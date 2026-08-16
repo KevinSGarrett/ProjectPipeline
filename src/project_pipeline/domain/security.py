@@ -12,7 +12,7 @@ from pydantic import Field, field_validator, model_validator
 from project_pipeline.domain.base import DomainModel, utc_now
 
 SECURITY_ID = re.compile(
-    r"^(IDENT|ROLE|GRANT|APPROVAL|POLICY|EGRESS|SREF|SLEASE|SAUDIT|SBOM|SCOMP|PROV|INTEGRITY|SGATE|SELFCHG|ROOTTRUST)-[A-F0-9]{20}$"
+    r"^(IDENT|ROLE|GRANT|APPROVAL|POLICY|EGRESS|SREF|SLEASE|SAUDIT|SBOM|SCOMP|PROV|INTEGRITY|SCANEVID|SGATE|SELFCHG|ROOTTRUST)-[A-F0-9]{20}$"
 )
 
 
@@ -430,6 +430,38 @@ class SupplyChainFinding(DomainModel):
     source_tool: str
     evidence_path: str | None = None
     blocking: bool = False
+
+
+class ScannerEvidence(DomainModel):
+    """Normalized, content-bound evidence from one external scanner execution."""
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    scanner_evidence_id: str
+    tool: str = Field(min_length=1, max_length=100)
+    execution_state: Literal["SUCCEEDED", "FAILED"]
+    source_manifest_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    result_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    observed_at_utc: datetime
+    scanned_kinds: tuple[SupplyChainFindingKind, ...]
+    findings: tuple[SupplyChainFinding, ...] = ()
+    evidence_path: str | None = None
+
+    @field_validator("observed_at_utc")
+    @classmethod
+    def validate_time(cls, value: datetime) -> datetime:
+        return _aware(value)
+
+    @model_validator(mode="after")
+    def validate_evidence(self) -> ScannerEvidence:
+        if not SECURITY_ID.fullmatch(
+            self.scanner_evidence_id
+        ) or not self.scanner_evidence_id.startswith("SCANEVID-"):
+            raise ValueError("invalid scanner evidence id")
+        if self.execution_state == "SUCCEEDED" and not self.scanned_kinds:
+            raise ValueError("successful scanner evidence must identify scanned finding kinds")
+        if len(set(self.scanned_kinds)) != len(self.scanned_kinds):
+            raise ValueError("scanner evidence finding kinds must be unique")
+        return self
 
 
 class ArtifactIntegrityRecord(DomainModel):

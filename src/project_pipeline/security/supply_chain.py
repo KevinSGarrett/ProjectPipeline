@@ -3,19 +3,24 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from typing import Literal
 
 from project_pipeline.domain.security import (
     ArtifactIntegrityRecord,
     GateState,
     ReleaseProvenance,
     SBOMComponent,
+    ScannerEvidence,
+    SelfModificationAssessment,
     SoftwareBillOfMaterials,
     SupplyChainFinding,
     SupplyChainFindingKind,
     SupplyChainGateResult,
     SupplyChainSeverity,
+    security_fingerprint,
     security_identifier,
 )
 
@@ -26,6 +31,260 @@ _OFFICIAL_MAJOR_TAG_ACTIONS = {
     "actions/upload-artifact",
     "actions/download-artifact",
 }
+_DEFAULT_SCANNER_MAX_AGE = timedelta(hours=24)
+
+
+def _mapping(value: object, *, context: str) -> Mapping[str, object]:
+    if not isinstance(value, Mapping):
+        raise ValueError(f"{context} must be an object")
+    return value
+
+
+def _rows(value: object, *, context: str) -> list[object]:
+    if not isinstance(value, list):
+        raise ValueError(f"{context} must be a list")
+    return value
+
+
+def _severity(value: object, *, default: SupplyChainSeverity) -> SupplyChainSeverity:
+    normalized = str(value or "").strip().upper()
+    aliases = {"UNKNOWN": default, "MODERATE": SupplyChainSeverity.MEDIUM}
+    if normalized in aliases:
+        return aliases[normalized]
+    try:
+        return SupplyChainSeverity(normalized)
+    except ValueError:
+        return default
+
+
+def _normalized_finding(
+    *,
+    tool: str,
+    kind: SupplyChainFindingKind,
+    severity: SupplyChainSeverity,
+    subject: str,
+    external_id: str,
+    message: str,
+    evidence_path: str | None,
+) -> SupplyChainFinding:
+    return SupplyChainFinding(
+        finding_id=security_identifier("SGATE", tool, kind.value, subject, external_id),
+        kind=kind,
+        severity=severity,
+        subject=subject,
+        message=message,
+        source_tool=tool,
+        evidence_path=evidence_path,
+        blocking=severity in {SupplyChainSeverity.HIGH, SupplyChainSeverity.CRITICAL},
+    )
+
+
+def _normalize_osv(payload: object, *, evidence_path: str | None) -> tuple[SupplyChainFinding, ...]:
+    document = _mapping(payload, context="OSV Scanner result")
+    results = _rows(document.get("results"), context="OSV Scanner results")
+    findings: list[SupplyChainFinding] = []
+    for result_index, result_value in enumerate(results):
+        result = _mapping(result_value, context=f"OSV result {result_index}")
+        packages = _rows(result.get("packages", []), context=f"OSV result {result_index} packages")
+        for package_index, package_value in enumerate(packages):
+            package = _mapping(
+                package_value,
+                context=f"OSV result {result_index} package {package_index}",
+            )
+            package_data = _mapping(
+                package.get("package", {}),
+                context=f"OSV result {result_index} package identity",
+            )
+            name = str(package_data.get("name") or "unknown-package")
+            version = str(package_data.get("version") or "unknown-version")
+            vulnerabilities = _rows(
+                package.get("vulnerabilities", []),
+                context=f"OSV result {result_index} vulnerabilities",
+            )
+            for vulnerability_index, vulnerability_value in enumerate(vulnerabilities):
+                vulnerability = _mapping(
+                    vulnerability_value,
+                    context=(f"OSV result {result_index} vulnerability {vulnerability_index}"),
+                )
+                database_specific = _mapping(
+                    vulnerability.get("database_specific", {}),
+                    context="OSV database_specific",
+                )
+                external_id = str(
+                    vulnerability.get("id")
+                    or f"unknown-{result_index}-{package_index}-{vulnerability_index}"
+                )
+                severity = _severity(
+                    database_specific.get("severity"),
+                    default=SupplyChainSeverity.HIGH,
+                )
+                findings.append(
+                    _normalized_finding(
+                        tool="osv-scanner",
+                        kind=SupplyChainFindingKind.VULNERABILITY,
+                        severity=severity,
+                        subject=f"{name}@{version}",
+                        external_id=external_id,
+                        message=str(
+                            vulnerability.get("summary")
+                            or vulnerability.get("details")
+                            or external_id
+                        ),
+                        evidence_path=evidence_path,
+                    )
+                )
+    return tuple(findings)
+
+
+def _normalize_trivy_collection(
+    *,
+    result: Mapping[str, object],
+    result_index: int,
+    key: str,
+    kind: SupplyChainFindingKind,
+    evidence_path: str | None,
+) -> tuple[SupplyChainFinding, ...]:
+    rows = _rows(result.get(key, []), context=f"Trivy result {result_index} {key}")
+    findings: list[SupplyChainFinding] = []
+    target = str(result.get("Target") or "repository")
+    for row_index, row_value in enumerate(rows):
+        row = _mapping(row_value, context=f"Trivy {key} row {row_index}")
+        external_id = str(
+            row.get("VulnerabilityID")
+            or row.get("RuleID")
+            or row.get("ID")
+            or row.get("Category")
+            or f"unknown-{result_index}-{row_index}"
+        )
+        package = str(row.get("PkgName") or row.get("PackageName") or "")
+        version = str(row.get("InstalledVersion") or row.get("Version") or "")
+        subject = (
+            f"{package}@{version}" if package and version else str(row.get("Target") or target)
+        )
+        default = (
+            SupplyChainSeverity.CRITICAL
+            if kind is SupplyChainFindingKind.SECRET
+            else SupplyChainSeverity.MEDIUM
+        )
+        severity = _severity(row.get("Severity"), default=default)
+        findings.append(
+            _normalized_finding(
+                tool="trivy",
+                kind=kind,
+                severity=severity,
+                subject=subject,
+                external_id=external_id,
+                message=str(
+                    row.get("Title") or row.get("Message") or row.get("Description") or external_id
+                ),
+                evidence_path=evidence_path,
+            )
+        )
+    return tuple(findings)
+
+
+def _normalize_trivy(
+    payload: object, *, evidence_path: str | None
+) -> tuple[SupplyChainFinding, ...]:
+    document = _mapping(payload, context="Trivy result")
+    results = _rows(document.get("Results"), context="Trivy Results")
+    findings: list[SupplyChainFinding] = []
+    collections = (
+        ("Vulnerabilities", SupplyChainFindingKind.VULNERABILITY),
+        ("Secrets", SupplyChainFindingKind.SECRET),
+        ("Misconfigurations", SupplyChainFindingKind.MISCONFIGURATION),
+        ("Licenses", SupplyChainFindingKind.LICENSE),
+    )
+    for result_index, result_value in enumerate(results):
+        result = _mapping(result_value, context=f"Trivy result {result_index}")
+        for key, kind in collections:
+            findings.extend(
+                _normalize_trivy_collection(
+                    result=result,
+                    result_index=result_index,
+                    key=key,
+                    kind=kind,
+                    evidence_path=evidence_path,
+                )
+            )
+    return tuple(findings)
+
+
+def _normalize_gitleaks(
+    payload: object, *, evidence_path: str | None
+) -> tuple[SupplyChainFinding, ...]:
+    findings: list[SupplyChainFinding] = []
+    for index, value in enumerate(_rows(payload, context="Gitleaks result")):
+        row = _mapping(value, context=f"Gitleaks finding {index}")
+        subject = str(row.get("File") or "repository")
+        external_id = str(row.get("Fingerprint") or row.get("RuleID") or f"finding-{index}")
+        findings.append(
+            _normalized_finding(
+                tool="gitleaks",
+                kind=SupplyChainFindingKind.SECRET,
+                severity=SupplyChainSeverity.CRITICAL,
+                subject=subject,
+                external_id=external_id,
+                message=str(row.get("Description") or "potential secret detected"),
+                evidence_path=evidence_path,
+            )
+        )
+    return tuple(findings)
+
+
+def build_scanner_evidence(
+    *,
+    tool: str,
+    payload: object,
+    source_manifest_sha256: str,
+    observed_at_utc: datetime,
+    scanned_kinds: tuple[SupplyChainFindingKind, ...] | None = None,
+    execution_state: Literal["SUCCEEDED", "FAILED"] = "SUCCEEDED",
+    evidence_path: str | None = None,
+) -> ScannerEvidence:
+    """Normalize supported scanner output and bind it to one source manifest."""
+
+    normalized_tool = tool.strip().casefold()
+    inferred_kinds: tuple[SupplyChainFindingKind, ...]
+    if normalized_tool in {"osv", "osv-scanner"}:
+        canonical_tool = "osv-scanner"
+        inferred_kinds = (SupplyChainFindingKind.VULNERABILITY,)
+        findings = _normalize_osv(payload, evidence_path=evidence_path)
+    elif normalized_tool == "trivy":
+        canonical_tool = "trivy"
+        if not scanned_kinds:
+            raise ValueError("Trivy evidence must identify the configured scanner kinds")
+        inferred_kinds = scanned_kinds
+        findings = _normalize_trivy(payload, evidence_path=evidence_path)
+    elif normalized_tool == "gitleaks":
+        canonical_tool = "gitleaks"
+        inferred_kinds = (SupplyChainFindingKind.SECRET,)
+        findings = _normalize_gitleaks(payload, evidence_path=evidence_path)
+    else:
+        raise ValueError(f"unsupported scanner evidence tool: {tool}")
+    if scanned_kinds is not None and normalized_tool != "trivy" and scanned_kinds != inferred_kinds:
+        raise ValueError(f"{canonical_tool} scanner kinds do not match its governed capability")
+    result_sha256 = security_fingerprint(payload)
+    if observed_at_utc.tzinfo is None or observed_at_utc.utcoffset() is None:
+        raise ValueError("scanner observation time must be timezone-aware")
+    observed = observed_at_utc.astimezone(UTC)
+    return ScannerEvidence(
+        scanner_evidence_id=security_identifier(
+            "SCANEVID",
+            canonical_tool,
+            source_manifest_sha256,
+            result_sha256,
+            observed.isoformat(),
+        ),
+        tool=canonical_tool,
+        execution_state=execution_state,
+        source_manifest_sha256=source_manifest_sha256,
+        result_sha256=result_sha256,
+        observed_at_utc=observed,
+        scanned_kinds=inferred_kinds,
+        findings=findings,
+        evidence_path=evidence_path,
+    )
 
 
 def _manifest_aggregate(root: Path) -> str:
@@ -155,16 +414,79 @@ def evaluate_ci_workflows(root: Path) -> tuple[SupplyChainFinding, ...]:
     return tuple(findings)
 
 
+def _release_requirement_finding(
+    *,
+    kind: SupplyChainFindingKind,
+    subject: str,
+    code: str,
+    message: str,
+    evidence_path: str | None = None,
+) -> SupplyChainFinding:
+    return SupplyChainFinding(
+        finding_id=security_identifier("SGATE", "release", kind.value, subject, code),
+        kind=kind,
+        severity=SupplyChainSeverity.HIGH,
+        subject=subject,
+        message=message,
+        source_tool="project-pipeline-release-gate",
+        evidence_path=evidence_path,
+        blocking=True,
+    )
+
+
+def _validate_integrity_records(
+    root: Path, records: tuple[ArtifactIntegrityRecord, ...]
+) -> tuple[SupplyChainFinding, ...]:
+    findings: list[SupplyChainFinding] = []
+    for record in records:
+        path = (root / record.artifact_path).resolve()
+        try:
+            path.relative_to(root)
+        except ValueError:
+            valid = False
+        else:
+            valid = path.is_file()
+        if valid:
+            data = path.read_bytes()
+            valid = (
+                len(data) == record.size_bytes and hashlib.sha256(data).hexdigest() == record.sha256
+            )
+        if not valid:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.INTEGRITY,
+                    subject=record.artifact_path,
+                    code="artifact-mismatch",
+                    message="artifact content does not match its release integrity record",
+                )
+            )
+    return tuple(findings)
+
+
 def evaluate_supply_chain(
     root: Path,
     *,
     external_findings: Iterable[SupplyChainFinding] = (),
     require_sbom: bool = True,
+    release_mode: bool = False,
+    scanner_evidence: Iterable[ScannerEvidence] = (),
+    integrity_records: Iterable[ArtifactIntegrityRecord] = (),
+    provenance: ReleaseProvenance | None = None,
+    now_utc: datetime | None = None,
+    scanner_max_age: timedelta = _DEFAULT_SCANNER_MAX_AGE,
+    signing_profile_enabled: bool = False,
 ) -> tuple[SupplyChainGateResult, SoftwareBillOfMaterials | None]:
     root = root.resolve()
+    aggregate = _manifest_aggregate(root)
+    policy = json.loads((root / "config/security_policy.json").read_text(encoding="utf-8"))
+    supply_policy = _mapping(policy.get("supply_chain", {}), context="supply-chain policy")
+    effective_require_sbom = require_sbom or (
+        release_mode and bool(supply_policy.get("require_sbom"))
+    )
     findings = list(evaluate_ci_workflows(root)) + list(external_findings)
-    sbom = build_repository_sbom(root) if require_sbom else None
-    if require_sbom and sbom is None:
+    records = tuple(integrity_records)
+    sbom = build_repository_sbom(root) if effective_require_sbom else None
+    if effective_require_sbom and sbom is None:
         findings.append(
             SupplyChainFinding(
                 finding_id=security_identifier("SGATE", "sbom", "missing"),
@@ -176,20 +498,135 @@ def evaluate_supply_chain(
                 blocking=True,
             )
         )
+    if release_mode:
+        now = now_utc or datetime.now(UTC)
+        if now.tzinfo is None or now.utcoffset() is None:
+            raise ValueError("release supply-chain evaluation time must be timezone-aware")
+        now = now.astimezone(UTC)
+        if scanner_max_age <= timedelta(0):
+            raise ValueError("scanner evidence maximum age must be positive")
+        qualifying_vulnerability_scan = False
+        for evidence in tuple(scanner_evidence):
+            findings.extend(evidence.findings)
+            evidence_valid = True
+            if evidence.execution_state != "SUCCEEDED":
+                evidence_valid = False
+                findings.append(
+                    _release_requirement_finding(
+                        kind=SupplyChainFindingKind.INTEGRITY,
+                        subject=evidence.tool,
+                        code="execution-failed",
+                        message="scanner execution did not succeed",
+                        evidence_path=evidence.evidence_path,
+                    )
+                )
+            if evidence.source_manifest_sha256 != aggregate:
+                evidence_valid = False
+                findings.append(
+                    _release_requirement_finding(
+                        kind=SupplyChainFindingKind.PROVENANCE,
+                        subject=evidence.tool,
+                        code="manifest-mismatch",
+                        message="scanner evidence is not bound to the current source manifest",
+                        evidence_path=evidence.evidence_path,
+                    )
+                )
+            age = now - evidence.observed_at_utc
+            if age < -timedelta(minutes=5) or age > scanner_max_age:
+                evidence_valid = False
+                findings.append(
+                    _release_requirement_finding(
+                        kind=SupplyChainFindingKind.PROVENANCE,
+                        subject=evidence.tool,
+                        code="stale-or-future",
+                        message="scanner evidence is stale or has an invalid future timestamp",
+                        evidence_path=evidence.evidence_path,
+                    )
+                )
+            if evidence_valid and SupplyChainFindingKind.VULNERABILITY in evidence.scanned_kinds:
+                qualifying_vulnerability_scan = True
+        if (
+            bool(supply_policy.get("require_vulnerability_scan_for_release"))
+            and not qualifying_vulnerability_scan
+        ):
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.VULNERABILITY,
+                    subject="release candidate",
+                    code="required-scan-missing",
+                    message=(
+                        "release requires fresh successful vulnerability-scan evidence bound "
+                        "to the current source manifest"
+                    ),
+                )
+            )
+        if bool(supply_policy.get("require_provenance")):
+            provenance_valid = bool(
+                provenance is not None
+                and provenance.source_aggregate_sha256 == aggregate
+                and provenance.verification_state.startswith("VERIFIED")
+                and provenance.evidence_ids
+            )
+            if not provenance_valid:
+                findings.append(
+                    _release_requirement_finding(
+                        kind=SupplyChainFindingKind.PROVENANCE,
+                        subject="release candidate",
+                        code="required-provenance-missing",
+                        message="verified release provenance bound to the current source is required",
+                    )
+                )
+        if bool(supply_policy.get("require_integrity_hashes")):
+            if records:
+                findings.extend(_validate_integrity_records(root, records))
+            else:
+                findings.append(
+                    _release_requirement_finding(
+                        kind=SupplyChainFindingKind.INTEGRITY,
+                        subject="release candidate",
+                        code="required-integrity-missing",
+                        message="release artifact integrity records are required",
+                    )
+                )
+        if (
+            signing_profile_enabled
+            and bool(supply_policy.get("require_signed_release_when_signing_profile_enabled"))
+            and (not records or any(record.signature_state != "VERIFIED" for record in records))
+        ):
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.SIGNATURE,
+                    subject="release candidate",
+                    code="required-signature-missing",
+                    message="the enabled signing profile requires verified artifact signatures",
+                )
+            )
     state = GateState.FAIL if any(item.blocking for item in findings) else GateState.PASS
-    reasons = (
-        ("blocking supply-chain findings remain",)
-        if state is GateState.FAIL
-        else ("required supply-chain policy checks passed",)
-    )
+    if state is GateState.FAIL:
+        reason = (
+            "release supply-chain evidence is incomplete or blocking findings remain"
+            if release_mode
+            else "blocking supply-chain findings remain"
+        )
+    else:
+        reason = (
+            "required release supply-chain policy checks passed"
+            if release_mode
+            else "required supply-chain policy checks passed"
+        )
     gate = SupplyChainGateResult(
         gate_id=security_identifier(
-            "SGATE", _manifest_aggregate(root), str(len(findings)), state.value
+            "SGATE",
+            aggregate,
+            "release" if release_mode else "internal",
+            str(len(findings)),
+            state.value,
         ),
         state=state,
         findings=tuple(findings),
         sbom_id=sbom.sbom_id if sbom else None,
-        reasons=reasons,
+        integrity_ids=tuple(record.integrity_id for record in records),
+        reasons=(reason,),
     )
     return gate, sbom
 
@@ -234,9 +671,7 @@ def release_provenance(
     return record, sbom
 
 
-def assess_self_modification(changed_paths: tuple[str, ...]):
-    from project_pipeline.domain.security import SelfModificationAssessment
-
+def assess_self_modification(changed_paths: tuple[str, ...]) -> SelfModificationAssessment:
     sensitive_prefixes = (
         "src/project_pipeline/control/",
         "src/project_pipeline/security/",
