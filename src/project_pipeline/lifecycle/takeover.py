@@ -147,9 +147,7 @@ class CheckpointDecision:
     eligible_unrelated_lanes: tuple[str, ...]
 
     def is_valid(self) -> bool:
-        return not (
-            self.no_additional_action_needed and bool(self.eligible_unrelated_lanes)
-        )
+        return not (self.no_additional_action_needed and bool(self.eligible_unrelated_lanes))
 
 
 def has_path_collision(left_paths: tuple[str, ...], right_paths: tuple[str, ...]) -> bool:
@@ -425,7 +423,7 @@ def validate_provider_qualification_evidence(
                 satisfied=False,
                 state=ProviderQualificationState.STALE,
                 reasons=("provider_qualification_stale",),
-                    fingerprint_matches=fingerprint_matches,
+                fingerprint_matches=fingerprint_matches,
                 identity_matches=identity_matches,
                 fresh_within_policy=False,
             )

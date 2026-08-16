@@ -61,7 +61,9 @@ def evaluate_jira_sync_guard(root: Path) -> JiraSyncGuardResult:
     if not expected_fingerprint:
         reasons.append("jira sync guard artifact does not include local_mirror_fingerprint")
     elif expected_fingerprint != observed_fingerprint:
-        reasons.append("jira sync guard artifact is stale for current local Jira mirror fingerprint")
+        reasons.append(
+            "jira sync guard artifact is stale for current local Jira mirror fingerprint"
+        )
 
     if parity_status != "PARITY_CONFIRMED":
         reasons.append("jira sync guard artifact does not confirm remote/local parity")

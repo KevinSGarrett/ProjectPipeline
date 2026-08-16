@@ -1678,7 +1678,9 @@ def _run_takeover_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
                 },
             }, 1
         requires_privacy_attestation = bool(
-            _takeover_policy(args.root).get("require_privacy_mode", provider_id == "provider:cursor-cli")
+            _takeover_policy(args.root).get(
+                "require_privacy_mode", provider_id == "provider:cursor-cli"
+            )
         )
         fingerprint = DurableAttestation.fingerprint_for(
             {
@@ -1798,8 +1800,8 @@ def _takeover_governor_status(
         "requires_privacy_attestation": requires_privacy_attestation,
     }
     prior_attestation, attestation_path = _load_durable_attestation(root)
-    prior_provider_qualification, provider_qualification_path = _load_provider_qualification_evidence(
-        root
+    prior_provider_qualification, provider_qualification_path = (
+        _load_provider_qualification_evidence(root)
     )
     attestation_validation = validate_durable_attestation(
         prior=prior_attestation,
@@ -1825,7 +1827,9 @@ def _takeover_governor_status(
         expected_project_id=project_id,
         expected_provider_id=provider_id,
         expected_scope=provider_scope,
-        expected_timestamp_utc=None if prior_attestation is None else prior_attestation.approved_at_utc,
+        expected_timestamp_utc=None
+        if prior_attestation is None
+        else prior_attestation.approved_at_utc,
         max_age_hours=max_attestation_age_hours,
         require_reference=require_attestation_evidence_reference,
         require_identity=require_attestation_identity,
@@ -1834,7 +1838,9 @@ def _takeover_governor_status(
     provider_reference_validation = _takeover_evidence_reference_validation(
         root=root,
         evidence_ref=(
-            None if prior_provider_qualification is None else prior_provider_qualification.evidence_ref
+            None
+            if prior_provider_qualification is None
+            else prior_provider_qualification.evidence_ref
         ),
         evidence_fingerprint=(
             None
@@ -1845,7 +1851,9 @@ def _takeover_governor_status(
         expected_provider_id=provider_id,
         expected_scope=provider_scope,
         expected_timestamp_utc=(
-            None if prior_provider_qualification is None else prior_provider_qualification.verified_at_utc
+            None
+            if prior_provider_qualification is None
+            else prior_provider_qualification.verified_at_utc
         ),
         max_age_hours=max_provider_qualification_age_hours,
         require_reference=require_provider_qualification_evidence_reference,
@@ -1855,7 +1863,9 @@ def _takeover_governor_status(
     attestation_gate_reasons = tuple(
         [*attestation_validation.reasons, *attestation_reference_validation["reasons"]]
     )
-    attestation_gate_valid = attestation_validation.valid and attestation_reference_validation["valid"]
+    attestation_gate_valid = (
+        attestation_validation.valid and attestation_reference_validation["valid"]
+    )
     attestation_gate_state = (
         AttestationState.VALID
         if attestation_gate_valid
@@ -1886,9 +1896,7 @@ def _takeover_governor_status(
         provider_qualified=provider_qualification_satisfied,
     )
     provider_dispatch_eligible = (
-        attestation_gate_valid
-        and provider_qualification_satisfied
-        and not provider_gate_blocked
+        attestation_gate_valid and provider_qualification_satisfied and not provider_gate_blocked
     )
     local_lane_state = LaneState.ACTIVE if active_lane_count > 0 else LaneState.BLOCKED
     lane_matrix = [
@@ -2036,9 +2044,7 @@ def _completion_stages(product_outcome: dict[str, Any]) -> tuple[dict[str, Any],
         order = stage.get("order")
         if not isinstance(stage_id, str) or not isinstance(order, int):
             continue
-        story_ids = tuple(
-            item for item in stage.get("jira_story_ids", []) if isinstance(item, str)
-        )
+        story_ids = tuple(item for item in stage.get("jira_story_ids", []) if isinstance(item, str))
         normalized.append(
             {
                 "stage_id": stage_id,
