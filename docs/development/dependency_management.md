@@ -13,3 +13,13 @@ python scripts/resolve_dependencies.py --portable
 ```
 
 A dependency addition requires capability rationale, licensing/provenance review, an explicit activation group, tests at the removal boundary, and rollback instructions.
+
+## Dependency PR Hygiene Controls
+
+The repository enforces batched dependency intake to keep pull requests actionable and review capacity stable.
+
+- Active dependency PR budget: at most `2` open `pip` PRs and `1` open `github-actions` PR at a time (via Dependabot open-PR limits).
+- Batching cadence: weekly on Monday in controlled windows; patch and minor updates are grouped per ecosystem.
+- Major-version containment: noisy GitHub Action major bumps are ignored by default and handled in explicit maintenance batches.
+- Closure/supersede protocol: when flood or overlap occurs, close superseded Dependabot PRs with one policy rationale comment and move each candidate into `evidence/dependency_pr_queue.json` so no update is lost.
+- Active PR budget: keep only feature/product PRs and at most one dependency batch per ecosystem concurrently; if exceeded, pause intake and escalate in the next planning checkpoint before reopening dependency flow.
