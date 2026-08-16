@@ -10,12 +10,12 @@ from project_pipeline.lifecycle.repositories import MultiRepositoryCoordinator
 from project_pipeline.lifecycle.retention import InformationLifecycleManager, ProjectClosureDirector
 from project_pipeline.lifecycle.simulation import simulate_scenario, supported_scenarios
 from project_pipeline.lifecycle.takeover import (
+    PP327_BLOCKED_PATHS,
     AttestationState,
     AttestationValidation,
-    DurableProviderQualificationEvidence,
-    PP327_BLOCKED_PATHS,
     CheckpointDecision,
     DurableAttestation,
+    DurableProviderQualificationEvidence,
     LaneState,
     ProviderQualificationState,
     ProviderQualificationValidation,

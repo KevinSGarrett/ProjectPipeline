@@ -148,7 +148,6 @@ from project_pipeline.jira_steward import (
 )
 from project_pipeline.jira_steward.persistence import JiraSyncStore
 from project_pipeline.jira_steward.sync_guard import evaluate_jira_sync_guard
-from project_pipeline.line_numbering import generate_line_numbered_plans
 from project_pipeline.lifecycle import (
     AttestationState,
     DurableAttestation,
@@ -162,6 +161,7 @@ from project_pipeline.lifecycle import (
     validate_durable_attestation,
     validate_provider_qualification_evidence,
 )
+from project_pipeline.line_numbering import generate_line_numbered_plans
 from project_pipeline.manifest import write_manifest
 from project_pipeline.orchestration import (
     DBOSFallbackAdapter,
@@ -1373,11 +1373,7 @@ def _resolve_takeover_evidence(
             reasons.append("invalid_evidence_payload")
         payload = None
     if isinstance(payload, dict):
-        if payload.get("project_id") != expected_project_id:
-            reasons.append("evidence_identity_mismatch")
-        elif payload.get("provider_id") != expected_provider_id:
-            reasons.append("evidence_identity_mismatch")
-        elif payload.get("scope") != expected_scope:
+        if payload.get("project_id") != expected_project_id or payload.get("provider_id") != expected_provider_id or payload.get("scope") != expected_scope:
             reasons.append("evidence_identity_mismatch")
     return {
         "valid": not reasons,
