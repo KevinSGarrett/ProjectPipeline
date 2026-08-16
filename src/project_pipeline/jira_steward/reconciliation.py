@@ -347,8 +347,6 @@ class JiraReconciler:
                 )
             )
             return
-        if remote_state is local.state:
-            return
         if self.policy.authority_mode is JiraAuthorityMode.SOURCE_CONTROLLED_LOCAL:
             target = self.policy.preferred_remote_status.get(local.state)
             if target is None:
@@ -362,7 +360,7 @@ class JiraReconciler:
                         required_resolution="Define a target remote status or resolve the state manually.",
                     )
                 )
-            else:
+            elif target != remote.status_name:
                 operations.append(
                     JiraSyncOperation.create(
                         operation_type=JiraSyncOperationType.TRANSITION_REMOTE_ISSUE,
@@ -377,6 +375,8 @@ class JiraReconciler:
                         },
                     )
                 )
+            return
+        if remote_state is local.state:
             return
         human_required = (
             self.policy.require_human_for_remote_done

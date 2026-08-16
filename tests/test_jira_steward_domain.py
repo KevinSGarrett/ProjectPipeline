@@ -174,6 +174,39 @@ class JiraStewardDomainTests(unittest.TestCase):
         self.assertIn(JiraSyncOperationType.UPDATE_REMOTE_FIELDS, kinds)
         self.assertIn(JiraSyncOperationType.TRANSITION_REMOTE_ISSUE, kinds)
 
+    def test_reconciliation_skips_transition_when_remote_status_is_already_preferred(self) -> None:
+        issue = self.issues[0].model_copy(update={"state": JiraLifecycleState.READY})
+        remote_issue = _remote_for(
+            issue,
+            status=JiraLifecycleState.BACKLOG,
+            summary="Stale remote summary",
+        )
+        plan = JiraReconciler().plan(
+            _bundle(issue),
+            JiraRemoteSnapshot.create(project_key="PP", issues=(remote_issue,)),
+        )
+        self.assertEqual(plan.conflicts, ())
+        self.assertEqual(
+            [operation.operation_type for operation in plan.operations],
+            [JiraSyncOperationType.UPDATE_REMOTE_FIELDS],
+        )
+
+    def test_source_controlled_reconciliation_normalizes_preferred_status_alias(self) -> None:
+        issue = self.issues[0]
+        remote_issue = _remote_for(issue).model_copy(update={"status_name": "Backlog"})
+        plan = JiraReconciler().plan(
+            _bundle(issue),
+            JiraRemoteSnapshot.create(project_key="PP", issues=(remote_issue,)),
+        )
+        self.assertEqual(plan.conflicts, ())
+        transition = next(
+            operation
+            for operation in plan.operations
+            if operation.operation_type is JiraSyncOperationType.TRANSITION_REMOTE_ISSUE
+        )
+        self.assertEqual(transition.payload["from_status"], "Backlog")
+        self.assertEqual(transition.payload["target_status"], "To Do")
+
     def test_duplicate_and_remote_only_mappings_become_explicit_conflicts(self) -> None:
         issue = self.issues[0]
         local = _bundle(issue)
