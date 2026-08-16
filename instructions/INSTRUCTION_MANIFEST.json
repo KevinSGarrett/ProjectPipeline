@@ -549,8 +549,8 @@
       "instruction_id": "PP-ASSET-SCHEMAS-RUNTIME-CONFIGURATION-SCHEMA-JSON",
       "kind": "INTEGRATION_SUPPORT",
       "path": "schemas/runtime_configuration.schema.json",
-      "sha256": "194c241f564fae7514fc9104ba9dfd0473b725fb48acc0f8d93e024ff0c823d8",
-      "size_bytes": 10147
+      "sha256": "341c9f8e12140f6dc9fc04068fe57ec46ebed91a58a269c30dc4437d943855d5",
+      "size_bytes": 9002
     },
     {
       "instruction_id": "PP-ASSET-SCRIPTS-INSTRUCTION-COLD-START-PY",
@@ -570,8 +570,8 @@
       "instruction_id": "PP-ASSET-SRC-PROJECT-PIPELINE-CONFIGURATION-MODELS-PY",
       "kind": "IMPLEMENTATION_SUPPORT",
       "path": "src/project_pipeline/configuration/models.py",
-      "sha256": "f5af8cf9a9a1873d495676e43c6da5d625c0c06f76ba812c6420e3839a37edc0",
-      "size_bytes": 8946
+      "sha256": "d288d13dd048b4b0ec41db28f41a2cc936855c3bb49ef79a786fc3610e2a2dd1",
+      "size_bytes": 9292
     },
     {
       "instruction_id": "PP-ASSET-SRC-PROJECT-PIPELINE-VALIDATION-CONTENT-PY",

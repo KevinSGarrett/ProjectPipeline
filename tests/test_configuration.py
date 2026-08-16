@@ -13,6 +13,7 @@ from project_pipeline.configuration import (
     SecretResolutionError,
     SecretResolver,
     load_runtime_configuration,
+    runtime_configuration_schema,
     validate_runtime_configuration_files,
 )
 
@@ -122,3 +123,15 @@ class ConfigurationTests(unittest.TestCase):
 
     def test_committed_runtime_profiles_and_schema_are_current(self) -> None:
         self.assertEqual(validate_runtime_configuration_files(ROOT), [])
+
+    def test_generated_path_defaults_are_platform_neutral(self) -> None:
+        schema = runtime_configuration_schema()
+        for definition in ("RuntimePaths", "PersistenceSettings"):
+            properties = schema["$defs"][definition]["properties"]
+            path_defaults = [
+                item["default"]
+                for item in properties.values()
+                if item.get("format") == "path" and "default" in item
+            ]
+            self.assertTrue(path_defaults)
+            self.assertTrue(all("\\" not in value for value in path_defaults))

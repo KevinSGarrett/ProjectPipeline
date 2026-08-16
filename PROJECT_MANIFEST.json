@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "4dc890816f16ac2f6995067c77e3bf1daac0d9afa86026c0ccbfb4fc74026112",
+  "aggregate_sha256": "4d2e02296bdcc1640512c8bedeb4027f91c1603c47215bf322183fca6a3ca89e",
   "exclusions": [
     "FILE_MANIFEST.sha256",
     "PROJECT_MANIFEST.json",
@@ -4835,8 +4835,8 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "c71da9c8c802687d9d7c9663a6306d76b99a7762f4f2785ac89a95f9bfe3815b",
-      "size_bytes": 24884
+      "sha256": "3920b2c60aca96b60e15e37db1557209249af8c1013c7ef834c2e76aa2219b50",
+      "size_bytes": 24883
     },
     {
       "path": "instructions/policies/BRANCH_PR_POLICY.json",
@@ -10840,8 +10840,8 @@
     },
     {
       "path": "schemas/runtime_configuration.schema.json",
-      "sha256": "194c241f564fae7514fc9104ba9dfd0473b725fb48acc0f8d93e024ff0c823d8",
-      "size_bytes": 10147
+      "sha256": "341c9f8e12140f6dc9fc04068fe57ec46ebed91a58a269c30dc4437d943855d5",
+      "size_bytes": 9002
     },
     {
       "path": "schemas/scheduler_admission_decision.schema.json",
@@ -11525,8 +11525,8 @@
     },
     {
       "path": "src/project_pipeline/configuration/models.py",
-      "sha256": "f5af8cf9a9a1873d495676e43c6da5d625c0c06f76ba812c6420e3839a37edc0",
-      "size_bytes": 8946
+      "sha256": "d288d13dd048b4b0ec41db28f41a2cc936855c3bb49ef79a786fc3610e2a2dd1",
+      "size_bytes": 9292
     },
     {
       "path": "src/project_pipeline/configuration/schema.py",
@@ -12780,8 +12780,8 @@
     },
     {
       "path": "tests/test_configuration.py",
-      "sha256": "df264dc8844b25ed472136fc083b6840c2a58e8f0cf79e08189018bec11ffb87",
-      "size_bytes": 5312
+      "sha256": "765a397329b83747686a3f42236bd796675449f2e69a306124f1babd778016e1",
+      "size_bytes": 5918
     },
     {
       "path": "tests/test_context_broker_compiler.py",
@@ -13394,7 +13394,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T07:01:01.661825+00:00",
+  "generated_at_utc": "2026-08-16T07:07:43.825886+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13403,5 +13403,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22582166
+  "total_bytes": 22581972
 }
