@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "de1367488f908f9f625b783b264393b1bc6d7b33bb2a9e2e19f2ed71c904b1e8",
+  "aggregate_sha256": "4d7302a3d5a5e982d369ca62e90274814cad85e94afddfbf42db87e7b672d471",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2683,
+  "file_count": 2684,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -72,8 +72,8 @@
     },
     {
       "path": ".github/dependabot.yml",
-      "sha256": "b50ba806efd3eed9308303ccce7635b6673e8783ea81b899dbfaa10d983b4b59",
-      "size_bytes": 206
+      "sha256": "3ad91f6aa0d3e3b6b2aba0bf5d7f8f2525f7519fb9ba0b21a861a21ad30cd457",
+      "size_bytes": 1020
     },
     {
       "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
@@ -1182,8 +1182,8 @@
     },
     {
       "path": "docs/development/dependency_management.md",
-      "sha256": "a2a70898445b0dd7a5cde356669aea4b4903e3f4ee921ba5fb0cf573b23b9b49",
-      "size_bytes": 1187
+      "sha256": "8c234135e0a3017fa1693ad9484b019600b77d7694a5fcbfbf0e0f958c2cf00a",
+      "size_bytes": 2138
     },
     {
       "path": "docs/development/DEVELOPER_GUIDE.md",
@@ -4094,6 +4094,11 @@
       "path": "evidence/pp19_regression_part04.txt",
       "sha256": "438a2f1328e6f6099e4765efb44b8131efcf76d8c911e798d67a2a42b6fc05a7",
       "size_bytes": 261
+    },
+    {
+      "path": "evidence/pr_cleanup_followup_checkpoint_2026-08-16.json",
+      "sha256": "3a02fe80d39ca7aed8d123927bffbd7a35149193c664e296db9368e048dc2e2e",
+      "size_bytes": 790
     },
     {
       "path": "evidence/project_intake_foundation_validation.json",
@@ -13426,7 +13431,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T18:38:57.744981+00:00",
+  "generated_at_utc": "2026-08-16T22:50:08.650381+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13435,5 +13440,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22640447
+  "total_bytes": 22643002
 }
