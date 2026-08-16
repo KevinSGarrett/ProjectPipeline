@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "91af81bdc3620f4df864ac007d11a48802e03e8c6f779a826f83f2826d1adac3",
+  "aggregate_sha256": "f744569345f3c68a1be16209197219ed8de6d0364a7b9b44706818deeff5d8fb",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11937,8 +11937,8 @@
     },
     {
       "path": "src/project_pipeline/jira_steward/reconciliation.py",
-      "sha256": "e8a0f2ac446c0d4f8546df0e610727cfa29bf476483ba68a8dfec63eb9050e5f",
-      "size_bytes": 25514
+      "sha256": "af382d6d7cd1ba5b0a1b9261e954fe04cb029a591c68657df35c455dd03c67f8",
+      "size_bytes": 25543
     },
     {
       "path": "src/project_pipeline/jira_steward/repository.py",
@@ -12962,8 +12962,8 @@
     },
     {
       "path": "tests/test_jira_steward_domain.py",
-      "sha256": "cbf5175ef99ad7de09ae3498034d7d566c400b7c8a3ae6aa3dedabd1279fcf65",
-      "size_bytes": 12102
+      "sha256": "c0d21ac913617814d79ed302e7f852108a1f0398aae3a704c7af8f75376c17d7",
+      "size_bytes": 13566
     },
     {
       "path": "tests/test_jira_steward_mock_and_service.py",
@@ -13396,7 +13396,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T07:57:10.845123+00:00",
+  "generated_at_utc": "2026-08-16T08:13:50.270188+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13405,5 +13405,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22540769
+  "total_bytes": 22542262
 }
