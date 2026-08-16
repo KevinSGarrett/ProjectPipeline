@@ -65,10 +65,10 @@
     "supply-chain"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-16T12:41:58.487442Z",
+    "observed_at_utc": "2026-08-16T12:54:50.536041Z",
     "remote_id": "25190",
     "remote_key": "PP-221",
-    "snapshot_id": "JSNAP-269A21D1D431E2ACC6A5",
+    "snapshot_id": "JSNAP-376F9375CCC27F433F73",
     "status_name": "In Progress"
   },
   "local_id": "PP-TASK-000341",
@@ -117,7 +117,7 @@
     "SRC-017:L000072-L000141",
     "SRC-017:L000142-L000191"
   ],
-  "state": "REVIEW",
+  "state": "VALIDATION",
   "title": "Implement distinct identities, least privilege, and root of trust",
   "upstream_dependencies": []
 }
