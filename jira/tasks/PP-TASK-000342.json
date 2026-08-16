@@ -65,11 +65,11 @@
     "supply-chain"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-16T13:43:58.500085Z",
+    "observed_at_utc": "2026-08-16T14:05:17.707516Z",
     "remote_id": "25309",
     "remote_key": "PP-340",
-    "snapshot_id": "JSNAP-DCE13F5C8FBBBAD81B62",
-    "status_name": "To Do"
+    "snapshot_id": "JSNAP-8BA654691BFA329B1CAA",
+    "status_name": "In Progress"
   },
   "local_id": "PP-TASK-000342",
   "objective": "Implement independent approval and deterministic policy authority",
@@ -120,7 +120,7 @@
     "SRC-017:L000009-L000071",
     "SRC-017:L000072-L000141"
   ],
-  "state": "IN_PROGRESS",
+  "state": "REVIEW",
   "title": "Implement independent approval and deterministic policy authority",
   "upstream_dependencies": []
 }
