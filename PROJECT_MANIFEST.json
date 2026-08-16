@@ -1,7 +1,8 @@
 {
-  "aggregate_sha256": "f1b159ab4520fbba97b981fbaf0283e7f84618543798c0e0f3eafaff92d39f15",
+  "aggregate_sha256": "91af81bdc3620f4df864ac007d11a48802e03e8c6f779a826f83f2826d1adac3",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
+    ".git",
     "FILE_MANIFEST.sha256",
     "PROJECT_MANIFEST.json",
     "docs/generated/REPOSITORY_MAP.json",
@@ -4836,7 +4837,7 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "3920b2c60aca96b60e15e37db1557209249af8c1013c7ef834c2e76aa2219b50",
+      "sha256": "79286c6d5525878a7931a1a830be837256b13a93f84f5da46375d84ac1a8a01e",
       "size_bytes": 24883
     },
     {
@@ -4931,8 +4932,8 @@
     },
     {
       "path": "jira/BOARD_MANIFEST.json",
-      "sha256": "0ae31f58e436c0c4b987d76cfb3cef5ddb178a20cb43e990344c2ada88cd203e",
-      "size_bytes": 571
+      "sha256": "e0432acfd3403a2d8d6d3113c7fe73f3547b65cc8661bfb72f6025acbbf75f47",
+      "size_bytes": 587
     },
     {
       "path": "jira/bugs/README.md",
@@ -5041,13 +5042,13 @@
     },
     {
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "4c922846ca2296038d09ceca6bb5aeceaf2699cf53026ff8303efd7026446397",
-      "size_bytes": 1590592
+      "sha256": "604b920028260f906dcc6948d13aa01199d4bd50fc71314e503d1db4d2d5413e",
+      "size_bytes": 1590606
     },
     {
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "17f45d75654c58fb0130d74680d966e4015891c7f7b26f2b7cb37011c3cb0bcc",
-      "size_bytes": 1879506
+      "sha256": "c668cd75581765d1d8a1a4dfedbf0dc1a808958e492eb388d3929d0d696a93b0",
+      "size_bytes": 1879526
     },
     {
       "path": "jira/README.md",
@@ -5056,8 +5057,8 @@
     },
     {
       "path": "jira/relationships/graph.json",
-      "sha256": "2e13fb0104b18c23c26f3112d7a552e0cae3ab888ee5b84cb6ab7cbdedfda710",
-      "size_bytes": 147900
+      "sha256": "3481542cd8694c078f66a0a258bbccfc33a9080c5a5f29912cb1d76c2464a225",
+      "size_bytes": 147898
     },
     {
       "path": "jira/relationships/issues.jsonl",
@@ -5066,8 +5067,8 @@
     },
     {
       "path": "jira/reports/backlog_status.json",
-      "sha256": "b56e13a2c3e55b0aaf974ffdc038041b53431d040a0aad239555dd35e8483e92",
-      "size_bytes": 282
+      "sha256": "6789982f25885b0d008f2492678add89be93a94f55051b8832b751d578136c80",
+      "size_bytes": 298
     },
     {
       "path": "jira/reports/foundation_status.json",
@@ -8546,8 +8547,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000327.json",
-      "sha256": "05aefbd1513aeac121871971d7139749e4c3558c76df7234bf15a9fc0648bb2c",
-      "size_bytes": 4787
+      "sha256": "0a34f4f9093e89bfc95580a002e24ae36377eac5e017fd3e7e00187211ddff2a",
+      "size_bytes": 4805
     },
     {
       "path": "jira/tasks/PP-TASK-000328.json",
@@ -11771,8 +11772,8 @@
     },
     {
       "path": "src/project_pipeline/domain/state.py",
-      "sha256": "367e1c1e18b369129d5be922f17e846c4d804f0c64b0102f7a4038186da795e4",
-      "size_bytes": 11605
+      "sha256": "0a9eb32bb5ad131e77307802d260efc498680609cb26e44823614d2e083bd049",
+      "size_bytes": 11658
     },
     {
       "path": "src/project_pipeline/domain/traceability.py",
@@ -12016,8 +12017,8 @@
     },
     {
       "path": "src/project_pipeline/manifest.py",
-      "sha256": "e6fb76275b7caf6ee33f6e1d09e6cad09440be8078f610f17fb7954cf8811a7b",
-      "size_bytes": 4173
+      "sha256": "cc727d1c5e7776d7681a006e13b325177e0ce4ca2a609c5ebcf77e8c1daee3fb",
+      "size_bytes": 4835
     },
     {
       "path": "src/project_pipeline/observability/__init__.py",
@@ -12886,8 +12887,8 @@
     },
     {
       "path": "tests/test_domain_models.py",
-      "sha256": "b1b2e0453a0e6969c3a95de74ea3f73fcd9645eb262c0a5a6138a7f8b12f663e",
-      "size_bytes": 2890
+      "sha256": "f9404a0347cf953bcab93203d6a2c909bd2b59fccd5c3a615a65f44ace6be221",
+      "size_bytes": 3090
     },
     {
       "path": "tests/test_github_cli.py",
@@ -12996,8 +12997,8 @@
     },
     {
       "path": "tests/test_manifest.py",
-      "sha256": "022fba699752816f72ba1b87b8cd447ece0a7f1316d982db2c0f5c383898658e",
-      "size_bytes": 3356
+      "sha256": "6cc00a2947a09b1720e75a4b0230d9652d1519f5cccefa5fa24b7545839cb606",
+      "size_bytes": 4735
     },
     {
       "path": "tests/test_migrations.py",
@@ -13395,7 +13396,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T07:29:19.103464+00:00",
+  "generated_at_utc": "2026-08-16T07:57:10.845123+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13404,5 +13405,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22538393
+  "total_bytes": 22540769
 }

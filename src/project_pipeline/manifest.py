@@ -1,14 +1,16 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from datetime import UTC, datetime
-from pathlib import Path
+from pathlib import Path, PurePosixPath, PureWindowsPath
 from typing import Any
 
 from project_pipeline.io import iter_repository_files, write_json
 
 MANIFEST_EXCLUSIONS = frozenset(
     {
+        ".git",
         "PROJECT_MANIFEST.json",
         "FILE_MANIFEST.sha256",
         "docs/generated/REPOSITORY_MAP.json",
@@ -17,6 +19,19 @@ MANIFEST_EXCLUSIONS = frozenset(
 )
 ENV_TEMPLATE_NAMES = frozenset({".env.example", ".env.sample", ".env.template"})
 LOCAL_SECRET_SUFFIXES = frozenset({".pem", ".key", ".p12", ".pfx"})
+
+
+def _manifest_root_name(root: Path) -> str:
+    project_config = root / "config" / "project.json"
+    if not project_config.exists():
+        return root.name
+    data = json.loads(project_config.read_text(encoding="utf-8"))
+    target_root = data.get("target_local_root")
+    if not isinstance(target_root, str) or not target_root.strip():
+        return root.name
+    if "\\" in target_root:
+        return PureWindowsPath(target_root).name
+    return PurePosixPath(target_root).name
 
 
 def _canonical_manifest_content(path: Path) -> bytes:
@@ -59,7 +74,7 @@ def build_manifest(root: Path) -> dict[str, Any]:
     return {
         "schema_version": "1.0.0",
         "project_id": "PROJECT-PIPELINE",
-        "root_name": root.name,
+        "root_name": _manifest_root_name(root),
         "generated_at_utc": datetime.now(UTC).isoformat(),
         "file_count": len(files),
         "total_bytes": sum(item["size_bytes"] for item in files),
@@ -89,11 +104,11 @@ def verify_manifest(root: Path) -> list[str]:
     path = root / "PROJECT_MANIFEST.json"
     if not path.exists():
         return ["PROJECT_MANIFEST.json is missing"]
-    import json
-
     recorded = json.loads(path.read_text(encoding="utf-8"))
     current = build_manifest(root)
     errors: list[str] = []
+    if recorded.get("root_name") != current.get("root_name"):
+        errors.append("Manifest root name mismatch")
     recorded_files = {item["path"]: item for item in recorded.get("files", [])}
     current_files = {item["path"]: item for item in current["files"]}
     for missing in sorted(recorded_files.keys() - current_files.keys()):

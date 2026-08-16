@@ -316,6 +316,7 @@ def task_state_from_jira(value: str) -> TaskLifecycleState:
         "READY": TaskLifecycleState.READY,
         "IN_PROGRESS": TaskLifecycleState.IN_PROGRESS,
         "IN_REVIEW": TaskLifecycleState.IN_REVIEW,
+        "VALIDATION": TaskLifecycleState.VALIDATING,
         "VALIDATING": TaskLifecycleState.VALIDATING,
         "BLOCKED": TaskLifecycleState.BLOCKED,
         "DONE": TaskLifecycleState.DONE,
