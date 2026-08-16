@@ -1,0 +1,42 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(**)",
+      "Write(src/**)",
+      "Write(tests/**)",
+      "Write(config/**)",
+      "Write(docs/**)",
+      "Write(plans/**)",
+      "Write(jira/**)",
+      "Write(instructions/**)",
+      "Write(scripts/**)",
+      "Shell(python)",
+      "Shell(pytest)",
+      "Shell(ruff)",
+      "Shell(mypy)",
+      "Shell(git)",
+      "Shell(powershell)",
+      "Shell(pwsh)"
+    ],
+    "deny": [
+      "Read(.env*)",
+      "Read(dummy/**)",
+      "Read(Github_Repo/**)",
+      "Read(**/*.key)",
+      "Read(**/*.pem)",
+      "Write(.env*)",
+      "Write(dummy/**)",
+      "Write(Github_Repo/**)",
+      "Write(**/*.key)",
+      "Write(**/*.pem)",
+      "Shell(rm)",
+      "Shell(del)",
+      "Shell(rmdir)",
+      "Shell(format)",
+      "Shell(diskpart)",
+      "Shell(gh)",
+      "Shell(curl)",
+      "Shell(wget)"
+    ]
+  }
+}

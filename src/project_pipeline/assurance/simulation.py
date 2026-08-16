@@ -34,6 +34,7 @@ def _facts(**overrides) -> CompletionGateFacts:
         unresolved_items_truthful=True,
         command_center_truthful=True,
         jira_truthful=True,
+        unattended_operating_loop_qualified=True,
         unexplained_gap_count=0,
         snapshot_fingerprint="a" * 64,
     )

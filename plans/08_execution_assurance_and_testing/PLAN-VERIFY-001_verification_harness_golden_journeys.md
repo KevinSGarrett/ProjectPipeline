@@ -44,3 +44,7 @@ Post-merge verification reconciles the repository manifest, repository validator
 ## PLAN-VERIFY-001:SEC-10 Completion recomputation and continuation
 
 Pass 16 supplies executable verification evidence and recomputes the deterministic Completion Gate. Golden-journey evidence may satisfy the corresponding gate question, but unfinished later-pass obligations remain failed. Pass completion requires cumulative regression, repository self-validation, clean archive verification, upstream validation, and generation of the next pass upstream-first gate.
+
+## PLAN-VERIFY-001:SEC-11 Unattended operating-loop qualification
+
+Qualification shall drive a fixture project through intake, verified compilation, genuinely missing implementation, tests, conflict-safe branch and PR handling, merge, Jira reconciliation, next-work recomputation, restart recovery, and truthful Command Center observation. Component invocation or mock-only stages do not qualify the operating loop. After the bounded golden journey and controlled external-write qualification pass, the same governed runtime must pass Windows-native 4-hour, 24-hour, and 72-hour unattended stages. Only a verified 72-hour artifact containing all required end-to-end, recovery, reconciliation, Windows, and unattended facts may satisfy Completion Gate question 16.

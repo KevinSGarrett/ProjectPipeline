@@ -1,0 +1,143 @@
+{
+  "schema_version": "1.0.0",
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "The complete source-derived autonomous operating loop is represented by enforceable requirements and Completion Gate facts.",
+    "Cursor operates only through the governed provider and bounded supervisor contracts.",
+    "A real fixture golden journey and staged unattended qualification are required before activation or completion.",
+    "Traceability, tests, documentation, security, rollback, and durable handoff state agree."
+  ],
+  "dependencies": [],
+  "evidence_required": [],
+  "exclusions": [
+    "No claim that Cursor authentication, Privacy Mode, cloud execution, Windows behavior, or unattended qualification has passed before durable evidence exists.",
+    "No lifecycle-only PRs, one-transition deliverables, direct secret exposure, direct external writes, or mock-only completion claims."
+  ],
+  "last_observed_remote_state": null,
+  "remote_jira_key": null,
+  "upstream_dependencies": [],
+  "observability_impact": "Persist Cursor run IDs, prompt and context digests, base/head SHAs, files, tests, cost, duration, outcomes, checkpoints, receipts, and readbacks without secret values.",
+  "rollback_recovery_consideration": "Disable provider:cursor-cli, preserve durable checkpoints and branches, restore the verified pre-change backup, and continue through another qualified provider without changing canonical project truth.",
+  "security_impact": "Keep Cursor quarantined until authentication, Privacy Mode, representative qualification, Windows verification, rollback, and external-write isolation are evidenced.",
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000379-01",
+      "statement": "REQ-PDEF-0011 and the Completion Gate preserve and enforce the complete SRC-014/SRC-015 operating outcome.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_assurance_completion.py tests/test_cursor_takeover.py",
+        "method": "source_derived_outcome_and_gate_validation",
+        "path": "tests/test_assurance_completion.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000379-02",
+      "statement": "Cursor is configured as a quarantined provider with tracked rules, privacy exclusions, bounded planning, issue-specific artifact audit, and fail-closed external writes.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_cursor_takeover.py tests/test_agent_router_adapters.py tests/test_agent_router_validation.py",
+        "method": "provider_and_supervisor_contract_validation",
+        "path": "tests/test_cursor_takeover.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000379-03",
+      "statement": "The takeover handoff explicitly distinguishes configuration readiness from live qualification and supplies a deterministic first-session prompt.",
+      "verification": {
+        "command": "PYTHONPATH=src python scripts/cursor_takeover.py validate --root .",
+        "method": "takeover_readiness_validation",
+        "path": "docs/operations/CURSOR_TAKEOVER_PROMPT.md",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "description": "Create the complete governed Cursor control package, restore the autonomous operating-loop outcome, and provide an evidence-honest activation and handoff boundary.",
+  "expected_file_locations": [
+    ".cursor/rules/00-authority-and-product-goal.mdc",
+    ".cursor/cli.json",
+    ".cursor/hooks.json",
+    ".cursorignore",
+    "config/cursor_takeover.json",
+    "src/project_pipeline/cursor_takeover.py",
+    "scripts/cursor_takeover.py",
+    "tests/test_cursor_takeover.py",
+    "docs/operations/cursor_autonomous_takeover.md"
+  ],
+  "expected_implementation_artifacts": [
+    ".cursor/rules/00-authority-and-product-goal.mdc",
+    ".cursor/cli.json",
+    ".cursor/hooks.json",
+    ".cursorignore",
+    "config/cursor_takeover.json",
+    "src/project_pipeline/cursor_takeover.py",
+    "scripts/cursor_takeover.py",
+    "tests/test_cursor_takeover.py",
+    "docs/operations/cursor_autonomous_takeover.md"
+  ],
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "issue_type": "TASK",
+  "labels": [
+    "implementation",
+    "autonomous-runtime",
+    "cursor-takeover",
+    "product-model-repair"
+  ],
+  "local_id": "PP-TASK-000379",
+  "objective": "Install and verify the governed Cursor takeover and permanent autonomous product outcome.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-STORY-000138",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
+      "end_line": 46,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-001_project_definition.lines.txt",
+      "line_reference": "PLAN-PDEF-001:SEC-08:L000044-L000046",
+      "plan_id": "PLAN-PDEF-001",
+      "section_id": "PLAN-PDEF-001:SEC-08",
+      "start_line": 44
+    },
+    {
+      "authoritative_path": "plans/08_execution_assurance_and_testing/PLAN-VERIFY-001_verification_harness_golden_journeys.md",
+      "end_line": 50,
+      "line_numbered_path": "plans/_line_numbered/PLAN-VERIFY-001_verification_harness_golden_journeys.lines.txt",
+      "line_reference": "PLAN-VERIFY-001:SEC-11:L000048-L000050",
+      "plan_id": "PLAN-VERIFY-001",
+      "section_id": "PLAN-VERIFY-001:SEC-11",
+      "start_line": 48
+    }
+  ],
+  "rationale": "The takeover must prevent provider drift, bookkeeping loops, false work selection, secret exposure, and premature completion while restoring the original product outcome.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000138",
+      "type": "CHILD_OF"
+    }
+  ],
+  "required_tests": [
+    "TEST-CURSOR-TAKEOVER-001",
+    "TEST-AGENT-ADAPTER-007",
+    "TEST-AGENT-ADAPTER-008",
+    "TEST-ASSURANCE-COMPLETION-007"
+  ],
+  "requirement_ids": [
+    "REQ-PDEF-0011",
+    "REQ-CTRL-0015"
+  ],
+  "risk_classification": "CRITICAL",
+  "scope": [
+    "Tracked Cursor rules and hooks",
+    "Cursor provider adapter and registry",
+    "Bounded cycle planner",
+    "Issue-specific artifact audit",
+    "Source-derived product requirement",
+    "Completion Gate question 16",
+    "Runbook and takeover prompt"
+  ],
+  "source_references": [
+    "SRC-014:L000001-L000087",
+    "SRC-015:L000031-L000150"
+  ],
+  "state": "IN_PROGRESS",
+  "title": "Install governed Cursor takeover and autonomous runtime outcome"
+}

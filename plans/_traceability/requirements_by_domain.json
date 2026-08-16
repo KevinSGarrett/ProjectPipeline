@@ -233,7 +233,8 @@
     "REQ-PDEF-0007",
     "REQ-PDEF-0008",
     "REQ-PDEF-0009",
-    "REQ-PDEF-0010"
+    "REQ-PDEF-0010",
+    "REQ-PDEF-0011"
   ],
   "REL": [
     "REQ-REL-0001",

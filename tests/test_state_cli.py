@@ -31,7 +31,7 @@ class StateCliTests(unittest.TestCase):
             (ROOT / "jira/BOARD_MANIFEST.json").read_text(encoding="utf-8")
         )["issue_count"]
         self.assertEqual(state["task_count"], expected)
-        self.assertEqual(state["requirement_count"], 351)
+        self.assertEqual(state["requirement_count"], 352)
         self.assertEqual(payload["equivalence_errors"], [])
 
     def test_state_and_trace_queries_are_machine_readable(self) -> None:

@@ -23,7 +23,7 @@ class TraceabilityTests(unittest.TestCase):
     def test_requirement_ids_are_unique_and_mapped_to_plan_and_work(self) -> None:
         identifiers = [item["requirement_id"] for item in self.requirements]
         self.assertEqual(len(identifiers), len(set(identifiers)))
-        self.assertGreaterEqual(len(self.requirements), 351)
+        self.assertGreaterEqual(len(self.requirements), 352)
         self.assertEqual(
             sum(bool(item["plan_ids"]) for item in self.requirements), len(self.requirements)
         )

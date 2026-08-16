@@ -1,18 +1,19 @@
 {
   "board_id": "PROJECT-PIPELINE-LOCAL",
   "counts_by_state": {
-    "BACKLOG": 371,
+    "BACKLOG": 373,
+    "IN_PROGRESS": 1,
     "MERGE_READY": 7
   },
   "counts_by_type": {
     "BUG": 0,
-    "EPIC": 18,
+    "EPIC": 19,
     "SPIKE": 0,
-    "STORY": 107,
+    "STORY": 108,
     "SUBTASK": 16,
-    "TASK": 237
+    "TASK": 238
   },
-  "issue_count": 378,
+  "issue_count": 381,
   "issue_index": "jira/indexes/issues.jsonl",
   "last_generated_date": "2026-08-14",
   "project_key": "PP",

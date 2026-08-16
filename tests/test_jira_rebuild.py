@@ -32,7 +32,7 @@ class JiraRebuildTests(unittest.TestCase):
                 for _ in (ROOT / "jira" / folder).glob("PP-*.json")
             )
             self.assertEqual(first["status"]["issue_count"], expected_issue_count)
-            self.assertEqual(first["status"]["requirements_referenced"], 351)
+            self.assertEqual(first["status"]["requirements_referenced"], 352)
             edges = first_graph["edges"]
             identities = {(edge["from"], edge["to"], edge["type"]) for edge in edges}
             self.assertEqual(len(edges), len(identities))

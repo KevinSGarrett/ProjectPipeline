@@ -155,8 +155,8 @@ def test_aws_budget_circuit_breaker_source_is_fail_closed_and_independent():
 
 def test_final_convergence_audit_enumerates_every_accepted_requirement_and_keeps_truth_boundary():
     report = build_convergence_audit(ROOT)
-    assert report["accepted_requirement_count"] == 351
-    assert len(report["requirements"]) == 351
+    assert report["accepted_requirement_count"] == 352
+    assert len(report["requirements"]) == 352
     assert report["project_complete"] is False
     assert report["completion_gate_state"] == "NOT_COMPLETE"
     assert report["truth_boundary"].startswith("audit completion means")

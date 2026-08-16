@@ -421,7 +421,7 @@ class CandidateCompletionAssessment(DomainModel):
 
 class CompletionQuestionResult(DomainModel):
     schema_version: Literal["1.0.0"] = "1.0.0"
-    question_number: int = Field(ge=1, le=15)
+    question_number: int = Field(ge=1, le=16)
     question: str
     passed: bool
     externally_blocked: bool = False
@@ -461,6 +461,7 @@ class CompletionGateFacts(DomainModel):
     unresolved_items_truthful: bool
     command_center_truthful: bool
     jira_truthful: bool
+    unattended_operating_loop_qualified: bool
     unexplained_gap_count: int = Field(ge=0)
     externally_blocked_question_numbers: tuple[int, ...] = ()
     evidence_by_question: dict[str, tuple[str, ...]] = Field(default_factory=dict)

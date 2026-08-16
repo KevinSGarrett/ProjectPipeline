@@ -22,7 +22,7 @@ def test_repository_control_evaluation_is_consistent(tmp_path: Path) -> None:
         kernel = ProjectControlKernel(ROOT, store, "PROJECT-PIPELINE")
         snapshot = kernel.evaluate()
         assert snapshot.sequence.task_count == len(load_issues(ROOT))
-        assert snapshot.scope.requirement_count == 351
+        assert snapshot.scope.requirement_count == 352
         assert not snapshot.scope.findings
         assert snapshot.completion.state.value == "INCOMPLETE"
         assert snapshot.completion.final_completion_gate_satisfied is False
