@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "05d91391a2dfd4deeb2375103488b9606e0d956269274c68f1de5e22a9ed8439",
+  "aggregate_sha256": "87fd07939242a4e7b7ff3a4802fcea1b7d30ac530887f95802a5ff7fa68d485e",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11592,8 +11592,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "79e3ae667ff19f3a877b7ff81526b9692729351c0f3f3277ce1adbb6891d59c1",
-      "size_bytes": 125768
+      "sha256": "2234494eb5cdf57fec0e22711aba29499e3a69626d518eb491f60d541f89d66e",
+      "size_bytes": 125720
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12122,7 +12122,7 @@
     },
     {
       "path": "src/project_pipeline/lifecycle/__init__.py",
-      "sha256": "a036f06d48a83d5c943e7cd91dc1e67e4f6047f8da1a05843ca42310dc89b98a",
+      "sha256": "35277a29a826459d162ca1191b22e4882c7d1cd93de2e1d83ad231162b2a931f",
       "size_bytes": 2055
     },
     {
@@ -12172,8 +12172,8 @@
     },
     {
       "path": "src/project_pipeline/lifecycle/takeover.py",
-      "sha256": "e56ea23f2013b2db6a3609cbc07f4c202d1e9a3a8537be1c026b8aa6a4892bbc",
-      "size_bytes": 5427
+      "sha256": "9db7875b72ce724dbca1c25a0d4d9c8e6a858d3722e81f3b0756a748df4e8b45",
+      "size_bytes": 5405
     },
     {
       "path": "src/project_pipeline/lifecycle/validation.py",
@@ -12427,8 +12427,8 @@
     },
     {
       "path": "src/project_pipeline/scheduler/engine.py",
-      "sha256": "3a821f33384ca36a4955a3487e13b1498fdc9c9412f5f7aa348aa1974ee97625",
-      "size_bytes": 13559
+      "sha256": "4643dc802a38e44da2f76215021b86fb231aa76a1ebc8fb5b854e0c693e7e892",
+      "size_bytes": 13591
     },
     {
       "path": "src/project_pipeline/scheduler/ortools_optimizer.py",
@@ -13007,8 +13007,8 @@
     },
     {
       "path": "tests/test_control_cli.py",
-      "sha256": "fa3b3912f541c3e35b26590d0fd8429ea00236859669648c674c92b8fee5c785",
-      "size_bytes": 4415
+      "sha256": "6f16f6c8bdc7eeb8ac6e68e6e51a21440560fa4fdb9c1e8ba1c9bc8f76695e0b",
+      "size_bytes": 4407
     },
     {
       "path": "tests/test_control_domain.py",
@@ -13372,8 +13372,8 @@
     },
     {
       "path": "tests/test_scheduler_cli.py",
-      "sha256": "47aff9d1953be69525f19aa68a24cf6a3beba1bc9a510fefa37828270460ee98",
-      "size_bytes": 6311
+      "sha256": "11243c37474151e5f8bb3674963fe568cc4426c31ca1ea362efea31fd8e2f562",
+      "size_bytes": 6303
     },
     {
       "path": "tests/test_scheduler_conflicts.py",
@@ -13586,7 +13586,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T22:22:36.779647+00:00",
+  "generated_at_utc": "2026-08-16T22:35:31.298117+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13595,5 +13595,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 23140783
+  "total_bytes": 23140729
 }
