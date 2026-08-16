@@ -6298,7 +6298,7 @@
     },
     {
       "id": "PP-TASK-000343",
-      "state": "BACKLOG",
+      "state": "READY",
       "title": "Implement data classification, egress, and instruction-trust controls",
       "type": "TASK"
     },
