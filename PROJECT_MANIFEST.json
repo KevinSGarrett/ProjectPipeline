@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "4d2e02296bdcc1640512c8bedeb4027f91c1603c47215bf322183fca6a3ca89e",
+  "aggregate_sha256": "c6387da0db9fc40ba001c130e60bf07125c50f2b451b0559923eaa989e648734",
   "exclusions": [
     "FILE_MANIFEST.sha256",
     "PROJECT_MANIFEST.json",
@@ -9975,8 +9975,8 @@
     },
     {
       "path": "requirements/quality-tools.txt",
-      "sha256": "730db1f71946ea06e001967b0d8c6473174e620a629545cdea0e54ed9a021456",
-      "size_bytes": 242
+      "sha256": "8d614b85e00e2fdf8e16e9f748212595d8e97012494a258f277a2bffdbf93fa4",
+      "size_bytes": 273
     },
     {
       "path": "requirements/README.md",
@@ -13394,7 +13394,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T07:07:43.825886+00:00",
+  "generated_at_utc": "2026-08-16T07:10:10.152572+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13403,5 +13403,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22581972
+  "total_bytes": 22582003
 }
