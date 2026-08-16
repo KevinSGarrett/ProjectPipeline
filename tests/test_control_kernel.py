@@ -53,6 +53,44 @@ def test_apply_readiness_transitions_uses_optimistic_state_api(tmp_path: Path) -
         assert not kernel.readiness_transition_plan()
 
 
+def test_targeted_readiness_apply_preserves_other_ready_backlog_items(tmp_path: Path) -> None:
+    with initialized_store(tmp_path / "control.db") as store:
+        kernel = ProjectControlKernel(ROOT, store, "PROJECT-PIPELINE")
+        plan = kernel.readiness_transition_plan()
+        assert len(plan) > 1
+        target_id = plan[0]["task_id"]
+        untouched_id = plan[1]["task_id"]
+
+        targeted = kernel.readiness_transition_plan(task_ids=frozenset({target_id}))
+        assert [item["task_id"] for item in targeted] == [target_id]
+
+        results = kernel.apply_readiness_transitions(
+            actor_id="actor:test-control",
+            correlation_id="corr:test-control-targeted",
+            task_ids=frozenset({target_id}),
+        )
+
+        assert len(results) == 1
+        assert results[0]["task_id"] == target_id
+        assert results[0]["state"] == "READY"
+        assert results[0]["version"] == 2
+        assert results[0]["last_transition_id"]
+        states = {item.task_id: item for item in store.list_task_states("PROJECT-PIPELINE")}
+        assert states[untouched_id].state.value == "BACKLOG"
+        assert states[untouched_id].version == 1
+
+
+def test_targeted_readiness_plan_rejects_unknown_task(tmp_path: Path) -> None:
+    with initialized_store(tmp_path / "control.db") as store:
+        kernel = ProjectControlKernel(ROOT, store, "PROJECT-PIPELINE")
+        try:
+            kernel.readiness_transition_plan(task_ids=frozenset({"PP-TASK-999999"}))
+        except ValueError as error:
+            assert "unknown task IDs" in str(error)
+        else:
+            raise AssertionError("unknown task ID must fail closed")
+
+
 def test_completion_recomputation_does_not_confuse_done_count_with_project_completion(
     tmp_path: Path,
 ) -> None:
