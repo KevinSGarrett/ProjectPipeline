@@ -6292,7 +6292,7 @@
     },
     {
       "id": "PP-TASK-000342",
-      "state": "REVIEW",
+      "state": "VALIDATION",
       "title": "Implement independent approval and deterministic policy authority",
       "type": "TASK"
     },
