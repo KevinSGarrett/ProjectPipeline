@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-14` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.0` |
+| Pack version | `1.0.1` |
 | Primary domains | `upstream_repositories`, `dependencies` |
 | Governing entry point | `AGENTS.md` |
 

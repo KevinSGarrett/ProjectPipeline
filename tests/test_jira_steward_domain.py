@@ -321,6 +321,50 @@ class JiraStewardDomainTests(unittest.TestCase):
         policy = load_jira_reconciliation_policy(ROOT)
         self.assertTrue(policy.require_human_for_remote_done)
 
+    def test_project_policy_projects_rich_lifecycle_to_live_three_state_workflow(self) -> None:
+        policies = (JiraReconciliationPolicy(), load_jira_reconciliation_policy(ROOT))
+        to_do_states = {
+            JiraLifecycleState.DISCOVERED,
+            JiraLifecycleState.BACKLOG,
+            JiraLifecycleState.READY,
+            JiraLifecycleState.DEFERRED,
+            JiraLifecycleState.CANCELLED,
+        }
+        in_progress_states = {
+            JiraLifecycleState.IN_PROGRESS,
+            JiraLifecycleState.REVIEW,
+            JiraLifecycleState.VALIDATION,
+            JiraLifecycleState.MERGE_READY,
+            JiraLifecycleState.BLOCKED,
+            JiraLifecycleState.FAILED,
+        }
+        issue = self.issues[0].model_copy(update={"state": JiraLifecycleState.REVIEW})
+        remote_issue = _remote_for(issue).model_copy(
+            update={
+                "status_name": "In Progress",
+                "normalized_state": JiraLifecycleState.IN_PROGRESS,
+            }
+        )
+        for policy in policies:
+            with self.subTest(policy=policy):
+                self.assertTrue(
+                    all(policy.preferred_remote_status[state] == "To Do" for state in to_do_states)
+                )
+                self.assertTrue(
+                    all(
+                        policy.preferred_remote_status[state] == "In Progress"
+                        for state in in_progress_states
+                    )
+                )
+                self.assertEqual(policy.preferred_remote_status[JiraLifecycleState.DONE], "Done")
+
+                plan = JiraReconciler(policy).plan(
+                    _bundle(issue),
+                    JiraRemoteSnapshot.create(project_key="PP", issues=(remote_issue,)),
+                )
+                self.assertEqual(plan.operations, ())
+                self.assertEqual(plan.conflicts, ())
+
     def test_create_operations_are_parent_first(self) -> None:
         epic = next(item for item in self.issues if item.issue_type is JiraIssueType.EPIC)
         story = next(item for item in self.issues if item.parent == epic.local_id)

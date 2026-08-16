@@ -1,34 +1,38 @@
 # Second-Pass External Activation and Verification Register
 
-The repository-local instruction system is implemented in this pack. The items below cannot be truthfully marked live-verified from the exported snapshot or this execution environment. They require the named external access and must remain `BLOCKED_EXTERNAL` or `UNKNOWN` until evidence is collected.
+The repository-local instruction system is implemented in this pack. This register records both completed live verification and work that still requires external access. An item remains `BLOCKED_EXTERNAL` or `UNKNOWN` until the named evidence is collected; completed observations are dated and identify the evidence boundary.
 
 ## 1. Publish and protect the live GitHub repository
 
-**Observed state:** `KevinSGarrett/ProjectPipeline` exists as a public repository, but it had no branches or repository content when inspected on 2026-08-16. The legacy underscored repository did not exist.
+**Status:** `UNKNOWN` pending durable evidence-ledger registration. The observations below were made on 2026-08-16 but are not yet independently verifiable from a cold clone.
 
-**Required second-pass actions after the first controlled push:**
+**Observed state:** `KevinSGarrett/ProjectPipeline` is a populated public repository with protected `main`. API readback verified required pull requests and status checks, conversation resolution, linear history, and force-push/deletion protection. CodeQL, secret scanning, push protection, Dependabot, dependency graph, and least-privilege workflow permissions were verified during the controlled publication sequence. Exact-head pull-request checks and post-merge `main` checks were preserved as GitHub evidence; the current instruction-maintenance change remains subject to the same protected merge gate.
 
-1. verify `main` and the evaluated head SHA;
-2. configure a ruleset or branch protection requiring pull requests, selected current status checks, conversation resolution where useful, and protection against force-push and deletion;
-3. verify CodeQL, secret scanning, push protection, Dependabot, and dependency graph availability;
-4. verify workflow permissions remain least privilege;
-5. decide whether auto-merge is justified; do not enable a merge queue without observed concurrency need;
-6. record screenshots or API responses as evidence.
+**Observed actions pending evidence registration:**
+
+1. verified `main` and each evaluated pull-request head SHA before merge;
+2. configured and read back branch protection requiring pull requests, selected current status checks, conversation resolution, linear history, and protection against force-push and deletion;
+3. verified CodeQL, secret scanning, push protection, Dependabot, and dependency graph availability;
+4. verified workflow permissions remain least privilege;
+5. retained manual protected merging; no merge queue or auto-merge was enabled without an observed concurrency need;
+6. retained GitHub API responses and exact-head check runs as evidence.
 
 **Authority:** `07`, `08`, `09`, `15`, `19`, and `policies/EXTERNAL_MUTATION_AUTHORITY.json`.
 
 ## 2. Reconcile the live Jira `PP` project
 
-**Observed state:** the local mirror validates at 368 issues and 595 dependency/relationship edges. The connected Atlassian site was not explicitly granted to the available integration, so the remote project could not be read.
+**Status:** `UNKNOWN` pending durable evidence-ledger and applicable Jira-reference registration. The read, plan, bounded write, readback, and recovery observations below were made on 2026-08-16.
 
-**Required second-pass actions:**
+**Observed state:** the local Jira mirror validates at 378 issues and 605 dependency/relationship edges. Authenticated read-only snapshots of the live `PP` project were captured. The READY and IN_PROGRESS reconciliations were applied with receipts and complete readbacks. The REVIEW reconciliation produced a deterministic partial receipt, `JREC-072E9A714667ACFF42C5`: its field update applied, its unsupported `Code Review` transition failed with no unknown outcome, and snapshot `JSNAP-BB122CAF17909D8EE034` confirmed PP-318 remained remotely `In Progress`. The policy was then corrected to project rich local lifecycle states onto the live three-state Jira workflow (`To Do`, `In Progress`, `Done`) while retaining the human gate for remote `Done`.
 
-1. grant the intended Jira connector access to `kevinsgarrett.atlassian.net`;
-2. take a read-only remote snapshot of project `PP`;
-3. compare issue identities, statuses, hierarchy, dependencies, fields, and comments against the local mirror;
-4. produce a reconciliation plan before any write;
-5. apply only explicitly authorized operations with idempotency and unknown-outcome handling;
-6. preserve the project rule that remote `DONE` requires the configured human gate.
+**Observed actions pending evidence registration:**
+
+1. authenticated the governed Jira adapter for `kevinsgarrett.atlassian.net` without persisting credentials in the public tree;
+2. captured complete read-only snapshots of project `PP`;
+3. compared issue identities, statuses, hierarchy, dependencies, and governed fields against the local mirror;
+4. generated immutable reconciliation plans before every write;
+5. applied only explicitly authorized operations and preserved receipts, readbacks, idempotency keys, and deterministic failure evidence without retrying an unchanged failed operation;
+6. preserved the rule that remote `Done` requires the configured human gate.
 
 **Authority:** `06`, `15`, `17`, and `config/jira/sync_policy.json`.
 
@@ -62,9 +66,11 @@ The repository-local instruction system is implemented in this pack. The items b
 
 ## 5. Execute Windows-native validation
 
-**Observed state:** repository validation and all tests were executed in Linux/Python 3.13. The project is Windows-first, and the actual `C:\Project_X` host was not mounted.
+**Status:** `UNKNOWN` pending durable evidence-ledger registration. The Windows observations below were made on 2026-08-16.
 
-**Required second-pass actions on Windows:**
+**Observed state:** Windows-native validation ran from the canonical `C:\Project_X` workspace and governed Windows worktrees. The instruction validator and cold start, repository and Jira validators, control commands, full pytest suite, Windows-sensitive path/worktree behavior, and protected Git/GitHub workflow were exercised. The latest policy-repair full suite passed with 726 tests, 1 environment-appropriate symlink skip, and 6 subtests; repository validation reported 41 checks with 0 errors and 0 warnings, and Jira validation reported 378 issues, 605 edges, 0 errors, and 0 warnings.
+
+**Executed command set pending evidence registration:**
 
 ```powershell
 $env:PYTHONPATH = "src"
@@ -78,13 +84,15 @@ python -m project_pipeline control sequence --root .
 python -m pytest -q
 ```
 
-Also exercise Windows-sensitive path, subprocess, worktree, remote-worker, and archive behavior.
+Windows-sensitive path, subprocess, and worktree behavior were exercised. Live secondary-worker qualification remains separately blocked under item 4; that outstanding external capability is not implied by this local validation result.
 
 ## 6. Run unavailable optional quality and dependency tools
 
-**Observed state:** Ruff, mypy, and pip-audit were not installed, and package-index access was unavailable. Their exact versions and CI commands are already pinned/configured.
+**Status:** `UNKNOWN` pending durable evidence-ledger registration. The governed local and hosted quality-lane observations below were made on 2026-08-16.
 
-**Required second-pass actions in an environment with dependency access:**
+**Observed state:** pinned quality dependencies were installed through the authoritative dependency policy and generated exports. Ruff check/format, configured strict mypy, dependency audit, build/test validation, and hosted Python 3.11/3.13 verification ran successfully. The current Jira-policy repair also passed Ruff and targeted no-incremental mypy for its changed runtime module; `scripts/validate_instructions.py` remains outside the configured source typing lane and is validated by its dedicated instruction tests and transactional validator.
+
+**Executed quality command set pending evidence registration:**
 
 ```powershell
 python -m pip install -r requirements/quality-tools.txt

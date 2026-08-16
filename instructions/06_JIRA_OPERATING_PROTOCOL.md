@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-06` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.0` |
+| Pack version | `1.0.1` |
 | Primary domains | `jira` |
 | Governing entry point | `AGENTS.md` |
 
@@ -13,6 +13,14 @@
 The source-controlled `/jira` mirror is the rich local engineering representation and default authority mode is `SOURCE_CONTROLLED_LOCAL`. The remote `PP` project is a collaboration surface. Neither side is silently overwritten. Jira Steward snapshots, compares, plans, applies authorized changes, records outbox state, and reconciles uncertain outcomes.
 
 Remote UI status is not the sole source of truth and is never completion proof.
+
+The live `PP` collaboration workflow exposes only `To Do`, `In Progress`, and
+`Done`. The preferred-status policy therefore projects discovered, backlog,
+ready, deferred, and cancelled local work to `To Do`; active, review,
+validation, merge-ready, blocked, and failed local work to `In Progress`; and
+only locally `DONE` work to `Done`. Rich lifecycle truth remains in the local
+mirror and structured remote description. The human gate for remote `Done`
+remains mandatory.
 
 ## Before starting an item
 

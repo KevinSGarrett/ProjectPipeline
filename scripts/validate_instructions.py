@@ -252,7 +252,7 @@ def check_manifest(root: Path, report: Report, manifest: dict[str, Any]) -> None
     report.checks.append("manifest")
     expected_identity = {
         "schema_version": "1.0.0",
-        "instruction_pack_version": "1.0.0",
+        "instruction_pack_version": "1.0.1",
         "project_id": "PROJECT-PIPELINE",
         "project_name": "ProjectPipeline",
         "repository_url": "https://github.com/KevinSGarrett/ProjectPipeline",
