@@ -49,11 +49,11 @@ CANONICAL_SOURCE_REFERENCES = (
 )
 
 __all__ = [
+    "CANONICAL_PURSUING_GOAL",
+    "CANONICAL_SOURCE_REFERENCES",
     "PP327_BLOCKED_PATHS",
     "AttestationState",
     "AttestationValidation",
-    "CANONICAL_PURSUING_GOAL",
-    "CANONICAL_SOURCE_REFERENCES",
     "CheckpointDecision",
     "ContractEvolutionManager",
     "DurableAttestation",
