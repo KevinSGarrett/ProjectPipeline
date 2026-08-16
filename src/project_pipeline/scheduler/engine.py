@@ -106,7 +106,9 @@ class DynamicLaneScheduler:
                 )
                 continue
             path_claims = tuple(
-                claim.resource_key for claim in candidate.claims if claim.resource_type.value == "PATH"
+                claim.resource_key
+                for claim in candidate.claims
+                if claim.resource_type.value == "PATH"
             )
             if path_claims and not claim_is_admissible(path_claims):
                 admissions[candidate.task_id] = AdmissionDecision(

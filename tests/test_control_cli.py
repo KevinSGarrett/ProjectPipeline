@@ -119,8 +119,7 @@ def test_control_takeover_governor_keeps_unrelated_lanes_active(tmp_path: Path, 
     lane_matrix = governor["lane_matrix"]
     assert lane_matrix
     assert any(
-        row["state"] == "ACTIVE" and not row["requires_privacy_attestation"]
-        for row in lane_matrix
+        row["state"] == "ACTIVE" and not row["requires_privacy_attestation"] for row in lane_matrix
     )
     for row in lane_matrix:
         if row["requires_privacy_attestation"]:

@@ -1,9 +1,9 @@
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from enum import StrEnum
 from hashlib import sha256
-import json
 
 CANONICAL_PURSUING_GOAL = (
     "Deliver and qualify ProjectPipeline as a continuously operating, local-first "
@@ -89,9 +89,7 @@ class CheckpointDecision:
     eligible_unrelated_lanes: tuple[str, ...]
 
     def is_valid(self) -> bool:
-        return not (
-            self.no_additional_action_needed and bool(self.eligible_unrelated_lanes)
-        )
+        return not (self.no_additional_action_needed and bool(self.eligible_unrelated_lanes))
 
 
 def has_path_collision(left_paths: tuple[str, ...], right_paths: tuple[str, ...]) -> bool:

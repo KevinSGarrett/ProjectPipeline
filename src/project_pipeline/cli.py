@@ -145,7 +145,6 @@ from project_pipeline.jira_steward import (
     load_jira_reconciliation_policy,
 )
 from project_pipeline.jira_steward.persistence import JiraSyncStore
-from project_pipeline.line_numbering import generate_line_numbered_plans
 from project_pipeline.lifecycle import (
     ReadinessEvidence,
     SessionIdentity,
@@ -154,6 +153,7 @@ from project_pipeline.lifecycle import (
     provider_dispatch_blocked,
     scoped_lane_state,
 )
+from project_pipeline.line_numbering import generate_line_numbered_plans
 from project_pipeline.manifest import write_manifest
 from project_pipeline.orchestration import (
     DBOSFallbackAdapter,
@@ -1294,9 +1294,8 @@ def _takeover_governor_from_runtime(
     lane_rows: list[dict[str, Any]] = []
     lane_states = []
     for lane_id, paths in lane_claim_paths:
-        requires_privacy_attestation = (
-            require_privacy_mode
-            and (not privacy_required_lane_ids or lane_id in privacy_required_lane_ids)
+        requires_privacy_attestation = require_privacy_mode and (
+            not privacy_required_lane_ids or lane_id in privacy_required_lane_ids
         )
         path_collision = bool(paths) and not claim_is_admissible(paths)
         lane_state = scoped_lane_state(
@@ -1433,10 +1432,7 @@ def _run_control_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]
         provider_id=str(policy.get("provider_id", "provider:cursor-cli")),
         provider_qualified=policy.get("activation_state") == "QUALIFIED",
         privacy_required_lane_ids=_privacy_required_lane_ids(args.root),
-        lane_claim_paths=tuple(
-            (item.task_id, ())
-            for item in snapshot.sequence.ordered_ready_work
-        ),
+        lane_claim_paths=tuple((item.task_id, ()) for item in snapshot.sequence.ordered_ready_work),
     )
 
     with ControlStore(database, args.root) as control_store:
