@@ -6286,7 +6286,7 @@
     },
     {
       "id": "PP-TASK-000341",
-      "state": "IN_PROGRESS",
+      "state": "REVIEW",
       "title": "Implement distinct identities, least privilege, and root of trust",
       "type": "TASK"
     },
