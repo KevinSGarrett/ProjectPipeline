@@ -1,8 +1,9 @@
 {
   "board_id": "PROJECT-PIPELINE-LOCAL",
   "counts_by_state": {
-    "BACKLOG": 372,
-    "MERGE_READY": 6
+    "BACKLOG": 371,
+    "MERGE_READY": 6,
+    "READY": 1
   },
   "counts_by_type": {
     "BUG": 0,

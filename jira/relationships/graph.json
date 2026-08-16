@@ -6310,7 +6310,7 @@
     },
     {
       "id": "PP-TASK-000345",
-      "state": "BACKLOG",
+      "state": "READY",
       "title": "Implement SOPS, age, and OpenBao secret-provider boundaries",
       "type": "TASK"
     },
