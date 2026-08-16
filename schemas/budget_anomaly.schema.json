@@ -1,0 +1,98 @@
+{
+  "$id": "https://project-pipeline.local/schemas/budget_anomaly.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "anomaly_id": {
+      "title": "Anomaly Id",
+      "type": "string"
+    },
+    "block_new_paid_work": {
+      "default": false,
+      "title": "Block New Paid Work",
+      "type": "boolean"
+    },
+    "detected_at_utc": {
+      "format": "date-time",
+      "title": "Detected At Utc",
+      "type": "string"
+    },
+    "expected_p90_microunits": {
+      "minimum": 0,
+      "title": "Expected P90 Microunits",
+      "type": "integer"
+    },
+    "observed_microunits": {
+      "minimum": 0,
+      "title": "Observed Microunits",
+      "type": "integer"
+    },
+    "observed_to_expected_milli": {
+      "minimum": 0,
+      "title": "Observed To Expected Milli",
+      "type": "integer"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "provider_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Id"
+    },
+    "reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "severity": {
+      "enum": [
+        "NORMAL",
+        "WARN",
+        "BLOCK"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "task_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Task Id"
+    }
+  },
+  "required": [
+    "anomaly_id",
+    "project_id",
+    "expected_p90_microunits",
+    "observed_microunits",
+    "observed_to_expected_milli",
+    "severity",
+    "detected_at_utc"
+  ],
+  "title": "BudgetAnomaly",
+  "type": "object"
+}

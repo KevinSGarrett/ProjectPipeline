@@ -1,0 +1,125 @@
+{
+  "$id": "https://project-pipeline.local/schemas/delegation_envelope.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "acceptance_criteria": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Acceptance Criteria",
+      "type": "array"
+    },
+    "allowed_tools": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Tools",
+      "type": "array"
+    },
+    "authority_scope": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Authority Scope",
+      "type": "array"
+    },
+    "constraints": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Constraints",
+      "type": "array"
+    },
+    "delegation_id": {
+      "title": "Delegation Id",
+      "type": "string"
+    },
+    "exclusions": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Exclusions",
+      "type": "array"
+    },
+    "expected_outputs": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Expected Outputs",
+      "type": "array"
+    },
+    "expected_revisions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Expected Revisions",
+      "type": "object"
+    },
+    "objective": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "title": "Objective",
+      "type": "string"
+    },
+    "optional_context_keys": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Optional Context Keys",
+      "type": "array"
+    },
+    "required_context_keys": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Context Keys",
+      "type": "array"
+    },
+    "resource_requirements": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Resource Requirements",
+      "type": "array"
+    },
+    "return_protocol": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Return Protocol",
+      "type": "string"
+    },
+    "scope": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Scope",
+      "type": "array"
+    },
+    "source_references": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Source References",
+      "type": "array"
+    }
+  },
+  "required": [
+    "delegation_id",
+    "objective",
+    "return_protocol"
+  ],
+  "title": "DelegationEnvelope",
+  "type": "object"
+}

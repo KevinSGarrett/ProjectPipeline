@@ -1,0 +1,8 @@
+[
+  {"capability_id":"routine_reasoning","description":"Bounded advisory reasoning for routine project work","task_classes":["reasoning","triage"],"quality_tiers":["standard"]},
+  {"capability_id":"summarization","description":"Summarize bounded project context without authority","task_classes":["summary"],"quality_tiers":["standard"]},
+  {"capability_id":"code_review","description":"Advisory code review that does not approve merges","task_classes":["review"],"quality_tiers":["standard"]},
+  {"capability_id":"code_implementation","description":"Implementation candidate generation under bounded task authority","task_classes":["implementation"],"quality_tiers":["standard","strong"]},
+  {"capability_id":"repository_reasoning","description":"Repository-aware advisory reasoning","task_classes":["implementation","review"],"quality_tiers":["standard","strong"]},
+  {"capability_id":"visual_review","description":"Advisory visual inspection","task_classes":["visual_review"],"quality_tiers":["standard"]}
+]

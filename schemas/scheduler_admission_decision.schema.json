@@ -1,0 +1,54 @@
+{
+  "$defs": {
+    "AdmissionState": {
+      "enum": [
+        "ADMITTED",
+        "CONFLICT",
+        "CAPACITY_EXHAUSTED",
+        "LEASE_UNAVAILABLE",
+        "BACKPRESSURE",
+        "POLICY_DENIED",
+        "WORKSPACE_UNSAFE"
+      ],
+      "title": "AdmissionState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/scheduler_admission_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "admitted": {
+      "title": "Admitted",
+      "type": "boolean"
+    },
+    "reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/AdmissionState"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_id",
+    "state",
+    "admitted"
+  ],
+  "title": "AdmissionDecision",
+  "type": "object"
+}

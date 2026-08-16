@@ -1,0 +1,90 @@
+from __future__ import annotations
+
+from pathlib import PurePosixPath
+
+from project_pipeline.domain.control import ControlSnapshot
+from project_pipeline.domain.scheduler import (
+    AccessMode,
+    ResourceClaim,
+    ResourceType,
+    SchedulerTaskProfile,
+)
+from project_pipeline.jira import load_issues
+
+_EXCLUDED_PREFIXES = (
+    "plans/",
+    "jira/",
+    "evidence/",
+    "provenance/",
+    "docs/",
+)
+
+
+def profiles_from_repository(root, control: ControlSnapshot) -> tuple[SchedulerTaskProfile, ...]:
+    """Derive conservative scheduler inputs from the current Jira execution contract."""
+    issues = {item["local_id"]: item for item in load_issues(root)}
+    profiles: list[SchedulerTaskProfile] = []
+    for item in control.sequence.ordered_ready_work:
+        issue = issues.get(item.task_id, {})
+        claims: list[ResourceClaim] = [
+            ResourceClaim(
+                resource_key="machine:local/cpu_slots",
+                resource_type=ResourceType.CPU_SLOT,
+                access_mode=AccessMode.SHARED,
+                quantity=1,
+                machine_id="machine:local",
+                purpose="default worker CPU admission",
+            ),
+            ResourceClaim(
+                resource_key="machine:local/process_slots",
+                resource_type=ResourceType.PROCESS_SLOT,
+                access_mode=AccessMode.SHARED,
+                quantity=1,
+                machine_id="machine:local",
+                purpose="worker process admission",
+            ),
+        ]
+        for raw in issue.get("expected_file_locations", []):
+            path = str(PurePosixPath(str(raw).replace("\\", "/")))
+            if path == "." or path.startswith(_EXCLUDED_PREFIXES):
+                continue
+            claims.append(
+                ResourceClaim(
+                    resource_key=path,
+                    resource_type=ResourceType.PATH,
+                    access_mode=AccessMode.EXCLUSIVE,
+                    purpose="declared implementation path",
+                )
+            )
+        # Common high-contention domains receive semantic leases even when a path is not explicit.
+        labels = set(issue.get("labels", []))
+        if "migration" in labels or any(
+            "migration" in str(x).lower() for x in issue.get("scope", [])
+        ):
+            claims.append(
+                ResourceClaim(
+                    resource_key="database:migration-sequence", resource_type=ResourceType.DATABASE
+                )
+            )
+        if "aws" in labels or "infrastructure" in labels:
+            claims.append(
+                ResourceClaim(
+                    resource_key="environment:infrastructure",
+                    resource_type=ResourceType.INFRASTRUCTURE,
+                )
+            )
+        profiles.append(
+            SchedulerTaskProfile(
+                task_id=item.task_id,
+                project_id=control.project_id,
+                sequence_rank=item.rank,
+                utility_score=max(0, item.score.total_score),
+                priority=issue.get("priority", "P1"),
+                critical_path=item.on_critical_path,
+                claims=tuple(claims),
+                owner_id=issue.get("owner_required_capability"),
+                workspace_isolated=True,
+                policy_eligible=True,
+            )
+        )
+    return tuple(profiles)

@@ -1,0 +1,502 @@
+from __future__ import annotations
+
+import json
+import time
+from collections.abc import Iterable, Mapping
+from typing import Any
+from urllib import error as urllib_error
+from urllib import parse as urllib_parse
+from urllib import request as urllib_request
+
+from project_pipeline.contracts import AdapterErrorCategory, AdapterErrorPayload
+from project_pipeline.domain.base import utc_now
+from project_pipeline.domain.github import (
+    BranchRole,
+    CheckConclusion,
+    CheckState,
+    GitBranch,
+    GitHubAdapterCapabilities,
+    GitHubBranchProtection,
+    GitHubRepositoryMetadata,
+    PullRequestCheck,
+    PullRequestReview,
+    PullRequestSnapshot,
+    PullRequestState,
+    ReviewState,
+    github_identifier,
+)
+from project_pipeline.github_steward.errors import GitHubAdapterError
+from project_pipeline.github_steward.ports import GitHubRemotePort, GitHubWriteContext
+
+_API_VERSION = "2026-03-10"
+
+
+class GitHubRestAdapter(GitHubRemotePort):
+    provider_id = "github-rest"
+
+    def __init__(
+        self,
+        *,
+        token: str | None = None,
+        base_url: str = "https://api.github.com",
+        timeout_seconds: float = 20.0,
+        maximum_attempts: int = 3,
+        retry_base_seconds: float = 0.05,
+        opener: Any | None = None,
+    ) -> None:
+        parsed = urllib_parse.urlparse(base_url)
+        if parsed.scheme != "https" or not parsed.netloc:
+            raise ValueError("GitHub REST base URL must be HTTPS")
+        self.base_url = base_url.rstrip("/")
+        self._token = token
+        self.timeout_seconds = timeout_seconds
+        self.maximum_attempts = max(1, maximum_attempts)
+        self.retry_base_seconds = max(0.0, retry_base_seconds)
+        self._opener = opener or urllib_request.build_opener()
+
+    def discover_capabilities(self) -> GitHubAdapterCapabilities:
+        return GitHubAdapterCapabilities(provider="GITHUB_REST", api_version=_API_VERSION)
+
+    def get_repository(self, repository_slug: str) -> GitHubRepositoryMetadata:
+        payload = self._request_json(
+            "GET",
+            f"/repos/{self._repo_path(repository_slug)}",
+            operation="github.repository.read",
+            correlation_id="corr:github-repository-read",
+        )
+        return GitHubRepositoryMetadata(
+            repository_slug=repository_slug,
+            repository_id=str(payload.get("id", repository_slug)),
+            default_branch=str(payload.get("default_branch", "main")),
+            private=bool(payload.get("private", False)),
+            archived=bool(payload.get("archived", False)),
+            disabled=bool(payload.get("disabled", False)),
+            allow_merge_commit=payload.get("allow_merge_commit"),
+            allow_squash_merge=payload.get("allow_squash_merge"),
+            allow_rebase_merge=payload.get("allow_rebase_merge"),
+        )
+
+    def iter_branches(self, repository_slug: str, *, page_size: int = 100) -> Iterable[GitBranch]:
+        for item in self._iter_pages(
+            f"/repos/{self._repo_path(repository_slug)}/branches",
+            page_size=page_size,
+            operation="github.branches.read",
+        ):
+            name = str(item.get("name", ""))
+            sha = str((item.get("commit") or {}).get("sha", ""))
+            if not name or not sha:
+                continue
+            yield GitBranch(
+                branch_id=github_identifier("GHBR", repository_slug, name, sha),
+                name=name,
+                sha=sha,
+                role=BranchRole.UNKNOWN,
+                protected=bool(item.get("protected", False)),
+            )
+
+    def get_branch_protection(self, repository_slug: str, branch: str) -> GitHubBranchProtection:
+        try:
+            payload = self._request_json(
+                "GET",
+                f"/repos/{self._repo_path(repository_slug)}/branches/{urllib_parse.quote(branch, safe='')}/protection",
+                operation="github.branch.protection.read",
+                correlation_id="corr:github-branch-protection",
+            )
+        except GitHubAdapterError as exc:
+            if exc.payload.category is AdapterErrorCategory.NOT_FOUND:
+                return GitHubBranchProtection(
+                    repository_slug=repository_slug, branch=branch, protected=False
+                )
+            raise
+        contexts = tuple(
+            sorted(
+                str(item)
+                for item in ((payload.get("required_status_checks") or {}).get("contexts") or ())
+                if str(item).strip()
+            )
+        )
+        reviews = payload.get("required_pull_request_reviews") or {}
+        return GitHubBranchProtection(
+            repository_slug=repository_slug,
+            branch=branch,
+            protected=True,
+            required_status_checks=contexts,
+            required_approving_review_count=int(
+                reviews.get("required_approving_review_count") or 0
+            ),
+            dismiss_stale_reviews=bool(reviews.get("dismiss_stale_reviews", False)),
+            require_code_owner_reviews=bool(reviews.get("require_code_owner_reviews", False)),
+            enforce_admins=bool((payload.get("enforce_admins") or {}).get("enabled", False)),
+        )
+
+    def get_pull_request(self, repository_slug: str, number: int) -> PullRequestSnapshot | None:
+        try:
+            payload = self._request_json(
+                "GET",
+                f"/repos/{self._repo_path(repository_slug)}/pulls/{number}",
+                operation="github.pull.read",
+                correlation_id=f"corr:github-pr-{number}",
+            )
+        except GitHubAdapterError as exc:
+            if exc.payload.category is AdapterErrorCategory.NOT_FOUND:
+                return None
+            raise
+        return self._parse_pull(repository_slug, payload)
+
+    def iter_reviews(
+        self, repository_slug: str, number: int, *, page_size: int = 100
+    ) -> Iterable[PullRequestReview]:
+        for item in self._iter_pages(
+            f"/repos/{self._repo_path(repository_slug)}/pulls/{number}/reviews",
+            page_size=page_size,
+            operation="github.pull.reviews.read",
+        ):
+            state_raw = str(item.get("state", "PENDING")).upper()
+            state = (
+                ReviewState(state_raw)
+                if state_raw in ReviewState._value2member_map_
+                else ReviewState.PENDING
+            )
+            commit_sha = item.get("commit_id")
+            yield PullRequestReview(
+                review_id=str(
+                    item.get(
+                        "id", github_identifier("GHREV", repository_slug, str(number), str(item))
+                    )
+                ),
+                review_node_id=item.get("node_id"),
+                author=str((item.get("user") or {}).get("login", "unknown")),
+                state=state,
+                commit_sha=str(commit_sha).lower() if commit_sha else None,
+                submitted_at_utc=item.get("submitted_at"),
+            )
+
+    def iter_checks(
+        self, repository_slug: str, ref: str, *, page_size: int = 100
+    ) -> Iterable[PullRequestCheck]:
+        page = 1
+        while True:
+            payload = self._request_json(
+                "GET",
+                f"/repos/{self._repo_path(repository_slug)}/commits/{urllib_parse.quote(ref, safe='')}/check-runs?per_page={page_size}&page={page}",
+                operation="github.checks.read",
+                correlation_id="corr:github-checks",
+            )
+            rows = payload.get("check_runs", []) if isinstance(payload, dict) else []
+            for item in rows:
+                status_raw = str(item.get("status", "unknown")).upper()
+                state = (
+                    CheckState(status_raw)
+                    if status_raw in CheckState._value2member_map_
+                    else CheckState.UNKNOWN
+                )
+                conclusion_raw = str(item.get("conclusion") or "UNKNOWN").upper()
+                conclusion = (
+                    CheckConclusion(conclusion_raw)
+                    if conclusion_raw in CheckConclusion._value2member_map_
+                    else CheckConclusion.UNKNOWN
+                )
+                yield PullRequestCheck(
+                    check_id=str(
+                        item.get("id", github_identifier("GHCHK", repository_slug, ref, str(item)))
+                    ),
+                    name=str(item.get("name", "unnamed-check")),
+                    state=state,
+                    conclusion=conclusion if state is CheckState.COMPLETED else None,
+                    details_url=item.get("details_url"),
+                )
+            if len(rows) < page_size:
+                return
+            page += 1
+
+    def create_branch(
+        self, repository_slug: str, *, branch: str, sha: str, context: GitHubWriteContext
+    ) -> GitBranch:
+        payload = self._request_json(
+            "POST",
+            f"/repos/{self._repo_path(repository_slug)}/git/refs",
+            body={"ref": f"refs/heads/{branch}", "sha": sha},
+            operation="github.branch.create",
+            correlation_id=context.correlation_id,
+            is_write=True,
+        )
+        commit_sha = str((payload.get("object") or {}).get("sha", sha))
+        return GitBranch(
+            branch_id=github_identifier("GHBR", repository_slug, branch, commit_sha),
+            name=branch,
+            sha=commit_sha,
+            role=BranchRole.FEATURE,
+        )
+
+    def create_pull_request(
+        self,
+        repository_slug: str,
+        *,
+        head: str,
+        base: str,
+        title: str,
+        body: str,
+        draft: bool,
+        context: GitHubWriteContext,
+    ) -> PullRequestSnapshot:
+        payload = self._request_json(
+            "POST",
+            f"/repos/{self._repo_path(repository_slug)}/pulls",
+            body={"head": head, "base": base, "title": title, "body": body, "draft": draft},
+            operation="github.pull.create",
+            correlation_id=context.correlation_id,
+            is_write=True,
+        )
+        return self._parse_pull(repository_slug, payload)
+
+    def update_pull_request(
+        self,
+        repository_slug: str,
+        *,
+        number: int,
+        fields: Mapping[str, Any],
+        context: GitHubWriteContext,
+    ) -> PullRequestSnapshot:
+        allowed = {
+            key: value for key, value in fields.items() if key in {"title", "body", "state", "base"}
+        }
+        payload = self._request_json(
+            "PATCH",
+            f"/repos/{self._repo_path(repository_slug)}/pulls/{number}",
+            body=allowed,
+            operation="github.pull.update",
+            correlation_id=context.correlation_id,
+            is_write=True,
+        )
+        return self._parse_pull(repository_slug, payload)
+
+    def merge_pull_request(
+        self,
+        repository_slug: str,
+        *,
+        number: int,
+        head_sha: str,
+        method: str,
+        context: GitHubWriteContext,
+    ) -> Mapping[str, Any]:
+        if method not in {"merge", "squash", "rebase"}:
+            raise ValueError("merge method must be merge, squash, or rebase")
+        return self._request_json(
+            "PUT",
+            f"/repos/{self._repo_path(repository_slug)}/pulls/{number}/merge",
+            body={"sha": head_sha, "merge_method": method},
+            operation="github.pull.merge",
+            correlation_id=context.correlation_id,
+            is_write=True,
+        )
+
+    def delete_branch(
+        self, repository_slug: str, *, branch: str, context: GitHubWriteContext
+    ) -> None:
+        self._request_json(
+            "DELETE",
+            f"/repos/{self._repo_path(repository_slug)}/git/refs/heads/{urllib_parse.quote(branch, safe='')}",
+            operation="github.branch.delete",
+            correlation_id=context.correlation_id,
+            is_write=True,
+            allow_empty=True,
+        )
+
+    def _iter_pages(self, path: str, *, page_size: int, operation: str) -> Iterable[dict[str, Any]]:
+        if page_size < 1 or page_size > 100:
+            raise ValueError("GitHub page_size must be between 1 and 100")
+        page = 1
+        while True:
+            separator = "&" if "?" in path else "?"
+            payload = self._request_json(
+                "GET",
+                f"{path}{separator}per_page={page_size}&page={page}",
+                operation=operation,
+                correlation_id=f"corr:{operation.replace('.', '-')}",
+            )
+            if not isinstance(payload, list):
+                return
+            for item in payload:
+                if isinstance(item, dict):
+                    yield item
+            if len(payload) < page_size:
+                return
+            page += 1
+
+    def _request_json(
+        self,
+        method: str,
+        path: str,
+        *,
+        body: Any | None = None,
+        operation: str,
+        correlation_id: str,
+        is_write: bool = False,
+        allow_empty: bool = False,
+    ) -> Any:
+        encoded = None if body is None else json.dumps(body, separators=(",", ":")).encode("utf-8")
+        headers = {
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": _API_VERSION,
+            "User-Agent": "Project-Pipeline-Repository-Steward",
+        }
+        if self._token:
+            headers["Authorization"] = f"Bearer {self._token}"
+        if encoded is not None:
+            headers["Content-Type"] = "application/json"
+        request = urllib_request.Request(
+            self.base_url + path, data=encoded, headers=headers, method=method
+        )
+        attempts = 1 if is_write else self.maximum_attempts
+        for attempt in range(1, attempts + 1):
+            try:
+                response = self._opener.open(request, timeout=self.timeout_seconds)
+                raw = response.read()
+                if not raw and allow_empty:
+                    return {}
+                return json.loads(raw.decode("utf-8")) if raw else {}
+            except urllib_error.HTTPError as exc:
+                payload = self._read_error(exc)
+                category, retryable = self._classify_status(exc.code)
+                if is_write and category in {
+                    AdapterErrorCategory.TIMEOUT,
+                    AdapterErrorCategory.TRANSIENT,
+                    AdapterErrorCategory.UNAVAILABLE,
+                    AdapterErrorCategory.RATE_LIMIT,
+                }:
+                    category = AdapterErrorCategory.UNKNOWN_OUTCOME
+                    retryable = True
+                error = self._error(
+                    category,
+                    f"GITHUB_HTTP_{exc.code}",
+                    self._message(payload, exc.reason),
+                    correlation_id,
+                    operation,
+                    retryable=retryable,
+                    unknown_outcome=category is AdapterErrorCategory.UNKNOWN_OUTCOME,
+                    details={"status": exc.code},
+                )
+                if not is_write and retryable and attempt < attempts:
+                    time.sleep(self.retry_base_seconds * attempt)
+                    continue
+                raise error from exc
+            except (urllib_error.URLError, TimeoutError, ConnectionError) as exc:
+                category = (
+                    AdapterErrorCategory.UNKNOWN_OUTCOME
+                    if is_write
+                    else AdapterErrorCategory.UNAVAILABLE
+                )
+                error = self._error(
+                    category,
+                    "GITHUB_TRANSPORT_FAILURE",
+                    str(getattr(exc, "reason", exc)),
+                    correlation_id,
+                    operation,
+                    retryable=True,
+                    unknown_outcome=is_write,
+                )
+                if not is_write and attempt < attempts:
+                    time.sleep(self.retry_base_seconds * attempt)
+                    continue
+                raise error from exc
+        raise AssertionError("unreachable")
+
+    @staticmethod
+    def _read_error(exc: urllib_error.HTTPError) -> Any:
+        try:
+            raw = exc.read()
+            return json.loads(raw.decode("utf-8")) if raw else {}
+        except Exception:
+            return {}
+
+    @staticmethod
+    def _message(payload: Any, fallback: Any) -> str:
+        if isinstance(payload, dict) and payload.get("message"):
+            return str(payload["message"])
+        return str(fallback)
+
+    @staticmethod
+    def _classify_status(status: int) -> tuple[AdapterErrorCategory, bool]:
+        if status == 401:
+            return AdapterErrorCategory.AUTHENTICATION, False
+        if status == 403:
+            return AdapterErrorCategory.AUTHORIZATION, False
+        if status == 404:
+            return AdapterErrorCategory.NOT_FOUND, False
+        if status in {409, 422}:
+            return AdapterErrorCategory.CONFLICT, False
+        if status == 429:
+            return AdapterErrorCategory.RATE_LIMIT, True
+        if status >= 500:
+            return AdapterErrorCategory.UNAVAILABLE, True
+        return AdapterErrorCategory.INVALID_REQUEST, False
+
+    def _error(
+        self,
+        category: AdapterErrorCategory,
+        code: str,
+        message: str,
+        correlation_id: str,
+        operation: str,
+        *,
+        retryable: bool,
+        unknown_outcome: bool = False,
+        details: dict[str, Any] | None = None,
+    ) -> GitHubAdapterError:
+        return GitHubAdapterError(
+            AdapterErrorPayload(
+                error_code=code,
+                category=category,
+                message=message,
+                retryable=retryable,
+                unknown_outcome=unknown_outcome,
+                provider=self.provider_id,
+                operation=operation,
+                correlation_id=correlation_id,
+                details=details or {},
+            )
+        )
+
+    @staticmethod
+    def _repo_path(slug: str) -> str:
+        owner, separator, repo = slug.partition("/")
+        if separator != "/" or not owner or not repo or "/" in repo:
+            raise ValueError("repository slug must be owner/name")
+        return f"{urllib_parse.quote(owner, safe='')}/{urllib_parse.quote(repo, safe='')}"
+
+    @staticmethod
+    def _parse_pull(repository_slug: str, payload: Mapping[str, Any]) -> PullRequestSnapshot:
+        state_raw = str(payload.get("state", "open")).upper()
+        merged = bool(payload.get("merged", False) or payload.get("merged_at"))
+        state = (
+            PullRequestState.MERGED
+            if merged
+            else (
+                PullRequestState(state_raw)
+                if state_raw in PullRequestState._value2member_map_
+                else PullRequestState.OPEN
+            )
+        )
+        base = payload.get("base") or {}
+        head = payload.get("head") or {}
+        number = int(payload.get("number") or 0)
+        head_sha = str(head.get("sha", ""))
+        return PullRequestSnapshot(
+            pull_request_id=github_identifier("GHPR", repository_slug, str(number), head_sha),
+            repository_slug=repository_slug,
+            number=number,
+            title=str(payload.get("title", "Untitled pull request")),
+            state=state,
+            draft=bool(payload.get("draft", False)),
+            base_branch=str(base.get("ref", "")),
+            head_branch=str(head.get("ref", "")),
+            base_sha=str(base.get("sha", "")),
+            head_sha=head_sha,
+            mergeable=payload.get("mergeable"),
+            mergeable_state=payload.get("mergeable_state"),
+            author=str((payload.get("user") or {}).get("login", "")) or None,
+            changed_files=int(payload.get("changed_files") or 0),
+            additions=int(payload.get("additions") or 0),
+            deletions=int(payload.get("deletions") or 0),
+            updated_at_utc=payload.get("updated_at") or utc_now(),
+        )

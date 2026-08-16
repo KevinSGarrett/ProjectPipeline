@@ -1,0 +1,122 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000066-01",
+      "statement": "Every linked requirement is explicitly dispositioned, mapped, and represented by the stated implementation or planned artifacts.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000066-02",
+      "statement": "Applicable behavior-specific tests and evidence support completion; unavailable external verification remains explicitly blocked.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000096",
+    "EVID-000097",
+    "EVID-000098",
+    "EVID-000100",
+    "EVID-000101"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement and verify the source-grounded requirements grouped under durability for Control Plane and Orchestration.",
+  "evidence_required": [
+    "EVID-000096",
+    "EVID-000097",
+    "EVID-000098",
+    "EVID-000100",
+    "EVID-000101"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "STORY",
+  "labels": [
+    "capability-story",
+    "domain-ctrl",
+    "cluster-durability"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25077",
+    "remote_key": "PP-108",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-STORY-000066",
+  "objective": "Deliver the durability capability for Control Plane and Orchestration.",
+  "observability_impact": "Record structured validation, state, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-EPIC-000007",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md",
+      "end_line": 31,
+      "line_numbered_path": "plans/_line_numbered/PLAN-CTRL-001_control_plane.lines.txt",
+      "line_reference": "PLAN-CTRL-001:SEC-04:L000028-L000031",
+      "plan_id": "PLAN-CTRL-001",
+      "section_id": "PLAN-CTRL-001:SEC-04",
+      "start_line": 28
+    }
+  ],
+  "rationale": "This work is required to convert source-grounded requirements into bounded implementation, verification, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-EPIC-000007",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-108",
+  "required_tests": [
+    "TEST-ORCH-MIGRATION-001",
+    "TEST-ORCH-RECOVERY-003",
+    "TEST-ORCH-RUNTIME-001"
+  ],
+  "requirement_ids": [
+    "REQ-CTRL-0010",
+    "REQ-CTRL-0011",
+    "REQ-CTRL-0012"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the durability capability for Control Plane and Orchestration."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, data-egress, and external-mutation effects.",
+  "source_references": [
+    "SRC-003:L000882-L000961",
+    "SRC-005:L000604-L000735",
+    "SRC-005:L000730-L000766",
+    "SRC-017:L000281-L000359"
+  ],
+  "state": "BACKLOG",
+  "title": "Durability \u2014 Control Plane and Orchestration",
+  "upstream_dependencies": []
+}

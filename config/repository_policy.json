@@ -1,0 +1,62 @@
+{
+  "external_mutation": {
+    "default": "DENY",
+    "required_fields": [
+      "action_id",
+      "actor_id",
+      "target",
+      "operation",
+      "scope",
+      "authorization",
+      "idempotency_key"
+    ]
+  },
+  "content_validation": {
+    "placeholder_excluded_roots": [
+      "dummy"
+    ]
+  },
+  "forbidden_term_parts": [
+    "wa",
+    "ve"
+  ],
+  "forbidden_term_plural_suffix": "s",
+  "generated_paths": [
+    "docs/generated/REPOSITORY_MAP.json",
+    "docs/generated/REPOSITORY_MAP.md",
+    "PROJECT_MANIFEST.json",
+    "FILE_MANIFEST.sha256"
+  ],
+  "ignored_directories": [
+    ".git",
+    ".local",
+    ".codex",
+    ".codex_backups",
+    ".claude",
+    ".cursor",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "Github_Repo",
+    "__pycache__"
+  ],
+  "required_paths": [
+    "README.md",
+    "SECURITY.md",
+    "adr/ADR_CATALOG.json",
+    "config/project_manifest.json",
+    "database/MIGRATION_CATALOG.json",
+    "evidence/EVIDENCE_LEDGER.jsonl",
+    "jira/BOARD_MANIFEST.json",
+    "jira/relationships/graph.json",
+    "plans/PLAN_CATALOG.json",
+    "plans/_traceability/requirements.jsonl",
+    "provenance/source_registry.json",
+    "provenance/upstream_registry.json",
+    "pyproject.toml",
+    "src/project_pipeline/cli.py",
+    "tests"
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,58 @@
+{
+  "accessibility_evidence": {
+    "accessibility_id": "A11Y-79A8BDFA63396FCF6812",
+    "method": "Playwright DOM semantic baseline; axe-core adapter remains optional when the reviewed bundle is installed",
+    "passed": true,
+    "rule_count": 9,
+    "schema_version": "1.0.0",
+    "target": "evidence/verification/pass16_verification_report.html",
+    "violation_count": 0,
+    "violations": []
+  },
+  "browser_evidence": [
+    {
+      "browser_evidence_id": "BROWSE-168525996090A67A35E5",
+      "browser_name": "Chromium",
+      "browser_version": "144.0.0.0",
+      "console_error_count": 0,
+      "horizontal_overflow": false,
+      "load_duration_ms": 26,
+      "passed": true,
+      "schema_version": "1.0.0",
+      "screenshot_path": "evidence/verification/browser/verification_report_1280x720.png",
+      "screenshot_sha256": "254c103d41e5ef62cc8ff23de25179f9ee3ab61704e8f710da753d0c1875f0ee",
+      "target": "evidence/verification/pass16_verification_report.html",
+      "viewport_height": 720,
+      "viewport_width": 1280
+    },
+    {
+      "browser_evidence_id": "BROWSE-9369FAEF700CCBCE6D80",
+      "browser_name": "Chromium",
+      "browser_version": "144.0.0.0",
+      "console_error_count": 0,
+      "horizontal_overflow": false,
+      "load_duration_ms": 15,
+      "passed": true,
+      "schema_version": "1.0.0",
+      "screenshot_path": "evidence/verification/browser/verification_report_390x844.png",
+      "screenshot_sha256": "36a761946a2d5b921dd8198ee59542fe1e6e20526599f078ddc4dbd5b6667d9c",
+      "target": "evidence/verification/pass16_verification_report.html",
+      "viewport_height": 844,
+      "viewport_width": 390
+    }
+  ],
+  "schema_version": "1.0.0",
+  "screenshots": [
+    {
+      "bytes": 89323,
+      "path": "evidence/verification/browser/verification_report_1280x720.png",
+      "sha256": "254c103d41e5ef62cc8ff23de25179f9ee3ab61704e8f710da753d0c1875f0ee"
+    },
+    {
+      "bytes": 88373,
+      "path": "evidence/verification/browser/verification_report_390x844.png",
+      "sha256": "36a761946a2d5b921dd8198ee59542fe1e6e20526599f078ddc4dbd5b6667d9c"
+    }
+  ],
+  "verification_run_id": "VRUN-23B429F6EBF873EE9A70"
+}

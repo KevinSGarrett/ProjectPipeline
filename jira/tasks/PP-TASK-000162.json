@@ -1,0 +1,121 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000162-01",
+      "statement": "The specified artifacts implement or precisely disposition the linked requirements and preserve stable architecture, source, ADR, and work-item traceability.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "behavior_and_traceability_validation",
+        "path": "src/project_pipeline/workflows/dbos_runtime.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000162-02",
+      "statement": "Applicable behavior tests and evidence pass, and unavailable live or external verification remains explicitly represented.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000095",
+    "EVID-000097"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability, ADRs, plans, Jira, and documentation are updated.",
+    "Security, provenance, observability, and rollback effects are addressed.",
+    "No unresolved blocker or external verification gap is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement and qualify the Hatchet DurableExecutionPort adapter.",
+  "evidence_required": [
+    "EVID-000095",
+    "EVID-000097"
+  ],
+  "exclusions": [
+    "Live external backend qualification remains outside the locally verified scope.",
+    "No external write or source incorporation is authorized by this item.",
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/orchestration/adapters.py",
+    "src/project_pipeline/orchestration/ports.py"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/orchestration/adapters.py",
+    "src/project_pipeline/orchestration/ports.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "backlog",
+    "implementation",
+    "platform"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25161",
+    "remote_key": "PP-192",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000162",
+  "objective": "Implement and qualify the Hatchet DurableExecutionPort adapter",
+  "observability_impact": "Record structured state, correlation, validation, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-STORY-000066",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md",
+      "end_line": 23,
+      "line_numbered_path": "plans/_line_numbered/PLAN-ARCH-001_system_architecture.lines.txt",
+      "line_reference": "PLAN-ARCH-001:SEC-04:L000020-L000023",
+      "plan_id": "PLAN-ARCH-001",
+      "section_id": "PLAN-ARCH-001:SEC-04",
+      "start_line": 20
+    }
+  ],
+  "rationale": "This bounded work converts accepted architecture or upstream requirements into explicit implementation, verification, provenance, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-192",
+  "required_tests": [
+    "TEST-ORCH-ADAPTER-001",
+    "TEST-ORCH-ADAPTER-003"
+  ],
+  "requirement_ids": [
+    "REQ-CTRL-0003",
+    "REQ-CTRL-0010",
+    "REQ-RES-0018"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration, adapter replacement, or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Implement and qualify the Hatchet DurableExecutionPort adapter"
+  ],
+  "security_impact": "Enforce authority, secret, dependency, data-egress, provenance, and external-mutation boundaries.",
+  "source_references": [
+    "SRC-003:L000040-L000083",
+    "SRC-003:L000882-L000961",
+    "SRC-006:L000767-L000824",
+    "SRC-017:L000281-L000359"
+  ],
+  "state": "BACKLOG",
+  "title": "Implement and qualify the Hatchet DurableExecutionPort adapter",
+  "upstream_dependencies": [
+    "UPSTREAM-050"
+  ]
+}

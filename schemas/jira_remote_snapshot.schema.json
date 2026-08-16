@@ -1,0 +1,414 @@
+{
+  "$defs": {
+    "JiraIssueType": {
+      "enum": [
+        "EPIC",
+        "STORY",
+        "TASK",
+        "SUBTASK",
+        "BUG",
+        "SPIKE"
+      ],
+      "title": "JiraIssueType",
+      "type": "string"
+    },
+    "JiraLifecycleState": {
+      "enum": [
+        "DISCOVERED",
+        "BACKLOG",
+        "READY",
+        "IN_PROGRESS",
+        "REVIEW",
+        "VALIDATION",
+        "MERGE_READY",
+        "BLOCKED",
+        "FAILED",
+        "CANCELLED",
+        "DEFERRED",
+        "DONE"
+      ],
+      "title": "JiraLifecycleState",
+      "type": "string"
+    },
+    "RemoteJiraAttachmentReference": {
+      "additionalProperties": false,
+      "properties": {
+        "attachment_id": {
+          "title": "Attachment Id",
+          "type": "string"
+        },
+        "content_url": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Url"
+        },
+        "filename": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Filename",
+          "type": "string"
+        },
+        "media_type": {
+          "anyOf": [
+            {
+              "maxLength": 191,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Media Type"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "attachment_id",
+        "filename",
+        "size_bytes"
+      ],
+      "title": "RemoteJiraAttachmentReference",
+      "type": "object"
+    },
+    "RemoteJiraComment": {
+      "additionalProperties": false,
+      "properties": {
+        "author_account_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Author Account Id"
+        },
+        "body_text": {
+          "maxLength": 12000,
+          "minLength": 1,
+          "title": "Body Text",
+          "type": "string"
+        },
+        "comment_id": {
+          "title": "Comment Id",
+          "type": "string"
+        },
+        "created_at_utc": {
+          "format": "date-time",
+          "title": "Created At Utc",
+          "type": "string"
+        },
+        "semantic_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Semantic Fingerprint",
+          "type": "string"
+        },
+        "updated_at_utc": {
+          "format": "date-time",
+          "title": "Updated At Utc",
+          "type": "string"
+        }
+      },
+      "required": [
+        "comment_id",
+        "body_text",
+        "created_at_utc",
+        "updated_at_utc",
+        "semantic_fingerprint"
+      ],
+      "title": "RemoteJiraComment",
+      "type": "object"
+    },
+    "RemoteJiraIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "assignee_account_id": {
+          "anyOf": [
+            {
+              "maxLength": 191,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Assignee Account Id"
+        },
+        "attachments": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/RemoteJiraAttachmentReference"
+          },
+          "title": "Attachments",
+          "type": "array"
+        },
+        "comments": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/RemoteJiraComment"
+          },
+          "title": "Comments",
+          "type": "array"
+        },
+        "description_text": {
+          "default": "",
+          "maxLength": 12000,
+          "title": "Description Text",
+          "type": "string"
+        },
+        "fields": {
+          "additionalProperties": true,
+          "title": "Fields",
+          "type": "object"
+        },
+        "issue_type_name": {
+          "maxLength": 191,
+          "minLength": 1,
+          "title": "Issue Type Name",
+          "type": "string"
+        },
+        "labels": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Labels",
+          "type": "array"
+        },
+        "links": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/RemoteJiraLink"
+          },
+          "title": "Links",
+          "type": "array"
+        },
+        "local_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Local Id"
+        },
+        "normalized_issue_type": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/JiraIssueType"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "normalized_state": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/JiraLifecycleState"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "parent_remote_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Parent Remote Key"
+        },
+        "remote_id": {
+          "title": "Remote Id",
+          "type": "string"
+        },
+        "remote_key": {
+          "title": "Remote Key",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "status_name": {
+          "maxLength": 191,
+          "minLength": 1,
+          "title": "Status Name",
+          "type": "string"
+        },
+        "summary": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        },
+        "updated_at_utc": {
+          "format": "date-time",
+          "title": "Updated At Utc",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "remote_id",
+        "remote_key",
+        "issue_type_name",
+        "summary",
+        "status_name",
+        "updated_at_utc"
+      ],
+      "title": "RemoteJiraIssue",
+      "type": "object"
+    },
+    "RemoteJiraLink": {
+      "additionalProperties": false,
+      "properties": {
+        "inward_key": {
+          "title": "Inward Key",
+          "type": "string"
+        },
+        "link_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Link Id"
+        },
+        "link_type": {
+          "maxLength": 191,
+          "minLength": 1,
+          "title": "Link Type",
+          "type": "string"
+        },
+        "outward_key": {
+          "title": "Outward Key",
+          "type": "string"
+        }
+      },
+      "required": [
+        "link_type",
+        "outward_key",
+        "inward_key"
+      ],
+      "title": "RemoteJiraLink",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/jira_remote_snapshot.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "complete": {
+      "default": true,
+      "title": "Complete",
+      "type": "boolean"
+    },
+    "fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/RemoteJiraIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "next_page_token": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Next Page Token"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "project_key": {
+      "pattern": "^[A-Z][A-Z0-9_]{0,31}$",
+      "title": "Project Key",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "snapshot_id": {
+      "title": "Snapshot Id",
+      "type": "string"
+    },
+    "source": {
+      "enum": [
+        "REMOTE_JIRA",
+        "IMPORT_BUNDLE"
+      ],
+      "title": "Source",
+      "type": "string"
+    }
+  },
+  "required": [
+    "snapshot_id",
+    "source",
+    "project_key",
+    "issues",
+    "fingerprint"
+  ],
+  "title": "JiraRemoteSnapshot",
+  "type": "object"
+}

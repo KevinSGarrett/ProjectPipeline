@@ -1,0 +1,110 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000170-01",
+      "statement": "The specified artifacts implement or precisely disposition the linked requirements and preserve stable architecture, source, ADR, and work-item traceability.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "behavior_and_traceability_validation",
+        "path": "observability/telemetry.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000170-02",
+      "statement": "Applicable behavior tests and evidence pass, and unavailable live or external verification remains explicitly represented.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability, ADRs, plans, Jira, and documentation are updated.",
+    "Security, provenance, observability, and rollback effects are addressed.",
+    "No unresolved blocker or external verification gap is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement the vendor-neutral OpenTelemetry contract and the selected OpenLIT agent/model instrumentation profile with redaction and correlation controls.",
+  "evidence_required": [],
+  "exclusions": [
+    "No unverified claim of live external-system completion.",
+    "No external write or source incorporation is authorized by this item."
+  ],
+  "expected_file_locations": [
+    "observability/telemetry.py",
+    "tests/test_telemetry.py"
+  ],
+  "expected_implementation_artifacts": [
+    "observability/telemetry.py",
+    "tests/test_telemetry.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "backlog",
+    "implementation",
+    "platform"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25095",
+    "remote_key": "PP-126",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000170",
+  "objective": "Implement OpenTelemetry telemetry and OpenLIT agent instrumentation",
+  "observability_impact": "Record structured state, correlation, validation, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-STORY-000120",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-003_high_value_reviews.md",
+      "end_line": 23,
+      "line_numbered_path": "plans/_line_numbered/PLAN-UPSTREAM-003_high_value_reviews.lines.txt",
+      "line_reference": "PLAN-UPSTREAM-003:SEC-04:L000020-L000023",
+      "plan_id": "PLAN-UPSTREAM-003",
+      "section_id": "PLAN-UPSTREAM-003:SEC-04",
+      "start_line": 20
+    }
+  ],
+  "rationale": "This bounded work converts accepted architecture or upstream requirements into explicit implementation, verification, provenance, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000120",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-126",
+  "required_tests": [],
+  "requirement_ids": [
+    "REQ-OPS-0001",
+    "REQ-OPS-0002",
+    "REQ-OPS-0006"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration, adapter replacement, or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Implement telemetry contracts and the selected agent instrumentation profile."
+  ],
+  "security_impact": "Enforce authority, secret, dependency, data-egress, provenance, and external-mutation boundaries.",
+  "source_references": [
+    "GOV-001:L000695-L000710",
+    "GOV-001:L000696-L000709",
+    "SRC-017:L000281-L000359"
+  ],
+  "state": "BACKLOG",
+  "title": "Implement OpenTelemetry telemetry and OpenLIT agent instrumentation",
+  "upstream_dependencies": [
+    "UPSTREAM-077"
+  ]
+}

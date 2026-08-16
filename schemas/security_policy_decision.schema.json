@@ -1,0 +1,105 @@
+{
+  "$defs": {
+    "AuthorityCapability": {
+      "enum": [
+        "READ",
+        "PROPOSE",
+        "APPROVE",
+        "MUTATE",
+        "MERGE",
+        "DEPLOY",
+        "SPEND",
+        "EXTERNAL_MODEL",
+        "ACCESS_SECRET",
+        "MODIFY_INSTRUCTIONS",
+        "MODIFY_POLICY",
+        "COMPLETE_PROJECT",
+        "EMERGENCY"
+      ],
+      "title": "AuthorityCapability",
+      "type": "string"
+    },
+    "PolicyDisposition": {
+      "enum": [
+        "ALLOW",
+        "DENY",
+        "REQUIRE_APPROVAL",
+        "CONSTRAIN"
+      ],
+      "title": "PolicyDisposition",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/security_policy_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "action_id": {
+      "title": "Action Id",
+      "type": "string"
+    },
+    "actor_identity_id": {
+      "title": "Actor Identity Id",
+      "type": "string"
+    },
+    "approval_required": {
+      "default": false,
+      "title": "Approval Required",
+      "type": "boolean"
+    },
+    "capability": {
+      "$ref": "#/$defs/AuthorityCapability"
+    },
+    "constraints": {
+      "additionalProperties": true,
+      "title": "Constraints",
+      "type": "object"
+    },
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "disposition": {
+      "$ref": "#/$defs/PolicyDisposition"
+    },
+    "evaluated_at_utc": {
+      "format": "date-time",
+      "title": "Evaluated At Utc",
+      "type": "string"
+    },
+    "input_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Input Fingerprint",
+      "type": "string"
+    },
+    "policy_version": {
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "decision_id",
+    "policy_version",
+    "action_id",
+    "actor_identity_id",
+    "capability",
+    "disposition",
+    "reasons",
+    "input_fingerprint"
+  ],
+  "title": "PolicyDecision",
+  "type": "object"
+}

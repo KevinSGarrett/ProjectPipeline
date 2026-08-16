@@ -1,0 +1,9 @@
+{
+  "catalog_path": "plans/_traceability/requirements.jsonl",
+  "catalog_sha256": "9ce5e39cae731e6f959dd441610ed8f83eb1d689d4ad5258cd9fc28cca0a93ee",
+  "database": "/tmp/pp_r05_evidence.db",
+  "equivalence_errors": [],
+  "persisted_link_count": 3807,
+  "persisted_requirement_count": 351,
+  "schema_version": "1.0.0"
+}

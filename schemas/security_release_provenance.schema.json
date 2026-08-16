@@ -1,0 +1,62 @@
+{
+  "$id": "https://project-pipeline.local/schemas/security_release_provenance.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "builder_identity_id": {
+      "title": "Builder Identity Id",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "provenance_id": {
+      "title": "Provenance Id",
+      "type": "string"
+    },
+    "sbom_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Sbom Sha256",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_aggregate_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Source Aggregate Sha256",
+      "type": "string"
+    },
+    "verification_state": {
+      "title": "Verification State",
+      "type": "string"
+    }
+  },
+  "required": [
+    "provenance_id",
+    "project_id",
+    "source_aggregate_sha256",
+    "builder_identity_id",
+    "sbom_sha256",
+    "verification_state",
+    "evidence_ids"
+  ],
+  "title": "ReleaseProvenance",
+  "type": "object"
+}

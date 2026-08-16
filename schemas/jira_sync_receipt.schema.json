@@ -1,0 +1,116 @@
+{
+  "$defs": {
+    "JiraSyncMode": {
+      "enum": [
+        "DRY_RUN",
+        "APPLY"
+      ],
+      "title": "JiraSyncMode",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/jira_sync_receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "maxLength": 191,
+      "minLength": 3,
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "applied_operation_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Applied Operation Ids",
+      "type": "array"
+    },
+    "conflict_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Conflict Ids",
+      "type": "array"
+    },
+    "correlation_id": {
+      "maxLength": 191,
+      "minLength": 3,
+      "title": "Correlation Id",
+      "type": "string"
+    },
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "failed_operation_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Failed Operation Ids",
+      "type": "array"
+    },
+    "mode": {
+      "$ref": "#/$defs/JiraSyncMode"
+    },
+    "plan_id": {
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "receipt_id": {
+      "title": "Receipt Id",
+      "type": "string"
+    },
+    "remote_snapshot_id_after": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Remote Snapshot Id After"
+    },
+    "result": {
+      "enum": [
+        "DRY_RUN",
+        "APPLIED",
+        "PARTIAL",
+        "RECONCILIATION_REQUIRED",
+        "REJECTED"
+      ],
+      "title": "Result",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "unknown_outcome_operation_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Unknown Outcome Operation Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "receipt_id",
+    "plan_id",
+    "mode",
+    "result",
+    "actor_id",
+    "correlation_id"
+  ],
+  "title": "JiraSyncReceipt",
+  "type": "object"
+}

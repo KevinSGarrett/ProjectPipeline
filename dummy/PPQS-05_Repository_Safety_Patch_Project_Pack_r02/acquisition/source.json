@@ -1,0 +1,14 @@
+{
+  "acquisition_command": "python common/tooling/acquire_repository.py --manifest acquisition/source.json --destination seed_repository",
+  "clone_url": "https://github.com/restic/restic.git",
+  "expected_commit_sha": "d4088aa09ba78d3c93d81505bfab9cacf13f5168",
+  "integrity_rule": "git rev-parse HEAD must exactly match expected_commit_sha",
+  "license": "BSD-2-Clause",
+  "network_required": true,
+  "repository_url": "https://github.com/restic/restic",
+  "requested_ref": "d4088aa09ba78d3c93d81505bfab9cacf13f5168",
+  "role": "CANDIDATE_BASELINE",
+  "schema_version": "1.0.0",
+  "source_type": "GIT",
+  "target_directory": "seed_repository"
+}

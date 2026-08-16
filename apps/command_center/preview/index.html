@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark light"><title>Project Pipeline Command Center — Pass 21 Preview</title><style>:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0b0d12;
+  color: #ecf0f6;
+  font-synthesis: none;
+  --bg: #0b0d12;
+  --panel: #11151d;
+  --panel-2: #171c25;
+  --line: #2a303c;
+  --muted: #8e98aa;
+  --text: #ecf0f6;
+  --accent: #8fb4ff;
+  --accent-2: #7ae0bd;
+  --warning: #f1c46a;
+  --danger: #ff8d91;
+  --radius: 16px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 320px; background: radial-gradient(circle at 70% 0%, #182033 0, var(--bg) 34%); color: var(--text); }
+button, input { font: inherit; }
+button { color: inherit; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 3px solid #b8d0ff; outline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.skip-link { position: fixed; left: 12px; top: 10px; transform: translateY(-160%); background: white; color: #111; padding: 10px 14px; border-radius: 8px; z-index: 100; }
+.skip-link:focus { transform: none; }
+.app-shell { min-height: 100vh; display: grid; grid-template-columns: 248px minmax(0, 1fr); }
+.sidebar { position: sticky; top: 0; height: 100vh; padding: 20px 16px; background: rgba(12, 15, 21, .96); border-right: 1px solid var(--line); display: flex; flex-direction: column; z-index: 20; }
+.brand { display: flex; gap: 11px; align-items: center; padding: 5px 8px 22px; border-bottom: 1px solid var(--line); }
+.brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border: 1px solid #586b8e; border-radius: 10px; background: linear-gradient(145deg, #25324a, #131923); font-weight: 800; letter-spacing: -.04em; }
+.brand strong, .brand span { display: block; }
+.brand strong { font-size: .9rem; }
+.brand span { color: var(--muted); font-size: .72rem; margin-top: 2px; }
+nav { display: grid; gap: 4px; padding-block: 18px; overflow: auto; }
+.nav-item { appearance: none; border: 0; background: transparent; color: #aab3c3; text-align: left; padding: 10px 11px; border-radius: 9px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: .86rem; }
+.nav-item:hover { background: #171c25; color: #fff; }
+.nav-item.active { background: #20283a; color: #fff; box-shadow: inset 2px 0 0 var(--accent); }
+.nav-dot { width: 6px; height: 6px; border-radius: 50%; background: #626d80; }
+.nav-item.active .nav-dot { background: var(--accent); box-shadow: 0 0 0 4px rgba(143,180,255,.08); }
+.sidebar-foot { margin-top: auto; padding: 14px 10px 0; border-top: 1px solid var(--line); color: var(--muted); font-size: .7rem; line-height: 1.45; }
+.authority-dot { display: inline-block; width: 7px; height: 7px; margin-right: 7px; border-radius: 50%; background: var(--accent-2); }
+.workspace { min-width: 0; }
+.topbar { min-height: 78px; padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; gap: 18px; position: sticky; top: 0; z-index: 15; background: rgba(11,13,18,.88); border-bottom: 1px solid rgba(42,48,60,.8); backdrop-filter: blur(18px); }
+.topbar h1 { margin: 2px 0 0; font-size: 1.22rem; letter-spacing: -.025em; }
+.eyebrow { margin: 0; font-size: .65rem; letter-spacing: .15em; font-weight: 700; color: #7f899a; text-transform: uppercase; }
+.top-actions { display: flex; gap: 8px; align-items: center; }
+.menu-button { display: none; }
+.icon-button { width: 34px; height: 34px; border-radius: 9px; border: 1px solid var(--line); background: #151a22; cursor: pointer; }
+.badge { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid var(--line); padding: 4px 8px; font-size: .64rem; font-weight: 800; letter-spacing: .06em; white-space: nowrap; }
+.badge-good { color: #a8f4d8; background: rgba(52,177,132,.10); border-color: rgba(90,211,164,.28); }
+.badge-warn { color: #f6d58f; background: rgba(204,151,48,.10); border-color: rgba(225,177,79,.27); }
+.badge-bad { color: #ffb4b7; background: rgba(210,74,83,.11); border-color: rgba(244,103,111,.30); }
+.badge-neutral { color: #b8c0cf; background: #171c25; }
+main { width: min(1600px, 100%); margin-inline: auto; padding: 28px; }
+.hero { border: 1px solid var(--line); border-radius: 20px; padding: 26px 28px; display: flex; align-items: center; justify-content: space-between; gap: 30px; background: linear-gradient(125deg, rgba(35,44,62,.96), rgba(17,21,29,.96) 60%, rgba(17,34,36,.82)); overflow: hidden; position: relative; }
+.hero::after { content:""; position:absolute; inset:auto -50px -90px auto; width:260px; height:260px; border-radius:50%; background:rgba(122,224,189,.05); border:1px solid rgba(122,224,189,.1); }
+.hero h2 { margin: 7px 0 8px; font-size: clamp(1.55rem, 2.3vw, 2.5rem); line-height: 1.06; letter-spacing: -.045em; max-width: 760px; }
+.hero p:not(.eyebrow) { color: #aeb7c6; margin: 0; max-width: 690px; font-size: .92rem; }
+.hero-gate { min-width: 180px; padding-left: 24px; border-left: 1px solid #394252; display: grid; gap: 3px; position: relative; z-index: 1; }
+.hero-gate span, .hero-gate small { color: var(--muted); font-size: .72rem; }
+.hero-gate strong { color: #f4c97b; font-size: 1.16rem; }
+.metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 14px 0; }
+.metric-card { padding: 16px 17px; border-radius: 14px; border: 1px solid var(--line); background: rgba(17,21,29,.88); }
+.metric-card span, .metric-card small { display: block; color: var(--muted); font-size: .7rem; }
+.metric-card strong { display: block; margin: 6px 0 3px; font-size: 1.55rem; letter-spacing: -.04em; }
+.content-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 14px; align-items: start; }
+.main-column { min-width: 0; display: grid; gap: 14px; }
+.surface-card, .rail-card { border: 1px solid var(--line); border-radius: var(--radius); background: rgba(17,21,29,.92); padding: 20px; }
+.section-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.section-head h2, .rail-card h2 { margin: 4px 0 0; font-size: 1rem; letter-spacing: -.02em; }
+.readiness-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 24px; }
+.progress-wrap { min-width: 0; }
+.progress-label { display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:.76rem; color:#b3bccb; margin-bottom:7px; }
+.progress-label strong { color:#eef2f8; font-size:.72rem; }
+.progress-track { height: 7px; background: #242a35; border-radius: 999px; overflow:hidden; }
+.progress-track span { display:block; height:100%; border-radius:inherit; background: linear-gradient(90deg, #7397de, #89d2bf); }
+.search-field input { width: min(320px, 45vw); background:#0f131a; border:1px solid var(--line); color:var(--text); border-radius:9px; padding:9px 11px; font-size:.78rem; }
+.graph-canvas { position:relative; min-height:300px; overflow:hidden; border-radius:12px; border:1px solid #252c38; background-image: linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px); background-size:24px 24px; background-color:#0d1117; }
+.graph-node { position:absolute; left:var(--x); top:var(--y); width:25%; min-width:155px; transform:translate(-5%, -5%); text-align:left; border:1px solid #364055; background:#171d28; border-radius:10px; padding:10px 11px; cursor:pointer; z-index:2; box-shadow:0 9px 25px rgba(0,0,0,.2); }
+.graph-node span, .graph-node small { display:block; font-size:.58rem; color:#8e98aa; text-transform:uppercase; letter-spacing:.08em; }
+.graph-node strong { display:block; font-size:.74rem; margin:4px 0; line-height:1.3; }
+.graph-node.kind-requirement { border-left:3px solid #8fb4ff; }
+.graph-node.kind-story { border-left:3px solid #b997ff; }
+.graph-node.kind-task { border-left:3px solid #7ae0bd; }
+.graph-node.kind-evidence { border-left:3px solid #f1c46a; }
+.graph-lines { position:absolute; inset:0; width:100%; height:100%; z-index:1; pointer-events:none; }
+.graph-lines path { vector-effect:non-scaling-stroke; fill:none; stroke:#475165; stroke-width:1.3; stroke-dasharray:3 3; }
+.graph-legend { display:flex; flex-wrap:wrap; gap:16px; margin-top:11px; color:var(--muted); font-size:.66rem; }
+.graph-legend span { display:flex; gap:6px; align-items:center; }
+.legend { width:8px; height:8px; border-radius:2px; background:#8fb4ff; }.legend.story{background:#b997ff}.legend.task{background:#7ae0bd}.legend.evidence{background:#f1c46a}
+.table-wrap { overflow:auto; border:1px solid #252c38; border-radius:11px; }
+table { width:100%; border-collapse:collapse; font-size:.74rem; min-width:740px; }
+th { background:#121720; color:#8f99ab; font-weight:700; letter-spacing:.04em; text-transform:uppercase; font-size:.61rem; text-align:left; }
+th, td { padding:11px 12px; border-bottom:1px solid #242a34; vertical-align:middle; }
+td strong, td small { display:block; } td small { color:#7d8798; margin-top:2px; font-size:.62rem; } tbody tr:last-child td { border-bottom:0; }
+.health-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:9px; }
+.health-card { border:1px solid #292f3a; background:#121720; border-radius:11px; padding:12px; }
+.health-card > div { display:flex; align-items:center; gap:7px; margin-bottom:8px; }
+.health-card .badge { float:right; }
+.health-card p { clear:both; margin:10px 0 0; color:var(--muted); font-size:.67rem; line-height:1.45; }
+.status-light { width:7px; height:7px; border-radius:50%; background:#778092; }.status-light.good{background:#6ed6af}.status-light.warn{background:#e4b65d}.status-light.bad{background:#ec7279}
+.risk-list { display:grid; gap:8px; margin-top:12px; }
+.risk-list article { display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:start; padding:11px; border:1px solid #292f3a; border-radius:10px; }
+.risk-list strong { font-size:.74rem; } .risk-list p { color:var(--muted); margin:3px 0 0; font-size:.67rem; line-height:1.4; }
+.budget-layout { display:grid; grid-template-columns:220px 1fr; gap:28px; align-items:center; }
+.budget-total { padding:18px; border:1px solid #2e3745; border-radius:12px; background:#131923; }
+.budget-total span,.budget-total small{display:block;color:var(--muted);font-size:.67rem}.budget-total strong{display:block;margin:4px 0;font-size:1.65rem;letter-spacing:-.04em}
+.provider-bars { display:grid; gap:14px; }
+.provider-grid,.sync-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:9px; }
+.provider-grid article,.sync-grid article { border:1px solid #292f3a; border-radius:11px; padding:13px; background:#121720; }
+.provider-grid article>div,.sync-grid article>div { display:flex;justify-content:space-between;gap:8px;align-items:center; }
+dl { margin:10px 0 0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+dt { color:var(--muted); font-size:.62rem; } dd { margin:2px 0 0; font-size:.72rem; }
+.context-metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 24px; }
+.context-metrics article { border-left:2px solid #46536b; padding-left:12px; }.context-metrics article span{display:block;color:var(--muted);font-size:.65rem}.context-metrics article strong{display:block;margin-top:3px;font-size:1.2rem}
+.record-list { display:grid; gap:9px; }.record-list article{border:1px solid #292f3a;border-radius:11px;padding:13px;background:#121720}.record-list article>div{display:flex;justify-content:space-between;gap:10px}.record-list p{color:#a7b0bf;font-size:.7rem;margin:8px 0}.record-list dl{grid-template-columns:repeat(3,minmax(0,1fr));}
+.sync-grid small { display:block; margin-top:10px; color:#7f899a; font-size:.62rem; }
+.evidence-list { display:grid; gap:6px; }.evidence-list button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;padding:11px;border:1px solid #292f3a;border-radius:10px;background:#121720;cursor:pointer}.evidence-list button:hover{background:#171d27}.evidence-list button span{display:flex;align-items:center;gap:9px}.evidence-list strong{font-size:.72rem}.evidence-list code{font-size:.63rem;color:#8692a4}
+.right-rail { display:grid; gap:14px; position:relative; }
+.rail-card { padding:18px; }
+.rail-card.sticky { position:sticky; top:92px; }
+.inbox-list { display:grid; gap:9px; margin-top:14px; }
+.inbox-list article { display:grid; grid-template-columns:auto 1fr; gap:9px; padding:10px 0; border-top:1px solid #252b35; }
+.inbox-list article:first-child{border-top:0}.inbox-list strong{font-size:.7rem;line-height:1.35}.inbox-list p{color:#99a3b3;font-size:.64rem;line-height:1.4;margin:4px 0}.inbox-list small{display:block;color:#788395;font-size:.6rem;line-height:1.4}
+.control-stack { display:grid; gap:7px; margin:14px 0; }.control-stack button{border:1px solid #364052;background:#1a202a;border-radius:9px;padding:10px;text-align:left;cursor:pointer;font-size:.72rem}.control-stack button:hover{background:#232b38}.control-stack button.danger{border-color:rgba(238,100,108,.35);color:#ffb1b4;background:rgba(130,38,44,.10)}
+.control-status { color:#adb6c5; font-size:.65rem; line-height:1.4; min-height:2em; }.rail-card>small{display:block;color:#6f7b8e;font-size:.58rem;line-height:1.45}
+@media (max-width: 1180px) { .content-grid{grid-template-columns:1fr}.right-rail{grid-template-columns:repeat(2,minmax(0,1fr))}.rail-card.sticky{position:static}.health-grid{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width: 860px) { .app-shell{grid-template-columns:1fr}.sidebar{position:fixed;left:0;transform:translateX(-105%);width:260px;box-shadow:18px 0 60px rgba(0,0,0,.4);transition:transform .18s ease}.sidebar.sidebar-open{transform:none}.menu-button{display:grid;place-items:center;width:36px;height:36px;border:1px solid var(--line);border-radius:9px;background:#151a22}.topbar{padding:12px 18px}.topbar>div:nth-child(2){flex:1}.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{align-items:flex-start}.hero-gate{min-width:160px}.right-rail{grid-template-columns:1fr}.provider-grid,.sync-grid{grid-template-columns:1fr}main{padding:18px}.graph-node{width:33%;min-width:130px}.health-grid{grid-template-columns:1fr 1fr} }
+@media (max-width: 620px) { .top-actions .badge:first-child{display:none}.hero{display:grid;padding:20px}.hero-gate{border-left:0;border-top:1px solid #394252;padding:14px 0 0}.metric-grid{grid-template-columns:1fr 1fr}.metric-card{padding:13px}.metric-card strong{font-size:1.25rem}.readiness-grid,.context-metrics{grid-template-columns:1fr}.health-grid{grid-template-columns:1fr}.budget-layout{grid-template-columns:1fr}.section-head{align-items:flex-start;flex-direction:column}.search-field,.search-field input{width:100%}.graph-canvas{min-height:390px}.graph-node{width:43%;min-width:0}.record-list dl{grid-template-columns:1fr 1fr}.surface-card{padding:16px}.topbar .eyebrow{display:none}.topbar h1{font-size:1rem} }
+@media (prefers-reduced-motion: reduce) { *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important} }
+@media (forced-colors: active) { .progress-track span,.status-light,.nav-dot,.legend{forced-color-adjust:none}.surface-card,.rail-card,.metric-card,.hero{border:1px solid CanvasText} }
+
+/* Prevent intrinsic-width children from widening the page grid. */
+.main-column { grid-template-columns: minmax(0, 1fr); width: 100%; }
+.surface-card, .right-rail, .rail-card { min-width: 0; }
+
+/* Pass 21 evidence-preview interactions. */
+.director-layout{display:grid;gap:12px}.chat-log{min-height:140px;display:grid;gap:8px;padding:12px;border:1px solid #292f3a;border-radius:11px;background:#0d1117}.chat-message{max-width:86%;border:1px solid #2d3542;border-radius:11px;padding:10px 12px;background:#151b24}.chat-message.chat-user{justify-self:end;background:#1b2638;border-color:#405476}.chat-message span{display:block;color:var(--muted);font-size:.58rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em}.chat-message p{margin:5px 0 0;color:#d9e0ea;font-size:.72rem;line-height:1.5}.director-form{display:grid;grid-template-columns:140px minmax(0,1fr) auto;gap:9px;align-items:end}.director-form label{display:grid;gap:5px;color:var(--muted);font-size:.62rem}.director-form input,.director-form select{width:100%;border:1px solid var(--line);border-radius:9px;background:#0f131a;color:var(--text);padding:9px 10px}.director-form button,.incident-actions button,.inbox-actions button{border:1px solid #364052;background:#1a202a;color:var(--text);border-radius:8px;padding:8px 10px;cursor:pointer;font-size:.68rem}.incident-action-detail{display:grid;grid-template-columns:90px minmax(0,1fr);gap:6px 10px;padding:10px;border-radius:9px;background:#0f141b}.incident-action-detail span{color:var(--muted);font-size:.61rem}.incident-action-detail strong,.incident-action-detail small{font-size:.68rem;line-height:1.45}.incident-actions,.inbox-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.inbox-actions button{padding:6px 8px;font-size:.6rem}.inbox-list small+small{margin-top:4px}@media(max-width:620px){.director-form{grid-template-columns:1fr}.chat-message{max-width:95%}.incident-action-detail{grid-template-columns:1fr}}
+</style></head>
+<body>
+<a class="skip-link" href="#main-content">Skip to content</a>
+<div class="app-shell">
+<aside class="sidebar" id="primary-sidebar" aria-label="Primary navigation">
+  <div class="brand"><div class="brand-mark">PP</div><div><strong>Project Pipeline</strong><span>Command Center</span></div></div>
+  <nav>
+    <button type="button" class="nav-item active" data-target="overview" aria-current="page"><span class="nav-dot"></span>Overview</button>
+    <button type="button" class="nav-item" data-target="graph"><span class="nav-dot"></span>Project Graph</button>
+    <button type="button" class="nav-item" data-target="work"><span class="nav-dot"></span>Live Work</button>
+    <button type="button" class="nav-item" data-target="health"><span class="nav-dot"></span>Health &amp; Risk</button>
+    <button type="button" class="nav-item" data-target="budgets"><span class="nav-dot"></span>Budgets</button>
+    <button type="button" class="nav-item" data-target="providers"><span class="nav-dot"></span>Providers</button>
+    <button type="button" class="nav-item" data-target="context"><span class="nav-dot"></span>Context</button>
+    <button type="button" class="nav-item" data-target="recovery"><span class="nav-dot"></span>Recovery</button>
+    <button type="button" class="nav-item" data-target="director"><span class="nav-dot"></span>Director Chat</button>
+    <button type="button" class="nav-item" data-target="incidents"><span class="nav-dot"></span>Incidents</button>
+    <button type="button" class="nav-item" data-target="approvals"><span class="nav-dot"></span>Approvals</button>
+    <button type="button" class="nav-item" data-target="sync"><span class="nav-dot"></span>Jira / GitHub</button>
+    <button type="button" class="nav-item" data-target="evidence"><span class="nav-dot"></span>Evidence</button>
+  </nav>
+  <div class="sidebar-foot"><span class="authority-dot"></span>Canonical authority: Project Pipeline</div>
+</aside>
+<div class="workspace">
+<header class="topbar">
+  <button class="menu-button" type="button" aria-label="Toggle navigation" aria-controls="primary-sidebar" aria-expanded="false">☰</button>
+  <div><p class="eyebrow">CONTROL PLANE / PROJECT-PIPELINE</p><h1>Command Center</h1></div>
+  <div class="top-actions"><span class="badge badge-warn">OFFLINE EVIDENCE</span><span class="badge badge-warn">DEGRADED</span><button type="button" class="icon-button" aria-label="Notification status">◉</button></div>
+</header>
+<main id="main-content" tabindex="-1">
+<section class="hero" aria-labelledby="hero-heading"><div><p class="eyebrow">PROJECT OVERVIEW</p><h2 id="hero-heading">Execution truth, without the guesswork.</h2><p>Live operational state is projected from canonical records. This verification preview is non-authoritative by design.</p></div><div class="hero-gate"><span>Completion Gate</span><strong>NOT_COMPLETE</strong><small>62% deterministic completion</small></div></section>
+<div class="metric-grid" aria-label="Key project metrics"><article class="metric-card"><span>Implementation</span><strong>62%</strong><small>accepted scope delivered</small></article><article class="metric-card"><span>Verification</span><strong>79%</strong><small>behavior-linked evidence</small></article><article class="metric-card"><span>Live work</span><strong>3</strong><small>active / queued items</small></article><article class="metric-card"><span>Human attention</span><strong>2</strong><small>operator inbox items</small></article></div>
+<div class="content-grid"><div class="main-column">
+<section id="overview" class="surface-card" aria-labelledby="overview-heading"><header class="section-head"><div><p class="eyebrow">READINESS</p><h2 id="overview-heading">Project readiness</h2></div></header><div class="readiness-grid"><div class="progress-wrap"><div class="progress-label"><span>Implementation</span><strong>62%</strong></div><div class="progress-track"><span style="width:62%"></span></div></div><div class="progress-wrap"><div class="progress-label"><span>Verification</span><strong>79%</strong></div><div class="progress-track"><span style="width:79%"></span></div></div><div class="progress-wrap"><div class="progress-label"><span>Release readiness</span><strong>48%</strong></div><div class="progress-track"><span style="width:48%"></span></div></div><div class="progress-wrap"><div class="progress-label"><span>Operational readiness</span><strong>55%</strong></div><div class="progress-track"><span style="width:55%"></span></div></div></div></section>
+<section id="graph" class="surface-card" aria-labelledby="graph-heading"><header class="section-head"><div><p class="eyebrow">TRACEABILITY</p><h2 id="graph-heading">Interactive project graph</h2></div><label class="search-field"><span class="sr-only">Search graph</span><input id="graph-search" aria-label="Search graph" placeholder="Filter requirements, work, evidence…"></label></header><div class="graph-canvas" role="group" aria-label="Requirement and work dependency graph"><button type="button" class="graph-node kind-requirement" data-node="REQ-UX-0008" style="--x:8%;--y:16%"><span>requirement</span><strong>Interactive project graph</strong><small>IN PROGRESS</small></button><button type="button" class="graph-node kind-story" data-node="PP-STORY-000114" style="--x:39%;--y:16%"><span>story</span><strong>Project Intelligence</strong><small>IN PROGRESS</small></button><button type="button" class="graph-node kind-evidence" data-node="EVID-000136" style="--x:70%;--y:16%"><span>evidence</span><strong>Backend evidence</strong><small>VERIFIED</small></button><button type="button" class="graph-node kind-task" data-node="PP-TASK-000171" style="--x:39%;--y:54%"><span>task</span><strong>React + Tauri client</strong><small>IN PROGRESS</small></button><svg class="graph-lines" aria-hidden="true" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M 21 27 C 34 27, 32 27, 42 27"></path><path d="M 53 27 C 66 27, 64 27, 74 27"></path><path d="M 53 35 C 53 48, 53 52, 53 62"></path></svg></div><div class="graph-legend"><span><i class="legend requirement"></i>Requirement</span><span><i class="legend story"></i>Story</span><span><i class="legend task"></i>Task</span><span><i class="legend evidence"></i>Evidence</span></div></section>
+<section id="work" class="surface-card" aria-labelledby="work-heading"><header class="section-head"><div><p class="eyebrow">EXECUTION</p><h2 id="work-heading">Live work</h2></div></header><div class="table-wrap"><table><caption class="sr-only">Current and queued work</caption><thead><tr><th>Work</th><th>Owner</th><th>Stage</th><th>State</th><th>Progress</th><th>Next</th></tr></thead><tbody><tr><td><strong>React operator client and Tauri shell</strong><small>PP-TASK-000171</small></td><td>command-center</td><td>UI implementation</td><td><span class="badge badge-good">RUNNING</span></td><td>74%</td><td>Browser verification</td></tr><tr><td><strong>Project Intelligence surfaces</strong><small>PP-STORY-000114</small></td><td>command-center</td><td>Projection wiring</td><td><span class="badge badge-good">RUNNING</span></td><td>68%</td><td>Evidence drill-down</td></tr><tr><td><strong>Accessible responsive surfaces</strong><small>PP-STORY-000115</small></td><td>verification</td><td>Visual QA</td><td><span class="badge badge-neutral">QUEUED</span></td><td>51%</td><td>Mobile viewport audit</td></tr></tbody></table></div></section>
+<section id="health" class="surface-card" aria-labelledby="health-heading"><header class="section-head"><div><p class="eyebrow">OPERATIONS</p><h2 id="health-heading">Layered health &amp; risk</h2></div></header><div class="health-grid"><article class="health-card"><div><span class="status-light good"></span><strong>System</strong></div><span class="badge badge-good">HEALTHY</span><p>Control plane responsive.</p></article><article class="health-card"><div><span class="status-light warn"></span><strong>Project</strong></div><span class="badge badge-warn">DEGRADED</span><p>Accepted scope remains incomplete.</p></article><article class="health-card"><div><span class="status-light good"></span><strong>Evidence</strong></div><span class="badge badge-good">HEALTHY</span><p>Current pass evidence attached.</p></article><article class="health-card"><div><span class="status-light good"></span><strong>Budget</strong></div><span class="badge badge-good">HEALTHY</span><p>Within configured guardrail.</p></article><article class="health-card"><div><span class="status-light warn"></span><strong>Providers</strong></div><span class="badge badge-warn">DEGRADED</span><p>Some external providers remain unverified.</p></article><article class="health-card"><div><span class="status-light warn"></span><strong>Sync</strong></div><span class="badge badge-warn">DEGRADED</span><p>Remote Jira/GitHub mutation disabled.</p></article></div><div class="risk-list"><article><span class="badge badge-bad">HIGH</span><div><strong>Completion Gate remains open</strong><p>Critical accepted requirements remain without full evidence.</p></div></article><article><span class="badge badge-warn">MEDIUM</span><div><strong>Desktop runtime unverified</strong><p>Tauri source boundary exists but native binary needs external toolchain qualification.</p></div></article></div></section>
+<section id="budgets" class="surface-card" aria-labelledby="budgets-heading"><header class="section-head"><div><p class="eyebrow">FINANCE</p><h2 id="budgets-heading">Budget &amp; cost drill-down</h2></div></header><div class="budget-layout"><div class="budget-total"><span>Forecast</span><strong>$286</strong><small>of $500 configured cap</small></div><div class="provider-bars"><div class="progress-wrap"><div class="progress-label"><span>OpenAI · $132</span><strong>26%</strong></div><div class="progress-track"><span style="width:26%"></span></div></div><div class="progress-wrap"><div class="progress-label"><span>Local · $24</span><strong>5%</strong></div><div class="progress-track"><span style="width:5%"></span></div></div><div class="progress-wrap"><div class="progress-label"><span>Other · $56</span><strong>11%</strong></div><div class="progress-track"><span style="width:11%"></span></div></div></div></div></section>
+<section id="providers" class="surface-card" aria-labelledby="providers-heading"><header class="section-head"><div><p class="eyebrow">ROUTING</p><h2 id="providers-heading">Provider &amp; agent performance</h2></div></header><div class="provider-grid"><article><div><strong>OpenAI</strong><span class="badge badge-good">READY</span></div><dl><div><dt>Success</dt><dd>98.4%</dd></div><div><dt>p50 latency</dt><dd>780 ms</dd></div></dl></article><article><div><strong>Local runtime</strong><span class="badge badge-good">READY</span></div><dl><div><dt>Success</dt><dd>96.8%</dd></div><div><dt>p50 latency</dt><dd>1,240 ms</dd></div></dl></article></div></section>
+<section id="context" class="surface-card" aria-labelledby="context-heading"><header class="section-head"><div><p class="eyebrow">KNOWLEDGE</p><h2 id="context-heading">Context health</h2></div></header><div class="context-metrics"><div class="progress-wrap"><div class="progress-label"><span>Freshness</span><strong>97%</strong></div><div class="progress-track"><span style="width:97%"></span></div></div><div class="progress-wrap"><div class="progress-label"><span>Coverage</span><strong>93%</strong></div><div class="progress-track"><span style="width:93%"></span></div></div><article><span>Trusted sources</span><strong>18</strong></article><article><span>Egress-restricted</span><strong>4</strong></article></div></section>
+<section id="recovery" class="surface-card" aria-labelledby="recovery-heading"><header class="section-head"><div><p class="eyebrow">RESILIENCE</p><h2 id="recovery-heading">Recovery Center</h2></div></header><div class="record-list"><article><div><strong>INCIDENT-LOCAL-001</strong><span class="badge badge-warn">MONITORING</span></div><p>External GitHub synchronization</p><dl><div><dt>Checkpoint</dt><dd>Local outbox preserved</dd></div><div><dt>Runbook</dt><dd>command_center_realtime_recovery.md</dd></div></dl></article></div></section>
+<section id="director" class="surface-card" aria-labelledby="director-heading"><header class="section-head"><div><p class="eyebrow">INTELLIGENCE</p><h2 id="director-heading">Director Chat</h2></div></header><div class="director-layout"><div id="director-log" class="chat-log" aria-live="polite"><article class="chat-message"><span>Director</span><p>Ask about global, project, or incident state. This evidence preview demonstrates grounded interaction behavior; raw chat cannot mutate canonical state.</p></article></div><form id="director-form" class="director-form"><label><span>Scope</span><select id="director-scope" aria-label="Director scope"><option>GLOBAL</option><option selected>PROJECT</option><option>INCIDENT</option></select></label><label><span>Message</span><input id="director-message" aria-label="Director message" value="What needs my attention?" autocomplete="off"></label><button type="submit">Ask Director</button></form><p id="director-status" class="control-status" role="status">Evidence preview only; no command has been executed.</p></div></section>
+<section id="incidents" class="surface-card" aria-labelledby="incidents-heading"><header class="section-head"><div><p class="eyebrow">RECOVERY</p><h2 id="incidents-heading">Incident Manager</h2></div></header><div class="record-list incident-list"><article><div><strong>INCIDENT-AAAAAAAAAAAAAAAAAAAA</strong><span id="incident-state" class="badge badge-warn">OPEN</span></div><p>External provider credentials require human repair.</p><div class="incident-action-detail"><span>Exact action</span><strong>Rotate the provider credential and confirm the health check succeeds.</strong><span>Verification</span><small>credential validates · provider health check passes · invalidate stale assumptions · reconcile canonical state</small></div><div class="incident-actions"><button type="button" data-incident-action="acknowledge">Acknowledge</button><button type="button" data-incident-action="recovery">Start recovery</button><button type="button" data-incident-action="verify">Verify repair</button><button type="button" data-incident-action="resolve">Resolve</button></div></article></div><p id="incident-status" class="control-status" role="status">Resolution remains blocked until repair verification succeeds in canonical state.</p></section>
+<section id="approvals" class="surface-card" aria-labelledby="approvals-heading"><header class="section-head"><div><p class="eyebrow">GOVERNANCE</p><h2 id="approvals-heading">Approval Center</h2></div></header><div class="record-list"><article><div><strong>Increase provider budget threshold</strong><span class="badge badge-warn">PENDING</span></div><p>+$75 maximum authorized spend</p><dl><div><dt>Risk</dt><dd>HIGH</dd></div><div><dt>Requester</dt><dd>budget-governor</dd></div><div><dt>Expires</dt><dd>2h</dd></div></dl></article></div></section>
+<section id="sync" class="surface-card" aria-labelledby="sync-heading"><header class="section-head"><div><p class="eyebrow">RECONCILIATION</p><h2 id="sync-heading">Jira / GitHub synchronization</h2></div></header><div class="sync-grid"><article><div><strong>Jira</strong><span class="badge badge-warn">LOCAL_ONLY</span></div><dl><div><dt>Mismatches</dt><dd>0</dd></div><div><dt>Pending</dt><dd>0</dd></div></dl><small>Last remote observation is stale</small></article><article><div><strong>GitHub</strong><span class="badge badge-warn">LOCAL_ONLY</span></div><dl><div><dt>Mismatches</dt><dd>0</dd></div><div><dt>Pending</dt><dd>0</dd></div></dl><small>Last remote observation is stale</small></article></div></section>
+<section id="evidence" class="surface-card" aria-labelledby="evidence-heading"><header class="section-head"><div><p class="eyebrow">ASSURANCE</p><h2 id="evidence-heading">Evidence drill-down</h2></div></header><div class="evidence-list"><button type="button"><span><span class="badge badge-good">VERIFIED</span><strong>Command Center backend focused suite</strong></span><code>EVID-000136</code></button><button type="button"><span><span class="badge badge-good">VERIFIED</span><strong>Realtime reconnect simulation</strong></span><code>EVID-000138</code></button></div></section>
+</div><aside class="right-rail" aria-label="Operator attention and controls"><section class="rail-card"><p class="eyebrow">OPERATOR INBOX</p><h2>Human attention</h2><div class="inbox-list"><article><span class="badge badge-bad">L3</span><div><strong>Windows desktop build requires toolchain verification</strong><p>Desktop runtime cannot be certified in this environment.</p><small><b>Action:</b> Run the documented Tauri Windows qualification workflow.</small><small><b>Deadline:</b> 2026-08-16 04:00 UTC</small><small><b>Verify:</b> Attach a successful native Windows qualification record.</small><div class="inbox-actions"><button type="button" data-inbox-action="ack">Acknowledge</button><button type="button" data-inbox-action="notify">Notify</button></div></div></article><article><span class="badge badge-warn">L2</span><div><strong>Remote Jira observation is stale</strong><p>Local mirror remains authoritative for this pass.</p><small><b>Action:</b> Reconcile after credentials and remote-write approval are available.</small><small><b>Deadline:</b> 2026-08-16 12:00 UTC</small><small><b>Verify:</b> Confirm remote observation timestamp and reconciliation state.</small></div></article></div><p id="notification-status" class="control-status" role="status">Remote delivery disabled by default; native action-click handling is not certified by this preview.</p></section><section class="rail-card sticky"><p class="eyebrow">SAFE CONTROLS</p><h2>Project controls</h2><div class="control-stack"><button type="button" data-control="pause-new">Pause new work</button><button type="button" data-control="pause-project">Pause project</button><button type="button" class="danger" data-control="emergency-stop">Emergency stop</button></div><p class="control-status" role="status">Controls are disabled in the evidence preview; the React client routes them through typed CommandEnvelope calls.</p><small>Every mutation returns through authentication, policy, idempotency, audit, and canonical state transition handling.</small></section></aside></div>
+</main></div></div>
+<script>
+(() => {
+  const sidebar=document.querySelector('.sidebar'); const menu=document.querySelector('.menu-button');
+  menu.addEventListener('click',()=>{const open=sidebar.classList.toggle('sidebar-open');menu.setAttribute('aria-expanded',String(open));});
+  document.querySelectorAll('.nav-item').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(x=>{x.classList.remove('active');x.removeAttribute('aria-current')});btn.classList.add('active');btn.setAttribute('aria-current','page');sidebar.classList.remove('sidebar-open');menu.setAttribute('aria-expanded','false');document.getElementById(btn.dataset.target).scrollIntoView({block:'start'});}));
+  document.getElementById('graph-search').addEventListener('input',(event)=>{const term=event.target.value.toLowerCase();document.querySelectorAll('.graph-node').forEach(node=>{node.hidden=Boolean(term && !node.textContent.toLowerCase().includes(term));});});
+  document.querySelectorAll('[data-control]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelector('.rail-card.sticky .control-status').textContent='Evidence preview: control intentionally not executed.';}));
+  document.getElementById('director-form').addEventListener('submit',(event)=>{event.preventDefault();const input=document.getElementById('director-message');const log=document.getElementById('director-log');const scope=document.getElementById('director-scope').value;const message=input.value.trim();if(!message)return;log.insertAdjacentHTML('beforeend',`<article class="chat-message chat-user"><span>Operator</span><p>${message.replace(/[<>&]/g,'')}</p></article><article class="chat-message"><span>Director</span><p>Authorized ${scope.toLowerCase()} preview: Completion Gate remains NOT_COMPLETE; human attention includes the native runtime qualification and stale remote observation. This is a grounded evidence-preview response; no action was executed.</p></article>`);document.getElementById('director-status').textContent='Grounded preview response rendered; raw chat mutation remains disabled.';});
+  let incidentStage=0;const stages=['OPEN','ACKNOWLEDGED','RECOVERING','VERIFIED','RESOLVED'];document.querySelectorAll('[data-incident-action]').forEach(btn=>btn.addEventListener('click',()=>{const wanted=btn.dataset.incidentAction;const status=document.getElementById('incident-status');if(wanted==='acknowledge')incidentStage=Math.max(incidentStage,1);else if(wanted==='recovery')incidentStage=Math.max(incidentStage,2);else if(wanted==='verify')incidentStage=Math.max(incidentStage,3);else if(wanted==='resolve'&&incidentStage<3){status.textContent='Evidence preview: resolve remains blocked until repair verification succeeds.';return;}else if(wanted==='resolve')incidentStage=4;document.getElementById('incident-state').textContent=stages[incidentStage];status.textContent=`Evidence preview: ${stages[incidentStage]} lifecycle state displayed locally; canonical mutation intentionally not executed.`;}));
+  document.querySelectorAll('[data-inbox-action]').forEach(btn=>btn.addEventListener('click',()=>{document.getElementById('notification-status').textContent=btn.dataset.inboxAction==='notify'?'Evidence preview: broker would classify delivery; native click handling remains unqualified and remote delivery remains off.':'Evidence preview: acknowledgement intentionally not written to canonical state.';}));
+})();
+</script>
+</body></html>

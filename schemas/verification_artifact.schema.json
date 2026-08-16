@@ -1,0 +1,67 @@
+{
+  "$defs": {
+    "ArtifactKind": {
+      "enum": [
+        "LOG",
+        "JSON",
+        "SCREENSHOT",
+        "TRACE",
+        "HTML",
+        "REPORT"
+      ],
+      "title": "ArtifactKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/verification_artifact.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_id": {
+      "title": "Artifact Id",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/ArtifactKind"
+    },
+    "media_type": {
+      "title": "Media Type",
+      "type": "string"
+    },
+    "produced_by_check_id": {
+      "title": "Produced By Check Id",
+      "type": "string"
+    },
+    "relative_path": {
+      "title": "Relative Path",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Sha256",
+      "type": "string"
+    },
+    "size_bytes": {
+      "minimum": 0,
+      "title": "Size Bytes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "artifact_id",
+    "kind",
+    "relative_path",
+    "sha256",
+    "size_bytes",
+    "media_type",
+    "produced_by_check_id"
+  ],
+  "title": "VerificationArtifact",
+  "type": "object"
+}

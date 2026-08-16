@@ -1,0 +1,33 @@
+{
+  "accepted_adr_count": 21,
+  "decision_count": 32,
+  "resolved_decision_ids": [
+    "OPEN-DEC-0001",
+    "OPEN-DEC-0002",
+    "OPEN-DEC-0003",
+    "OPEN-DEC-0004",
+    "OPEN-DEC-0006",
+    "OPEN-DEC-0007",
+    "OPEN-DEC-0008",
+    "OPEN-DEC-0009",
+    "OPEN-DEC-0010",
+    "OPEN-DEC-0012",
+    "OPEN-DEC-0015",
+    "OPEN-DEC-0020",
+    "OPEN-DEC-0025",
+    "OPEN-DEC-0026",
+    "OPEN-DEC-0028",
+    "OPEN-DEC-0029"
+  ],
+  "result": "PASS",
+  "schema_version": "1.0.0",
+  "status_counts": {
+    "BLOCKED_EXTERNAL": 4,
+    "OPEN": 12,
+    "RESOLVED": 16
+  },
+  "validation_notes": [
+    "Every resolved decision links to one or more accepted ADRs.",
+    "Hatchet, Docker MCP Gateway, pgvector, and AG-UI choices preserve the latest source chronology and explicit fallback boundaries."
+  ]
+}

@@ -1,0 +1,107 @@
+{
+  "$defs": {
+    "ContextSourceKind": {
+      "enum": [
+        "SOURCE",
+        "REQUIREMENT",
+        "PLAN",
+        "JIRA",
+        "DECISION",
+        "EVIDENCE",
+        "POLICY",
+        "INSTRUCTION",
+        "REPOSITORY_MAP",
+        "SOURCE_FILE",
+        "TEST",
+        "DIFF",
+        "REVIEW_RUBRIC",
+        "DOCUMENT",
+        "OTHER"
+      ],
+      "title": "ContextSourceKind",
+      "type": "string"
+    },
+    "ContextTrust": {
+      "enum": [
+        "GOVERNING",
+        "AUTHORITATIVE",
+        "SOURCE_CONTROLLED",
+        "VERIFIED_EXTERNAL",
+        "UNTRUSTED_REPOSITORY",
+        "UNTRUSTED_EXTERNAL"
+      ],
+      "title": "ContextTrust",
+      "type": "string"
+    },
+    "Sensitivity": {
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "title": "Sensitivity",
+      "type": "integer"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/context_item.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "content": {
+      "title": "Content",
+      "type": "string"
+    },
+    "content_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Content Sha256",
+      "type": "string"
+    },
+    "context_key": {
+      "title": "Context Key",
+      "type": "string"
+    },
+    "item_id": {
+      "title": "Item Id",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/ContextSourceKind"
+    },
+    "revision_id": {
+      "title": "Revision Id",
+      "type": "string"
+    },
+    "sensitivity": {
+      "$ref": "#/$defs/Sensitivity"
+    },
+    "source_reference": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Reference"
+    },
+    "trust": {
+      "$ref": "#/$defs/ContextTrust"
+    }
+  },
+  "required": [
+    "item_id",
+    "context_key",
+    "kind",
+    "content",
+    "revision_id",
+    "trust",
+    "sensitivity",
+    "content_sha256"
+  ],
+  "title": "ContextItem",
+  "type": "object"
+}

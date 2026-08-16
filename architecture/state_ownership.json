@@ -1,0 +1,201 @@
+{
+  "entities": [
+    {
+      "authoritative_owner": "COMP-CTRL-001",
+      "durable_backend": "PostgreSQL",
+      "entity": "Project",
+      "local_execution_profile": "SQLite projection rebuilt from validated repository authorities; PostgreSQL remains the production target.",
+      "ownership_rule": "Control Kernel transitions only",
+      "persistence": "PostgreSQL",
+      "reconciliation_rule": "Control Kernel transitions only"
+    },
+    {
+      "authoritative_owner": "COMP-TRACE-001",
+      "durable_backend": "PostgreSQL",
+      "entity": "Requirement",
+      "local_execution_profile": "SQLite projection rebuilt from validated repository authorities; PostgreSQL remains the production target.",
+      "ownership_rule": "Traceability engine with source provenance",
+      "persistence": "PostgreSQL",
+      "reconciliation_rule": "Traceability engine with source provenance"
+    },
+    {
+      "authoritative_owner": "COMP-CTRL-001",
+      "durable_backend": "PostgreSQL",
+      "entity": "WorkItem",
+      "local_execution_profile": "SQLite projection rebuilt from validated repository authorities; PostgreSQL remains the production target.",
+      "ownership_rule": "Control Kernel owns canonical state; Jira is reconciled",
+      "persistence": "PostgreSQL",
+      "reconciliation_rule": "Control Kernel owns canonical state; Jira is reconciled"
+    },
+    {
+      "authoritative_owner": "COMP-SEQUENCE-001",
+      "durable_backend": "PostgreSQL",
+      "entity": "DependencyGraph",
+      "ownership_rule": "Graph service computes projections",
+      "persistence": "PostgreSQL",
+      "reconciliation_rule": "Graph service computes projections"
+    },
+    {
+      "authoritative_owner": "COMP-RESOURCE-001",
+      "durable_backend": "PostgreSQL",
+      "entity": "ResourceLease",
+      "ownership_rule": "Lease manager owns fencing and expiry",
+      "persistence": "PostgreSQL",
+      "reconciliation_rule": "Lease manager owns fencing and expiry"
+    },
+    {
+      "authoritative_owner": "COMP-WORKFLOW-001",
+      "durable_backend": "Hatchet behind DurableExecutionPort with PostgreSQL-backed Project Pipeline reconciliation records",
+      "entity": "WorkflowExecution",
+      "ownership_rule": "Workflow history and checkpoints only; canonical project truth remains in Project Pipeline domain tables",
+      "persistence": "Hatchet workflow history plus PostgreSQL command, checkpoint, and reconciliation metadata",
+      "reconciliation_rule": "DurableExecutionPort observations are reconciled into canonical Project Pipeline state before completion"
+    },
+    {
+      "authoritative_owner": "COMP-CONTEXT-001",
+      "durable_backend": "Content-addressed artifact store",
+      "entity": "ContextPack",
+      "ownership_rule": "Immutable bytes plus PostgreSQL metadata",
+      "persistence": "Content-addressed artifact store",
+      "reconciliation_rule": "Immutable bytes plus PostgreSQL metadata"
+    },
+    {
+      "authoritative_owner": "COMP-ROUTER-001",
+      "durable_backend": "PostgreSQL",
+      "entity": "ProviderQualification",
+      "ownership_rule": "Qualification and performance registry",
+      "persistence": "PostgreSQL",
+      "reconciliation_rule": "Qualification and performance registry"
+    },
+    {
+      "authoritative_owner": "COMP-POLICY-001",
+      "durable_backend": "PostgreSQL and audit event",
+      "entity": "PolicyDecision",
+      "ownership_rule": "Policy bundle version and input hash retained",
+      "persistence": "PostgreSQL and audit event",
+      "reconciliation_rule": "Policy bundle version and input hash retained"
+    },
+    {
+      "authoritative_owner": "COMP-BUDGET-001",
+      "durable_backend": "PostgreSQL",
+      "entity": "BudgetLedger",
+      "ownership_rule": "Append-only accounting entries and spend leases",
+      "persistence": "PostgreSQL",
+      "reconciliation_rule": "Append-only accounting entries and spend leases"
+    },
+    {
+      "authoritative_owner": "COMP-EVIDENCE-001",
+      "durable_backend": "PostgreSQL",
+      "entity": "EvidenceRecord",
+      "ownership_rule": "Append-only record referencing artifact identity",
+      "persistence": "PostgreSQL",
+      "reconciliation_rule": "Append-only record referencing artifact identity"
+    },
+    {
+      "authoritative_owner": "COMP-ARTIFACT-001",
+      "durable_backend": "Local content-addressed filesystem; optional S3",
+      "entity": "ArtifactBytes",
+      "ownership_rule": "SHA-256 identity and reference-aware retention",
+      "persistence": "Local content-addressed filesystem; optional S3",
+      "reconciliation_rule": "SHA-256 identity and reference-aware retention"
+    },
+    {
+      "authoritative_owner": "COMP-OUTBOX-001",
+      "durable_backend": "PostgreSQL",
+      "entity": "DomainEvent",
+      "ownership_rule": "Transactional event and delivery state",
+      "persistence": "PostgreSQL",
+      "reconciliation_rule": "Transactional event and delivery state"
+    },
+    {
+      "authoritative_owner": "COMP-REPO-001",
+      "durable_backend": "Git",
+      "entity": "RepositoryRevision",
+      "ownership_rule": "Git is authoritative for source revisions",
+      "persistence": "Git",
+      "reconciliation_rule": "Git is authoritative for source revisions"
+    },
+    {
+      "authoritative_owner": "COMP-JIRA-001",
+      "durable_backend": "Jira plus local mirror",
+      "entity": "RemoteWorkState",
+      "ownership_rule": "Authority profile and reconciliation required",
+      "persistence": "Jira plus local mirror",
+      "reconciliation_rule": "Authority profile and reconciliation required"
+    },
+    {
+      "authoritative_owner": "COMP-OBS-001",
+      "durable_backend": "OpenTelemetry-compatible backend",
+      "entity": "Telemetry",
+      "ownership_rule": "Not canonical truth until interpreted by deterministic health rules",
+      "persistence": "OpenTelemetry-compatible backend",
+      "reconciliation_rule": "Not canonical truth until interpreted by deterministic health rules"
+    },
+    {
+      "authoritative_owner": "COMP-RECOVERY-001",
+      "durable_backend": "PostgreSQL",
+      "entity": "Incident",
+      "ownership_rule": "Recovery state and verification evidence",
+      "persistence": "PostgreSQL",
+      "reconciliation_rule": "Recovery state and verification evidence"
+    },
+    {
+      "authoritative_owner": "COMP-CHAT-001",
+      "durable_backend": "PostgreSQL with retention policy",
+      "entity": "OperatorConversation",
+      "ownership_rule": "No private reasoning; actions stored separately as commands",
+      "persistence": "PostgreSQL with retention policy",
+      "reconciliation_rule": "No private reasoning; actions stored separately as commands"
+    },
+    {
+      "authoritative_owner": "COMP-API-001",
+      "durable_backend": "Rebuildable projection from canonical Project Pipeline state and retained events",
+      "entity": "CommandCenterProjection",
+      "ownership_rule": "Never canonical; client and API projection caches are disposable",
+      "persistence": "PPDB-0016 replay/cache tables where needed",
+      "reconciliation_rule": "Refresh from canonical snapshot and EventEnvelope sequence before operator decisions"
+    },
+    {
+      "authoritative_owner": "COMP-NOTIFY-001",
+      "durable_backend": "PostgreSQL; SQLite local profile",
+      "entity": "OperatorInboxItem",
+      "ownership_rule": "Authoritative only for notification/inbox delivery state, never for underlying project/work state",
+      "persistence": "PPDB-0016 command_center_inbox",
+      "reconciliation_rule": "Underlying action re-enters Control Kernel through typed CommandEnvelope"
+    },
+    {
+      "authoritative_owner": "COMP-API-001",
+      "durable_backend": "Retained EventEnvelope projection log",
+      "entity": "RealtimeProjectionEvent",
+      "ownership_rule": "Sequence/cursor supports delivery and replay; authoritative domain facts remain with originating component",
+      "persistence": "PPDB-0016 command_center_events",
+      "reconciliation_rule": "Cursor gaps trigger retained replay or fresh canonical snapshot"
+    },
+    {
+      "entity": "PortfolioLifecycleState",
+      "authoritative_owner": "COMP-LIFECYCLE-001",
+      "persistence": "PostgreSQL/SQLite lifecycle_portfolio_projects and project-scoped registries",
+      "reconciliation_rule": "Portfolio projections may allocate shared capacity but may not overwrite per-project control state."
+    },
+    {
+      "entity": "EnvironmentAndTestDataLifecycle",
+      "authoritative_owner": "COMP-LIFECYCLE-001",
+      "persistence": "PostgreSQL/SQLite lifecycle_environments and lifecycle_test_data_assets",
+      "reconciliation_rule": "Environment/test-data cleanup remains plan-only until typed authorization and verification; production-derived data defaults denied."
+    },
+    {
+      "entity": "ContractEvolutionState",
+      "authoritative_owner": "COMP-LIFECYCLE-001",
+      "persistence": "PostgreSQL/SQLite lifecycle_contract_evolutions plus versioned contract/migration registries",
+      "reconciliation_rule": "Breaking contraction is blocked until compatibility and verification evidence pass."
+    },
+    {
+      "entity": "PlatformQualificationAndClosure",
+      "authoritative_owner": "COMP-LIFECYCLE-001",
+      "persistence": "PostgreSQL/SQLite lifecycle_qualifications and lifecycle_project_closures",
+      "reconciliation_rule": "Promotion/archive eligibility is canonical here, but external deployment/cleanup mutations remain with their existing authorities."
+    }
+  ],
+  "entity_count": 25,
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,13 @@
+{
+  "blocked_external_decision_count": 4,
+  "exact_duplicate_record_present": true,
+  "glossary_term_count": 62,
+  "open_decision_count": 32,
+  "prefix_overlap_record_present": true,
+  "result": "PASS",
+  "reverse_link_mismatches": [],
+  "schema_version": "1.0.0",
+  "source_evolution_record_count": 15,
+  "unlinked_open_decisions": [],
+  "unlinked_source_evolution_records": []
+}

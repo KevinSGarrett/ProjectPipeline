@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "gate_id": "PASS-16-VERIFICATION-ACTIVATION-GATE",
+  "status": "INTEGRATED",
+  "material_implementation_allowed": true,
+  "correction_rounds_repeated": false,
+  "pass_15_review_artifact": "provenance/reviews/PASS-15_verification_evaluation_upstream_review.md",
+  "activation_review_artifact": "provenance/reviews/PASS-16_verification_harness_activation_review.md",
+  "candidate_upstream_ids": [
+    "UPSTREAM-015",
+    "UPSTREAM-027",
+    "UPSTREAM-032",
+    "UPSTREAM-044",
+    "UPSTREAM-051",
+    "UPSTREAM-063",
+    "UPSTREAM-064",
+    "UPSTREAM-085",
+    "UPSTREAM-092",
+    "UPSTREAM-093",
+    "UPSTREAM-101",
+    "UPSTREAM-108",
+    "UPSTREAM-111"
+  ],
+  "executed_external_upstream_ids": [
+    "UPSTREAM-063"
+  ],
+  "adapter_implemented_upstream_ids": [
+    "UPSTREAM-015",
+    "UPSTREAM-027",
+    "UPSTREAM-044",
+    "UPSTREAM-063",
+    "UPSTREAM-064",
+    "UPSTREAM-085",
+    "UPSTREAM-092",
+    "UPSTREAM-093",
+    "UPSTREAM-108",
+    "UPSTREAM-111"
+  ],
+  "selected_not_executed_upstream_ids": [
+    "UPSTREAM-015",
+    "UPSTREAM-027",
+    "UPSTREAM-044",
+    "UPSTREAM-051",
+    "UPSTREAM-064",
+    "UPSTREAM-085",
+    "UPSTREAM-092",
+    "UPSTREAM-093",
+    "UPSTREAM-108",
+    "UPSTREAM-111"
+  ],
+  "pattern_only_upstream_ids": [
+    "UPSTREAM-032",
+    "UPSTREAM-101"
+  ],
+  "authority_boundary": "Upstreams produce verification evidence; Project Pipeline alone evaluates deterministic completion.",
+  "no_silent_required_skips": true
+}

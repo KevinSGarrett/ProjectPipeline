@@ -1,0 +1,38 @@
+flowchart TB
+    subgraph Experience[Operator Experience]
+      UI[Command Center] --> API[Control API]
+      UI --> Chat[Director Chat]
+    end
+    subgraph Control[Deterministic Control]
+      Kernel[Project Control Kernel]
+      Sequence[Build Sequencer]
+      Scheduler[Dynamic Lane Scheduler]
+      Policy[Policy Engine]
+      Budget[Budget Governor]
+      Complete[Completion Gate]
+    end
+    subgraph Advisory[Advisory Intelligence]
+      Director[Autonomy Director]
+      Context[Context Broker and Compiler]
+      Router[Capability Router]
+    end
+    subgraph Execution[Execution and Integration]
+      Workflow[Durable Execution Port]
+      Worker[Worker Runtime]
+      Jira[Jira Steward]
+      Repo[Repository Steward]
+      Tools[Governed Tool Port]
+    end
+    subgraph Platform[Platform Services]
+      Postgres[(Canonical Persistence)]
+      Outbox[Inbox and Outbox]
+      Artifact[Artifact Store]
+      Telemetry[Observability]
+    end
+    API --> Kernel
+    Kernel --> Advisory
+    Kernel --> Execution
+    Kernel --> Platform
+    Advisory --> Execution
+    Execution --> Platform
+    Worker --> Complete

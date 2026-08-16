@@ -1,0 +1,110 @@
+{
+  "$id": "https://project-pipeline.local/schemas/budget_infracost_estimate.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "available": {
+      "title": "Available",
+      "type": "boolean"
+    },
+    "complete": {
+      "title": "Complete",
+      "type": "boolean"
+    },
+    "currency": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Currency"
+    },
+    "project_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Project Count",
+      "type": "integer"
+    },
+    "reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_revision": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Revision"
+    },
+    "total_hourly_microunits": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Total Hourly Microunits"
+    },
+    "total_monthly_microunits": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Total Monthly Microunits"
+    },
+    "total_monthly_usage_microunits": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Total Monthly Usage Microunits"
+    },
+    "unknown_price_components": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Unknown Price Components",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "available",
+    "complete"
+  ],
+  "title": "InfracostEstimate",
+  "type": "object"
+}

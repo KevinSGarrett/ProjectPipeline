@@ -1,0 +1,661 @@
+{
+  "canonical_local_root": "C:\\Project_X",
+  "commands": [
+    {
+      "command": "python -m project_pipeline doctor --root .",
+      "name": "doctor",
+      "requires_paths": [
+        "src/project_pipeline/cli.py"
+      ]
+    },
+    {
+      "command": "python -m project_pipeline validate --root .",
+      "name": "repository_validation",
+      "requires_paths": [
+        "config/repository_policy.json"
+      ]
+    },
+    {
+      "command": "python -m project_pipeline jira validate --root .",
+      "name": "jira_validation",
+      "requires_paths": [
+        "jira/BOARD_MANIFEST.json"
+      ]
+    },
+    {
+      "command": "python -m project_pipeline control evaluate --root .",
+      "name": "control_evaluation",
+      "requires_paths": [
+        "src/project_pipeline/control"
+      ]
+    },
+    {
+      "command": "python -m project_pipeline control sequence --root .",
+      "name": "control_sequence",
+      "requires_paths": [
+        "src/project_pipeline/control"
+      ]
+    },
+    {
+      "command": "python scripts/validate_instructions.py --root .",
+      "name": "instruction_validation",
+      "requires_paths": [
+        "scripts/validate_instructions.py",
+        "instructions/INSTRUCTION_MANIFEST.json"
+      ]
+    },
+    {
+      "command": "python scripts/instruction_cold_start.py --root .",
+      "name": "cold_start",
+      "requires_paths": [
+        "scripts/instruction_cold_start.py",
+        "AGENTS.md"
+      ]
+    }
+  ],
+  "entry_point": "AGENTS.md",
+  "files": [
+    {
+      "instruction_id": "PP-ASSET-AGENTS-SKILLS-FAILURE-RECOVERY-SKILL-MD",
+      "kind": "SKILL",
+      "path": ".agents/skills/failure-recovery/SKILL.md",
+      "sha256": "60d18b050896ccf7858b0d7e86b5225564030bcccf654a13a6efa688cf520748",
+      "size_bytes": 833
+    },
+    {
+      "instruction_id": "PP-ASSET-AGENTS-SKILLS-GITHUB-BRANCH-PR-SKILL-MD",
+      "kind": "SKILL",
+      "path": ".agents/skills/github-branch-pr/SKILL.md",
+      "sha256": "56384850bc32eaac475dd72dcd2b4f5d398b746360bd5c144f52e118b4b2e0d1",
+      "size_bytes": 776
+    },
+    {
+      "instruction_id": "PP-ASSET-AGENTS-SKILLS-JIRA-WORK-ITEM-SKILL-MD",
+      "kind": "SKILL",
+      "path": ".agents/skills/jira-work-item/SKILL.md",
+      "sha256": "ae9fa827d0eada7dcd6386460ea81ff37611325f266c2bfef8c78eb3fa6a991b",
+      "size_bytes": 904
+    },
+    {
+      "instruction_id": "PP-ASSET-AGENTS-SKILLS-PPQS-BENCHMARK-SKILL-MD",
+      "kind": "SKILL",
+      "path": ".agents/skills/ppqs-benchmark/SKILL.md",
+      "sha256": "94e3f1602a72bf578ce645404fa7e2f339a3991d12978954768cb19490618d25",
+      "size_bytes": 917
+    },
+    {
+      "instruction_id": "PP-ASSET-AGENTS-SKILLS-PROJECT-BOOTSTRAP-SKILL-MD",
+      "kind": "SKILL",
+      "path": ".agents/skills/project-bootstrap/SKILL.md",
+      "sha256": "f030f2fe0a3534752461b6a44033b1c8b0d39579325d84d6f44e5d2bc6ee1ee7",
+      "size_bytes": 807
+    },
+    {
+      "instruction_id": "PP-ASSET-AGENTS-SKILLS-RELEASE-HANDOFF-SKILL-MD",
+      "kind": "SKILL",
+      "path": ".agents/skills/release-handoff/SKILL.md",
+      "sha256": "b6f3ffd5bea8a2fd5ded99604a816c65f1938fcc27915d1e32e99ba3312dbbbd",
+      "size_bytes": 821
+    },
+    {
+      "instruction_id": "PP-ASSET-AGENTS-SKILLS-REMOTE-CPU-WORKER-SKILL-MD",
+      "kind": "SKILL",
+      "path": ".agents/skills/remote-cpu-worker/SKILL.md",
+      "sha256": "17a89bcc31833c9f6a98b1a9957f4dc2b5abde55b2ffe44154b46448edf1684e",
+      "size_bytes": 914
+    },
+    {
+      "instruction_id": "PP-ASSET-AGENTS-SKILLS-UPSTREAM-QUALIFICATION-SKILL-MD",
+      "kind": "SKILL",
+      "path": ".agents/skills/upstream-qualification/SKILL.md",
+      "sha256": "85a4602cfc9f7f1390a2fe32df4a0975b1a2608a3b7a71917ca6d41c1e381327",
+      "size_bytes": 896
+    },
+    {
+      "instruction_id": "PP-ASSET-GITHUB-CODEOWNERS",
+      "kind": "GITHUB_GOVERNANCE",
+      "path": ".github/CODEOWNERS",
+      "sha256": "965d5c72af3c956ddc0df4ea448d86addf0697f68fb857e133d88debefa64ff2",
+      "size_bytes": 321
+    },
+    {
+      "instruction_id": "PP-ASSET-GITHUB-ISSUE-TEMPLATE-BUG-REPORT-YML",
+      "kind": "GITHUB_GOVERNANCE",
+      "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+      "sha256": "04c264480aa8bae554a7015b85cc9d3ac95205cbc1410a3dc4405c3e4b760f34",
+      "size_bytes": 612
+    },
+    {
+      "instruction_id": "PP-ASSET-GITHUB-PULL-REQUEST-TEMPLATE-MD",
+      "kind": "GITHUB_GOVERNANCE",
+      "path": ".github/pull_request_template.md",
+      "sha256": "8082219b2ced10f2c0785ba89b541c3e31474d8a9912b97fa27280d57476a677",
+      "size_bytes": 1011
+    },
+    {
+      "instruction_id": "PP-ASSET-GITHUB-WORKFLOWS-CODEQL-YML",
+      "kind": "GITHUB_GOVERNANCE",
+      "path": ".github/workflows/codeql.yml",
+      "sha256": "5d525ed4a55628f563062f7004074277f767eb137cf8e66eb8ce5678c1cefc62",
+      "size_bytes": 1141
+    },
+    {
+      "instruction_id": "PP-ASSET-GITHUB-WORKFLOWS-QUALITY-YML",
+      "kind": "GITHUB_GOVERNANCE",
+      "path": ".github/workflows/quality.yml",
+      "sha256": "fdf7bba5bccd076a91fc8caaa355c5cd9b184da582a1e9205cba1ba8bb053730",
+      "size_bytes": 3098
+    },
+    {
+      "instruction_id": "PP-ASSET-GITIGNORE",
+      "kind": "INTEGRATION_SUPPORT",
+      "path": ".gitignore",
+      "sha256": "4efee7ebe62afd27d128ebd7ec049d24ba9b8ee7d072b67547aa128f04e286b4",
+      "size_bytes": 1894
+    },
+    {
+      "instruction_id": "PP-ENTRY-ROOT",
+      "kind": "ENTRY_POINT",
+      "path": "AGENTS.md",
+      "sha256": "ed79d288b41acee607217635d3ba33a1817fc6b499128f1455a203d6c537e1db",
+      "size_bytes": 6185
+    },
+    {
+      "instruction_id": "PP-ASSET-CONFIG-JIRA-SYNC-POLICY-JSON",
+      "kind": "CONFIGURATION",
+      "path": "config/jira/sync_policy.json",
+      "sha256": "9dfe571ecbe299530467002877606b5182fdb651ac1f0516e9bd98c54beafa42",
+      "size_bytes": 516
+    },
+    {
+      "instruction_id": "PP-ASSET-CONFIG-PROJECT-JSON",
+      "kind": "CONFIGURATION",
+      "path": "config/project.json",
+      "sha256": "0dbf3d8adb28959fdb98d21d652f0fe66bb9ff933c79e527c2d7c40293f420f7",
+      "size_bytes": 569
+    },
+    {
+      "instruction_id": "PP-ASSET-CONFIG-PROJECT-MANIFEST-JSON",
+      "kind": "CONFIGURATION",
+      "path": "config/project_manifest.json",
+      "sha256": "09d4c73e2aad1e3d1dabf299b9e6a6f1ef19f2fb66bca97bd4cab357a47f20eb",
+      "size_bytes": 786
+    },
+    {
+      "instruction_id": "PP-ASSET-CONFIG-REPOSITORY-POLICY-JSON",
+      "kind": "CONFIGURATION",
+      "path": "config/repository_policy.json",
+      "sha256": "7d0cf7096447df1c984103371b64cf5bd328b5ed1a995b3ea7255a1ac0e17049",
+      "size_bytes": 1326
+    },
+    {
+      "instruction_id": "PP-ASSET-CONFIG-RUNTIME-BASE-JSON",
+      "kind": "CONFIGURATION",
+      "path": "config/runtime/base.json",
+      "sha256": "69a8fde54fab509b9ff24fc0b6cf195aa28c07dfb8e62bde4486cac9a5d290f7",
+      "size_bytes": 1431
+    },
+    {
+      "instruction_id": "PP-ASSET-CONFIG-SECURITY-POLICY-JSON",
+      "kind": "CONFIGURATION",
+      "path": "config/security_policy.json",
+      "sha256": "d508acae7ac240f6275567ff62266f45ef0f60fefe5aa53a9581df84d643f242",
+      "size_bytes": 1078
+    },
+    {
+      "instruction_id": "PP-ASSET-CONTRIBUTING-MD",
+      "kind": "INTEGRATION_SUPPORT",
+      "path": "CONTRIBUTING.md",
+      "sha256": "b6d754d005564e48115c79ee81a71c79a8cd3a41ccf1ff9aad7dc9b1b894481d",
+      "size_bytes": 2235
+    },
+    {
+      "instruction_id": "PP-INST-00",
+      "kind": "INSTRUCTION",
+      "path": "instructions/00_START_HERE.md",
+      "sha256": "8970edefa869ac72509d185a430e0ba93f30ea060f759958881e6ade9d5cee0c",
+      "size_bytes": 4042
+    },
+    {
+      "instruction_id": "PP-INST-01",
+      "kind": "INSTRUCTION",
+      "path": "instructions/01_AUTHORITY_AND_SOURCE_OF_TRUTH.md",
+      "sha256": "402107bcf17389cc8019022eb7cea37b8cb562b25ae5e2fc0bed604744fa2276",
+      "size_bytes": 4510
+    },
+    {
+      "instruction_id": "PP-INST-02",
+      "kind": "INSTRUCTION",
+      "path": "instructions/02_AUTONOMOUS_OPERATING_CONTRACT.md",
+      "sha256": "deee3a58bbb16018486a94dfdf1f5454b4a277d1cd3f7935f3e6a92be1882dd5",
+      "size_bytes": 4062
+    },
+    {
+      "instruction_id": "PP-INST-03",
+      "kind": "INSTRUCTION",
+      "path": "instructions/03_SESSION_BOOTSTRAP_AND_PREFLIGHT.md",
+      "sha256": "6231f15ca0142b4f659adf755f23cc727cf54f42027056e10d89e1cd891a320a",
+      "size_bytes": 4448
+    },
+    {
+      "instruction_id": "PP-INST-04",
+      "kind": "INSTRUCTION",
+      "path": "instructions/04_CONTEXT_RETRIEVAL_AND_NAVIGATION.md",
+      "sha256": "dbf56b708fc8433e25de9ac36c06757d2b9d30dd1a3ff6c1b75c03b59dcc9e59",
+      "size_bytes": 3407
+    },
+    {
+      "instruction_id": "PP-INST-05",
+      "kind": "INSTRUCTION",
+      "path": "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
+      "sha256": "1546b2664fc8f68653b3ca9564d1dd20cd4a02071cbebfc820650872959b926d",
+      "size_bytes": 3963
+    },
+    {
+      "instruction_id": "PP-INST-06",
+      "kind": "INSTRUCTION",
+      "path": "instructions/06_JIRA_OPERATING_PROTOCOL.md",
+      "sha256": "75fedea64bc059d96c784ee6ff7d392cdf4979eec3eeb4060df4b07569ee53e0",
+      "size_bytes": 3887
+    },
+    {
+      "instruction_id": "PP-INST-07",
+      "kind": "INSTRUCTION",
+      "path": "instructions/07_GIT_AND_GITHUB_OPERATING_PROTOCOL.md",
+      "sha256": "9bcf7d4f815c11960b746d6339cebf674f9235c3303f56511f6c0d6311bdea36",
+      "size_bytes": 3975
+    },
+    {
+      "instruction_id": "PP-INST-08",
+      "kind": "INSTRUCTION",
+      "path": "instructions/08_BRANCH_WORKTREE_AND_PR_POLICY.md",
+      "sha256": "62498b970e75a62c751850a2de32b725a4095e3dca205a138a71669557122356",
+      "size_bytes": 3489
+    },
+    {
+      "instruction_id": "PP-INST-09",
+      "kind": "INSTRUCTION",
+      "path": "instructions/09_CI_QUALITY_SECURITY_AND_MERGE_GATES.md",
+      "sha256": "01b60ef092d64a4c41d4a753134403ae47e8851cb82dd7269d554233288dcebd",
+      "size_bytes": 4256
+    },
+    {
+      "instruction_id": "PP-INST-10",
+      "kind": "INSTRUCTION",
+      "path": "instructions/10_PARALLEL_AGENT_COORDINATION.md",
+      "sha256": "880f08a05a7be19ad3aa95ef719a3494006a898d07d93fe7d18cbea1298789f4",
+      "size_bytes": 3525
+    },
+    {
+      "instruction_id": "PP-INST-11",
+      "kind": "INSTRUCTION",
+      "path": "instructions/11_ANTI_LOOP_AND_ANTI_OVERENGINEERING.md",
+      "sha256": "9b73b9dc46dd2fb9680f0dd2b430bf2e317e2e2038057d19ecd1d21a583cb81c",
+      "size_bytes": 3435
+    },
+    {
+      "instruction_id": "PP-INST-12",
+      "kind": "INSTRUCTION",
+      "path": "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md",
+      "sha256": "38fff5c84798e7c7349a40bf9fc303fa972a48f37a3f37e9bc38be19d78a41d1",
+      "size_bytes": 3660
+    },
+    {
+      "instruction_id": "PP-INST-13",
+      "kind": "INSTRUCTION",
+      "path": "instructions/13_PPQS_BENCHMARK_PROTOCOL.md",
+      "sha256": "d023555a28c0338bffd83fdc4af39efd1f4cb0a3582f8c2f486f7d3f10e0b3ed",
+      "size_bytes": 3612
+    },
+    {
+      "instruction_id": "PP-INST-14",
+      "kind": "INSTRUCTION",
+      "path": "instructions/14_UPSTREAM_REPOSITORY_PROTOCOL.md",
+      "sha256": "85995dcfe9558d5e8ddc527c66f12f3f76e41a04585d8b0b36ba6fa5212476f4",
+      "size_bytes": 3124
+    },
+    {
+      "instruction_id": "PP-INST-15",
+      "kind": "INSTRUCTION",
+      "path": "instructions/15_SECRETS_AUTHORITY_AND_EXTERNAL_MUTATION.md",
+      "sha256": "8401ccc48116b4253164565d00c45385affcfe5fcc4269554f3dcb5d98989a84",
+      "size_bytes": 3561
+    },
+    {
+      "instruction_id": "PP-INST-16",
+      "kind": "INSTRUCTION",
+      "path": "instructions/16_REMOTE_MACHINE_AND_RESOURCE_PROTOCOL.md",
+      "sha256": "66b3d68c629e8be60878b25f10a5e5c154fe25232272d399d0f2710aa07fb2a4",
+      "size_bytes": 3103
+    },
+    {
+      "instruction_id": "PP-INST-17",
+      "kind": "INSTRUCTION",
+      "path": "instructions/17_FAILURE_RECOVERY_AND_RESUMPTION.md",
+      "sha256": "fd9d241fdcd7914b43120ab1efd893052f1b8f2b4c9cb6966089194cbb294061",
+      "size_bytes": 3354
+    },
+    {
+      "instruction_id": "PP-INST-18",
+      "kind": "INSTRUCTION",
+      "path": "instructions/18_HUMAN_ESCALATION_PROTOCOL.md",
+      "sha256": "123286558fa065eb3cee27e1ee21361b0d990a01f55f856e75b6fc29a01849d5",
+      "size_bytes": 2657
+    },
+    {
+      "instruction_id": "PP-INST-19",
+      "kind": "INSTRUCTION",
+      "path": "instructions/19_RELEASE_HANDOFF_AND_CLEANUP.md",
+      "sha256": "8b0f866a78eeaa5f3ff8f0bf5ffcbead1f809e26f7fdef65447dd5ea56ffa904",
+      "size_bytes": 3123
+    },
+    {
+      "instruction_id": "PP-INST-20",
+      "kind": "INSTRUCTION",
+      "path": "instructions/20_INSTRUCTION_MAINTENANCE.md",
+      "sha256": "4e55a85909756457793ced0d46198f44345ccd99e1eeaefa3340bda4834ff2e1",
+      "size_bytes": 3769
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-AUTHORITY-MAP-JSON",
+      "kind": "INSTRUCTION",
+      "path": "instructions/AUTHORITY_MAP.json",
+      "sha256": "6ad284c928cd72270a373c0de8eea9ba486af5f40513c83aaa1510ae6f41eb3b",
+      "size_bytes": 4120
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-CHANGELOG-MD",
+      "kind": "INSTRUCTION",
+      "path": "instructions/CHANGELOG.md",
+      "sha256": "3bd2a8436dc9db948666e9b9d85dc70d5e22e20bc8561b62cec1231e215374b2",
+      "size_bytes": 1185
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-CREATION-REPORT-MD",
+      "kind": "INSTRUCTION",
+      "path": "instructions/CREATION_REPORT.md",
+      "sha256": "c1f85732deb45a2e04efd3d11cdb98d66496ec7a5f22411b1a04439b5f5d6dc9",
+      "size_bytes": 6538
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-EXAMPLES-COLD-START-WALKTHROUGH-MD",
+      "kind": "EXAMPLE",
+      "path": "instructions/examples/COLD_START_WALKTHROUGH.md",
+      "sha256": "3ab25b918843d509c25209b06fabb082f5162ecc1e8e12ce9c3b936d9ba026b4",
+      "size_bytes": 1466
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-EXAMPLES-SCENARIO-VALIDATION-REPORT-MD",
+      "kind": "EXAMPLE",
+      "path": "instructions/examples/SCENARIO_VALIDATION_REPORT.md",
+      "sha256": "1cf37df90ceae7df057502e2624720b4f1d5b969e6ffab7f3d9c472fb836aaa4",
+      "size_bytes": 1404
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-INSTRUCTION-COVERAGE-MATRIX-JSON",
+      "kind": "INSTRUCTION",
+      "path": "instructions/INSTRUCTION_COVERAGE_MATRIX.json",
+      "sha256": "f6960a9c9934264c9f9c4bf4ef07c4984f27155bdbbe6d410e96a5292349d91a",
+      "size_bytes": 9412
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-BRANCH-PR-POLICY-JSON",
+      "kind": "MACHINE_POLICY",
+      "path": "instructions/policies/BRANCH_PR_POLICY.json",
+      "sha256": "6b23f5c25a09df3d385bab25d1921c9434cb7626ba5e304c7ca17199a0412bdd",
+      "size_bytes": 1457
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-CI-RISK-MATRIX-JSON",
+      "kind": "MACHINE_POLICY",
+      "path": "instructions/policies/CI_RISK_MATRIX.json",
+      "sha256": "79a0a8674f365badb06283d1f6978239fb47a86929209ff1fe5465e3abff2cd8",
+      "size_bytes": 2870
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-CONTEXT-ROUTING-JSON",
+      "kind": "MACHINE_POLICY",
+      "path": "instructions/policies/CONTEXT_ROUTING.json",
+      "sha256": "dbd14a496d6bc7740f90aa05de646e837302c212eb2dcfee085d381e6293e66f",
+      "size_bytes": 2498
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-ESCALATION-CLASSIFICATIONS-JSON",
+      "kind": "MACHINE_POLICY",
+      "path": "instructions/policies/ESCALATION_CLASSIFICATIONS.json",
+      "sha256": "bbfaaeb0743dc7269a03f3304db70568bb329aef77950e8ec46dd26ba1682aa7",
+      "size_bytes": 1793
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-EXTERNAL-MUTATION-AUTHORITY-JSON",
+      "kind": "MACHINE_POLICY",
+      "path": "instructions/policies/EXTERNAL_MUTATION_AUTHORITY.json",
+      "sha256": "4874783dd2802106e2e1bb21a2ae052a90d8129411140df0127fde235c97aca2",
+      "size_bytes": 2511
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-MACHINE-REGISTRY-JSON",
+      "kind": "MACHINE_POLICY",
+      "path": "instructions/policies/MACHINE_REGISTRY.json",
+      "sha256": "6acb1d19a82ffa1ca54ea88b94fc56f4ab46104568aa771feffd5ce9b08258df",
+      "size_bytes": 1879
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-PPQS-BENCHMARK-REGISTRY-JSON",
+      "kind": "MACHINE_POLICY",
+      "path": "instructions/policies/PPQS_BENCHMARK_REGISTRY.json",
+      "sha256": "6fdc2faada8695afbe8635817b8eab2cd97d1892dea7b6f1b7734699ba800743",
+      "size_bytes": 5115
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-VALIDATION-SCENARIOS-JSON",
+      "kind": "MACHINE_POLICY",
+      "path": "instructions/policies/VALIDATION_SCENARIOS.json",
+      "sha256": "6f3012e339431fb22a19b665a2e1b17b134e4a4cd97fa713b2e49cd1b3d2bf41",
+      "size_bytes": 3464
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-README-MD",
+      "kind": "INSTRUCTION",
+      "path": "instructions/README.md",
+      "sha256": "eb650279cdf32666568e31f7a6fd94fc0c37f34b43512a1756be6b7bce60411f",
+      "size_bytes": 2395
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-SCHEMAS-AUTHORITY-MAP-SCHEMA-JSON",
+      "kind": "SCHEMA",
+      "path": "instructions/schemas/authority_map.schema.json",
+      "sha256": "91f8ae413cd4add0d22f600ac41dba593f783755b10fdc814698dad8095598b9",
+      "size_bytes": 792
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-SCHEMAS-INSTRUCTION-COVERAGE-MATRIX-SCHEMA-JSON",
+      "kind": "SCHEMA",
+      "path": "instructions/schemas/instruction_coverage_matrix.schema.json",
+      "sha256": "d74f41f53d091cdc10e7a5b6d8c6bd845334aad2abac350518abdceec38bf5c6",
+      "size_bytes": 932
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-SCHEMAS-INSTRUCTION-MANIFEST-SCHEMA-JSON",
+      "kind": "SCHEMA",
+      "path": "instructions/schemas/instruction_manifest.schema.json",
+      "sha256": "df0a2a39789544e0ca5430d6bcfff3f1b2556803ae89089673ab97a60d3a9200",
+      "size_bytes": 2380
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-SECOND-PASS-REQUIRED-MD",
+      "kind": "INSTRUCTION",
+      "path": "instructions/SECOND_PASS_REQUIRED.md",
+      "sha256": "4fc256ea8efeb034d1e65b7f589cd38ca30af41d5c5c3c3014eaab132dc0afd6",
+      "size_bytes": 5498
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-TEMPLATES-HUMAN-INTERVENTION-REQUEST-MD",
+      "kind": "TEMPLATE",
+      "path": "instructions/templates/HUMAN_INTERVENTION_REQUEST.md",
+      "sha256": "baf32af11e823e6e1d363af9bc37c884d0c170358ac769c24dd2f50939e1b611",
+      "size_bytes": 1295
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-TEMPLATES-PULL-REQUEST-BODY-MD",
+      "kind": "TEMPLATE",
+      "path": "instructions/templates/PULL_REQUEST_BODY.md",
+      "sha256": "1fcfd49c1462412f5fd4526ea4f20a1aabf8fbf72cf0b4499fd6ba9780197bfc",
+      "size_bytes": 1370
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-TEMPLATES-RELEASE-HANDOFF-MD",
+      "kind": "TEMPLATE",
+      "path": "instructions/templates/RELEASE_HANDOFF.md",
+      "sha256": "f076cbfbc11f5fda5ebb6c49166b3688e33e4d9c20051ae07406adf817d38274",
+      "size_bytes": 1323
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-TEMPLATES-SESSION-CHECKPOINT-MD",
+      "kind": "TEMPLATE",
+      "path": "instructions/templates/SESSION_CHECKPOINT.md",
+      "sha256": "a632da29fad2f28e1a54bcc1773664c33ad8c95b06b2fabe45631230a20f9b28",
+      "size_bytes": 1171
+    },
+    {
+      "instruction_id": "PP-ASSET-INSTRUCTIONS-TEMPLATES-WORK-CLAIM-MD",
+      "kind": "TEMPLATE",
+      "path": "instructions/templates/WORK_CLAIM.md",
+      "sha256": "6eceeb61422f780abf61f37c2c96f005c7a32317ea654e06f58458c11f802c94",
+      "size_bytes": 1116
+    },
+    {
+      "instruction_id": "PP-ASSET-MAKEFILE",
+      "kind": "INTEGRATION_SUPPORT",
+      "path": "Makefile",
+      "sha256": "b393fcce0a8ac91c42faec47e73305303c4288241abec0ce5d528f2bbd08d86f",
+      "size_bytes": 1732
+    },
+    {
+      "instruction_id": "PP-ASSET-PROVENANCE-UPSTREAM-REGISTRY-JSON",
+      "kind": "INTEGRATION_SUPPORT",
+      "path": "provenance/upstream_registry.json",
+      "sha256": "1107d9343091f9240b3309f81f53615bbfb8bd91c46809b91aa14572b4949d30",
+      "size_bytes": 404714
+    },
+    {
+      "instruction_id": "PP-ASSET-README-MD",
+      "kind": "INTEGRATION_SUPPORT",
+      "path": "README.md",
+      "sha256": "ce389d7866db134fd9019b0b105c975fefb584be6981fd72372ed76df9fbff55",
+      "size_bytes": 9648
+    },
+    {
+      "instruction_id": "PP-ASSET-SCHEMAS-RUNTIME-CONFIGURATION-SCHEMA-JSON",
+      "kind": "INTEGRATION_SUPPORT",
+      "path": "schemas/runtime_configuration.schema.json",
+      "sha256": "194c241f564fae7514fc9104ba9dfd0473b725fb48acc0f8d93e024ff0c823d8",
+      "size_bytes": 10147
+    },
+    {
+      "instruction_id": "PP-ASSET-SCRIPTS-INSTRUCTION-COLD-START-PY",
+      "kind": "VALIDATION_TOOL",
+      "path": "scripts/instruction_cold_start.py",
+      "sha256": "80fe3ef4058c25a5c545c1374c96f931dc1b257e0e410437b966d2e4601e15a3",
+      "size_bytes": 5149
+    },
+    {
+      "instruction_id": "PP-ASSET-SCRIPTS-VALIDATE-INSTRUCTIONS-PY",
+      "kind": "VALIDATION_TOOL",
+      "path": "scripts/validate_instructions.py",
+      "sha256": "7a659f6bf8635cd03f1471fbe4673f8bcaa157cde2b77f063e495e2f2f48e6b4",
+      "size_bytes": 36721
+    },
+    {
+      "instruction_id": "PP-ASSET-SRC-PROJECT-PIPELINE-CONFIGURATION-MODELS-PY",
+      "kind": "IMPLEMENTATION_SUPPORT",
+      "path": "src/project_pipeline/configuration/models.py",
+      "sha256": "f5af8cf9a9a1873d495676e43c6da5d625c0c06f76ba812c6420e3839a37edc0",
+      "size_bytes": 8946
+    },
+    {
+      "instruction_id": "PP-ASSET-SRC-PROJECT-PIPELINE-VALIDATION-CONTENT-PY",
+      "kind": "IMPLEMENTATION_SUPPORT",
+      "path": "src/project_pipeline/validation/content.py",
+      "sha256": "767e5db61d33c507fed13aaba459afba48dd1f8d9eed337f8aa4179d03a8c637",
+      "size_bytes": 6491
+    },
+    {
+      "instruction_id": "PP-ASSET-SRC-PROJECT-PIPELINE-VALIDATION-REPOSITORY-PY",
+      "kind": "IMPLEMENTATION_SUPPORT",
+      "path": "src/project_pipeline/validation/repository.py",
+      "sha256": "12592bf9262966f17e3b757d5ef5843ee1ef52e0e6d872fab81e74c96e82b2a7",
+      "size_bytes": 15398
+    },
+    {
+      "instruction_id": "PP-ASSET-TESTS-TEST-DOMAIN-MODELS-PY",
+      "kind": "TEST",
+      "path": "tests/test_domain_models.py",
+      "sha256": "b1b2e0453a0e6969c3a95de74ea3f73fcd9645eb262c0a5a6138a7f8b12f663e",
+      "size_bytes": 2890
+    },
+    {
+      "instruction_id": "PP-ASSET-TESTS-TEST-INSTRUCTION-SYSTEM-PY",
+      "kind": "TEST",
+      "path": "tests/test_instruction_system.py",
+      "sha256": "09555659c08045cd930e47f514d0fe9dd9d0130b5e3bc2ccd490c3163f3f13f5",
+      "size_bytes": 5342
+    },
+    {
+      "instruction_id": "PP-ASSET-TESTS-TEST-SECURITY-UPSTREAM-ADAPTERS-PY",
+      "kind": "TEST",
+      "path": "tests/test_security_upstream_adapters.py",
+      "sha256": "decdd24993716953d23435e1472c5c118aadcf9053ead05f9142b39242173077",
+      "size_bytes": 2496
+    },
+    {
+      "instruction_id": "PP-ASSET-TESTS-TEST-VALIDATION-CONTENT-PY",
+      "kind": "TEST",
+      "path": "tests/test_validation_content.py",
+      "sha256": "62e5d4d3aafbc84810f931d87fd5ff790a8d11889a1844cd0ff851c2fc3f56a4",
+      "size_bytes": 4697
+    }
+  ],
+  "instruction_pack_version": "1.0.0",
+  "instruction_root": "instructions",
+  "managed_support_paths": [
+    ".gitignore",
+    "AGENTS.md",
+    "README.md",
+    "CONTRIBUTING.md",
+    "Makefile",
+    ".github/CODEOWNERS",
+    ".github/ISSUE_TEMPLATE/bug_report.yml",
+    ".github/pull_request_template.md",
+    ".github/workflows/quality.yml",
+    ".github/workflows/codeql.yml",
+    "config/jira/sync_policy.json",
+    "config/project.json",
+    "config/project_manifest.json",
+    "config/repository_policy.json",
+    "config/security_policy.json",
+    "scripts/validate_instructions.py",
+    "scripts/instruction_cold_start.py",
+    "src/project_pipeline/validation/content.py",
+    "src/project_pipeline/validation/repository.py",
+    "tests/test_instruction_system.py",
+    "tests/test_validation_content.py",
+    "tests/test_domain_models.py",
+    "tests/test_security_upstream_adapters.py",
+    "config/runtime/base.json",
+    "src/project_pipeline/configuration/models.py",
+    "provenance/upstream_registry.json",
+    "schemas/runtime_configuration.schema.json"
+  ],
+  "project_id": "PROJECT-PIPELINE",
+  "project_name": "ProjectPipeline",
+  "repository_url": "https://github.com/KevinSGarrett/ProjectPipeline",
+  "schema_version": "1.0.0",
+  "source_adoption": {
+    "adoption_date": "2026-08-16",
+    "master_task_filename": "Pasted markdown(20260816-003000).md",
+    "master_task_sha256": "092f05588c529a637974aed56e38773d3f82e6d68e768925742a9995134b752a",
+    "repository_snapshot_filename": "Project_X(1).zip",
+    "repository_snapshot_sha256": "a62decfdbfe75844e1d585980c1e9d8ae6955cf70bc566078ff81966d3966a32"
+  }
+}

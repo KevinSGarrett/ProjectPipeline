@@ -1,0 +1,8 @@
+{
+  "benchmark_id": "PPQS-06",
+  "runtime": {
+    "node": ">=22.19.0",
+    "package_manager": "npm"
+  },
+  "source": "frozen r02 contract"
+}

@@ -1,0 +1,188 @@
+{
+  "$defs": {
+    "CompletionFailure": {
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "$ref": "#/$defs/FailureCategory"
+        },
+        "detail": {
+          "title": "Detail",
+          "type": "string"
+        },
+        "failure_id": {
+          "title": "Failure Id",
+          "type": "string"
+        },
+        "rework_route": {
+          "title": "Rework Route",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "subject_id": {
+          "title": "Subject Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "failure_id",
+        "category",
+        "subject_id",
+        "detail",
+        "rework_route"
+      ],
+      "title": "CompletionFailure",
+      "type": "object"
+    },
+    "CompletionQuestionResult": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "externally_blocked": {
+          "default": false,
+          "title": "Externally Blocked",
+          "type": "boolean"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "question": {
+          "title": "Question",
+          "type": "string"
+        },
+        "question_number": {
+          "maximum": 15,
+          "minimum": 1,
+          "title": "Question Number",
+          "type": "integer"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "question_number",
+        "question",
+        "passed",
+        "reasons"
+      ],
+      "title": "CompletionQuestionResult",
+      "type": "object"
+    },
+    "FailureCategory": {
+      "enum": [
+        "REQUIREMENT",
+        "TRACEABILITY",
+        "WORK",
+        "TEST",
+        "GOLDEN_JOURNEY",
+        "SECURITY",
+        "RESILIENCE",
+        "DEPLOYMENT",
+        "ROLLBACK",
+        "DOCUMENTATION",
+        "CONTINUATION",
+        "STATE_RECONCILIATION",
+        "COVERAGE",
+        "EVIDENCE",
+        "REVIEW",
+        "SCOPE"
+      ],
+      "title": "FailureCategory",
+      "type": "string"
+    },
+    "GateState": {
+      "enum": [
+        "COMPLETE",
+        "NOT_COMPLETE",
+        "BLOCKED_EXTERNAL"
+      ],
+      "title": "GateState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/assurance_completion_gate_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "evaluated_at_utc": {
+      "format": "date-time",
+      "title": "Evaluated At Utc",
+      "type": "string"
+    },
+    "failures": {
+      "items": {
+        "$ref": "#/$defs/CompletionFailure"
+      },
+      "title": "Failures",
+      "type": "array"
+    },
+    "final_complete": {
+      "title": "Final Complete",
+      "type": "boolean"
+    },
+    "gate_id": {
+      "title": "Gate Id",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "questions": {
+      "items": {
+        "$ref": "#/$defs/CompletionQuestionResult"
+      },
+      "title": "Questions",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_snapshot_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Source Snapshot Fingerprint",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/GateState"
+    }
+  },
+  "required": [
+    "gate_id",
+    "project_id",
+    "state",
+    "questions",
+    "failures",
+    "source_snapshot_fingerprint",
+    "final_complete"
+  ],
+  "title": "CompletionGateDecision",
+  "type": "object"
+}

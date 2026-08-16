@@ -1,0 +1,184 @@
+{
+  "$defs": {
+    "DiscoveryArtifactKind": {
+      "enum": [
+        "SOURCE",
+        "TEST",
+        "INSTRUCTION",
+        "PLAN",
+        "JIRA",
+        "REQUIREMENT",
+        "EVIDENCE",
+        "CONFIGURATION",
+        "BUILD",
+        "CI",
+        "DEPLOYMENT",
+        "DOCUMENTATION",
+        "SECRET_REFERENCE",
+        "REPOSITORY_METADATA",
+        "OTHER"
+      ],
+      "title": "DiscoveryArtifactKind",
+      "type": "string"
+    },
+    "RepositoryMapEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "change_relevance": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Change Relevance",
+          "type": "array"
+        },
+        "dependencies": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "array"
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "owners": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Owners",
+          "type": "array"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/DiscoveryArtifactKind"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        },
+        "symbols": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Symbols",
+          "type": "array"
+        },
+        "tested_by": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Tested By",
+          "type": "array"
+        }
+      },
+      "required": [
+        "path",
+        "role",
+        "size_bytes"
+      ],
+      "title": "RepositoryMapEntry",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/compiled_repository_map.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "entries": {
+      "items": {
+        "$ref": "#/$defs/RepositoryMapEntry"
+      },
+      "title": "Entries",
+      "type": "array"
+    },
+    "file_count": {
+      "minimum": 0,
+      "title": "File Count",
+      "type": "integer"
+    },
+    "fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "language_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Language Counts",
+      "type": "object"
+    },
+    "role_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Role Counts",
+      "type": "object"
+    },
+    "root_path": {
+      "title": "Root Path",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "top_level_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Top Level Counts",
+      "type": "object"
+    },
+    "total_bytes": {
+      "minimum": 0,
+      "title": "Total Bytes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "root_path",
+    "fingerprint",
+    "file_count",
+    "total_bytes",
+    "top_level_counts",
+    "language_counts",
+    "role_counts",
+    "entries"
+  ],
+  "title": "CompiledRepositoryMap",
+  "type": "object"
+}

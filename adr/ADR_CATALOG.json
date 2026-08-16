@@ -1,0 +1,940 @@
+{
+  "decision_count": 27,
+  "decisions": [
+    {
+      "alternatives": [
+        "TypeScript-first control core",
+        "Rust-first control core",
+        "Polyglot bootstrap"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-API-001",
+        "COMP-CTRL-001",
+        "COMP-TRACE-001"
+      ],
+      "decision_id": "ADR-0001",
+      "path": "adr/ADR-0001_use_python_for_the_executable_repository_foundation.md",
+      "requirement_ids": [
+        "REQ-ARCH-0016"
+      ],
+      "resolves_open_decision_ids": [],
+      "source_references": [
+        "GOV-001:L001319-L001360"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use Python for the executable repository foundation",
+      "tradeoffs": [
+        "Fast local implementation and ecosystem breadth",
+        "Python runtime and packaging discipline are required"
+      ]
+    },
+    {
+      "alternatives": [
+        "YAML-only registries",
+        "Relational database immediately",
+        "Prose-only records"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-TRACE-001"
+      ],
+      "decision_id": "ADR-0002",
+      "path": "adr/ADR-0002_use_json_and_jsonl_for_bootstrap_machine_readable_registries.md",
+      "requirement_ids": [
+        "REQ-ARCH-0015",
+        "REQ-ASSURE-0004",
+        "REQ-GOV-0007"
+      ],
+      "resolves_open_decision_ids": [],
+      "source_references": [
+        "GOV-001:L001162-L001215",
+        "GOV-001:L001996-L002024"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use JSON and JSONL for bootstrap machine-readable registries",
+      "tradeoffs": [
+        "Diffable and streamable bootstrap truth",
+        "Relational queries arrive with the persistence layer"
+      ]
+    },
+    {
+      "alternatives": [
+        "Vendor the canonical corpus",
+        "Keep raw sources in the continuation archive",
+        "Publish the corpus as an external package"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-TRACE-001"
+      ],
+      "decision_id": "ADR-0003",
+      "path": "adr/ADR-0003_keep_the_raw_source_corpus_outside_the_permanent_repository.md",
+      "requirement_ids": [
+        "REQ-REQ-0001",
+        "REQ-UPSTREAM-0013"
+      ],
+      "resolves_open_decision_ids": [],
+      "source_references": [
+        "GOV-001:L000123-L000183",
+        "GOV-001:L000225-L000287"
+      ],
+      "status": "ACCEPTED",
+      "title": "Keep the raw source corpus outside the permanent repository",
+      "tradeoffs": [
+        "Permanent repository remains professional and compact",
+        "Continuation materials must preserve source availability"
+      ]
+    },
+    {
+      "alternatives": [
+        "Allow writes after credential discovery",
+        "Per-adapter permissive defaults",
+        "Deny by default with explicit authorization"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-JIRA-001",
+        "COMP-REPO-001",
+        "COMP-TOOL-001"
+      ],
+      "decision_id": "ADR-0004",
+      "path": "adr/ADR-0004_deny_external_mutation_by_default.md",
+      "requirement_ids": [
+        "REQ-GOV-0001",
+        "REQ-GOV-0002",
+        "REQ-GOV-0003",
+        "REQ-GOV-0004",
+        "REQ-GOV-0008",
+        "REQ-GOV-0012",
+        "REQ-GOV-0014",
+        "REQ-GOV-0015",
+        "REQ-GOV-0016",
+        "REQ-GOV-0018",
+        "REQ-GOV-0021",
+        "REQ-GOV-0022",
+        "REQ-GOV-0024",
+        "REQ-SEC-0015"
+      ],
+      "resolves_open_decision_ids": [],
+      "source_references": [
+        "GOV-001:L001389-L001415",
+        "GOV-001:L002184-L002196"
+      ],
+      "status": "ACCEPTED",
+      "title": "Deny external mutation by default",
+      "tradeoffs": [
+        "Prevents unintended external mutation",
+        "Authorized write workflows require explicit activation"
+      ]
+    },
+    {
+      "alternatives": [
+        "Immediate microservices",
+        "Single undifferentiated process",
+        "Modular monolith with extraction criteria"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-API-001",
+        "COMP-CTRL-001",
+        "COMP-DEPLOY-001",
+        "COMP-DIRECTOR-001"
+      ],
+      "decision_id": "ADR-0005",
+      "path": "adr/ADR-0005_start_with_a_modular_monolith_for_deterministic_control.md",
+      "requirement_ids": [
+        "REQ-ARCH-0001",
+        "REQ-ARCH-0012",
+        "REQ-ARCH-0016"
+      ],
+      "resolves_open_decision_ids": [],
+      "source_references": [
+        "GOV-001:L000362-L000793",
+        "GOV-001:L002235-L002271"
+      ],
+      "status": "ACCEPTED",
+      "title": "Start with a modular monolith for deterministic control",
+      "tradeoffs": [
+        "Lower initial operational burden",
+        "Module boundaries and state ownership must be enforced"
+      ]
+    },
+    {
+      "alternatives": [
+        "Agent-led implicit authority",
+        "Vendor workflow authority",
+        "Explicit deterministic authority planes"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-ASSURE-001",
+        "COMP-BUDGET-001",
+        "COMP-CHAT-001",
+        "COMP-CONTEXT-001",
+        "COMP-CTRL-001",
+        "COMP-DIRECTOR-001",
+        "COMP-INTAKE-001",
+        "COMP-JIRA-001",
+        "COMP-NOTIFY-001",
+        "COMP-RECOVERY-001",
+        "COMP-RESOURCE-001",
+        "COMP-TRACE-001"
+      ],
+      "decision_id": "ADR-0006",
+      "path": "adr/ADR-0006_establish_deterministic_control-plane_component_boundaries_and_stable_ports.md",
+      "requirement_ids": [
+        "REQ-ARCH-0001",
+        "REQ-ARCH-0002",
+        "REQ-ARCH-0006",
+        "REQ-ARCH-0007",
+        "REQ-ARCH-0014"
+      ],
+      "resolves_open_decision_ids": [],
+      "source_references": [
+        "GOV-001:L000362-L000793",
+        "SRC-003:L000040-L000083",
+        "SRC-014:L000013-L000086"
+      ],
+      "status": "ACCEPTED",
+      "title": "Establish deterministic control-plane component boundaries and stable ports",
+      "tradeoffs": [
+        "Auditable state transitions and completion",
+        "More schemas and enforcement points are required"
+      ]
+    },
+    {
+      "alternatives": [
+        "SQLite-only runtime",
+        "Multiple stores by subsystem",
+        "PostgreSQL canonical transactional state"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-BUDGET-001",
+        "COMP-CTRL-001",
+        "COMP-OUTBOX-001",
+        "COMP-PERSIST-001",
+        "COMP-RESOURCE-001"
+      ],
+      "decision_id": "ADR-0007",
+      "path": "adr/ADR-0007_use_postgresql_as_canonical_state_with_transactional_inbox_and_outbox_records.md",
+      "requirement_ids": [
+        "REQ-ARCH-0007",
+        "REQ-ARCH-0008",
+        "REQ-ARCH-0009",
+        "REQ-CTRL-0011",
+        "REQ-CTRL-0012",
+        "REQ-RES-0016",
+        "REQ-RES-0017"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0002",
+        "OPEN-DEC-0007"
+      ],
+      "source_references": [
+        "SRC-003:L000962-L001000",
+        "SRC-009:L000019-L000020",
+        "SRC-016:L002201-L002230"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use PostgreSQL as canonical state with transactional inbox and outbox records",
+      "tradeoffs": [
+        "Strong transactions and portability",
+        "A database service is required for the full runtime"
+      ]
+    },
+    {
+      "alternatives": [
+        "Temporal as the mandatory baseline",
+        "DBOS as the mandatory baseline",
+        "Custom durable engine",
+        "Hatchet behind DurableExecutionPort"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-RECOVERY-001",
+        "COMP-WORKFLOW-001"
+      ],
+      "decision_id": "ADR-0008",
+      "path": "adr/ADR-0008_use_hatchet_as_the_initial_durable_execution_backend_behind_an_internal_orchestration_port.md",
+      "requirement_ids": [
+        "REQ-ARCH-0008",
+        "REQ-CTRL-0003",
+        "REQ-CTRL-0010",
+        "REQ-INFRA-0001",
+        "REQ-RES-0010"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0001"
+      ],
+      "source_references": [
+        "SRC-011:L000102-L000184",
+        "SRC-016:L001752-L001756",
+        "SRC-016:L002223-L002230"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use Hatchet as the initial durable execution backend behind an internal orchestration port",
+      "tradeoffs": [
+        "Matches the latest canonical direct-use selection and provides a dedicated worker/control surface",
+        "Requires a separately operated dependency and strict adapter/conformance boundaries"
+      ]
+    },
+    {
+      "alternatives": [
+        "OR-Tools owns scheduling",
+        "Model-selected work",
+        "Internal deterministic baseline with optional optimization"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-GRAPH-001",
+        "COMP-SCHED-001",
+        "COMP-SEQUENCE-001"
+      ],
+      "decision_id": "ADR-0009",
+      "path": "adr/ADR-0009_use_networkx_for_authoritative_graph_analysis_and_or-tools_as_a_bounded_optimizer.md",
+      "requirement_ids": [
+        "REQ-SCHED-0001",
+        "REQ-SCHED-0002",
+        "REQ-SCHED-0005",
+        "REQ-SCHED-0007",
+        "REQ-SCHED-0009",
+        "REQ-SCHED-0010",
+        "REQ-SCHED-0014"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0006"
+      ],
+      "source_references": [
+        "SRC-016:L001752-L001756",
+        "SRC-016:L002215-L002224"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use NetworkX for authoritative graph analysis and OR-Tools as a bounded optimizer",
+      "tradeoffs": [
+        "Unique eligibility semantics remain authoritative",
+        "Advanced optimization is deferred until benchmarked"
+      ]
+    },
+    {
+      "alternatives": [
+        "Django monolith",
+        "Node-only API",
+        "FastAPI with Pydantic contracts"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-API-001"
+      ],
+      "decision_id": "ADR-0010",
+      "path": "adr/ADR-0010_use_fastapi_and_pydantic_for_control_apis_and_typed_contracts.md",
+      "requirement_ids": [
+        "REQ-ARCH-0006",
+        "REQ-UX-0011"
+      ],
+      "resolves_open_decision_ids": [],
+      "source_references": [
+        "SRC-010:L001338-L001352",
+        "GOV-001:L001219-L001285"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use FastAPI and Pydantic for control APIs and typed contracts",
+      "tradeoffs": [
+        "Typed Python boundary and OpenAPI generation",
+        "Authentication and policy remain separate responsibilities"
+      ]
+    },
+    {
+      "alternatives": [
+        "Native-only Windows client with no network-accessible interface",
+        "Browser-only client with no bounded native shell",
+        "React web client, optional Tauri shell, and compatibility event adapter"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-CHAT-001",
+        "COMP-DEPLOY-001",
+        "COMP-NOTIFY-001",
+        "COMP-UI-001"
+      ],
+      "decision_id": "ADR-0011",
+      "path": "adr/ADR-0011_use_react_tauri_and_winsw_for_operator_and_windows_service_surfaces.md",
+      "requirement_ids": [
+        "REQ-INFRA-0010",
+        "REQ-UX-0001",
+        "REQ-UX-0004",
+        "REQ-UX-0026"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0003",
+        "OPEN-DEC-0028"
+      ],
+      "source_references": [
+        "SRC-010:L001338-L001352",
+        "SRC-016:L001500-L001508",
+        "SRC-016:L002282-L002290"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use React, Tauri, and WinSW for operator and Windows service surfaces",
+      "tradeoffs": [
+        "One accessible client supports browser, local, and private-network operation",
+        "Desktop plugins and event compatibility require least-privilege and conformance testing"
+      ]
+    },
+    {
+      "alternatives": [
+        "Application-only policy",
+        "Vault/OpenBao mandatory",
+        "OPA plus SOPS with age"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-DEPLOY-001",
+        "COMP-POLICY-001",
+        "COMP-SECRET-001"
+      ],
+      "decision_id": "ADR-0012",
+      "path": "adr/ADR-0012_use_opa_and_conftest_for_policy_and_sops_plus_age_for_local_encrypted_configuration.md",
+      "requirement_ids": [
+        "REQ-SEC-0002",
+        "REQ-SEC-0009",
+        "REQ-SEC-0010",
+        "REQ-SEC-0014",
+        "REQ-SEC-0017",
+        "REQ-SEC-0021"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0004",
+        "OPEN-DEC-0020"
+      ],
+      "source_references": [
+        "SRC-009:L000007-L000009",
+        "SRC-014:L000175-L000230",
+        "SRC-016:L001784-L001787",
+        "SRC-016:L002201-L002209"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use OPA and Conftest for policy and SOPS plus age for local encrypted configuration",
+      "tradeoffs": [
+        "Declarative policy and encrypted configuration",
+        "Dynamic secrets remain optional"
+      ]
+    },
+    {
+      "alternatives": [
+        "Mutable shared folders",
+        "Database binary blobs only",
+        "Content-addressed immutable artifacts"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-ARTIFACT-001",
+        "COMP-EVIDENCE-001",
+        "COMP-PERSIST-001"
+      ],
+      "decision_id": "ADR-0013",
+      "path": "adr/ADR-0013_use_content-addressed_artifacts_with_postgresql_metadata_and_filesystem_or_s3-compatible_bytes.md",
+      "requirement_ids": [
+        "REQ-ARCH-0010",
+        "REQ-ASSURE-0002",
+        "REQ-INFRA-0019"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0008",
+        "OPEN-DEC-0009"
+      ],
+      "source_references": [
+        "SRC-009:L000015-L000017",
+        "SRC-015:L000237-L000301"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use content-addressed artifacts with PostgreSQL metadata and filesystem or S3-compatible bytes",
+      "tradeoffs": [
+        "Deduplication and integrity are intrinsic",
+        "Garbage collection and metadata lifecycle must be designed"
+      ]
+    },
+    {
+      "alternatives": [
+        "Vendor-specific telemetry",
+        "Logs only",
+        "OpenTelemetry-compatible semantics"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-OBS-001",
+        "COMP-PROVIDER-001"
+      ],
+      "decision_id": "ADR-0014",
+      "path": "adr/ADR-0014_use_opentelemetry_as_the_telemetry_contract_and_openlit_as_an_agent_instrumentation_profile.md",
+      "requirement_ids": [
+        "REQ-OPS-0001",
+        "REQ-OPS-0004",
+        "REQ-OPS-0005",
+        "REQ-OPS-0006",
+        "REQ-OPS-0007",
+        "REQ-OPS-0008"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0015"
+      ],
+      "source_references": [
+        "SRC-016:L001792-L001794",
+        "SRC-016:L002272-L002276",
+        "GOV-001:L000696-L000710"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use OpenTelemetry as the telemetry contract and OpenLIT as an agent instrumentation profile",
+      "tradeoffs": [
+        "Portable correlation and export",
+        "A backend still must be selected per profile"
+      ]
+    },
+    {
+      "alternatives": [
+        "Direct vendor SDK calls everywhere",
+        "Mandatory external MCP gateway",
+        "Internal tool port with MCP compatibility"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-TOOL-001"
+      ],
+      "decision_id": "ADR-0015",
+      "path": "adr/ADR-0015_use_docker_mcp_gateway_behind_an_internal_governed_tool_port.md",
+      "requirement_ids": [
+        "REQ-AGENT-0006",
+        "REQ-AGENT-0007",
+        "REQ-ARCH-0006",
+        "REQ-INFRA-0006",
+        "REQ-SEC-0023"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0010"
+      ],
+      "source_references": [
+        "SRC-014:L000210-L000230",
+        "SRC-016:L001778-L001783",
+        "SRC-016:L002249-L002255"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use Docker MCP Gateway behind an internal governed tool port",
+      "tradeoffs": [
+        "Tool authority and policy remain internal",
+        "Protocol compatibility needs conformance tests"
+      ]
+    },
+    {
+      "alternatives": [
+        "Agent framework owns orchestration",
+        "Single provider SDK throughout",
+        "Provider and agent frameworks behind ports"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-CHAT-001",
+        "COMP-DIRECTOR-001",
+        "COMP-PROVIDER-001",
+        "COMP-ROUTER-001",
+        "COMP-WORKER-001"
+      ],
+      "decision_id": "ADR-0016",
+      "path": "adr/ADR-0016_use_pydantic_ai_for_typed_advisory_agents_and_litellm_as_a_replaceable_model_gateway.md",
+      "requirement_ids": [
+        "REQ-AGENT-0001",
+        "REQ-AGENT-0002",
+        "REQ-AGENT-0004",
+        "REQ-AGENT-0005",
+        "REQ-AGENT-0006",
+        "REQ-AGENT-0007",
+        "REQ-AGENT-0008",
+        "REQ-ARCH-0002",
+        "REQ-CTRL-0004"
+      ],
+      "resolves_open_decision_ids": [],
+      "source_references": [
+        "SRC-011:L000654-L000722",
+        "SRC-016:L001788-L001792"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use Pydantic AI for typed advisory agents and retain LiteLLM behind a replaceable, activation-gated model gateway port",
+      "tradeoffs": [
+        "Typed advisory-agent integration and provider replaceability",
+        "LiteLLM activation remains blocked until license and release-channel evidence is approved"
+      ]
+    },
+    {
+      "alternatives": [
+        "Mocks only",
+        "Manual browser verification",
+        "Playwright plus Testcontainers"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-ASSURE-001",
+        "COMP-PERSIST-001",
+        "COMP-UI-001"
+      ],
+      "decision_id": "ADR-0017",
+      "path": "adr/ADR-0017_use_layered_deterministic_tests_testcontainers_and_playwright_for_acceptance_evidence.md",
+      "requirement_ids": [
+        "REQ-ASSURE-0021",
+        "REQ-ASSURE-0022",
+        "REQ-ASSURE-0023",
+        "REQ-ASSURE-0024",
+        "REQ-ASSURE-0025",
+        "REQ-INFRA-0008",
+        "REQ-UX-0021"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0029"
+      ],
+      "source_references": [
+        "SRC-009:L000013-L000017",
+        "SRC-016:L001800-L001807",
+        "GOV-001:L002066-L002103"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use layered deterministic tests, Testcontainers, and Playwright for acceptance evidence",
+      "tradeoffs": [
+        "Real browser and dependency evidence",
+        "Container/browser provisioning increases CI cost"
+      ]
+    },
+    {
+      "alternatives": [
+        "Mandatory standalone vector database in every profile",
+        "No semantic retrieval capability",
+        "PostgreSQL plus pgvector by default with benchmark-gated standalone services"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-CONTEXT-001",
+        "COMP-PERSIST-001"
+      ],
+      "decision_id": "ADR-0018",
+      "path": "adr/ADR-0018_use_postgresql_plus_pgvector_for_semantic_retrieval_and_profile-gate_standalone_vector_services.md",
+      "requirement_ids": [
+        "REQ-ARCH-0011",
+        "REQ-CTX-0009"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0012"
+      ],
+      "source_references": [
+        "SRC-011:L000601-L000652",
+        "SRC-016:L001777-L001780",
+        "SRC-016:L002201-L002203"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use PostgreSQL plus pgvector for semantic retrieval and profile-gate standalone vector services",
+      "tradeoffs": [
+        "Keeps semantic retrieval in the canonical PostgreSQL operational boundary",
+        "Requires extension migration, backup, index, and retrieval-quality evidence"
+      ]
+    },
+    {
+      "alternatives": [
+        "Adopt catalog entries without bounded review",
+        "Treat dependency installation and source copying as one approval",
+        "Separate provenance, dependency activation, and source-incorporation gates"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-DEPLOY-001",
+        "COMP-POLICY-001",
+        "COMP-TRACE-001"
+      ],
+      "decision_id": "ADR-0019",
+      "path": "adr/ADR-0019_enforce_dependency_provenance_license_and_source-incorporation_policy_before_adoption.md",
+      "requirement_ids": [
+        "REQ-SEC-0021",
+        "REQ-UPSTREAM-0002",
+        "REQ-UPSTREAM-0005",
+        "REQ-UPSTREAM-0006",
+        "REQ-UPSTREAM-0007",
+        "REQ-UPSTREAM-0008",
+        "REQ-UPSTREAM-0009",
+        "REQ-UPSTREAM-0010",
+        "REQ-UPSTREAM-0013",
+        "REQ-UPSTREAM-0014"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0025"
+      ],
+      "source_references": [
+        "GOV-001:L000797-L000876",
+        "GOV-001:L001364-L001385",
+        "SRC-016:L002181-L002195"
+      ],
+      "status": "ACCEPTED",
+      "title": "Enforce dependency provenance, license, and source-incorporation policy before adoption",
+      "tradeoffs": [
+        "License, supply-chain, and maintenance risk become explicit before activation",
+        "Dependency introduction requires more evidence and release upkeep"
+      ]
+    },
+    {
+      "alternatives": [
+        "Allow workers to issue unrestricted Git worktree commands",
+        "Copy Worktrunk internals into Project Pipeline",
+        "Use Worktrunk through a bounded RepositoryWorkspacePort with native Git fallback"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-REPO-001",
+        "COMP-RESOURCE-001",
+        "COMP-WORKER-001"
+      ],
+      "decision_id": "ADR-0020",
+      "path": "adr/ADR-0020_use_worktrunk_behind_repository_steward_for_worktree_lifecycle_mechanics.md",
+      "requirement_ids": [
+        "REQ-GOV-0004",
+        "REQ-GOV-0014",
+        "REQ-GOV-0015",
+        "REQ-GOV-0016",
+        "REQ-GOV-0022",
+        "REQ-SCHED-0012"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0026"
+      ],
+      "source_references": [
+        "SRC-016:L001765-L001766",
+        "SRC-016:L002181-L002191",
+        "SRC-016:L002237-L002240"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use Worktrunk behind Repository Steward for worktree lifecycle mechanics",
+      "tradeoffs": [
+        "Commodity worktree mechanics are reused without surrendering repository authority",
+        "Subprocess, path, ownership, cleanup, and cross-platform compatibility must be tested"
+      ]
+    },
+    {
+      "alternatives": [
+        "Mandatory pgvector",
+        "Mandatory external vector database",
+        "Exact retrieval first with benchmark-gated vectors"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-CONTEXT-001",
+        "COMP-PERSIST-001"
+      ],
+      "decision_id": "ADR-0021",
+      "path": "adr/ADR-0021_defer_a_standalone_vector_service_until_retrieval_benchmarks_justify_it.md",
+      "requirement_ids": [
+        "REQ-ARCH-0011",
+        "REQ-CTX-0009"
+      ],
+      "resolves_open_decision_ids": [],
+      "source_references": [
+        "SRC-011:L000601-L000652",
+        "SRC-016:L001777-L001780"
+      ],
+      "status": "ACCEPTED",
+      "title": "Defer a standalone vector service until retrieval benchmarks justify it",
+      "tradeoffs": [
+        "Avoids premature service and index complexity",
+        "Semantic retrieval may need later activation"
+      ]
+    },
+    {
+      "alternatives": [
+        "Ollama only",
+        "llama.cpp only",
+        "llama-swap as mandatory front door"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-LOCALMODEL-001",
+        "COMP-PROVIDER-001"
+      ],
+      "decision_id": "ADR-0022",
+      "path": "adr/ADR-0022_use_provider_neutral_local_model_gateway.md",
+      "requirement_ids": [
+        "REQ-AGENT-0012",
+        "REQ-INFRA-0001"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0016"
+      ],
+      "source_references": [
+        "SRC-013:L001055-L001117",
+        "SRC-016:L001691-L001832"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use a provider-neutral local model gateway with Ollama, llama.cpp, and optional llama-swap",
+      "tradeoffs": [
+        "Preserves replaceability and offline operation",
+        "Requires per-runtime qualification and endpoint hardening"
+      ]
+    },
+    {
+      "alternatives": [
+        "Move primary director to AWS",
+        "Always-running EC2 control plane",
+        "No cloud spine"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-CLOUDSPINE-001",
+        "COMP-RECOVERY-001"
+      ],
+      "decision_id": "ADR-0023",
+      "path": "adr/ADR-0023_keep_control_local_primary_with_optional_aws_cloud_spine.md",
+      "requirement_ids": [
+        "REQ-INFRA-0012",
+        "REQ-INFRA-0013",
+        "REQ-RES-0015",
+        "REQ-RES-0024"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0019"
+      ],
+      "source_references": [
+        "SRC-012:L000001-L000217",
+        "SRC-012:L000380-L000495"
+      ],
+      "status": "ACCEPTED",
+      "title": "Keep control local-primary and use AWS only as an optional cloud spine",
+      "tradeoffs": [
+        "Retains local autonomy and low steady cloud cost",
+        "Requires explicit fencing/reconciliation for optional DR activation"
+      ]
+    },
+    {
+      "alternatives": [
+        "Native database backup plus restic",
+        "Cloud snapshots only",
+        "One generic backup tool for all domains"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-BACKUP-001",
+        "COMP-PERSIST-001",
+        "COMP-ARTIFACT-001"
+      ],
+      "decision_id": "ADR-0024",
+      "path": "adr/ADR-0024_use_pgbackrest_and_restic_for_backup_recovery.md",
+      "requirement_ids": [
+        "REQ-RES-0003",
+        "REQ-RES-0021",
+        "REQ-INFRA-0019"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0022"
+      ],
+      "source_references": [
+        "SRC-016:L001057-L001284",
+        "SRC-017:L000439-L000489"
+      ],
+      "status": "ACCEPTED",
+      "title": "Use pgBackRest for PostgreSQL and restic for portable encrypted backup",
+      "tradeoffs": [
+        "Uses PostgreSQL-aware recovery mechanics plus portable encrypted repository protection",
+        "Adds two optional external tools that require separate qualification"
+      ]
+    },
+    {
+      "alternatives": [
+        "One RPO/RTO for every domain",
+        "No explicit recovery targets until production"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-BACKUP-001",
+        "COMP-RECOVERY-001"
+      ],
+      "decision_id": "ADR-0025",
+      "path": "adr/ADR-0025_define_domain_recovery_objectives_and_measured_restore_evidence.md",
+      "requirement_ids": [
+        "REQ-RES-0003",
+        "REQ-RES-0020",
+        "REQ-RES-0021"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0023"
+      ],
+      "source_references": [
+        "SRC-017:L000439-L000489"
+      ],
+      "status": "ACCEPTED",
+      "title": "Define domain-specific recovery objectives and require measured restore evidence",
+      "tradeoffs": [
+        "Makes recovery readiness measurable by business impact",
+        "Targets remain provisional until real restore exercises establish observed performance"
+      ]
+    },
+    {
+      "alternatives": [
+        "Windows notifications plus ntfy as initial remote path",
+        "Email or existing channels only",
+        "Make an external delivery system the canonical broker"
+      ],
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "component_ids": [
+        "COMP-NOTIFY-001",
+        "COMP-CHAT-001"
+      ],
+      "decision_id": "ADR-0026",
+      "path": "adr/ADR-0026_keep_project_pipeline_notification_authority_with_tauri_local_and_apprise_remote.md",
+      "requirement_ids": [
+        "REQ-OPS-0017",
+        "REQ-UX-0003",
+        "REQ-UX-0025"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0021"
+      ],
+      "source_references": [
+        "SRC-015:L000703-L000955",
+        "SRC-016:L000973-L001056"
+      ],
+      "status": "ACCEPTED",
+      "title": "Keep Project Pipeline notification authority with Tauri-local and optional Apprise remote delivery",
+      "tradeoffs": [
+        "Preserves one deterministic notification policy and deduplication authority",
+        "Remote fan-out remains optional and requires separate operational qualification",
+        "Native Windows action-click behavior remains unqualified until exercised on Windows"
+      ]
+    },
+    {
+      "decision_id": "ADR-0027",
+      "title": "Keep Project-Native Locks Canonical with Optional mise and Dev Container Profiles",
+      "status": "ACCEPTED",
+      "authority_classification": "ENGINEERING_DECISION_GROUNDED_IN_SOURCE",
+      "path": "adr/ADR-0027_keep_project_native_locks_canonical_with_optional_mise_and_devcontainer_profiles.md",
+      "source_references": [
+        "SRC-009:L000012-L000012",
+        "SRC-011:L000912-L000943",
+        "SRC-017:L000597-L000670",
+        "SRC-017:L001002-L001063"
+      ],
+      "requirement_ids": [
+        "REQ-INFRA-0007",
+        "REQ-LIFE-0016",
+        "REQ-LIFE-0018"
+      ],
+      "component_ids": [
+        "COMP-LIFECYCLE-001"
+      ],
+      "resolves_open_decision_ids": [
+        "OPEN-DEC-0027"
+      ],
+      "alternatives": [
+        "mise as mandatory environment authority",
+        "Dev Containers as mandatory environment authority",
+        "Project-native declarations only with no optional environment adapters"
+      ],
+      "tradeoffs": [
+        "Preserves Windows-first and offline operability",
+        "Allows optional developer tooling without transferring authority",
+        "Requires Project Pipeline to maintain compatibility/qualification records"
+      ]
+    }
+  ],
+  "schema_version": "1.1.0"
+}

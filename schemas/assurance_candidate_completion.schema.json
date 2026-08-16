@@ -1,0 +1,89 @@
+{
+  "$defs": {
+    "CandidateCompletionState": {
+      "enum": [
+        "CHALLENGE",
+        "READY_FOR_COMPLETION_GATE",
+        "NOT_READY"
+      ],
+      "title": "CandidateCompletionState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/assurance_candidate_completion.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assessment_id": {
+      "title": "Assessment Id",
+      "type": "string"
+    },
+    "criteria_passing": {
+      "minimum": 0,
+      "title": "Criteria Passing",
+      "type": "integer"
+    },
+    "criteria_total": {
+      "minimum": 0,
+      "title": "Criteria Total",
+      "type": "integer"
+    },
+    "implementer_id": {
+      "title": "Implementer Id",
+      "type": "string"
+    },
+    "independent_review_required": {
+      "title": "Independent Review Required",
+      "type": "boolean"
+    },
+    "independent_review_satisfied": {
+      "title": "Independent Review Satisfied",
+      "type": "boolean"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "stale_evidence_count": {
+      "minimum": 0,
+      "title": "Stale Evidence Count",
+      "type": "integer"
+    },
+    "state": {
+      "$ref": "#/$defs/CandidateCompletionState"
+    },
+    "unknown_count": {
+      "minimum": 0,
+      "title": "Unknown Count",
+      "type": "integer"
+    },
+    "work_item_id": {
+      "title": "Work Item Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "assessment_id",
+    "work_item_id",
+    "state",
+    "implementer_id",
+    "criteria_total",
+    "criteria_passing",
+    "stale_evidence_count",
+    "unknown_count",
+    "independent_review_required",
+    "independent_review_satisfied",
+    "reasons"
+  ],
+  "title": "CandidateCompletionAssessment",
+  "type": "object"
+}

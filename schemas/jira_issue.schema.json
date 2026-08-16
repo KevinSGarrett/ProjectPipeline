@@ -1,0 +1,102 @@
+{
+  "$id": "https://project-pipeline.local/schemas/jira_issue.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "acceptance_criteria": {
+      "items": {
+        "properties": {
+          "criterion_id": {
+            "pattern": "^AC-PP-[0-9]{6}-[0-9]{2}$",
+            "type": "string"
+          },
+          "statement": {
+            "type": "string"
+          },
+          "verification": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "criterion_id",
+          "statement",
+          "verification"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "definition_of_done": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "description": {
+      "type": "string"
+    },
+    "issue_type": {
+      "enum": [
+        "EPIC",
+        "STORY",
+        "TASK",
+        "SUBTASK",
+        "BUG",
+        "SPIKE"
+      ]
+    },
+    "local_id": {
+      "pattern": "^PP-(EPIC|STORY|TASK|SUBTASK|BUG|SPIKE)-[0-9]{6}$",
+      "type": "string"
+    },
+    "objective": {
+      "type": "string"
+    },
+    "parent": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "plan_references": {
+      "items": {
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "requirement_ids": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "source_references": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "state": {
+      "type": "string"
+    },
+    "title": {
+      "minLength": 5,
+      "type": "string"
+    }
+  },
+  "required": [
+    "local_id",
+    "issue_type",
+    "title",
+    "objective",
+    "description",
+    "requirement_ids",
+    "source_references",
+    "plan_references",
+    "acceptance_criteria",
+    "definition_of_done",
+    "state"
+  ],
+  "title": "Local Jira Work Item",
+  "type": "object"
+}

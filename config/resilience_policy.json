@@ -1,0 +1,175 @@
+{
+  "aws_cloud_spine": {
+    "activation_preconditions": [
+      "explicit operator authorization",
+      "budget lease",
+      "least-privilege IAM review",
+      "environment identity",
+      "recovery test",
+      "cost review"
+    ],
+    "burst_workers_canonical_authority": false,
+    "credential_policy": "role_or_profile_credentials_scoped_by_function; no embedded long-lived keys",
+    "optional_recovery_director": true,
+    "primary_control_location": "LOCAL",
+    "services": {
+      "backup_and_event_ledger": "S3",
+      "budget_controls": "AWS Budgets",
+      "configuration": "Parameter Store",
+      "durable_queue": "SQS",
+      "lease_witness": "DynamoDB",
+      "observability": "CloudWatch",
+      "watchdog_and_ingress": "Lambda"
+    }
+  },
+  "backup_tools": {
+    "backup_status_distinct_from_restore_status": true,
+    "canonical_database": "PGBACKREST",
+    "general_encrypted_backup": "RESTIC",
+    "restore_verification_required": true
+  },
+  "deterministic_control_authority": "PROJECT_PIPELINE",
+  "failover": {
+    "active_lease_must_expire_or_be_fenced": true,
+    "fencing_token_monotonic": true,
+    "reconcile_before_commit": true,
+    "split_brain_policy": "FAIL_CLOSED",
+    "witness_required": true
+  },
+  "human_required": {
+    "continue_unaffected_work": true,
+    "exact_action_required": true,
+    "global_stop_only_for_global_failure": true,
+    "invalidate_stale_assumptions": true,
+    "repair_verification_required": true
+  },
+  "local_model_runtimes": [
+    {
+      "capabilities": [
+        "triage",
+        "summarization",
+        "review_support",
+        "routing_assistance",
+        "outage_fallback"
+      ],
+      "endpoint": "http://127.0.0.1:11434",
+      "kind": "OLLAMA",
+      "metadata": {
+        "role": "default_local_service_candidate",
+        "upstream_id": "UPSTREAM-072"
+      },
+      "qualified": false,
+      "remote_network_allowed": false
+    },
+    {
+      "capabilities": [
+        "triage",
+        "summarization",
+        "review_support",
+        "routing_assistance",
+        "outage_fallback"
+      ],
+      "endpoint": "http://127.0.0.1:8080",
+      "kind": "LLAMA_CPP",
+      "metadata": {
+        "role": "direct_runtime_fallback_candidate",
+        "upstream_id": "UPSTREAM-040"
+      },
+      "qualified": false,
+      "remote_network_allowed": false
+    },
+    {
+      "capabilities": [
+        "triage",
+        "summarization",
+        "review_support",
+        "routing_assistance",
+        "outage_fallback",
+        "model_hot_swap"
+      ],
+      "endpoint": "http://127.0.0.1:8081",
+      "kind": "LLAMA_SWAP",
+      "metadata": {
+        "role": "optional_multi_model_gateway_candidate",
+        "upstream_id": "UPSTREAM-068"
+      },
+      "qualified": false,
+      "remote_network_allowed": false
+    }
+  ],
+  "machine_roles": {
+    "cloud_burst": {
+      "authority": "bounded_worker_only",
+      "roles": [
+        "CLOUD_BURST"
+      ]
+    },
+    "control_machine": {
+      "authority": "primary_when_fenced_lease_valid",
+      "roles": [
+        "PRIMARY_CONTROL",
+        "CPU_WORKER"
+      ]
+    },
+    "gpu_machine": {
+      "authority": "standby_until_fenced_takeover",
+      "roles": [
+        "STANDBY_CONTROL",
+        "GPU_WORKER",
+        "RECOVERY"
+      ]
+    }
+  },
+  "operating_modes": [
+    "FULL",
+    "DEGRADED",
+    "LOCAL_FIRST",
+    "RECOVERY",
+    "PAUSED",
+    "EMERGENCY_STOP"
+  ],
+  "policy_id": "PROJECT-PIPELINE-RESILIENCE-POLICY",
+  "recovery_objectives": [
+    {
+      "backup_strategy": "pgBackRest incremental backups plus restore verification against an isolated PostgreSQL target",
+      "destructive_restore_interval_days": 30,
+      "domain": "canonical_state",
+      "rationale": "Canonical project, workflow, reconciliation, and authority state has the strictest recovery target.",
+      "rpo_seconds": 300,
+      "rto_seconds": 1800
+    },
+    {
+      "backup_strategy": "policy checkpoints to protected remote branches plus restic protection for recoverable local WIP metadata",
+      "destructive_restore_interval_days": 30,
+      "domain": "repository_wip",
+      "rationale": "Meaningful work in progress must survive a local machine loss without turning remote Git into canonical control authority.",
+      "rpo_seconds": 900,
+      "rto_seconds": 1800
+    },
+    {
+      "backup_strategy": "digest-verified restic repository with isolated restore sampling",
+      "destructive_restore_interval_days": 30,
+      "domain": "evidence",
+      "rationale": "Evidence must remain durable and independently verifiable.",
+      "rpo_seconds": 3600,
+      "rto_seconds": 3600
+    },
+    {
+      "backup_strategy": "content-addressed local artifacts with restic/offsite or optional S3-compatible replication",
+      "destructive_restore_interval_days": 30,
+      "domain": "artifacts",
+      "rationale": "Artifacts are reproducible where possible but large immutable outputs require bounded restoration.",
+      "rpo_seconds": 3600,
+      "rto_seconds": 7200
+    },
+    {
+      "backup_strategy": "database backup plus append-only exported history snapshots protected by restic",
+      "destructive_restore_interval_days": 30,
+      "domain": "operator_history",
+      "rationale": "Operator decisions and incident history are needed for reconciliation and audit.",
+      "rpo_seconds": 3600,
+      "rto_seconds": 3600
+    }
+  ],
+  "schema_version": "1.0.0"
+}

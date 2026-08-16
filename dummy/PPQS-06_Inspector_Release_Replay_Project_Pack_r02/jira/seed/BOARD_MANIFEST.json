@@ -1,0 +1,20 @@
+{
+  "board_id": "PPQS-06-SEED",
+  "counts_by_state": {
+    "DISCOVERED": 12,
+    "DONE": 12
+  },
+  "counts_by_type": {
+    "STORY": 12,
+    "TASK": 12
+  },
+  "generated_at_utc": "2026-08-16T04:00:00Z",
+  "issue_count": 24,
+  "issue_index": "indexes/issues.jsonl",
+  "project_key": "MI",
+  "relationship_graph": "relationships/graph.json",
+  "remote_board_state": "SIMULATED_LOCAL_MIRROR",
+  "remote_write_state": "DENIED_BY_DEFAULT",
+  "schema_version": "1.0.0",
+  "seed_state": true
+}

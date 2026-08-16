@@ -1,0 +1,47 @@
+{
+  "$id": "https://project-pipeline.local/schemas/verification_fault_scenario.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "expected_behavior": {
+      "title": "Expected Behavior",
+      "type": "string"
+    },
+    "fault_id": {
+      "title": "Fault Id",
+      "type": "string"
+    },
+    "injected_fault": {
+      "title": "Injected Fault",
+      "type": "string"
+    },
+    "observed_behavior": {
+      "title": "Observed Behavior",
+      "type": "string"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "scenario": {
+      "title": "Scenario",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "fault_id",
+    "scenario",
+    "injected_fault",
+    "expected_behavior",
+    "observed_behavior",
+    "passed"
+  ],
+  "title": "FaultScenarioResult",
+  "type": "object"
+}

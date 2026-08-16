@@ -1,0 +1,24 @@
+{
+  "dependency_check": {
+    "errors": [],
+    "ok": true
+  },
+  "generated_context_schemas": [
+    "context_candidate.schema.json",
+    "context_coverage.schema.json",
+    "context_firewall_result.schema.json",
+    "context_item.schema.json",
+    "context_pack.schema.json",
+    "context_policy.schema.json",
+    "context_receipt.schema.json",
+    "context_reviewer_package.schema.json",
+    "context_selection.schema.json",
+    "context_telemetry.schema.json",
+    "delegation_envelope.schema.json"
+  ],
+  "migration_latest": "PPDB-0009",
+  "schema_check": {
+    "errors": [],
+    "ok": true
+  }
+}

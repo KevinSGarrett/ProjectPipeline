@@ -1,0 +1,36 @@
+{
+  "$id": "https://project-pipeline.local/schemas/agent_circuit_breaker_policy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "failure_threshold": {
+      "default": 3,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Failure Threshold",
+      "type": "integer"
+    },
+    "half_open_probe_limit": {
+      "default": 1,
+      "maximum": 10,
+      "minimum": 1,
+      "title": "Half Open Probe Limit",
+      "type": "integer"
+    },
+    "recovery_seconds": {
+      "default": 120,
+      "maximum": 86400,
+      "minimum": 1,
+      "title": "Recovery Seconds",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "title": "CircuitBreakerPolicy",
+  "type": "object"
+}

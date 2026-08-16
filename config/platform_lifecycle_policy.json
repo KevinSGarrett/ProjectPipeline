@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "canonical_authority": "PROJECT_PIPELINE",
+  "portfolio": {
+    "supported_modes": ["NORMAL", "BALANCED_PORTFOLIO", "DEADLINE_SPRINT", "EXCLUSIVE"],
+    "project_authority_preserved": true,
+    "minimum_guaranteed_capacity_supported": true,
+    "starvation_aging_required": true
+  },
+  "environment": {
+    "types": ["LOCAL", "INTEGRATION", "PR_PREVIEW", "STAGING", "PRODUCTION", "TEMPORARY_TEST"],
+    "temporary_environment_ttl_required": true,
+    "shared_destructive_test_targets": "DENY"
+  },
+  "test_data": {
+    "production_data_default": "DENY",
+    "production_derived_requires_explicit_permission": true,
+    "production_derived_requires_verified_transformation": true,
+    "sensitive_data_requires_masking": true
+  },
+  "contract_evolution": {
+    "phases": ["EXPAND", "MIGRATE", "VERIFY", "CONTRACT"],
+    "automatic_breaking_change": false,
+    "rollback_required": true
+  },
+  "retention": {
+    "debug_logs_days": 14,
+    "agent_raw_transcripts_days": 30,
+    "context_packs_days": 90,
+    "test_evidence_days": 365,
+    "release_evidence": "PERMANENT",
+    "audit_events_days": 730,
+    "reference_aware_gc": true
+  },
+  "destructive_operations": {
+    "retention_expiry_is_deletion_authority": false,
+    "typed_action_required": true,
+    "verification_required": true,
+    "legal_hold_blocks_deletion": true
+  },
+  "project_terminal_states": ["ACTIVE", "MAINTENANCE", "CLOSING", "ARCHIVED", "DECOMMISSIONED"],
+  "qualification_states": ["QUALIFICATION", "ACTIVE", "DEGRADED", "DEPRECATED", "DISABLED", "RETIRED"],
+  "platform_upgrade": {
+    "separately_verified_release_artifact_required": true,
+    "synthetic_e2e_certification_required": true,
+    "canary_or_shadow_required": true,
+    "migration_plan_required": true,
+    "rollback_plan_required": true,
+    "post_upgrade_verification_required": true
+  },
+  "renovate": {
+    "activation": "PROHIBITED_BY_LICENSE_POLICY",
+    "license": "AGPL-3.0-only"
+  }
+}

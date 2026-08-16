@@ -1,0 +1,121 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000152-01",
+      "statement": "Every linked requirement is explicitly dispositioned, mapped, and represented by the stated implementation or planned artifacts.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000152-02",
+      "statement": "Applicable behavior-specific tests and evidence support completion; unavailable external verification remains explicitly blocked.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000013"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Add behavior-specific catalog, source, and Jira tests with deterministic regeneration, tests, and traceability.",
+  "evidence_required": [
+    "EVID-000013"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "tests/test_requirements_detailed.py",
+    "tests/test_source_references.py",
+    "tests/test_source_sections.py",
+    "tests/test_requirement_query.py",
+    "tests/test_jira_rebuild.py"
+  ],
+  "expected_implementation_artifacts": [
+    "tests/test_requirements_detailed.py",
+    "tests/test_source_references.py",
+    "tests/test_source_sections.py",
+    "tests/test_requirement_query.py",
+    "tests/test_jira_rebuild.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "catalog-foundation"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25117",
+    "remote_key": "PP-148",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000152",
+  "objective": "Add behavior-specific catalog, source, and Jira tests",
+  "observability_impact": "Record structured validation, state, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-STORY-000093",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/08_execution_assurance_and_testing/PLAN-ASSURE-001_execution_assurance.md",
+      "end_line": 20,
+      "line_numbered_path": "plans/_line_numbered/PLAN-ASSURE-001_execution_assurance.lines.txt",
+      "line_reference": "PLAN-ASSURE-001:SEC-03:L000017-L000020",
+      "plan_id": "PLAN-ASSURE-001",
+      "section_id": "PLAN-ASSURE-001:SEC-03",
+      "start_line": 17
+    }
+  ],
+  "rationale": "This work is required to convert source-grounded requirements into bounded implementation, verification, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "target": "PP-SUBTASK-000153",
+      "type": "PARENT_OF"
+    }
+  ],
+  "remote_jira_key": "PP-148",
+  "required_tests": [
+    "TEST-REQUIREMENTS-001",
+    "TEST-SOURCE-REFERENCES-001",
+    "TEST-SOURCE-SECTIONS-001",
+    "TEST-REQUIREMENT-QUERY-001",
+    "TEST-JIRA-REBUILD-001"
+  ],
+  "requirement_ids": [
+    "REQ-ASSURE-0003"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Add behavior-specific catalog, source, and Jira tests"
+  ],
+  "security_impact": "Assess authority, secrets, dependency, data-egress, and external-mutation effects.",
+  "source_references": [
+    "SRC-008:L000540-L000760"
+  ],
+  "state": "BACKLOG",
+  "title": "Add behavior-specific catalog, source, and Jira tests",
+  "upstream_dependencies": []
+}

@@ -1,0 +1,23 @@
+test_archive_is_deterministic_and_valid (test_archive.ArchiveTests.test_archive_is_deterministic_and_valid) ... ok
+test_wrong_root_is_reported (test_archive.ArchiveTests.test_wrong_root_is_reported) ... ok
+test_invalid_identifiers_do_not_match (test_ids.IdentifierTests.test_invalid_identifiers_do_not_match) ... ok
+test_valid_identifiers_match (test_ids.IdentifierTests.test_valid_identifiers_match) ... ok
+test_board_counts_match_issue_index (test_jira_graph.JiraGraphTests.test_board_counts_match_issue_index) ... ok
+test_graph_has_no_dangling_edges_or_orphan_epics (test_jira_graph.JiraGraphTests.test_graph_has_no_dangling_edges_or_orphan_epics) ... ok
+test_plan_sections_receive_exact_ranges (test_line_numbering.LineNumberingTests.test_plan_sections_receive_exact_ranges) ... ok
+test_manifest_aggregate_is_stable_for_same_content (test_manifest.ManifestTests.test_manifest_aggregate_is_stable_for_same_content) ... ok
+test_manifest_is_sorted_and_detects_change (test_manifest.ManifestTests.test_manifest_is_sorted_and_detects_change) ... ok
+test_governing_prompt_aliases_are_reconciled_without_hiding_raw_hashes (test_provenance.ProvenanceTests.test_governing_prompt_aliases_are_reconciled_without_hiding_raw_hashes) ... ok
+test_knowledge_pack_registry_preserves_source_relations (test_provenance.ProvenanceTests.test_knowledge_pack_registry_preserves_source_relations) ... ok
+test_upstream_catalog_is_unique_and_unadopted (test_provenance.ProvenanceTests.test_upstream_catalog_is_unique_and_unadopted) ... ok
+test_repository_contract_has_no_errors (test_repository_contract.RepositoryContractTests.test_repository_contract_has_no_errors) ... ok
+test_map_groups_semantic_paths (test_repository_map.RepositoryMapTests.test_map_groups_semantic_paths) ... ok
+test_coverage_has_no_unexplained_implemented_gap (test_traceability.TraceabilityTests.test_coverage_has_no_unexplained_implemented_gap) ... ok
+test_requirement_ids_are_unique_and_mapped_to_plan_and_work (test_traceability.TraceabilityTests.test_requirement_ids_are_unique_and_mapped_to_plan_and_work) ... ok
+test_forbidden_term_is_detected (test_validation_content.ContentValidationTests.test_forbidden_term_is_detected) ... ok
+test_placeholder_and_secret_markers_are_detected (test_validation_content.ContentValidationTests.test_placeholder_and_secret_markers_are_detected) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests
+
+OK

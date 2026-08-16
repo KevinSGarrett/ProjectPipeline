@@ -1,0 +1,132 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000027-01",
+      "statement": "Every accepted domain requirement is linked to at least one valid child work item.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "automated_graph_and_traceability_check",
+        "path": "plans/_traceability/requirements_to_jira.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Own all accepted requirements, decisions, implementation, tests, evidence, and operational readiness for PLAN-OPS-001.",
+  "evidence_required": [
+    "EVID-000004"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "EPIC",
+  "labels": [
+    "domain-epic",
+    "plan-ops-001"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "24983",
+    "remote_key": "PP-14",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-EPIC-000027",
+  "objective": "Deliver the complete observability and operations capability and its verified operational contract.",
+  "observability_impact": "Record structured validation and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": null,
+  "plan_references": [
+    {
+      "authoritative_path": "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md",
+      "end_line": 12,
+      "line_numbered_path": "plans/_line_numbered/PLAN-OPS-001_observability_operations.lines.txt",
+      "line_reference": "PLAN-OPS-001:SEC-01:L000009-L000012",
+      "plan_id": "PLAN-OPS-001",
+      "section_id": "PLAN-OPS-001:SEC-01",
+      "start_line": 9
+    }
+  ],
+  "rationale": "The source corpus requires this domain as part of the end-to-end platform.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000028",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000116",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000117",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000118",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000119",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000120",
+      "type": "PARENT_OF"
+    }
+  ],
+  "remote_jira_key": "PP-14",
+  "required_tests": [
+    "TEST-JIRA-GRAPH-001"
+  ],
+  "requirement_ids": [
+    "REQ-OPS-0001",
+    "REQ-OPS-0002",
+    "REQ-OPS-0003",
+    "REQ-OPS-0004",
+    "REQ-OPS-0005",
+    "REQ-OPS-0006",
+    "REQ-OPS-0007",
+    "REQ-OPS-0008",
+    "REQ-OPS-0009",
+    "REQ-OPS-0010",
+    "REQ-OPS-0011",
+    "REQ-OPS-0012",
+    "REQ-OPS-0013",
+    "REQ-OPS-0014",
+    "REQ-OPS-0015",
+    "REQ-OPS-0016",
+    "REQ-OPS-0017",
+    "REQ-OPS-0018",
+    "REQ-OPS-0019"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the complete observability and operations capability and its verified operational contract."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L000696-L000709"
+  ],
+  "state": "BACKLOG",
+  "title": "Observability and Operations",
+  "upstream_dependencies": []
+}

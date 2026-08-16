@@ -1,0 +1,18 @@
+{
+  "evidence_integrity_ok": true,
+  "final_passed": true,
+  "observations": [
+    "manifest_errors:0",
+    "repository_errors:0",
+    "repository_warnings:0",
+    "unexplained_traceability_gaps:0",
+    "evidence_verification_failures:0",
+    "required_test_suite_ok:True"
+  ],
+  "report_id": "PMERGE-561FCB5366AD3E752E4C",
+  "repository_manifest_ok": true,
+  "repository_validation_ok": true,
+  "required_test_suite_ok": true,
+  "schema_version": "1.0.0",
+  "traceability_ok": true
+}

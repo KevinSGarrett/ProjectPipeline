@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0.0",
+  "currency": "USD",
+  "yellow_projected_ratio_milli": 800,
+  "orange_projected_ratio_milli": 900,
+  "red_projected_ratio_milli": 975,
+  "yellow_pace_ratio_milli": 1100,
+  "orange_pace_ratio_milli": 1250,
+  "red_pace_ratio_milli": 1500,
+  "lease_ttl_seconds": 3600,
+  "reevaluate_at_consumed_milli": 800,
+  "default_p90_multiplier_milli": 1500,
+  "minimum_history_samples_medium": 4,
+  "minimum_history_samples_high": 12,
+  "anomaly_warn_ratio_milli": 1500,
+  "anomaly_block_ratio_milli": 2500,
+  "reserve_reasons": [
+    "P0_FAILURE_RECOVERY",
+    "CRITICAL_PATH",
+    "RELEASE_BLOCKER",
+    "SECURITY",
+    "PRODUCTION_RECOVERY",
+    "CRITICAL_ARCHITECTURE",
+    "DEADLINE_PROTECTION",
+    "REQUIRED_VERIFICATION"
+  ]
+}

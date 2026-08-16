@@ -1,0 +1,819 @@
+{
+  "components": [
+    {
+      "component_id": "SCOMP-8E36F7697C4F8B0C93B2",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "ee5b6ac64b09274c026051813484025939564067801f485115d9cadc207cf791",
+      "name": "annotated-types",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "0.7.0"
+    },
+    {
+      "component_id": "SCOMP-ED21439876AEFCCD951B",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "4cd40e690f23bf37cbcad34efd6758e062df1df07c86833f7e3ce95bf1fa38cc",
+      "name": "attrs",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "26.1.0"
+    },
+    {
+      "component_id": "SCOMP-811EBA4BBA7A59C541FC",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "cb2893a5e7e2e4063b7eec50e64b982559c1e528e354ee903928663a34a69783",
+      "name": "coverage",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "7.13.3"
+    },
+    {
+      "component_id": "SCOMP-1749B6849BE5CB1D649C",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "40d773f84e4e112f495bbf4f1be9cbd2d456c0aeb6ef5311f75d1bf322f2165b",
+      "name": "iniconfig",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "2.3.0"
+    },
+    {
+      "component_id": "SCOMP-4DAD2F0BE6E338462D29",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "05b189866ca98a96da3934bf6b83687ced3ff85325273b77e16b705f6d8b26d2",
+      "name": "jsonschema",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "4.26.0"
+    },
+    {
+      "component_id": "SCOMP-D82AD2555CCC87BD4C6D",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "35abd41757f32b4ea24756920ded47b70173d77cbc052a5a6d3ab583b2e8d89d",
+      "name": "jsonschema-specifications",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "2025.9.1"
+    },
+    {
+      "component_id": "SCOMP-3A084EB82FD9C4A115F1",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "aca5d94a97d1f70f301d033addb635f6e66be8973a00aba4127637eed2ef316a",
+      "name": "networkx",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "3.6.1"
+    },
+    {
+      "component_id": "SCOMP-BC8878E7A6D36525DAF3",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "39b230247a354f64e33751ecab6e9b55badbecfcb9c102d8756bd32dc8d1e718",
+      "name": "opentelemetry-api",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "1.42.1"
+    },
+    {
+      "component_id": "SCOMP-DC4B38FD73F7A39AA61A",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "b913c6de2fbb38c4673059ad6f4bbf6c775b7325ff1d10af2a3507b818c22a4d",
+      "name": "opentelemetry-sdk",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "1.42.1"
+    },
+    {
+      "component_id": "SCOMP-A3BE0BD58C7E291A9AD3",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "08fa5c21cefb0175f151867694feaddd5298588216e2e31b5f28fbf274ccb8fe",
+      "name": "opentelemetry-semantic-conventions",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "0.63b1"
+    },
+    {
+      "component_id": "SCOMP-6E71959224DA1FAD97BA",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "5b611a609c38fefc3d616bf45d20aec98fb7d53f245daca9e2c30fc85c7ac282",
+      "name": "packaging",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "25.0"
+    },
+    {
+      "component_id": "SCOMP-4D3B25AF0B5BFA02461B",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "7438c35ee25a095eb7416f84b461c2d74425c5e734ad54c3912453c65244e01c",
+      "name": "pluggy",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "1.6.0"
+    },
+    {
+      "component_id": "SCOMP-F431F31EE826C1A34852",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "d1e56c3412492512fb6b59a9dfc25ab7af2a8204585cd7bca000513023133394",
+      "name": "pydantic",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "2.13.4"
+    },
+    {
+      "component_id": "SCOMP-E745BBD956D0B3FCFCCE",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "135fa8b2f89473e9191c7078c2164e3ec6c8927a61c2379c2fddcc07f11f3bae",
+      "name": "pydantic-core",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "2.46.4"
+    },
+    {
+      "component_id": "SCOMP-3FC02A23E23D4BC10DD7",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "e0528f51b30427fae94723662ba622f8d8db2a4d8d3f1365698d67a52450a845",
+      "name": "pygments",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "2.20.0"
+    },
+    {
+      "component_id": "SCOMP-BCBE53B949E653ACBCEE",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "14131718cc1f40cfecb5eac338037029a519b6392876100afec1e949f023d1ed",
+      "name": "pytest",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "9.0.2"
+    },
+    {
+      "component_id": "SCOMP-BEC63F13961F7FF14E5E",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "5f01bfe29b1fef7305d48b923a96e4dc191f77fb87298db207cb7685e8ce5e3b",
+      "name": "pytest-cov",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "7.0.0"
+    },
+    {
+      "component_id": "SCOMP-1BF85CDF7FA56ED3385E",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "c93b00e6ab1524fd60848376604c189a114374776475c25a31d57be47b29de6a",
+      "name": "referencing",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "0.37.0"
+    },
+    {
+      "component_id": "SCOMP-EFAD7FA9713335571987",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "1bc561b7215de8649cb5ecde1885d9d448b27f5341245844c33b4a0e38313be5",
+      "name": "rpds-py",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "2026.5.1"
+    },
+    {
+      "component_id": "SCOMP-8ED23315FD3A47F7F628",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "b05084ca1d50879865178d9fff9fabeab61bdfb1f361bfbde95421ffc8f9be46",
+      "name": "typing-extensions",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "4.16.0"
+    },
+    {
+      "component_id": "SCOMP-6CB082755FAE976AD334",
+      "component_type": "python-package",
+      "license": null,
+      "metadata_sha256": "61096cd0bfe3c7040b6f98c22b02d190fe01936d0ff7616c5134fed02891953a",
+      "name": "typing-inspection",
+      "schema_version": "1.0.0",
+      "source": "requirements/environment.lock.json",
+      "version": "0.4.2"
+    },
+    {
+      "component_id": "SCOMP-A4842153E225A824A2FE",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "ag-ui-protocol/ag-ui",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/ag-ui-protocol/ag-ui",
+      "version": "b70b564fc99504bf57a1d82feab714d67f85a563"
+    },
+    {
+      "component_id": "SCOMP-9CBD275F81E36445C342",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "aquasecurity/trivy",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/aquasecurity/trivy",
+      "version": "d98911ea338b061f8bef0baeef85b35660013b32"
+    },
+    {
+      "component_id": "SCOMP-8EA56F583F5729693276",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "atlassian/atlassian-mcp-server",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/atlassian/atlassian-mcp-server",
+      "version": "94a30436435fb526a29f820f5f46250870eb75a0"
+    },
+    {
+      "component_id": "SCOMP-19FCA3C21EEADB95CCCD",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "BerriAI/litellm",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/BerriAI/litellm",
+      "version": "87abb8781ee2e586858c9e9943ecb789e316af96"
+    },
+    {
+      "component_id": "SCOMP-07231193F5FB8F1A2B85",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0 OR GPL-2.0",
+      "metadata_sha256": null,
+      "name": "binwiederhier/ntfy",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/binwiederhier/ntfy",
+      "version": "binwiederhier/ntfy@metadata-snapshot-20260815T062737Z"
+    },
+    {
+      "component_id": "SCOMP-27921B68B7B7FEE82000",
+      "component_type": "upstream-integration",
+      "license": "BSD-3-Clause",
+      "metadata_sha256": null,
+      "name": "boxed/mutmut",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/boxed/mutmut",
+      "version": "boxed/mutmut@metadata-snapshot-20260815T062737Z"
+    },
+    {
+      "component_id": "SCOMP-B51939476CA930D69442",
+      "component_type": "upstream-integration",
+      "license": "BSD-2-Clause",
+      "metadata_sha256": null,
+      "name": "caronc/apprise",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/caronc/apprise",
+      "version": "caronc/apprise@metadata-snapshot-20260815T062737Z"
+    },
+    {
+      "component_id": "SCOMP-A1D220D69D3435E5189B",
+      "component_type": "upstream-integration",
+      "license": "MPL-2.0",
+      "metadata_sha256": null,
+      "name": "dequelabs/axe-core",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/dequelabs/axe-core",
+      "version": "dequelabs/axe-core@metadata-snapshot-20260815T062737Z"
+    },
+    {
+      "component_id": "SCOMP-A90A8A2B4AA9B7032E28",
+      "component_type": "upstream-integration",
+      "license": "CC-BY-4.0 AND MIT",
+      "metadata_sha256": null,
+      "name": "devcontainers/spec",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/devcontainers/spec",
+      "version": "devcontainers/spec@metadata-snapshot-20260815T233400Z"
+    },
+    {
+      "component_id": "SCOMP-C4D3694235B35175DF3D",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "docker/mcp-gateway",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/docker/mcp-gateway",
+      "version": "24b028f4f9aac85ce1a1057c5e8d739836e7c18d"
+    },
+    {
+      "component_id": "SCOMP-1FE6CB7782BA66194050",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "docling-project/docling",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/docling-project/docling",
+      "version": "61d76f1ff3f8428065465889f7b4577da7df704c"
+    },
+    {
+      "component_id": "SCOMP-C204F4E3D874104F6468",
+      "component_type": "upstream-integration",
+      "license": "BSD-3-Clause",
+      "metadata_sha256": null,
+      "name": "FiloSottile/age",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/FiloSottile/age",
+      "version": "706dfc1e799a03443ae46023502bd88d4e9e324f"
+    },
+    {
+      "component_id": "SCOMP-3993C9CEF366BB3D02F3",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "Fission-AI/OpenSpec",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/Fission-AI/OpenSpec",
+      "version": "Fission-AI/OpenSpec@metadata-snapshot-20260815T233400Z"
+    },
+    {
+      "component_id": "SCOMP-00EE776382C00BFBDE4A",
+      "component_type": "upstream-integration",
+      "license": "MPL-2.0",
+      "metadata_sha256": null,
+      "name": "getsops/sops",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/getsops/sops",
+      "version": "30332a959e3d987f622702519f6b52d8ff81e1dc"
+    },
+    {
+      "component_id": "SCOMP-315865813692686432F4",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "ggml-org/llama.cpp",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/ggml-org/llama.cpp",
+      "version": "ggml-org/llama.cpp@metadata-snapshot-20260815T062737Z"
+    },
+    {
+      "component_id": "SCOMP-90506A15D3CADCDFD9C4",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "github/github-mcp-server",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/github/github-mcp-server",
+      "version": "0ea1f775a7c73eff1bd2e25904d01136756bbfe2"
+    },
+    {
+      "component_id": "SCOMP-68F0C7E93F8D345E7318",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "github/spec-kit",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/github/spec-kit",
+      "version": "github/spec-kit@metadata-snapshot-20260815T233400Z"
+    },
+    {
+      "component_id": "SCOMP-5009B029DFD0224AB554",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "gitleaks/gitleaks",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/gitleaks/gitleaks",
+      "version": "b58d3f102cf3a2c84cb7f923d05c25c9b1aed84b"
+    },
+    {
+      "component_id": "SCOMP-C10E00BD0AD4C8B9AB4D",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "GoogleChrome/lighthouse-ci",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/GoogleChrome/lighthouse-ci",
+      "version": "GoogleChrome/lighthouse-ci@metadata-snapshot-20260815T062737Z"
+    },
+    {
+      "component_id": "SCOMP-953691FA82BFB2662B54",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "google-gemini/gemini-cli",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/google-gemini/gemini-cli",
+      "version": "2a87e7be103308b8734246097ba723cc7deb4122"
+    },
+    {
+      "component_id": "SCOMP-94854EAB3C94DFB1DE59",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "google/or-tools",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/google/or-tools",
+      "version": "98c165af62df62b3056c2ee0fca66b24e79097cb"
+    },
+    {
+      "component_id": "SCOMP-46F2C299B5644EF32DDB",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "google/osv-scanner",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/google/osv-scanner",
+      "version": "567f3ea998f1241e60ec3ca9c4cc9e30809cd820"
+    },
+    {
+      "component_id": "SCOMP-75FBF3D8FE970317AB92",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "hatchet-dev/hatchet",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/hatchet-dev/hatchet",
+      "version": "4253c86ca3a763a6065b4134a6017a630b610061"
+    },
+    {
+      "component_id": "SCOMP-EBDC570919494DAC8338",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "IBM/mcp-context-forge",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/IBM/mcp-context-forge",
+      "version": "6004d236479c12ed2571d9bf9dc5cc20bf3aead7"
+    },
+    {
+      "component_id": "SCOMP-A6FBEB2CE9440B9D1A79",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "infracost/infracost",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/infracost/infracost",
+      "version": "0c473ade0fd0d725fe8f5edd719ef634d9594690"
+    },
+    {
+      "component_id": "SCOMP-0E4F93EB84080841AF1A",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "jdx/mise",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/jdx/mise",
+      "version": "jdx/mise@metadata-snapshot-20260815T233400Z"
+    },
+    {
+      "component_id": "SCOMP-865C3C2F4547DEC3EAEC",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "kvcache-ai/ktransformers",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/kvcache-ai/ktransformers",
+      "version": "kvcache-ai/ktransformers@metadata-snapshot-20260815T062737Z"
+    },
+    {
+      "component_id": "SCOMP-75D42988EE821CDBB4BE",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "langfuse/langfuse",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/langfuse/langfuse",
+      "version": "ab58010c81339ffb3e19fc491d71733cf4f10f6a"
+    },
+    {
+      "component_id": "SCOMP-4C052AD3DA8C057591C5",
+      "component_type": "upstream-integration",
+      "license": "MIT OR Apache-2.0",
+      "metadata_sha256": null,
+      "name": "max-sixty/worktrunk",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/max-sixty/worktrunk",
+      "version": "2d4b6d8ac187dbd6e700e8c3e7ff2be0507d8c85"
+    },
+    {
+      "component_id": "SCOMP-6A6304FB4B241D9246C3",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "microsoft/markitdown",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/microsoft/markitdown",
+      "version": "fd239d5d2be43d9b68329730206b9312c7d5a388"
+    },
+    {
+      "component_id": "SCOMP-8258290AAC79660F5DC2",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "microsoft/playwright",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/microsoft/playwright",
+      "version": "a0af4bf3ae711b062fbc31d1655f76af870817c1"
+    },
+    {
+      "component_id": "SCOMP-852F23C573ECAF7A3B18",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "microsoft/playwright-mcp",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/microsoft/playwright-mcp",
+      "version": "7e0457a7cbf88823bf0146d12c46ae12c6818247"
+    },
+    {
+      "component_id": "SCOMP-6C7A743A1744C2A22A1E",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "mlflow/mlflow",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/mlflow/mlflow",
+      "version": "9355281ca38ff7e288161f0a71022400f8197175"
+    },
+    {
+      "component_id": "SCOMP-E6F018977E2B0CE48928",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "mostlygeek/llama-swap",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/mostlygeek/llama-swap",
+      "version": "mostlygeek/llama-swap@metadata-snapshot-20260815T062737Z"
+    },
+    {
+      "component_id": "SCOMP-2AF4CE37BEB1AAFC8526",
+      "component_type": "upstream-integration",
+      "license": "BSD-3-Clause",
+      "metadata_sha256": null,
+      "name": "networkx/networkx",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/networkx/networkx",
+      "version": "9266db885598a9d0b8f2d24ac6fef877e9137b96"
+    },
+    {
+      "component_id": "SCOMP-584577A9C185E20DE034",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "ollama/ollama",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/ollama/ollama",
+      "version": "ollama/ollama@metadata-snapshot-20260815T062737Z"
+    },
+    {
+      "component_id": "SCOMP-45EA01408093FBA32C89",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "openai/codex",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/openai/codex",
+      "version": "85fc4def358b7df21883e72ae8dda43a0f572f32"
+    },
+    {
+      "component_id": "SCOMP-BC724F86686F4CDDD535",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "openai/symphony",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/openai/symphony",
+      "version": "8001b52e3062495a16e520e4ceaf8f9de868c4d0"
+    },
+    {
+      "component_id": "SCOMP-AECA5C1A9EC96BD93CFA",
+      "component_type": "upstream-integration",
+      "license": "MPL-2.0",
+      "metadata_sha256": null,
+      "name": "openbao/openbao",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/openbao/openbao",
+      "version": "9c17d73cb4a71690d32d7ed223f9bc8f241f9157"
+    },
+    {
+      "component_id": "SCOMP-635A46AE23B8318205BC",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "openlit/openlit",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/openlit/openlit",
+      "version": "24224bdfad8628c639742e49fddc303675067416"
+    },
+    {
+      "component_id": "SCOMP-647A8F74BEB102272716",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "open-policy-agent/conftest",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/open-policy-agent/conftest",
+      "version": "c149d816bb161496cdb2402a720fa5e291236690"
+    },
+    {
+      "component_id": "SCOMP-D0098098633DD8261FD0",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "open-policy-agent/opa",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/open-policy-agent/opa",
+      "version": "16b5a013726fff3c2197f98ac4afcd6d2218588a"
+    },
+    {
+      "component_id": "SCOMP-3AB9C73106FC9B8CA5F9",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "oraios/serena",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/oraios/serena",
+      "version": "93ec043105f5ee4f5ff64ea0158041500d2cdc65"
+    },
+    {
+      "component_id": "SCOMP-9172D037128E8EF0E32E",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "ossf/scorecard",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/ossf/scorecard",
+      "version": "d1fab88f54636ff366076edfc5c239f97b3c8e66"
+    },
+    {
+      "component_id": "SCOMP-C2C1497DDA6C500B7093",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "pgbackrest/pgbackrest",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/pgbackrest/pgbackrest",
+      "version": "pgbackrest/pgbackrest@metadata-snapshot-20260815T062737Z"
+    },
+    {
+      "component_id": "SCOMP-4DAD83DAFD4DE1B85BC8",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "promptfoo/promptfoo",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/promptfoo/promptfoo",
+      "version": "fded938b65a81e12070a66e90ca4ad2d42a8062e"
+    },
+    {
+      "component_id": "SCOMP-AD33905A36E1E1943814",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "pydantic/pydantic-ai",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/pydantic/pydantic-ai",
+      "version": "25a70926cfafdfc63b3d32c1b5f2c7f139e2c58c"
+    },
+    {
+      "component_id": "SCOMP-5B2C8DA3F1430589748B",
+      "component_type": "upstream-integration",
+      "license": "BSD-2-Clause",
+      "metadata_sha256": null,
+      "name": "restic/restic",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/restic/restic",
+      "version": "restic/restic@metadata-snapshot-20260815T062737Z"
+    },
+    {
+      "component_id": "SCOMP-56FBC5BB96101E861C26",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "schemathesis/schemathesis",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/schemathesis/schemathesis",
+      "version": "c60bde9733dad2fc4ef8f6451f58a10e8c7b6663"
+    },
+    {
+      "component_id": "SCOMP-FC7D7BAC46DFC9CF4591",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "Shopify/toxiproxy",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/Shopify/toxiproxy",
+      "version": "94d6d4b3c385e48534622b138da61e95014196d5"
+    },
+    {
+      "component_id": "SCOMP-FF901CE899F7F0A57871",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "sigstore/cosign",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/sigstore/cosign",
+      "version": "8b8c87b68a75f70c12e1adf25f9bb87f24abea7e"
+    },
+    {
+      "component_id": "SCOMP-30E4CF6932A36F5AD304",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "sipyourdrink-ltd/bernstein",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/sipyourdrink-ltd/bernstein",
+      "version": "708ebf9b8acf8ced0e0bfb2a6e19b4be76c9defc"
+    },
+    {
+      "component_id": "SCOMP-59F66F9548F57D8D6452",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "step-security/harden-runner",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/step-security/harden-runner",
+      "version": "05e31511f85b41b11d1cf0ef85d0992719546e2c"
+    },
+    {
+      "component_id": "SCOMP-BA2EF97B95D1E358AF50",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "SWE-agent/SWE-ReX",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/SWE-agent/SWE-ReX",
+      "version": "5c995c365dfb1fd5bc56fda688be5d8538f9931f"
+    },
+    {
+      "component_id": "SCOMP-D4635719310CD41C8056",
+      "component_type": "upstream-integration",
+      "license": "MIT OR Apache-2.0",
+      "metadata_sha256": null,
+      "name": "tauri-apps/plugins-workspace",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/tauri-apps/plugins-workspace",
+      "version": "db9c5998feff9384f9cbbefcbe0d45937c00a1fc"
+    },
+    {
+      "component_id": "SCOMP-84CE2B4979FFEFE38AFA",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "treeverse/dvc",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/treeverse/dvc",
+      "version": "treeverse/dvc@metadata-snapshot-20260815T233400Z"
+    },
+    {
+      "component_id": "SCOMP-65C90BABEC91AD07756D",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "UKGovernmentBEIS/inspect_ai",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/UKGovernmentBEIS/inspect_ai",
+      "version": "c07dff4f8c029d92e785bf4109f5ed43f582c880"
+    },
+    {
+      "component_id": "SCOMP-77C7B55B079C7348697C",
+      "component_type": "upstream-integration",
+      "license": "Apache-2.0",
+      "metadata_sha256": null,
+      "name": "vercel-labs/agent-browser",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/vercel-labs/agent-browser",
+      "version": "548b159b30eef119ccf6846c8bc807d0eaa3f6f8"
+    },
+    {
+      "component_id": "SCOMP-CC2123197DD9A829ADDF",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "yamadashy/repomix",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/yamadashy/repomix",
+      "version": "e3b15a406ed78d8a463620a032a059ce911bfc0e"
+    },
+    {
+      "component_id": "SCOMP-D8629C509D4D872D9D7D",
+      "component_type": "upstream-integration",
+      "license": "MIT",
+      "metadata_sha256": null,
+      "name": "zizmorcore/zizmor",
+      "schema_version": "1.0.0",
+      "source": "https://github.com/zizmorcore/zizmor",
+      "version": "3a46aaade8a6005c92e8f9dc43c34be560682022"
+    }
+  ],
+  "generated_at_utc": "2026-08-16T00:34:07.532172Z",
+  "project_id": "PROJECT-PIPELINE",
+  "sbom_id": "SBOM-CE0013AA6D56C3042D31",
+  "schema_version": "1.0.0",
+  "source_manifest_sha256": "8fd8ae609c840631994ddd909836e72f0a73029f82df47390aad5693286f6b0d"
+}

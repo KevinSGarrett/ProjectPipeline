@@ -1,0 +1,128 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000029-01",
+      "statement": "Every accepted domain requirement is linked to at least one valid child work item.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "automated_graph_and_traceability_check",
+        "path": "plans/_traceability/requirements_to_jira.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Own all accepted requirements, decisions, implementation, tests, evidence, and operational readiness for PLAN-INFRA-001.",
+  "evidence_required": [
+    "EVID-000004"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "EPIC",
+  "labels": [
+    "domain-epic",
+    "plan-infra-001"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "24973",
+    "remote_key": "PP-4",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-EPIC-000029",
+  "objective": "Deliver the complete deployment and infrastructure capability and its verified operational contract.",
+  "observability_impact": "Record structured validation and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": null,
+  "plan_references": [
+    {
+      "authoritative_path": "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md",
+      "end_line": 11,
+      "line_numbered_path": "plans/_line_numbered/PLAN-INFRA-001_deployment_infrastructure.lines.txt",
+      "line_reference": "PLAN-INFRA-001:SEC-01:L000008-L000011",
+      "plan_id": "PLAN-INFRA-001",
+      "section_id": "PLAN-INFRA-001:SEC-01",
+      "start_line": 8
+    }
+  ],
+  "rationale": "The source corpus requires this domain as part of the end-to-end platform.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000030",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000121",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000122",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000123",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000124",
+      "type": "PARENT_OF"
+    }
+  ],
+  "remote_jira_key": "PP-4",
+  "required_tests": [
+    "TEST-JIRA-GRAPH-001"
+  ],
+  "requirement_ids": [
+    "REQ-INFRA-0001",
+    "REQ-INFRA-0002",
+    "REQ-INFRA-0003",
+    "REQ-INFRA-0004",
+    "REQ-INFRA-0005",
+    "REQ-INFRA-0006",
+    "REQ-INFRA-0007",
+    "REQ-INFRA-0008",
+    "REQ-INFRA-0009",
+    "REQ-INFRA-0010",
+    "REQ-INFRA-0011",
+    "REQ-INFRA-0012",
+    "REQ-INFRA-0013",
+    "REQ-INFRA-0014",
+    "REQ-INFRA-0015",
+    "REQ-INFRA-0016",
+    "REQ-INFRA-0017",
+    "REQ-INFRA-0018",
+    "REQ-INFRA-0019"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the complete deployment and infrastructure capability and its verified operational contract."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L000748-L000764"
+  ],
+  "state": "BACKLOG",
+  "title": "Deployment and Infrastructure",
+  "upstream_dependencies": []
+}

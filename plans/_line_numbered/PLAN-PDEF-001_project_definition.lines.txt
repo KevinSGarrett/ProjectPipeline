@@ -1,0 +1,42 @@
+L000001 | # PLAN-PDEF-001 — Project Definition and Scope
+L000002 | 
+L000003 | - **Plan ID:** `PLAN-PDEF-001`
+L000004 | - **Status:** `ACTIVE`
+L000005 | - **Authority:** source-derived requirements plus explicitly labeled implementation detail
+L000006 | - **Source basis:** `GOV-001:L000005-L000048`, `GOV-001:L000052-L000119`, `SRC-014:L000001-L000115`
+L000007 | 
+L000008 | 
+L000009 | ## PLAN-PDEF-001:SEC-01 Purpose
+L000010 | 
+L000011 | Project Pipeline converts project intent and existing project state into a governed, evidence-backed delivery system. It must support both greenfield projects and adoption of existing repositories without treating generated recommendations as deterministic truth.
+L000012 | 
+L000013 | ## PLAN-PDEF-001:SEC-02 Operating model
+L000014 | 
+L000015 | The target operating model is local-first and continuously operable, with optional cloud services for durability, collaboration, burst capacity, and remote access. A deterministic control plane owns canonical state transitions. Probabilistic components advise, compile context, classify risk, or perform bounded work under explicit policy.
+L000016 | 
+L000017 | ## PLAN-PDEF-001:SEC-03 In scope
+L000018 | 
+L000019 | - project intake and compilation;
+L000020 | - source, requirement, plan, decision, work, implementation, test, evidence, and completion traceability;
+L000021 | - Jira and GitHub stewardship;
+L000022 | - dependency-aware sequencing and conflict-safe parallel execution;
+L000023 | - agent, model, tool, context, budget, policy, assurance, and recovery systems;
+L000024 | - a network-accessible Command Center and operator interaction surface;
+L000025 | - local Windows operation with optional AWS support;
+L000026 | - installation, upgrade, rollback, archive, and handoff.
+L000027 | 
+L000028 | ## PLAN-PDEF-001:SEC-04 Boundaries and non-goals
+L000029 | 
+L000030 | Project Pipeline does not grant autonomous workers unrestricted authority, hide external blockers, infer unknown facts into verified state, or treat ticket status as proof of completion. This repository foundation does not claim that the complete runtime is operational.
+L000031 | 
+L000032 | ## PLAN-PDEF-001:SEC-05 Source authority
+L000033 | 
+L000034 | Conflicts are resolved in this order: governing execution contract; canonical raw source documents; later source material that explicitly revises earlier material; accepted decisions; implementation evidence; derived indexes; external repositories; engineering inference. Additions not explicitly established by source are labeled `ENGINEERING_INFERENCE`, `ENGINEERING_PROPOSAL`, `REQUIRED_IMPLEMENTATION_DETAIL`, or `OPEN_DECISION`.
+L000035 | 
+L000036 | ## PLAN-PDEF-001:SEC-06 Success criteria
+L000037 | 
+L000038 | Success requires bidirectional traceability, reproducible deployment, verified critical journeys, explicit disposition of every accepted requirement, no unexplained implementation or work-item gaps, accurate operator state, and continuation by another engineer or autonomous worker using repository artifacts rather than chat history.
+L000039 | 
+L000040 | ## PLAN-PDEF-001:SEC-07 Constraints
+L000041 | 
+L000042 | The target Windows path and locally downloaded upstream repositories are not available in the current execution environment. External GitHub, Jira, provider, purchasing, and cloud mutations remain disabled without explicit authorization and credentials. These constraints do not prevent local implementation, mock verification, contracts, tests, packaging, or exact activation procedures.

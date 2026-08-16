@@ -1,0 +1,14 @@
+{
+  "environment": "test",
+  "paths": {
+    "artifact_dir": ".local/environments/test/artifacts",
+    "cache_dir": ".local/environments/test/cache",
+    "data_dir": ".local/environments/test/data",
+    "log_dir": ".local/environments/test/logs",
+    "state_dir": ".local/environments/test/state"
+  },
+  "security": {
+    "external_writes_default": "DENY",
+    "require_explicit_approval": true
+  }
+}

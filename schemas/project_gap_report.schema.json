@@ -1,0 +1,139 @@
+{
+  "$defs": {
+    "GapCategory": {
+      "enum": [
+        "AUTHORITY",
+        "BOUNDARY",
+        "DOCUMENTATION",
+        "GOVERNANCE",
+        "INSTRUCTIONS",
+        "PLANNING",
+        "REQUIREMENTS",
+        "TESTING",
+        "CI",
+        "DEPLOYMENT",
+        "SECURITY",
+        "BUILD",
+        "PERSISTENCE",
+        "PROFILE"
+      ],
+      "title": "GapCategory",
+      "type": "string"
+    },
+    "GapSeverity": {
+      "enum": [
+        "INFO",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "GapSeverity",
+      "type": "string"
+    },
+    "ProjectGap": {
+      "additionalProperties": false,
+      "properties": {
+        "affected_paths": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Affected Paths",
+          "type": "array"
+        },
+        "blocks_autonomy": {
+          "default": false,
+          "title": "Blocks Autonomy",
+          "type": "boolean"
+        },
+        "bootstrap_eligible": {
+          "default": false,
+          "title": "Bootstrap Eligible",
+          "type": "boolean"
+        },
+        "category": {
+          "$ref": "#/$defs/GapCategory"
+        },
+        "description": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "gap_id": {
+          "pattern": "^GAP-[A-F0-9]{20}$",
+          "title": "Gap Id",
+          "type": "string"
+        },
+        "remediation": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Remediation",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/GapSeverity"
+        },
+        "title": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gap_id",
+        "category",
+        "severity",
+        "title",
+        "description",
+        "remediation"
+      ],
+      "title": "ProjectGap",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/project_gap_report.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "blocks_autonomy": {
+      "title": "Blocks Autonomy",
+      "type": "boolean"
+    },
+    "counts_by_severity": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Counts By Severity",
+      "type": "object"
+    },
+    "fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "gaps": {
+      "items": {
+        "$ref": "#/$defs/ProjectGap"
+      },
+      "title": "Gaps",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "gaps",
+    "counts_by_severity",
+    "blocks_autonomy",
+    "fingerprint"
+  ],
+  "title": "ProjectGapReport",
+  "type": "object"
+}

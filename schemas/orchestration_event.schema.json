@@ -1,0 +1,58 @@
+{
+  "$id": "https://project-pipeline.local/schemas/orchestration_event.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "correlation_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Correlation Id"
+    },
+    "event_id": {
+      "title": "Event Id",
+      "type": "string"
+    },
+    "event_type": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "title": "Event Type",
+      "type": "string"
+    },
+    "occurred_at_utc": {
+      "format": "date-time",
+      "title": "Occurred At Utc",
+      "type": "string"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "sequence": {
+      "minimum": 1,
+      "title": "Sequence",
+      "type": "integer"
+    },
+    "workflow_id": {
+      "title": "Workflow Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "event_id",
+    "workflow_id",
+    "sequence",
+    "event_type",
+    "occurred_at_utc"
+  ],
+  "title": "WorkflowEvent",
+  "type": "object"
+}

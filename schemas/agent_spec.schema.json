@@ -1,0 +1,83 @@
+{
+  "$defs": {
+    "AuthorityClass": {
+      "enum": [
+        "ADVISORY",
+        "IMPLEMENTATION",
+        "REVIEW",
+        "VERIFICATION",
+        "RECOVERY",
+        "STEWARDSHIP"
+      ],
+      "title": "AuthorityClass",
+      "type": "string"
+    },
+    "QualificationState": {
+      "enum": [
+        "QUARANTINED",
+        "SHADOW",
+        "CANARY",
+        "QUALIFIED",
+        "REJECTED",
+        "EXPIRED"
+      ],
+      "title": "QualificationState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/agent_spec.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agent_id": {
+      "title": "Agent Id",
+      "type": "string"
+    },
+    "authority_classes": {
+      "default": [
+        "ADVISORY"
+      ],
+      "items": {
+        "$ref": "#/$defs/AuthorityClass"
+      },
+      "title": "Authority Classes",
+      "type": "array"
+    },
+    "capabilities": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "model_id": {
+      "title": "Model Id",
+      "type": "string"
+    },
+    "qualification": {
+      "$ref": "#/$defs/QualificationState",
+      "default": "QUARANTINED"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tool_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Tool Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "agent_id",
+    "model_id",
+    "capabilities"
+  ],
+  "title": "AgentSpec",
+  "type": "object"
+}

@@ -1,0 +1,79 @@
+{
+  "$defs": {
+    "LoopDisposition": {
+      "enum": [
+        "CONTINUE",
+        "REQUIRE_NOVELTY",
+        "STOP_AND_ESCALATE"
+      ],
+      "title": "LoopDisposition",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/assurance_loop_guard_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "attempts_used": {
+      "minimum": 0,
+      "title": "Attempts Used",
+      "type": "integer"
+    },
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "disposition": {
+      "$ref": "#/$defs/LoopDisposition"
+    },
+    "progress_detected": {
+      "title": "Progress Detected",
+      "type": "boolean"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "repeated_action_count": {
+      "minimum": 0,
+      "title": "Repeated Action Count",
+      "type": "integer"
+    },
+    "repeated_failure_count": {
+      "minimum": 0,
+      "title": "Repeated Failure Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "unchanged_output_count": {
+      "minimum": 0,
+      "title": "Unchanged Output Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "decision_id",
+    "task_id",
+    "disposition",
+    "attempts_used",
+    "repeated_failure_count",
+    "unchanged_output_count",
+    "repeated_action_count",
+    "progress_detected",
+    "reasons"
+  ],
+  "title": "LoopGuardDecision",
+  "type": "object"
+}

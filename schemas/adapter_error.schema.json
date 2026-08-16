@@ -1,0 +1,107 @@
+{
+  "$defs": {
+    "AdapterErrorCategory": {
+      "enum": [
+        "AUTHENTICATION",
+        "AUTHORIZATION",
+        "CONFLICT",
+        "DEPENDENCY",
+        "INVALID_REQUEST",
+        "NOT_FOUND",
+        "RATE_LIMIT",
+        "TIMEOUT",
+        "TRANSIENT",
+        "UNKNOWN_OUTCOME",
+        "UNAVAILABLE",
+        "PERMANENT"
+      ],
+      "title": "AdapterErrorCategory",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/adapter_error.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "category": {
+      "$ref": "#/$defs/AdapterErrorCategory"
+    },
+    "correlation_id": {
+      "maxLength": 191,
+      "minLength": 3,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+      "title": "Correlation Id",
+      "type": "string"
+    },
+    "details": {
+      "additionalProperties": true,
+      "title": "Details",
+      "type": "object"
+    },
+    "error_code": {
+      "maxLength": 100,
+      "minLength": 3,
+      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "title": "Error Code",
+      "type": "string"
+    },
+    "external_operation_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "External Operation Id"
+    },
+    "message": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Message",
+      "type": "string"
+    },
+    "operation": {
+      "maxLength": 191,
+      "minLength": 3,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+      "title": "Operation",
+      "type": "string"
+    },
+    "provider": {
+      "maxLength": 191,
+      "minLength": 3,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+      "title": "Provider",
+      "type": "string"
+    },
+    "retryable": {
+      "title": "Retryable",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "unknown_outcome": {
+      "default": false,
+      "title": "Unknown Outcome",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "error_code",
+    "category",
+    "message",
+    "retryable",
+    "provider",
+    "operation",
+    "correlation_id"
+  ],
+  "title": "AdapterErrorPayload",
+  "type": "object"
+}

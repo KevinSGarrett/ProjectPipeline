@@ -1,0 +1,105 @@
+{
+  "$defs": {
+    "PressureMode": {
+      "enum": [
+        "GREEN",
+        "YELLOW",
+        "ORANGE",
+        "RED",
+        "HARD_STOP"
+      ],
+      "title": "PressureMode",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/budget_snapshot.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "committed_microunits": {
+      "minimum": 0,
+      "title": "Committed Microunits",
+      "type": "integer"
+    },
+    "credited_microunits": {
+      "minimum": 0,
+      "title": "Credited Microunits",
+      "type": "integer"
+    },
+    "forecast_p90_microunits": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Forecast P90 Microunits",
+      "type": "integer"
+    },
+    "hard_cap_microunits": {
+      "minimum": 0,
+      "title": "Hard Cap Microunits",
+      "type": "integer"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "pace_ratio_milli": {
+      "default": 1000,
+      "minimum": 0,
+      "title": "Pace Ratio Milli",
+      "type": "integer"
+    },
+    "pressure_mode": {
+      "$ref": "#/$defs/PressureMode"
+    },
+    "protected_reserve_microunits": {
+      "minimum": 0,
+      "title": "Protected Reserve Microunits",
+      "type": "integer"
+    },
+    "remaining_normal_microunits": {
+      "minimum": 0,
+      "title": "Remaining Normal Microunits",
+      "type": "integer"
+    },
+    "remaining_total_microunits": {
+      "minimum": 0,
+      "title": "Remaining Total Microunits",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope_key": {
+      "title": "Scope Key",
+      "type": "string"
+    },
+    "soft_cap_microunits": {
+      "minimum": 0,
+      "title": "Soft Cap Microunits",
+      "type": "integer"
+    },
+    "spent_microunits": {
+      "minimum": 0,
+      "title": "Spent Microunits",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "scope_key",
+    "hard_cap_microunits",
+    "soft_cap_microunits",
+    "protected_reserve_microunits",
+    "spent_microunits",
+    "credited_microunits",
+    "committed_microunits",
+    "remaining_normal_microunits",
+    "remaining_total_microunits",
+    "pressure_mode",
+    "observed_at_utc"
+  ],
+  "title": "BudgetSnapshot",
+  "type": "object"
+}

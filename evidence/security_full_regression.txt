@@ -1,0 +1,179 @@
+Pass 17 cumulative Project Pipeline regression
+Execution note: test modules were partitioned only to stay within the command-wrapper lifetime; all 140 test_*.py modules executed against the same final working tree.
+
+## Partition A
+Modules: 48
+tests/test_agent_router_adapters.py
+tests/test_agent_router_circuit.py
+tests/test_agent_router_cli.py
+tests/test_agent_router_domain.py
+tests/test_agent_router_performance.py
+tests/test_agent_router_persistence.py
+tests/test_agent_router_routing.py
+tests/test_agent_router_service.py
+tests/test_agent_router_validation.py
+tests/test_architecture_cli.py
+tests/test_architecture_registry.py
+tests/test_archive.py
+tests/test_assurance_cli.py
+tests/test_assurance_compiler.py
+tests/test_assurance_completion.py
+tests/test_assurance_domain.py
+tests/test_assurance_evidence.py
+tests/test_assurance_loop_scope.py
+tests/test_assurance_persistence.py
+tests/test_assurance_validation.py
+tests/test_budget_advanced.py
+tests/test_budget_cli.py
+tests/test_budget_domain.py
+tests/test_budget_forecast.py
+tests/test_budget_infracost.py
+tests/test_budget_integration.py
+tests/test_budget_migration.py
+tests/test_budget_persistence.py
+tests/test_budget_policy.py
+tests/test_budget_simulation.py
+tests/test_build_sequencer.py
+tests/test_cli_foundation.py
+tests/test_command_processor.py
+tests/test_configuration.py
+tests/test_context_broker_compiler.py
+tests/test_context_cli.py
+tests/test_context_domain.py
+tests/test_context_firewall.py
+tests/test_context_persistence.py
+tests/test_context_service.py
+tests/test_context_trust.py
+tests/test_context_upstream_adapters.py
+tests/test_context_validation.py
+tests/test_contracts.py
+tests/test_control_cli.py
+tests/test_control_domain.py
+tests/test_control_kernel.py
+tests/test_control_persistence.py
+
+........................................................................ [ 33%]
+........................................................................ [ 67%]
+.................................................................... [ 99%]
+.                                                                        [100%]
+213 passed, 4 subtests passed in 17.93s
+
+## Partition B
+Modules: 48
+tests/test_control_validation.py
+tests/test_core_state_store.py
+tests/test_decision_resolution.py
+tests/test_dependencies.py
+tests/test_docker_mcp_gateway.py
+tests/test_domain_identifiers.py
+tests/test_domain_models.py
+tests/test_github_cli.py
+tests/test_github_mock_and_service.py
+tests/test_github_rest_adapter.py
+tests/test_github_steward_domain.py
+tests/test_github_steward_persistence.py
+tests/test_ids.py
+tests/test_intake_cli.py
+tests/test_intake_models.py
+tests/test_intake_persistence.py
+tests/test_jira_cli.py
+tests/test_jira_cloud_adapter.py
+tests/test_jira_graph.py
+tests/test_jira_rebuild.py
+tests/test_jira_steward_domain.py
+tests/test_jira_steward_mock_and_service.py
+tests/test_jira_steward_persistence.py
+tests/test_jira_steward_validation.py
+tests/test_line_numbering.py
+tests/test_litellm_adapter.py
+tests/test_local_git_repository.py
+tests/test_manifest.py
+tests/test_migrations.py
+tests/test_observability.py
+tests/test_openlit_bridge.py
+tests/test_orchestration_adapters.py
+tests/test_orchestration_cli.py
+tests/test_orchestration_domain.py
+tests/test_orchestration_migration.py
+tests/test_orchestration_recovery.py
+tests/test_orchestration_runtime.py
+tests/test_orchestration_simulation.py
+tests/test_ortools_optimizer.py
+tests/test_project_bootstrap.py
+tests/test_project_compiler.py
+tests/test_project_discovery.py
+tests/test_provenance.py
+tests/test_pydantic_ai_adapter.py
+tests/test_repository_contract.py
+tests/test_repository_map.py
+tests/test_requirement_query.py
+tests/test_requirement_registries.py
+
+........................................................................ [ 40%]
+........................................................................ [ 81%]
+................................                                         [100%]
+176 passed in 14.03s
+
+## Partition C1
+Modules: 23
+tests/test_requirement_views.py
+tests/test_requirements_detailed.py
+tests/test_runtime_foundation.py
+tests/test_scheduler_backpressure.py
+tests/test_scheduler_cli.py
+tests/test_scheduler_conflicts.py
+tests/test_scheduler_domain.py
+tests/test_scheduler_engine.py
+tests/test_scheduler_persistence.py
+tests/test_scheduler_validation.py
+tests/test_security_domain.py
+tests/test_security_identity_policy.py
+tests/test_security_persistence_cli.py
+tests/test_security_secrets.py
+tests/test_security_supply_chain.py
+tests/test_security_upstream_adapters.py
+tests/test_security_validation.py
+tests/test_source_references.py
+tests/test_source_sections.py
+tests/test_state_cli.py
+tests/test_traceability.py
+tests/test_traceability_store.py
+tests/test_upstream_adoption_gate.py
+
+........................................................................ [ 77%]
+.....................                                                    [100%]
+93 passed in 19.95s
+
+## Partition C2
+Modules: 21
+tests/test_upstream_contract_assets.py
+tests/test_upstream_integrations.py
+tests/test_upstream_p0_convergence.py
+tests/test_upstream_reviews.py
+tests/test_validation_content.py
+tests/test_verification_adversarial.py
+tests/test_verification_browser.py
+tests/test_verification_cli.py
+tests/test_verification_domain.py
+tests/test_verification_faults.py
+tests/test_verification_golden.py
+tests/test_verification_impact.py
+tests/test_verification_mutation.py
+tests/test_verification_performance.py
+tests/test_verification_persistence.py
+tests/test_verification_policy.py
+tests/test_verification_properties.py
+tests/test_verification_simulation.py
+tests/test_verification_tools.py
+tests/test_verification_validation.py
+tests/test_worktrunk_adapter.py
+
+........................................................................ [ 91%]
+.......                                                                  [100%]
+79 passed in 11.22s
+
+## Aggregate
+Modules: 140
+Tests: 561 passed
+Subtests: 4 passed
+Failures: 0

@@ -1,0 +1,200 @@
+{
+  "$defs": {
+    "DurableBackendKind": {
+      "enum": [
+        "LOCAL_REFERENCE",
+        "HATCHET",
+        "DBOS",
+        "TEMPORAL",
+        "MOCK"
+      ],
+      "title": "DurableBackendKind",
+      "type": "string"
+    },
+    "WorkflowState": {
+      "enum": [
+        "PENDING",
+        "RUNNING",
+        "WAITING",
+        "RETRY_SCHEDULED",
+        "SUSPENDED",
+        "RECOVERY_REQUIRED",
+        "CANCEL_REQUESTED",
+        "CANCELLED",
+        "SUCCEEDED",
+        "FAILED"
+      ],
+      "title": "WorkflowState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/orchestration_workflow_instance.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assigned_worker_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Assigned Worker Id"
+    },
+    "backend": {
+      "$ref": "#/$defs/DurableBackendKind"
+    },
+    "backend_run_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Backend Run Id"
+    },
+    "cancel_requested": {
+      "default": false,
+      "title": "Cancel Requested",
+      "type": "boolean"
+    },
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "current_attempt": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Current Attempt",
+      "type": "integer"
+    },
+    "current_step_index": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Current Step Index",
+      "type": "integer"
+    },
+    "definition_id": {
+      "title": "Definition Id",
+      "type": "string"
+    },
+    "failure_code": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Failure Code"
+    },
+    "failure_message": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Failure Message"
+    },
+    "idempotency_key": {
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "input_payload": {
+      "additionalProperties": true,
+      "title": "Input Payload",
+      "type": "object"
+    },
+    "last_checkpoint_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Checkpoint Id"
+    },
+    "recovery_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Recovery Count",
+      "type": "integer"
+    },
+    "retry_available_at_utc": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Retry Available At Utc"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/WorkflowState"
+    },
+    "updated_at_utc": {
+      "format": "date-time",
+      "title": "Updated At Utc",
+      "type": "string"
+    },
+    "version": {
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    },
+    "wait_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Wait Id"
+    },
+    "workflow_id": {
+      "title": "Workflow Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "workflow_id",
+    "definition_id",
+    "idempotency_key",
+    "state",
+    "version",
+    "backend",
+    "created_at_utc",
+    "updated_at_utc"
+  ],
+  "title": "WorkflowInstance",
+  "type": "object"
+}

@@ -1,0 +1,36 @@
+{
+  "profiles": {
+    "HYBRID_AWS": {
+      "browser_qa": false,
+      "cloud_replication": true,
+      "dynamic_secrets": false,
+      "external_tool_gateway": false,
+      "llm_observability_backend": false,
+      "optimizer": false,
+      "semantic_vector_store": false,
+      "windows_desktop_shell": false
+    },
+    "LOCAL_CORE": {
+      "browser_qa": false,
+      "cloud_replication": false,
+      "dynamic_secrets": false,
+      "external_tool_gateway": false,
+      "llm_observability_backend": false,
+      "optimizer": false,
+      "semantic_vector_store": false,
+      "windows_desktop_shell": false
+    },
+    "OPERATOR_DESKTOP": {
+      "browser_qa": true,
+      "cloud_replication": false,
+      "dynamic_secrets": false,
+      "external_tool_gateway": false,
+      "llm_observability_backend": false,
+      "optimizer": false,
+      "semantic_vector_store": false,
+      "windows_desktop_shell": true
+    }
+  },
+  "rule": "A profile-optional service remains disabled until a project requirement, ADR, activation evidence, and rollback path enable it.",
+  "schema_version": "1.0.0"
+}

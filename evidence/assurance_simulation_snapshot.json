@@ -1,0 +1,42 @@
+{
+  "all_passed": true,
+  "scenarios": [
+    {
+      "observations": [
+        "COMPLETE"
+      ],
+      "passed": true,
+      "scenario": "complete",
+      "schema_version": "1.0.0",
+      "simulation_id": "SIM-2096E07CD88BE2CCB1E8"
+    },
+    {
+      "observations": [
+        "NOT_COMPLETE",
+        "golden journey blocks completion"
+      ],
+      "passed": true,
+      "scenario": "stale_or_missing_gate",
+      "schema_version": "1.0.0",
+      "simulation_id": "SIM-58FC4C01476948C117CD"
+    },
+    {
+      "observations": [
+        "STOP_AND_ESCALATE"
+      ],
+      "passed": true,
+      "scenario": "attempt_loop",
+      "schema_version": "1.0.0",
+      "simulation_id": "SIM-A55321EF76A9F2BFABA6"
+    },
+    {
+      "observations": [
+        "BLOCKED_EXTERNAL"
+      ],
+      "passed": true,
+      "scenario": "external_block_only",
+      "schema_version": "1.0.0",
+      "simulation_id": "SIM-80CD249DB679471767A5"
+    }
+  ]
+}

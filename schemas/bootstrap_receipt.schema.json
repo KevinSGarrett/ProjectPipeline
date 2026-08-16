@@ -1,0 +1,96 @@
+{
+  "$defs": {
+    "BootstrapOutcome": {
+      "enum": [
+        "DRY_RUN",
+        "APPLIED",
+        "NO_CHANGES",
+        "REJECTED",
+        "ROLLED_BACK"
+      ],
+      "title": "BootstrapOutcome",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/bootstrap_receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "bootstrap_id": {
+      "title": "Bootstrap Id",
+      "type": "string"
+    },
+    "compilation_id": {
+      "title": "Compilation Id",
+      "type": "string"
+    },
+    "conflict_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Conflict Paths",
+      "type": "array"
+    },
+    "correlation_id": {
+      "title": "Correlation Id",
+      "type": "string"
+    },
+    "created_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Created Paths",
+      "type": "array"
+    },
+    "outcome": {
+      "$ref": "#/$defs/BootstrapOutcome"
+    },
+    "recorded_at_utc": {
+      "format": "date-time",
+      "title": "Recorded At Utc",
+      "type": "string"
+    },
+    "rolled_back_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Rolled Back Paths",
+      "type": "array"
+    },
+    "satisfied_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Satisfied Paths",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target_root": {
+      "title": "Target Root",
+      "type": "string"
+    }
+  },
+  "required": [
+    "bootstrap_id",
+    "compilation_id",
+    "outcome",
+    "target_root",
+    "actor_id",
+    "correlation_id"
+  ],
+  "title": "BootstrapReceipt",
+  "type": "object"
+}

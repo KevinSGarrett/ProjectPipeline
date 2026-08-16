@@ -1,0 +1,93 @@
+{
+  "$defs": {
+    "PressureMode": {
+      "enum": [
+        "GREEN",
+        "YELLOW",
+        "ORANGE",
+        "RED",
+        "HARD_STOP"
+      ],
+      "title": "PressureMode",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/budget_admission_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "admitted": {
+      "title": "Admitted",
+      "type": "boolean"
+    },
+    "allowed_paid_incremental": {
+      "default": true,
+      "title": "Allowed Paid Incremental",
+      "type": "boolean"
+    },
+    "authorized_microunits": {
+      "minimum": 0,
+      "title": "Authorized Microunits",
+      "type": "integer"
+    },
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "preferred_execution_modes": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Preferred Execution Modes",
+      "type": "array"
+    },
+    "pressure_mode": {
+      "$ref": "#/$defs/PressureMode"
+    },
+    "quota_shadow_cost_microunits": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Quota Shadow Cost Microunits",
+      "type": "integer"
+    },
+    "reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "reserve_authorized": {
+      "default": false,
+      "title": "Reserve Authorized",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "decision_id",
+    "task_id",
+    "admitted",
+    "pressure_mode",
+    "authorized_microunits",
+    "generated_at_utc"
+  ],
+  "title": "BudgetAdmissionDecision",
+  "type": "object"
+}

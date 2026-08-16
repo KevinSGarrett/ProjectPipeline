@@ -1,0 +1,19 @@
+{
+  "benchmark_id": "PPQS-01",
+  "contamination_class": "C0",
+  "external_acquisition_required": false,
+  "gold_counts_withheld": true,
+  "intake": "NEW_PROJECT",
+  "name": "SchemaShift",
+  "pack_type": "PROJECT_PACK",
+  "profiles": [
+    "EMPTY",
+    "PYTHON_LIBRARY",
+    "DOCUMENTATION"
+  ],
+  "release": "r02",
+  "scale": "SMALL",
+  "schema_version": "2.0",
+  "seed_jira_count": 0,
+  "trust_zone": "CANDIDATE_VISIBLE"
+}

@@ -1,0 +1,74 @@
+{
+  "$defs": {
+    "ProjectProfile": {
+      "enum": [
+        "GENERIC",
+        "PYTHON_LIBRARY",
+        "PYTHON_SERVICE",
+        "WEB_APPLICATION",
+        "TYPESCRIPT_APPLICATION",
+        "RUST_APPLICATION",
+        "MACHINE_LEARNING",
+        "INFRASTRUCTURE",
+        "DOCUMENTATION",
+        "POLYGLOT_APPLICATION",
+        "EMPTY"
+      ],
+      "title": "ProjectProfile",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/project_profile_detection.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "confidence": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Confidence",
+      "type": "number"
+    },
+    "evidence": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Evidence",
+      "type": "object"
+    },
+    "policy_activations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Policy Activations",
+      "type": "array"
+    },
+    "primary_profile": {
+      "$ref": "#/$defs/ProjectProfile"
+    },
+    "profiles": {
+      "items": {
+        "$ref": "#/$defs/ProjectProfile"
+      },
+      "title": "Profiles",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "primary_profile",
+    "profiles",
+    "confidence",
+    "evidence",
+    "policy_activations"
+  ],
+  "title": "ProjectProfileDetection",
+  "type": "object"
+}

@@ -1,0 +1,66 @@
+{
+  "$id": "https://project-pipeline.local/schemas/budget_quota_limit.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capacity_units": {
+      "exclusiveMinimum": 0,
+      "title": "Capacity Units",
+      "type": "integer"
+    },
+    "enabled": {
+      "default": true,
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "max_shadow_cost_microunits": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Max Shadow Cost Microunits",
+      "type": "integer"
+    },
+    "protected_units": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Protected Units",
+      "type": "integer"
+    },
+    "provider_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Provider Id",
+      "type": "string"
+    },
+    "quota_id": {
+      "title": "Quota Id",
+      "type": "string"
+    },
+    "quota_name": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Quota Name",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope_key": {
+      "maxLength": 250,
+      "minLength": 3,
+      "title": "Scope Key",
+      "type": "string"
+    }
+  },
+  "required": [
+    "quota_id",
+    "scope_key",
+    "provider_id",
+    "quota_name",
+    "capacity_units"
+  ],
+  "title": "QuotaLimit",
+  "type": "object"
+}

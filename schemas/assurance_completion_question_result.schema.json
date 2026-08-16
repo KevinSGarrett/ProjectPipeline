@@ -1,0 +1,55 @@
+{
+  "$id": "https://project-pipeline.local/schemas/assurance_completion_question_result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "evidence_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "externally_blocked": {
+      "default": false,
+      "title": "Externally Blocked",
+      "type": "boolean"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "question": {
+      "title": "Question",
+      "type": "string"
+    },
+    "question_number": {
+      "maximum": 15,
+      "minimum": 1,
+      "title": "Question Number",
+      "type": "integer"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "question_number",
+    "question",
+    "passed",
+    "reasons"
+  ],
+  "title": "CompletionQuestionResult",
+  "type": "object"
+}

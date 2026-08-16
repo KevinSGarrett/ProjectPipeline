@@ -1,0 +1,47 @@
+{
+  "accepted_incomplete_requirements": 166,
+  "accepted_requirements": 351,
+  "audit_dimensions_covered": 15,
+  "completion_gate_state": "NOT_COMPLETE",
+  "critical_requirements_lacking_test_or_evidence": 0,
+  "evidence_records": 174,
+  "external_blockers": [
+    "AWS budget-action live qualification",
+    "post-deployment target verification",
+    "Windows/Tauri native runtime qualification",
+    "Docker runtime qualification",
+    "AWS/Terraform deployment qualification",
+    "remote Jira/GitHub/provider live qualification as applicable"
+  ],
+  "failed_questions": [
+    2,
+    6,
+    7,
+    8,
+    13
+  ],
+  "handoff_id": "PROJECT-PIPELINE-R25-FINAL-CONVERGENCE",
+  "live_external_verification_count": 0,
+  "local_verification": {
+    "chromium_verification": "PASS_3_VIEWPORTS",
+    "functional_pytest": 693,
+    "node_tests": 7,
+    "repository_contract_pytest": 1,
+    "repository_validation_checks": 41,
+    "repository_validation_errors": 0,
+    "repository_validation_warnings": 0,
+    "subtests": 4,
+    "total_pytest": 694
+  },
+  "next_safe_work": "Continue only against explicitly incomplete accepted requirements and externally blocked target qualifications; there is no automatic Pass 26 in the 25-pass plan.",
+  "pass_25_complete": true,
+  "project_complete": false,
+  "release_readiness": "FINAL_CONVERGENCE_HANDOFF_NOT_PRODUCTION_READY",
+  "requirement_state": {
+    "IMPLEMENTED": 185,
+    "PARTIALLY_IMPLEMENTED": 136,
+    "PLANNED_ONLY": 30
+  },
+  "schema_version": "1.0.0",
+  "truth_boundary": "Pass 25 completion means the planned convergence pass is finished, not that the independent Project Pipeline Completion Gate is complete."
+}

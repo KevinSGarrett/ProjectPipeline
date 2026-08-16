@@ -1,0 +1,13 @@
+{
+  "schema_version": "1.0.0",
+  "default_evidence_max_age_seconds": 2592000,
+  "high_risk_min_distinct_methods": 2,
+  "critical_risk_min_distinct_methods": 3,
+  "require_independent_review_for_high_risk": true,
+  "loop_max_attempts": 5,
+  "loop_max_same_failure": 2,
+  "loop_max_unchanged_outputs": 2,
+  "verification_max_attempts": 8,
+  "verification_max_evidence_records": 40,
+  "default_scope_change_budget": 3
+}

@@ -1,0 +1,3 @@
+[
+  {"model_id":"model:mock-local-general","provider_id":"provider:mock-local","provider_model_name":"mock-general","version":"1.0.0","capabilities":["routine_reasoning","summarization","code_review"],"quality_tier":"standard","qualification":"QUALIFIED","local":true}
+]

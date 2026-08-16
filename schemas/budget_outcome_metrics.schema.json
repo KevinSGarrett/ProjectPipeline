@@ -1,0 +1,67 @@
+{
+  "$id": "https://project-pipeline.local/schemas/budget_outcome_metrics.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cost_per_merged_outcome_microunits": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cost Per Merged Outcome Microunits"
+    },
+    "cost_per_verified_outcome_microunits": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cost Per Verified Outcome Microunits"
+    },
+    "merged_outcome_count": {
+      "minimum": 0,
+      "title": "Merged Outcome Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "total_cost_microunits": {
+      "minimum": 0,
+      "title": "Total Cost Microunits",
+      "type": "integer"
+    },
+    "verified_outcome_count": {
+      "minimum": 0,
+      "title": "Verified Outcome Count",
+      "type": "integer"
+    },
+    "wasted_cost_microunits": {
+      "minimum": 0,
+      "title": "Wasted Cost Microunits",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "total_cost_microunits",
+    "verified_outcome_count",
+    "merged_outcome_count",
+    "wasted_cost_microunits"
+  ],
+  "title": "CostOutcomeMetrics",
+  "type": "object"
+}

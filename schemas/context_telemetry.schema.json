@@ -1,0 +1,90 @@
+{
+  "$defs": {
+    "ReceiptStatus": {
+      "enum": [
+        "CONSUMED",
+        "PARTIAL",
+        "REJECTED",
+        "NEEDS_CONTEXT"
+      ],
+      "title": "ReceiptStatus",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/context_telemetry.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "coverage_score": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Coverage Score",
+      "type": "number"
+    },
+    "item_count": {
+      "minimum": 0,
+      "title": "Item Count",
+      "type": "integer"
+    },
+    "omission_count": {
+      "minimum": 0,
+      "title": "Omission Count",
+      "type": "integer"
+    },
+    "pack_id": {
+      "title": "Pack Id",
+      "type": "string"
+    },
+    "receipt_status": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ReceiptStatus"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "redaction_count": {
+      "minimum": 0,
+      "title": "Redaction Count",
+      "type": "integer"
+    },
+    "source_count": {
+      "minimum": 0,
+      "title": "Source Count",
+      "type": "integer"
+    },
+    "stale_count": {
+      "minimum": 0,
+      "title": "Stale Count",
+      "type": "integer"
+    },
+    "total_chars": {
+      "minimum": 0,
+      "title": "Total Chars",
+      "type": "integer"
+    },
+    "trust_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Trust Counts",
+      "type": "object"
+    }
+  },
+  "required": [
+    "pack_id",
+    "item_count",
+    "total_chars",
+    "source_count",
+    "coverage_score",
+    "trust_counts",
+    "stale_count",
+    "redaction_count",
+    "omission_count"
+  ],
+  "title": "ContextTelemetry",
+  "type": "object"
+}

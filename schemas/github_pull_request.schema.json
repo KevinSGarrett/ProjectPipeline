@@ -1,0 +1,297 @@
+{
+  "$defs": {
+    "CheckConclusion": {
+      "enum": [
+        "SUCCESS",
+        "NEUTRAL",
+        "SKIPPED",
+        "FAILURE",
+        "CANCELLED",
+        "TIMED_OUT",
+        "ACTION_REQUIRED",
+        "STALE",
+        "STARTUP_FAILURE",
+        "UNKNOWN"
+      ],
+      "title": "CheckConclusion",
+      "type": "string"
+    },
+    "CheckState": {
+      "enum": [
+        "QUEUED",
+        "IN_PROGRESS",
+        "COMPLETED",
+        "UNKNOWN"
+      ],
+      "title": "CheckState",
+      "type": "string"
+    },
+    "PullRequestCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {
+          "title": "Check Id",
+          "type": "string"
+        },
+        "conclusion": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CheckConclusion"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "details_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Details Url"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "required": {
+          "default": false,
+          "title": "Required",
+          "type": "boolean"
+        },
+        "state": {
+          "$ref": "#/$defs/CheckState"
+        }
+      },
+      "required": [
+        "check_id",
+        "name",
+        "state"
+      ],
+      "title": "PullRequestCheck",
+      "type": "object"
+    },
+    "PullRequestReview": {
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "title": "Author",
+          "type": "string"
+        },
+        "commit_sha": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Commit Sha"
+        },
+        "review_id": {
+          "title": "Review Id",
+          "type": "string"
+        },
+        "review_node_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Review Node Id"
+        },
+        "state": {
+          "$ref": "#/$defs/ReviewState"
+        },
+        "submitted_at_utc": {
+          "anyOf": [
+            {
+              "format": "date-time",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Submitted At Utc"
+        }
+      },
+      "required": [
+        "review_id",
+        "author",
+        "state"
+      ],
+      "title": "PullRequestReview",
+      "type": "object"
+    },
+    "PullRequestState": {
+      "enum": [
+        "OPEN",
+        "CLOSED",
+        "MERGED"
+      ],
+      "title": "PullRequestState",
+      "type": "string"
+    },
+    "ReviewState": {
+      "enum": [
+        "APPROVED",
+        "CHANGES_REQUESTED",
+        "COMMENTED",
+        "DISMISSED",
+        "PENDING"
+      ],
+      "title": "ReviewState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_pull_request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "additions": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Additions",
+      "type": "integer"
+    },
+    "author": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Author"
+    },
+    "base_branch": {
+      "title": "Base Branch",
+      "type": "string"
+    },
+    "base_sha": {
+      "title": "Base Sha",
+      "type": "string"
+    },
+    "changed_files": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Changed Files",
+      "type": "integer"
+    },
+    "checks": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PullRequestCheck"
+      },
+      "title": "Checks",
+      "type": "array"
+    },
+    "deletions": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Deletions",
+      "type": "integer"
+    },
+    "draft": {
+      "default": false,
+      "title": "Draft",
+      "type": "boolean"
+    },
+    "head_branch": {
+      "title": "Head Branch",
+      "type": "string"
+    },
+    "head_sha": {
+      "title": "Head Sha",
+      "type": "string"
+    },
+    "mergeable": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Mergeable"
+    },
+    "mergeable_state": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Mergeable State"
+    },
+    "number": {
+      "minimum": 1,
+      "title": "Number",
+      "type": "integer"
+    },
+    "pull_request_id": {
+      "title": "Pull Request Id",
+      "type": "string"
+    },
+    "repository_slug": {
+      "title": "Repository Slug",
+      "type": "string"
+    },
+    "reviews": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/PullRequestReview"
+      },
+      "title": "Reviews",
+      "type": "array"
+    },
+    "state": {
+      "$ref": "#/$defs/PullRequestState"
+    },
+    "title": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "updated_at_utc": {
+      "format": "date-time",
+      "title": "Updated At Utc",
+      "type": "string"
+    }
+  },
+  "required": [
+    "pull_request_id",
+    "repository_slug",
+    "number",
+    "title",
+    "state",
+    "base_branch",
+    "head_branch",
+    "base_sha",
+    "head_sha"
+  ],
+  "title": "PullRequestSnapshot",
+  "type": "object"
+}

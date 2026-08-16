@@ -1,0 +1,22 @@
+[
+  {
+    "case_count": 100,
+    "failure_count": 0,
+    "failure_examples": [],
+    "passed": true,
+    "property_id": "PROP-C7E578A55A473A7CB010",
+    "property_name": "Completion Gate can be COMPLETE iff every required fact is true and gap count is zero",
+    "schema_version": "1.0.0",
+    "seed": 16016
+  },
+  {
+    "case_count": 100,
+    "failure_count": 0,
+    "failure_examples": [],
+    "passed": true,
+    "property_id": "PROP-30ED1DC9688F1DE5319F",
+    "property_name": "Scheduler resource conflict relation is symmetric for equivalent resource identities",
+    "schema_version": "1.0.0",
+    "seed": 16017
+  }
+]

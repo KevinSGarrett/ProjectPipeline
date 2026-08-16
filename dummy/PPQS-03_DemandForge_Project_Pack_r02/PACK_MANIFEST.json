@@ -1,0 +1,19 @@
+{
+  "benchmark_id": "PPQS-03",
+  "contamination_class": "C0",
+  "external_acquisition_required": false,
+  "gold_counts_withheld": true,
+  "intake": "NEW_PROJECT",
+  "name": "DemandForge",
+  "pack_type": "PROJECT_PACK",
+  "profiles": [
+    "MACHINE_LEARNING",
+    "PYTHON_SERVICE",
+    "INFRASTRUCTURE"
+  ],
+  "release": "r02",
+  "scale": "LARGE",
+  "schema_version": "2.0",
+  "seed_jira_count": 0,
+  "trust_zone": "CANDIDATE_VISIBLE"
+}

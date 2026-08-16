@@ -1,0 +1,57 @@
+{
+  "$id": "https://project-pipeline.local/schemas/verification_property_probe.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "case_count": {
+      "minimum": 1,
+      "title": "Case Count",
+      "type": "integer"
+    },
+    "failure_count": {
+      "minimum": 0,
+      "title": "Failure Count",
+      "type": "integer"
+    },
+    "failure_examples": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Failure Examples",
+      "type": "array"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "property_id": {
+      "title": "Property Id",
+      "type": "string"
+    },
+    "property_name": {
+      "title": "Property Name",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "seed": {
+      "title": "Seed",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "property_id",
+    "property_name",
+    "case_count",
+    "seed",
+    "failure_count",
+    "passed"
+  ],
+  "title": "PropertyProbeResult",
+  "type": "object"
+}

@@ -1,0 +1,67 @@
+{
+  "$defs": {
+    "DurableBackendKind": {
+      "enum": [
+        "LOCAL_REFERENCE",
+        "HATCHET",
+        "DBOS",
+        "TEMPORAL",
+        "MOCK"
+      ],
+      "title": "DurableBackendKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/orchestration_backend_mutation_receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accepted": {
+      "title": "Accepted",
+      "type": "boolean"
+    },
+    "backend": {
+      "$ref": "#/$defs/DurableBackendKind"
+    },
+    "backend_operation_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Backend Operation Id"
+    },
+    "backend_run_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Backend Run Id"
+    },
+    "detail": {
+      "default": "",
+      "title": "Detail",
+      "type": "string"
+    },
+    "unknown_outcome": {
+      "default": false,
+      "title": "Unknown Outcome",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "backend",
+    "accepted"
+  ],
+  "title": "BackendMutationReceipt",
+  "type": "object"
+}

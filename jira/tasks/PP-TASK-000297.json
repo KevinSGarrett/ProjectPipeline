@@ -1,0 +1,129 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000297-01",
+      "statement": "Persist context packs and add PPDB-0009 has executable implementation and behavior-specific automated verification.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
+        "method": "automated_behavior_validation",
+        "path": "src/project_pipeline/context_engine/persistence.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000297-02",
+      "statement": "Repository traceability, upstream-adoption truth, schemas, migrations, evidence, and permanent safeguards remain consistent.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_contract_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000089",
+    "EVID-000090",
+    "EVID-000093",
+    "EVID-000094"
+  ],
+  "definition_of_done": [
+    "Implementation is present and locally behaviorally verified.",
+    "Applicable requirement/test/evidence mappings are current.",
+    "Upstream integration claims match real integration paths.",
+    "Unavailable live external behavior remains explicitly unverified."
+  ],
+  "dependencies": [],
+  "description": "Persist context packs and add PPDB-0009. This Pass 12 task converts source-grounded Context requirements into executable, locally verified implementation while retaining truthful external qualification state.",
+  "evidence_required": [
+    "EVID-000089",
+    "EVID-000090",
+    "EVID-000093",
+    "EVID-000094"
+  ],
+  "exclusions": [
+    "No remote GitHub/Jira/AWS mutation.",
+    "No raw secret values in context packs or durable context evidence.",
+    "No optional upstream runtime is represented as live-qualified solely because an adapter exists."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/context_engine/persistence.py",
+    "database/migrations/sqlite/PPDB-0009_context_delegation.up.sql",
+    "database/migrations/postgresql/PPDB-0009_context_delegation.up.sql",
+    "database/MIGRATION_CATALOG.json"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/context_engine/persistence.py",
+    "database/migrations/sqlite/PPDB-0009_context_delegation.up.sql",
+    "database/migrations/postgresql/PPDB-0009_context_delegation.up.sql",
+    "database/MIGRATION_CATALOG.json"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "context",
+    "delegation",
+    "pass-12"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25261",
+    "remote_key": "PP-292",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000297",
+  "objective": "Persist context packs and add PPDB-0009",
+  "observability_impact": "Context pack identity, coverage, trust distribution, staleness, redactions, omissions, and receipts are machine-readable.",
+  "owner_required_capability": "context_and_delegation",
+  "parent": "PP-STORY-000075",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/05_context_and_knowledge/PLAN-CTX-002_context_delegation_implementation.md",
+      "end_line": 39,
+      "line_numbered_path": "plans/_line_numbered/PLAN-CTX-002_context_delegation_implementation.lines.txt",
+      "line_reference": "PLAN-CTX-002:SEC-08:L000036-L000039",
+      "plan_id": "PLAN-CTX-002",
+      "section_id": "PLAN-CTX-002:SEC-08",
+      "start_line": 36
+    }
+  ],
+  "rationale": "Context is an execution-control input. The implementation must remain minimal, source-grounded, revision-aware, policy-bounded, and traceable before delegated work can rely on it.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000075",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-292",
+  "required_tests": [
+    "TEST-CTX-PERSIST-001",
+    "TEST-CTX-PERSIST-002",
+    "TEST-CTX-PERSIST-003"
+  ],
+  "requirement_ids": [
+    "REQ-CTX-0002",
+    "REQ-CTX-0007",
+    "REQ-CTX-0008"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Immutable packs are never edited in place; revert the implementation/configuration or recompile a new pack from authoritative inputs while preserving prior receipts and evidence.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "src/project_pipeline/context_engine/persistence.py",
+    "database/migrations/sqlite/PPDB-0009_context_delegation.up.sql",
+    "database/migrations/postgresql/PPDB-0009_context_delegation.up.sql",
+    "database/MIGRATION_CATALOG.json"
+  ],
+  "security_impact": "Context policy controls trust, secret handling, provider egress, untrusted instructions, prompt-injection quarantine, and optional upstream boundaries.",
+  "source_references": [
+    "SRC-002:L001015-L001156",
+    "SRC-002:L000213-L000260",
+    "SRC-002:L000959-L001014",
+    "SRC-002:L000359-L000386"
+  ],
+  "state": "BACKLOG",
+  "title": "Persist context packs and add PPDB-0009",
+  "upstream_dependencies": []
+}

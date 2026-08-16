@@ -1,0 +1,53 @@
+{
+  "$defs": {
+    "BackpressureMode": {
+      "enum": [
+        "NORMAL",
+        "CONGESTED",
+        "BROWNOUT",
+        "HALT_NEW_WORK"
+      ],
+      "title": "BackpressureMode",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/scheduler_backpressure_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "admit_new_work": {
+      "title": "Admit New Work",
+      "type": "boolean"
+    },
+    "lane_fraction": {
+      "maximum": 1,
+      "minimum": 0,
+      "title": "Lane Fraction",
+      "type": "number"
+    },
+    "mode": {
+      "$ref": "#/$defs/BackpressureMode"
+    },
+    "reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode",
+    "lane_fraction",
+    "admit_new_work"
+  ],
+  "title": "BackpressureDecision",
+  "type": "object"
+}

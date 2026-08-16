@@ -1,0 +1,13 @@
+{
+  "application": {
+    "name": "orders"
+  },
+  "observability": {
+    "log_level": "INFO"
+  },
+  "resilience": {
+    "backoff_seconds": 2,
+    "max_attempts": 4
+  },
+  "schema_version": 2
+}

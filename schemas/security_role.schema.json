@@ -1,0 +1,90 @@
+{
+  "$defs": {
+    "AuthorityCapability": {
+      "enum": [
+        "READ",
+        "PROPOSE",
+        "APPROVE",
+        "MUTATE",
+        "MERGE",
+        "DEPLOY",
+        "SPEND",
+        "EXTERNAL_MODEL",
+        "ACCESS_SECRET",
+        "MODIFY_INSTRUCTIONS",
+        "MODIFY_POLICY",
+        "COMPLETE_PROJECT",
+        "EMERGENCY"
+      ],
+      "title": "AuthorityCapability",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/security_role.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_environments": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Environments",
+      "type": "array"
+    },
+    "allowed_target_prefixes": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Target Prefixes",
+      "type": "array"
+    },
+    "capabilities": {
+      "items": {
+        "$ref": "#/$defs/AuthorityCapability"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "emergency": {
+      "default": false,
+      "title": "Emergency",
+      "type": "boolean"
+    },
+    "max_risk": {
+      "default": "MEDIUM",
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Max Risk",
+      "type": "string"
+    },
+    "name": {
+      "maxLength": 100,
+      "minLength": 2,
+      "title": "Name",
+      "type": "string"
+    },
+    "role_id": {
+      "title": "Role Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "role_id",
+    "name",
+    "capabilities"
+  ],
+  "title": "RoleDefinition",
+  "type": "object"
+}

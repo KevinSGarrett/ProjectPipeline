@@ -1,0 +1,30 @@
+L000001 | # PLAN-UPSTREAM-002 — Dependency, License, and Provenance Policy
+L000002 | 
+L000003 | - **Plan ID:** `PLAN-UPSTREAM-002`
+L000004 | - **Status:** `ACTIVE`
+L000005 | - **Authority:** accepted architecture decision and supply-chain requirements
+L000006 | - **Source basis:** `GOV-001:L000855-L000876`, `GOV-001:L001364-L001385`, `SRC-016:L001625-L001640`, `SRC-016:L002181-L002195`
+L000007 | 
+L000008 | ## PLAN-UPSTREAM-002:SEC-01 Separate approval decisions
+L000009 | 
+L000010 | Installing or linking an upstream dependency and copying, adapting, or vendoring source are separate decisions. Dependency eligibility never grants source-incorporation permission. The default for both is deny until the applicable evidence is recorded.
+L000011 | 
+L000012 | ## PLAN-UPSTREAM-002:SEC-02 Dependency activation gate
+L000013 | 
+L000014 | Activation requires canonical URL, inspected revision, compatible license classification, bounded subsystem role, explicit disposition, review artifact, version lock, integrity verification, vulnerability review, SBOM entry, notice handling, and representative tests. Runtime services also require configuration, health, recovery, upgrade, and rollback evidence.
+L000015 | 
+L000016 | ## PLAN-UPSTREAM-002:SEC-03 Source-incorporation gate
+L000017 | 
+L000018 | Source incorporation requires a separately approved record naming exact files, license obligations, copyright and notice preservation, modification boundaries, provenance annotations, security review, and maintenance ownership. No source incorporation is approved by the current upstream registry.
+L000019 | 
+L000020 | ## PLAN-UPSTREAM-002:SEC-04 License classes
+L000021 | 
+L000022 | Permissive licenses may proceed through the automated policy after all technical gates. MPL-family dependencies require notice and file-level compliance review. AGPL, source-available, custom, conflicting, or unknown terms require explicit human legal approval before incorporation or a deployment decision that may trigger obligations.
+L000023 | 
+L000024 | ## PLAN-UPSTREAM-002:SEC-05 Repository subtrees and mixed terms
+L000025 | 
+L000026 | Repository-level license metadata does not automatically cover enterprise, examples, models, data, plugins, or separately licensed subdirectories. Such content is excluded until separately inspected. LiteLLM enterprise-only content is excluded from the selected core dependency boundary.
+L000027 | 
+L000028 | ## PLAN-UPSTREAM-002:SEC-06 Continuous assurance
+L000029 | 
+L000030 | Dependency manifests, locks, notices, SBOMs, vulnerability results, signatures or checksums, and provenance are regenerated for releases. Material upstream changes reopen the review. A selected dependency that fails security, maintenance, compatibility, or conformance gates is disabled or replaced through its internal port.

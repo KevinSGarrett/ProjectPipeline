@@ -1,0 +1,103 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000037-01",
+      "statement": "Run the pack-provided validator independently and preserve the exact result.",
+      "verification": {
+        "command": "python knowledge_pack/07_TOOLS/validate_pack.py",
+        "method": "command_and_artifact_inspection",
+        "path": "evidence/knowledge_pack_validation.txt",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000037-02",
+      "statement": "The resulting state is represented accurately in traceability and evidence records.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "registry_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000001"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Run the pack-provided validator independently and preserve the exact result.",
+  "evidence_required": [
+    "EVID-000001",
+    "EVID-000006"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "evidence/knowledge_pack_validation.txt"
+  ],
+  "expected_implementation_artifacts": [
+    "evidence/knowledge_pack_validation.txt"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "foundation",
+    "executable"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25185",
+    "remote_key": "PP-216",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000037",
+  "objective": "Run the pack-provided validator independently and preserve the exact result.",
+  "observability_impact": "Record structured validation and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-STORY-000004",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/01_requirements/PLAN-REQ-001_requirements_engineering.md",
+      "end_line": 16,
+      "line_numbered_path": "plans/_line_numbered/PLAN-REQ-001_requirements_engineering.lines.txt",
+      "line_reference": "PLAN-REQ-001:SEC-02:L000013-L000016",
+      "plan_id": "PLAN-REQ-001",
+      "section_id": "PLAN-REQ-001:SEC-02",
+      "start_line": 13
+    }
+  ],
+  "rationale": "This bounded task creates evidence-bearing foundation capability required before deeper subsystem implementation.",
+  "relationships": [],
+  "remote_jira_key": "PP-216",
+  "required_tests": [
+    "TEST-PROVENANCE-001"
+  ],
+  "requirement_ids": [
+    "REQ-REQ-0001",
+    "REQ-REQ-0002"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Run the pack-provided validator independently and preserve the exact result."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L000123-L000221"
+  ],
+  "state": "BACKLOG",
+  "title": "Validate the supplied knowledge corpus",
+  "upstream_dependencies": []
+}

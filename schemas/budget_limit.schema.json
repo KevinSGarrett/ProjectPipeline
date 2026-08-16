@@ -1,0 +1,103 @@
+{
+  "$defs": {
+    "BudgetScopeType": {
+      "enum": [
+        "GLOBAL",
+        "PORTFOLIO",
+        "PROJECT",
+        "PHASE",
+        "TASK",
+        "PROVIDER",
+        "RESOURCE"
+      ],
+      "title": "BudgetScopeType",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/budget_limit.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "currency": {
+      "const": "USD",
+      "default": "USD",
+      "title": "Currency",
+      "type": "string"
+    },
+    "cycle_id": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Cycle Id",
+      "type": "string"
+    },
+    "enabled": {
+      "default": true,
+      "title": "Enabled",
+      "type": "boolean"
+    },
+    "hard_cap_microunits": {
+      "minimum": 0,
+      "title": "Hard Cap Microunits",
+      "type": "integer"
+    },
+    "limit_id": {
+      "title": "Limit Id",
+      "type": "string"
+    },
+    "parent_scope_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Parent Scope Key"
+    },
+    "protected_reserve_microunits": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Protected Reserve Microunits",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Scope Id",
+      "type": "string"
+    },
+    "scope_type": {
+      "$ref": "#/$defs/BudgetScopeType"
+    },
+    "soft_cap_microunits": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Soft Cap Microunits"
+    }
+  },
+  "required": [
+    "limit_id",
+    "scope_type",
+    "scope_id",
+    "cycle_id",
+    "hard_cap_microunits"
+  ],
+  "title": "BudgetLimit",
+  "type": "object"
+}

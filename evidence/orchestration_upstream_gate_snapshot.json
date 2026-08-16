@@ -1,0 +1,110 @@
+{
+  "pass_13_gate": {
+    "candidate_count": 18,
+    "candidate_upstream_ids": [
+      "UPSTREAM-002",
+      "UPSTREAM-005",
+      "UPSTREAM-018",
+      "UPSTREAM-020",
+      "UPSTREAM-025",
+      "UPSTREAM-026",
+      "UPSTREAM-050",
+      "UPSTREAM-054",
+      "UPSTREAM-056",
+      "UPSTREAM-061",
+      "UPSTREAM-074",
+      "UPSTREAM-088",
+      "UPSTREAM-095",
+      "UPSTREAM-096",
+      "UPSTREAM-102",
+      "UPSTREAM-104",
+      "UPSTREAM-107",
+      "UPSTREAM-109"
+    ],
+    "existing_boundary": "UPSTREAM-061",
+    "fallback_backends": [
+      "UPSTREAM-026",
+      "UPSTREAM-104"
+    ],
+    "gate_id": "PASS-13-ORCHESTRATION-UPSTREAM-GATE",
+    "implementation_complete_locally": true,
+    "implementation_paths": [
+      "src/project_pipeline/orchestration",
+      "database/migrations/sqlite/PPDB-0010_durable_orchestration_recovery.up.sql",
+      "database/migrations/postgresql/PPDB-0010_durable_orchestration_recovery.up.sql"
+    ],
+    "initial_backend": "UPSTREAM-050",
+    "live_backend_qualification": false,
+    "material_implementation_allowed": true,
+    "pattern_sources": [
+      "UPSTREAM-074",
+      "UPSTREAM-102",
+      "UPSTREAM-095",
+      "UPSTREAM-025"
+    ],
+    "review_artifact": "provenance/reviews/PASS-13_orchestration_upstream_review.md",
+    "review_state": "INTEGRATED",
+    "schema_version": "1.0.0",
+    "status": "INTEGRATED",
+    "test_paths": [
+      "tests/test_orchestration_domain.py",
+      "tests/test_orchestration_runtime.py",
+      "tests/test_orchestration_recovery.py",
+      "tests/test_orchestration_adapters.py",
+      "tests/test_orchestration_migration.py",
+      "tests/test_orchestration_simulation.py"
+    ]
+  },
+  "schema_version": "1.0.0",
+  "upstream_summary": {
+    "active_dependency_count": 1,
+    "adoption_count": 62,
+    "by_disposition": {
+      "ADAPT_COMPONENT": 14,
+      "ADOPT_DEPENDENCY": 48,
+      "MINE_ARCHITECTURE": 28,
+      "MINE_IMPLEMENTATION_PATTERN": 15,
+      "MINE_TEST_PATTERN": 3,
+      "NOT_RELEVANT": 3,
+      "REJECT": 5
+    },
+    "by_inspection_state": {
+      "CATALOG_DISPOSITION_REVIEW_COMPLETE": 76,
+      "DEEPLY_REVIEWED": 19,
+      "FOCUSED_REVIEW_COMPLETE": 8,
+      "SOURCE_LEVEL_REVIEW_COMPLETE": 13
+    },
+    "by_usage_state": {
+      "ACTIVE_RUNTIME": 1,
+      "ARCHITECTURE_PATTERN_ADOPTED": 2,
+      "EXTERNAL_CLI_ADAPTER_IMPLEMENTED": 10,
+      "FUTURE_SUBSYSTEM_BOUNDARY": 30,
+      "IMPLEMENTATION_PATTERN_ADOPTED": 2,
+      "OPTIONAL_ADAPTER_IMPLEMENTED": 11,
+      "SELECTED_NOT_ACTIVATED": 10
+    },
+    "catalog_review_complete": true,
+    "deep_review_count": 40,
+    "dependency_activation_eligible_count": 21,
+    "entry_count": 116,
+    "evaluate_later_count": 0,
+    "external_cli_adapter_count": 10,
+    "implemented_usage_count": 26,
+    "incorporation_allowed_count": 2,
+    "licenses_reviewed": {
+      "Apache-2.0": 14,
+      "BSD-3-Clause": 2,
+      "MIT": 19,
+      "MIT OR Apache-2.0": 2,
+      "MPL-2.0": 2,
+      "PostgreSQL": 1
+    },
+    "optional_adapter_count": 11,
+    "schema_version": "2.0.0",
+    "selected_not_activated_count": 40,
+    "source_incorporation_approved_count": 2,
+    "terminal_disposition_count": 116,
+    "usage_record_count": 66
+  },
+  "upstream_validation_errors": []
+}

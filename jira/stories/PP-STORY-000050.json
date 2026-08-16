@@ -1,0 +1,177 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000050-01",
+      "statement": "Every linked requirement is explicitly dispositioned, mapped, and represented by the stated implementation or planned artifacts.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000050-02",
+      "statement": "Applicable behavior-specific tests and evidence support completion; unavailable external verification remains explicitly blocked.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000036",
+    "EVID-000039",
+    "EVID-000040",
+    "EVID-000041",
+    "EVID-000042"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement and verify the source-grounded requirements grouped under intake for Project Definition and Scope.",
+  "evidence_required": [
+    "EVID-000036",
+    "EVID-000039",
+    "EVID-000040",
+    "EVID-000041",
+    "EVID-000042"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "docs/intake",
+    "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
+    "src/project_pipeline/intake",
+    "src/project_pipeline/services/intake.py"
+  ],
+  "expected_implementation_artifacts": [
+    "docs/intake",
+    "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
+    "src/project_pipeline/intake",
+    "src/project_pipeline/services/intake.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "STORY",
+  "labels": [
+    "capability-story",
+    "domain-pdef",
+    "cluster-intake"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25061",
+    "remote_key": "PP-92",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-STORY-000050",
+  "objective": "Deliver the intake capability for Project Definition and Scope.",
+  "observability_impact": "Record structured validation, state, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-EPIC-000001",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
+      "end_line": 27,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-001_project_definition.lines.txt",
+      "line_reference": "PLAN-PDEF-001:SEC-03:L000017-L000027",
+      "plan_id": "PLAN-PDEF-001",
+      "section_id": "PLAN-PDEF-001:SEC-03",
+      "start_line": 17
+    },
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-002_project_intake_and_compilation.md",
+      "end_line": 17,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-002_project_intake_and_compilation.lines.txt",
+      "line_reference": "PLAN-PDEF-002:SEC-01:L000007-L000017",
+      "plan_id": "PLAN-PDEF-002",
+      "section_id": "PLAN-PDEF-002:SEC-01",
+      "start_line": 7
+    },
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-002_project_intake_and_compilation.md",
+      "end_line": 51,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-002_project_intake_and_compilation.lines.txt",
+      "line_reference": "PLAN-PDEF-002:SEC-03:L000036-L000051",
+      "plan_id": "PLAN-PDEF-002",
+      "section_id": "PLAN-PDEF-002:SEC-03",
+      "start_line": 36
+    },
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-002_project_intake_and_compilation.md",
+      "end_line": 88,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-002_project_intake_and_compilation.lines.txt",
+      "line_reference": "PLAN-PDEF-002:SEC-06:L000075-L000088",
+      "plan_id": "PLAN-PDEF-002",
+      "section_id": "PLAN-PDEF-002:SEC-06",
+      "start_line": 75
+    },
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-002_project_intake_and_compilation.md",
+      "end_line": 98,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-002_project_intake_and_compilation.lines.txt",
+      "line_reference": "PLAN-PDEF-002:SEC-07:L000089-L000098",
+      "plan_id": "PLAN-PDEF-002",
+      "section_id": "PLAN-PDEF-002:SEC-07",
+      "start_line": 89
+    },
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-002_project_intake_and_compilation.md",
+      "end_line": 130,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-002_project_intake_and_compilation.lines.txt",
+      "line_reference": "PLAN-PDEF-002:SEC-09:L000117-L000130",
+      "plan_id": "PLAN-PDEF-002",
+      "section_id": "PLAN-PDEF-002:SEC-09",
+      "start_line": 117
+    },
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-002_project_intake_and_compilation.md",
+      "end_line": 137,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-002_project_intake_and_compilation.lines.txt",
+      "line_reference": "PLAN-PDEF-002:SEC-10:L000131-L000137",
+      "plan_id": "PLAN-PDEF-002",
+      "section_id": "PLAN-PDEF-002:SEC-10",
+      "start_line": 131
+    }
+  ],
+  "rationale": "This work is required to convert source-grounded requirements into bounded implementation, verification, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-EPIC-000001",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-92",
+  "required_tests": [
+    "TEST-INTAKE-CLI-002",
+    "TEST-INTAKE-COMPILER-001"
+  ],
+  "requirement_ids": [
+    "REQ-PDEF-0006"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the intake capability for Project Definition and Scope."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, data-egress, and external-mutation effects.",
+  "source_references": [
+    "SRC-014:L000005-L000209",
+    "SRC-017:L001122-L001217"
+  ],
+  "state": "BACKLOG",
+  "title": "Intake \u2014 Project Definition and Scope",
+  "upstream_dependencies": []
+}

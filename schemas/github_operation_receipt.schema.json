@@ -1,0 +1,80 @@
+{
+  "$defs": {
+    "GitOperationState": {
+      "enum": [
+        "PLANNED",
+        "PENDING",
+        "APPLIED",
+        "FAILED",
+        "UNKNOWN_OUTCOME",
+        "RECONCILED",
+        "REJECTED"
+      ],
+      "title": "GitOperationState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_operation_receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "external_identifier": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "External Identifier"
+    },
+    "observed_result": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Observed Result"
+    },
+    "operation_id": {
+      "title": "Operation Id",
+      "type": "string"
+    },
+    "provider": {
+      "title": "Provider",
+      "type": "string"
+    },
+    "receipt_id": {
+      "title": "Receipt Id",
+      "type": "string"
+    },
+    "reconciliation_required": {
+      "default": false,
+      "title": "Reconciliation Required",
+      "type": "boolean"
+    },
+    "state": {
+      "$ref": "#/$defs/GitOperationState"
+    }
+  },
+  "required": [
+    "receipt_id",
+    "operation_id",
+    "state",
+    "provider"
+  ],
+  "title": "GitHubOperationReceipt",
+  "type": "object"
+}

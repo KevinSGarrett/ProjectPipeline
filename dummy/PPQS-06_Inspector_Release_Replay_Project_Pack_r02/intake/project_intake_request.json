@@ -1,0 +1,20 @@
+{
+  "actor_id": "actor:ppqs-benchmark-owner",
+  "allow_nested_repositories": false,
+  "canonical_url": "https://github.com/modelcontextprotocol/inspector",
+  "correlation_id": "corr:ppqs-06-run",
+  "max_files": 100000,
+  "max_hash_bytes_per_file": 64000000,
+  "max_total_bytes": 8000000000,
+  "mode": "EXISTING_PROJECT",
+  "project_id": "ppqs-06",
+  "project_name": "Inspector Release Replay",
+  "requested_profiles": [
+    "TYPESCRIPT_APPLICATION",
+    "WEB_APPLICATION",
+    "DOCUMENTATION"
+  ],
+  "scale": "STANDARD",
+  "schema_version": "1.0.0",
+  "target_root": "./workspace/PPQS-06"
+}

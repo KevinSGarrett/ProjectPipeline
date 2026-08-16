@@ -1,0 +1,89 @@
+{
+  "$defs": {
+    "DiagnosticCheck": {
+      "additionalProperties": false,
+      "properties": {
+        "check_id": {
+          "maxLength": 100,
+          "minLength": 3,
+          "pattern": "^[a-z][a-z0-9_.-]*$",
+          "title": "Check Id",
+          "type": "string"
+        },
+        "details": {
+          "additionalProperties": true,
+          "title": "Details",
+          "type": "object"
+        },
+        "status": {
+          "$ref": "#/$defs/DiagnosticStatus"
+        },
+        "summary": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "check_id",
+        "status",
+        "summary"
+      ],
+      "title": "DiagnosticCheck",
+      "type": "object"
+    },
+    "DiagnosticStatus": {
+      "enum": [
+        "PASS",
+        "WARNING",
+        "FAIL"
+      ],
+      "title": "DiagnosticStatus",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/diagnostic_snapshot.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/DiagnosticCheck"
+      },
+      "title": "Checks",
+      "type": "array"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "overall_status": {
+      "$ref": "#/$defs/DiagnosticStatus"
+    },
+    "profile": {
+      "title": "Profile",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "observed_at_utc",
+    "project_id",
+    "profile",
+    "overall_status",
+    "checks"
+  ],
+  "title": "DiagnosticSnapshot",
+  "type": "object"
+}

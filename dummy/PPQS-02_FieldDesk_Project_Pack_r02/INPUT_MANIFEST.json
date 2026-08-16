@@ -1,0 +1,62 @@
+{
+  "allowed_inputs": [
+    "BENCHMARK_BRIEF.md",
+    "INPUT_MANIFEST.json",
+    "intake/",
+    "requirements_source/",
+    "source_registry/",
+    "seed_repository/",
+    "seed_repositories/",
+    "fixtures/",
+    "visible_tests/",
+    "mock_services/",
+    "constraints/",
+    "environment/",
+    "jira/seed/",
+    "github/seed/",
+    "fault_overlays/catalog.json",
+    "third_party/"
+  ],
+  "assigned_fault_overlays": [
+    "DATABASE_MIGRATION_FAILURE",
+    "WEBHOOK_PROVIDER_OUTAGE",
+    "CONCURRENT_WORKSPACE_CONFLICT",
+    "MID_PROJECT_REQUIREMENT_CHANGE",
+    "BROWSER_VISUAL_REGRESSION",
+    "SYNTHETIC_SECRET_TRAP",
+    "VULNERABLE_DEPENDENCY"
+  ],
+  "benchmark_id": "PPQS-02",
+  "benchmark_name": "FieldDesk",
+  "build_id": "PPQS-8-r01",
+  "candidate_output_root": "candidate_outputs/",
+  "contamination_class": "C0",
+  "external_mutation_policy": "DENIED_BY_DEFAULT",
+  "forbidden_content_classes": [
+    "ORACLE_PACK",
+    "GOLD_REQUIREMENTS",
+    "GOLD_JIRA",
+    "REFERENCE_SOURCE",
+    "HIDDEN_TESTS",
+    "TARGET_COMMIT_OR_PATCH"
+  ],
+  "frozen_at_utc": "2026-08-16T04:00:00Z",
+  "intake_mode": "NEW_PROJECT",
+  "oracle_access_forbidden": true,
+  "pack_role": "PROJECT_PACK_VISIBLE_TO_CANDIDATE",
+  "project_alias": "FieldDesk",
+  "project_profiles": [
+    "WEB_APPLICATION",
+    "TYPESCRIPT_APPLICATION",
+    "PYTHON_SERVICE",
+    "INFRASTRUCTURE",
+    "POLYGLOT_APPLICATION"
+  ],
+  "repository_shape": "MONOREPO",
+  "reset_entrypoint": "python common/tooling/reset_workspace.py",
+  "scale": "STANDARD",
+  "schema_version": "1.0.0",
+  "seed_jira_issue_count": 0,
+  "source_class": "FULLY_SYNTHETIC",
+  "suite_version": "0.1.0"
+}

@@ -1,0 +1,66 @@
+{
+  "$id": "https://project-pipeline.local/schemas/security_self_modification.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "assessment_id": {
+      "title": "Assessment Id",
+      "type": "string"
+    },
+    "changed_paths": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Changed Paths",
+      "type": "array"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "required_review_classes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Review Classes",
+      "type": "array"
+    },
+    "requires_independent_review": {
+      "title": "Requires Independent Review",
+      "type": "boolean"
+    },
+    "requires_rollback_material": {
+      "title": "Requires Rollback Material",
+      "type": "boolean"
+    },
+    "requires_security_verification": {
+      "title": "Requires Security Verification",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "touches_control_plane": {
+      "title": "Touches Control Plane",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "assessment_id",
+    "changed_paths",
+    "touches_control_plane",
+    "required_review_classes",
+    "requires_independent_review",
+    "requires_rollback_material",
+    "requires_security_verification",
+    "reasons"
+  ],
+  "title": "SelfModificationAssessment",
+  "type": "object"
+}

@@ -1,0 +1,65 @@
+{
+  "$id": "https://project-pipeline.local/schemas/jira_project_metadata.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "components": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Components",
+      "type": "array"
+    },
+    "fields": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Fields",
+      "type": "object"
+    },
+    "issue_types": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Issue Types",
+      "type": "array"
+    },
+    "name": {
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "project_key": {
+      "pattern": "^[A-Z][A-Z0-9_]{0,31}$",
+      "title": "Project Key",
+      "type": "string"
+    },
+    "statuses": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Statuses",
+      "type": "array"
+    }
+  },
+  "required": [
+    "project_id",
+    "project_key",
+    "name",
+    "issue_types",
+    "statuses"
+  ],
+  "title": "JiraProjectMetadata",
+  "type": "object"
+}

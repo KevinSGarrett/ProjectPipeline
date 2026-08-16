@@ -1,0 +1,77 @@
+{
+  "$id": "https://project-pipeline.local/schemas/github_repository_metadata.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allow_merge_commit": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Allow Merge Commit"
+    },
+    "allow_rebase_merge": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Allow Rebase Merge"
+    },
+    "allow_squash_merge": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Allow Squash Merge"
+    },
+    "archived": {
+      "default": false,
+      "title": "Archived",
+      "type": "boolean"
+    },
+    "default_branch": {
+      "title": "Default Branch",
+      "type": "string"
+    },
+    "disabled": {
+      "default": false,
+      "title": "Disabled",
+      "type": "boolean"
+    },
+    "private": {
+      "default": false,
+      "title": "Private",
+      "type": "boolean"
+    },
+    "repository_id": {
+      "title": "Repository Id",
+      "type": "string"
+    },
+    "repository_slug": {
+      "title": "Repository Slug",
+      "type": "string"
+    }
+  },
+  "required": [
+    "repository_slug",
+    "repository_id",
+    "default_branch"
+  ],
+  "title": "GitHubRepositoryMetadata",
+  "type": "object"
+}

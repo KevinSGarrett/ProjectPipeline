@@ -1,0 +1,149 @@
+{
+  "$defs": {
+    "IntakeMode": {
+      "enum": [
+        "NEW_PROJECT",
+        "EXISTING_PROJECT"
+      ],
+      "title": "IntakeMode",
+      "type": "string"
+    },
+    "ProjectProfile": {
+      "enum": [
+        "GENERIC",
+        "PYTHON_LIBRARY",
+        "PYTHON_SERVICE",
+        "WEB_APPLICATION",
+        "TYPESCRIPT_APPLICATION",
+        "RUST_APPLICATION",
+        "MACHINE_LEARNING",
+        "INFRASTRUCTURE",
+        "DOCUMENTATION",
+        "POLYGLOT_APPLICATION",
+        "EMPTY"
+      ],
+      "title": "ProjectProfile",
+      "type": "string"
+    },
+    "ProjectScale": {
+      "enum": [
+        "SMALL",
+        "STANDARD",
+        "LARGE",
+        "CRITICAL"
+      ],
+      "title": "ProjectScale",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/project_intake_request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "default": "actor:local-intake",
+      "maxLength": 255,
+      "minLength": 3,
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "allow_nested_repositories": {
+      "default": false,
+      "title": "Allow Nested Repositories",
+      "type": "boolean"
+    },
+    "canonical_url": {
+      "anyOf": [
+        {
+          "maxLength": 2048,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Canonical Url"
+    },
+    "correlation_id": {
+      "default": "corr:local-intake",
+      "maxLength": 255,
+      "minLength": 3,
+      "title": "Correlation Id",
+      "type": "string"
+    },
+    "max_files": {
+      "default": 20000,
+      "maximum": 1000000,
+      "minimum": 1,
+      "title": "Max Files",
+      "type": "integer"
+    },
+    "max_hash_bytes_per_file": {
+      "default": 16000000,
+      "maximum": 1000000000,
+      "minimum": 1,
+      "title": "Max Hash Bytes Per File",
+      "type": "integer"
+    },
+    "max_total_bytes": {
+      "default": 2000000000,
+      "maximum": 10000000000000,
+      "minimum": 1,
+      "title": "Max Total Bytes",
+      "type": "integer"
+    },
+    "mode": {
+      "$ref": "#/$defs/IntakeMode"
+    },
+    "project_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Project Id"
+    },
+    "project_name": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Project Name",
+      "type": "string"
+    },
+    "requested_profiles": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ProjectProfile"
+      },
+      "title": "Requested Profiles",
+      "type": "array"
+    },
+    "scale": {
+      "$ref": "#/$defs/ProjectScale",
+      "default": "STANDARD"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target_root": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "title": "Target Root",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mode",
+    "project_name",
+    "target_root"
+  ],
+  "title": "ProjectIntakeRequest",
+  "type": "object"
+}

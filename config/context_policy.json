@@ -1,0 +1,12 @@
+{
+  "allow_stale_optional": false,
+  "allow_untrusted_data": true,
+  "allow_untrusted_instructions": false,
+  "hosted_max_sensitivity": 1,
+  "max_age_seconds": 86400,
+  "max_chars": 200000,
+  "max_items": 64,
+  "min_coverage_score": 1.0,
+  "policy_version": "CTX-POLICY-1.0",
+  "redact_secrets": true
+}

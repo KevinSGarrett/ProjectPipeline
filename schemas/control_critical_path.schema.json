@@ -1,0 +1,58 @@
+{
+  "$id": "https://project-pipeline.local/schemas/control_critical_path.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "duration_source": {
+      "enum": [
+        "DECLARED",
+        "MIXED",
+        "DEFAULT_HEURISTIC",
+        "EMPTY"
+      ],
+      "title": "Duration Source",
+      "type": "string"
+    },
+    "earliest_finish_minutes": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Earliest Finish Minutes",
+      "type": "object"
+    },
+    "path": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Path",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "slack_minutes": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Slack Minutes",
+      "type": "object"
+    },
+    "total_duration_minutes": {
+      "minimum": 0,
+      "title": "Total Duration Minutes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "path",
+    "total_duration_minutes",
+    "duration_source",
+    "earliest_finish_minutes",
+    "slack_minutes"
+  ],
+  "title": "CriticalPathAnalysis",
+  "type": "object"
+}

@@ -1,0 +1,73 @@
+{
+  "$id": "https://project-pipeline.local/schemas/scheduler_backpressure_signals.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "disk_free_percent": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Disk Free Percent"
+    },
+    "memory_used_percent": {
+      "anyOf": [
+        {
+          "maximum": 100,
+          "minimum": 0,
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Memory Used Percent"
+    },
+    "outbox_depth": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Outbox Depth",
+      "type": "integer"
+    },
+    "queue_depth": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Queue Depth",
+      "type": "integer"
+    },
+    "retry_storm_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Retry Storm Count",
+      "type": "integer"
+    },
+    "scheduler_queue_lag_seconds": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Scheduler Queue Lag Seconds",
+      "type": "number"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "verification_queue_depth": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Verification Queue Depth",
+      "type": "integer"
+    }
+  },
+  "title": "BackpressureSignals",
+  "type": "object"
+}

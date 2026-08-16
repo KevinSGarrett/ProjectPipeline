@@ -1,0 +1,44 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "PROJECT-PIPELINE",
+  "profile": "local-pass16",
+  "required_categories": [
+    "CONTRACT",
+    "API",
+    "INTEGRATION",
+    "END_TO_END",
+    "GOLDEN_JOURNEY",
+    "BROWSER",
+    "VISUAL",
+    "ACCESSIBILITY",
+    "PERFORMANCE",
+    "ADVERSARIAL",
+    "PROPERTY",
+    "MUTATION",
+    "FAULT",
+    "POST_MERGE"
+  ],
+  "browser_required_when_available": true,
+  "no_silent_required_skips": true,
+  "max_test_seconds": 1800,
+  "browser_load_p95_budget_ms": 2500,
+  "cli_help_p95_budget_ms": 3000,
+  "property_case_count": 100,
+  "property_seed": 16016,
+  "performance_samples": 7,
+  "screenshot_viewports": [
+    [
+      1280,
+      720
+    ],
+    [
+      390,
+      844
+    ]
+  ],
+  "system_chromium_candidates": [
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+    "/usr/bin/google-chrome"
+  ]
+}

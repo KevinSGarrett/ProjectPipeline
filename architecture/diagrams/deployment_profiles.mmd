@@ -1,0 +1,29 @@
+flowchart TB
+    subgraph Local[LOCAL_CORE]
+      Web[React and Tauri Client]
+      API[Python Control API]
+      Worker[Python Worker Services]
+      PG[(PostgreSQL and pgvector)]
+      Hatchet[Hatchet]
+      OPA[OPA]
+      MCP[Docker MCP Gateway]
+      CAS[(Local Content-addressed Storage)]
+    end
+    subgraph Hybrid[HYBRID_AWS Additions]
+      S3[(S3-compatible Artifact Bytes)]
+      AWS[Optional Backup, Ingress, Notification, Witness, and Burst Services]
+    end
+    subgraph Offline[OFFLINE_PORTABLE]
+      Reduced[Reduced Deterministic Tools]
+      Queue[Queued Remote Reconciliation]
+    end
+    Web --> API
+    API --> PG
+    Worker --> PG
+    Worker --> Hatchet
+    API --> OPA
+    Worker --> MCP
+    Worker --> CAS
+    CAS -. optional .-> S3
+    API -. optional .-> AWS
+    Local --> Offline

@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "policy_version": "SECURITY-POLICY-1.0.0",
+  "high_impact_requires_independent_approval": true,
+  "high_impact_capabilities": [
+    "MERGE",
+    "DEPLOY",
+    "SPEND",
+    "EXTERNAL_MODEL",
+    "ACCESS_SECRET",
+    "MODIFY_INSTRUCTIONS",
+    "MODIFY_POLICY",
+    "COMPLETE_PROJECT",
+    "EMERGENCY"
+  ],
+  "data_classifications": [
+    "PUBLIC",
+    "INTERNAL",
+    "CONFIDENTIAL",
+    "SECRET",
+    "LOCAL_ONLY"
+  ],
+  "external_egress": {
+    "secret": "DENY",
+    "local_only": "DENY",
+    "confidential": "REQUIRE_APPROVAL",
+    "untrusted_instructions": "CONSTRAIN"
+  },
+  "secret_lease_max_seconds": 900,
+  "supply_chain": {
+    "require_sbom": true,
+    "require_vulnerability_scan_for_release": true,
+    "require_provenance": true,
+    "require_integrity_hashes": true,
+    "require_signed_release_when_signing_profile_enabled": true,
+    "ci_harden_runner": "AUDIT"
+  },
+  "self_modification": {
+    "independent_review_for_control_plane": true,
+    "rollback_material_required": true,
+    "security_verification_required": true
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "$defs": {
+    "TaskLifecycleState": {
+      "enum": [
+        "BACKLOG",
+        "READY",
+        "CLAIMED",
+        "IN_PROGRESS",
+        "BLOCKED",
+        "IN_REVIEW",
+        "VALIDATING",
+        "DONE",
+        "FAILED",
+        "CANCELLED"
+      ],
+      "title": "TaskLifecycleState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/control_task_fact.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accepted": {
+      "default": true,
+      "title": "Accepted",
+      "type": "boolean"
+    },
+    "approval_required": {
+      "default": false,
+      "title": "Approval Required",
+      "type": "boolean"
+    },
+    "approval_satisfied": {
+      "default": true,
+      "title": "Approval Satisfied",
+      "type": "boolean"
+    },
+    "blocker_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Blocker Ids",
+      "type": "array"
+    },
+    "context_required": {
+      "default": false,
+      "title": "Context Required",
+      "type": "boolean"
+    },
+    "context_satisfied": {
+      "default": true,
+      "title": "Context Satisfied",
+      "type": "boolean"
+    },
+    "deadline_utc": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Deadline Utc"
+    },
+    "dependency_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Dependency Ids",
+      "type": "array"
+    },
+    "environment_available": {
+      "default": true,
+      "title": "Environment Available",
+      "type": "boolean"
+    },
+    "expected_duration_minutes": {
+      "anyOf": [
+        {
+          "maximum": 525600,
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expected Duration Minutes"
+    },
+    "external_blocked": {
+      "default": false,
+      "title": "External Blocked",
+      "type": "boolean"
+    },
+    "human_required": {
+      "default": false,
+      "title": "Human Required",
+      "type": "boolean"
+    },
+    "issue_type": {
+      "default": "TASK",
+      "enum": [
+        "EPIC",
+        "STORY",
+        "TASK",
+        "SUBTASK",
+        "BUG",
+        "SPIKE"
+      ],
+      "title": "Issue Type",
+      "type": "string"
+    },
+    "policy_eligible": {
+      "default": true,
+      "title": "Policy Eligible",
+      "type": "boolean"
+    },
+    "priority": {
+      "pattern": "^P[0-3]$",
+      "title": "Priority",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "requirement_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Requirement Ids",
+      "type": "array"
+    },
+    "resources_available": {
+      "default": true,
+      "title": "Resources Available",
+      "type": "boolean"
+    },
+    "risk": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Risk",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/TaskLifecycleState"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_id",
+    "project_id",
+    "state",
+    "priority",
+    "risk"
+  ],
+  "title": "TaskControlFact",
+  "type": "object"
+}

@@ -1,0 +1,42 @@
+{
+  "$id": "https://project-pipeline.local/schemas/orchestration_simulation_result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "final_state": {
+      "title": "Final State",
+      "type": "string"
+    },
+    "observations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Observations",
+      "type": "array"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "scenario": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Scenario",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "scenario",
+    "passed",
+    "observations",
+    "final_state"
+  ],
+  "title": "OrchestrationSimulationResult",
+  "type": "object"
+}

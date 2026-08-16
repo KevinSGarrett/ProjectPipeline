@@ -1,0 +1,260 @@
+{
+  "$defs": {
+    "CriticalPathAnalysis": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_source": {
+          "enum": [
+            "DECLARED",
+            "MIXED",
+            "DEFAULT_HEURISTIC",
+            "EMPTY"
+          ],
+          "title": "Duration Source",
+          "type": "string"
+        },
+        "earliest_finish_minutes": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Earliest Finish Minutes",
+          "type": "object"
+        },
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Path",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "slack_minutes": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Slack Minutes",
+          "type": "object"
+        },
+        "total_duration_minutes": {
+          "minimum": 0,
+          "title": "Total Duration Minutes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "total_duration_minutes",
+        "duration_source",
+        "earliest_finish_minutes",
+        "slack_minutes"
+      ],
+      "title": "CriticalPathAnalysis",
+      "type": "object"
+    },
+    "ReadinessState": {
+      "enum": [
+        "READY",
+        "WAITING_DEPENDENCIES",
+        "BLOCKED",
+        "WAITING_APPROVAL",
+        "WAITING_CONTEXT",
+        "WAITING_RESOURCES",
+        "WAITING_ENVIRONMENT",
+        "NOT_ELIGIBLE",
+        "ACTIVE",
+        "TERMINAL"
+      ],
+      "title": "ReadinessState",
+      "type": "string"
+    },
+    "SequenceItem": {
+      "additionalProperties": false,
+      "properties": {
+        "dependency_depth": {
+          "minimum": 0,
+          "title": "Dependency Depth",
+          "type": "integer"
+        },
+        "downstream_count": {
+          "minimum": 0,
+          "title": "Downstream Count",
+          "type": "integer"
+        },
+        "on_critical_path": {
+          "title": "On Critical Path",
+          "type": "boolean"
+        },
+        "rank": {
+          "minimum": 1,
+          "title": "Rank",
+          "type": "integer"
+        },
+        "readiness": {
+          "$ref": "#/$defs/ReadinessState"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "score": {
+          "$ref": "#/$defs/SequenceScore"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rank",
+        "task_id",
+        "readiness",
+        "score",
+        "dependency_depth",
+        "downstream_count",
+        "on_critical_path"
+      ],
+      "title": "SequenceItem",
+      "type": "object"
+    },
+    "SequenceScore": {
+      "additionalProperties": false,
+      "properties": {
+        "critical_path_score": {
+          "title": "Critical Path Score",
+          "type": "integer"
+        },
+        "deadline_score": {
+          "title": "Deadline Score",
+          "type": "integer"
+        },
+        "duration_score": {
+          "title": "Duration Score",
+          "type": "integer"
+        },
+        "priority_score": {
+          "title": "Priority Score",
+          "type": "integer"
+        },
+        "risk_score": {
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "total_score": {
+          "title": "Total Score",
+          "type": "integer"
+        },
+        "unblock_score": {
+          "title": "Unblock Score",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "task_id",
+        "priority_score",
+        "critical_path_score",
+        "deadline_score",
+        "risk_score",
+        "unblock_score",
+        "duration_score",
+        "total_score"
+      ],
+      "title": "SequenceScore",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/control_build_sequence.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "active_count": {
+      "minimum": 0,
+      "title": "Active Count",
+      "type": "integer"
+    },
+    "blocked_count": {
+      "minimum": 0,
+      "title": "Blocked Count",
+      "type": "integer"
+    },
+    "critical_path": {
+      "$ref": "#/$defs/CriticalPathAnalysis"
+    },
+    "edge_count": {
+      "minimum": 0,
+      "title": "Edge Count",
+      "type": "integer"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "graph_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Graph Fingerprint",
+      "type": "string"
+    },
+    "ordered_ready_work": {
+      "items": {
+        "$ref": "#/$defs/SequenceItem"
+      },
+      "title": "Ordered Ready Work",
+      "type": "array"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "ready_count": {
+      "minimum": 0,
+      "title": "Ready Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sequence_id": {
+      "title": "Sequence Id",
+      "type": "string"
+    },
+    "task_count": {
+      "minimum": 0,
+      "title": "Task Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "sequence_id",
+    "project_id",
+    "graph_fingerprint",
+    "task_count",
+    "edge_count",
+    "ready_count",
+    "active_count",
+    "blocked_count",
+    "critical_path",
+    "ordered_ready_work"
+  ],
+  "title": "BuildSequence",
+  "type": "object"
+}

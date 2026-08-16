@@ -1,0 +1,67 @@
+{
+  "categories": {
+    "AUTONOMOUSLY_AUTHORIZED_WITHIN_PROJECT_POLICY": [
+      "local repository reads and bounded edits",
+      "local tests and deterministic generation",
+      "local branches and registered worktrees",
+      "normal local commits associated with owned work",
+      "dry-run external plans",
+      "normal ProjectPipeline pull-request creation when a standing grant and all write preconditions exist",
+      "eligible pull-request merge only after all required deterministic and independent gates pass",
+      "ProjectPipeline Jira lifecycle updates when a standing grant and reconciliation contract exist",
+      "namespaced PPQS test repositories, branches, pull requests, Jira projects, and test releases"
+    ],
+    "HUMAN_REQUIRED": [
+      "unresolved legal or license question",
+      "MFA or CAPTCHA",
+      "missing secret requiring owner provisioning or rotation",
+      "destructive action outside established scope",
+      "material cost above policy",
+      "irreconcilable source requirements",
+      "security incident requiring account or identity intervention",
+      "physical hardware action"
+    ],
+    "POLICY_GATED": [
+      "remote branch deletion",
+      "GitHub ruleset or protection changes",
+      "CI permission changes",
+      "cloud resource creation",
+      "major dependency upgrades",
+      "public releases",
+      "production-like deployment",
+      "secret access",
+      "instruction or control-policy modification",
+      "material spend"
+    ],
+    "PROHIBITED": [
+      "secret exposure",
+      "Oracle or hidden-evaluator access",
+      "evidence fabrication or alteration",
+      "force integration around required gates",
+      "deletion of unpreserved work",
+      "credential invention",
+      "blind retry after an unknown remote outcome",
+      "execution of unreviewed upstream scripts or binaries"
+    ]
+  },
+  "default": "DENY",
+  "preconditions_for_any_remote_write": [
+    "validated action intent",
+    "known actor identity",
+    "exact target and bounded scope",
+    "authorization or standing project grant",
+    "idempotency key",
+    "required credentials through approved references",
+    "budget and security gates when applicable",
+    "reconciliation plan for an unknown outcome"
+  ],
+  "project_id": "PROJECT-PIPELINE",
+  "schema_version": "1.0.0",
+  "unknown_outcome_sequence": [
+    "STOP_WRITE_RETRIES",
+    "READ_REMOTE_STATE",
+    "RECONCILE",
+    "DETERMINE_EFFECT",
+    "RETRY_ONLY_IF_ABSENT_AND_STILL_AUTHORIZED"
+  ]
+}

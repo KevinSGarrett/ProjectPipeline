@@ -1,0 +1,137 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000031-01",
+      "statement": "Every accepted domain requirement is linked to at least one valid child work item.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "automated_graph_and_traceability_check",
+        "path": "plans/_traceability/requirements_to_jira.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000153",
+    "EVID-000154"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Own all accepted requirements, decisions, implementation, tests, evidence, and operational readiness for PLAN-LIFE-001.",
+  "evidence_required": [
+    "EVID-000004",
+    "EVID-000153",
+    "EVID-000154"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "EPIC",
+  "labels": [
+    "domain-epic",
+    "plan-life-001",
+    "pass-22"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "24986",
+    "remote_key": "PP-17",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-EPIC-000031",
+  "objective": "Deliver the complete platform lifecycle and portfolio governance capability and its verified operational contract.",
+  "observability_impact": "Record structured validation and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": null,
+  "plan_references": [
+    {
+      "authoritative_path": "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md",
+      "end_line": 12,
+      "line_numbered_path": "plans/_line_numbered/PLAN-LIFE-001_platform_lifecycle.lines.txt",
+      "line_reference": "PLAN-LIFE-001:SEC-01:L000009-L000012",
+      "plan_id": "PLAN-LIFE-001",
+      "section_id": "PLAN-LIFE-001:SEC-01",
+      "start_line": 9
+    }
+  ],
+  "rationale": "The source corpus requires this domain as part of the end-to-end platform.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000032",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000125",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000126",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000127",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000128",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000129",
+      "type": "PARENT_OF"
+    }
+  ],
+  "remote_jira_key": "PP-17",
+  "required_tests": [
+    "TEST-JIRA-GRAPH-001"
+  ],
+  "requirement_ids": [
+    "REQ-LIFE-0001",
+    "REQ-LIFE-0002",
+    "REQ-LIFE-0003",
+    "REQ-LIFE-0004",
+    "REQ-LIFE-0005",
+    "REQ-LIFE-0006",
+    "REQ-LIFE-0007",
+    "REQ-LIFE-0008",
+    "REQ-LIFE-0009",
+    "REQ-LIFE-0010",
+    "REQ-LIFE-0011",
+    "REQ-LIFE-0012",
+    "REQ-LIFE-0013",
+    "REQ-LIFE-0014",
+    "REQ-LIFE-0015",
+    "REQ-LIFE-0016",
+    "REQ-LIFE-0017",
+    "REQ-LIFE-0018"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the complete platform lifecycle and portfolio governance capability and its verified operational contract."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L000733-L000747"
+  ],
+  "state": "BACKLOG",
+  "title": "Platform Lifecycle and Portfolio Governance",
+  "upstream_dependencies": []
+}

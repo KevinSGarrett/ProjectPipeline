@@ -1,0 +1,58 @@
+{
+  "$id": "https://project-pipeline.local/schemas/security_root_of_trust.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "bootstrap_identity_id": {
+      "title": "Bootstrap Identity Id",
+      "type": "string"
+    },
+    "recovery_procedure": {
+      "title": "Recovery Procedure",
+      "type": "string"
+    },
+    "revocation_procedure": {
+      "title": "Revocation Procedure",
+      "type": "string"
+    },
+    "root_id": {
+      "title": "Root Id",
+      "type": "string"
+    },
+    "rotation_procedure": {
+      "title": "Rotation Procedure",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "trusted_key_references": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Trusted Key References",
+      "type": "array"
+    },
+    "trusted_policy_paths": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Trusted Policy Paths",
+      "type": "array"
+    }
+  },
+  "required": [
+    "root_id",
+    "bootstrap_identity_id",
+    "trusted_policy_paths",
+    "trusted_key_references",
+    "recovery_procedure",
+    "rotation_procedure",
+    "revocation_procedure"
+  ],
+  "title": "RootOfTrust",
+  "type": "object"
+}

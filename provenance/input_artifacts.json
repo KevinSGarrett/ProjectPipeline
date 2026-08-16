@@ -1,0 +1,38 @@
+{
+  "artifacts": [
+    {
+      "artifact_id": "INPUT-GOV-001",
+      "included_in_permanent_repository": false,
+      "name": "Initial_Prompt.txt",
+      "role": "governing_execution_contract_alias",
+      "sha256": "b519951b9414600a11f05e866ccf7615fda98d31e51e483a423ad7668c7132de",
+      "size_bytes": 56002
+    },
+    {
+      "artifact_id": "INPUT-GOV-002",
+      "included_in_permanent_repository": false,
+      "name": "Pasted markdown",
+      "role": "governing_execution_contract_alias",
+      "sha256": "c70109685508ea4ed45c01eabb85b27b2866dc5b4885ec3130efdb1828ed034e",
+      "size_bytes": 53639
+    },
+    {
+      "artifact_id": "INPUT-UPSTREAM-001",
+      "included_in_permanent_repository": false,
+      "name": "github_repo_urls.txt",
+      "role": "upstream_candidate_catalog",
+      "sha256": "2c7420058d19cb833988a17b5c5a07eb7032f82409ea2dec27476be800b5eef6",
+      "size_bytes": 4507
+    },
+    {
+      "artifact_id": "INPUT-KNOWLEDGE-001",
+      "included_in_permanent_repository": false,
+      "name": "Universal Autonomous Parallel System knowledge pack",
+      "role": "canonical_source_corpus",
+      "sha256": "b0f1f69246c36b8c5a0035dd141fbddc757003cf0715f2e6a0e0e150a2482c6b",
+      "size_bytes": 8929761
+    }
+  ],
+  "schema_version": "1.0.0",
+  "storage_note": "Raw input bytes are preserved in the separate continuation package. The permanent repository stores provenance and source references without duplicating the raw corpus."
+}

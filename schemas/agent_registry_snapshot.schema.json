@@ -1,0 +1,603 @@
+{
+  "$defs": {
+    "AccessMode": {
+      "enum": [
+        "SHARED",
+        "EXCLUSIVE"
+      ],
+      "title": "AccessMode",
+      "type": "string"
+    },
+    "AgentSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "authority_classes": {
+          "default": [
+            "ADVISORY"
+          ],
+          "items": {
+            "$ref": "#/$defs/AuthorityClass"
+          },
+          "title": "Authority Classes",
+          "type": "array"
+        },
+        "capabilities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Capabilities",
+          "type": "array"
+        },
+        "model_id": {
+          "title": "Model Id",
+          "type": "string"
+        },
+        "qualification": {
+          "$ref": "#/$defs/QualificationState",
+          "default": "QUARANTINED"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "tool_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Tool Ids",
+          "type": "array"
+        }
+      },
+      "required": [
+        "agent_id",
+        "model_id",
+        "capabilities"
+      ],
+      "title": "AgentSpec",
+      "type": "object"
+    },
+    "AuthorityClass": {
+      "enum": [
+        "ADVISORY",
+        "IMPLEMENTATION",
+        "REVIEW",
+        "VERIFICATION",
+        "RECOVERY",
+        "STEWARDSHIP"
+      ],
+      "title": "AuthorityClass",
+      "type": "string"
+    },
+    "CapabilityRoutePolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "capability_id": {
+          "title": "Capability Id",
+          "type": "string"
+        },
+        "fallback_provider_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Fallback Provider Ids",
+          "type": "array"
+        },
+        "prefer_local_under_pressure": {
+          "default": true,
+          "title": "Prefer Local Under Pressure",
+          "type": "boolean"
+        },
+        "preferred_provider_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Preferred Provider Ids",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "capability_id"
+      ],
+      "title": "CapabilityRoutePolicy",
+      "type": "object"
+    },
+    "CapabilitySpec": {
+      "additionalProperties": false,
+      "properties": {
+        "capability_id": {
+          "title": "Capability Id",
+          "type": "string"
+        },
+        "description": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "quality_tiers": {
+          "default": [
+            "standard"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Quality Tiers",
+          "type": "array"
+        },
+        "requires_tools": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Requires Tools",
+          "type": "array"
+        },
+        "risk_ceiling": {
+          "default": "HIGH",
+          "title": "Risk Ceiling",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "task_classes": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Task Classes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "capability_id",
+        "description"
+      ],
+      "title": "CapabilitySpec",
+      "type": "object"
+    },
+    "ExecutionMode": {
+      "enum": [
+        "LOCAL_PROCESS",
+        "HOSTED_API",
+        "SUBSCRIPTION_TOOL",
+        "BROWSER",
+        "MOCK"
+      ],
+      "title": "ExecutionMode",
+      "type": "string"
+    },
+    "ModelSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "capabilities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Capabilities",
+          "type": "array"
+        },
+        "context_limit": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Context Limit"
+        },
+        "local": {
+          "default": false,
+          "title": "Local",
+          "type": "boolean"
+        },
+        "model_id": {
+          "title": "Model Id",
+          "type": "string"
+        },
+        "output_limit": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Output Limit"
+        },
+        "provider_id": {
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "provider_model_name": {
+          "maxLength": 191,
+          "minLength": 1,
+          "title": "Provider Model Name",
+          "type": "string"
+        },
+        "qualification": {
+          "$ref": "#/$defs/QualificationState",
+          "default": "QUARANTINED"
+        },
+        "quality_tier": {
+          "default": "standard",
+          "title": "Quality Tier",
+          "type": "string"
+        },
+        "resource_claims": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ResourceClaim"
+          },
+          "title": "Resource Claims",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "version": {
+          "maxLength": 191,
+          "minLength": 1,
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "model_id",
+        "provider_id",
+        "provider_model_name",
+        "version",
+        "capabilities"
+      ],
+      "title": "ModelSpec",
+      "type": "object"
+    },
+    "ProviderSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_id": {
+          "title": "Adapter Id",
+          "type": "string"
+        },
+        "capabilities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Capabilities",
+          "type": "array"
+        },
+        "constraints": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Constraints",
+          "type": "array"
+        },
+        "cost_behavior": {
+          "default": "unknown",
+          "title": "Cost Behavior",
+          "type": "string"
+        },
+        "data_egress": {
+          "default": true,
+          "title": "Data Egress",
+          "type": "boolean"
+        },
+        "display_name": {
+          "maxLength": 191,
+          "minLength": 1,
+          "title": "Display Name",
+          "type": "string"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "execution_mode": {
+          "$ref": "#/$defs/ExecutionMode"
+        },
+        "local": {
+          "default": false,
+          "title": "Local",
+          "type": "boolean"
+        },
+        "provider_id": {
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "resource_claims": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/ResourceClaim"
+          },
+          "title": "Resource Claims",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "subscription_backed": {
+          "default": false,
+          "title": "Subscription Backed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "provider_id",
+        "display_name",
+        "adapter_id",
+        "execution_mode",
+        "capabilities"
+      ],
+      "title": "ProviderSpec",
+      "type": "object"
+    },
+    "QualificationState": {
+      "enum": [
+        "QUARANTINED",
+        "SHADOW",
+        "CANARY",
+        "QUALIFIED",
+        "REJECTED",
+        "EXPIRED"
+      ],
+      "title": "QualificationState",
+      "type": "string"
+    },
+    "ResourceClaim": {
+      "additionalProperties": false,
+      "properties": {
+        "access_mode": {
+          "$ref": "#/$defs/AccessMode",
+          "default": "EXCLUSIVE"
+        },
+        "machine_id": {
+          "anyOf": [
+            {
+              "maxLength": 191,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Machine Id"
+        },
+        "purpose": {
+          "anyOf": [
+            {
+              "maxLength": 1000,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Purpose"
+        },
+        "quantity": {
+          "default": 1,
+          "maximum": 10000000,
+          "minimum": 1,
+          "title": "Quantity",
+          "type": "integer"
+        },
+        "resource_key": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Resource Key",
+          "type": "string"
+        },
+        "resource_type": {
+          "$ref": "#/$defs/ResourceType"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "resource_key",
+        "resource_type"
+      ],
+      "title": "ResourceClaim",
+      "type": "object"
+    },
+    "ResourceType": {
+      "enum": [
+        "PATH",
+        "SYMBOL",
+        "MODULE",
+        "DATABASE",
+        "SCHEMA",
+        "API_CONTRACT",
+        "CONFIGURATION",
+        "INFRASTRUCTURE",
+        "DOCKER",
+        "ENVIRONMENT",
+        "RELEASE",
+        "FIXTURE",
+        "SERVICE",
+        "PORT",
+        "GPU",
+        "GPU_MEMORY_MB",
+        "CPU_SLOT",
+        "MEMORY_MB",
+        "DISK_MB",
+        "NETWORK_SLOT",
+        "PROCESS_SLOT",
+        "CONCURRENCY_SLOT",
+        "PROVIDER_SLOT",
+        "REVIEW_SLOT"
+      ],
+      "title": "ResourceType",
+      "type": "string"
+    },
+    "ToolSpec": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_id": {
+          "title": "Adapter Id",
+          "type": "string"
+        },
+        "capabilities": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Capabilities",
+          "type": "array"
+        },
+        "mutating": {
+          "default": false,
+          "title": "Mutating",
+          "type": "boolean"
+        },
+        "qualification": {
+          "$ref": "#/$defs/QualificationState",
+          "default": "QUARANTINED"
+        },
+        "required_authority_scope": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Authority Scope",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "tool_id": {
+          "title": "Tool Id",
+          "type": "string"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "tool_id",
+        "adapter_id",
+        "version",
+        "capabilities"
+      ],
+      "title": "ToolSpec",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/agent_registry_snapshot.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "agents": {
+      "items": {
+        "$ref": "#/$defs/AgentSpec"
+      },
+      "title": "Agents",
+      "type": "array"
+    },
+    "capabilities": {
+      "items": {
+        "$ref": "#/$defs/CapabilitySpec"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "models": {
+      "items": {
+        "$ref": "#/$defs/ModelSpec"
+      },
+      "title": "Models",
+      "type": "array"
+    },
+    "providers": {
+      "items": {
+        "$ref": "#/$defs/ProviderSpec"
+      },
+      "title": "Providers",
+      "type": "array"
+    },
+    "registry_id": {
+      "title": "Registry Id",
+      "type": "string"
+    },
+    "routing_policies": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/CapabilityRoutePolicy"
+      },
+      "title": "Routing Policies",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tools": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ToolSpec"
+      },
+      "title": "Tools",
+      "type": "array"
+    }
+  },
+  "required": [
+    "registry_id",
+    "capabilities",
+    "providers",
+    "models",
+    "agents",
+    "generated_at_utc"
+  ],
+  "title": "AgentRegistrySnapshot",
+  "type": "object"
+}

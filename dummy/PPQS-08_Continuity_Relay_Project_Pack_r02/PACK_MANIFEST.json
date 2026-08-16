@@ -1,0 +1,20 @@
+{
+  "benchmark_id": "PPQS-08",
+  "contamination_class": "C1",
+  "external_acquisition_required": false,
+  "gold_counts_withheld": true,
+  "intake": "EXISTING_PROJECT",
+  "name": "Continuity_Relay",
+  "pack_type": "PROJECT_PACK",
+  "profiles": [
+    "POLYGLOT_APPLICATION",
+    "INFRASTRUCTURE",
+    "GENERIC",
+    "DOCUMENTATION"
+  ],
+  "release": "r02",
+  "scale": "CRITICAL",
+  "schema_version": "2.0",
+  "seed_jira_count": 45,
+  "trust_zone": "CANDIDATE_VISIBLE"
+}

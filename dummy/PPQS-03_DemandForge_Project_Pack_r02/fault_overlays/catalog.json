@@ -1,0 +1,55 @@
+{
+  "benchmark_id": "PPQS-03",
+  "overlays": [
+    {
+      "candidate_knows_overlay_exists": true,
+      "fault_id": "FLT-DF-001",
+      "overlay": "FORCED_PROCESS_TERMINATION",
+      "required_general_behavior": "Preserve truth, evidence, security, idempotency, and explicit blocked/degraded state.",
+      "trigger_details_withheld": true
+    },
+    {
+      "candidate_knows_overlay_exists": true,
+      "fault_id": "FLT-DF-002",
+      "overlay": "CORRUPTED_INPUT_DATA",
+      "required_general_behavior": "Preserve truth, evidence, security, idempotency, and explicit blocked/degraded state.",
+      "trigger_details_withheld": true
+    },
+    {
+      "candidate_knows_overlay_exists": true,
+      "fault_id": "FLT-DF-003",
+      "overlay": "SCHEMA_DRIFT",
+      "required_general_behavior": "Preserve truth, evidence, security, idempotency, and explicit blocked/degraded state.",
+      "trigger_details_withheld": true
+    },
+    {
+      "candidate_knows_overlay_exists": true,
+      "fault_id": "FLT-DF-004",
+      "overlay": "GPU_RESOURCE_UNAVAILABLE",
+      "required_general_behavior": "Preserve truth, evidence, security, idempotency, and explicit blocked/degraded state.",
+      "trigger_details_withheld": true
+    },
+    {
+      "candidate_knows_overlay_exists": true,
+      "fault_id": "FLT-DF-005",
+      "overlay": "PROVIDER_QUOTA_PRESSURE",
+      "required_general_behavior": "Preserve truth, evidence, security, idempotency, and explicit blocked/degraded state.",
+      "trigger_details_withheld": true
+    },
+    {
+      "candidate_knows_overlay_exists": true,
+      "fault_id": "FLT-DF-006",
+      "overlay": "REDUCED_BUDGET",
+      "required_general_behavior": "Preserve truth, evidence, security, idempotency, and explicit blocked/degraded state.",
+      "trigger_details_withheld": true
+    },
+    {
+      "candidate_knows_overlay_exists": true,
+      "fault_id": "FLT-DF-007",
+      "overlay": "DATABASE_SERVICE_FAILURE",
+      "required_general_behavior": "Preserve truth, evidence, security, idempotency, and explicit blocked/degraded state.",
+      "trigger_details_withheld": true
+    }
+  ],
+  "schema_version": "1.0.0"
+}

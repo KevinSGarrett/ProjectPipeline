@@ -1,0 +1,40 @@
+{
+  "$id": "https://project-pipeline.local/schemas/assurance_simulation_result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "observations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Observations",
+      "type": "array"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "scenario": {
+      "title": "Scenario",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "simulation_id": {
+      "title": "Simulation Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "simulation_id",
+    "scenario",
+    "passed",
+    "observations"
+  ],
+  "title": "AssuranceSimulationResult",
+  "type": "object"
+}

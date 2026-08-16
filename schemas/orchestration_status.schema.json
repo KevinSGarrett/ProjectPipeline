@@ -1,0 +1,59 @@
+{
+  "$id": "https://project-pipeline.local/schemas/orchestration_status.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "active_workflows": {
+      "minimum": 0,
+      "title": "Active Workflows",
+      "type": "integer"
+    },
+    "definitions": {
+      "minimum": 0,
+      "title": "Definitions",
+      "type": "integer"
+    },
+    "recovery_required": {
+      "minimum": 0,
+      "title": "Recovery Required",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "stale_workers": {
+      "minimum": 0,
+      "title": "Stale Workers",
+      "type": "integer"
+    },
+    "unknown_outcomes": {
+      "minimum": 0,
+      "title": "Unknown Outcomes",
+      "type": "integer"
+    },
+    "waiting_workflows": {
+      "minimum": 0,
+      "title": "Waiting Workflows",
+      "type": "integer"
+    },
+    "workflows": {
+      "minimum": 0,
+      "title": "Workflows",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "definitions",
+    "workflows",
+    "active_workflows",
+    "waiting_workflows",
+    "recovery_required",
+    "unknown_outcomes",
+    "stale_workers"
+  ],
+  "title": "OrchestrationStatus",
+  "type": "object"
+}

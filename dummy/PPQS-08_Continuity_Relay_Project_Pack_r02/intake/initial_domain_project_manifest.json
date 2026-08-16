@@ -1,0 +1,36 @@
+{
+  "created_at_utc": "2026-08-16T04:00:00Z",
+  "evidence_ledger_path": "candidate_outputs/evidence/evidence.jsonl",
+  "jira_index_path": "candidate_outputs/jira/indexes/issues.jsonl",
+  "origin": "ADOPTED",
+  "plan_catalog_path": "candidate_outputs/plans/catalog.json",
+  "profile": "POLYGLOT_APPLICATION",
+  "project_id": "ppqs-08",
+  "project_name": "Continuity Relay",
+  "repositories": [
+    {
+      "canonical_url": null,
+      "repository_id": "continuity-relay-api",
+      "role": "PRIMARY",
+      "root_path": "seed_repositories/continuity-relay-api"
+    },
+    {
+      "canonical_url": null,
+      "repository_id": "continuity-relay-console",
+      "role": "SUPPORTING",
+      "root_path": "seed_repositories/continuity-relay-console"
+    },
+    {
+      "canonical_url": null,
+      "repository_id": "continuity-relay-worker",
+      "role": "SUPPORTING",
+      "root_path": "seed_repositories/continuity-relay-worker"
+    }
+  ],
+  "requirement_registry_path": "candidate_outputs/requirements.jsonl",
+  "revision": 1,
+  "root_path": "./workspace/PPQS-08",
+  "schema_version": "1.0.0",
+  "source_registry_path": "source_registry/sources.jsonl",
+  "updated_at_utc": "2026-08-16T04:00:00Z"
+}

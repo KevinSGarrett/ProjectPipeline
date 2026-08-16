@@ -1,0 +1,63 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-DNROAD000003-01",
+      "statement": "Reconcile this issue against authoritative source, repository, tests, and evidence before assigning a terminal state.",
+      "verification": {
+        "command": "python -m ppqs_eval compare-jira",
+        "method": "TRUTH_RECONCILIATION",
+        "path": "candidate_outputs/jira",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Repository truth, tests, evidence, and Jira state agree."
+  ],
+  "dependencies": [],
+  "description": "Jobs use idempotency keys, leases, checkpoints, bounded retry, dead-letter state, and restart-safe recovery. Every transition records actor, source hash, engine version, policy version, artifacts, test evidence, and correlation identifiers. A responsive TypeScript web console shows queues, job details, previews, failures, policy findings, artifacts, retries, and evidence. Signed webhooks and a polling API publish job lifecycle events with replay protection, delivery receipts, retries, and a mock receiver.",
+  "evidence_required": [
+    "reconciliation_receipt"
+  ],
+  "exclusions": [
+    "Oracle access",
+    "Unsupported destructive cleanup"
+  ],
+  "expected_file_locations": [],
+  "expected_implementation_artifacts": [],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "EPIC",
+  "labels": [
+    "ppqs-07",
+    "seed-jira"
+  ],
+  "last_observed_remote_state": null,
+  "local_id": "DN-ROAD-000003",
+  "objective": "Private roadmap: recovery, evidence, and events",
+  "observability_impact": "Record state and reconciliation evidence.",
+  "owner_required_capability": "project-control-and-reconciliation",
+  "parent": null,
+  "plan_references": [],
+  "rationale": "This issue exists in the visible seed board and must be preserved, decomposed, reconciled, or corrected according to repository and requirement truth.",
+  "relationships": [],
+  "remote_jira_key": null,
+  "required_tests": [
+    "TRUTH_RECONCILIATION"
+  ],
+  "requirement_ids": [],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve the seed state and unrelated work.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Jobs use idempotency keys, leases, checkpoints, bounded retry, dead-letter state, and restart-safe recovery. Every transition records actor, source hash, engine version, policy version, artifacts, test evidence, and correlation identifiers. A responsive TypeScript web console shows queues, job details, previews, failures, policy findings, artifacts, retries, and evidence. Signed webhooks and a polling API publish job lifecycle events with replay protection, delivery receipts, retries, and a mock receiver."
+  ],
+  "security_impact": "Assess before mutation.",
+  "source_references": [
+    "SRC-DN-BRIEF"
+  ],
+  "state": "DISCOVERED",
+  "title": "Private roadmap: recovery, evidence, and events",
+  "upstream_dependencies": []
+}

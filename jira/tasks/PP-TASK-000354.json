@@ -1,0 +1,131 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000354-01",
+      "statement": "Implement recovery objectives and backup restore planning has executable implementation and behavior-specific automated verification.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
+        "method": "automated_behavior_validation",
+        "path": "src/project_pipeline/resilience/backup.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000354-02",
+      "statement": "Resilience state remains source-grounded, traceable, evidence-backed, and repository-valid.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_contract_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000129",
+    "EVID-000130",
+    "EVID-000131",
+    "EVID-000133",
+    "EVID-000134"
+  ],
+  "definition_of_done": [
+    "Implementation is present and behaviorally verified.",
+    "Relevant requirements, tests, plans, ADRs, upstream decisions, and evidence are linked.",
+    "External dependencies remain bounded adapters until live-qualified.",
+    "Recovery behavior fails closed where authority is uncertain."
+  ],
+  "dependencies": [],
+  "description": "Implement recovery objectives and backup restore planning. The implementation is deterministic, locally verified, and preserves Project Pipeline authority boundaries without claiming unexecuted external runtime or cloud verification.",
+  "evidence_required": [
+    "EVID-000129",
+    "EVID-000130",
+    "EVID-000131",
+    "EVID-000133",
+    "EVID-000134"
+  ],
+  "exclusions": [
+    "No remote Jira/GitHub/cloud mutation.",
+    "No live external runtime or backup/restore claim without executed environment evidence."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/resilience/backup.py",
+    "runbooks/backup_restore_verification.md",
+    "config/resilience_policy.json"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/resilience/backup.py",
+    "runbooks/backup_restore_verification.md",
+    "config/resilience_policy.json"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "resilience",
+    "recovery"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25240",
+    "remote_key": "PP-271",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000354",
+  "objective": "Implement recovery objectives and backup restore planning",
+  "observability_impact": "Recovery decisions, operating modes, objectives, simulations, and verification outcomes are structured and evidence-linked.",
+  "owner_required_capability": "resilience_recovery_and_platform_engineering",
+  "parent": "PP-STORY-000110",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md",
+      "end_line": 27,
+      "line_numbered_path": "plans/_line_numbered/PLAN-RES-001_resilience_recovery.lines.txt",
+      "line_reference": "PLAN-RES-001:SEC-05:L000024-L000027",
+      "plan_id": "PLAN-RES-001",
+      "section_id": "PLAN-RES-001:SEC-05",
+      "start_line": 24
+    }
+  ],
+  "rationale": "Implements the source-grounded resilience/recovery capability through bounded deterministic components and explicit operational evidence.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000110",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-271",
+  "required_tests": [
+    "TEST-RES-BACKUP-001",
+    "TEST-RES-BACKUP-002",
+    "TEST-RES-BACKUP-003",
+    "TEST-RES-DOMAIN-003"
+  ],
+  "requirement_ids": [
+    "REQ-RES-0003",
+    "REQ-RES-0020",
+    "REQ-RES-0021",
+    "REQ-INFRA-0019"
+  ],
+  "risk_classification": "CRITICAL",
+  "rollback_recovery_consideration": "Preserve prior durable state/evidence; fail closed, roll back code/schema/IaC plans, and never rewrite historical recovery evidence.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "src/project_pipeline/resilience/backup.py",
+    "runbooks/backup_restore_verification.md",
+    "config/resilience_policy.json"
+  ],
+  "security_impact": "Preserves deterministic authority, fenced failover, scoped credentials, local/private model boundaries, and explicit external-mutation gates.",
+  "source_references": [
+    "GOV-001:L000621-L000641",
+    "SRC-009:L000016-L000016",
+    "SRC-009:L000025-L000025",
+    "SRC-017:L000439-L000489"
+  ],
+  "state": "BACKLOG",
+  "title": "Implement recovery objectives and backup restore planning",
+  "upstream_dependencies": [
+    "UPSTREAM-082",
+    "UPSTREAM-090"
+  ]
+}

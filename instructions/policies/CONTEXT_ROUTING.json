@@ -1,0 +1,73 @@
+{
+  "default_bootstrap": [
+    "AGENTS.md",
+    "instructions/README.md",
+    "instructions/00_START_HERE.md",
+    "instructions/01_AUTHORITY_AND_SOURCE_OF_TRUTH.md",
+    "instructions/02_AUTONOMOUS_OPERATING_CONTRACT.md",
+    "instructions/03_SESSION_BOOTSTRAP_AND_PREFLIGHT.md",
+    "instructions/INSTRUCTION_MANIFEST.json",
+    "instructions/INSTRUCTION_COVERAGE_MATRIX.json",
+    "instructions/AUTHORITY_MAP.json",
+    "instructions/SECOND_PASS_REQUIRED.md"
+  ],
+  "jira_item_context_order": [
+    "applicable AGENTS.md",
+    "applicable instruction documents",
+    "jira issue by local ID",
+    "jira/source_context/<LOCAL-ID>.md",
+    "referenced requirement records",
+    "referenced line-addressable plan sections",
+    "applicable ADRs and policies",
+    "affected implementation",
+    "affected tests",
+    "existing evidence"
+  ],
+  "principle": "bounded_sufficient_context",
+  "prohibited_default_loads": [
+    "all technical plans for a small task",
+    "all Jira records for a single item",
+    "all upstream repositories",
+    "any Oracle or hidden-evaluator material"
+  ],
+  "project_id": "PROJECT-PIPELINE",
+  "routes": {
+    "external_write_or_secret": [
+      "instructions/15_SECRETS_AUTHORITY_AND_EXTERNAL_MUTATION.md"
+    ],
+    "git_or_github": [
+      "instructions/07_GIT_AND_GITHUB_OPERATING_PROTOCOL.md",
+      "instructions/08_BRANCH_WORKTREE_AND_PR_POLICY.md",
+      "instructions/09_CI_QUALITY_SECURITY_AND_MERGE_GATES.md"
+    ],
+    "instruction_change": [
+      "instructions/01_AUTHORITY_AND_SOURCE_OF_TRUTH.md",
+      "instructions/20_INSTRUCTION_MAINTENANCE.md"
+    ],
+    "jira_work": [
+      "instructions/06_JIRA_OPERATING_PROTOCOL.md",
+      "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
+      "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md"
+    ],
+    "ppqs": [
+      "instructions/13_PPQS_BENCHMARK_PROTOCOL.md"
+    ],
+    "recovery": [
+      "instructions/11_ANTI_LOOP_AND_ANTI_OVERENGINEERING.md",
+      "instructions/17_FAILURE_RECOVERY_AND_RESUMPTION.md"
+    ],
+    "release": [
+      "instructions/09_CI_QUALITY_SECURITY_AND_MERGE_GATES.md",
+      "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md",
+      "instructions/19_RELEASE_HANDOFF_AND_CLEANUP.md"
+    ],
+    "remote_worker": [
+      "instructions/10_PARALLEL_AGENT_COORDINATION.md",
+      "instructions/16_REMOTE_MACHINE_AND_RESOURCE_PROTOCOL.md"
+    ],
+    "upstream": [
+      "instructions/14_UPSTREAM_REPOSITORY_PROTOCOL.md"
+    ]
+  },
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,426 @@
+{
+  "$defs": {
+    "EnvironmentName": {
+      "enum": [
+        "development",
+        "test",
+        "staging",
+        "production",
+        "recovery",
+        "synthetic"
+      ],
+      "title": "EnvironmentName",
+      "type": "string"
+    },
+    "ExternalWriteMode": {
+      "enum": [
+        "DENY",
+        "DRY_RUN",
+        "REQUIRE_APPROVAL"
+      ],
+      "title": "ExternalWriteMode",
+      "type": "string"
+    },
+    "IntegrationSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "aws_profile": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Aws Profile"
+        },
+        "github_token": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SecretReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "jira_api_token": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SecretReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "jira_base_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Jira Base Url"
+        },
+        "jira_user_email": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Jira User Email"
+        }
+      },
+      "title": "IntegrationSettings",
+      "type": "object"
+    },
+    "LogFormat": {
+      "enum": [
+        "JSON",
+        "TEXT"
+      ],
+      "title": "LogFormat",
+      "type": "string"
+    },
+    "LoggingSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "format": {
+          "$ref": "#/$defs/LogFormat",
+          "default": "JSON"
+        },
+        "include_process": {
+          "default": true,
+          "title": "Include Process",
+          "type": "boolean"
+        },
+        "include_source": {
+          "default": false,
+          "title": "Include Source",
+          "type": "boolean"
+        },
+        "include_thread": {
+          "default": false,
+          "title": "Include Thread",
+          "type": "boolean"
+        },
+        "level": {
+          "default": "INFO",
+          "enum": [
+            "DEBUG",
+            "INFO",
+            "WARNING",
+            "ERROR",
+            "CRITICAL"
+          ],
+          "title": "Level",
+          "type": "string"
+        },
+        "redacted_fields": {
+          "default": [
+            "api_key",
+            "authorization",
+            "client_secret",
+            "cookie",
+            "password",
+            "private_key",
+            "secret",
+            "token"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "title": "Redacted Fields",
+          "type": "array"
+        },
+        "service_name": {
+          "default": "project-pipeline",
+          "title": "Service Name",
+          "type": "string"
+        }
+      },
+      "title": "LoggingSettings",
+      "type": "object"
+    },
+    "PersistenceBackend": {
+      "enum": [
+        "SQLITE_LOCAL",
+        "POSTGRESQL"
+      ],
+      "title": "PersistenceBackend",
+      "type": "string"
+    },
+    "PersistenceSettings": {
+      "additionalProperties": false,
+      "properties": {
+        "auto_migrate": {
+          "default": true,
+          "title": "Auto Migrate",
+          "type": "boolean"
+        },
+        "backend": {
+          "$ref": "#/$defs/PersistenceBackend",
+          "default": "SQLITE_LOCAL"
+        },
+        "migration_catalog": {
+          "format": "path",
+          "title": "Migration Catalog",
+          "type": "string"
+        },
+        "postgresql_dsn": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/SecretReference"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "sqlite_path": {
+          "format": "path",
+          "title": "Sqlite Path",
+          "type": "string"
+        }
+      },
+      "title": "PersistenceSettings",
+      "type": "object"
+    },
+    "RuntimePaths": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_dir": {
+          "format": "path",
+          "title": "Artifact Dir",
+          "type": "string"
+        },
+        "cache_dir": {
+          "format": "path",
+          "title": "Cache Dir",
+          "type": "string"
+        },
+        "create_on_boot": {
+          "default": true,
+          "title": "Create On Boot",
+          "type": "boolean"
+        },
+        "data_dir": {
+          "format": "path",
+          "title": "Data Dir",
+          "type": "string"
+        },
+        "evidence_dir": {
+          "format": "path",
+          "title": "Evidence Dir",
+          "type": "string"
+        },
+        "log_dir": {
+          "format": "path",
+          "title": "Log Dir",
+          "type": "string"
+        },
+        "state_dir": {
+          "format": "path",
+          "title": "State Dir",
+          "type": "string"
+        }
+      },
+      "title": "RuntimePaths",
+      "type": "object"
+    },
+    "SecretReference": {
+      "additionalProperties": false,
+      "description": "Reference to secret material; the secret value is never stored in configuration.",
+      "properties": {
+        "reference": {
+          "maxLength": 512,
+          "minLength": 7,
+          "title": "Reference",
+          "type": "string"
+        }
+      },
+      "required": [
+        "reference"
+      ],
+      "title": "SecretReference",
+      "type": "object"
+    },
+    "SecuritySettings": {
+      "additionalProperties": false,
+      "properties": {
+        "external_writes_default": {
+          "$ref": "#/$defs/ExternalWriteMode",
+          "default": "DENY"
+        },
+        "require_explicit_approval": {
+          "default": true,
+          "title": "Require Explicit Approval",
+          "type": "boolean"
+        }
+      },
+      "title": "SecuritySettings",
+      "type": "object"
+    },
+    "TelemetryExporter": {
+      "enum": [
+        "NONE",
+        "OTLP_HTTP"
+      ],
+      "title": "TelemetryExporter",
+      "type": "string"
+    },
+    "TelemetrySettings": {
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "default": false,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "exporter": {
+          "$ref": "#/$defs/TelemetryExporter",
+          "default": "NONE"
+        },
+        "otlp_endpoint": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Otlp Endpoint"
+        },
+        "service_name": {
+          "default": "project-pipeline",
+          "title": "Service Name",
+          "type": "string"
+        },
+        "service_namespace": {
+          "default": "project-pipeline",
+          "title": "Service Namespace",
+          "type": "string"
+        }
+      },
+      "title": "TelemetrySettings",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/runtime_configuration.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "environment": {
+      "$ref": "#/$defs/EnvironmentName",
+      "default": "development"
+    },
+    "integrations": {
+      "$ref": "#/$defs/IntegrationSettings",
+      "default": {
+        "aws_profile": null,
+        "github_token": null,
+        "jira_api_token": null,
+        "jira_base_url": null,
+        "jira_user_email": null
+      }
+    },
+    "logging": {
+      "$ref": "#/$defs/LoggingSettings",
+      "default": {
+        "format": "JSON",
+        "include_process": true,
+        "include_source": false,
+        "include_thread": false,
+        "level": "INFO",
+        "redacted_fields": [
+          "api_key",
+          "authorization",
+          "client_secret",
+          "cookie",
+          "password",
+          "private_key",
+          "secret",
+          "token"
+        ],
+        "service_name": "project-pipeline"
+      }
+    },
+    "paths": {
+      "$ref": "#/$defs/RuntimePaths",
+      "default": {
+        "artifact_dir": ".local\\artifacts",
+        "cache_dir": ".local\\cache",
+        "create_on_boot": true,
+        "data_dir": ".local\\data",
+        "evidence_dir": "evidence",
+        "log_dir": ".local\\logs",
+        "state_dir": ".local\\state"
+      }
+    },
+    "persistence": {
+      "$ref": "#/$defs/PersistenceSettings",
+      "default": {
+        "auto_migrate": true,
+        "backend": "SQLITE_LOCAL",
+        "migration_catalog": "database\\MIGRATION_CATALOG.json",
+        "postgresql_dsn": null,
+        "sqlite_path": ".local\\state\\project_pipeline.db"
+      }
+    },
+    "profile": {
+      "default": "local",
+      "title": "Profile",
+      "type": "string"
+    },
+    "project_id": {
+      "default": "PROJECT-PIPELINE",
+      "title": "Project Id",
+      "type": "string"
+    },
+    "project_name": {
+      "default": "ProjectPipeline",
+      "title": "Project Name",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "security": {
+      "$ref": "#/$defs/SecuritySettings",
+      "default": {
+        "external_writes_default": "DENY",
+        "require_explicit_approval": true
+      }
+    },
+    "telemetry": {
+      "$ref": "#/$defs/TelemetrySettings",
+      "default": {
+        "enabled": false,
+        "exporter": "NONE",
+        "otlp_endpoint": null,
+        "service_name": "project-pipeline",
+        "service_namespace": "project-pipeline"
+      }
+    }
+  },
+  "title": "RuntimeSettings",
+  "type": "object"
+}

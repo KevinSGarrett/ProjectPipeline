@@ -1,0 +1,13 @@
+{
+  "logging": {
+    "level": "INFO"
+  },
+  "retry": {
+    "count": 3,
+    "delay_seconds": 2
+  },
+  "schema_version": 1,
+  "service": {
+    "name": "orders"
+  }
+}

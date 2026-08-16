@@ -1,0 +1,78 @@
+{
+  "$defs": {
+    "BackendQualificationState": {
+      "enum": [
+        "LOCAL_VERIFIED",
+        "ADAPTER_IMPLEMENTED",
+        "DEPENDENCY_UNAVAILABLE",
+        "CONFIGURATION_REQUIRED",
+        "LIVE_VERIFIED"
+      ],
+      "title": "BackendQualificationState",
+      "type": "string"
+    },
+    "DurableBackendKind": {
+      "enum": [
+        "LOCAL_REFERENCE",
+        "HATCHET",
+        "DBOS",
+        "TEMPORAL",
+        "MOCK"
+      ],
+      "title": "DurableBackendKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/orchestration_backend_capabilities.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "backend": {
+      "$ref": "#/$defs/DurableBackendKind"
+    },
+    "detail": {
+      "default": "",
+      "title": "Detail",
+      "type": "string"
+    },
+    "qualification": {
+      "$ref": "#/$defs/BackendQualificationState"
+    },
+    "supports_cancel": {
+      "title": "Supports Cancel",
+      "type": "boolean"
+    },
+    "supports_native_recovery": {
+      "title": "Supports Native Recovery",
+      "type": "boolean"
+    },
+    "supports_query": {
+      "title": "Supports Query",
+      "type": "boolean"
+    },
+    "supports_retries": {
+      "title": "Supports Retries",
+      "type": "boolean"
+    },
+    "supports_signals": {
+      "title": "Supports Signals",
+      "type": "boolean"
+    },
+    "supports_timers": {
+      "title": "Supports Timers",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "backend",
+    "supports_signals",
+    "supports_timers",
+    "supports_retries",
+    "supports_cancel",
+    "supports_query",
+    "supports_native_recovery",
+    "qualification"
+  ],
+  "title": "BackendCapabilities",
+  "type": "object"
+}

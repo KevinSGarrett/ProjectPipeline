@@ -1,0 +1,46 @@
+L000001 | # PLAN-CTRL-002 — Project Control Kernel and Build Sequencer
+L000002 | 
+L000003 | - **Plan ID:** `PLAN-CTRL-002`
+L000004 | - **Status:** `ACTIVE`
+L000005 | - **Authority:** source-derived requirements plus required implementation detail
+L000006 | - **Source basis:** `SRC-003:L000040-L000083`, `SRC-003:L000225-L000371`, `SRC-014:L000210-L000373`, `SRC-014:L000378-L000748`, `SRC-014:L000859-L000946`, `GOV-001:L000423-L000435`
+L000007 | 
+L000008 | ## PLAN-CTRL-002:SEC-01 Canonical control authority
+L000009 | 
+L000010 | The Project Control Kernel is the deterministic authority for runtime project-state admissibility, task eligibility, readiness, accepted dependency truth, scope-reconciliation findings, and completion recomputation. Probabilistic systems may propose sequence or remediation, but they cannot directly commit canonical transitions.
+L000011 | 
+L000012 | ## PLAN-CTRL-002:SEC-02 Accepted work graph
+L000013 | 
+L000014 | The Build Sequencer constructs a directed graph from source-controlled work identities and accepted blocking dependencies. Every dependency endpoint must exist. Blocking cycles are invalid and fail sequencing. Non-blocking iterative relationships remain outside the dependency DAG. NetworkX supplies bounded graph primitives behind Project Pipeline-owned semantics; it does not own eligibility or transition authority.
+L000015 | 
+L000016 | ## PLAN-CTRL-002:SEC-03 Eligibility and readiness
+L000017 | 
+L000018 | Eligibility first excludes terminal, already-active, failed, blocked, unaccepted, policy-denied, human-required, and externally blocked work. Readiness is then computed from dependency completion, explicit blockers, approvals, required context, resources, and environment availability. A blocked or human-required item does not prevent independent work elsewhere from becoming ready.
+L000019 | 
+L000020 | ## PLAN-CTRL-002:SEC-04 Critical-path analysis
+L000021 | 
+L000022 | Critical-path calculations operate on the validated dependency DAG. Declared duration estimates are used when present. When duration evidence is unavailable, a documented equal-duration heuristic is used only to expose dependency-depth critical-path structure; it is not presented as an actual delivery-time forecast. Earliest-finish and slack facts are deterministic and reproducible for the same graph inputs.
+L000023 | 
+L000024 | ## PLAN-CTRL-002:SEC-05 Priority and build sequencing
+L000025 | 
+L000026 | Ready work is ranked deterministically from explicit priority, critical-path membership, deadline pressure when supplied, risk, downstream unblock value, and declared expected duration when supplied. The score breakdown is retained so ranking is explainable. Stable work IDs break exact ties. Scheduling/resource admission remains a separate downstream responsibility.
+L000027 | 
+L000028 | ## PLAN-CTRL-002:SEC-06 Scope reconciliation
+L000029 | 
+L000030 | The control plane compares accepted requirements, Jira work, dependency references, implementation state, and completion evidence. Missing requirement/work mappings, unknown dependencies, completed work without evidence, and implemented requirements without mapped artifacts are represented as explicit findings rather than silently repaired.
+L000031 | 
+L000032 | ## PLAN-CTRL-002:SEC-07 Completion recomputation
+L000033 | 
+L000034 | Completion is recomputed from accepted requirement dispositions and persistent work state. The Control Kernel may determine that a project is eligible to enter independent completion verification, but it cannot satisfy the Completion Gate itself. Final completion authority remains separated from implementation and sequencing authority.
+L000035 | 
+L000036 | ## PLAN-CTRL-002:SEC-08 Persistence and change detection
+L000037 | 
+L000038 | Control evaluations are persisted as immutable snapshots with graph and semantic fingerprints, ordered ready work, critical-path facts, scope findings, and completion projection. Re-evaluation after accepted changes produces a new deterministic projection without mutating historical evidence. Runtime transitions retain optimistic version checks in canonical state persistence.
+L000039 | 
+L000040 | ## PLAN-CTRL-002:SEC-09 Operator and machine interfaces
+L000041 | 
+L000042 | CLI operations expose evaluation, sequence, readiness, scope, completion, status, and readiness-transition planning. State-changing readiness transitions are separate from read-only evaluation and require an explicit apply/approval invocation. Machine-readable schemas permit future API and Command Center reuse without duplicating control semantics.
+L000043 | 
+L000044 | ## PLAN-CTRL-002:SEC-10 Verification and failure behavior
+L000045 | 
+L000046 | Tests cover graph cycles, unknown dependencies, independent progress around blocked work, readiness predicates, deterministic ordering, critical-path calculations, priority factors, scope drift, completion projection, migrations, persistence, CLI behavior, and repository self-validation. Invalid graph or state inputs fail closed; no remote Jira, GitHub, AWS, provider, or paid-service mutation is required for this control-plane slice.

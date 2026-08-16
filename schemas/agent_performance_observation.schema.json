@@ -1,0 +1,92 @@
+{
+  "$id": "https://project-pipeline.local/schemas/agent_performance_observation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {
+      "title": "Capability Id",
+      "type": "string"
+    },
+    "cost_microunits": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cost Microunits"
+    },
+    "latency_ms": {
+      "minimum": 0,
+      "title": "Latency Ms",
+      "type": "integer"
+    },
+    "observation_id": {
+      "title": "Observation Id",
+      "type": "string"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "quality_milli": {
+      "default": 500,
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Quality Milli",
+      "type": "integer"
+    },
+    "retry_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Retry Count",
+      "type": "integer"
+    },
+    "review_findings": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Review Findings",
+      "type": "integer"
+    },
+    "rework_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Rework Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "success": {
+      "title": "Success",
+      "type": "boolean"
+    },
+    "target_id": {
+      "title": "Target Id",
+      "type": "string"
+    },
+    "task_class": {
+      "title": "Task Class",
+      "type": "string"
+    }
+  },
+  "required": [
+    "observation_id",
+    "target_id",
+    "capability_id",
+    "task_class",
+    "success",
+    "latency_ms",
+    "observed_at_utc"
+  ],
+  "title": "PerformanceObservation",
+  "type": "object"
+}

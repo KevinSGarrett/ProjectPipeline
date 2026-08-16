@@ -1,0 +1,115 @@
+{
+  "environment_tool_observation": "Current build environment only; binary absence does not imply project incompatibility.",
+  "project_id": "PROJECT-PIPELINE",
+  "schema_version": "1.0.0",
+  "tools": [
+    {
+      "activation_policy": "QUALIFY_BEFORE_USE",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": "trivy",
+      "license": "Apache-2.0",
+      "repository": "aquasecurity/trivy",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-007"
+    },
+    {
+      "activation_policy": "QUALIFY_BEFORE_USE",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": "gitleaks",
+      "license": "MIT",
+      "repository": "gitleaks/gitleaks",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-043"
+    },
+    {
+      "activation_policy": "QUALIFY_BEFORE_USE",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": "osv-scanner",
+      "license": "Apache-2.0",
+      "repository": "google/osv-scanner",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-047"
+    },
+    {
+      "activation_policy": "BLOCKED_LICENSE_POLICY",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": "k6",
+      "license": "AGPL-3.0-only",
+      "repository": "grafana/k6",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-048"
+    },
+    {
+      "activation_policy": "QUALIFY_BEFORE_USE",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": "infracost",
+      "license": "Apache-2.0",
+      "repository": "infracost/infracost",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-053"
+    },
+    {
+      "activation_policy": "QUALIFY_BEFORE_USE",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": "act",
+      "license": "MIT",
+      "repository": "nektos/act",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-069"
+    },
+    {
+      "activation_policy": "QUALIFY_BEFORE_USE",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": "scorecard",
+      "license": "Apache-2.0",
+      "repository": "ossf/scorecard",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-081"
+    },
+    {
+      "activation_policy": "BLOCKED_LICENSE_POLICY",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": "renovate",
+      "license": "AGPL-3.0-only",
+      "repository": "renovatebot/renovate",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-089"
+    },
+    {
+      "activation_policy": "QUALIFY_BEFORE_USE",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": "restic",
+      "license": "BSD-2-Clause",
+      "repository": "restic/restic",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-090"
+    },
+    {
+      "activation_policy": "QUALIFY_BEFORE_USE",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": "cosign",
+      "license": "Apache-2.0",
+      "repository": "sigstore/cosign",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-094"
+    },
+    {
+      "activation_policy": "PINNED_CI_PROFILE",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": null,
+      "license": "Apache-2.0",
+      "repository": "step-security/harden-runner",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-100"
+    },
+    {
+      "activation_policy": "QUALIFY_BEFORE_USE",
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "executable": "winsw",
+      "license": "MIT",
+      "repository": "winsw/winsw",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-114"
+    }
+  ]
+}

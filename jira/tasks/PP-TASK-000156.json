@@ -1,0 +1,131 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000156-01",
+      "statement": "The specified artifacts implement or precisely disposition the linked requirements and preserve stable architecture, source, ADR, and work-item traceability.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "behavior_and_traceability_validation",
+        "path": "adr/ADR_CATALOG.json",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000156-02",
+      "statement": "Applicable behavior tests and evidence pass, and unavailable live or external verification remains explicitly represented.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000016",
+    "EVID-000018",
+    "EVID-000019",
+    "EVID-000020"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability, ADRs, plans, Jira, and documentation are updated.",
+    "Security, provenance, observability, and rollback effects are addressed.",
+    "No unresolved blocker or external verification gap is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Complete the architecture decision and technology-selection set.",
+  "evidence_required": [
+    "EVID-000016",
+    "EVID-000018",
+    "EVID-000019",
+    "EVID-000020"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion.",
+    "No external write or source incorporation is authorized by this item."
+  ],
+  "expected_file_locations": [
+    "adr/ADR_CATALOG.json",
+    "architecture/technology_stack.json",
+    "architecture/decision_map.json"
+  ],
+  "expected_implementation_artifacts": [
+    "adr/ADR_CATALOG.json",
+    "architecture/technology_stack.json",
+    "architecture/decision_map.json"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "architecture",
+    "implementation"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25180",
+    "remote_key": "PP-211",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000156",
+  "objective": "Complete the architecture decision and technology-selection set",
+  "observability_impact": "Record structured state, correlation, validation, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-STORY-000061",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md",
+      "end_line": 35,
+      "line_numbered_path": "plans/_line_numbered/PLAN-ARCH-001_system_architecture.lines.txt",
+      "line_reference": "PLAN-ARCH-001:SEC-07:L000032-L000035",
+      "plan_id": "PLAN-ARCH-001",
+      "section_id": "PLAN-ARCH-001:SEC-07",
+      "start_line": 32
+    }
+  ],
+  "rationale": "This bounded work converts accepted architecture or upstream requirements into explicit implementation, verification, provenance, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000061",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-211",
+  "required_tests": [
+    "TEST-ARCH-REGISTRY-001",
+    "TEST-ARCHITECTURE-003",
+    "TEST-ARCHITECTURE-005",
+    "TEST-DECISION-001",
+    "TEST-DECISION-002",
+    "TEST-REPOSITORY-001"
+  ],
+  "requirement_ids": [
+    "REQ-ARCH-0003",
+    "REQ-ARCH-0008",
+    "REQ-ARCH-0011",
+    "REQ-ARCH-0012",
+    "REQ-ARCH-0013",
+    "REQ-ARCH-0014",
+    "REQ-ARCH-0015",
+    "REQ-ARCH-0016"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration, adapter replacement, or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Complete the architecture decision and technology-selection set"
+  ],
+  "security_impact": "Enforce authority, secret, dependency, data-egress, provenance, and external-mutation boundaries.",
+  "source_references": [
+    "GOV-001:L000187-L000217",
+    "GOV-001:L000362-L000793",
+    "GOV-001:L001319-L001360"
+  ],
+  "state": "BACKLOG",
+  "title": "Complete the architecture decision and technology-selection set",
+  "upstream_dependencies": []
+}

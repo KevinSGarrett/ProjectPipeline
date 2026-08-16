@@ -1,0 +1,9 @@
+{
+  "benchmark_id": "PPQS-04",
+  "runtime": {
+    "node": ">=22.19.0",
+    "os": "Windows-capable and Linux authoring path",
+    "rust": "stable toolchain pinned by generated lock"
+  },
+  "source": "frozen r02 contract"
+}

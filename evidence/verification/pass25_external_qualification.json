@@ -1,0 +1,33 @@
+{
+  "aws_external_budget_circuit_breaker": {
+    "activation_default": false,
+    "live_state": "BLOCKED_EXTERNAL",
+    "paths": [
+      "infrastructure/aws/terraform/main.tf",
+      "infrastructure/aws/terraform/variables.tf",
+      "src/project_pipeline/resilience/aws.py"
+    ],
+    "reason": "Terraform source defines a fail-closed automatic AWS Budgets IAM-policy action but no AWS account, service role, budget action execution, or independent live alarm evidence is available in this environment.",
+    "source_state": "PARTIALLY_IMPLEMENTED_SOURCE_VERIFIED"
+  },
+  "live_external_evidence_count": 0,
+  "post_deployment_verification": {
+    "live_state": "BLOCKED_EXTERNAL",
+    "path": "src/project_pipeline/release_hardening/post_deploy.py",
+    "reason": "Verifier passes only with live_target=true and preserved target evidence; no deployed target was available for Pass 25.",
+    "required_checks": [
+      "health",
+      "version",
+      "migration",
+      "integration",
+      "security",
+      "telemetry",
+      "golden_journey"
+    ],
+    "source_state": "PARTIALLY_IMPLEMENTED_LOCAL_CONTRACT_VERIFIED"
+  },
+  "production_ready": false,
+  "qualification_id": "PASS-25-EXTERNAL-QUALIFICATION-BOUNDARY",
+  "schema_version": "1.0.0",
+  "truth_boundary": "No source-only, dry-run, mock, or local verification result is promoted to LIVE_VERIFIED."
+}

@@ -1,0 +1,649 @@
+{
+  "$defs": {
+    "BuildSequence": {
+      "additionalProperties": false,
+      "properties": {
+        "active_count": {
+          "minimum": 0,
+          "title": "Active Count",
+          "type": "integer"
+        },
+        "blocked_count": {
+          "minimum": 0,
+          "title": "Blocked Count",
+          "type": "integer"
+        },
+        "critical_path": {
+          "$ref": "#/$defs/CriticalPathAnalysis"
+        },
+        "edge_count": {
+          "minimum": 0,
+          "title": "Edge Count",
+          "type": "integer"
+        },
+        "generated_at_utc": {
+          "format": "date-time",
+          "title": "Generated At Utc",
+          "type": "string"
+        },
+        "graph_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Graph Fingerprint",
+          "type": "string"
+        },
+        "ordered_ready_work": {
+          "items": {
+            "$ref": "#/$defs/SequenceItem"
+          },
+          "title": "Ordered Ready Work",
+          "type": "array"
+        },
+        "project_id": {
+          "title": "Project Id",
+          "type": "string"
+        },
+        "ready_count": {
+          "minimum": 0,
+          "title": "Ready Count",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "sequence_id": {
+          "title": "Sequence Id",
+          "type": "string"
+        },
+        "task_count": {
+          "minimum": 0,
+          "title": "Task Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "sequence_id",
+        "project_id",
+        "graph_fingerprint",
+        "task_count",
+        "edge_count",
+        "ready_count",
+        "active_count",
+        "blocked_count",
+        "critical_path",
+        "ordered_ready_work"
+      ],
+      "title": "BuildSequence",
+      "type": "object"
+    },
+    "CompletionProjection": {
+      "additionalProperties": false,
+      "properties": {
+        "accepted_requirements": {
+          "minimum": 0,
+          "title": "Accepted Requirements",
+          "type": "integer"
+        },
+        "active_work_items": {
+          "minimum": 0,
+          "title": "Active Work Items",
+          "type": "integer"
+        },
+        "blocked_work_items": {
+          "minimum": 0,
+          "title": "Blocked Work Items",
+          "type": "integer"
+        },
+        "completed_work_items": {
+          "minimum": 0,
+          "title": "Completed Work Items",
+          "type": "integer"
+        },
+        "failed_work_items": {
+          "minimum": 0,
+          "title": "Failed Work Items",
+          "type": "integer"
+        },
+        "final_completion_gate_satisfied": {
+          "default": false,
+          "title": "Final Completion Gate Satisfied",
+          "type": "boolean"
+        },
+        "generated_at_utc": {
+          "format": "date-time",
+          "title": "Generated At Utc",
+          "type": "string"
+        },
+        "implemented_or_external_blocked_requirements": {
+          "minimum": 0,
+          "title": "Implemented Or External Blocked Requirements",
+          "type": "integer"
+        },
+        "project_id": {
+          "title": "Project Id",
+          "type": "string"
+        },
+        "projection_id": {
+          "title": "Projection Id",
+          "type": "string"
+        },
+        "ready_work_items": {
+          "minimum": 0,
+          "title": "Ready Work Items",
+          "type": "integer"
+        },
+        "reasons": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/CompletionProjectionState"
+        },
+        "total_work_items": {
+          "minimum": 0,
+          "title": "Total Work Items",
+          "type": "integer"
+        },
+        "verification_eligible": {
+          "title": "Verification Eligible",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "projection_id",
+        "project_id",
+        "state",
+        "total_work_items",
+        "completed_work_items",
+        "active_work_items",
+        "blocked_work_items",
+        "failed_work_items",
+        "accepted_requirements",
+        "implemented_or_external_blocked_requirements",
+        "ready_work_items",
+        "verification_eligible",
+        "reasons"
+      ],
+      "title": "CompletionProjection",
+      "type": "object"
+    },
+    "CompletionProjectionState": {
+      "enum": [
+        "INCOMPLETE",
+        "BLOCKED",
+        "FAILED",
+        "READY_FOR_COMPLETION_GATE"
+      ],
+      "title": "CompletionProjectionState",
+      "type": "string"
+    },
+    "CriticalPathAnalysis": {
+      "additionalProperties": false,
+      "properties": {
+        "duration_source": {
+          "enum": [
+            "DECLARED",
+            "MIXED",
+            "DEFAULT_HEURISTIC",
+            "EMPTY"
+          ],
+          "title": "Duration Source",
+          "type": "string"
+        },
+        "earliest_finish_minutes": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Earliest Finish Minutes",
+          "type": "object"
+        },
+        "path": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Path",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "slack_minutes": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Slack Minutes",
+          "type": "object"
+        },
+        "total_duration_minutes": {
+          "minimum": 0,
+          "title": "Total Duration Minutes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "path",
+        "total_duration_minutes",
+        "duration_source",
+        "earliest_finish_minutes",
+        "slack_minutes"
+      ],
+      "title": "CriticalPathAnalysis",
+      "type": "object"
+    },
+    "EligibilityState": {
+      "enum": [
+        "ELIGIBLE",
+        "ALREADY_ACTIVE",
+        "TERMINAL",
+        "BLOCKED",
+        "HUMAN_REQUIRED",
+        "EXTERNAL_BLOCKED",
+        "POLICY_DENIED"
+      ],
+      "title": "EligibilityState",
+      "type": "string"
+    },
+    "ReadinessState": {
+      "enum": [
+        "READY",
+        "WAITING_DEPENDENCIES",
+        "BLOCKED",
+        "WAITING_APPROVAL",
+        "WAITING_CONTEXT",
+        "WAITING_RESOURCES",
+        "WAITING_ENVIRONMENT",
+        "NOT_ELIGIBLE",
+        "ACTIVE",
+        "TERMINAL"
+      ],
+      "title": "ReadinessState",
+      "type": "string"
+    },
+    "ScopeFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "detail": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Detail",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ScopeFindingKind"
+        },
+        "related_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Related Id"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "subject_id": {
+          "title": "Subject Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "subject_id",
+        "detail"
+      ],
+      "title": "ScopeFinding",
+      "type": "object"
+    },
+    "ScopeFindingKind": {
+      "enum": [
+        "REQUIREMENT_WITHOUT_WORK",
+        "WORK_WITHOUT_REQUIREMENT",
+        "UNKNOWN_REQUIREMENT",
+        "UNKNOWN_DEPENDENCY",
+        "DONE_WITHOUT_EVIDENCE",
+        "DONE_WITHOUT_IMPLEMENTATION",
+        "IMPLEMENTED_REQUIREMENT_WITHOUT_ARTIFACT"
+      ],
+      "title": "ScopeFindingKind",
+      "type": "string"
+    },
+    "ScopeReconciliationReport": {
+      "additionalProperties": false,
+      "properties": {
+        "findings": {
+          "items": {
+            "$ref": "#/$defs/ScopeFinding"
+          },
+          "title": "Findings",
+          "type": "array"
+        },
+        "fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "generated_at_utc": {
+          "format": "date-time",
+          "title": "Generated At Utc",
+          "type": "string"
+        },
+        "project_id": {
+          "title": "Project Id",
+          "type": "string"
+        },
+        "report_id": {
+          "title": "Report Id",
+          "type": "string"
+        },
+        "requirement_count": {
+          "minimum": 0,
+          "title": "Requirement Count",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "work_item_count": {
+          "minimum": 0,
+          "title": "Work Item Count",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "report_id",
+        "project_id",
+        "requirement_count",
+        "work_item_count",
+        "findings",
+        "fingerprint"
+      ],
+      "title": "ScopeReconciliationReport",
+      "type": "object"
+    },
+    "SequenceItem": {
+      "additionalProperties": false,
+      "properties": {
+        "dependency_depth": {
+          "minimum": 0,
+          "title": "Dependency Depth",
+          "type": "integer"
+        },
+        "downstream_count": {
+          "minimum": 0,
+          "title": "Downstream Count",
+          "type": "integer"
+        },
+        "on_critical_path": {
+          "title": "On Critical Path",
+          "type": "boolean"
+        },
+        "rank": {
+          "minimum": 1,
+          "title": "Rank",
+          "type": "integer"
+        },
+        "readiness": {
+          "$ref": "#/$defs/ReadinessState"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "score": {
+          "$ref": "#/$defs/SequenceScore"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "rank",
+        "task_id",
+        "readiness",
+        "score",
+        "dependency_depth",
+        "downstream_count",
+        "on_critical_path"
+      ],
+      "title": "SequenceItem",
+      "type": "object"
+    },
+    "SequenceScore": {
+      "additionalProperties": false,
+      "properties": {
+        "critical_path_score": {
+          "title": "Critical Path Score",
+          "type": "integer"
+        },
+        "deadline_score": {
+          "title": "Deadline Score",
+          "type": "integer"
+        },
+        "duration_score": {
+          "title": "Duration Score",
+          "type": "integer"
+        },
+        "priority_score": {
+          "title": "Priority Score",
+          "type": "integer"
+        },
+        "risk_score": {
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "total_score": {
+          "title": "Total Score",
+          "type": "integer"
+        },
+        "unblock_score": {
+          "title": "Unblock Score",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "task_id",
+        "priority_score",
+        "critical_path_score",
+        "deadline_score",
+        "risk_score",
+        "unblock_score",
+        "duration_score",
+        "total_score"
+      ],
+      "title": "SequenceScore",
+      "type": "object"
+    },
+    "TaskEligibility": {
+      "additionalProperties": false,
+      "properties": {
+        "eligible": {
+          "title": "Eligible",
+          "type": "boolean"
+        },
+        "reasons": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/EligibilityState"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "task_id",
+        "state",
+        "eligible"
+      ],
+      "title": "TaskEligibility",
+      "type": "object"
+    },
+    "TaskReadiness": {
+      "additionalProperties": false,
+      "properties": {
+        "ready": {
+          "title": "Ready",
+          "type": "boolean"
+        },
+        "reasons": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/ReadinessState"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "unresolved_blockers": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Unresolved Blockers",
+          "type": "array"
+        },
+        "unresolved_dependencies": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Unresolved Dependencies",
+          "type": "array"
+        }
+      },
+      "required": [
+        "task_id",
+        "state",
+        "ready"
+      ],
+      "title": "TaskReadiness",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/control_snapshot.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "completion": {
+      "$ref": "#/$defs/CompletionProjection"
+    },
+    "eligibility": {
+      "items": {
+        "$ref": "#/$defs/TaskEligibility"
+      },
+      "title": "Eligibility",
+      "type": "array"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "readiness": {
+      "items": {
+        "$ref": "#/$defs/TaskReadiness"
+      },
+      "title": "Readiness",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope": {
+      "$ref": "#/$defs/ScopeReconciliationReport"
+    },
+    "sequence": {
+      "$ref": "#/$defs/BuildSequence"
+    },
+    "snapshot_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Snapshot Fingerprint",
+      "type": "string"
+    },
+    "snapshot_id": {
+      "title": "Snapshot Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "snapshot_id",
+    "project_id",
+    "sequence",
+    "scope",
+    "completion",
+    "eligibility",
+    "readiness",
+    "snapshot_fingerprint"
+  ],
+  "title": "ControlSnapshot",
+  "type": "object"
+}

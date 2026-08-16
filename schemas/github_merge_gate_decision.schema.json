@@ -1,0 +1,96 @@
+{
+  "$defs": {
+    "MergeGateState": {
+      "enum": [
+        "READY",
+        "BLOCKED",
+        "RECONCILIATION_REQUIRED"
+      ],
+      "title": "MergeGateState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_merge_gate_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "approvals_observed": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Approvals Observed",
+      "type": "integer"
+    },
+    "approvals_required": {
+      "default": 1,
+      "minimum": 0,
+      "title": "Approvals Required",
+      "type": "integer"
+    },
+    "blockers": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Blockers",
+      "type": "array"
+    },
+    "evaluated_at_utc": {
+      "format": "date-time",
+      "title": "Evaluated At Utc",
+      "type": "string"
+    },
+    "gate_id": {
+      "title": "Gate Id",
+      "type": "string"
+    },
+    "head_sha": {
+      "title": "Head Sha",
+      "type": "string"
+    },
+    "observed_checks": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Observed Checks",
+      "type": "array"
+    },
+    "pull_number": {
+      "minimum": 1,
+      "title": "Pull Number",
+      "type": "integer"
+    },
+    "repository_slug": {
+      "title": "Repository Slug",
+      "type": "string"
+    },
+    "required_checks": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Checks",
+      "type": "array"
+    },
+    "state": {
+      "$ref": "#/$defs/MergeGateState"
+    },
+    "warnings": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "gate_id",
+    "repository_slug",
+    "pull_number",
+    "head_sha",
+    "state"
+  ],
+  "title": "MergeGateDecision",
+  "type": "object"
+}

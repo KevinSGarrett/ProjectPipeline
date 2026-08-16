@@ -1,0 +1,48 @@
+{
+  "$id": "https://project-pipeline.local/schemas/context_selection.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "delegation_id": {
+      "title": "Delegation Id",
+      "type": "string"
+    },
+    "omitted_keys": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Omitted Keys",
+      "type": "array"
+    },
+    "selected_keys": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Selected Keys",
+      "type": "array"
+    },
+    "selection_reason": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Selection Reason",
+      "type": "array"
+    },
+    "unknown_keys": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Unknown Keys",
+      "type": "array"
+    }
+  },
+  "required": [
+    "delegation_id",
+    "selected_keys"
+  ],
+  "title": "ContextSelection",
+  "type": "object"
+}

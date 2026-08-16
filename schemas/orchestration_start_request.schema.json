@@ -1,0 +1,45 @@
+{
+  "$defs": {
+    "DurableBackendKind": {
+      "enum": [
+        "LOCAL_REFERENCE",
+        "HATCHET",
+        "DBOS",
+        "TEMPORAL",
+        "MOCK"
+      ],
+      "title": "DurableBackendKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/orchestration_start_request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "backend": {
+      "$ref": "#/$defs/DurableBackendKind",
+      "default": "LOCAL_REFERENCE"
+    },
+    "definition_id": {
+      "title": "Definition Id",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "input_payload": {
+      "additionalProperties": true,
+      "title": "Input Payload",
+      "type": "object"
+    }
+  },
+  "required": [
+    "definition_id",
+    "idempotency_key"
+  ],
+  "title": "WorkflowStartRequest",
+  "type": "object"
+}

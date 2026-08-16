@@ -1,0 +1,209 @@
+{
+  "$defs": {
+    "AcceptanceCriterion": {
+      "additionalProperties": false,
+      "properties": {
+        "criterion_id": {
+          "title": "Criterion Id",
+          "type": "string"
+        },
+        "fixture_paths": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Fixture Paths",
+          "type": "array"
+        },
+        "frozen_fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Frozen Fingerprint",
+          "type": "string"
+        },
+        "objective": {
+          "default": true,
+          "title": "Objective",
+          "type": "boolean"
+        },
+        "requirement_ids": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Requirement Ids",
+          "type": "array"
+        },
+        "risk": {
+          "$ref": "#/$defs/AssuranceRisk",
+          "default": "MEDIUM"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "statement": {
+          "maxLength": 4000,
+          "minLength": 8,
+          "title": "Statement",
+          "type": "string"
+        },
+        "verification_command": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verification Command"
+        },
+        "verification_methods": {
+          "items": {
+            "$ref": "#/$defs/VerificationMethod"
+          },
+          "title": "Verification Methods",
+          "type": "array"
+        },
+        "verification_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Verification Path"
+        },
+        "work_item_id": {
+          "title": "Work Item Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "criterion_id",
+        "work_item_id",
+        "statement",
+        "verification_methods",
+        "frozen_fingerprint"
+      ],
+      "title": "AcceptanceCriterion",
+      "type": "object"
+    },
+    "AssuranceRisk": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "AssuranceRisk",
+      "type": "string"
+    },
+    "VerificationMethod": {
+      "enum": [
+        "STATIC",
+        "UNIT",
+        "COMPONENT",
+        "CONTRACT",
+        "API",
+        "INTEGRATION",
+        "END_TO_END",
+        "PROPERTY",
+        "MUTATION",
+        "ADVERSARIAL",
+        "FAULT",
+        "PERFORMANCE",
+        "SECURITY",
+        "ACCESSIBILITY",
+        "VISUAL",
+        "BROWSER",
+        "RESILIENCE",
+        "RECOVERY",
+        "INSTALLER",
+        "UPGRADE",
+        "ROLLBACK",
+        "REVIEW",
+        "TRACEABILITY",
+        "DOCUMENTATION"
+      ],
+      "title": "VerificationMethod",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/assurance_verification_plan.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "criteria": {
+      "items": {
+        "$ref": "#/$defs/AcceptanceCriterion"
+      },
+      "title": "Criteria",
+      "type": "array"
+    },
+    "fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "independent_review_required": {
+      "default": false,
+      "title": "Independent Review Required",
+      "type": "boolean"
+    },
+    "max_evidence_records": {
+      "default": 40,
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Max Evidence Records",
+      "type": "integer"
+    },
+    "max_verification_attempts": {
+      "default": 8,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Max Verification Attempts",
+      "type": "integer"
+    },
+    "plan_id": {
+      "title": "Plan Id",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "required_method_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Required Method Counts",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "plan_id",
+    "project_id",
+    "criteria",
+    "fingerprint"
+  ],
+  "title": "VerificationPlan",
+  "type": "object"
+}

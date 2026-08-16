@@ -1,0 +1,165 @@
+{
+  "flow_count": 12,
+  "flows": [
+    {
+      "contract": "Verified project model and gaps",
+      "controls": "schema validation, provenance, idempotency",
+      "crosses_boundaries": [
+        "BOUNDARY-DATA-001"
+      ],
+      "failure_rule": "Reject invalid project compilation input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-PROJECT-COMPILE-001",
+      "from_component": "COMP-INTAKE-001",
+      "name": "Project compilation",
+      "payload": "Verified project model and gaps",
+      "to_component": "COMP-CTRL-001"
+    },
+    {
+      "contract": "Typed command and identity",
+      "controls": "policy, authority, idempotency, audit",
+      "crosses_boundaries": [
+        "BOUNDARY-TRUST-001"
+      ],
+      "failure_rule": "Reject invalid control command input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-CONTROL-COMMAND-001",
+      "from_component": "COMP-API-001",
+      "name": "Control command",
+      "payload": "Typed command and identity",
+      "to_component": "COMP-CTRL-001"
+    },
+    {
+      "contract": "Grounded recommendation",
+      "controls": "typed schema, source citations, deterministic acceptance",
+      "crosses_boundaries": [
+        "BOUNDARY-AI-001"
+      ],
+      "failure_rule": "Reject invalid director recommendation input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-DIRECTOR-ADVICE-001",
+      "from_component": "COMP-DIRECTOR-001",
+      "name": "Director recommendation",
+      "payload": "Grounded recommendation",
+      "to_component": "COMP-CTRL-001"
+    },
+    {
+      "contract": "Admitted work with leases",
+      "controls": "conflict validation, spend lease, policy decision",
+      "crosses_boundaries": [
+        "BOUNDARY-DATA-001"
+      ],
+      "failure_rule": "Reject invalid work admission input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-WORK-ADMISSION-001",
+      "from_component": "COMP-SCHED-001",
+      "name": "Work admission",
+      "payload": "Admitted work with leases",
+      "to_component": "COMP-WORKFLOW-001"
+    },
+    {
+      "contract": "Task contract, context pack, receipt, leases",
+      "controls": "context firewall, secret exclusion, coverage score",
+      "crosses_boundaries": [
+        "BOUNDARY-EXEC-001"
+      ],
+      "failure_rule": "Reject invalid delegation input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-DELEGATION-001",
+      "from_component": "COMP-CONTEXT-001",
+      "name": "Delegation",
+      "payload": "Task contract, context pack, receipt, leases",
+      "to_component": "COMP-WORKER-001"
+    },
+    {
+      "contract": "Provider-neutral request",
+      "controls": "policy, budget, circuit breaker, telemetry",
+      "crosses_boundaries": [
+        "BOUNDARY-AI-001",
+        "BOUNDARY-EXT-001"
+      ],
+      "failure_rule": "Reject invalid provider invocation input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-PROVIDER-CALL-001",
+      "from_component": "COMP-WORKER-001",
+      "name": "Provider invocation",
+      "payload": "Provider-neutral request",
+      "to_component": "COMP-PROVIDER-001"
+    },
+    {
+      "contract": "Typed tool call",
+      "controls": "allowlist, scoped credential, action intent, audit",
+      "crosses_boundaries": [
+        "BOUNDARY-EXEC-001",
+        "BOUNDARY-EXT-001"
+      ],
+      "failure_rule": "Reject invalid tool invocation input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-TOOL-CALL-001",
+      "from_component": "COMP-WORKER-001",
+      "name": "Tool invocation",
+      "payload": "Typed tool call",
+      "to_component": "COMP-TOOL-001"
+    },
+    {
+      "contract": "Candidate result and artifacts",
+      "controls": "independent checks, affected-behavior tests, evidence freshness",
+      "crosses_boundaries": [
+        "BOUNDARY-AI-001"
+      ],
+      "failure_rule": "Reject invalid candidate verification input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-CANDIDATE-VERIFY-001",
+      "from_component": "COMP-WORKER-001",
+      "name": "Candidate verification",
+      "payload": "Candidate result and artifacts",
+      "to_component": "COMP-ASSURE-001"
+    },
+    {
+      "contract": "Authorized mutation intent",
+      "controls": "transactional commit, idempotency, retry, reconciliation",
+      "crosses_boundaries": [
+        "BOUNDARY-EXT-001"
+      ],
+      "failure_rule": "Reject invalid external write input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-EXTERNAL-WRITE-001",
+      "from_component": "COMP-CTRL-001",
+      "name": "External write",
+      "payload": "Authorized mutation intent",
+      "to_component": "COMP-OUTBOX-001"
+    },
+    {
+      "contract": "Claim, method, result, artifact references",
+      "controls": "append-only identity, digest verification",
+      "crosses_boundaries": [
+        "BOUNDARY-DATA-001"
+      ],
+      "failure_rule": "Reject invalid evidence storage input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-EVIDENCE-STORE-001",
+      "from_component": "COMP-ASSURE-001",
+      "name": "Evidence storage",
+      "payload": "Claim, method, result, artifact references",
+      "to_component": "COMP-EVIDENCE-001"
+    },
+    {
+      "contract": "Authorized state projections and events",
+      "controls": "authentication, redaction, rate control",
+      "crosses_boundaries": [
+        "BOUNDARY-TRUST-001",
+        "BOUNDARY-NET-001"
+      ],
+      "failure_rule": "Reject invalid operator state stream input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-OPERATOR-STREAM-001",
+      "from_component": "COMP-API-001",
+      "name": "Operator state stream",
+      "payload": "Authorized state projections and events",
+      "to_component": "COMP-UI-001"
+    },
+    {
+      "contract": "Actionable human-required incident",
+      "controls": "deduplication, severity, quiet hours, acknowledgement",
+      "crosses_boundaries": [
+        "BOUNDARY-TRUST-001"
+      ],
+      "failure_rule": "Reject invalid incident notification input, preserve correlation and audit state, and require deterministic retry or reconciliation before authority advances.",
+      "flow_id": "FLOW-INCIDENT-NOTIFY-001",
+      "from_component": "COMP-RECOVERY-001",
+      "name": "Incident notification",
+      "payload": "Actionable human-required incident",
+      "to_component": "COMP-NOTIFY-001"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

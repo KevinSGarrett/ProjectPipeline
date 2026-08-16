@@ -1,0 +1,63 @@
+{
+  "$id": "https://project-pipeline.local/schemas/github_adapter_capabilities.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "api_version": {
+      "title": "Api Version",
+      "type": "string"
+    },
+    "maximum_page_size": {
+      "default": 100,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Maximum Page Size",
+      "type": "integer"
+    },
+    "provider": {
+      "title": "Provider",
+      "type": "string"
+    },
+    "supports_branch_protection": {
+      "default": true,
+      "title": "Supports Branch Protection",
+      "type": "boolean"
+    },
+    "supports_branches": {
+      "default": true,
+      "title": "Supports Branches",
+      "type": "boolean"
+    },
+    "supports_checks": {
+      "default": true,
+      "title": "Supports Checks",
+      "type": "boolean"
+    },
+    "supports_delete_branch": {
+      "default": true,
+      "title": "Supports Delete Branch",
+      "type": "boolean"
+    },
+    "supports_merge": {
+      "default": true,
+      "title": "Supports Merge",
+      "type": "boolean"
+    },
+    "supports_pull_requests": {
+      "default": true,
+      "title": "Supports Pull Requests",
+      "type": "boolean"
+    },
+    "supports_reviews": {
+      "default": true,
+      "title": "Supports Reviews",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "provider",
+    "api_version"
+  ],
+  "title": "GitHubAdapterCapabilities",
+  "type": "object"
+}

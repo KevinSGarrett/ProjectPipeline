@@ -1,0 +1,124 @@
+{
+  "$defs": {
+    "BootstrapAction": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "$ref": "#/$defs/BootstrapActionKind"
+        },
+        "content_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Sha256"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "reason": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "action",
+        "reason"
+      ],
+      "title": "BootstrapAction",
+      "type": "object"
+    },
+    "BootstrapActionKind": {
+      "enum": [
+        "CREATE_DIRECTORY",
+        "CREATE_FILE",
+        "SATISFIED",
+        "CONFLICT"
+      ],
+      "title": "BootstrapActionKind",
+      "type": "string"
+    },
+    "IntakeMode": {
+      "enum": [
+        "NEW_PROJECT",
+        "EXISTING_PROJECT"
+      ],
+      "title": "IntakeMode",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/bootstrap_plan.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actions": {
+      "items": {
+        "$ref": "#/$defs/BootstrapAction"
+      },
+      "title": "Actions",
+      "type": "array"
+    },
+    "bootstrap_id": {
+      "title": "Bootstrap Id",
+      "type": "string"
+    },
+    "compilation_id": {
+      "title": "Compilation Id",
+      "type": "string"
+    },
+    "destructive_actions": {
+      "const": false,
+      "default": false,
+      "title": "Destructive Actions",
+      "type": "boolean"
+    },
+    "fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "intake_mode": {
+      "$ref": "#/$defs/IntakeMode"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "requires_existing_project_confirmation": {
+      "title": "Requires Existing Project Confirmation",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target_root": {
+      "title": "Target Root",
+      "type": "string"
+    }
+  },
+  "required": [
+    "bootstrap_id",
+    "compilation_id",
+    "project_id",
+    "intake_mode",
+    "target_root",
+    "actions",
+    "requires_existing_project_confirmation",
+    "fingerprint"
+  ],
+  "title": "BootstrapPlan",
+  "type": "object"
+}

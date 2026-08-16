@@ -1,0 +1,351 @@
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0001"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002", "PLAN-UPSTREAM-004"], "requirement_id": "REQ-AGENT-0002"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0003"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0004"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0005"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0006"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002", "PLAN-UPSTREAM-004"], "requirement_id": "REQ-AGENT-0007"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0008"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0009"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0010"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0011"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0012"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0013"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0014"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0015"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0016"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0017"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-SCHED-002", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0018"}
+{"plan_ids": ["PLAN-AGENT-001", "PLAN-AGENT-002"], "requirement_id": "REQ-AGENT-0019"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-002"], "requirement_id": "REQ-ARCH-0001"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-002", "PLAN-LIFE-002"], "requirement_id": "REQ-ARCH-0002"}
+{"plan_ids": ["PLAN-ARCH-001"], "requirement_id": "REQ-ARCH-0003"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-002"], "requirement_id": "REQ-ARCH-0004"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-002"], "requirement_id": "REQ-ARCH-0005"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-002"], "requirement_id": "REQ-ARCH-0006"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-002", "PLAN-ARCH-004", "PLAN-PDEF-002"], "requirement_id": "REQ-ARCH-0007"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-002", "PLAN-ARCH-004", "PLAN-PDEF-002"], "requirement_id": "REQ-ARCH-0008"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-002", "PLAN-ARCH-004", "PLAN-LIFE-002", "PLAN-PDEF-002"], "requirement_id": "REQ-ARCH-0009"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-002", "PLAN-LIFE-002"], "requirement_id": "REQ-ARCH-0010"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-003"], "requirement_id": "REQ-ARCH-0011"}
+{"plan_ids": ["PLAN-ARCH-001"], "requirement_id": "REQ-ARCH-0012"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-003"], "requirement_id": "REQ-ARCH-0013"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-ARCH-002"], "requirement_id": "REQ-ARCH-0014"}
+{"plan_ids": ["PLAN-ARCH-001"], "requirement_id": "REQ-ARCH-0015"}
+{"plan_ids": ["PLAN-ARCH-001", "PLAN-LIFE-002"], "requirement_id": "REQ-ARCH-0016"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0001"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0002"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0003"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0004"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0005"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0006"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0007"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0008"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0009"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002", "PLAN-LIFE-002"], "requirement_id": "REQ-ASSURE-0010"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0011"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0012"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0013"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0014"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0015"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0016"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0017"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0018"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0019"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0020"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002", "PLAN-VERIFY-001"], "requirement_id": "REQ-ASSURE-0021"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002", "PLAN-LIFE-002", "PLAN-PDEF-002", "PLAN-VERIFY-001"], "requirement_id": "REQ-ASSURE-0022"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002", "PLAN-VERIFY-001"], "requirement_id": "REQ-ASSURE-0023"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002", "PLAN-VERIFY-001"], "requirement_id": "REQ-ASSURE-0024"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002", "PLAN-VERIFY-001"], "requirement_id": "REQ-ASSURE-0025"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002", "PLAN-GOV-003", "PLAN-VERIFY-001"], "requirement_id": "REQ-ASSURE-0026"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0027"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002", "PLAN-VERIFY-001"], "requirement_id": "REQ-ASSURE-0028"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002", "PLAN-LIFE-002", "PLAN-VERIFY-001"], "requirement_id": "REQ-ASSURE-0029"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0030"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0031"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0032"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0033"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0034"}
+{"plan_ids": ["PLAN-ASSURE-001", "PLAN-ASSURE-002"], "requirement_id": "REQ-ASSURE-0035"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0001"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0002"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0003"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0004"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0005"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0006"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0007"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0008"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0009"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0010"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0011"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0012"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0013"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0014"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0015"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0016"}
+{"plan_ids": ["PLAN-BUDGET-001"], "requirement_id": "REQ-BUDGET-0017"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0018"}
+{"plan_ids": ["PLAN-BUDGET-001", "PLAN-SCHED-002", "PLAN-BUDGET-002"], "requirement_id": "REQ-BUDGET-0019"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-CTRL-001", "PLAN-CTRL-002"], "requirement_id": "REQ-CTRL-0001"}
+{"plan_ids": ["PLAN-CTRL-001"], "requirement_id": "REQ-CTRL-0002"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-CTRL-001", "PLAN-ORCH-001"], "requirement_id": "REQ-CTRL-0003"}
+{"plan_ids": ["PLAN-CTRL-001"], "requirement_id": "REQ-CTRL-0004"}
+{"plan_ids": ["PLAN-CTRL-001", "PLAN-CTRL-002"], "requirement_id": "REQ-CTRL-0005"}
+{"plan_ids": ["PLAN-CTRL-001"], "requirement_id": "REQ-CTRL-0006"}
+{"plan_ids": ["PLAN-CTRL-001"], "requirement_id": "REQ-CTRL-0007"}
+{"plan_ids": ["PLAN-CTRL-001"], "requirement_id": "REQ-CTRL-0008"}
+{"plan_ids": ["PLAN-CTRL-001", "PLAN-CTRL-002"], "requirement_id": "REQ-CTRL-0009"}
+{"plan_ids": ["PLAN-CTRL-001", "PLAN-ORCH-001"], "requirement_id": "REQ-CTRL-0010"}
+{"plan_ids": ["PLAN-CTRL-001", "PLAN-ORCH-001"], "requirement_id": "REQ-CTRL-0011"}
+{"plan_ids": ["PLAN-CTRL-001", "PLAN-ORCH-001"], "requirement_id": "REQ-CTRL-0012"}
+{"plan_ids": ["PLAN-CTRL-001", "PLAN-CTRL-002"], "requirement_id": "REQ-CTRL-0013"}
+{"plan_ids": ["PLAN-CTRL-001"], "requirement_id": "REQ-CTRL-0014"}
+{"plan_ids": ["PLAN-CTRL-001", "PLAN-CTRL-002"], "requirement_id": "REQ-CTRL-0015"}
+{"plan_ids": ["PLAN-CTRL-001"], "requirement_id": "REQ-CTRL-0016"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0001"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0002"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0003"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0004"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0005"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0006"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0007"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0008"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0009"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-PDEF-002", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0010"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0011"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0012"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0013"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0014"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0015"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0016"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0017"}
+{"plan_ids": ["PLAN-CTX-001", "PLAN-CTX-002"], "requirement_id": "REQ-CTX-0018"}
+{"plan_ids": ["PLAN-GOV-001"], "requirement_id": "REQ-GOV-0001"}
+{"plan_ids": ["PLAN-GOV-001"], "requirement_id": "REQ-GOV-0002"}
+{"plan_ids": ["PLAN-GOV-001"], "requirement_id": "REQ-GOV-0003"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-003"], "requirement_id": "REQ-GOV-0004"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-LIFE-002"], "requirement_id": "REQ-GOV-0005"}
+{"plan_ids": ["PLAN-GOV-001"], "requirement_id": "REQ-GOV-0006"}
+{"plan_ids": ["PLAN-GOV-001"], "requirement_id": "REQ-GOV-0007"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-002"], "requirement_id": "REQ-GOV-0008"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-002"], "requirement_id": "REQ-GOV-0009"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-GOV-001", "PLAN-GOV-002"], "requirement_id": "REQ-GOV-0010"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-002"], "requirement_id": "REQ-GOV-0011"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-002"], "requirement_id": "REQ-GOV-0012"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-002"], "requirement_id": "REQ-GOV-0013"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-003", "PLAN-UPSTREAM-004"], "requirement_id": "REQ-GOV-0014"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-003"], "requirement_id": "REQ-GOV-0015"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-003"], "requirement_id": "REQ-GOV-0016"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-003"], "requirement_id": "REQ-GOV-0017"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-003"], "requirement_id": "REQ-GOV-0018"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-003"], "requirement_id": "REQ-GOV-0019"}
+{"plan_ids": ["PLAN-GOV-001"], "requirement_id": "REQ-GOV-0020"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-003"], "requirement_id": "REQ-GOV-0021"}
+{"plan_ids": ["PLAN-GOV-001"], "requirement_id": "REQ-GOV-0022"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-003"], "requirement_id": "REQ-GOV-0023"}
+{"plan_ids": ["PLAN-GOV-001", "PLAN-GOV-002", "PLAN-GOV-003", "PLAN-UPSTREAM-004"], "requirement_id": "REQ-GOV-0024"}
+{"plan_ids": ["PLAN-GOV-001"], "requirement_id": "REQ-GOV-0025"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0001"}
+{"plan_ids": ["PLAN-INFRA-001", "PLAN-LIFE-002"], "requirement_id": "REQ-INFRA-0002"}
+{"plan_ids": ["PLAN-INFRA-001", "PLAN-LIFE-002"], "requirement_id": "REQ-INFRA-0003"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0004"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0005"}
+{"plan_ids": ["PLAN-INFRA-001", "PLAN-UPSTREAM-004"], "requirement_id": "REQ-INFRA-0006"}
+{"plan_ids": ["PLAN-INFRA-001", "PLAN-LIFE-002"], "requirement_id": "REQ-INFRA-0007"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0008"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0009"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0010"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0011"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0012"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0013"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0014"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0015"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0016"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0017"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0018"}
+{"plan_ids": ["PLAN-INFRA-001"], "requirement_id": "REQ-INFRA-0019"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0001"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-LIFE-001", "PLAN-LIFE-002"], "requirement_id": "REQ-LIFE-0002"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0003"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0004"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0005"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0006"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-LIFE-001", "PLAN-LIFE-002"], "requirement_id": "REQ-LIFE-0007"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0008"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0009"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0010"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0011"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0012"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0013"}
+{"plan_ids": ["PLAN-LIFE-001", "PLAN-PDEF-002"], "requirement_id": "REQ-LIFE-0014"}
+{"plan_ids": ["PLAN-LIFE-001", "PLAN-PDEF-002"], "requirement_id": "REQ-LIFE-0015"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0016"}
+{"plan_ids": ["PLAN-LIFE-001"], "requirement_id": "REQ-LIFE-0017"}
+{"plan_ids": ["PLAN-LIFE-001", "PLAN-LIFE-002"], "requirement_id": "REQ-LIFE-0018"}
+{"plan_ids": ["PLAN-LIFE-002", "PLAN-OPS-001", "PLAN-UPSTREAM-004"], "requirement_id": "REQ-OPS-0001"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0002"}
+{"plan_ids": ["PLAN-OPS-001", "PLAN-LIFE-002"], "requirement_id": "REQ-OPS-0003"}
+{"plan_ids": ["PLAN-OPS-001", "PLAN-LIFE-002"], "requirement_id": "REQ-OPS-0004"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0005"}
+{"plan_ids": ["PLAN-OPS-001", "PLAN-ORCH-001"], "requirement_id": "REQ-OPS-0006"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0007"}
+{"plan_ids": ["PLAN-OPS-001", "PLAN-CTX-002"], "requirement_id": "REQ-OPS-0008"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0009"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0010"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0011"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0012"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0013"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0014"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0015"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0016"}
+{"plan_ids": ["PLAN-OPS-001"], "requirement_id": "REQ-OPS-0017"}
+{"plan_ids": ["PLAN-OPS-001", "PLAN-LIFE-002"], "requirement_id": "REQ-OPS-0018"}
+{"plan_ids": ["PLAN-OPS-001", "PLAN-LIFE-002"], "requirement_id": "REQ-OPS-0019"}
+{"plan_ids": ["PLAN-PDEF-001"], "requirement_id": "REQ-PDEF-0001"}
+{"plan_ids": ["PLAN-PDEF-001"], "requirement_id": "REQ-PDEF-0002"}
+{"plan_ids": ["PLAN-PDEF-001"], "requirement_id": "REQ-PDEF-0003"}
+{"plan_ids": ["PLAN-PDEF-001", "PLAN-PDEF-002"], "requirement_id": "REQ-PDEF-0004"}
+{"plan_ids": ["PLAN-PDEF-001", "PLAN-PDEF-002"], "requirement_id": "REQ-PDEF-0005"}
+{"plan_ids": ["PLAN-PDEF-001", "PLAN-PDEF-002"], "requirement_id": "REQ-PDEF-0006"}
+{"plan_ids": ["PLAN-PDEF-001"], "requirement_id": "REQ-PDEF-0007"}
+{"plan_ids": ["PLAN-PDEF-001"], "requirement_id": "REQ-PDEF-0008"}
+{"plan_ids": ["PLAN-PDEF-001", "PLAN-LIFE-002"], "requirement_id": "REQ-PDEF-0009"}
+{"plan_ids": ["PLAN-PDEF-001"], "requirement_id": "REQ-PDEF-0010"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0001"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0002"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0003"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0004"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0005"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0006"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0007"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0008"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0009"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0010"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0011"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0012"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0013"}
+{"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0014"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-REQ-001"], "requirement_id": "REQ-REQ-0001"}
+{"plan_ids": ["PLAN-REQ-001"], "requirement_id": "REQ-REQ-0002"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-REQ-001"], "requirement_id": "REQ-REQ-0003"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-REQ-002"], "requirement_id": "REQ-REQ-0004"}
+{"plan_ids": ["PLAN-REQ-002"], "requirement_id": "REQ-REQ-0005"}
+{"plan_ids": ["PLAN-REQ-002"], "requirement_id": "REQ-REQ-0006"}
+{"plan_ids": ["PLAN-REQ-002"], "requirement_id": "REQ-REQ-0007"}
+{"plan_ids": ["PLAN-REQ-002"], "requirement_id": "REQ-REQ-0008"}
+{"plan_ids": ["PLAN-REQ-002"], "requirement_id": "REQ-REQ-0009"}
+{"plan_ids": ["PLAN-REQ-002"], "requirement_id": "REQ-REQ-0010"}
+{"plan_ids": ["PLAN-REQ-002"], "requirement_id": "REQ-REQ-0011"}
+{"plan_ids": ["PLAN-REQ-002"], "requirement_id": "REQ-REQ-0012"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-REQ-002"], "requirement_id": "REQ-REQ-0013"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-REQ-002"], "requirement_id": "REQ-REQ-0014"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-REQ-002"], "requirement_id": "REQ-REQ-0015"}
+{"plan_ids": ["PLAN-ARCH-004", "PLAN-REQ-002"], "requirement_id": "REQ-REQ-0016"}
+{"plan_ids": ["PLAN-REQ-002"], "requirement_id": "REQ-REQ-0017"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0001"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0002"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0003"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0004"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0005"}
+{"plan_ids": ["PLAN-ORCH-001", "PLAN-RES-001", "PLAN-SCHED-002"], "requirement_id": "REQ-RES-0006"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0007"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0008"}
+{"plan_ids": ["PLAN-ORCH-001", "PLAN-RES-001"], "requirement_id": "REQ-RES-0009"}
+{"plan_ids": ["PLAN-ORCH-001", "PLAN-RES-001"], "requirement_id": "REQ-RES-0010"}
+{"plan_ids": ["PLAN-RES-001", "PLAN-GOV-003"], "requirement_id": "REQ-RES-0011"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0012"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0013"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0014"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0015"}
+{"plan_ids": ["PLAN-GOV-002", "PLAN-RES-001"], "requirement_id": "REQ-RES-0016"}
+{"plan_ids": ["PLAN-RES-001", "PLAN-GOV-003"], "requirement_id": "REQ-RES-0017"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0018"}
+{"plan_ids": ["PLAN-RES-001", "PLAN-VERIFY-001"], "requirement_id": "REQ-RES-0019"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0020"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0021"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0022"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0023"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0024"}
+{"plan_ids": ["PLAN-RES-001"], "requirement_id": "REQ-RES-0025"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-CTRL-002"], "requirement_id": "REQ-SCHED-0001"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0002"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0003"}
+{"plan_ids": ["PLAN-SCHED-001"], "requirement_id": "REQ-SCHED-0004"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-CTRL-002"], "requirement_id": "REQ-SCHED-0005"}
+{"plan_ids": ["PLAN-CTRL-002", "PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0006"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-CTRL-002"], "requirement_id": "REQ-SCHED-0007"}
+{"plan_ids": ["PLAN-CTRL-002", "PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0008"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0009"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0010"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0011"}
+{"plan_ids": ["PLAN-GOV-003", "PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0012"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0013"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0014"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0015"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0016"}
+{"plan_ids": ["PLAN-SCHED-001", "PLAN-SCHED-002"], "requirement_id": "REQ-SCHED-0017"}
+{"plan_ids": ["PLAN-SEC-001"], "requirement_id": "REQ-SEC-0001"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-LIFE-002"], "requirement_id": "REQ-SEC-0002"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-LIFE-002"], "requirement_id": "REQ-SEC-0003"}
+{"plan_ids": ["PLAN-LIFE-002", "PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0004"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0005"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0006"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0007"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0008"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0009"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0010"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0011"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-LIFE-002"], "requirement_id": "REQ-SEC-0012"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0013"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0014"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0015"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0016"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0017"}
+{"plan_ids": ["PLAN-LIFE-002", "PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0018"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0019"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0020"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0021"}
+{"plan_ids": ["PLAN-LIFE-002", "PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0022"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-LIFE-002"], "requirement_id": "REQ-SEC-0023"}
+{"plan_ids": ["PLAN-SEC-001", "PLAN-SEC-002"], "requirement_id": "REQ-SEC-0024"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0001"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0002"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0003"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0004"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0005"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0006"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0007"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-004", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0008"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0009"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0010"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0011"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-004", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0012"}
+{"plan_ids": ["PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-004", "PLAN-UPSTREAM-006"], "requirement_id": "REQ-UPSTREAM-0013"}
+{"plan_ids": ["PLAN-ORCH-001", "PLAN-UPSTREAM-001", "PLAN-UPSTREAM-002", "PLAN-UPSTREAM-003", "PLAN-UPSTREAM-004", "PLAN-UPSTREAM-006", "PLAN-VERIFY-001"], "requirement_id": "REQ-UPSTREAM-0014"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0001"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0002"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0003"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0004"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0005"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0006"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0007"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0008"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0009"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0010"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0011"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0012"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0013"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0014"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0015"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0016"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0017"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0018"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0019"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0020"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0021"}
+{"plan_ids": ["PLAN-GOV-002", "PLAN-UX-001"], "requirement_id": "REQ-UX-0022"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0023"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0024"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0025"}
+{"plan_ids": ["PLAN-UX-001"], "requirement_id": "REQ-UX-0026"}

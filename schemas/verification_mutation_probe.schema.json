@@ -1,0 +1,49 @@
+{
+  "$id": "https://project-pipeline.local/schemas/verification_mutation_probe.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "detected": {
+      "title": "Detected",
+      "type": "boolean"
+    },
+    "detector": {
+      "title": "Detector",
+      "type": "string"
+    },
+    "evidence_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Evidence Path"
+    },
+    "mutation_id": {
+      "title": "Mutation Id",
+      "type": "string"
+    },
+    "mutation_name": {
+      "title": "Mutation Name",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "mutation_id",
+    "mutation_name",
+    "detector",
+    "detected"
+  ],
+  "title": "MutationProbeResult",
+  "type": "object"
+}

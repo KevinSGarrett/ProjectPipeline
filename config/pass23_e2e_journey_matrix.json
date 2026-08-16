@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0.0",
+  "pass_number": 23,
+  "canonical_authority": "PROJECT_PIPELINE",
+  "external_mutation_policy": "DRY_RUN_OR_MOCK_UNLESS_EXPLICITLY_AUTHORIZED_AND_LIVE_QUALIFIED",
+  "journeys": [
+    {
+      "journey_id": "E2E-P23-001",
+      "name": "full_project_pipeline_journey",
+      "environment": "local deterministic integration environment",
+      "setup": "Compile the existing Python service fixture and load canonical repository registries.",
+      "actions": ["intake", "requirements", "Jira dry-run", "sequence", "schedule", "delegate/context", "provider-fallback execution", "verification", "mock PR gate", "completion gate", "incident recovery", "continuation", "Command Center projection"],
+      "observable_result": "Every locally executable transition succeeds and all unavailable external legs are explicitly typed as blocked rather than verified.",
+      "cleanup": "Temporary Git repository and state databases are removed; no remote Jira/GitHub/cloud mutation is performed.",
+      "preserved_evidence": "evidence/verification/pass23_full_e2e_report.json"
+    },
+    {
+      "journey_id": "E2E-P23-002",
+      "name": "duplicate_and_idempotency",
+      "environment": "local deterministic integration environment",
+      "setup": "Create a stable incident identity and repeat the same open operation.",
+      "actions": ["repeat incident open", "repeat Jira dry-run planning"],
+      "observable_result": "Duplicate delivery does not create duplicate operator work or remote writes.",
+      "cleanup": "In-memory incident/Jira state is discarded.",
+      "preserved_evidence": "evidence/verification/pass23_full_e2e_report.json"
+    },
+    {
+      "journey_id": "E2E-P23-003",
+      "name": "partial_failure_retry_and_recovery",
+      "environment": "local deterministic integration environment",
+      "setup": "Force the first provider unavailable and exercise durable unknown-outcome/worker-loss scenarios.",
+      "actions": ["provider failure", "fallback", "unknown outcome", "worker loss", "human repair", "reconciliation"],
+      "observable_result": "Safe fallback succeeds; uncertain effects are not blindly retried; human repair must verify before resolution.",
+      "cleanup": "All temporary state is in-memory or temporary-directory scoped.",
+      "preserved_evidence": "evidence/verification/pass23_full_e2e_report.json"
+    }
+  ]
+}

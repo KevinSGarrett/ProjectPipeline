@@ -1,0 +1,21 @@
+{
+  "application": {
+    "name": "orders"
+  },
+  "execution_policy": {
+    "retry": {
+      "backoff": "2s",
+      "max_attempts": 4
+    }
+  },
+  "observability": {
+    "logging": {
+      "level": "INFO"
+    }
+  },
+  "schema_version": 3,
+  "secrets": {
+    "provider": "environment",
+    "references": []
+  }
+}

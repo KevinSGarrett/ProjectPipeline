@@ -1,0 +1,27 @@
+L000001 | # PLAN-CTX-001 — Context and Knowledge Architecture
+L000002 | 
+L000003 | - **Plan ID:** `PLAN-CTX-001`
+L000004 | - **Status:** `PLANNED`
+L000005 | - **Authority:** source-derived requirements plus explicitly labeled implementation detail
+L000006 | - **Source basis:** `SRC-002:L001015-L001156`, `GOV-001:L000472-L000485`, `GOV-001:L001575-L001588`
+L000007 | 
+L000008 | 
+L000009 | ## PLAN-CTX-001:SEC-01 Context policy
+L000010 | 
+L000011 | No delegated work starts without an explicit context envelope. Context is purpose-specific, minimal, source-grounded, versioned, and auditable. More context is not automatically better; irrelevant or untrusted material increases risk.
+L000012 | 
+L000013 | ## PLAN-CTX-001:SEC-02 Context Broker
+L000014 | 
+L000015 | The Context Broker resolves requested facts and artifacts from authoritative registries, repository maps, plans, source ranges, work relationships, and current state. It enforces access, trust, freshness, and size policy.
+L000016 | 
+L000017 | ## PLAN-CTX-001:SEC-03 Context Compiler
+L000018 | 
+L000019 | The compiler produces immutable context packs containing task objective, authority, constraints, source references, expected artifacts, acceptance criteria, relevant code map, allowed tools, and return contract. A context receipt records what was actually supplied.
+L000020 | 
+L000021 | ## PLAN-CTX-001:SEC-04 Trust and firewall
+L000022 | 
+L000023 | Retrieved instructions are classified by origin and authority. Untrusted repository or external text cannot override governing instructions, request secrets, expand tool authority, or silently mutate scope. Suspicious content is isolated and reported.
+L000024 | 
+L000025 | ## PLAN-CTX-001:SEC-05 Freshness and coverage
+L000026 | 
+L000027 | Each pack records source versions and generation time. Staleness checks invalidate packs after relevant source or state changes. Coverage checks ensure every required acceptance criterion and constraint is represented before delegation.

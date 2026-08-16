@@ -1,0 +1,32 @@
+{
+  "$id": "https://project-pipeline.local/schemas/agent_qualification_check.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "check_name": {
+      "title": "Check Name",
+      "type": "string"
+    },
+    "detail": {
+      "default": "",
+      "title": "Detail",
+      "type": "string"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "check_name",
+    "passed"
+  ],
+  "title": "QualificationCheckResult",
+  "type": "object"
+}

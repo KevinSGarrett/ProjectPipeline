@@ -1,0 +1,32 @@
+[
+  {
+    "browser_evidence_id": "BROWSE-168525996090A67A35E5",
+    "browser_name": "Chromium",
+    "browser_version": "144.0.0.0",
+    "console_error_count": 0,
+    "horizontal_overflow": false,
+    "load_duration_ms": 26,
+    "passed": true,
+    "schema_version": "1.0.0",
+    "screenshot_path": "evidence/verification/browser/verification_report_1280x720.png",
+    "screenshot_sha256": "254c103d41e5ef62cc8ff23de25179f9ee3ab61704e8f710da753d0c1875f0ee",
+    "target": "evidence/verification/pass16_verification_report.html",
+    "viewport_height": 720,
+    "viewport_width": 1280
+  },
+  {
+    "browser_evidence_id": "BROWSE-9369FAEF700CCBCE6D80",
+    "browser_name": "Chromium",
+    "browser_version": "144.0.0.0",
+    "console_error_count": 0,
+    "horizontal_overflow": false,
+    "load_duration_ms": 15,
+    "passed": true,
+    "schema_version": "1.0.0",
+    "screenshot_path": "evidence/verification/browser/verification_report_390x844.png",
+    "screenshot_sha256": "36a761946a2d5b921dd8198ee59542fe1e6e20526599f078ddc4dbd5b6667d9c",
+    "target": "evidence/verification/pass16_verification_report.html",
+    "viewport_height": 844,
+    "viewport_width": 390
+  }
+]

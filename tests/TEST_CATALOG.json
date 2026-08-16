@@ -1,0 +1,2461 @@
+{
+  "schema_version": "2.0.0",
+  "test_count": 491,
+  "tests": [
+    {
+      "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
+      "path": "tests/test_agent_router_adapters.py",
+      "test_id": "TEST-AGENT-ADAPTER-001"
+    },
+    {
+      "callable": "test_anthropic_messages_adapter_normalizes_payload_and_usage",
+      "path": "tests/test_agent_router_adapters.py",
+      "test_id": "TEST-AGENT-ADAPTER-002"
+    },
+    {
+      "callable": "test_gemini_generate_content_adapter_normalizes_payload_and_usage",
+      "path": "tests/test_agent_router_adapters.py",
+      "test_id": "TEST-AGENT-ADAPTER-003"
+    },
+    {
+      "callable": "test_http_rate_limit_is_typed_retryable_error",
+      "path": "tests/test_agent_router_adapters.py",
+      "test_id": "TEST-AGENT-ADAPTER-004"
+    },
+    {
+      "callable": "test_local_process_adapter_uses_no_shell_and_parses_json",
+      "path": "tests/test_agent_router_adapters.py",
+      "test_id": "TEST-AGENT-ADAPTER-005"
+    },
+    {
+      "callable": "test_mock_tool_adapter_enforces_operation_allowlist",
+      "path": "tests/test_agent_router_adapters.py",
+      "test_id": "TEST-AGENT-ADAPTER-006"
+    },
+    {
+      "callable": "test_circuit_opens_after_bounded_failures",
+      "path": "tests/test_agent_router_circuit.py",
+      "test_id": "TEST-AGENT-CIRCUIT-001"
+    },
+    {
+      "callable": "test_open_circuit_becomes_half_open_after_cooldown_and_probe_is_bounded",
+      "path": "tests/test_agent_router_circuit.py",
+      "test_id": "TEST-AGENT-CIRCUIT-002"
+    },
+    {
+      "callable": "test_success_closes_circuit",
+      "path": "tests/test_agent_router_circuit.py",
+      "test_id": "TEST-AGENT-CIRCUIT-003"
+    },
+    {
+      "callable": "test_agent_router_registry_and_route_are_executable",
+      "path": "tests/test_agent_router_cli.py",
+      "test_id": "TEST-AGENT-CLI-001"
+    },
+    {
+      "callable": "test_agent_router_unqualified_external_capability_fails_closed",
+      "path": "tests/test_agent_router_cli.py",
+      "test_id": "TEST-AGENT-CLI-002"
+    },
+    {
+      "callable": "test_agent_router_simulation_demonstrates_fallback",
+      "path": "tests/test_agent_router_cli.py",
+      "test_id": "TEST-AGENT-CLI-003"
+    },
+    {
+      "callable": "test_registry_identity_is_deterministic",
+      "path": "tests/test_agent_router_domain.py",
+      "test_id": "TEST-AGENT-DOMAIN-001"
+    },
+    {
+      "callable": "test_registry_rejects_unknown_provider_link",
+      "path": "tests/test_agent_router_domain.py",
+      "test_id": "TEST-AGENT-DOMAIN-002"
+    },
+    {
+      "callable": "test_task_contract_requires_capability_identifiers",
+      "path": "tests/test_agent_router_domain.py",
+      "test_id": "TEST-AGENT-DOMAIN-003"
+    },
+    {
+      "callable": "test_adapter_qualification_requires_every_standard_check_and_rollback",
+      "path": "tests/test_agent_router_domain.py",
+      "test_id": "TEST-AGENT-DOMAIN-004"
+    },
+    {
+      "callable": "test_performance_registry_summarizes_measured_outcomes",
+      "path": "tests/test_agent_router_performance.py",
+      "test_id": "TEST-AGENT-PERF-001"
+    },
+    {
+      "callable": "test_agent_router_store_roundtrip",
+      "path": "tests/test_agent_router_persistence.py",
+      "test_id": "TEST-AGENT-PERSIST-001"
+    },
+    {
+      "callable": "test_ppdb_0008_is_reversible",
+      "path": "tests/test_agent_router_persistence.py",
+      "test_id": "TEST-AGENT-PERSIST-002"
+    },
+    {
+      "callable": "test_capability_first_selects_preferred_eligible_provider",
+      "path": "tests/test_agent_router_routing.py",
+      "test_id": "TEST-AGENT-ROUTER-001"
+    },
+    {
+      "callable": "test_unavailable_preferred_falls_back_without_changing_task_contract",
+      "path": "tests/test_agent_router_routing.py",
+      "test_id": "TEST-AGENT-ROUTER-002"
+    },
+    {
+      "callable": "test_quarantined_preferred_is_ineligible",
+      "path": "tests/test_agent_router_routing.py",
+      "test_id": "TEST-AGENT-ROUTER-003"
+    },
+    {
+      "callable": "test_open_circuit_excludes_provider",
+      "path": "tests/test_agent_router_routing.py",
+      "test_id": "TEST-AGENT-ROUTER-004"
+    },
+    {
+      "callable": "test_data_egress_policy_can_force_local_route",
+      "path": "tests/test_agent_router_routing.py",
+      "test_id": "TEST-AGENT-ROUTER-005"
+    },
+    {
+      "callable": "test_no_capability_match_fails_closed",
+      "path": "tests/test_agent_router_routing.py",
+      "test_id": "TEST-AGENT-ROUTER-006"
+    },
+    {
+      "callable": "test_service_falls_back_after_provider_failure",
+      "path": "tests/test_agent_router_service.py",
+      "test_id": "TEST-AGENT-SERVICE-001"
+    },
+    {
+      "callable": "test_service_reports_failed_receipt_when_all_candidates_fail",
+      "path": "tests/test_agent_router_service.py",
+      "test_id": "TEST-AGENT-SERVICE-002"
+    },
+    {
+      "callable": "test_agent_router_foundation_is_registered_and_valid",
+      "path": "tests/test_agent_router_validation.py",
+      "test_id": "TEST-AGENT-VALIDATION-001"
+    },
+    {
+      "callable": "ArchitectureCliTests.test_summary_and_component_queries",
+      "path": "tests/test_architecture_cli.py",
+      "test_id": "TEST-ARCH-CLI-001"
+    },
+    {
+      "callable": "ArchitectureRegistryTests.test_component_query_is_bounded",
+      "path": "tests/test_architecture_registry.py",
+      "test_id": "TEST-ARCH-QUERY-001"
+    },
+    {
+      "callable": "ArchitectureRegistryTests.test_architecture_registry_is_cross_linked_and_current",
+      "path": "tests/test_architecture_registry.py",
+      "test_id": "TEST-ARCH-REGISTRY-001"
+    },
+    {
+      "callable": "ArchitectureRegistryTests.test_architecture_catalog_is_complete_and_valid",
+      "path": "tests/test_architecture_registry.py",
+      "test_id": "TEST-ARCHITECTURE-001"
+    },
+    {
+      "callable": "ArchitectureRegistryTests.test_authority_and_state_ownership_are_explicit",
+      "path": "tests/test_architecture_registry.py",
+      "test_id": "TEST-ARCHITECTURE-002"
+    },
+    {
+      "callable": "ArchitectureRegistryTests.test_technology_stack_preserves_latest_source_chronology",
+      "path": "tests/test_architecture_registry.py",
+      "test_id": "TEST-ARCHITECTURE-003"
+    },
+    {
+      "callable": "ArchitectureRegistryTests.test_diagrams_and_profiles_match_selected_backend",
+      "path": "tests/test_architecture_registry.py",
+      "test_id": "TEST-ARCHITECTURE-004"
+    },
+    {
+      "callable": "ArchitectureRegistryTests.test_architecture_queries_and_decision_map_are_deterministic",
+      "path": "tests/test_architecture_registry.py",
+      "test_id": "TEST-ARCHITECTURE-005"
+    },
+    {
+      "callable": "ArchiveTests.test_archive_is_deterministic_and_valid",
+      "path": "tests/test_archive.py",
+      "test_id": "TEST-ARCHIVE-001"
+    },
+    {
+      "callable": "ArchiveTests.test_wrong_root_is_reported",
+      "path": "tests/test_archive.py",
+      "test_id": "TEST-ARCHIVE-002"
+    },
+    {
+      "callable": "ArchitectureRegistryTests.test_local_artifact_store_deduplicates_and_detects_corruption",
+      "path": "tests/test_architecture_registry.py",
+      "test_id": "TEST-ARTIFACT-STORE-001"
+    },
+    {
+      "callable": "test_candidate_claim_is_challenged_by_missing_or_stale_evidence",
+      "path": "tests/test_assurance_completion.py",
+      "test_id": "TEST-ASSURE-CANDIDATE-001"
+    },
+    {
+      "callable": "test_assurance_cli_completion_gate_truthfully_reports_not_complete",
+      "path": "tests/test_assurance_cli.py",
+      "test_id": "TEST-ASSURE-CLI-001"
+    },
+    {
+      "callable": "test_repository_plan_compiles_real_jira_and_has_stable_fingerprint",
+      "path": "tests/test_assurance_compiler.py",
+      "test_id": "TEST-ASSURE-COMPILER-001"
+    },
+    {
+      "callable": "test_repository_plan_rejects_unverifiable_criterion_before_work",
+      "path": "tests/test_assurance_compiler.py",
+      "test_id": "TEST-ASSURE-COMPILER-002"
+    },
+    {
+      "callable": "test_completion_gate_model_rejects_false_complete_claim",
+      "path": "tests/test_assurance_domain.py",
+      "test_id": "TEST-ASSURE-DOMAIN-001"
+    },
+    {
+      "callable": "test_old_passing_evidence_becomes_stale",
+      "path": "tests/test_assurance_evidence.py",
+      "test_id": "TEST-ASSURE-EVIDENCE-001"
+    },
+    {
+      "callable": "test_high_risk_two_methods_plus_clean_review_is_sufficient",
+      "path": "tests/test_assurance_evidence.py",
+      "test_id": "TEST-ASSURE-EVIDENCE-002"
+    },
+    {
+      "callable": "test_all_fifteen_questions_are_required_for_complete",
+      "path": "tests/test_assurance_completion.py",
+      "test_id": "TEST-ASSURE-GATE-001"
+    },
+    {
+      "callable": "test_current_repository_cannot_self_certify_complete_before_later_passes",
+      "path": "tests/test_assurance_completion.py",
+      "test_id": "TEST-ASSURE-GATE-002"
+    },
+    {
+      "callable": "test_repeated_failure_escalates",
+      "path": "tests/test_assurance_loop_scope.py",
+      "test_id": "TEST-ASSURE-LOOP-001"
+    },
+    {
+      "callable": "test_retry_after_failure_requires_explicit_novelty_dimension",
+      "path": "tests/test_assurance_loop_scope.py",
+      "test_id": "TEST-ASSURE-LOOP-002"
+    },
+    {
+      "callable": "test_ppdb_0012_is_reversible_without_damaging_ppdb_0011",
+      "path": "tests/test_assurance_persistence.py",
+      "test_id": "TEST-ASSURE-PERSIST-001"
+    },
+    {
+      "callable": "test_self_review_never_satisfies_high_risk_review",
+      "path": "tests/test_assurance_evidence.py",
+      "test_id": "TEST-ASSURE-REVIEW-001"
+    },
+    {
+      "callable": "test_scope_change_budget_exhaustion_blocks_autonomous_expansion",
+      "path": "tests/test_assurance_loop_scope.py",
+      "test_id": "TEST-ASSURE-SCOPE-001"
+    },
+    {
+      "callable": "test_all_assurance_simulations_pass",
+      "path": "tests/test_assurance_persistence.py",
+      "test_id": "TEST-ASSURE-SIM-001"
+    },
+    {
+      "callable": "test_claim_and_verified_fact_remain_distinct_truth_types",
+      "path": "tests/test_assurance_evidence.py",
+      "test_id": "TEST-ASSURE-TRUTH-001"
+    },
+    {
+      "callable": "test_assurance_foundation_contract_is_present",
+      "path": "tests/test_assurance_validation.py",
+      "test_id": "TEST-ASSURE-VALIDATION-001"
+    },
+    {
+      "callable": "test_provider_soft_rebalance_never_changes_hard_caps",
+      "path": "tests/test_budget_advanced.py",
+      "test_id": "TEST-BUDGET-ALLOC-001"
+    },
+    {
+      "callable": "test_anomaly_detection_warns_then_blocks_and_persists",
+      "path": "tests/test_budget_advanced.py",
+      "test_id": "TEST-BUDGET-ANOMALY-001"
+    },
+    {
+      "callable": "test_budget_cli_limit_requires_explicit_approval",
+      "path": "tests/test_budget_cli.py",
+      "test_id": "TEST-BUDGET-CLI-001"
+    },
+    {
+      "callable": "test_budget_cli_anomaly_is_approval_gated_and_persists",
+      "path": "tests/test_budget_cli.py",
+      "test_id": "TEST-BUDGET-CLI-002"
+    },
+    {
+      "callable": "test_limit_identity_and_normal_cap",
+      "path": "tests/test_budget_domain.py",
+      "test_id": "TEST-BUDGET-DOMAIN-001"
+    },
+    {
+      "callable": "test_forecast_uses_historical_median_and_p90",
+      "path": "tests/test_budget_forecast.py",
+      "test_id": "TEST-BUDGET-FORECAST-001"
+    },
+    {
+      "callable": "test_budget_limit_change_reports_active_commitment_impact",
+      "path": "tests/test_budget_advanced.py",
+      "test_id": "TEST-BUDGET-IMPACT-001"
+    },
+    {
+      "callable": "test_parse_infracost_machine_readable_totals",
+      "path": "tests/test_budget_infracost.py",
+      "test_id": "TEST-BUDGET-INFRACOST-001"
+    },
+    {
+      "callable": "test_scheduler_profile_remains_ineligible_when_budget_denies",
+      "path": "tests/test_budget_integration.py",
+      "test_id": "TEST-BUDGET-INTEGRATION-001"
+    },
+    {
+      "callable": "test_atomic_recheck_closes_preapproved_reservation_race",
+      "path": "tests/test_budget_advanced.py",
+      "test_id": "TEST-BUDGET-LEASE-001"
+    },
+    {
+      "callable": "test_unknown_outcome_holds_reservation_until_reconciled",
+      "path": "tests/test_budget_persistence.py",
+      "test_id": "TEST-BUDGET-LEASE-002"
+    },
+    {
+      "callable": "test_settlement_moves_reservation_to_immutable_ledger",
+      "path": "tests/test_budget_persistence.py",
+      "test_id": "TEST-BUDGET-LEDGER-001"
+    },
+    {
+      "callable": "test_ppdb_0011_is_reversible_without_damaging_ppdb_0010",
+      "path": "tests/test_budget_migration.py",
+      "test_id": "TEST-BUDGET-MIGRATION-001"
+    },
+    {
+      "callable": "test_outcome_metrics_measure_verified_cost_and_waste",
+      "path": "tests/test_budget_forecast.py",
+      "test_id": "TEST-BUDGET-OUTCOME-001"
+    },
+    {
+      "callable": "test_pressure_progresses_from_green_to_red",
+      "path": "tests/test_budget_policy.py",
+      "test_id": "TEST-BUDGET-POLICY-001"
+    },
+    {
+      "callable": "test_hard_stop_still_allows_non_paid_local_work",
+      "path": "tests/test_budget_policy.py",
+      "test_id": "TEST-BUDGET-POLICY-002"
+    },
+    {
+      "callable": "test_atomic_quota_recheck_closes_preapproved_quota_race",
+      "path": "tests/test_budget_advanced.py",
+      "test_id": "TEST-BUDGET-QUOTA-001"
+    },
+    {
+      "callable": "test_protected_reserve_requires_critical_justification",
+      "path": "tests/test_budget_persistence.py",
+      "test_id": "TEST-BUDGET-RESERVE-001"
+    },
+    {
+      "callable": "test_agent_router_hard_cost_contract_excludes_known_expensive_candidate",
+      "path": "tests/test_budget_integration.py",
+      "test_id": "TEST-BUDGET-ROUTER-001"
+    },
+    {
+      "callable": "test_all_budget_simulations_execute_deterministically",
+      "path": "tests/test_budget_simulation.py",
+      "test_id": "TEST-BUDGET-SIM-001"
+    },
+    {
+      "callable": "test_agui_run_requires_lifecycle_bookends",
+      "path": "tests/test_command_center_agui.py",
+      "test_id": "TEST-CC-AGUI-001"
+    },
+    {
+      "callable": "test_agui_rejects_unterminated_run",
+      "path": "tests/test_command_center_agui.py",
+      "test_id": "TEST-CC-AGUI-002"
+    },
+    {
+      "callable": "test_state_snapshot_remains_non_authoritative",
+      "path": "tests/test_command_center_agui.py",
+      "test_id": "TEST-CC-AGUI-003"
+    },
+    {
+      "callable": "test_internal_event_maps_to_custom_without_losing_identity",
+      "path": "tests/test_command_center_agui.py",
+      "test_id": "TEST-CC-AGUI-004"
+    },
+    {
+      "callable": "test_protected_endpoints_fail_closed_by_default",
+      "path": "tests/test_command_center_api.py",
+      "test_id": "TEST-CC-API-001"
+    },
+    {
+      "callable": "test_status_and_capabilities_are_truthful",
+      "path": "tests/test_command_center_api.py",
+      "test_id": "TEST-CC-API-002"
+    },
+    {
+      "callable": "test_timeline_and_sse_replay_use_sequence_cursor",
+      "path": "tests/test_command_center_api.py",
+      "test_id": "TEST-CC-API-003"
+    },
+    {
+      "callable": "test_inbox_is_actionable_and_acknowledgeable",
+      "path": "tests/test_command_center_api.py",
+      "test_id": "TEST-CC-API-004"
+    },
+    {
+      "callable": "test_control_rejects_actor_mismatch",
+      "path": "tests/test_command_center_api.py",
+      "test_id": "TEST-CC-API-005"
+    },
+    {
+      "callable": "test_control_uses_typed_command_gateway",
+      "path": "tests/test_command_center_api.py",
+      "test_id": "TEST-CC-API-006"
+    },
+    {
+      "callable": "test_director_context_does_not_expose_private_reasoning",
+      "path": "tests/test_command_center_api.py",
+      "test_id": "TEST-CC-API-007"
+    },
+    {
+      "callable": "test_repository_projection_is_explicitly_non_authoritative",
+      "path": "tests/test_command_center_application.py",
+      "test_id": "TEST-CC-APP-001"
+    },
+    {
+      "callable": "test_repository_projection_never_invents_remote_sync_or_approval_truth",
+      "path": "tests/test_command_center_application.py",
+      "test_id": "TEST-CC-APP-002"
+    },
+    {
+      "callable": "test_application_graph_is_bounded_and_traceable",
+      "path": "tests/test_command_center_application.py",
+      "test_id": "TEST-CC-APP-003"
+    },
+    {
+      "callable": "test_application_projection_endpoint_is_authenticated_and_truthful",
+      "path": "tests/test_command_center_application.py",
+      "test_id": "TEST-CC-APP-004"
+    },
+    {
+      "callable": "test_application_endpoint_fails_closed_without_projection_provider",
+      "path": "tests/test_command_center_application.py",
+      "test_id": "TEST-CC-APP-005"
+    },
+    {
+      "callable": "test_command_center_application_repository_contract_is_clean",
+      "path": "tests/test_command_center_application.py",
+      "test_id": "TEST-CC-APP-006"
+    },
+    {
+      "callable": "verify_command_center_ui",
+      "path": "scripts/verify_command_center_ui.py",
+      "test_id": "TEST-CC-BROWSER-001"
+    },
+    {
+      "callable": "test_control_gateway_requires_typed_action_intent",
+      "path": "tests/test_command_center_director.py",
+      "test_id": "TEST-CC-DIRECTOR-001"
+    },
+    {
+      "callable": "test_control_gateway_obeys_authorization",
+      "path": "tests/test_command_center_director.py",
+      "test_id": "TEST-CC-DIRECTOR-002"
+    },
+    {
+      "callable": "test_control_gateway_uses_normal_idempotent_command_processor",
+      "path": "tests/test_command_center_director.py",
+      "test_id": "TEST-CC-DIRECTOR-003"
+    },
+    {
+      "callable": "test_director_context_scrubs_private_reasoning_keys",
+      "path": "tests/test_command_center_director.py",
+      "test_id": "TEST-CC-DIRECTOR-004"
+    },
+    {
+      "callable": "test_incident_context_requires_incident_id",
+      "path": "tests/test_command_center_director.py",
+      "test_id": "TEST-CC-DIRECTOR-005"
+    },
+    {
+      "callable": "test_priority_uses_impact_blockage_duration_and_recoverability",
+      "path": "tests/test_command_center_inbox.py",
+      "test_id": "TEST-CC-INBOX-001"
+    },
+    {
+      "callable": "test_deduplication_keeps_stable_inbox_identity",
+      "path": "tests/test_command_center_inbox.py",
+      "test_id": "TEST-CC-INBOX-002"
+    },
+    {
+      "callable": "test_acknowledge_and_resolve_are_explicit_states",
+      "path": "tests/test_command_center_inbox.py",
+      "test_id": "TEST-CC-INBOX-003"
+    },
+    {
+      "callable": "test_quiet_hours_suppress_nonurgent_desktop_notice",
+      "path": "tests/test_command_center_inbox.py",
+      "test_id": "TEST-CC-INBOX-004"
+    },
+    {
+      "callable": "test_critical_breaks_through_quiet_hours_and_can_use_remote",
+      "path": "tests/test_command_center_inbox.py",
+      "test_id": "TEST-CC-INBOX-005"
+    },
+    {
+      "callable": "test_director_chat_is_grounded_and_never_mutates_from_raw_text",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-001"
+    },
+    {
+      "callable": "test_director_chat_prepares_typed_confirmation_required_action_proposal_only",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-002"
+    },
+    {
+      "callable": "test_director_incident_scope_requires_canonical_incident_context",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-003"
+    },
+    {
+      "callable": "test_incident_lifecycle_requires_verified_repair_before_resolution",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-004"
+    },
+    {
+      "callable": "test_incident_open_is_idempotent_until_resolved",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-005"
+    },
+    {
+      "callable": "test_notification_delivery_keeps_project_pipeline_as_broker_and_remote_default_off",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-006"
+    },
+    {
+      "callable": "test_notification_quiet_hours_suppress_attention_desktop_delivery",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-007"
+    },
+    {
+      "callable": "test_remote_adapter_retries_then_delivers_and_deduplicates",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-008"
+    },
+    {
+      "callable": "test_remote_adapter_failure_exposes_category_not_secret_message",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-009"
+    },
+    {
+      "callable": "test_ntfy_http_adapter_uses_http_json_action_link_and_idempotency_header",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-010"
+    },
+    {
+      "callable": "test_command_center_store_persists_pass21_artifacts",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-011"
+    },
+    {
+      "callable": "test_ppdb_0017_rolls_back_without_removing_pass19_command_center_schema",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-012"
+    },
+    {
+      "callable": "test_pass21_api_endpoints_are_authenticated_grounded_and_stateful",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-013"
+    },
+    {
+      "callable": "test_notification_dispatch_api_returns_client_action_required_for_native_desktop",
+      "path": "tests/test_command_center_pass21.py",
+      "test_id": "TEST-CC-P21-014"
+    },
+    {
+      "callable": "test_command_center_migration_is_latest_and_reversible",
+      "path": "tests/test_command_center_persistence.py",
+      "test_id": "TEST-CC-PERSIST-001"
+    },
+    {
+      "callable": "test_command_center_store_records_projection_artifacts",
+      "path": "tests/test_command_center_persistence.py",
+      "test_id": "TEST-CC-PERSIST-002"
+    },
+    {
+      "callable": "test_projection_preserves_non_authoritative_ui_boundary",
+      "path": "tests/test_command_center_models.py",
+      "test_id": "TEST-CC-PROJECTION-001"
+    },
+    {
+      "callable": "test_unknown_or_stale_health_is_not_claimed_healthy",
+      "path": "tests/test_command_center_models.py",
+      "test_id": "TEST-CC-PROJECTION-002"
+    },
+    {
+      "callable": "test_unhealthy_known_dimension_survives_other_unknown_dimension",
+      "path": "tests/test_command_center_models.py",
+      "test_id": "TEST-CC-PROJECTION-003"
+    },
+    {
+      "callable": "test_sequence_and_reconnect_replay",
+      "path": "tests/test_command_center_realtime.py",
+      "test_id": "TEST-CC-REALTIME-001"
+    },
+    {
+      "callable": "test_retention_bounds_replay",
+      "path": "tests/test_command_center_realtime.py",
+      "test_id": "TEST-CC-REALTIME-002"
+    },
+    {
+      "callable": "test_sse_contains_cursor_event_and_json",
+      "path": "tests/test_command_center_realtime.py",
+      "test_id": "TEST-CC-REALTIME-003"
+    },
+    {
+      "callable": "test_live_subscription_gets_future_event",
+      "path": "tests/test_command_center_realtime.py",
+      "test_id": "TEST-CC-REALTIME-004"
+    },
+    {
+      "callable": "navigation contains all Pass 20 operator surfaces",
+      "path": "apps/command_center/tests/appModel.test.mjs",
+      "test_id": "TEST-CC-UI-001"
+    },
+    {
+      "callable": "summary keeps readiness dimensions distinct",
+      "path": "apps/command_center/tests/appModel.test.mjs",
+      "test_id": "TEST-CC-UI-002"
+    },
+    {
+      "callable": "graph filtering only retains valid visible edges",
+      "path": "apps/command_center/tests/appModel.test.mjs",
+      "test_id": "TEST-CC-UI-003"
+    },
+    {
+      "callable": "typed control command carries actor project correlation and idempotency",
+      "path": "apps/command_center/tests/appModel.test.mjs",
+      "test_id": "TEST-CC-UI-004"
+    },
+    {
+      "callable": "format helpers are bounded and health tones are deterministic",
+      "path": "apps/command_center/tests/appModel.test.mjs",
+      "test_id": "TEST-CC-UI-005"
+    },
+    {
+      "callable": "live application projection normalizes canonical backend contract",
+      "path": "apps/command_center/tests/appModel.test.mjs",
+      "test_id": "TEST-CC-UI-006"
+    },
+    {
+      "callable": "test_command_center_simulations_pass",
+      "path": "tests/test_command_center_validation.py",
+      "test_id": "TEST-CC-VALIDATION-001"
+    },
+    {
+      "callable": "test_command_center_foundation_validator_clean",
+      "path": "tests/test_command_center_validation.py",
+      "test_id": "TEST-CC-VALIDATION-002"
+    },
+    {
+      "callable": "FoundationCliTests.test_config_validate_outputs_fingerprint_and_sources",
+      "path": "tests/test_cli_foundation.py",
+      "test_id": "TEST-CLI-FOUNDATION-001"
+    },
+    {
+      "callable": "FoundationCliTests.test_schema_and_dependency_checks_are_executable",
+      "path": "tests/test_cli_foundation.py",
+      "test_id": "TEST-CLI-FOUNDATION-002"
+    },
+    {
+      "callable": "FoundationCliTests.test_doctor_reports_non_blocked_local_state",
+      "path": "tests/test_cli_foundation.py",
+      "test_id": "TEST-CLI-FOUNDATION-003"
+    },
+    {
+      "callable": "CommandProcessorTests.test_second_execution_replays_without_calling_handler",
+      "path": "tests/test_command_processor.py",
+      "test_id": "TEST-COMMAND-001"
+    },
+    {
+      "callable": "CommandProcessorTests.test_reusing_key_for_different_semantics_is_rejected",
+      "path": "tests/test_command_processor.py",
+      "test_id": "TEST-COMMAND-002"
+    },
+    {
+      "callable": "CommandProcessorTests.test_result_identity_mismatch_is_rejected",
+      "path": "tests/test_command_processor.py",
+      "test_id": "TEST-COMMAND-003"
+    },
+    {
+      "callable": "CommandProcessorTests.test_unknown_command_is_rejected_and_duplicate_handler_is_blocked",
+      "path": "tests/test_command_processor.py",
+      "test_id": "TEST-COMMAND-004"
+    },
+    {
+      "callable": "ConfigurationTests.test_layer_precedence_is_deterministic",
+      "path": "tests/test_configuration.py",
+      "test_id": "TEST-CONFIG-001"
+    },
+    {
+      "callable": "ConfigurationTests.test_unknown_configuration_key_is_rejected",
+      "path": "tests/test_configuration.py",
+      "test_id": "TEST-CONFIG-002"
+    },
+    {
+      "callable": "ConfigurationTests.test_secret_references_are_not_materialized_in_effective_configuration",
+      "path": "tests/test_configuration.py",
+      "test_id": "TEST-CONFIG-003"
+    },
+    {
+      "callable": "ConfigurationTests.test_secret_resolver_supports_environment_and_confined_files",
+      "path": "tests/test_configuration.py",
+      "test_id": "TEST-CONFIG-004"
+    },
+    {
+      "callable": "ConfigurationTests.test_secret_resolver_rejects_root_escape_and_missing_values",
+      "path": "tests/test_configuration.py",
+      "test_id": "TEST-CONFIG-005"
+    },
+    {
+      "callable": "ConfigurationTests.test_secret_reference_syntax_is_strict",
+      "path": "tests/test_configuration.py",
+      "test_id": "TEST-CONFIG-006"
+    },
+    {
+      "callable": "ConfigurationTests.test_committed_runtime_profiles_and_schema_are_current",
+      "path": "tests/test_configuration.py",
+      "test_id": "TEST-CONFIG-007"
+    },
+    {
+      "callable": "ConfigurationTests.test_local_persistence_defaults_to_repository_confined_sqlite",
+      "path": "tests/test_configuration.py",
+      "test_id": "TEST-CONFIG-008"
+    },
+    {
+      "callable": "ConfigurationTests.test_postgresql_profile_requires_secret_reference_and_keeps_it_redacted",
+      "path": "tests/test_configuration.py",
+      "test_id": "TEST-CONFIG-009"
+    },
+    {
+      "callable": "ContentValidationTests.test_forbidden_term_is_detected",
+      "path": "tests/test_validation_content.py",
+      "test_id": "TEST-CONTENT-POLICY-001"
+    },
+    {
+      "callable": "ContentValidationTests.test_placeholder_and_secret_markers_are_detected",
+      "path": "tests/test_validation_content.py",
+      "test_id": "TEST-CONTENT-POLICY-002"
+    },
+    {
+      "callable": "ContractTests.test_generated_schemas_are_deterministic_and_current",
+      "path": "tests/test_contracts.py",
+      "test_id": "TEST-CONTRACT-001"
+    },
+    {
+      "callable": "ContractTests.test_command_requires_timezone_aware_timestamp",
+      "path": "tests/test_contracts.py",
+      "test_id": "TEST-CONTRACT-002"
+    },
+    {
+      "callable": "ContractTests.test_action_intent_must_align_with_command_identity",
+      "path": "tests/test_contracts.py",
+      "test_id": "TEST-CONTRACT-003"
+    },
+    {
+      "callable": "ContractTests.test_state_transition_rejects_noop",
+      "path": "tests/test_contracts.py",
+      "test_id": "TEST-CONTRACT-004"
+    },
+    {
+      "callable": "ContractTests.test_adapter_error_semantics_distinguish_retry_and_unknown_outcome",
+      "path": "tests/test_contracts.py",
+      "test_id": "TEST-CONTRACT-005"
+    },
+    {
+      "callable": "ContractTests.test_command_result_requires_error_for_failed_or_unknown_status",
+      "path": "tests/test_contracts.py",
+      "test_id": "TEST-CONTRACT-006"
+    },
+    {
+      "callable": "test_ready_apply_requires_explicit_apply_and_approval",
+      "path": "tests/test_control_cli.py",
+      "test_id": "TEST-CONTROL-CLI-001"
+    },
+    {
+      "callable": "test_declared_duration_critical_path_is_deterministic",
+      "path": "tests/test_build_sequencer.py",
+      "test_id": "TEST-CONTROL-CRITICAL-PATH-001"
+    },
+    {
+      "callable": "test_cycle_fails_closed",
+      "path": "tests/test_build_sequencer.py",
+      "test_id": "TEST-CONTROL-DAG-001"
+    },
+    {
+      "callable": "test_completion_projection_cannot_self_satisfy_final_gate",
+      "path": "tests/test_control_domain.py",
+      "test_id": "TEST-CONTROL-DOMAIN-001"
+    },
+    {
+      "callable": "test_human_and_external_blocks_are_ineligible",
+      "path": "tests/test_build_sequencer.py",
+      "test_id": "TEST-CONTROL-HUMAN-001"
+    },
+    {
+      "callable": "test_repository_control_evaluation_is_consistent",
+      "path": "tests/test_control_kernel.py",
+      "test_id": "TEST-CONTROL-KERNEL-001"
+    },
+    {
+      "callable": "test_control_snapshot_roundtrip_and_projection_rows",
+      "path": "tests/test_control_persistence.py",
+      "test_id": "TEST-CONTROL-PERSIST-001"
+    },
+    {
+      "callable": "test_blocked_work_does_not_stop_independent_work",
+      "path": "tests/test_build_sequencer.py",
+      "test_id": "TEST-CONTROL-READINESS-001"
+    },
+    {
+      "callable": "test_priority_score_considers_priority_criticality_deadline_risk_and_unblock",
+      "path": "tests/test_build_sequencer.py",
+      "test_id": "TEST-CONTROL-SEQUENCE-001"
+    },
+    {
+      "callable": "test_ppdb_0019_database_enforces_append_only_audit_history",
+      "path": "tests/test_pass25_final_convergence.py",
+      "test_id": "TEST-CONV-P25-001"
+    },
+    {
+      "callable": "test_ppdb_0019_is_latest_and_reversible_without_removing_ppdb_0018",
+      "path": "tests/test_pass25_final_convergence.py",
+      "test_id": "TEST-CONV-P25-002"
+    },
+    {
+      "callable": "test_versioned_approved_runbook_dry_run_is_non_mutating_and_recorded",
+      "path": "tests/test_pass25_final_convergence.py",
+      "test_id": "TEST-CONV-P25-003"
+    },
+    {
+      "callable": "test_runbook_executor_rejects_unapproved_and_honors_stop_condition",
+      "path": "tests/test_pass25_final_convergence.py",
+      "test_id": "TEST-CONV-P25-004"
+    },
+    {
+      "callable": "test_post_deployment_verifier_requires_every_check_and_live_target_evidence",
+      "path": "tests/test_pass25_final_convergence.py",
+      "test_id": "TEST-CONV-P25-005"
+    },
+    {
+      "callable": "test_aws_budget_circuit_breaker_source_is_fail_closed_and_independent",
+      "path": "tests/test_pass25_final_convergence.py",
+      "test_id": "TEST-CONV-P25-006"
+    },
+    {
+      "callable": "test_final_convergence_audit_enumerates_every_accepted_requirement_and_keeps_truth_boundary",
+      "path": "tests/test_pass25_final_convergence.py",
+      "test_id": "TEST-CONV-P25-007"
+    },
+    {
+      "callable": "test_completion_gate_cannot_be_overridden_by_final_audit",
+      "path": "tests/test_pass25_final_convergence.py",
+      "test_id": "TEST-CONV-P25-008"
+    },
+    {
+      "callable": "test_final_convergence_validator_is_clean_after_report_generation",
+      "path": "tests/test_pass25_final_convergence.py",
+      "test_id": "TEST-CONV-P25-009"
+    },
+    {
+      "callable": "TraceabilityTests.test_coverage_has_no_unexplained_implemented_gap",
+      "path": "tests/test_traceability.py",
+      "test_id": "TEST-COVERAGE-001"
+    },
+    {
+      "callable": "test_context_cli_compile_status_pack_and_receipt",
+      "path": "tests/test_context_cli.py",
+      "test_id": "TEST-CTX-CLI-001"
+    },
+    {
+      "callable": "test_context_cli_missing_pack_fails_closed",
+      "path": "tests/test_context_cli.py",
+      "test_id": "TEST-CTX-CLI-002"
+    },
+    {
+      "callable": "test_broker_never_adds_unrequested_context",
+      "path": "tests/test_context_broker_compiler.py",
+      "test_id": "TEST-CTX-COMPILER-001"
+    },
+    {
+      "callable": "test_broker_reports_unknown_required",
+      "path": "tests/test_context_broker_compiler.py",
+      "test_id": "TEST-CTX-COMPILER-002"
+    },
+    {
+      "callable": "test_compiler_is_content_addressed_for_same_semantics",
+      "path": "tests/test_context_broker_compiler.py",
+      "test_id": "TEST-CTX-COMPILER-003"
+    },
+    {
+      "callable": "test_required_stale_context_fails_coverage",
+      "path": "tests/test_context_broker_compiler.py",
+      "test_id": "TEST-CTX-COMPILER-004"
+    },
+    {
+      "callable": "test_optional_stale_context_can_be_disclosed_when_allowed",
+      "path": "tests/test_context_broker_compiler.py",
+      "test_id": "TEST-CTX-COMPILER-005"
+    },
+    {
+      "callable": "test_pack_size_fails_closed",
+      "path": "tests/test_context_broker_compiler.py",
+      "test_id": "TEST-CTX-COMPILER-006"
+    },
+    {
+      "callable": "test_telemetry_reports_required_metrics",
+      "path": "tests/test_context_broker_compiler.py",
+      "test_id": "TEST-CTX-COMPILER-007"
+    },
+    {
+      "callable": "test_disconnected_reviewer_package_requires_all_categories",
+      "path": "tests/test_context_broker_compiler.py",
+      "test_id": "TEST-CTX-COMPILER-008"
+    },
+    {
+      "callable": "test_delegation_id_is_deterministic",
+      "path": "tests/test_context_domain.py",
+      "test_id": "TEST-CTX-DOMAIN-001"
+    },
+    {
+      "callable": "test_delegation_rejects_overlapping_keys",
+      "path": "tests/test_context_domain.py",
+      "test_id": "TEST-CTX-DOMAIN-002"
+    },
+    {
+      "callable": "test_coverage_validates_score",
+      "path": "tests/test_context_domain.py",
+      "test_id": "TEST-CTX-DOMAIN-003"
+    },
+    {
+      "callable": "test_models_are_immutable",
+      "path": "tests/test_context_domain.py",
+      "test_id": "TEST-CTX-DOMAIN-004"
+    },
+    {
+      "callable": "test_secret_sensitivity_is_excluded",
+      "path": "tests/test_context_firewall.py",
+      "test_id": "TEST-CTX-FIREWALL-001"
+    },
+    {
+      "callable": "test_hosted_egress_blocks_confidential",
+      "path": "tests/test_context_firewall.py",
+      "test_id": "TEST-CTX-FIREWALL-002"
+    },
+    {
+      "callable": "test_untrusted_instruction_is_isolated",
+      "path": "tests/test_context_firewall.py",
+      "test_id": "TEST-CTX-FIREWALL-003"
+    },
+    {
+      "callable": "test_untrusted_injection_is_quarantined_as_data",
+      "path": "tests/test_context_firewall.py",
+      "test_id": "TEST-CTX-FIREWALL-004"
+    },
+    {
+      "callable": "test_secret_like_values_are_redacted",
+      "path": "tests/test_context_firewall.py",
+      "test_id": "TEST-CTX-FIREWALL-005"
+    },
+    {
+      "callable": "test_context_store_roundtrip",
+      "path": "tests/test_context_persistence.py",
+      "test_id": "TEST-CTX-PERSIST-001"
+    },
+    {
+      "callable": "test_context_pack_is_idempotent_and_collision_safe",
+      "path": "tests/test_context_persistence.py",
+      "test_id": "TEST-CTX-PERSIST-002"
+    },
+    {
+      "callable": "test_migration_0009_applies_and_rolls_back",
+      "path": "tests/test_context_persistence.py",
+      "test_id": "TEST-CTX-PERSIST-003"
+    },
+    {
+      "callable": "test_context_service_persists_pack_receipt_and_artifact",
+      "path": "tests/test_context_service.py",
+      "test_id": "TEST-CTX-SERVICE-001"
+    },
+    {
+      "callable": "test_governing_and_source_controlled_instruction_origins_are_authority_bearing",
+      "path": "tests/test_context_trust.py",
+      "test_id": "TEST-CTX-TRUST-001"
+    },
+    {
+      "callable": "test_repository_and_external_document_origins_never_become_instruction_authority",
+      "path": "tests/test_context_trust.py",
+      "test_id": "TEST-CTX-TRUST-002"
+    },
+    {
+      "callable": "test_verified_external_evidence_is_not_instruction_authority",
+      "path": "tests/test_context_trust.py",
+      "test_id": "TEST-CTX-TRUST-003"
+    },
+    {
+      "callable": "test_markitdown_availability_is_truthful_boolean",
+      "path": "tests/test_context_upstream_adapters.py",
+      "test_id": "TEST-CTX-UPSTREAM-001"
+    },
+    {
+      "callable": "test_docling_rejects_large_file_before_dependency",
+      "path": "tests/test_context_upstream_adapters.py",
+      "test_id": "TEST-CTX-UPSTREAM-002"
+    },
+    {
+      "callable": "test_docling_missing_file_fails_closed",
+      "path": "tests/test_context_upstream_adapters.py",
+      "test_id": "TEST-CTX-UPSTREAM-003"
+    },
+    {
+      "callable": "test_markitdown_adapter_disables_plugins_and_returns_text",
+      "path": "tests/test_context_upstream_adapters.py",
+      "test_id": "TEST-CTX-UPSTREAM-004"
+    },
+    {
+      "callable": "test_docling_adapter_passes_page_and_size_limits",
+      "path": "tests/test_context_upstream_adapters.py",
+      "test_id": "TEST-CTX-UPSTREAM-005"
+    },
+    {
+      "callable": "test_context_foundation_is_registered_and_valid",
+      "path": "tests/test_context_validation.py",
+      "test_id": "TEST-CTX-VALIDATION-001"
+    },
+    {
+      "callable": "DecisionResolutionTests.test_accepted_adrs_link_sources_requirements_components_and_tradeoffs",
+      "path": "tests/test_decision_resolution.py",
+      "test_id": "TEST-DECISION-001"
+    },
+    {
+      "callable": "DecisionResolutionTests.test_resolved_open_decisions_link_back_to_accepted_adrs",
+      "path": "tests/test_decision_resolution.py",
+      "test_id": "TEST-DECISION-002"
+    },
+    {
+      "callable": "DependencyTests.test_observed_environment_lock_and_exports_are_current",
+      "path": "tests/test_dependencies.py",
+      "test_id": "TEST-DEPEND-001"
+    },
+    {
+      "callable": "DependencyTests.test_lock_generation_is_deterministic",
+      "path": "tests/test_dependencies.py",
+      "test_id": "TEST-DEPEND-002"
+    },
+    {
+      "callable": "DependencyTests.test_missing_active_dependency_is_reported",
+      "path": "tests/test_dependencies.py",
+      "test_id": "TEST-DEPEND-003"
+    },
+    {
+      "callable": "DomainIdentifierTests.test_project_identifier_normalizes_without_duplicate_prefix",
+      "path": "tests/test_domain_identifiers.py",
+      "test_id": "TEST-DOMAIN-ID-001"
+    },
+    {
+      "callable": "DomainIdentifierTests.test_digest_identifiers_are_deterministic_and_kind_scoped",
+      "path": "tests/test_domain_identifiers.py",
+      "test_id": "TEST-DOMAIN-ID-002"
+    },
+    {
+      "callable": "DomainIdentifierTests.test_identifier_parser_recovers_kind",
+      "path": "tests/test_domain_identifiers.py",
+      "test_id": "TEST-DOMAIN-ID-003"
+    },
+    {
+      "callable": "DomainIdentifierTests.test_unknown_identifier_is_rejected",
+      "path": "tests/test_domain_identifiers.py",
+      "test_id": "TEST-DOMAIN-ID-004"
+    },
+    {
+      "callable": "DomainModelTests.test_all_authoritative_requirements_parse_as_strict_entities",
+      "path": "tests/test_domain_models.py",
+      "test_id": "TEST-DOMAIN-MODEL-001"
+    },
+    {
+      "callable": "DomainModelTests.test_requirement_unknown_fields_are_rejected",
+      "path": "tests/test_domain_models.py",
+      "test_id": "TEST-DOMAIN-MODEL-002"
+    },
+    {
+      "callable": "DomainModelTests.test_domain_project_manifest_is_idempotent_and_valid",
+      "path": "tests/test_domain_models.py",
+      "test_id": "TEST-DOMAIN-MODEL-003"
+    },
+    {
+      "callable": "DomainModelTests.test_jira_work_items_compile_to_typed_task_state",
+      "path": "tests/test_domain_models.py",
+      "test_id": "TEST-DOMAIN-MODEL-004"
+    },
+    {
+      "callable": "DomainModelTests.test_invalid_project_and_task_transitions_are_rejected",
+      "path": "tests/test_domain_models.py",
+      "test_id": "TEST-DOMAIN-MODEL-005"
+    },
+    {
+      "callable": "test_recommendation_conflicting_with_canonical_plan_escalates",
+      "path": "tests/test_pass23_full_e2e.py",
+      "test_id": "TEST-E2E-P23-001"
+    },
+    {
+      "callable": "test_recommendation_conflicting_with_policy_is_rejected",
+      "path": "tests/test_pass23_full_e2e.py",
+      "test_id": "TEST-E2E-P23-002"
+    },
+    {
+      "callable": "test_aligned_recommendation_is_advisory_eligible",
+      "path": "tests/test_pass23_full_e2e.py",
+      "test_id": "TEST-E2E-P23-003"
+    },
+    {
+      "callable": "test_pass23_full_e2e_journeys_cover_required_chain",
+      "path": "tests/test_pass23_full_e2e.py",
+      "test_id": "TEST-E2E-P23-004"
+    },
+    {
+      "callable": "test_external_legs_are_explicitly_blocked_not_falsely_verified",
+      "path": "tests/test_pass23_full_e2e.py",
+      "test_id": "TEST-E2E-P23-005"
+    },
+    {
+      "callable": "test_pass23_report_is_persisted_with_digest",
+      "path": "tests/test_pass23_full_e2e.py",
+      "test_id": "TEST-E2E-P23-006"
+    },
+    {
+      "callable": "test_repository_headers_include_current_version_and_bearer",
+      "path": "tests/test_github_rest_adapter.py",
+      "test_id": "TEST-GITHUB-ADAPTER-001"
+    },
+    {
+      "callable": "test_merge_gate_requires_checks_and_approval",
+      "path": "tests/test_github_steward_domain.py",
+      "test_id": "TEST-GITHUB-DOMAIN-001"
+    },
+    {
+      "callable": "test_worktree_creation_and_dirty_removal_protection",
+      "path": "tests/test_local_git_repository.py",
+      "test_id": "TEST-GITHUB-LOCAL-GIT-001"
+    },
+    {
+      "callable": "test_merge_gate_blocks_draft_failure_and_changes_requested",
+      "path": "tests/test_github_steward_domain.py",
+      "test_id": "TEST-GITHUB-MERGE-GATE-001"
+    },
+    {
+      "callable": "test_service_merge_gate_and_apply",
+      "path": "tests/test_github_mock_and_service.py",
+      "test_id": "TEST-GITHUB-STEWARDSHIP-001"
+    },
+    {
+      "callable": "test_unknown_merge_outcome_is_not_retried",
+      "path": "tests/test_github_mock_and_service.py",
+      "test_id": "TEST-GITHUB-STEWARDSHIP-002"
+    },
+    {
+      "callable": "IdentifierTests.test_valid_identifiers_match",
+      "path": "tests/test_ids.py",
+      "test_id": "TEST-IDS-001"
+    },
+    {
+      "callable": "IdentifierTests.test_invalid_identifiers_do_not_match",
+      "path": "tests/test_ids.py",
+      "test_id": "TEST-IDS-002"
+    },
+    {
+      "callable": "ProjectBootstrapTests.test_greenfield_dry_run_does_not_create_target",
+      "path": "tests/test_project_bootstrap.py",
+      "test_id": "TEST-INTAKE-BOOTSTRAP-001"
+    },
+    {
+      "callable": "ProjectBootstrapTests.test_greenfield_apply_creates_profile_files_and_replay_is_no_change",
+      "path": "tests/test_project_bootstrap.py",
+      "test_id": "TEST-INTAKE-BOOTSTRAP-002"
+    },
+    {
+      "callable": "ProjectBootstrapTests.test_existing_project_requires_confirmation_and_preserves_existing_files",
+      "path": "tests/test_project_bootstrap.py",
+      "test_id": "TEST-INTAKE-BOOTSTRAP-003"
+    },
+    {
+      "callable": "ProjectBootstrapTests.test_conflicting_authority_file_rejects_without_overwrite",
+      "path": "tests/test_project_bootstrap.py",
+      "test_id": "TEST-INTAKE-BOOTSTRAP-004"
+    },
+    {
+      "callable": "ProjectBootstrapTests.test_failed_write_rolls_back_created_assets",
+      "path": "tests/test_project_bootstrap.py",
+      "test_id": "TEST-INTAKE-BOOTSTRAP-005"
+    },
+    {
+      "callable": "IntakeCliTests.test_inspect_is_read_only_and_machine_readable",
+      "path": "tests/test_intake_cli.py",
+      "test_id": "TEST-INTAKE-CLI-001"
+    },
+    {
+      "callable": "IntakeCliTests.test_compile_persist_status_and_bundle_are_executable",
+      "path": "tests/test_intake_cli.py",
+      "test_id": "TEST-INTAKE-CLI-002"
+    },
+    {
+      "callable": "IntakeCliTests.test_existing_bootstrap_without_confirmation_fails_closed",
+      "path": "tests/test_intake_cli.py",
+      "test_id": "TEST-INTAKE-CLI-003"
+    },
+    {
+      "callable": "IntakeCliTests.test_missing_intake_arguments_return_structured_error",
+      "path": "tests/test_intake_cli.py",
+      "test_id": "TEST-INTAKE-CLI-004"
+    },
+    {
+      "callable": "ProjectCompilerTests.test_compilation_is_deterministic_for_unchanged_repository_semantics",
+      "path": "tests/test_project_compiler.py",
+      "test_id": "TEST-INTAKE-COMPILER-001"
+    },
+    {
+      "callable": "ProjectCompilerTests.test_compiler_selects_python_service_and_builds_enriched_repository_map",
+      "path": "tests/test_project_compiler.py",
+      "test_id": "TEST-INTAKE-COMPILER-002"
+    },
+    {
+      "callable": "ProjectCompilerTests.test_polyglot_profile_activates_cross_component_policy",
+      "path": "tests/test_project_compiler.py",
+      "test_id": "TEST-INTAKE-COMPILER-003"
+    },
+    {
+      "callable": "ProjectCompilerTests.test_existing_project_gap_report_preserves_non_destructive_adoption_rule",
+      "path": "tests/test_project_compiler.py",
+      "test_id": "TEST-INTAKE-COMPILER-004"
+    },
+    {
+      "callable": "ProjectCompilerTests.test_greenfield_compilation_uses_requested_profile_and_bootstrap_gap",
+      "path": "tests/test_project_compiler.py",
+      "test_id": "TEST-INTAKE-COMPILER-005"
+    },
+    {
+      "callable": "ProjectCompilerTests.test_compilation_bundle_is_idempotent_and_refuses_unapproved_replacement",
+      "path": "tests/test_project_compiler.py",
+      "test_id": "TEST-INTAKE-COMPILER-006"
+    },
+    {
+      "callable": "ProjectDiscoveryTests.test_discovers_instructions_plans_jira_requirements_and_build_metadata",
+      "path": "tests/test_project_discovery.py",
+      "test_id": "TEST-INTAKE-DISCOVERY-001"
+    },
+    {
+      "callable": "ProjectDiscoveryTests.test_discovers_symbols_dependencies_test_links_and_owners_without_execution",
+      "path": "tests/test_project_discovery.py",
+      "test_id": "TEST-INTAKE-DISCOVERY-002"
+    },
+    {
+      "callable": "ProjectDiscoveryTests.test_external_symlink_is_recorded_and_never_traversed",
+      "path": "tests/test_project_discovery.py",
+      "test_id": "TEST-INTAKE-DISCOVERY-003"
+    },
+    {
+      "callable": "ProjectDiscoveryTests.test_nested_repository_is_boundary_violation_unless_explicitly_allowed",
+      "path": "tests/test_project_discovery.py",
+      "test_id": "TEST-INTAKE-DISCOVERY-004"
+    },
+    {
+      "callable": "ProjectDiscoveryTests.test_discovery_limits_fail_closed",
+      "path": "tests/test_project_discovery.py",
+      "test_id": "TEST-INTAKE-DISCOVERY-005"
+    },
+    {
+      "callable": "ProjectDiscoveryTests.test_malformed_build_declarations_are_diagnostics_not_code_execution",
+      "path": "tests/test_project_discovery.py",
+      "test_id": "TEST-INTAKE-DISCOVERY-006"
+    },
+    {
+      "callable": "ProjectDiscoveryTests.test_existing_project_requires_a_directory_but_new_project_may_not_exist",
+      "path": "tests/test_project_discovery.py",
+      "test_id": "TEST-INTAKE-DISCOVERY-007"
+    },
+    {
+      "callable": "IntakeModelTests.test_intake_request_resolves_stable_project_identity",
+      "path": "tests/test_intake_models.py",
+      "test_id": "TEST-INTAKE-MODEL-001"
+    },
+    {
+      "callable": "IntakeModelTests.test_intake_request_rejects_duplicate_profiles_and_unsafe_text",
+      "path": "tests/test_intake_models.py",
+      "test_id": "TEST-INTAKE-MODEL-002"
+    },
+    {
+      "callable": "IntakeModelTests.test_gap_identity_supports_global_gaps_without_affected_paths",
+      "path": "tests/test_intake_models.py",
+      "test_id": "TEST-INTAKE-MODEL-003"
+    },
+    {
+      "callable": "IntakeModelTests.test_bootstrap_receipt_rejects_success_with_conflicts",
+      "path": "tests/test_intake_models.py",
+      "test_id": "TEST-INTAKE-MODEL-004"
+    },
+    {
+      "callable": "IntakePersistenceTests.test_compilation_persists_idempotently_with_third_migration",
+      "path": "tests/test_intake_persistence.py",
+      "test_id": "TEST-INTAKE-PERSISTENCE-001"
+    },
+    {
+      "callable": "IntakePersistenceTests.test_status_queries_compilation_and_bootstrap_receipts",
+      "path": "tests/test_intake_persistence.py",
+      "test_id": "TEST-INTAKE-PERSISTENCE-002"
+    },
+    {
+      "callable": "IntakePersistenceTests.test_project_status_lists_only_requested_project",
+      "path": "tests/test_intake_persistence.py",
+      "test_id": "TEST-INTAKE-PERSISTENCE-003"
+    },
+    {
+      "callable": "ProjectCompilerTests.test_repository_intake_foundation_self_validation_is_clean",
+      "path": "tests/test_project_compiler.py",
+      "test_id": "TEST-INTAKE-VALIDATION-001"
+    },
+    {
+      "callable": "JiraCloudAdapterTests.test_search_uses_next_page_token_and_extracts_local_identity",
+      "path": "tests/test_jira_cloud_adapter.py",
+      "test_id": "TEST-JIRA-ADAPTER-001"
+    },
+    {
+      "callable": "JiraCloudAdapterTests.test_rate_limit_read_is_retried_but_write_is_not_blindly_retried",
+      "path": "tests/test_jira_cloud_adapter.py",
+      "test_id": "TEST-JIRA-ADAPTER-002"
+    },
+    {
+      "callable": "JiraCloudAdapterTests.test_transition_name_is_resolved_and_result_is_read_back",
+      "path": "tests/test_jira_cloud_adapter.py",
+      "test_id": "TEST-JIRA-ADAPTER-003"
+    },
+    {
+      "callable": "JiraCloudAdapterTests.test_http_authentication_error_is_non_retryable_and_redacts_credentials",
+      "path": "tests/test_jira_cloud_adapter.py",
+      "test_id": "TEST-JIRA-ADAPTER-004"
+    },
+    {
+      "callable": "JiraCliTests.test_validate_and_export_import_round_trip",
+      "path": "tests/test_jira_cli.py",
+      "test_id": "TEST-JIRA-CLI-001"
+    },
+    {
+      "callable": "JiraCliTests.test_sync_defaults_to_dry_run_and_requires_explicit_apply_approval",
+      "path": "tests/test_jira_cli.py",
+      "test_id": "TEST-JIRA-CLI-002"
+    },
+    {
+      "callable": "JiraCliTests.test_comment_is_dry_run_until_apply_is_explicit",
+      "path": "tests/test_jira_cli.py",
+      "test_id": "TEST-JIRA-CLI-003"
+    },
+    {
+      "callable": "JiraStewardDomainTests.test_existing_local_mirror_round_trips_through_typed_models",
+      "path": "tests/test_jira_steward_domain.py",
+      "test_id": "TEST-JIRA-DOMAIN-001"
+    },
+    {
+      "callable": "JiraStewardDomainTests.test_export_import_preserves_semantic_fingerprint",
+      "path": "tests/test_jira_steward_domain.py",
+      "test_id": "TEST-JIRA-DOMAIN-002"
+    },
+    {
+      "callable": "JiraStewardDomainTests.test_comment_intent_rejects_activity_noise",
+      "path": "tests/test_jira_steward_domain.py",
+      "test_id": "TEST-JIRA-DOMAIN-003"
+    },
+    {
+      "callable": "JiraStewardDomainTests.test_comment_intent_accepts_material_project_history",
+      "path": "tests/test_jira_steward_domain.py",
+      "test_id": "TEST-JIRA-DOMAIN-004"
+    },
+    {
+      "callable": "JiraStewardDomainTests.test_done_transition_requires_completion_evidence_and_verification",
+      "path": "tests/test_jira_steward_domain.py",
+      "test_id": "TEST-JIRA-DOMAIN-005"
+    },
+    {
+      "callable": "JiraStewardDomainTests.test_reconciliation_is_deterministic_and_detects_remote_drift",
+      "path": "tests/test_jira_steward_domain.py",
+      "test_id": "TEST-JIRA-DOMAIN-006"
+    },
+    {
+      "callable": "JiraStewardDomainTests.test_duplicate_and_remote_only_mappings_become_explicit_conflicts",
+      "path": "tests/test_jira_steward_domain.py",
+      "test_id": "TEST-JIRA-DOMAIN-007"
+    },
+    {
+      "callable": "JiraStewardDomainTests.test_collaborative_mode_never_silently_accepts_remote_done",
+      "path": "tests/test_jira_steward_domain.py",
+      "test_id": "TEST-JIRA-DOMAIN-008"
+    },
+    {
+      "callable": "JiraStewardDomainTests.test_create_operations_are_parent_first",
+      "path": "tests/test_jira_steward_domain.py",
+      "test_id": "TEST-JIRA-DOMAIN-009"
+    },
+    {
+      "callable": "JiraGraphTests.test_graph_has_no_dangling_edges_or_orphan_epics",
+      "path": "tests/test_jira_graph.py",
+      "test_id": "TEST-JIRA-GRAPH-001"
+    },
+    {
+      "callable": "JiraGraphTests.test_board_counts_match_issue_index",
+      "path": "tests/test_jira_graph.py",
+      "test_id": "TEST-JIRA-GRAPH-002"
+    },
+    {
+      "callable": "JiraStewardMockAndServiceTests.test_mock_pagination_reads_every_issue_exactly_once",
+      "path": "tests/test_jira_steward_mock_and_service.py",
+      "test_id": "TEST-JIRA-MOCK-001"
+    },
+    {
+      "callable": "JiraStewardPersistenceTests.test_latest_migration_contains_jira_sync_tables",
+      "path": "tests/test_jira_steward_persistence.py",
+      "test_id": "TEST-JIRA-PERSIST-001"
+    },
+    {
+      "callable": "JiraStewardPersistenceTests.test_plan_and_operation_state_are_persisted_idempotently",
+      "path": "tests/test_jira_steward_persistence.py",
+      "test_id": "TEST-JIRA-PERSIST-002"
+    },
+    {
+      "callable": "JiraStewardPersistenceTests.test_remote_mapping_rejects_split_identity",
+      "path": "tests/test_jira_steward_persistence.py",
+      "test_id": "TEST-JIRA-PERSIST-003"
+    },
+    {
+      "callable": "JiraStewardPersistenceTests.test_receipt_round_trip",
+      "path": "tests/test_jira_steward_persistence.py",
+      "test_id": "TEST-JIRA-PERSIST-004"
+    },
+    {
+      "callable": "JiraRebuildTests.test_rebuild_is_deterministic_and_preserves_all_work_items",
+      "path": "tests/test_jira_rebuild.py",
+      "test_id": "TEST-JIRA-REBUILD-001"
+    },
+    {
+      "callable": "JiraStewardMockAndServiceTests.test_dry_run_persists_plan_without_remote_writes",
+      "path": "tests/test_jira_steward_mock_and_service.py",
+      "test_id": "TEST-JIRA-SYNC-001"
+    },
+    {
+      "callable": "JiraStewardMockAndServiceTests.test_apply_requires_approved_jira_steward_intent",
+      "path": "tests/test_jira_steward_mock_and_service.py",
+      "test_id": "TEST-JIRA-SYNC-002"
+    },
+    {
+      "callable": "JiraStewardMockAndServiceTests.test_apply_is_idempotent_after_successful_creation",
+      "path": "tests/test_jira_steward_mock_and_service.py",
+      "test_id": "TEST-JIRA-SYNC-003"
+    },
+    {
+      "callable": "JiraStewardMockAndServiceTests.test_unknown_write_outcome_stops_retries_and_requires_reconciliation",
+      "path": "tests/test_jira_steward_mock_and_service.py",
+      "test_id": "TEST-JIRA-SYNC-004"
+    },
+    {
+      "callable": "JiraStewardMockAndServiceTests.test_meaningful_comment_posts_through_steward",
+      "path": "tests/test_jira_steward_mock_and_service.py",
+      "test_id": "TEST-JIRA-SYNC-005"
+    },
+    {
+      "callable": "JiraStewardValidationTests.test_jira_steward_foundation_is_self_validating",
+      "path": "tests/test_jira_steward_validation.py",
+      "test_id": "TEST-JIRA-VALIDATION-001"
+    },
+    {
+      "callable": "test_pass22_lifecycle_validator",
+      "path": "tests/test_pass22_platform_lifecycle.py",
+      "test_id": "TEST-LIFE-P22-001"
+    },
+    {
+      "callable": "LineNumberingTests.test_plan_sections_receive_exact_ranges",
+      "path": "tests/test_line_numbering.py",
+      "test_id": "TEST-LINE-PLANS-001"
+    },
+    {
+      "callable": "ManifestTests.test_manifest_is_sorted_and_detects_change",
+      "path": "tests/test_manifest.py",
+      "test_id": "TEST-MANIFEST-001"
+    },
+    {
+      "callable": "ManifestTests.test_manifest_aggregate_is_stable_for_same_content",
+      "path": "tests/test_manifest.py",
+      "test_id": "TEST-MANIFEST-002"
+    },
+    {
+      "callable": "MigrationTests.test_catalog_is_ordered_hashed_and_current",
+      "path": "tests/test_migrations.py",
+      "test_id": "TEST-MIGRATION-001"
+    },
+    {
+      "callable": "MigrationTests.test_sqlite_migrations_apply_idempotently",
+      "path": "tests/test_migrations.py",
+      "test_id": "TEST-MIGRATION-002"
+    },
+    {
+      "callable": "MigrationTests.test_sqlite_migrations_rollback_in_reverse_order",
+      "path": "tests/test_migrations.py",
+      "test_id": "TEST-MIGRATION-003"
+    },
+    {
+      "callable": "MigrationTests.test_failed_migration_rolls_back_only_its_transaction",
+      "path": "tests/test_migrations.py",
+      "test_id": "TEST-MIGRATION-004"
+    },
+    {
+      "callable": "ObservabilityTests.test_structured_log_contains_correlation_identity_and_redacts_fields",
+      "path": "tests/test_observability.py",
+      "test_id": "TEST-OBS-001"
+    },
+    {
+      "callable": "ObservabilityTests.test_correlation_scope_restores_prior_context",
+      "path": "tests/test_observability.py",
+      "test_id": "TEST-OBS-002"
+    },
+    {
+      "callable": "ObservabilityTests.test_sanitize_handles_nested_values_and_bytes",
+      "path": "tests/test_observability.py",
+      "test_id": "TEST-OBS-003"
+    },
+    {
+      "callable": "ObservabilityTests.test_invalid_correlation_field_is_rejected",
+      "path": "tests/test_observability.py",
+      "test_id": "TEST-OBS-004"
+    },
+    {
+      "callable": "ObservabilityTests.test_context_attribute_serialization_omits_unset_values",
+      "path": "tests/test_observability.py",
+      "test_id": "TEST-OBS-005"
+    },
+    {
+      "callable": "test_hatchet_bridge_uses_nonblocking_run_and_metadata",
+      "path": "tests/test_orchestration_adapters.py",
+      "test_id": "TEST-ORCH-ADAPTER-001"
+    },
+    {
+      "callable": "test_fallback_adapters_fail_closed_without_live_qualification",
+      "path": "tests/test_orchestration_adapters.py",
+      "test_id": "TEST-ORCH-ADAPTER-002"
+    },
+    {
+      "callable": "test_lost_remote_ack_becomes_unknown_outcome_without_blind_retry",
+      "path": "tests/test_orchestration_adapters.py",
+      "test_id": "TEST-ORCH-ADAPTER-003"
+    },
+    {
+      "callable": "test_failover_planner_blocks_active_external_history",
+      "path": "tests/test_orchestration_adapters.py",
+      "test_id": "TEST-ORCH-ADAPTER-004"
+    },
+    {
+      "callable": "test_orchestration_cli_backend_status_is_truthful",
+      "path": "tests/test_orchestration_cli.py",
+      "test_id": "TEST-ORCH-CLI-001"
+    },
+    {
+      "callable": "test_orchestration_cli_status_and_recover_do_not_require_workflow_id",
+      "path": "tests/test_orchestration_cli.py",
+      "test_id": "TEST-ORCH-CLI-002"
+    },
+    {
+      "callable": "test_orchestration_cli_register_start_query_local_reference",
+      "path": "tests/test_orchestration_cli.py",
+      "test_id": "TEST-ORCH-CLI-003"
+    },
+    {
+      "callable": "test_definition_identity_is_verified",
+      "path": "tests/test_orchestration_domain.py",
+      "test_id": "TEST-ORCH-DOMAIN-001"
+    },
+    {
+      "callable": "test_retry_policy_is_bounded_and_deterministic",
+      "path": "tests/test_orchestration_domain.py",
+      "test_id": "TEST-ORCH-DOMAIN-002"
+    },
+    {
+      "callable": "test_operation_identity_and_payload_hash_are_verified",
+      "path": "tests/test_orchestration_domain.py",
+      "test_id": "TEST-ORCH-DOMAIN-003"
+    },
+    {
+      "callable": "test_ppdb_0010_is_catalogued_and_reversible",
+      "path": "tests/test_orchestration_migration.py",
+      "test_id": "TEST-ORCH-MIGRATION-001"
+    },
+    {
+      "callable": "test_stale_worker_schedules_safe_retry",
+      "path": "tests/test_orchestration_recovery.py",
+      "test_id": "TEST-ORCH-RECOVERY-001"
+    },
+    {
+      "callable": "test_stale_worker_marks_nonrecoverable_work_manual",
+      "path": "tests/test_orchestration_recovery.py",
+      "test_id": "TEST-ORCH-RECOVERY-002"
+    },
+    {
+      "callable": "test_unknown_outcome_requires_reconciliation_not_retry",
+      "path": "tests/test_orchestration_recovery.py",
+      "test_id": "TEST-ORCH-RECOVERY-003"
+    },
+    {
+      "callable": "test_reconciliation_only_requeues_after_effect_is_proven_absent",
+      "path": "tests/test_orchestration_recovery.py",
+      "test_id": "TEST-ORCH-RECOVERY-004"
+    },
+    {
+      "callable": "test_start_is_idempotent",
+      "path": "tests/test_orchestration_runtime.py",
+      "test_id": "TEST-ORCH-RUNTIME-001"
+    },
+    {
+      "callable": "test_stale_heartbeat_epoch_is_rejected",
+      "path": "tests/test_orchestration_runtime.py",
+      "test_id": "TEST-ORCH-RUNTIME-002"
+    },
+    {
+      "callable": "test_retry_is_scheduled_with_deterministic_backoff",
+      "path": "tests/test_orchestration_runtime.py",
+      "test_id": "TEST-ORCH-RUNTIME-003"
+    },
+    {
+      "callable": "test_checkpoint_required_before_completion",
+      "path": "tests/test_orchestration_runtime.py",
+      "test_id": "TEST-ORCH-RUNTIME-004"
+    },
+    {
+      "callable": "test_signal_wait_is_durable_and_duplicate_signal_is_idempotent",
+      "path": "tests/test_orchestration_runtime.py",
+      "test_id": "TEST-ORCH-RUNTIME-005"
+    },
+    {
+      "callable": "test_timer_wait_survives_store_reopen",
+      "path": "tests/test_orchestration_runtime.py",
+      "test_id": "TEST-ORCH-RUNTIME-006"
+    },
+    {
+      "callable": "test_all_orchestration_simulations_pass",
+      "path": "tests/test_orchestration_simulation.py",
+      "test_id": "TEST-ORCH-SIM-001"
+    },
+    {
+      "callable": "ProvenanceTests.test_knowledge_pack_registry_preserves_source_relations",
+      "path": "tests/test_provenance.py",
+      "test_id": "TEST-PROVENANCE-001"
+    },
+    {
+      "callable": "ProvenanceTests.test_governing_prompt_aliases_are_reconciled_without_hiding_raw_hashes",
+      "path": "tests/test_provenance.py",
+      "test_id": "TEST-PROVENANCE-002"
+    },
+    {
+      "callable": "ProvenanceTests.test_upstream_catalog_is_unique_and_governed",
+      "path": "tests/test_provenance.py",
+      "test_id": "TEST-PROVENANCE-003"
+    },
+    {
+      "callable": "test_pass24_upstream_gate_covers_exact_candidates_and_blocks_agpl_activation",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-001"
+    },
+    {
+      "callable": "test_harden_runner_configuration_is_pinned_to_reviewed_sha",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-002"
+    },
+    {
+      "callable": "test_external_tool_absence_never_becomes_success",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-003"
+    },
+    {
+      "callable": "test_supply_chain_internal_gate_and_sbom_are_available",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-004"
+    },
+    {
+      "callable": "test_packaging_targets_preserve_runtime_qualification_boundary",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-005"
+    },
+    {
+      "callable": "test_service_source_runtime_check_builds_api_without_live_auth_secret",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-006"
+    },
+    {
+      "callable": "test_docker_source_requires_explicit_base_and_nonroot_runtime",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-007"
+    },
+    {
+      "callable": "test_windows_service_and_scripts_do_not_embed_credentials_and_require_explicit_mutation",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-008"
+    },
+    {
+      "callable": "test_environment_profiles_are_distinct_and_deny_or_gate_external_writes",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-009"
+    },
+    {
+      "callable": "test_cleanup_planner_never_selects_canonical_history",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-010"
+    },
+    {
+      "callable": "test_release_input_fingerprint_is_deterministic_and_ignores_evidence_outputs",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-011"
+    },
+    {
+      "callable": "test_release_candidate_is_truthful_not_production_ready",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-012"
+    },
+    {
+      "callable": "test_hardening_report_carries_resolver_and_target_blockers",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-013"
+    },
+    {
+      "callable": "test_release_docs_preserve_self_upgrade_independent_certification_and_rollback",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-014"
+    },
+    {
+      "callable": "test_pass24_release_hardening_validator_is_clean_after_generated_assets",
+      "path": "tests/test_pass24_release_hardening.py",
+      "test_id": "TEST-REL-HARDEN-015"
+    },
+    {
+      "callable": "RepositoryContractTests.test_repository_contract_has_no_errors",
+      "path": "tests/test_repository_contract.py",
+      "test_id": "TEST-REPOSITORY-001"
+    },
+    {
+      "callable": "RepositoryMapTests.test_map_groups_semantic_paths",
+      "path": "tests/test_repository_map.py",
+      "test_id": "TEST-REPOSITORY-MAP-001"
+    },
+    {
+      "callable": "RequirementQueryTests.test_query_filters_are_composable_and_case_normalized",
+      "path": "tests/test_requirement_query.py",
+      "test_id": "TEST-REQUIREMENT-QUERY-001"
+    },
+    {
+      "callable": "RequirementQueryTests.test_requirement_index_and_summary_match_catalog",
+      "path": "tests/test_requirement_query.py",
+      "test_id": "TEST-REQUIREMENT-QUERY-002"
+    },
+    {
+      "callable": "RequirementRegistryTests.test_glossary_open_decisions_and_evolution_are_complete_and_linked",
+      "path": "tests/test_requirement_registries.py",
+      "test_id": "TEST-REQUIREMENT-REGISTRIES-001"
+    },
+    {
+      "callable": "RequirementRegistryTests.test_generated_requirement_indexes_and_summary_are_current",
+      "path": "tests/test_requirement_registries.py",
+      "test_id": "TEST-REQUIREMENT-REGISTRIES-002"
+    },
+    {
+      "callable": "RequirementViewTests.test_generated_requirement_views_are_current",
+      "path": "tests/test_requirement_views.py",
+      "test_id": "TEST-REQUIREMENT-VIEWS-001"
+    },
+    {
+      "callable": "RequirementViewTests.test_requirement_view_generation_is_deterministic",
+      "path": "tests/test_requirement_views.py",
+      "test_id": "TEST-REQUIREMENT-VIEWS-002"
+    },
+    {
+      "callable": "DetailedRequirementTests.test_atomic_catalog_has_stable_ids_fields_and_all_domains",
+      "path": "tests/test_requirements_detailed.py",
+      "test_id": "TEST-REQUIREMENTS-001"
+    },
+    {
+      "callable": "DetailedRequirementTests.test_requirement_plan_jira_test_and_evidence_links_resolve",
+      "path": "tests/test_requirements_detailed.py",
+      "test_id": "TEST-REQUIREMENTS-002"
+    },
+    {
+      "callable": "test_aws_blueprint_keeps_local_primary",
+      "path": "tests/test_resilience_aws.py",
+      "test_id": "TEST-RES-AWS-001"
+    },
+    {
+      "callable": "test_terraform_is_disabled_by_default",
+      "path": "tests/test_resilience_aws.py",
+      "test_id": "TEST-RES-AWS-002"
+    },
+    {
+      "callable": "test_canonical_state_uses_pgbackrest",
+      "path": "tests/test_resilience_backup.py",
+      "test_id": "TEST-RES-BACKUP-001"
+    },
+    {
+      "callable": "test_general_backup_uses_restic",
+      "path": "tests/test_resilience_backup.py",
+      "test_id": "TEST-RES-BACKUP-002"
+    },
+    {
+      "callable": "test_restore_requires_isolated_target_and_separate_verification",
+      "path": "tests/test_resilience_backup.py",
+      "test_id": "TEST-RES-BACKUP-003"
+    },
+    {
+      "callable": "test_resilience_cli_simulation_and_aws_plan",
+      "path": "tests/test_resilience_cli.py",
+      "test_id": "TEST-RES-CLI-001"
+    },
+    {
+      "callable": "test_resilience_cli_backup_and_restore_plans",
+      "path": "tests/test_resilience_cli.py",
+      "test_id": "TEST-RES-CLI-002"
+    },
+    {
+      "callable": "test_resilience_cli_status_applies_migration",
+      "path": "tests/test_resilience_cli.py",
+      "test_id": "TEST-RES-CLI-003"
+    },
+    {
+      "callable": "test_recovery_objective_requires_positive_rto",
+      "path": "tests/test_resilience_domain.py",
+      "test_id": "TEST-RES-DOMAIN-001"
+    },
+    {
+      "callable": "test_local_runtime_is_advisory_only",
+      "path": "tests/test_resilience_domain.py",
+      "test_id": "TEST-RES-DOMAIN-002"
+    },
+    {
+      "callable": "test_restore_verification_requires_checks",
+      "path": "tests/test_resilience_domain.py",
+      "test_id": "TEST-RES-DOMAIN-003"
+    },
+    {
+      "callable": "test_failover_requires_fencing_and_witness",
+      "path": "tests/test_resilience_failover.py",
+      "test_id": "TEST-RES-FAILOVER-001"
+    },
+    {
+      "callable": "test_fenced_standby_takeover_is_eligible",
+      "path": "tests/test_resilience_failover.py",
+      "test_id": "TEST-RES-FAILOVER-002"
+    },
+    {
+      "callable": "test_cloud_outage_enters_local_first",
+      "path": "tests/test_resilience_failover.py",
+      "test_id": "TEST-RES-FAILOVER-003"
+    },
+    {
+      "callable": "test_provider_substitution_preserves_task_semantics",
+      "path": "tests/test_resilience_failover.py",
+      "test_id": "TEST-RES-FAILOVER-004"
+    },
+    {
+      "callable": "test_human_repair_is_verified_before_resume",
+      "path": "tests/test_resilience_failover.py",
+      "test_id": "TEST-RES-FAILOVER-005"
+    },
+    {
+      "callable": "test_local_runtime_config_is_private_and_advisory",
+      "path": "tests/test_resilience_local_models.py",
+      "test_id": "TEST-RES-LOCAL-001"
+    },
+    {
+      "callable": "test_local_runtime_fallback_selection",
+      "path": "tests/test_resilience_local_models.py",
+      "test_id": "TEST-RES-LOCAL-002"
+    },
+    {
+      "callable": "test_local_request_plan_never_claims_control_authority",
+      "path": "tests/test_resilience_local_models.py",
+      "test_id": "TEST-RES-LOCAL-003"
+    },
+    {
+      "callable": "test_ppdb_0015_and_store_roundtrip",
+      "path": "tests/test_resilience_persistence.py",
+      "test_id": "TEST-RES-PERSIST-001"
+    },
+    {
+      "callable": "test_ppdb_0015_rollback_preserves_0014",
+      "path": "tests/test_resilience_persistence.py",
+      "test_id": "TEST-RES-PERSIST-002"
+    },
+    {
+      "callable": "test_all_resilience_scenarios_preserve_authority",
+      "path": "tests/test_resilience_simulation.py",
+      "test_id": "TEST-RES-SIM-001"
+    },
+    {
+      "callable": "test_resilience_upstream_adapters_are_discovery_only",
+      "path": "tests/test_resilience_upstream_adapters.py",
+      "test_id": "TEST-RES-UPSTREAM-001"
+    },
+    {
+      "callable": "test_resilience_foundation_is_coherent",
+      "path": "tests/test_resilience_validation.py",
+      "test_id": "TEST-RES-VALIDATION-001"
+    },
+    {
+      "callable": "RuntimeFoundationTests.test_bootstrap_reports_required_foundation_ready",
+      "path": "tests/test_runtime_foundation.py",
+      "test_id": "TEST-RUNTIME-001"
+    },
+    {
+      "callable": "RuntimeFoundationTests.test_prepare_creates_runtime_paths_in_isolated_root",
+      "path": "tests/test_runtime_foundation.py",
+      "test_id": "TEST-RUNTIME-002"
+    },
+    {
+      "callable": "RuntimeFoundationTests.test_foundation_smoke_is_idempotent_and_integrity_checked",
+      "path": "tests/test_runtime_foundation.py",
+      "test_id": "TEST-RUNTIME-003"
+    },
+    {
+      "callable": "test_backpressure_modes_are_monotonic",
+      "path": "tests/test_scheduler_backpressure.py",
+      "test_id": "TEST-SCHED-BACKPRESSURE-001"
+    },
+    {
+      "callable": "test_scheduler_plan_is_machine_readable_and_dry_run",
+      "path": "tests/test_scheduler_cli.py",
+      "test_id": "TEST-SCHED-CLI-001"
+    },
+    {
+      "callable": "test_scheduler_acquire_and_release_are_fenced",
+      "path": "tests/test_scheduler_cli.py",
+      "test_id": "TEST-SCHED-CLI-002"
+    },
+    {
+      "callable": "test_conflict_graph_covers_paths_ports_gpu_and_environment",
+      "path": "tests/test_scheduler_conflicts.py",
+      "test_id": "TEST-SCHED-CONFLICT-001"
+    },
+    {
+      "callable": "test_path_conflict_detects_ancestor_scope",
+      "path": "tests/test_scheduler_domain.py",
+      "test_id": "TEST-SCHED-DOMAIN-001"
+    },
+    {
+      "callable": "test_lease_fencing_renew_release_and_expiry",
+      "path": "tests/test_scheduler_persistence.py",
+      "test_id": "TEST-SCHED-FENCING-001"
+    },
+    {
+      "callable": "test_atomic_lease_bundle_and_capacity",
+      "path": "tests/test_scheduler_persistence.py",
+      "test_id": "TEST-SCHED-LEASE-001"
+    },
+    {
+      "callable": "test_scheduler_migration_applies_and_rolls_back",
+      "path": "tests/test_scheduler_persistence.py",
+      "test_id": "TEST-SCHED-MIGRATION-001"
+    },
+    {
+      "callable": "test_scheduler_selects_safe_parallel_set_under_capacity",
+      "path": "tests/test_scheduler_engine.py",
+      "test_id": "TEST-SCHED-PARALLEL-001"
+    },
+    {
+      "callable": "test_scheduler_simulation_exercises_backpressure_modes",
+      "path": "tests/test_scheduler_cli.py",
+      "test_id": "TEST-SCHED-SIM-001"
+    },
+    {
+      "callable": "test_scheduler_prefers_higher_total_utility_when_conflicts_exist",
+      "path": "tests/test_scheduler_engine.py",
+      "test_id": "TEST-SCHED-UTILITY-001"
+    },
+    {
+      "callable": "test_scheduler_foundation_is_registered",
+      "path": "tests/test_scheduler_validation.py",
+      "test_id": "TEST-SCHED-VALIDATION-001"
+    },
+    {
+      "callable": "test_security_cli_record_identity_requires_approval",
+      "path": "tests/test_security_persistence_cli.py",
+      "test_id": "TEST-SEC-CLI-001"
+    },
+    {
+      "callable": "test_identity_kinds_are_distinct",
+      "path": "tests/test_security_domain.py",
+      "test_id": "TEST-SEC-DOMAIN-001"
+    },
+    {
+      "callable": "test_egress_secret_is_denied_and_untrusted_instruction_constrained",
+      "path": "tests/test_security_identity_policy.py",
+      "test_id": "TEST-SEC-EGRESS-001"
+    },
+    {
+      "callable": "test_default_worker_can_read_but_not_deploy",
+      "path": "tests/test_security_identity_policy.py",
+      "test_id": "TEST-SEC-IDENTITY-001"
+    },
+    {
+      "callable": "test_ppdb_0014_and_store_roundtrip",
+      "path": "tests/test_security_persistence_cli.py",
+      "test_id": "TEST-SEC-PERSIST-001"
+    },
+    {
+      "callable": "test_high_impact_action_requires_independent_approval",
+      "path": "tests/test_security_identity_policy.py",
+      "test_id": "TEST-SEC-POLICY-001"
+    },
+    {
+      "callable": "test_secret_lease_scope_and_runtime_plaintext_not_persisted",
+      "path": "tests/test_security_secrets.py",
+      "test_id": "TEST-SEC-SECRETS-001"
+    },
+    {
+      "callable": "test_supply_chain_gate_passes_local_policy",
+      "path": "tests/test_security_supply_chain.py",
+      "test_id": "TEST-SEC-SUPPLY-001"
+    },
+    {
+      "callable": "test_trivy_offline_scan_is_safe",
+      "path": "tests/test_security_upstream_adapters.py",
+      "test_id": "TEST-SEC-UPSTREAM-001"
+    },
+    {
+      "callable": "test_security_foundation_contract",
+      "path": "tests/test_security_validation.py",
+      "test_id": "TEST-SEC-VALIDATION-001"
+    },
+    {
+      "callable": "SourceReferenceTests.test_requirement_source_ranges_are_valid_and_duplicate_aware",
+      "path": "tests/test_source_references.py",
+      "test_id": "TEST-SOURCE-REFERENCES-001"
+    },
+    {
+      "callable": "SourceReferenceTests.test_parse_and_validate_exact_source_ranges",
+      "path": "tests/test_source_references.py",
+      "test_id": "TEST-SOURCE-REFERENCES-002"
+    },
+    {
+      "callable": "SourceReferenceTests.test_duplicate_and_prefix_sources_share_evidence_identity",
+      "path": "tests/test_source_references.py",
+      "test_id": "TEST-SOURCE-REFERENCES-003"
+    },
+    {
+      "callable": "SourceSectionCoverageTests.test_every_canonical_section_has_one_explicit_disposition",
+      "path": "tests/test_source_sections.py",
+      "test_id": "TEST-SOURCE-SECTIONS-001"
+    },
+    {
+      "callable": "SourceSectionCoverageTests.test_duplicate_and_prefix_sources_are_not_independent_confirmation",
+      "path": "tests/test_source_sections.py",
+      "test_id": "TEST-SOURCE-SECTIONS-002"
+    },
+    {
+      "callable": "SourceSectionCoverageTests.test_linked_sections_overlap_their_requirements_and_summary_is_current",
+      "path": "tests/test_source_sections.py",
+      "test_id": "TEST-SOURCE-SECTIONS-003"
+    },
+    {
+      "callable": "StateCliTests.test_state_init_compiles_state_and_traceability",
+      "path": "tests/test_state_cli.py",
+      "test_id": "TEST-STATE-CLI-001"
+    },
+    {
+      "callable": "StateCliTests.test_state_and_trace_queries_are_machine_readable",
+      "path": "tests/test_state_cli.py",
+      "test_id": "TEST-STATE-CLI-002"
+    },
+    {
+      "callable": "StateCliTests.test_missing_required_cli_argument_fails_closed",
+      "path": "tests/test_state_cli.py",
+      "test_id": "TEST-STATE-CLI-003"
+    },
+    {
+      "callable": "CoreStateStoreTests.test_repository_compiles_to_ready_project_and_all_task_states",
+      "path": "tests/test_core_state_store.py",
+      "test_id": "TEST-STATE-STORE-001"
+    },
+    {
+      "callable": "CoreStateStoreTests.test_project_transition_uses_optimistic_versioning",
+      "path": "tests/test_core_state_store.py",
+      "test_id": "TEST-STATE-STORE-002"
+    },
+    {
+      "callable": "CoreStateStoreTests.test_task_transition_records_immutable_history",
+      "path": "tests/test_core_state_store.py",
+      "test_id": "TEST-STATE-STORE-003"
+    },
+    {
+      "callable": "CoreStateStoreTests.test_initialization_is_idempotent",
+      "path": "tests/test_core_state_store.py",
+      "test_id": "TEST-STATE-STORE-004"
+    },
+    {
+      "callable": "CoreStateStoreTests.test_snapshot_reports_migration_and_state_counts",
+      "path": "tests/test_core_state_store.py",
+      "test_id": "TEST-STATE-STORE-005"
+    },
+    {
+      "callable": "TraceabilityStoreTests.test_authoritative_catalog_import_is_exact",
+      "path": "tests/test_traceability_store.py",
+      "test_id": "TEST-TRACE-STORE-001"
+    },
+    {
+      "callable": "TraceabilityStoreTests.test_requirement_trace_is_grouped_and_bidirectional",
+      "path": "tests/test_traceability_store.py",
+      "test_id": "TEST-TRACE-STORE-002"
+    },
+    {
+      "callable": "TraceabilityStoreTests.test_changed_and_noop_mutations_have_correct_revisions",
+      "path": "tests/test_traceability_store.py",
+      "test_id": "TEST-TRACE-STORE-003"
+    },
+    {
+      "callable": "TraceabilityStoreTests.test_stale_traceability_mutation_is_rejected",
+      "path": "tests/test_traceability_store.py",
+      "test_id": "TEST-TRACE-STORE-004"
+    },
+    {
+      "callable": "TraceabilityStoreTests.test_projection_export_does_not_replace_authoritative_catalog",
+      "path": "tests/test_traceability_store.py",
+      "test_id": "TEST-TRACE-STORE-005"
+    },
+    {
+      "callable": "TraceabilityTests.test_requirement_ids_are_unique_and_mapped_to_plan_and_work",
+      "path": "tests/test_traceability.py",
+      "test_id": "TEST-TRACEABILITY-001"
+    },
+    {
+      "callable": "TraceabilityTests.test_traceability_exports_match_the_authoritative_catalog",
+      "path": "tests/test_traceability.py",
+      "test_id": "TEST-TRACEABILITY-002"
+    },
+    {
+      "callable": "UpstreamReviewTests.test_reviewed_records_are_revision_pinned_and_complete",
+      "path": "tests/test_upstream_reviews.py",
+      "test_id": "TEST-UPSTREAM-001"
+    },
+    {
+      "callable": "UpstreamReviewTests.test_dependency_activation_is_separate_from_source_incorporation",
+      "path": "tests/test_upstream_reviews.py",
+      "test_id": "TEST-UPSTREAM-002"
+    },
+    {
+      "callable": "UpstreamReviewTests.test_every_entry_has_one_disposition_rationale_and_no_copied_source",
+      "path": "tests/test_upstream_reviews.py",
+      "test_id": "TEST-UPSTREAM-003"
+    },
+    {
+      "callable": "UpstreamReviewTests.test_upstream_queries_and_summaries_are_current",
+      "path": "tests/test_upstream_reviews.py",
+      "test_id": "TEST-UPSTREAM-004"
+    },
+    {
+      "callable": "UpstreamReviewTests.test_review_program_covers_completed_records_and_queued_priorities",
+      "path": "tests/test_upstream_reviews.py",
+      "test_id": "TEST-UPSTREAM-005"
+    },
+    {
+      "callable": "test_pydantic_ai_provider_contract_is_loaded_from_governed_upstream_asset",
+      "path": "tests/test_upstream_contract_assets.py",
+      "test_id": "TEST-UPSTREAM-ASSET-001"
+    },
+    {
+      "callable": "test_docker_mcp_gateway_contract_preserves_secure_reviewed_defaults",
+      "path": "tests/test_upstream_contract_assets.py",
+      "test_id": "TEST-UPSTREAM-ASSET-002"
+    },
+    {
+      "callable": "test_codex_read_only_plan_uses_safe_noninteractive_contract",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-CODEX-001"
+    },
+    {
+      "callable": "test_codex_mutation_requires_project_pipeline_approval",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-CODEX-002"
+    },
+    {
+      "callable": "test_cosign_verification_requires_digest_and_never_signs",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-COSIGN-001"
+    },
+    {
+      "callable": "test_catalog_has_terminal_disposition_for_every_supplied_repository",
+      "path": "tests/test_upstream_adoption_gate.py",
+      "test_id": "TEST-UPSTREAM-GATE-001"
+    },
+    {
+      "callable": "test_terminal_catalog_ledger_covers_registry_exactly",
+      "path": "tests/test_upstream_adoption_gate.py",
+      "test_id": "TEST-UPSTREAM-GATE-002"
+    },
+    {
+      "callable": "test_selected_is_never_equated_with_integrated",
+      "path": "tests/test_upstream_adoption_gate.py",
+      "test_id": "TEST-UPSTREAM-GATE-003"
+    },
+    {
+      "callable": "test_unresolved_license_blocks_activation",
+      "path": "tests/test_upstream_adoption_gate.py",
+      "test_id": "TEST-UPSTREAM-GATE-004"
+    },
+    {
+      "callable": "test_subsystem_gate_has_known_candidates_and_review_state",
+      "path": "tests/test_upstream_adoption_gate.py",
+      "test_id": "TEST-UPSTREAM-GATE-005"
+    },
+    {
+      "callable": "test_adoption_queue_is_closed_over_catalog_ids",
+      "path": "tests/test_upstream_adoption_gate.py",
+      "test_id": "TEST-UPSTREAM-GATE-006"
+    },
+    {
+      "callable": "test_upstream_review_validator_enforces_gate",
+      "path": "tests/test_upstream_adoption_gate.py",
+      "test_id": "TEST-UPSTREAM-GATE-007"
+    },
+    {
+      "callable": "test_gemini_plan_never_uses_yolo_and_uses_stream_json",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-GEMINI-001"
+    },
+    {
+      "callable": "test_gitleaks_uses_current_git_subcommand_and_full_redaction",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-GITLEAKS-001"
+    },
+    {
+      "callable": "test_inspect_ai_plan_is_constrained_and_network_gated",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-INSPECT-001"
+    },
+    {
+      "callable": "test_litellm_proxy_adapter_uses_openai_compatible_gateway_boundary",
+      "path": "tests/test_litellm_adapter.py",
+      "test_id": "TEST-UPSTREAM-LITELLM-001"
+    },
+    {
+      "callable": "test_docker_mcp_gateway_plan_applies_reviewed_secure_defaults",
+      "path": "tests/test_docker_mcp_gateway.py",
+      "test_id": "TEST-UPSTREAM-MCP-001"
+    },
+    {
+      "callable": "test_docker_mcp_gateway_execution_requires_explicit_approval",
+      "path": "tests/test_docker_mcp_gateway.py",
+      "test_id": "TEST-UPSTREAM-MCP-002"
+    },
+    {
+      "callable": "test_openlit_bridge_reports_dependency_unavailable_without_claiming_activation",
+      "path": "tests/test_openlit_bridge.py",
+      "test_id": "TEST-UPSTREAM-OPENLIT-001"
+    },
+    {
+      "callable": "test_openlit_bridge_initializes_reviewed_sdk_through_optional_boundary",
+      "path": "tests/test_openlit_bridge.py",
+      "test_id": "TEST-UPSTREAM-OPENLIT-002"
+    },
+    {
+      "callable": "test_scheduler_uses_optional_ortools_optimizer_for_larger_ready_set",
+      "path": "tests/test_ortools_optimizer.py",
+      "test_id": "TEST-UPSTREAM-ORTOOLS-001"
+    },
+    {
+      "callable": "test_scheduler_revalidates_optimizer_result_and_falls_back",
+      "path": "tests/test_ortools_optimizer.py",
+      "test_id": "TEST-UPSTREAM-ORTOOLS-002"
+    },
+    {
+      "callable": "test_osv_scanner_uses_read_only_source_scan_and_machine_output",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-OSV-001"
+    },
+    {
+      "callable": "test_p0_convergence_exactly_covers_priority_queue",
+      "path": "tests/test_upstream_p0_convergence.py",
+      "test_id": "TEST-UPSTREAM-P0-001"
+    },
+    {
+      "callable": "test_every_p0_record_has_real_integration_and_tests",
+      "path": "tests/test_upstream_p0_convergence.py",
+      "test_id": "TEST-UPSTREAM-P0-002"
+    },
+    {
+      "callable": "test_permanent_upstream_validator_accepts_p0_convergence",
+      "path": "tests/test_upstream_p0_convergence.py",
+      "test_id": "TEST-UPSTREAM-P0-003"
+    },
+    {
+      "callable": "test_promptfoo_eval_is_local_artifact_bounded_and_no_share",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-PROMPTFOO-001"
+    },
+    {
+      "callable": "test_pydantic_ai_adapter_uses_typed_framework_boundary_and_upstream_contract",
+      "path": "tests/test_pydantic_ai_adapter.py",
+      "test_id": "TEST-UPSTREAM-PYDANTICAI-001"
+    },
+    {
+      "callable": "test_repomix_plan_keeps_security_checks_and_enforces_token_budget",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-REPOMIX-001"
+    },
+    {
+      "callable": "UpstreamReviewTests.test_review_batch_and_policy_are_current",
+      "path": "tests/test_upstream_reviews.py",
+      "test_id": "TEST-UPSTREAM-REVIEWS-001"
+    },
+    {
+      "callable": "UpstreamReviewTests.test_selected_runtime_and_license_blocked_candidates_are_distinct",
+      "path": "tests/test_upstream_reviews.py",
+      "test_id": "TEST-UPSTREAM-REVIEWS-002"
+    },
+    {
+      "callable": "UpstreamReviewTests.test_every_catalog_entry_has_an_explicit_rationale",
+      "path": "tests/test_upstream_reviews.py",
+      "test_id": "TEST-UPSTREAM-REVIEWS-003"
+    },
+    {
+      "callable": "test_swerex_adapter_uses_runtime_without_shell_and_lifecycle",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-SWEREX-001"
+    },
+    {
+      "callable": "test_swerex_mutating_execution_requires_approval",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-SWEREX-002"
+    },
+    {
+      "callable": "test_worktrunk_create_is_dry_run_until_approved",
+      "path": "tests/test_worktrunk_adapter.py",
+      "test_id": "TEST-UPSTREAM-WORKTRUNK-001"
+    },
+    {
+      "callable": "test_worktrunk_json_list_and_approved_mutation_use_fixed_argv",
+      "path": "tests/test_worktrunk_adapter.py",
+      "test_id": "TEST-UPSTREAM-WORKTRUNK-002"
+    },
+    {
+      "callable": "test_zizmor_is_offline_strict_and_versioned_json",
+      "path": "tests/test_upstream_integrations.py",
+      "test_id": "TEST-UPSTREAM-ZIZMOR-001"
+    },
+    {
+      "callable": "test_adversarial_invariants_reject_unsafe_inputs",
+      "path": "tests/test_verification_adversarial.py",
+      "test_id": "TEST-VERIFY-ADVERSARIAL-001"
+    },
+    {
+      "callable": "test_render_verification_report_is_local_and_semantic",
+      "path": "tests/test_verification_browser.py",
+      "test_id": "TEST-VERIFY-BROWSER-001"
+    },
+    {
+      "callable": "test_verification_cli_full_run_requires_explicit_approval",
+      "path": "tests/test_verification_cli.py",
+      "test_id": "TEST-VERIFY-CLI-001"
+    },
+    {
+      "callable": "test_verification_impact_cli_derives_required_categories",
+      "path": "tests/test_verification_cli.py",
+      "test_id": "TEST-VERIFY-CLI-002"
+    },
+    {
+      "callable": "test_required_check_cannot_be_silently_skipped",
+      "path": "tests/test_verification_domain.py",
+      "test_id": "TEST-VERIFY-DOMAIN-001"
+    },
+    {
+      "callable": "test_fault_scenarios_cover_required_resilience_failure_classes",
+      "path": "tests/test_verification_faults.py",
+      "test_id": "TEST-VERIFY-FAULT-001"
+    },
+    {
+      "callable": "test_all_current_golden_journeys_pass",
+      "path": "tests/test_verification_golden.py",
+      "test_id": "TEST-VERIFY-GOLDEN-001"
+    },
+    {
+      "callable": "test_golden_journeys_define_environment_setup_actions_results_cleanup_and_evidence",
+      "path": "tests/test_verification_golden.py",
+      "test_id": "TEST-VERIFY-GOLDEN-002"
+    },
+    {
+      "callable": "test_budget_change_derives_integration_fault_and_contract_verification",
+      "path": "tests/test_verification_impact.py",
+      "test_id": "TEST-VERIFY-IMPACT-001"
+    },
+    {
+      "callable": "test_critical_risk_and_acceptance_methods_broaden_impact_set",
+      "path": "tests/test_verification_impact.py",
+      "test_id": "TEST-VERIFY-IMPACT-002"
+    },
+    {
+      "callable": "test_ppdb_0013_is_reversible_without_damaging_ppdb_0012",
+      "path": "tests/test_verification_persistence.py",
+      "test_id": "TEST-VERIFY-MIGRATION-001"
+    },
+    {
+      "callable": "test_verification_mutation_probes_detect_all_mutations",
+      "path": "tests/test_verification_mutation.py",
+      "test_id": "TEST-VERIFY-MUTATION-001"
+    },
+    {
+      "callable": "test_performance_measurement_enforces_budget",
+      "path": "tests/test_verification_performance.py",
+      "test_id": "TEST-VERIFY-PERF-001"
+    },
+    {
+      "callable": "test_verification_store_roundtrip_activation",
+      "path": "tests/test_verification_persistence.py",
+      "test_id": "TEST-VERIFY-PERSIST-001"
+    },
+    {
+      "callable": "test_verification_policy_has_full_pass16_category_portfolio",
+      "path": "tests/test_verification_policy.py",
+      "test_id": "TEST-VERIFY-POLICY-001"
+    },
+    {
+      "callable": "test_deterministic_property_probes_pass",
+      "path": "tests/test_verification_properties.py",
+      "test_id": "TEST-VERIFY-PROPERTY-001"
+    },
+    {
+      "callable": "test_activation_snapshot_covers_exact_13_candidates",
+      "path": "tests/test_verification_tools.py",
+      "test_id": "TEST-VERIFY-UPSTREAM-001"
+    },
+    {
+      "callable": "test_verification_foundation_is_registered",
+      "path": "tests/test_verification_validation.py",
+      "test_id": "TEST-VERIFY-VALIDATION-001"
+    }
+  ]
+}

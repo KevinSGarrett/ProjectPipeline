@@ -1,0 +1,47 @@
+{
+  "candidate_count": 13,
+  "completion_authority": "PROJECT_PIPELINE_DETERMINISTIC_ONLY",
+  "existing_adapter_ids": [
+    "UPSTREAM-085",
+    "UPSTREAM-108"
+  ],
+  "future_harness_ids": [
+    "UPSTREAM-015",
+    "UPSTREAM-027",
+    "UPSTREAM-044",
+    "UPSTREAM-051",
+    "UPSTREAM-063",
+    "UPSTREAM-064",
+    "UPSTREAM-092",
+    "UPSTREAM-093",
+    "UPSTREAM-111"
+  ],
+  "gate_id": "PASS-15-VERIFICATION-EVALUATION-UPSTREAM-GATE",
+  "license_blockers_resolved": {
+    "UPSTREAM-051": "MPL-2.0",
+    "UPSTREAM-108": "MIT"
+  },
+  "material_implementation_allowed": true,
+  "pattern_ids": [
+    "UPSTREAM-032",
+    "UPSTREAM-101"
+  ],
+  "review_artifact": "provenance/reviews/PASS-15_verification_evaluation_upstream_review.md",
+  "reviewed_candidate_ids": [
+    "UPSTREAM-015",
+    "UPSTREAM-027",
+    "UPSTREAM-032",
+    "UPSTREAM-044",
+    "UPSTREAM-051",
+    "UPSTREAM-063",
+    "UPSTREAM-064",
+    "UPSTREAM-085",
+    "UPSTREAM-092",
+    "UPSTREAM-093",
+    "UPSTREAM-101",
+    "UPSTREAM-108",
+    "UPSTREAM-111"
+  ],
+  "schema_version": "1.0.0",
+  "status": "INTEGRATED"
+}

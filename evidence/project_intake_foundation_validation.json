@@ -1,0 +1,18 @@
+{
+  "check": "project_intake_foundation",
+  "intake_errors": [],
+  "latest_migration_id": "PPDB-0003",
+  "migration_count": 3,
+  "observed_at_utc": "2026-08-15T02:08:07.356274+00:00",
+  "ok": true,
+  "required_boundaries": [
+    "read_only_discovery",
+    "no_symlink_traversal",
+    "no_overwrite_bootstrap",
+    "explicit_apply_confirmation",
+    "deterministic_compilation",
+    "transactional_compilation_projection"
+  ],
+  "schema_errors": [],
+  "schema_version": "1.0.0"
+}

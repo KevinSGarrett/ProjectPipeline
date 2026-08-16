@@ -1,0 +1,38 @@
+{
+  "$id": "https://projectpipeline.local/schemas/authority_map.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "conflict_resolution": {
+      "minItems": 4,
+      "type": "array"
+    },
+    "derived_and_advisory": {
+      "minItems": 3,
+      "type": "array"
+    },
+    "normative_order": {
+      "minItems": 5,
+      "type": "array"
+    },
+    "observational_order": {
+      "minItems": 3,
+      "type": "array"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "project_id",
+    "normative_order",
+    "observational_order",
+    "derived_and_advisory",
+    "conflict_resolution"
+  ],
+  "title": "Authority Map",
+  "type": "object"
+}

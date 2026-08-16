@@ -1,0 +1,57 @@
+{
+  "$id": "https://project-pipeline.local/schemas/security_audit_event.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_identity_id": {
+      "title": "Actor Identity Id",
+      "type": "string"
+    },
+    "audit_id": {
+      "title": "Audit Id",
+      "type": "string"
+    },
+    "correlation_id": {
+      "title": "Correlation Id",
+      "type": "string"
+    },
+    "details": {
+      "additionalProperties": true,
+      "title": "Details",
+      "type": "object"
+    },
+    "event_type": {
+      "title": "Event Type",
+      "type": "string"
+    },
+    "occurred_at_utc": {
+      "format": "date-time",
+      "title": "Occurred At Utc",
+      "type": "string"
+    },
+    "outcome": {
+      "title": "Outcome",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target": {
+      "title": "Target",
+      "type": "string"
+    }
+  },
+  "required": [
+    "audit_id",
+    "event_type",
+    "actor_identity_id",
+    "target",
+    "correlation_id",
+    "outcome"
+  ],
+  "title": "SecurityAuditEvent",
+  "type": "object"
+}

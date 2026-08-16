@@ -1,0 +1,694 @@
+{
+  "canonical_state_owner": "PostgreSQL, with pgvector for semantic retrieval and content-addressed byte references for immutable artifacts",
+  "durable_execution_backend": "Hatchet behind DurableExecutionPort; Temporal and DBOS are qualified fallbacks",
+  "operator_stack": "React and TypeScript web client with Tauri official plugins for Windows packaging and WinSW for eligible Windows-native services",
+  "schema_version": "1.0.0",
+  "selection_rules": [
+    "The latest authoritative source chronology controls target selection unless an explicit later ADR changes it.",
+    "A selected target is not live-qualified until its activation gate has current evidence.",
+    "Vendor SDK types and vendor workflow history cannot become authoritative Project Pipeline domain state.",
+    "Unknown or conflicting license/release evidence blocks activation without erasing the source-selected architecture intent.",
+    "Optional and fallback technologies remain behind internal ports and require compatibility and rollback evidence."
+  ],
+  "technologies": [
+    {
+      "activation_gate": "Pinned version, structured-output tests, provider portability tests, tool-policy tests, and deterministic authority separation",
+      "component_ids": [
+        "COMP-DIRECTOR-001",
+        "COMP-ROUTER-001",
+        "COMP-PROVIDER-001",
+        "COMP-CHAT-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0016",
+      "lifecycle_status": "SELECTED",
+      "rationale": "The latest canonical architecture selects Pydantic AI directly for advisory agents while deterministic control remains internal.",
+      "role": "Typed advisory agent adapter",
+      "selection": "Pydantic AI",
+      "technology_id": "TECH-AGENT-001",
+      "upstream_ids": [
+        "UPSTREAM-086"
+      ]
+    },
+    {
+      "activation_gate": "Authentication, policy, OpenAPI, and realtime contract tests",
+      "component_ids": [
+        "COMP-API-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0010",
+      "lifecycle_status": "SELECTED",
+      "rationale": "Keeps the control API in the selected language while producing explicit validation and OpenAPI contracts.",
+      "role": "Typed HTTP and realtime application boundary",
+      "selection": "FastAPI with Pydantic v2 contracts",
+      "technology_id": "TECH-API-001",
+      "upstream_ids": []
+    },
+    {
+      "activation_gate": "Integrity, deduplication, retention, backup, restore, and adapter tests",
+      "component_ids": [
+        "COMP-ARTIFACT-001",
+        "COMP-EVIDENCE-001",
+        "COMP-CONTEXT-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0013",
+      "lifecycle_status": "SELECTED",
+      "rationale": "Separates immutable bytes from canonical PostgreSQL metadata and makes integrity intrinsic.",
+      "role": "Immutable evidence and context bytes",
+      "selection": "SHA-256 content-addressed local storage with optional S3-compatible adapter",
+      "technology_id": "TECH-ARTIFACT-001",
+      "upstream_ids": []
+    },
+    {
+      "activation_gate": "Pinned binary, encrypted repository, scheduled backup, destructive isolated restore, integrity, RPO/RTO, upgrade, and rollback evidence",
+      "component_ids": [
+        "COMP-BACKUP-001",
+        "COMP-PERSIST-001"
+      ],
+      "constraints": [
+        "Backup status never equals restore verification.",
+        "Credentials are scoped through the secret/identity boundary."
+      ],
+      "decision_id": "ADR-0024",
+      "lifecycle_status": "PROFILE_OPTIONAL",
+      "rationale": "PostgreSQL-aware backup/restore mechanics are separated from portable artifact backup.",
+      "role": "PostgreSQL-specific backup and restore candidate",
+      "selection": "pgBackRest",
+      "technology_id": "TECH-BACKUP-001",
+      "upstream_ids": [
+        "UPSTREAM-082"
+      ]
+    },
+    {
+      "activation_gate": "Pinned binary, repository integrity, retention, isolated restore, credential, and RPO/RTO evidence",
+      "component_ids": [
+        "COMP-BACKUP-001",
+        "COMP-ARTIFACT-001"
+      ],
+      "constraints": [
+        "No embedded repository credentials.",
+        "Restore verification is recorded independently."
+      ],
+      "decision_id": "ADR-0024",
+      "lifecycle_status": "PROFILE_OPTIONAL",
+      "rationale": "Portable encrypted backups support local/offsite/S3-compatible profiles.",
+      "role": "Portable encrypted repository and artifact backup candidate",
+      "selection": "restic",
+      "technology_id": "TECH-BACKUP-002",
+      "upstream_ids": [
+        "UPSTREAM-090"
+      ]
+    },
+    {
+      "activation_gate": "Migration, backup, restore, and transactional integration tests",
+      "component_ids": [
+        "COMP-PERSIST-001",
+        "COMP-CTRL-001",
+        "COMP-OUTBOX-001",
+        "COMP-BUDGET-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0007",
+      "lifecycle_status": "SELECTED",
+      "rationale": "One transactional authority holds canonical domain state, command records, inbox/outbox delivery state, and audit references.",
+      "role": "Canonical transactional state",
+      "selection": "PostgreSQL",
+      "technology_id": "TECH-DATA-001",
+      "upstream_ids": []
+    },
+    {
+      "activation_gate": "Pinned plugin versions, capability allowlists, installer tests, update/rollback tests, and desktop security review",
+      "component_ids": [
+        "COMP-UI-001",
+        "COMP-NOTIFY-001",
+        "COMP-DEPLOY-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0011",
+      "lifecycle_status": "SELECTED",
+      "rationale": "The latest canonical architecture adds Tauri official plugins for the Command Center desktop surface without making the shell own backend state.",
+      "role": "Windows desktop shell and OS integration",
+      "selection": "Tauri v2 official plugins",
+      "technology_id": "TECH-DESKTOP-001",
+      "upstream_ids": [
+        "UPSTREAM-103"
+      ]
+    },
+    {
+      "activation_gate": "Duplicate delivery, ordering, unknown-outcome, retry, replay, and reconciliation tests",
+      "component_ids": [
+        "COMP-OUTBOX-001",
+        "COMP-PERSIST-001",
+        "COMP-CTRL-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0007",
+      "lifecycle_status": "SELECTED",
+      "rationale": "Avoids a mandatory external broker while preserving atomic command state and recoverable delivery.",
+      "role": "Recoverable domain-event delivery",
+      "selection": "PostgreSQL transactional inbox and outbox records",
+      "technology_id": "TECH-EVENT-001",
+      "upstream_ids": []
+    },
+    {
+      "activation_gate": "Pinned release, deterministic replay, property tests, and representative performance tests",
+      "component_ids": [
+        "COMP-GRAPH-001",
+        "COMP-SEQUENCE-001",
+        "COMP-SCHED-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0009",
+      "lifecycle_status": "SELECTED",
+      "rationale": "Provides mature deterministic graph algorithms while Project Pipeline owns readiness, authority, conflict, and completion semantics.",
+      "role": "Authoritative graph analysis",
+      "selection": "NetworkX behind graph-domain services",
+      "technology_id": "TECH-GRAPH-001",
+      "upstream_ids": [
+        "UPSTREAM-070"
+      ]
+    },
+    {
+      "activation_gate": "Repository quality checks and supported interpreter matrix",
+      "component_ids": [
+        "COMP-INTAKE-001",
+        "COMP-TRACE-001",
+        "COMP-CTRL-001",
+        "COMP-API-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0001",
+      "lifecycle_status": "SELECTED",
+      "rationale": "Matches the executable foundation and supports deterministic tooling, APIs, adapters, and tests.",
+      "role": "Core implementation language",
+      "selection": "Python 3.11 or newer",
+      "technology_id": "TECH-LANG-001",
+      "upstream_ids": []
+    },
+    {
+      "activation_gate": "Pinned runtime/model, Windows/GPU/CPU benchmark, tool-call/schema behavior, privacy, outage, upgrade, and rollback evidence",
+      "component_ids": [
+        "COMP-LOCALMODEL-001"
+      ],
+      "constraints": [
+        "Advisory-only; no deterministic control authority.",
+        "Activation requires pinned provenance, security review, and representative qualification."
+      ],
+      "decision_id": "ADR-0022",
+      "lifecycle_status": "PROFILE_OPTIONAL",
+      "rationale": "Provides a simple local-service profile behind the provider-neutral gateway without becoming mandatory.",
+      "role": "Default local advisory model service candidate",
+      "selection": "Ollama local service candidate",
+      "technology_id": "TECH-LOCALMODEL-001",
+      "upstream_ids": [
+        "UPSTREAM-072"
+      ]
+    },
+    {
+      "activation_gate": "Pinned build/model and target hardware qualification",
+      "component_ids": [
+        "COMP-LOCALMODEL-001"
+      ],
+      "constraints": [
+        "Advisory-only; no deterministic control authority.",
+        "Runtime remains optional and replaceable."
+      ],
+      "decision_id": "ADR-0022",
+      "lifecycle_status": "QUALIFIED_FALLBACK",
+      "rationale": "Provides a direct local serving path for offline/degraded operation.",
+      "role": "Direct local inference serving fallback",
+      "selection": "llama.cpp server",
+      "technology_id": "TECH-LOCALMODEL-002",
+      "upstream_ids": [
+        "UPSTREAM-040"
+      ]
+    },
+    {
+      "activation_gate": "Multi-model need plus pinned compatibility and recovery evidence",
+      "component_ids": [
+        "COMP-LOCALMODEL-001"
+      ],
+      "constraints": [
+        "Optional layer only; not required for deterministic control.",
+        "Must not hide model/runtime identity in evidence."
+      ],
+      "decision_id": "ADR-0022",
+      "lifecycle_status": "PROFILE_OPTIONAL",
+      "rationale": "Adds model hot-swap only where workload evidence justifies another local service.",
+      "role": "Optional local multi-model hot-swap gateway",
+      "selection": "llama-swap",
+      "technology_id": "TECH-LOCALMODEL-003",
+      "upstream_ids": [
+        "UPSTREAM-068"
+      ]
+    },
+    {
+      "activation_gate": "Human license/release-channel approval, pinned public release, provider contract tests, cost/fallback tests, telemetry, and rollback",
+      "component_ids": [
+        "COMP-PROVIDER-001",
+        "COMP-ROUTER-001",
+        "COMP-BUDGET-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0016",
+      "lifecycle_status": "ACTIVATION_BLOCKED",
+      "rationale": "The canonical source selects LiteLLM, but the inspected upstream snapshot has unasserted licensing and an unsuitable default release channel; architecture intent is preserved while activation remains blocked.",
+      "role": "Replaceable multi-provider API model gateway",
+      "selection": "LiteLLM",
+      "technology_id": "TECH-MODEL-GATEWAY-001",
+      "upstream_ids": [
+        "UPSTREAM-012"
+      ]
+    },
+    {
+      "activation_gate": "Semantic-convention, redaction, correlation, buffering, and exporter tests",
+      "component_ids": [
+        "COMP-OBS-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0014",
+      "lifecycle_status": "SELECTED",
+      "rationale": "Preserves vendor-neutral traces, metrics, logs, correlation, and export.",
+      "role": "Portable telemetry contract",
+      "selection": "OpenTelemetry and OTLP",
+      "technology_id": "TECH-OBS-001",
+      "upstream_ids": []
+    },
+    {
+      "activation_gate": "Pinned version, OTLP export, PII redaction, overhead, outage-isolation, and schema-compatibility tests",
+      "component_ids": [
+        "COMP-OBS-001",
+        "COMP-PROVIDER-001",
+        "COMP-WORKER-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0014",
+      "lifecycle_status": "SELECTED",
+      "rationale": "The latest canonical architecture selects OpenLIT directly while OpenTelemetry remains the portable telemetry contract.",
+      "role": "Agent and model instrumentation profile",
+      "selection": "OpenLIT",
+      "technology_id": "TECH-OBS-002",
+      "upstream_ids": [
+        "UPSTREAM-077"
+      ]
+    },
+    {
+      "activation_gate": "Pinned releases, policy-unit tests, fail-closed behavior, enforcement-point tests, and policy-bundle rollback",
+      "component_ids": [
+        "COMP-POLICY-001",
+        "COMP-DEPLOY-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0012",
+      "lifecycle_status": "SELECTED",
+      "rationale": "OPA is the runtime decision engine and Conftest applies the same Rego policy family to configuration and infrastructure preflight.",
+      "role": "Runtime and configuration policy decisions",
+      "selection": "Open Policy Agent with Conftest preflight",
+      "technology_id": "TECH-POLICY-001",
+      "upstream_ids": [
+        "UPSTREAM-079",
+        "UPSTREAM-078"
+      ]
+    },
+    {
+      "activation_gate": "Windows/Linux path, dry-run, ownership, cleanup, rollback, and native Git fallback tests",
+      "component_ids": [
+        "COMP-REPO-001",
+        "COMP-WORKER-001",
+        "COMP-RESOURCE-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0020",
+      "lifecycle_status": "SELECTED",
+      "rationale": "Provides worktree lifecycle mechanics while Repository Steward owns assignments, path safety, branch policy, merge gates, and reconciliation.",
+      "role": "Git worktree lifecycle mechanics",
+      "selection": "Worktrunk behind RepositoryWorkspacePort",
+      "technology_id": "TECH-REPO-001",
+      "upstream_ids": [
+        "UPSTREAM-061"
+      ]
+    },
+    {
+      "activation_gate": "Pinned version, graph-scale benchmark, cycle/critical-path tests, and deterministic fallback verification",
+      "component_ids": [
+        "COMP-GRAPH-001",
+        "COMP-SEQUENCE-001",
+        "COMP-SCHED-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0009",
+      "lifecycle_status": "SELECTED",
+      "rationale": "The latest canonical architecture selects NetworkX directly for task, conflict, resource, and critical-path graphs; Project Pipeline still owns eligibility semantics.",
+      "role": "Authoritative graph analysis",
+      "selection": "NetworkX",
+      "technology_id": "TECH-SCHED-001",
+      "upstream_ids": [
+        "UPSTREAM-070"
+      ]
+    },
+    {
+      "activation_gate": "Pinned version, time-bounded optimization tests, deterministic fallback, and post-solver constraint revalidation",
+      "component_ids": [
+        "COMP-SCHED-001",
+        "COMP-RESOURCE-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0009",
+      "lifecycle_status": "SELECTED",
+      "rationale": "The latest canonical build order includes an OR-Tools lane optimizer after authoritative NetworkX graph construction.",
+      "role": "Bounded lane and resource optimization",
+      "selection": "Google OR-Tools",
+      "technology_id": "TECH-SCHED-002",
+      "upstream_ids": [
+        "UPSTREAM-046"
+      ]
+    },
+    {
+      "activation_gate": "Key recovery, recipient rotation, redaction, and plaintext-leak tests",
+      "component_ids": [
+        "COMP-SECRET-001",
+        "COMP-DEPLOY-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0012",
+      "lifecycle_status": "SELECTED",
+      "rationale": "Supports encrypted structured configuration without plaintext secrets in the repository.",
+      "role": "Encrypted repository-managed configuration",
+      "selection": "SOPS with age recipients",
+      "technology_id": "TECH-SECRET-001",
+      "upstream_ids": [
+        "UPSTREAM-039",
+        "UPSTREAM-035"
+      ]
+    },
+    {
+      "activation_gate": "Explicit profile decision, MPL compliance, high-availability, audit, backup, and recovery tests",
+      "component_ids": [
+        "COMP-SECRET-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0012",
+      "lifecycle_status": "PROFILE_OPTIONAL",
+      "rationale": "Reserved for profiles that need dynamic credentials, certificates, leases, and revocation beyond encrypted configuration files.",
+      "role": "Optional dynamic secret broker",
+      "selection": "OpenBao",
+      "technology_id": "TECH-SECRET-002",
+      "upstream_ids": [
+        "UPSTREAM-075"
+      ]
+    },
+    {
+      "activation_gate": "Pinned browser matrix, deterministic fixtures, artifact retention, and flaky-test controls",
+      "component_ids": [
+        "COMP-ASSURE-001",
+        "COMP-UI-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0017",
+      "lifecycle_status": "SELECTED",
+      "rationale": "Produces reproducible cross-browser traces, screenshots, videos, and web-first assertions.",
+      "role": "Browser acceptance and evidence",
+      "selection": "Playwright",
+      "technology_id": "TECH-TEST-001",
+      "upstream_ids": [
+        "UPSTREAM-063"
+      ]
+    },
+    {
+      "activation_gate": "Docker availability, image digests, cleanup, isolation, and CI compatibility tests",
+      "component_ids": [
+        "COMP-ASSURE-001",
+        "COMP-PERSIST-001",
+        "COMP-RECOVERY-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0017",
+      "lifecycle_status": "SELECTED",
+      "rationale": "Exercises PostgreSQL and service contracts against disposable real dependencies instead of relying on mocks alone.",
+      "role": "Real dependency integration tests",
+      "selection": "Testcontainers for Python",
+      "technology_id": "TECH-TEST-002",
+      "upstream_ids": [
+        "UPSTREAM-105"
+      ]
+    },
+    {
+      "activation_gate": "Pinned release, protocol conformance, identity/policy enforcement, isolation, timeout, audit, and failure-reconciliation tests",
+      "component_ids": [
+        "COMP-TOOL-001",
+        "COMP-POLICY-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0015",
+      "lifecycle_status": "SELECTED",
+      "rationale": "The latest canonical architecture selects Docker MCP Gateway for the first implementation behind an internal governed tool port.",
+      "role": "Initial MCP lifecycle and isolation gateway",
+      "selection": "Docker MCP Gateway behind GovernedToolPort",
+      "technology_id": "TECH-TOOL-001",
+      "upstream_ids": [
+        "UPSTREAM-029"
+      ]
+    },
+    {
+      "activation_gate": "Federation, multi-tenant governance, or protocol-translation need that Docker MCP Gateway and direct adapters cannot meet",
+      "component_ids": [
+        "COMP-TOOL-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0015",
+      "lifecycle_status": "DEFERRED",
+      "rationale": "The latest canonical source explicitly places Context Forge later rather than in the first implementation.",
+      "role": "Advanced MCP federation and gateway profile",
+      "selection": "IBM MCP Context Forge",
+      "technology_id": "TECH-TOOL-002",
+      "upstream_ids": [
+        "UPSTREAM-052"
+      ]
+    },
+    {
+      "activation_gate": "Accessibility, protocol compatibility, browser, reconnect, and authorization tests",
+      "component_ids": [
+        "COMP-UI-001",
+        "COMP-CHAT-001",
+        "COMP-API-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0011",
+      "lifecycle_status": "SELECTED",
+      "rationale": "One accessible web client serves local and private-network operation; AG-UI is an adapter, not the authoritative internal event model.",
+      "role": "Network and desktop operator client",
+      "selection": "React and TypeScript with an AG-UI compatibility adapter",
+      "technology_id": "TECH-UI-001",
+      "upstream_ids": [
+        "UPSTREAM-003"
+      ]
+    },
+    {
+      "activation_gate": "Schema version pinning, replay tests, authorization boundaries, and compatibility tests against the internal authoritative event model",
+      "component_ids": [
+        "COMP-CHAT-001",
+        "COMP-UI-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0011",
+      "lifecycle_status": "SELECTED",
+      "rationale": "The latest canonical architecture adds AG-UI for Director Chat interoperability while the internal event model remains authoritative.",
+      "role": "Agent-to-operator event compatibility",
+      "selection": "AG-UI compatibility adapter",
+      "technology_id": "TECH-UI-PROTOCOL-001",
+      "upstream_ids": [
+        "UPSTREAM-003"
+      ]
+    },
+    {
+      "activation_gate": "Pinned extension, migration, index, backup/restore, exact-retrieval fallback, and retrieval-quality benchmarks",
+      "component_ids": [
+        "COMP-PERSIST-001",
+        "COMP-CONTEXT-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0018",
+      "lifecycle_status": "SELECTED",
+      "rationale": "The latest canonical source selects PostgreSQL plus pgvector directly and reserves standalone vector services for later profiles.",
+      "role": "Default semantic retrieval extension",
+      "selection": "PostgreSQL with pgvector",
+      "technology_id": "TECH-VECTOR-001",
+      "upstream_ids": [
+        "UPSTREAM-083"
+      ]
+    },
+    {
+      "activation_gate": "Benchmark threshold, migration, backup, restore, outage, and rollback evidence",
+      "component_ids": [
+        "COMP-CONTEXT-001",
+        "COMP-PERSIST-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0021",
+      "lifecycle_status": "DEFERRED",
+      "rationale": "Avoids adding a separate stateful service until scale and retrieval benchmarks prove that PostgreSQL plus pgvector is insufficient.",
+      "role": "Standalone semantic vector service",
+      "selection": "Profile-gated and deferred until benchmark evidence",
+      "technology_id": "TECH-VECTOR-002",
+      "upstream_ids": []
+    },
+    {
+      "activation_gate": "Pinned binary, checksum/provenance verification, install/uninstall, restart, log, recovery, upgrade, and rollback tests",
+      "component_ids": [
+        "COMP-DEPLOY-001",
+        "COMP-WORKER-001",
+        "COMP-API-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0011",
+      "lifecycle_status": "SELECTED",
+      "rationale": "The latest canonical build order adds WinSW for Windows-native daemons while container and WSL services keep native supervisors.",
+      "role": "Windows-native service supervision",
+      "selection": "WinSW v3",
+      "technology_id": "TECH-WINDOWS-001",
+      "upstream_ids": [
+        "UPSTREAM-114"
+      ]
+    },
+    {
+      "activation_gate": "Pinned release plus retry, cancellation, checkpoint, unknown-outcome, restart, and human-pause conformance tests",
+      "component_ids": [
+        "COMP-WORKFLOW-001",
+        "COMP-RECOVERY-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0008",
+      "lifecycle_status": "SELECTED",
+      "rationale": "The latest canonical architecture explicitly selects Hatchet for direct use and places DBOS and Temporal in benchmark/fallback roles.",
+      "role": "Initial durable workflow implementation",
+      "selection": "Hatchet",
+      "technology_id": "TECH-WORKFLOW-001",
+      "upstream_ids": [
+        "UPSTREAM-050"
+      ]
+    },
+    {
+      "activation_gate": "Measured scale or multi-region trigger plus DurableExecutionPort compatibility and migration evidence",
+      "component_ids": [
+        "COMP-WORKFLOW-001",
+        "COMP-RECOVERY-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0008",
+      "lifecycle_status": "QUALIFIED_FALLBACK",
+      "rationale": "Retained as the mature separate-platform fallback without making its workflow history authoritative project truth.",
+      "role": "Qualified durable-workflow fallback",
+      "selection": "Temporal",
+      "technology_id": "TECH-WORKFLOW-002",
+      "upstream_ids": [
+        "UPSTREAM-104"
+      ]
+    },
+    {
+      "activation_gate": "Benchmark and recovery evidence demonstrating a lower-risk fit than the selected backend for the target deployment",
+      "component_ids": [
+        "COMP-WORKFLOW-001",
+        "COMP-RECOVERY-001"
+      ],
+      "constraints": [
+        "Project Pipeline authoritative semantics remain outside the dependency.",
+        "Activation requires pinned provenance, compatibility evidence, security review, and rollback."
+      ],
+      "decision_id": "ADR-0008",
+      "lifecycle_status": "QUALIFIED_FALLBACK",
+      "rationale": "Retained as a lightweight fallback and implementation reference, not the initial source-selected backend.",
+      "role": "Qualified PostgreSQL-centered durable-workflow fallback",
+      "selection": "DBOS Transact Python",
+      "technology_id": "TECH-WORKFLOW-003",
+      "upstream_ids": [
+        "UPSTREAM-026"
+      ]
+    }
+  ],
+  "technology_count": 34
+}

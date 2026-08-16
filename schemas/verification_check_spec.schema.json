@@ -1,0 +1,104 @@
+{
+  "$defs": {
+    "VerificationCategory": {
+      "enum": [
+        "CONTRACT",
+        "API",
+        "INTEGRATION",
+        "END_TO_END",
+        "GOLDEN_JOURNEY",
+        "BROWSER",
+        "VISUAL",
+        "ACCESSIBILITY",
+        "PERFORMANCE",
+        "ADVERSARIAL",
+        "PROPERTY",
+        "MUTATION",
+        "FAULT",
+        "POST_MERGE"
+      ],
+      "title": "VerificationCategory",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/verification_check_spec.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "category": {
+      "$ref": "#/$defs/VerificationCategory"
+    },
+    "check_id": {
+      "title": "Check Id",
+      "type": "string"
+    },
+    "command": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Command",
+      "type": "array"
+    },
+    "description": {
+      "maxLength": 2000,
+      "minLength": 3,
+      "title": "Description",
+      "type": "string"
+    },
+    "evidence_max_age_seconds": {
+      "default": 86400,
+      "minimum": 1,
+      "title": "Evidence Max Age Seconds",
+      "type": "integer"
+    },
+    "name": {
+      "maxLength": 200,
+      "minLength": 3,
+      "title": "Name",
+      "type": "string"
+    },
+    "required": {
+      "default": true,
+      "title": "Required",
+      "type": "boolean"
+    },
+    "requirement_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Requirement Ids",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "timeout_seconds": {
+      "default": 120,
+      "maximum": 7200,
+      "minimum": 1,
+      "title": "Timeout Seconds",
+      "type": "integer"
+    },
+    "upstream_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Upstream Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "check_id",
+    "name",
+    "category",
+    "description"
+  ],
+  "title": "VerificationCheckSpec",
+  "type": "object"
+}

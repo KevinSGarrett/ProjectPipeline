@@ -1,0 +1,9 @@
+DROP INDEX IF EXISTS idx_jira_sync_receipts_plan;
+DROP TABLE IF EXISTS jira_sync_receipts;
+DROP TABLE IF EXISTS jira_remote_mappings;
+DROP INDEX IF EXISTS idx_jira_sync_operations_outbox;
+DROP TABLE IF EXISTS jira_sync_operations;
+DROP INDEX IF EXISTS idx_jira_reconciliation_plans_project;
+DROP TABLE IF EXISTS jira_reconciliation_plans;
+DROP INDEX IF EXISTS idx_jira_remote_snapshots_project;
+DROP TABLE IF EXISTS jira_remote_snapshots;

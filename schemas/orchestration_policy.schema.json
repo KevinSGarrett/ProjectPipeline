@@ -1,0 +1,72 @@
+{
+  "$defs": {
+    "DurableBackendKind": {
+      "enum": [
+        "LOCAL_REFERENCE",
+        "HATCHET",
+        "DBOS",
+        "TEMPORAL",
+        "MOCK"
+      ],
+      "title": "DurableBackendKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/orchestration_policy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allow_active_backend_migration": {
+      "default": false,
+      "title": "Allow Active Backend Migration",
+      "type": "boolean"
+    },
+    "blind_retry_unknown_outcome": {
+      "default": false,
+      "title": "Blind Retry Unknown Outcome",
+      "type": "boolean"
+    },
+    "fallback_backends": {
+      "default": [
+        "DBOS",
+        "TEMPORAL"
+      ],
+      "items": {
+        "$ref": "#/$defs/DurableBackendKind"
+      },
+      "title": "Fallback Backends",
+      "type": "array"
+    },
+    "initial_backend": {
+      "$ref": "#/$defs/DurableBackendKind",
+      "default": "HATCHET"
+    },
+    "max_automated_recovery_count": {
+      "default": 5,
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Max Automated Recovery Count",
+      "type": "integer"
+    },
+    "recover_stale_workers": {
+      "default": true,
+      "title": "Recover Stale Workers",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "worker_heartbeat_ttl_seconds": {
+      "default": 60,
+      "maximum": 3600,
+      "minimum": 5,
+      "title": "Worker Heartbeat Ttl Seconds",
+      "type": "integer"
+    }
+  },
+  "title": "OrchestrationPolicy",
+  "type": "object"
+}

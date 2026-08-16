@@ -1,0 +1,22 @@
+{"authority": "BENCHMARK_OWNER", "content_sha256": "26236c24cce1042ef88a76ee3aa9fa569d85b4103061031cf23d3f722b5a4b42", "path": "BENCHMARK_BRIEF.md", "source_id": "SRC-WA-BRIEF", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "content_sha256": "675cb1ef6c253252573e7ff25b496d52a3d2e5936f2f1d98d1d3f4d4f372240b", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-CATALOG", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Project registry", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-01", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Issue board", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-02", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Workspace creation", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-03", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Git branch and worktree isolation", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-04", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Agent provider profiles", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-05", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Session orchestration", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-06", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Terminal streaming", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-07", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Diff review", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-08", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Inline review comments", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-09", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Development server preview", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-10", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Embedded browser tools", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-11", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Source control integration", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-12", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Pull request workflow", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-13", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Agent feedback loop", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-14", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Desktop packaging and updates", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-15", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Configuration and secret boundaries", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-16", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Remote access", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-17", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Concurrency and conflict handling", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-18", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Notifications and recovery", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-19", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Accessibility responsive operation and handoff", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-WA-FEATURE-20", "trust": "TRUSTED_NORMATIVE"}

@@ -1,0 +1,91 @@
+{
+  "$defs": {
+    "ApprovalDecision": {
+      "enum": [
+        "APPROVED",
+        "DENIED"
+      ],
+      "title": "ApprovalDecision",
+      "type": "string"
+    },
+    "AuthorityCapability": {
+      "enum": [
+        "READ",
+        "PROPOSE",
+        "APPROVE",
+        "MUTATE",
+        "MERGE",
+        "DEPLOY",
+        "SPEND",
+        "EXTERNAL_MODEL",
+        "ACCESS_SECRET",
+        "MODIFY_INSTRUCTIONS",
+        "MODIFY_POLICY",
+        "COMPLETE_PROJECT",
+        "EMERGENCY"
+      ],
+      "title": "AuthorityCapability",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/security_approval.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "action_id": {
+      "title": "Action Id",
+      "type": "string"
+    },
+    "approval_id": {
+      "title": "Approval Id",
+      "type": "string"
+    },
+    "approver_identity_id": {
+      "title": "Approver Identity Id",
+      "type": "string"
+    },
+    "capability": {
+      "$ref": "#/$defs/AuthorityCapability"
+    },
+    "correlation_id": {
+      "title": "Correlation Id",
+      "type": "string"
+    },
+    "decided_at_utc": {
+      "format": "date-time",
+      "title": "Decided At Utc",
+      "type": "string"
+    },
+    "decision": {
+      "$ref": "#/$defs/ApprovalDecision"
+    },
+    "proposer_identity_id": {
+      "title": "Proposer Identity Id",
+      "type": "string"
+    },
+    "reason": {
+      "maxLength": 2000,
+      "minLength": 3,
+      "title": "Reason",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "approval_id",
+    "action_id",
+    "proposer_identity_id",
+    "approver_identity_id",
+    "capability",
+    "decision",
+    "reason",
+    "correlation_id"
+  ],
+  "title": "ApprovalRecord",
+  "type": "object"
+}

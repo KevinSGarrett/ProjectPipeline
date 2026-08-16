@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "upstream_id": "UPSTREAM-029",
+  "source_repository": "docker/mcp-gateway",
+  "source_revision": "24b028f4f9aac85ce1a1057c5e8d739836e7c18d",
+  "source_path": "docs/generator/reference/mcp_gateway_run.md",
+  "license": "MIT",
+  "adaptation": "Bounded security-relevant gateway option contract used by the Docker MCP Gateway adapter.",
+  "secure_defaults": {
+    "block_secrets": true,
+    "verify_signatures": true,
+    "log_calls": true,
+    "transport": "stdio",
+    "cpus": 1,
+    "memory": "2Gb"
+  },
+  "supported_transports": ["stdio", "sse", "streaming"],
+  "safe_optional_flags": ["block_network", "dry_run", "servers", "tools"]
+}

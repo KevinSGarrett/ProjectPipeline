@@ -1,0 +1,11 @@
+DROP TABLE IF EXISTS security_root_trust;
+DROP TABLE IF EXISTS security_supply_chain_gates;
+DROP TABLE IF EXISTS security_sboms;
+DROP TABLE IF EXISTS security_audit_events;
+DROP TABLE IF EXISTS security_secret_leases;
+DROP TABLE IF EXISTS security_secret_references;
+DROP TABLE IF EXISTS security_egress_decisions;
+DROP TABLE IF EXISTS security_policy_decisions;
+DROP TABLE IF EXISTS security_approvals;
+DROP TABLE IF EXISTS security_capability_grants;
+DROP TABLE IF EXISTS security_identities;

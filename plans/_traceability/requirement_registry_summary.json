@@ -1,0 +1,53 @@
+{
+  "by_authority": {
+    "REQUIRED_IMPLEMENTATION_DETAIL": 4,
+    "SOURCE_DERIVED": 347
+  },
+  "by_disposition": {
+    "ACCEPTED": 351
+  },
+  "by_domain": {
+    "AGENT": 19,
+    "ARCH": 16,
+    "ASSURE": 35,
+    "BUDGET": 19,
+    "CTRL": 16,
+    "CTX": 18,
+    "GOV": 25,
+    "INFRA": 19,
+    "LIFE": 18,
+    "OPS": 19,
+    "PDEF": 10,
+    "REL": 14,
+    "REQ": 17,
+    "RES": 25,
+    "SCHED": 17,
+    "SEC": 24,
+    "UPSTREAM": 14,
+    "UX": 26
+  },
+  "by_priority": {
+    "P0": 237,
+    "P1": 109,
+    "P2": 5
+  },
+  "by_state": {
+    "IMPLEMENTED": 185,
+    "PARTIALLY_IMPLEMENTED": 136,
+    "PLANNED_ONLY": 30
+  },
+  "by_type": {
+    "architecture": 5,
+    "completion": 2,
+    "constraint": 5,
+    "functional": 302,
+    "governance": 8,
+    "observability": 2,
+    "operational": 6,
+    "resilience": 5,
+    "security": 13,
+    "testing": 3
+  },
+  "requirement_count": 351,
+  "schema_version": "1.0.0"
+}

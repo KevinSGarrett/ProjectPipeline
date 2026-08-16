@@ -1,0 +1,21 @@
+{
+  "external_writes_default": "DENY",
+  "implementation_states": [
+    "IMPLEMENTED",
+    "PARTIALLY_IMPLEMENTED",
+    "MOCK_VERIFIED",
+    "LIVE_VERIFIED",
+    "BLOCKED_EXTERNAL",
+    "PLANNED_ONLY"
+  ],
+  "name": "ProjectPipeline",
+  "operating_model": "local-first_optional_cloud_assistance",
+  "project_id": "PROJECT-PIPELINE",
+  "repository": "https://github.com/KevinSGarrett/ProjectPipeline",
+  "schema_version": "1.0.0",
+  "source_reference_formats": [
+    "SRC-NNN:Lxxxxxx-Lxxxxxx",
+    "GOV-001:Lxxxxxx-Lxxxxxx"
+  ],
+  "target_local_root": "C:\\Project_X"
+}

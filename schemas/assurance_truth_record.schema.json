@@ -1,0 +1,134 @@
+{
+  "$defs": {
+    "TruthKind": {
+      "enum": [
+        "CLAIM",
+        "EVIDENCE",
+        "VERIFIED_FACT",
+        "UNKNOWN",
+        "CONTRADICTED"
+      ],
+      "title": "TruthKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/assurance_truth_record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "confidence_milli": {
+      "anyOf": [
+        {
+          "maximum": 1000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Confidence Milli"
+    },
+    "evidence_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "fresh_until_utc": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Fresh Until Utc"
+    },
+    "kind": {
+      "$ref": "#/$defs/TruthKind"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "producer_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Producer Id"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_references": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Source References",
+      "type": "array"
+    },
+    "statement": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "title": "Statement",
+      "type": "string"
+    },
+    "subject_id": {
+      "title": "Subject Id",
+      "type": "string"
+    },
+    "supersedes_truth_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Supersedes Truth Id"
+    },
+    "truth_id": {
+      "title": "Truth Id",
+      "type": "string"
+    },
+    "verification_status": {
+      "default": "UNVERIFIED",
+      "enum": [
+        "UNVERIFIED",
+        "VERIFIED",
+        "SUPERSEDED",
+        "CONFLICTED"
+      ],
+      "title": "Verification Status",
+      "type": "string"
+    }
+  },
+  "required": [
+    "truth_id",
+    "subject_id",
+    "kind",
+    "statement"
+  ],
+  "title": "TruthRecord",
+  "type": "object"
+}

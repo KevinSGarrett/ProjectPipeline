@@ -1,0 +1,134 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000003-01",
+      "statement": "Every accepted domain requirement is linked to at least one valid child work item.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "automated_graph_and_traceability_check",
+        "path": "plans/_traceability/requirements_to_jira.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Own all accepted requirements, decisions, implementation, tests, evidence, and operational readiness for PLAN-REQ-001.",
+  "evidence_required": [
+    "EVID-000004"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/01_requirements/PLAN-REQ-001_requirements_engineering.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/01_requirements/PLAN-REQ-001_requirements_engineering.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "EPIC",
+  "labels": [
+    "domain-epic",
+    "plan-req-001"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "24979",
+    "remote_key": "PP-10",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-EPIC-000003",
+  "objective": "Deliver the complete requirements engineering and traceability capability and its verified operational contract.",
+  "observability_impact": "Record structured validation and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": null,
+  "plan_references": [
+    {
+      "authoritative_path": "plans/01_requirements/PLAN-REQ-001_requirements_engineering.md",
+      "end_line": 12,
+      "line_numbered_path": "plans/_line_numbered/PLAN-REQ-001_requirements_engineering.lines.txt",
+      "line_reference": "PLAN-REQ-001:SEC-01:L000009-L000012",
+      "plan_id": "PLAN-REQ-001",
+      "section_id": "PLAN-REQ-001:SEC-01",
+      "start_line": 9
+    }
+  ],
+  "rationale": "The source corpus requires this domain as part of the end-to-end platform.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000004",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000053",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000054",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000055",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000056",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000057",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000058",
+      "type": "PARENT_OF"
+    }
+  ],
+  "remote_jira_key": "PP-10",
+  "required_tests": [
+    "TEST-JIRA-GRAPH-001"
+  ],
+  "requirement_ids": [
+    "REQ-REQ-0001",
+    "REQ-REQ-0002",
+    "REQ-REQ-0003",
+    "REQ-REQ-0004",
+    "REQ-REQ-0005",
+    "REQ-REQ-0006",
+    "REQ-REQ-0007",
+    "REQ-REQ-0008",
+    "REQ-REQ-0009",
+    "REQ-REQ-0010",
+    "REQ-REQ-0011",
+    "REQ-REQ-0012",
+    "REQ-REQ-0013",
+    "REQ-REQ-0014",
+    "REQ-REQ-0015",
+    "REQ-REQ-0016",
+    "REQ-REQ-0017"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the complete requirements engineering and traceability capability and its verified operational contract."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L000123-L000221"
+  ],
+  "state": "BACKLOG",
+  "title": "Requirements Engineering and Traceability",
+  "upstream_dependencies": []
+}

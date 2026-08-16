@@ -1,0 +1,536 @@
+{
+  "$defs": {
+    "ImplementationState": {
+      "enum": [
+        "IMPLEMENTED",
+        "PARTIALLY_IMPLEMENTED",
+        "MOCK_VERIFIED",
+        "LIVE_VERIFIED",
+        "BLOCKED_EXTERNAL",
+        "PLANNED_ONLY"
+      ],
+      "title": "ImplementationState",
+      "type": "string"
+    },
+    "JiraAcceptanceCriterion": {
+      "additionalProperties": false,
+      "properties": {
+        "criterion_id": {
+          "title": "Criterion Id",
+          "type": "string"
+        },
+        "statement": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Statement",
+          "type": "string"
+        },
+        "verification": {
+          "$ref": "#/$defs/JiraVerification"
+        }
+      },
+      "required": [
+        "criterion_id",
+        "statement",
+        "verification"
+      ],
+      "title": "JiraAcceptanceCriterion",
+      "type": "object"
+    },
+    "JiraIssueType": {
+      "enum": [
+        "EPIC",
+        "STORY",
+        "TASK",
+        "SUBTASK",
+        "BUG",
+        "SPIKE"
+      ],
+      "title": "JiraIssueType",
+      "type": "string"
+    },
+    "JiraLifecycleState": {
+      "enum": [
+        "DISCOVERED",
+        "BACKLOG",
+        "READY",
+        "IN_PROGRESS",
+        "REVIEW",
+        "VALIDATION",
+        "MERGE_READY",
+        "BLOCKED",
+        "FAILED",
+        "CANCELLED",
+        "DEFERRED",
+        "DONE"
+      ],
+      "title": "JiraLifecycleState",
+      "type": "string"
+    },
+    "JiraPlanReference": {
+      "additionalProperties": false,
+      "properties": {
+        "authoritative_path": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Authoritative Path",
+          "type": "string"
+        },
+        "end_line": {
+          "minimum": 1,
+          "title": "End Line",
+          "type": "integer"
+        },
+        "line_numbered_path": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Line Numbered Path",
+          "type": "string"
+        },
+        "line_reference": {
+          "maxLength": 255,
+          "minLength": 1,
+          "title": "Line Reference",
+          "type": "string"
+        },
+        "plan_id": {
+          "title": "Plan Id",
+          "type": "string"
+        },
+        "section_id": {
+          "title": "Section Id",
+          "type": "string"
+        },
+        "start_line": {
+          "minimum": 1,
+          "title": "Start Line",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "plan_id",
+        "section_id",
+        "authoritative_path",
+        "line_numbered_path",
+        "start_line",
+        "end_line",
+        "line_reference"
+      ],
+      "title": "JiraPlanReference",
+      "type": "object"
+    },
+    "JiraRelationship": {
+      "additionalProperties": false,
+      "properties": {
+        "target": {
+          "title": "Target",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/JiraRelationshipType"
+        }
+      },
+      "required": [
+        "target",
+        "type"
+      ],
+      "title": "JiraRelationship",
+      "type": "object"
+    },
+    "JiraRelationshipType": {
+      "enum": [
+        "PARENT_OF",
+        "CHILD_OF",
+        "BLOCKS",
+        "BLOCKED_BY",
+        "DEPENDS_ON",
+        "REQUIRED_BY",
+        "RELATES_TO",
+        "IMPLEMENTS_REQUIREMENT",
+        "VERIFIED_BY",
+        "SOURCE_OF",
+        "SUPERSEDES",
+        "CONFLICTS_WITH"
+      ],
+      "title": "JiraRelationshipType",
+      "type": "string"
+    },
+    "JiraVerification": {
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Command",
+          "type": "string"
+        },
+        "method": {
+          "maxLength": 191,
+          "minLength": 1,
+          "title": "Method",
+          "type": "string"
+        },
+        "path": {
+          "maxLength": 1000,
+          "minLength": 1,
+          "title": "Path",
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/$defs/JiraVerificationStatus"
+        }
+      },
+      "required": [
+        "method",
+        "path",
+        "command",
+        "status"
+      ],
+      "title": "JiraVerification",
+      "type": "object"
+    },
+    "JiraVerificationStatus": {
+      "enum": [
+        "PLANNED",
+        "IN_PROGRESS",
+        "PARTIALLY_VERIFIED",
+        "VERIFIED",
+        "BLOCKED",
+        "FAILED"
+      ],
+      "title": "JiraVerificationStatus",
+      "type": "string"
+    },
+    "LocalJiraIssue": {
+      "additionalProperties": false,
+      "properties": {
+        "acceptance_criteria": {
+          "items": {
+            "$ref": "#/$defs/JiraAcceptanceCriterion"
+          },
+          "title": "Acceptance Criteria",
+          "type": "array"
+        },
+        "blockers": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Blockers",
+          "type": "array"
+        },
+        "completion_evidence": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Completion Evidence",
+          "type": "array"
+        },
+        "definition_of_done": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Definition Of Done",
+          "type": "array"
+        },
+        "dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "array"
+        },
+        "description": {
+          "maxLength": 12000,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "evidence_required": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Required",
+          "type": "array"
+        },
+        "exclusions": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Exclusions",
+          "type": "array"
+        },
+        "expected_file_locations": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Expected File Locations",
+          "type": "array"
+        },
+        "expected_implementation_artifacts": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Expected Implementation Artifacts",
+          "type": "array"
+        },
+        "implementation_state": {
+          "$ref": "#/$defs/ImplementationState"
+        },
+        "issue_type": {
+          "$ref": "#/$defs/JiraIssueType"
+        },
+        "labels": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Labels",
+          "type": "array"
+        },
+        "last_observed_remote_state": {
+          "anyOf": [
+            {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Last Observed Remote State"
+        },
+        "local_id": {
+          "title": "Local Id",
+          "type": "string"
+        },
+        "objective": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Objective",
+          "type": "string"
+        },
+        "observability_impact": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Observability Impact",
+          "type": "string"
+        },
+        "owner_required_capability": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Owner Required Capability",
+          "type": "string"
+        },
+        "parent": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "Parent"
+        },
+        "plan_references": {
+          "items": {
+            "$ref": "#/$defs/JiraPlanReference"
+          },
+          "title": "Plan References",
+          "type": "array"
+        },
+        "rationale": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Rationale",
+          "type": "string"
+        },
+        "relationships": {
+          "items": {
+            "$ref": "#/$defs/JiraRelationship"
+          },
+          "title": "Relationships",
+          "type": "array"
+        },
+        "remote_jira_key": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Remote Jira Key"
+        },
+        "required_tests": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Required Tests",
+          "type": "array"
+        },
+        "requirement_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Requirement Ids",
+          "type": "array"
+        },
+        "risk_classification": {
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ],
+          "title": "Risk Classification",
+          "type": "string"
+        },
+        "rollback_recovery_consideration": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Rollback Recovery Consideration",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "scope": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Scope",
+          "type": "array"
+        },
+        "security_impact": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Security Impact",
+          "type": "string"
+        },
+        "source_references": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Source References",
+          "type": "array"
+        },
+        "state": {
+          "$ref": "#/$defs/JiraLifecycleState"
+        },
+        "title": {
+          "maxLength": 1000,
+          "minLength": 5,
+          "title": "Title",
+          "type": "string"
+        },
+        "upstream_dependencies": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Upstream Dependencies",
+          "type": "array"
+        }
+      },
+      "required": [
+        "local_id",
+        "issue_type",
+        "title",
+        "parent",
+        "objective",
+        "rationale",
+        "description",
+        "scope",
+        "exclusions",
+        "requirement_ids",
+        "source_references",
+        "plan_references",
+        "dependencies",
+        "blockers",
+        "relationships",
+        "upstream_dependencies",
+        "expected_implementation_artifacts",
+        "expected_file_locations",
+        "acceptance_criteria",
+        "definition_of_done",
+        "required_tests",
+        "evidence_required",
+        "risk_classification",
+        "security_impact",
+        "observability_impact",
+        "rollback_recovery_consideration",
+        "owner_required_capability",
+        "labels",
+        "state",
+        "implementation_state",
+        "completion_evidence"
+      ],
+      "title": "LocalJiraIssue",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/jira_mirror_bundle.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "board_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Board Id",
+      "type": "string"
+    },
+    "edge_count": {
+      "minimum": 0,
+      "title": "Edge Count",
+      "type": "integer"
+    },
+    "fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "issue_count": {
+      "minimum": 0,
+      "title": "Issue Count",
+      "type": "integer"
+    },
+    "issues": {
+      "items": {
+        "$ref": "#/$defs/LocalJiraIssue"
+      },
+      "title": "Issues",
+      "type": "array"
+    },
+    "project_key": {
+      "pattern": "^[A-Z][A-Z0-9_]{0,31}$",
+      "title": "Project Key",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "board_id",
+    "project_key",
+    "issues",
+    "issue_count",
+    "edge_count",
+    "fingerprint"
+  ],
+  "title": "JiraMirrorBundle",
+  "type": "object"
+}

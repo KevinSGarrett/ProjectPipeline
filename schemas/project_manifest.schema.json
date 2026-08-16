@@ -1,0 +1,42 @@
+{
+  "$id": "https://project-pipeline.local/schemas/project_manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "aggregate_sha256": {
+      "type": "string"
+    },
+    "files": {
+      "items": {
+        "required": [
+          "path",
+          "size_bytes",
+          "sha256"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "generated_at_utc": {
+      "type": "string"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "root_name": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "project_id",
+    "root_name",
+    "generated_at_utc",
+    "files",
+    "aggregate_sha256"
+  ],
+  "title": "Project Manifest",
+  "type": "object"
+}

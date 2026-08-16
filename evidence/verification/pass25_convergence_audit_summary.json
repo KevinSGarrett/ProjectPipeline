@@ -1,0 +1,101 @@
+{
+  "accepted_requirement_count": 351,
+  "audit_complete": true,
+  "audit_dimensions": {
+    "all_dimensions_covered": true,
+    "counts": {
+      "accepted_requirements": 351,
+      "adrs": 27,
+      "evidence_records": 174,
+      "golden_journey_records": 4,
+      "jira_issues": 378,
+      "jira_relationship_edges": 844,
+      "plan_files": 40,
+      "runbooks": 24,
+      "tests": 491,
+      "upstream_usages": 73
+    },
+    "dimension_count": 15,
+    "dimensions": {
+      "blockers": {
+        "covered": true,
+        "missing": []
+      },
+      "decisions": {
+        "covered": true,
+        "missing": []
+      },
+      "dependencies": {
+        "covered": true,
+        "missing": []
+      },
+      "deployment_artifacts": {
+        "covered": true,
+        "missing": []
+      },
+      "evidence": {
+        "covered": true,
+        "missing": []
+      },
+      "implementation_mappings": {
+        "covered": true,
+        "missing": []
+      },
+      "journeys": {
+        "covered": true,
+        "missing": []
+      },
+      "plan_areas": {
+        "covered": true,
+        "missing": []
+      },
+      "requirement_dispositions": {
+        "covered": true,
+        "missing": []
+      },
+      "runbooks": {
+        "covered": true,
+        "missing": []
+      },
+      "security_controls": {
+        "covered": true,
+        "missing": []
+      },
+      "source_links": {
+        "covered": true,
+        "missing": []
+      },
+      "tests": {
+        "covered": true,
+        "missing": []
+      },
+      "upstream_usage": {
+        "covered": true,
+        "missing": []
+      },
+      "work_relationships": {
+        "covered": true,
+        "missing": []
+      }
+    }
+  },
+  "audit_id": "PASS-25-FINAL-CONVERGENCE-AUDIT",
+  "classification_counts": {
+    "COMPLETE_LOCAL_OR_EVIDENCED": 185,
+    "EXTERNAL_OR_TARGET_QUALIFICATION_REQUIRED": 44,
+    "LOCALLY_PARTIAL_REQUIRES_BREADTH_OR_INDEPENDENT_EVIDENCE": 101,
+    "LOCAL_SCOPE_REMAINS_INCOMPLETE": 21
+  },
+  "completion_gate_failed_questions": [
+    2,
+    6,
+    7,
+    8,
+    13
+  ],
+  "completion_gate_state": "NOT_COMPLETE",
+  "full_report": "release/final_convergence_audit_r25.json",
+  "project_complete": false,
+  "schema_version": "1.0.0",
+  "truth_boundary": "audit completion means the convergence audit itself covered the repository; it does not override incomplete requirements, missing live target evidence, or the independent Completion Gate"
+}

@@ -1,0 +1,92 @@
+{
+  "$defs": {
+    "ProjectLifecycleState": {
+      "enum": [
+        "REGISTERED",
+        "COMPILING",
+        "READY",
+        "ACTIVE",
+        "BLOCKED",
+        "VERIFYING",
+        "COMPLETED",
+        "FAILED",
+        "ARCHIVED"
+      ],
+      "title": "ProjectLifecycleState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/project_state.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "blocked_reason": {
+      "anyOf": [
+        {
+          "maxLength": 2000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Blocked Reason"
+    },
+    "last_transition_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Transition Id"
+    },
+    "manifest_revision": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Manifest Revision",
+      "type": "integer"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/ProjectLifecycleState"
+    },
+    "task_counts": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Task Counts",
+      "type": "object"
+    },
+    "updated_at_utc": {
+      "format": "date-time",
+      "title": "Updated At Utc",
+      "type": "string"
+    },
+    "version": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Version",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "project_id",
+    "state"
+  ],
+  "title": "ProjectStateRecord",
+  "type": "object"
+}

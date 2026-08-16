@@ -1,0 +1,81 @@
+{
+  "$defs": {
+    "Sensitivity": {
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "title": "Sensitivity",
+      "type": "integer"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/context_policy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allow_stale_optional": {
+      "default": false,
+      "title": "Allow Stale Optional",
+      "type": "boolean"
+    },
+    "allow_untrusted_data": {
+      "default": true,
+      "title": "Allow Untrusted Data",
+      "type": "boolean"
+    },
+    "allow_untrusted_instructions": {
+      "default": false,
+      "title": "Allow Untrusted Instructions",
+      "type": "boolean"
+    },
+    "hosted_max_sensitivity": {
+      "$ref": "#/$defs/Sensitivity",
+      "default": 1
+    },
+    "max_age_seconds": {
+      "default": 86400,
+      "minimum": 1,
+      "title": "Max Age Seconds",
+      "type": "integer"
+    },
+    "max_chars": {
+      "default": 200000,
+      "maximum": 50000000,
+      "minimum": 1024,
+      "title": "Max Chars",
+      "type": "integer"
+    },
+    "max_items": {
+      "default": 64,
+      "maximum": 5000,
+      "minimum": 1,
+      "title": "Max Items",
+      "type": "integer"
+    },
+    "min_coverage_score": {
+      "default": 1.0,
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Min Coverage Score",
+      "type": "number"
+    },
+    "policy_version": {
+      "pattern": "^CTX-POLICY-[0-9]+(?:\\.[0-9]+)*$",
+      "title": "Policy Version",
+      "type": "string"
+    },
+    "redact_secrets": {
+      "default": true,
+      "title": "Redact Secrets",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "policy_version"
+  ],
+  "title": "ContextPolicy",
+  "type": "object"
+}

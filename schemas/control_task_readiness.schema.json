@@ -1,0 +1,73 @@
+{
+  "$defs": {
+    "ReadinessState": {
+      "enum": [
+        "READY",
+        "WAITING_DEPENDENCIES",
+        "BLOCKED",
+        "WAITING_APPROVAL",
+        "WAITING_CONTEXT",
+        "WAITING_RESOURCES",
+        "WAITING_ENVIRONMENT",
+        "NOT_ELIGIBLE",
+        "ACTIVE",
+        "TERMINAL"
+      ],
+      "title": "ReadinessState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/control_task_readiness.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "ready": {
+      "title": "Ready",
+      "type": "boolean"
+    },
+    "reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/ReadinessState"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "unresolved_blockers": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Unresolved Blockers",
+      "type": "array"
+    },
+    "unresolved_dependencies": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Unresolved Dependencies",
+      "type": "array"
+    }
+  },
+  "required": [
+    "task_id",
+    "state",
+    "ready"
+  ],
+  "title": "TaskReadiness",
+  "type": "object"
+}

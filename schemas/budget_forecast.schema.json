@@ -1,0 +1,134 @@
+{
+  "$defs": {
+    "ForecastConfidence": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "title": "ForecastConfidence",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/budget_forecast.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "burn_rate_microunits_per_day": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Burn Rate Microunits Per Day",
+      "type": "integer"
+    },
+    "confidence": {
+      "$ref": "#/$defs/ForecastConfidence",
+      "default": "LOW"
+    },
+    "forecast_id": {
+      "title": "Forecast Id",
+      "type": "string"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "p50_microunits": {
+      "minimum": 0,
+      "title": "P50 Microunits",
+      "type": "integer"
+    },
+    "p90_microunits": {
+      "minimum": 0,
+      "title": "P90 Microunits",
+      "type": "integer"
+    },
+    "pace_ratio_milli": {
+      "default": 1000,
+      "minimum": 0,
+      "title": "Pace Ratio Milli",
+      "type": "integer"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "provider_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Id"
+    },
+    "queued_p50_microunits": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Queued P50 Microunits",
+      "type": "integer"
+    },
+    "queued_p90_microunits": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Queued P90 Microunits",
+      "type": "integer"
+    },
+    "runway_days_milli": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Runway Days Milli"
+    },
+    "sample_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Sample Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Source",
+      "type": "string"
+    },
+    "task_class": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Task Class"
+    }
+  },
+  "required": [
+    "forecast_id",
+    "project_id",
+    "p50_microunits",
+    "p90_microunits",
+    "source",
+    "generated_at_utc"
+  ],
+  "title": "BudgetForecast",
+  "type": "object"
+}

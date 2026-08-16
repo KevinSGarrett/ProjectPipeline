@@ -1,0 +1,11 @@
+flowchart LR
+    Operator -->|typed command| API
+    API -->|identity + intent| Policy
+    Policy -->|allow / deny / require approval| Kernel
+    Director[Autonomy Director] -->|advisory recommendation| Kernel
+    Provider[Models and Providers] -->|untrusted structured result| Router
+    Router --> Kernel
+    Kernel -->|authorized work| Workflow
+    Workflow --> Worker
+    Worker -->|candidate result + evidence| Completion
+    Completion -->|verified transition only| Kernel

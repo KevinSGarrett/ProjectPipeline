@@ -1,0 +1,12 @@
+{
+  "duplicate_evidence_requirement_count": 0,
+  "duplicate_evidence_requirements": [],
+  "reference_error_count": 0,
+  "reference_errors": [],
+  "requirement_reference_count": 437,
+  "result": "PASS",
+  "schema_version": "1.0.0",
+  "security_secret_query_count": 8,
+  "src_017_query_count": 40,
+  "src_018_query_count": 0
+}

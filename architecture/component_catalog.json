@@ -1,0 +1,1759 @@
+{
+  "architecture_style": "LOCAL_FIRST_MODULAR_MONOLITH_WITH_PORTS",
+  "authority_model": "Project Pipeline separates deterministic authority from probabilistic advice. The Project Control Kernel, policy, budget, lease, and completion gates own admissible transitions; AI, provider, and optimization components may recommend or execute only within explicitly granted authority.",
+  "component_count": 35,
+  "components": [
+    {
+      "authority": "Transport boundary only; all commands route to the normal control, policy, and audit path.",
+      "component_id": "COMP-API-001",
+      "decision_ids": [
+        "ADR-0010"
+      ],
+      "depends_on": [
+        "COMP-CTRL-001",
+        "COMP-DIRECTOR-001",
+        "COMP-OBS-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-CTRL-001",
+        "IFACE-DIRECTOR-001",
+        "IFACE-OBS-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-API-001",
+          "name": "Operator API",
+          "purpose": "Versioned HTTP and realtime operator interface"
+        }
+      ],
+      "layer": "OPERATOR_EXPERIENCE",
+      "name": "Control API and Realtime Gateway",
+      "requirement_ids": [
+        "REQ-ARCH-0006",
+        "REQ-UX-0011",
+        "REQ-UX-0017",
+        "REQ-UX-0018"
+      ],
+      "responsibility": "Expose authenticated versioned HTTP, SSE, WebSocket, replay, Director-context, inbox, and typed-control contracts as non-authoritative operator projections.",
+      "source_references": [
+        "SRC-010:L001340-L001352",
+        "SRC-006:L002650-L002664"
+      ],
+      "tags": [
+        "fastapi",
+        "realtime"
+      ]
+    },
+    {
+      "authority": "Authoritative for artifact identity and byte integrity; consumers hold references rather than copied blobs.",
+      "component_id": "COMP-ARTIFACT-001",
+      "decision_ids": [
+        "ADR-0013"
+      ],
+      "depends_on": [
+        "COMP-PERSIST-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-PERSIST-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-ARTIFACT-001",
+          "name": "Artifact Storage Port",
+          "purpose": "Put, verify, retrieve, retain, and garbage-collect content-addressed artifacts"
+        }
+      ],
+      "layer": "PLATFORM_SERVICES",
+      "name": "Content-Addressed Artifact Store",
+      "requirement_ids": [
+        "REQ-ARCH-0010",
+        "REQ-INFRA-0019",
+        "REQ-ASSURE-0002"
+      ],
+      "responsibility": "Store immutable artifact bytes by SHA-256 with PostgreSQL metadata, local filesystem baseline, reference-aware retention, and optional S3 backend.",
+      "source_references": [
+        "SRC-009:L000016-L000016",
+        "SRC-017:L000958-L000980"
+      ],
+      "tags": [
+        "artifacts",
+        "sha256"
+      ]
+    },
+    {
+      "authority": "Independent deterministic Completion Gate authority; worker, model, reviewer, and upstream-tool claims cannot directly transition the project to final completion.",
+      "component_id": "COMP-ASSURE-001",
+      "decision_ids": [
+        "ADR-0006",
+        "ADR-0017"
+      ],
+      "depends_on": [
+        "COMP-CTRL-001",
+        "COMP-EVIDENCE-001",
+        "COMP-POLICY-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-CTRL-001",
+        "IFACE-EVIDENCE-001",
+        "IFACE-POLICY-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-ASSURE-001",
+          "name": "Verification and Completion API",
+          "purpose": "Plan verification, record findings, and evaluate completion"
+        }
+      ],
+      "layer": "ASSURANCE",
+      "name": "Verification Director and Completion Gate",
+      "requirement_ids": [
+        "REQ-ASSURE-0001",
+        "REQ-ASSURE-0002",
+        "REQ-ASSURE-0003",
+        "REQ-ASSURE-0004",
+        "REQ-ASSURE-0005",
+        "REQ-ASSURE-0006",
+        "REQ-ASSURE-0007",
+        "REQ-ASSURE-0008",
+        "REQ-ASSURE-0009",
+        "REQ-ASSURE-0010",
+        "REQ-ASSURE-0011",
+        "REQ-ASSURE-0012",
+        "REQ-ASSURE-0013",
+        "REQ-ASSURE-0014",
+        "REQ-ASSURE-0015",
+        "REQ-ASSURE-0016",
+        "REQ-ASSURE-0017",
+        "REQ-ASSURE-0018",
+        "REQ-ASSURE-0019",
+        "REQ-ASSURE-0020",
+        "REQ-ASSURE-0021",
+        "REQ-ASSURE-0022",
+        "REQ-ASSURE-0023",
+        "REQ-ASSURE-0024",
+        "REQ-ASSURE-0025",
+        "REQ-ASSURE-0026",
+        "REQ-ASSURE-0027",
+        "REQ-ASSURE-0028",
+        "REQ-ASSURE-0029",
+        "REQ-ASSURE-0030",
+        "REQ-ASSURE-0031",
+        "REQ-ASSURE-0032",
+        "REQ-ASSURE-0033",
+        "REQ-ASSURE-0034",
+        "REQ-ASSURE-0035"
+      ],
+      "responsibility": "Compile objective verification criteria, derive affected-behavior test impact, execute the profile-driven verification portfolio and golden journeys, record browser/accessibility/performance/adversarial/property/mutation/fault/post-merge evidence, enforce loop/scope/review/evidence sufficiency controls, challenge lazy completion, localize failures, and authorize final completion only when all convergence questions pass. Broader security, resilience/DR, deployment, lifecycle, and Command Center obligations remain downstream and cannot be hidden by verification success.",
+      "source_references": [
+        "SRC-003:L000840-L000880",
+        "SRC-014:L000049-L000080",
+        "SRC-016:L002110-L002150"
+      ],
+      "tags": [
+        "verification",
+        "completion"
+      ]
+    },
+    {
+      "authority": "Authoritative for recovery-objective and restore-verification records; destructive promotion requires recovery and policy authority.",
+      "component_id": "COMP-BACKUP-001",
+      "decision_ids": [
+        "ADR-0024",
+        "ADR-0025"
+      ],
+      "depends_on": [
+        "COMP-PERSIST-001",
+        "COMP-ARTIFACT-001",
+        "COMP-RECOVERY-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-PERSIST-001",
+        "IFACE-ARTIFACT-001",
+        "IFACE-RECOVERY-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-BACKUP-001",
+          "name": "Backup and Restore Verification Port",
+          "purpose": "Plan backup/restore operations and record separate restore-verification outcomes"
+        }
+      ],
+      "layer": "PLATFORM_SERVICES",
+      "name": "Backup and Restore Verification Controller",
+      "requirement_ids": [
+        "REQ-RES-0003",
+        "REQ-RES-0008",
+        "REQ-RES-0020",
+        "REQ-RES-0021",
+        "REQ-INFRA-0019"
+      ],
+      "responsibility": "Own domain recovery objectives, backup/restore plans, isolated restore verification status, and recovery evidence without equating backup existence with recovery readiness.",
+      "source_references": [
+        "SRC-017:L000439-L000489"
+      ],
+      "tags": [
+        "backup",
+        "restore",
+        "rpo",
+        "rto"
+      ]
+    },
+    {
+      "authority": "Authoritative for spend admission within configured budgets; unknown cost is handled conservatively.",
+      "component_id": "COMP-BUDGET-001",
+      "decision_ids": [
+        "ADR-0006",
+        "ADR-0007"
+      ],
+      "depends_on": [
+        "COMP-PERSIST-001",
+        "COMP-POLICY-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-PERSIST-001",
+        "IFACE-POLICY-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-BUDGET-001",
+          "name": "Budget and Spend Lease API",
+          "purpose": "Forecast, admit, reserve, record, and reconcile cost and quota usage"
+        }
+      ],
+      "layer": "DETERMINISTIC_CONTROL",
+      "name": "Budget Governor",
+      "requirement_ids": [
+        "REQ-BUDGET-0001",
+        "REQ-BUDGET-0002",
+        "REQ-BUDGET-0003",
+        "REQ-BUDGET-0004",
+        "REQ-BUDGET-0005",
+        "REQ-BUDGET-0006",
+        "REQ-BUDGET-0007",
+        "REQ-BUDGET-0008",
+        "REQ-BUDGET-0009",
+        "REQ-BUDGET-0010",
+        "REQ-BUDGET-0011",
+        "REQ-BUDGET-0012",
+        "REQ-BUDGET-0013",
+        "REQ-BUDGET-0014",
+        "REQ-BUDGET-0015",
+        "REQ-BUDGET-0016",
+        "REQ-BUDGET-0017",
+        "REQ-BUDGET-0018",
+        "REQ-BUDGET-0019"
+      ],
+      "responsibility": "Account for monetary spend, quotas, subscriptions, local compute, forecasts, spend leases, pressure modes, and cost per verified outcome.",
+      "source_references": [
+        "SRC-004:L000001-L000160",
+        "SRC-014:L000033-L000038"
+      ],
+      "tags": [
+        "budget",
+        "cost"
+      ]
+    },
+    {
+      "authority": "Conversational advisory surface only; action execution uses typed commands and normal gates.",
+      "component_id": "COMP-CHAT-001",
+      "decision_ids": [
+        "ADR-0006",
+        "ADR-0016"
+      ],
+      "depends_on": [
+        "COMP-DIRECTOR-001",
+        "COMP-API-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-DIRECTOR-001",
+        "IFACE-API-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-CHAT-001",
+          "name": "Director Conversation API",
+          "purpose": "Grounded conversational queries and action proposals"
+        }
+      ],
+      "layer": "OPERATOR_EXPERIENCE",
+      "name": "Director Chat",
+      "requirement_ids": [
+        "REQ-UX-0002",
+        "REQ-UX-0010",
+        "REQ-UX-0016",
+        "REQ-UX-0024"
+      ],
+      "responsibility": "Provide grounded global/project/incident Director conversation, evidence-backed summaries, and confirmation-required typed action proposals; mutations remain exclusively on normal Control Kernel paths.",
+      "source_references": [
+        "SRC-006:L002640-L002664",
+        "SRC-015:L000003-L000112"
+      ],
+      "tags": [
+        "chat",
+        "director"
+      ]
+    },
+    {
+      "authority": "No canonical project authority by default; cloud witness may fence local failover only under recorded lease policy.",
+      "component_id": "COMP-CLOUDSPINE-001",
+      "decision_ids": [
+        "ADR-0023"
+      ],
+      "depends_on": [
+        "COMP-RECOVERY-001",
+        "COMP-POLICY-001",
+        "COMP-BUDGET-001"
+      ],
+      "deployment_profiles": [
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-RECOVERY-001",
+        "IFACE-POLICY-001",
+        "IFACE-BUDGET-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-CLOUDSPINE-001",
+          "name": "Cloud Spine Port",
+          "purpose": "Expose optional witness, durable event, recovery storage, and bounded cloud-capacity primitives"
+        }
+      ],
+      "layer": "PLATFORM_SERVICES",
+      "name": "Optional AWS Cloud Spine",
+      "requirement_ids": [
+        "REQ-INFRA-0012",
+        "REQ-INFRA-0013",
+        "REQ-INFRA-0014",
+        "REQ-INFRA-0015",
+        "REQ-INFRA-0016",
+        "REQ-INFRA-0017",
+        "REQ-RES-0015",
+        "REQ-RES-0024",
+        "REQ-RES-0025"
+      ],
+      "responsibility": "Provide optional witness, durable event transport, recovery storage, observability, budget controls, and bounded recovery/burst support while local control remains primary.",
+      "source_references": [
+        "SRC-012:L000001-L000217",
+        "SRC-012:L000380-L000495"
+      ],
+      "tags": [
+        "aws",
+        "hybrid",
+        "witness",
+        "recovery"
+      ]
+    },
+    {
+      "authority": "Authoritative for issued context-pack identity and receipt validation, not for project state.",
+      "component_id": "COMP-CONTEXT-001",
+      "decision_ids": [
+        "ADR-0006"
+      ],
+      "depends_on": [
+        "COMP-TRACE-001",
+        "COMP-CTRL-001",
+        "COMP-ARTIFACT-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_paths": [
+        "src/project_pipeline/domain/context.py",
+        "src/project_pipeline/context_engine/",
+        "database/migrations/sqlite/PPDB-0009_context_delegation.up.sql",
+        "src/project_pipeline/upstream_integrations/context.py"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-TRACE-001",
+        "IFACE-CTRL-002",
+        "IFACE-ARTIFACT-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-CONTEXT-001",
+          "name": "Context Compilation API",
+          "purpose": "Compile, validate, and retrieve context packs and receipts"
+        }
+      ],
+      "layer": "EXECUTION",
+      "name": "Context Broker and Compiler",
+      "requirement_ids": [
+        "REQ-CTX-0001",
+        "REQ-CTX-0002",
+        "REQ-CTX-0003",
+        "REQ-CTX-0004",
+        "REQ-CTX-0005",
+        "REQ-CTX-0006",
+        "REQ-CTX-0007",
+        "REQ-CTX-0008"
+      ],
+      "responsibility": "Build immutable minimal context packs and receipts from trusted sources, repository maps, plans, acceptance criteria, and current state.",
+      "source_references": [
+        "SRC-002:L000001-L000180",
+        "SRC-014:L000084-L000086"
+      ],
+      "tags": [
+        "context",
+        "delegation"
+      ],
+      "test_paths": [
+        "tests/test_context_domain.py",
+        "tests/test_context_broker_compiler.py",
+        "tests/test_context_firewall.py",
+        "tests/test_context_persistence.py",
+        "tests/test_context_service.py",
+        "tests/test_context_cli.py",
+        "tests/test_context_trust.py",
+        "tests/test_context_upstream_adapters.py"
+      ]
+    },
+    {
+      "authority": "Final deterministic authority for project transitions; probabilistic recommendations cannot override it.",
+      "component_id": "COMP-CTRL-001",
+      "decision_ids": [
+        "ADR-0005",
+        "ADR-0006",
+        "ADR-0007"
+      ],
+      "depends_on": [
+        "COMP-PERSIST-001",
+        "COMP-TRACE-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-PERSIST-001",
+        "IFACE-TRACE-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-CTRL-001",
+          "name": "Control Command API",
+          "purpose": "Evaluate typed commands and return authoritative transition results"
+        },
+        {
+          "interface_id": "IFACE-CTRL-002",
+          "name": "Project State Query API",
+          "purpose": "Expose authoritative project state and readiness facts"
+        }
+      ],
+      "layer": "DETERMINISTIC_CONTROL",
+      "name": "Project Control Kernel",
+      "requirement_ids": [
+        "REQ-ARCH-0002",
+        "REQ-CTRL-0001",
+        "REQ-CTRL-0002",
+        "REQ-CTRL-0005",
+        "REQ-CTRL-0009"
+      ],
+      "responsibility": "Own canonical project state, admissible transitions, eligibility, dependency truth, assignment truth, and completion recomputation.",
+      "source_references": [
+        "SRC-003:L000040-L000083",
+        "SRC-003:L000852-L000928"
+      ],
+      "tags": [
+        "control-kernel",
+        "deterministic"
+      ]
+    },
+    {
+      "authority": "Deployment operations require explicit environment, policy, authorization, and evidence gates.",
+      "component_id": "COMP-DEPLOY-001",
+      "decision_ids": [
+        "ADR-0011",
+        "ADR-0012"
+      ],
+      "depends_on": [
+        "COMP-POLICY-001",
+        "COMP-OBS-001",
+        "COMP-SECRET-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-POLICY-001",
+        "IFACE-OBS-001",
+        "IFACE-SECRET-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-DEPLOY-001",
+          "name": "Deployment Control Port",
+          "purpose": "Plan and execute verified profile-aware deployment operations"
+        }
+      ],
+      "layer": "PLATFORM_SERVICES",
+      "name": "Runtime Supervisor and Deployment Profiles",
+      "requirement_ids": [
+        "REQ-INFRA-0001",
+        "REQ-INFRA-0002",
+        "REQ-INFRA-0003",
+        "REQ-INFRA-0010",
+        "REQ-INFRA-0011",
+        "REQ-INFRA-0012",
+        "REQ-INFRA-0017",
+        "REQ-INFRA-0018"
+      ],
+      "responsibility": "Install, configure, start, stop, monitor, qualify, upgrade, and roll back local Python, Windows-service/desktop, container, separated environment, and optional AWS runtime profiles while preserving explicit target qualification.",
+      "source_references": [
+        "SRC-003:L001002-L001020",
+        "SRC-016:L002272-L002291"
+      ],
+      "tags": [
+        "deployment",
+        "windows-service"
+      ]
+    },
+    {
+      "authority": "Advisory and coordinating authority only; all mutations pass through the Control Kernel, policy, budget, and evidence gates.",
+      "component_id": "COMP-DIRECTOR-001",
+      "decision_ids": [
+        "ADR-0006",
+        "ADR-0016"
+      ],
+      "depends_on": [
+        "COMP-CTRL-001",
+        "COMP-ROUTER-001",
+        "COMP-POLICY-001",
+        "COMP-BUDGET-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PLANNED_ONLY",
+      "interfaces_consumed": [
+        "IFACE-CTRL-002",
+        "IFACE-ROUTER-001",
+        "IFACE-POLICY-001",
+        "IFACE-BUDGET-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-DIRECTOR-001",
+          "name": "Director Recommendation API",
+          "purpose": "Produce grounded recommendations with rationale and confidence"
+        }
+      ],
+      "layer": "ADVISORY_INTELLIGENCE",
+      "name": "Autonomy Director",
+      "requirement_ids": [
+        "REQ-CTRL-0004",
+        "REQ-CTRL-0006",
+        "REQ-CTRL-0007",
+        "REQ-CTRL-0015"
+      ],
+      "responsibility": "Continuously propose priorities, plans, delegations, recovery actions, and escalations using live project state.",
+      "source_references": [
+        "SRC-003:L000085-L000110",
+        "SRC-014:L000003-L000086"
+      ],
+      "tags": [
+        "director",
+        "advisory"
+      ]
+    },
+    {
+      "authority": "Authoritative for evidence records; it cannot reinterpret a failed or unknown result as passing.",
+      "component_id": "COMP-EVIDENCE-001",
+      "decision_ids": [
+        "ADR-0013"
+      ],
+      "depends_on": [
+        "COMP-ARTIFACT-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-ARTIFACT-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-EVIDENCE-001",
+          "name": "Evidence Ledger API",
+          "purpose": "Append and query immutable evidence records"
+        }
+      ],
+      "layer": "ASSURANCE",
+      "name": "Evidence Ledger",
+      "requirement_ids": [
+        "REQ-ASSURE-0001",
+        "REQ-ASSURE-0002",
+        "REQ-ASSURE-0017",
+        "REQ-ASSURE-0018",
+        "REQ-ASSURE-0019",
+        "REQ-ASSURE-0028"
+      ],
+      "responsibility": "Record append-only evidence identities, claims, methods, freshness, results, provenance, and verification status.",
+      "source_references": [
+        "GOV-001:L002028-L002062",
+        "SRC-009:L000016-L000016"
+      ],
+      "tags": [
+        "evidence",
+        "ledger"
+      ]
+    },
+    {
+      "authority": "Computes graph facts from canonical inputs; it does not independently change project state.",
+      "component_id": "COMP-GRAPH-001",
+      "decision_ids": [
+        "ADR-0009"
+      ],
+      "depends_on": [
+        "COMP-PERSIST-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-PERSIST-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-GRAPH-001",
+          "name": "Graph Analysis Port",
+          "purpose": "Graph construction, validation, traversal, critical-path, and conflict queries"
+        }
+      ],
+      "layer": "DETERMINISTIC_CONTROL",
+      "name": "Graph Analysis Service",
+      "requirement_ids": [
+        "REQ-SCHED-0005",
+        "REQ-SCHED-0007",
+        "REQ-SCHED-0009"
+      ],
+      "responsibility": "Represent dependency, conflict, ownership, and resource graphs and run deterministic graph algorithms.",
+      "source_references": [
+        "SRC-016:L001752-L001756",
+        "SRC-016:L002215-L002224"
+      ],
+      "tags": [
+        "networkx",
+        "graphs"
+      ]
+    },
+    {
+      "authority": "Authoritative for observed intake facts and deterministic compilation artifacts; it may create bounded bootstrap assets only after explicit confirmation, while the Project Control Kernel remains authoritative for accepted project-state transitions.",
+      "component_id": "COMP-INTAKE-001",
+      "decision_ids": [
+        "ADR-0006"
+      ],
+      "depends_on": [],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-INTAKE-001",
+          "name": "Project Intake API",
+          "purpose": "Inspect and compile new or existing project roots into deterministic manifests, profiles, repository maps, and gap reports"
+        },
+        {
+          "interface_id": "IFACE-INTAKE-002",
+          "name": "Controlled Bootstrap API",
+          "purpose": "Plan, apply, replay, and roll back bounded non-destructive bootstrap actions"
+        }
+      ],
+      "layer": "PROJECT_DEFINITION",
+      "name": "Project Intake Compiler",
+      "requirement_ids": [
+        "REQ-CTX-0010",
+        "REQ-LIFE-0014",
+        "REQ-LIFE-0015",
+        "REQ-PDEF-0004",
+        "REQ-PDEF-0005",
+        "REQ-PDEF-0006",
+        "REQ-PDEF-0009"
+      ],
+      "responsibility": "Inspect new or existing project roots without executing discovered code, compile deterministic project manifests, profiles, repository maps, authority inventories, and gap reports, then plan or apply bounded non-destructive bootstrap actions.",
+      "source_references": [
+        "SRC-002:L000479-L000515",
+        "SRC-014:L000005-L000209",
+        "SRC-014:L000088-L000183",
+        "SRC-017:L001122-L001217"
+      ],
+      "tags": [
+        "intake",
+        "compiler"
+      ]
+    },
+    {
+      "authority": "Local model is authoritative for offline planning; remote authority is profile-specific and reconciliation is explicit.",
+      "component_id": "COMP-JIRA-001",
+      "decision_ids": [
+        "ADR-0004",
+        "ADR-0006"
+      ],
+      "depends_on": [
+        "COMP-CTRL-001",
+        "COMP-OUTBOX-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-CTRL-001",
+        "IFACE-OUTBOX-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-JIRA-001",
+          "name": "Jira Steward API",
+          "purpose": "Query, stage, synchronize, and reconcile work-management state"
+        }
+      ],
+      "layer": "INTEGRATION",
+      "name": "Jira Steward",
+      "requirement_ids": [
+        "REQ-GOV-0001",
+        "REQ-GOV-0002",
+        "REQ-GOV-0003",
+        "REQ-GOV-0008",
+        "REQ-GOV-0009",
+        "REQ-GOV-0010",
+        "REQ-GOV-0011",
+        "REQ-GOV-0012",
+        "REQ-GOV-0013",
+        "REQ-GOV-0024",
+        "REQ-RES-0016",
+        "REQ-UX-0022"
+      ],
+      "responsibility": "Maintain the structured local Jira model, synchronize authorized remote changes, reconcile divergence, and preserve source context.",
+      "source_references": [
+        "GOV-001:L000949-L001158",
+        "GOV-001:L001503-L001516",
+        "SRC-006:L000649-L000694",
+        "SRC-006:L002214-L002251",
+        "SRC-007:L000341-L000391",
+        "SRC-007:L000393-L000480",
+        "SRC-007:L000539-L000648",
+        "SRC-007:L001080-L001128",
+        "SRC-014:L000061-L000080"
+      ],
+      "tags": [
+        "jira",
+        "governance"
+      ]
+    },
+    {
+      "authority": "Advisory only; never authoritative for project state, recovery fencing, policy, budget, or completion.",
+      "component_id": "COMP-LOCALMODEL-001",
+      "decision_ids": [
+        "ADR-0022"
+      ],
+      "depends_on": [
+        "COMP-PROVIDER-001",
+        "COMP-RESOURCE-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-PROVIDER-001",
+        "IFACE-RESOURCE-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-LOCALMODEL-001",
+          "name": "Local Model Runtime Port",
+          "purpose": "Discover, validate, select, and plan advisory requests to qualified local runtimes"
+        }
+      ],
+      "layer": "EXECUTION",
+      "name": "Local Model Gateway",
+      "requirement_ids": [
+        "REQ-AGENT-0012",
+        "REQ-INFRA-0001",
+        "REQ-RES-0004",
+        "REQ-RES-0013"
+      ],
+      "responsibility": "Register and select local advisory runtimes for offline/degraded assistance while preserving deterministic task and control semantics.",
+      "source_references": [
+        "SRC-013:L001055-L001117",
+        "SRC-016:L001691-L001832"
+      ],
+      "tags": [
+        "local-model",
+        "offline",
+        "degraded"
+      ]
+    },
+    {
+      "authority": "Does not change project state by notification alone; acknowledged actions return through Control Kernel commands.",
+      "component_id": "COMP-NOTIFY-001",
+      "decision_ids": [
+        "ADR-0006",
+        "ADR-0026"
+      ],
+      "depends_on": [
+        "COMP-PERSIST-001",
+        "COMP-POLICY-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-PERSIST-001",
+        "IFACE-POLICY-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-NOTIFY-001",
+          "name": "Notification API",
+          "purpose": "Publish, route, acknowledge, and escalate operator notifications"
+        }
+      ],
+      "layer": "OPERATOR_EXPERIENCE",
+      "name": "Notification Broker and Operator Inbox",
+      "requirement_ids": [
+        "REQ-UX-0003",
+        "REQ-UX-0025",
+        "REQ-OPS-0017",
+        "REQ-CTRL-0014"
+      ],
+      "responsibility": "Deterministically prioritize, deduplicate, suppress, route, acknowledge, persist, retry, and audit operator notifications; Tauri local delivery and optional Apprise/ntfy remote adapters remain bounded behind the canonical broker and remote delivery is disabled by default.",
+      "source_references": [
+        "SRC-015:L000003-L000112"
+      ],
+      "tags": [
+        "notifications",
+        "operator-inbox"
+      ]
+    },
+    {
+      "authority": "Observed telemetry is evidence; deterministic health calculations are derived from it and canonical state.",
+      "component_id": "COMP-OBS-001",
+      "decision_ids": [
+        "ADR-0014"
+      ],
+      "depends_on": [
+        "COMP-PERSIST-001",
+        "COMP-EVIDENCE-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PLANNED_ONLY",
+      "interfaces_consumed": [
+        "IFACE-PERSIST-001",
+        "IFACE-EVIDENCE-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-OBS-001",
+          "name": "Telemetry and Health API",
+          "purpose": "Emit correlated telemetry and query calculated health"
+        }
+      ],
+      "layer": "PLATFORM_SERVICES",
+      "name": "Observability and Health Service",
+      "requirement_ids": [
+        "REQ-OPS-0001",
+        "REQ-OPS-0002",
+        "REQ-OPS-0004",
+        "REQ-OPS-0005",
+        "REQ-OPS-0006",
+        "REQ-OPS-0009"
+      ],
+      "responsibility": "Correlate structured logs, metrics, traces, audit events, workflow, worker, model, context, cost, and health telemetry using OpenTelemetry conventions.",
+      "source_references": [
+        "SRC-011:L001394-L001425",
+        "SRC-016:L001792-L001794",
+        "SRC-016:L002272-L002276"
+      ],
+      "tags": [
+        "opentelemetry",
+        "openlit"
+      ]
+    },
+    {
+      "authority": "Authoritative for event identity and delivery state; external systems remain subject to reconciliation.",
+      "component_id": "COMP-OUTBOX-001",
+      "decision_ids": [
+        "ADR-0007"
+      ],
+      "depends_on": [
+        "COMP-PERSIST-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PLANNED_ONLY",
+      "interfaces_consumed": [
+        "IFACE-PERSIST-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-OUTBOX-001",
+          "name": "Event Delivery Port",
+          "purpose": "Append, claim, deliver, retry, deduplicate, and reconcile durable messages"
+        }
+      ],
+      "layer": "PLATFORM_SERVICES",
+      "name": "Event, Inbox, and Outbox Service",
+      "requirement_ids": [
+        "REQ-ARCH-0009",
+        "REQ-CTRL-0011",
+        "REQ-CTRL-0012",
+        "REQ-RES-0016",
+        "REQ-RES-0017"
+      ],
+      "responsibility": "Commit domain events, external-write intents, inbound deduplication, retry state, and reconciliation records transactionally with canonical state.",
+      "source_references": [
+        "SRC-006:L000730-L000760",
+        "SRC-017:L000345-L000365"
+      ],
+      "tags": [
+        "outbox",
+        "inbox",
+        "events"
+      ]
+    },
+    {
+      "authority": "Authoritative for application-domain state; workflow engines, UIs, and providers hold projections or execution-specific state only.",
+      "component_id": "COMP-PERSIST-001",
+      "decision_ids": [
+        "ADR-0007"
+      ],
+      "depends_on": [],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-PERSIST-001",
+          "name": "Transactional State Port",
+          "purpose": "Atomic domain state, event, inbox, and outbox operations"
+        }
+      ],
+      "layer": "PLATFORM_SERVICES",
+      "name": "Canonical Persistence",
+      "requirement_ids": [
+        "REQ-ARCH-0007",
+        "REQ-ARCH-0008",
+        "REQ-ARCH-0009",
+        "REQ-CTRL-0001",
+        "REQ-CTRL-0003",
+        "REQ-CTRL-0011",
+        "REQ-CTRL-0012",
+        "REQ-LIFE-0012",
+        "REQ-PDEF-0006"
+      ],
+      "responsibility": "Persist canonical project, work, requirement, traceability, transition, intake-compilation, bootstrap-receipt, integration-reconciliation, durable-workflow, event, wait, checkpoint, heartbeat, inbox/outbox, and recovery-decision state through PostgreSQL production ports and an executable SQLite local profile.",
+      "source_references": [
+        "SRC-003:L000962-L001000",
+        "SRC-016:L002201-L002230"
+      ],
+      "tags": [
+        "postgresql",
+        "state"
+      ]
+    },
+    {
+      "authority": "Authoritative for policy decisions; callers enforce allow, deny, require-approval, and constrained results.",
+      "component_id": "COMP-POLICY-001",
+      "decision_ids": [
+        "ADR-0012"
+      ],
+      "depends_on": [
+        "COMP-PERSIST-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-PERSIST-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-POLICY-001",
+          "name": "Policy Decision API",
+          "purpose": "Evaluate versioned policy against typed input and return an auditable decision"
+        }
+      ],
+      "layer": "DETERMINISTIC_CONTROL",
+      "name": "Policy Engine",
+      "requirement_ids": [
+        "REQ-SEC-0009",
+        "REQ-SEC-0014",
+        "REQ-SEC-0016",
+        "REQ-SEC-0024"
+      ],
+      "responsibility": "Evaluate centralized testable runtime authority, action, egress, dependency, deployment, spend, and completion policies.",
+      "source_references": [
+        "SRC-009:L000007-L000007",
+        "SRC-016:L001784-L001787",
+        "SRC-016:L002201-L002209"
+      ],
+      "tags": [
+        "opa",
+        "conftest"
+      ]
+    },
+    {
+      "authority": "No authority over project truth; outputs are untrusted recommendations until validated.",
+      "component_id": "COMP-PROVIDER-001",
+      "decision_ids": [
+        "ADR-0016"
+      ],
+      "depends_on": [
+        "COMP-TOOL-001",
+        "COMP-OBS-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-TOOL-001",
+        "IFACE-OBS-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-PROVIDER-001",
+          "name": "Provider Invocation Port",
+          "purpose": "Invoke typed advisory agents and model providers through qualified adapters"
+        }
+      ],
+      "layer": "ADVISORY_INTELLIGENCE",
+      "name": "Provider and Advisory Agent Gateway",
+      "requirement_ids": [
+        "REQ-AGENT-0002",
+        "REQ-AGENT-0006",
+        "REQ-AGENT-0007",
+        "REQ-AGENT-0010",
+        "REQ-AGENT-0016"
+      ],
+      "responsibility": "Expose typed advisory-agent and provider-neutral model interfaces with schema validation, fallback, cost telemetry, and circuit breaking.",
+      "source_references": [
+        "SRC-011:L000654-L000680",
+        "SRC-016:L001788-L001793"
+      ],
+      "tags": [
+        "pydantic-ai",
+        "litellm"
+      ]
+    },
+    {
+      "authority": "May execute pre-authorized recovery actions; destructive or externally sensitive actions require policy and human gates.",
+      "component_id": "COMP-RECOVERY-001",
+      "decision_ids": [
+        "ADR-0006",
+        "ADR-0008",
+        "ADR-0023",
+        "ADR-0025"
+      ],
+      "depends_on": [
+        "COMP-CTRL-001",
+        "COMP-WORKFLOW-001",
+        "COMP-OBS-001",
+        "COMP-NOTIFY-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-CTRL-001",
+        "IFACE-WORKFLOW-001",
+        "IFACE-OBS-001",
+        "IFACE-NOTIFY-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-RECOVERY-001",
+          "name": "Recovery Control API",
+          "purpose": "Declare incidents, run recovery plans, and verify restored state"
+        }
+      ],
+      "layer": "DETERMINISTIC_CONTROL",
+      "name": "Recovery Director",
+      "requirement_ids": [
+        "REQ-RES-0001",
+        "REQ-RES-0002",
+        "REQ-RES-0004",
+        "REQ-RES-0007",
+        "REQ-RES-0009",
+        "REQ-RES-0014",
+        "REQ-RES-0015",
+        "REQ-RES-0018",
+        "REQ-RES-0020",
+        "REQ-RES-0022",
+        "REQ-RES-0023",
+        "REQ-RES-0024"
+      ],
+      "responsibility": "Detect incidents, select degraded modes and recovery plans, coordinate failover, preserve WIP, and verify restoration before normal operation resumes.",
+      "source_references": [
+        "SRC-015:L000003-L000112",
+        "SRC-014:L000084-L000086"
+      ],
+      "tags": [
+        "recovery",
+        "incidents"
+      ]
+    },
+    {
+      "authority": "Mutations require Control Kernel authorization and policy approval; worktree mechanics are delegated behind an adapter.",
+      "component_id": "COMP-REPO-001",
+      "decision_ids": [
+        "ADR-0004",
+        "ADR-0020"
+      ],
+      "depends_on": [
+        "COMP-CTRL-001",
+        "COMP-OUTBOX-001",
+        "COMP-POLICY-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-CTRL-001",
+        "IFACE-OUTBOX-001",
+        "IFACE-POLICY-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-REPO-001",
+          "name": "Repository Steward API",
+          "purpose": "Perform and reconcile authorized repository operations"
+        }
+      ],
+      "layer": "INTEGRATION",
+      "name": "Repository Steward",
+      "requirement_ids": [
+        "REQ-GOV-0004",
+        "REQ-GOV-0014",
+        "REQ-GOV-0015",
+        "REQ-GOV-0016",
+        "REQ-GOV-0018",
+        "REQ-GOV-0021",
+        "REQ-GOV-0022"
+      ],
+      "responsibility": "Own branch, worktree, pull-request, merge-gate, cleanup, WIP-preservation, and Git/GitHub reconciliation mechanics.",
+      "source_references": [
+        "SRC-010:L000259-L000282",
+        "SRC-016:L001765-L001766"
+      ],
+      "tags": [
+        "git",
+        "worktrunk"
+      ]
+    },
+    {
+      "authority": "Authoritative for resource ownership and lease validity.",
+      "component_id": "COMP-RESOURCE-001",
+      "decision_ids": [
+        "ADR-0006",
+        "ADR-0007"
+      ],
+      "depends_on": [
+        "COMP-PERSIST-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-PERSIST-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-RESOURCE-001",
+          "name": "Resource Lease API",
+          "purpose": "Register capacity and issue, renew, fence, or release leases"
+        }
+      ],
+      "layer": "DETERMINISTIC_CONTROL",
+      "name": "Resource Registry and Lease Manager",
+      "requirement_ids": [
+        "REQ-SCHED-0003",
+        "REQ-SCHED-0013",
+        "REQ-SCHED-0014",
+        "REQ-AGENT-0018",
+        "REQ-RES-0006"
+      ],
+      "responsibility": "Track machines, workers, files, worktrees, ports, environments, GPUs, credentials, and bounded fenced leases.",
+      "source_references": [
+        "SRC-003:L000048-L000069",
+        "SRC-014:L000033-L000047"
+      ],
+      "tags": [
+        "leases",
+        "resources"
+      ]
+    },
+    {
+      "authority": "May recommend and initiate approved execution but cannot override scheduler, policy, budget, or control decisions.",
+      "component_id": "COMP-ROUTER-001",
+      "decision_ids": [
+        "ADR-0016"
+      ],
+      "depends_on": [
+        "COMP-POLICY-001",
+        "COMP-BUDGET-001",
+        "COMP-RESOURCE-001",
+        "COMP-PROVIDER-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-POLICY-001",
+        "IFACE-BUDGET-001",
+        "IFACE-RESOURCE-001",
+        "IFACE-PROVIDER-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-ROUTER-001",
+          "name": "Capability Routing API",
+          "purpose": "Resolve a task contract to a qualified execution route"
+        }
+      ],
+      "layer": "ADVISORY_INTELLIGENCE",
+      "name": "Capability Router",
+      "requirement_ids": [
+        "REQ-AGENT-0001",
+        "REQ-AGENT-0003",
+        "REQ-AGENT-0004",
+        "REQ-AGENT-0005",
+        "REQ-AGENT-0008",
+        "REQ-AGENT-0009"
+      ],
+      "responsibility": "Select qualified agents, models, providers, tools, and worker nodes by capability, performance, policy, budget, and availability.",
+      "source_references": [
+        "SRC-011:L000654-L000680",
+        "SRC-016:L001788-L001793"
+      ],
+      "tags": [
+        "routing",
+        "capabilities"
+      ]
+    },
+    {
+      "authority": "Authoritative for admission decisions within policy and budget limits; optimization output is always revalidated deterministically.",
+      "component_id": "COMP-SCHED-001",
+      "decision_ids": [
+        "ADR-0009"
+      ],
+      "depends_on": [
+        "COMP-SEQUENCE-001",
+        "COMP-RESOURCE-001",
+        "COMP-BUDGET-001",
+        "COMP-POLICY-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-SEQUENCE-001",
+        "IFACE-RESOURCE-001",
+        "IFACE-BUDGET-001",
+        "IFACE-POLICY-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-SCHED-001",
+          "name": "Scheduling API",
+          "purpose": "Simulate and admit conflict-safe work sets"
+        }
+      ],
+      "layer": "DETERMINISTIC_CONTROL",
+      "name": "Dynamic Lane Scheduler",
+      "requirement_ids": [
+        "REQ-SCHED-0002",
+        "REQ-SCHED-0009",
+        "REQ-SCHED-0010",
+        "REQ-SCHED-0011",
+        "REQ-SCHED-0014",
+        "REQ-SCHED-0015",
+        "REQ-SCHED-0017"
+      ],
+      "responsibility": "Choose safe parallel work sets using conflict constraints, resource capacity, leases, backpressure, and optional optimization.",
+      "source_references": [
+        "SRC-014:L000028-L000084",
+        "SRC-016:L002215-L002230"
+      ],
+      "tags": [
+        "scheduler",
+        "or-tools"
+      ]
+    },
+    {
+      "authority": "Authoritative for credential release; human and agent authority remains policy-controlled.",
+      "component_id": "COMP-SECRET-001",
+      "decision_ids": [
+        "ADR-0012"
+      ],
+      "depends_on": [
+        "COMP-POLICY-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-POLICY-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-SECRET-001",
+          "name": "Secret Resolution Port",
+          "purpose": "Resolve approved secret references into scoped runtime credentials"
+        }
+      ],
+      "layer": "PLATFORM_SERVICES",
+      "name": "Secrets and Identity Broker",
+      "requirement_ids": [
+        "REQ-SEC-0002",
+        "REQ-SEC-0005",
+        "REQ-SEC-0010",
+        "REQ-SEC-0011",
+        "REQ-SEC-0012",
+        "REQ-SEC-0017"
+      ],
+      "responsibility": "Resolve secret references and issue least-privilege, task-scoped credentials without exposing secret material to prompts, logs, or source control.",
+      "source_references": [
+        "SRC-014:L000177-L000220",
+        "SRC-016:L001784-L001787"
+      ],
+      "tags": [
+        "sops",
+        "age",
+        "openbao"
+      ]
+    },
+    {
+      "authority": "Authoritative for graph-derived sequencing facts once inputs are accepted by the Control Kernel.",
+      "component_id": "COMP-SEQUENCE-001",
+      "decision_ids": [
+        "ADR-0009"
+      ],
+      "depends_on": [
+        "COMP-CTRL-001",
+        "COMP-GRAPH-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-CTRL-002",
+        "IFACE-GRAPH-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-SEQUENCE-001",
+          "name": "Sequencing API",
+          "purpose": "Compute readiness, priority, and critical path"
+        }
+      ],
+      "layer": "DETERMINISTIC_CONTROL",
+      "name": "Build Sequencer",
+      "requirement_ids": [
+        "REQ-SCHED-0001",
+        "REQ-SCHED-0004",
+        "REQ-SCHED-0005",
+        "REQ-SCHED-0006",
+        "REQ-SCHED-0007",
+        "REQ-SCHED-0008"
+      ],
+      "responsibility": "Maintain validated dependency DAGs, readiness, blockers, priority, critical path, and recomputation after change.",
+      "source_references": [
+        "SRC-014:L000013-L000086",
+        "SRC-016:L002215-L002224"
+      ],
+      "tags": [
+        "sequencing",
+        "dag"
+      ]
+    },
+    {
+      "authority": "Enforces policy decisions but does not define them; mutating calls require typed action intent and scoped credentials.",
+      "component_id": "COMP-TOOL-001",
+      "decision_ids": [
+        "ADR-0015"
+      ],
+      "depends_on": [
+        "COMP-POLICY-001",
+        "COMP-SECRET-001",
+        "COMP-OBS-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-POLICY-001",
+        "IFACE-SECRET-001",
+        "IFACE-OBS-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-TOOL-001",
+          "name": "Tool Invocation Port",
+          "purpose": "Discover and invoke approved tools with identity, policy, and telemetry"
+        }
+      ],
+      "layer": "INTEGRATION",
+      "name": "Tool Gateway",
+      "requirement_ids": [
+        "REQ-AGENT-0006",
+        "REQ-AGENT-0007",
+        "REQ-INFRA-0006",
+        "REQ-SEC-0023"
+      ],
+      "responsibility": "Register, isolate, authorize, discover, invoke, and observe tools and MCP servers through a stable internal contract.",
+      "source_references": [
+        "SRC-014:L000185-L000220",
+        "SRC-016:L001778-L001783"
+      ],
+      "tags": [
+        "mcp",
+        "gateway"
+      ]
+    },
+    {
+      "authority": "Authoritative for traceability records; it cannot declare implementation complete without evidence.",
+      "component_id": "COMP-TRACE-001",
+      "decision_ids": [
+        "ADR-0002",
+        "ADR-0006"
+      ],
+      "depends_on": [],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "IMPLEMENTED",
+      "interfaces_consumed": [],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-TRACE-001",
+          "name": "Traceability Query API",
+          "purpose": "Resolve relationships in both directions"
+        }
+      ],
+      "layer": "PROJECT_DEFINITION",
+      "name": "Requirement and Traceability Engine",
+      "requirement_ids": [
+        "REQ-ARCH-0008",
+        "REQ-ARCH-0015",
+        "REQ-ASSURE-0004",
+        "REQ-GOV-0007",
+        "REQ-REQ-0003",
+        "REQ-REQ-0013",
+        "REQ-REQ-0014",
+        "REQ-REQ-0015",
+        "REQ-REQ-0016"
+      ],
+      "responsibility": "Maintain source-to-requirement-to-plan-to-work-to-code-to-test-to-evidence mappings with stable identifiers and exact provenance.",
+      "source_references": [
+        "GOV-001:L000187-L000221"
+      ],
+      "tags": [
+        "traceability",
+        "requirements"
+      ]
+    },
+    {
+      "authority": "Read-only by default; actions are explicit commands routed through normal authorization and audit.",
+      "component_id": "COMP-UI-001",
+      "decision_ids": [
+        "ADR-0011"
+      ],
+      "depends_on": [
+        "COMP-API-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-API-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-UI-001",
+          "name": "Operator Interface",
+          "purpose": "Desktop and browser operator experience"
+        }
+      ],
+      "layer": "OPERATOR_EXPERIENCE",
+      "name": "Command Center",
+      "requirement_ids": [
+        "REQ-UX-0001",
+        "REQ-UX-0004",
+        "REQ-UX-0006",
+        "REQ-UX-0008",
+        "REQ-UX-0009",
+        "REQ-UX-0026",
+        "REQ-INFRA-0010"
+      ],
+      "responsibility": "Provide accessible Windows-capable and network-accessible views of project health, work, graph, evidence, budgets, providers, context, incidents, and controls.",
+      "source_references": [
+        "SRC-010:L001340-L001352",
+        "SRC-016:L002283-L002291"
+      ],
+      "tags": [
+        "react",
+        "tauri",
+        "winsw"
+      ]
+    },
+    {
+      "authority": "Execution authority is bounded by task, workspace, resource, credential, spend, and time leases.",
+      "component_id": "COMP-WORKER-001",
+      "decision_ids": [
+        "ADR-0006",
+        "ADR-0020"
+      ],
+      "depends_on": [
+        "COMP-WORKFLOW-001",
+        "COMP-CONTEXT-001",
+        "COMP-RESOURCE-001",
+        "COMP-TOOL-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-WORKFLOW-001",
+        "IFACE-CONTEXT-001",
+        "IFACE-RESOURCE-001",
+        "IFACE-TOOL-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-WORKER-001",
+          "name": "Worker Execution Port",
+          "purpose": "Start, observe, interrupt, checkpoint, and recover bounded worker sessions"
+        }
+      ],
+      "layer": "EXECUTION",
+      "name": "Worker Runtime and Node Harness",
+      "requirement_ids": [
+        "REQ-AGENT-0006",
+        "REQ-AGENT-0011",
+        "REQ-SCHED-0012",
+        "REQ-RES-0010",
+        "REQ-RES-0012"
+      ],
+      "responsibility": "Execute approved work in isolated workspaces, stream events, checkpoint progress, and report candidate results without self-declaring completion.",
+      "source_references": [
+        "SRC-011:L001337-L001392",
+        "SRC-016:L001691-L001746"
+      ],
+      "tags": [
+        "workers",
+        "harness"
+      ]
+    },
+    {
+      "authority": "Authoritative only for workflow execution history; canonical project truth remains in PostgreSQL and the Control Kernel.",
+      "component_id": "COMP-WORKFLOW-001",
+      "decision_ids": [
+        "ADR-0008"
+      ],
+      "depends_on": [
+        "COMP-PERSIST-001",
+        "COMP-CTRL-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-PERSIST-001",
+        "IFACE-CTRL-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-WORKFLOW-001",
+          "name": "Durable Workflow Port",
+          "purpose": "Start, signal, query, cancel, resume, and reconcile durable workflows"
+        }
+      ],
+      "layer": "EXECUTION",
+      "name": "Durable Workflow Runtime",
+      "requirement_ids": [
+        "REQ-CTRL-0003",
+        "REQ-CTRL-0010",
+        "REQ-RES-0010",
+        "REQ-INFRA-0001"
+      ],
+      "responsibility": "Persist and resume long-running workflow execution, timers, signal waits, retries, checkpoints, cancellation, worker heartbeats/fencing, uncertain-outcome reconciliation, and worker-loss recovery through a Project Pipeline-owned durable state model with Hatchet as the initial optional backend and DBOS/Temporal as qualified fallbacks.",
+      "source_references": [
+        "SRC-003:L000930-L001000",
+        "SRC-016:L001748-L001756",
+        "SRC-016:L002223-L002230"
+      ],
+      "tags": [
+        "hatchet",
+        "durable-execution"
+      ]
+    },
+    {
+      "authority": "Authoritative for lifecycle policy and eligibility decisions only; project control, repository stewardship, budget, security, deployment, and external destructive actions retain their existing authorities and must be invoked through typed audited controls.",
+      "component_id": "COMP-LIFECYCLE-001",
+      "decision_ids": [
+        "ADR-0006",
+        "ADR-0007",
+        "ADR-0027"
+      ],
+      "depends_on": [
+        "COMP-CTRL-001",
+        "COMP-PERSIST-001",
+        "COMP-RESOURCE-001",
+        "COMP-BUDGET-001",
+        "COMP-REPO-001",
+        "COMP-ASSURE-001",
+        "COMP-SECRET-001"
+      ],
+      "deployment_profiles": [
+        "LOCAL_CORE",
+        "HYBRID_AWS"
+      ],
+      "implementation_state": "PARTIALLY_IMPLEMENTED",
+      "interfaces_consumed": [
+        "IFACE-CTRL-001",
+        "IFACE-PERSIST-001",
+        "IFACE-RESOURCE-001",
+        "IFACE-BUDGET-001",
+        "IFACE-REPO-001",
+        "IFACE-ASSURE-001",
+        "IFACE-SECRET-001"
+      ],
+      "interfaces_provided": [
+        {
+          "interface_id": "IFACE-LIFECYCLE-001",
+          "name": "Platform Lifecycle API",
+          "purpose": "Evaluate portfolio, repository, environment, retention, closure, qualification, upgrade, and adoption lifecycle decisions"
+        }
+      ],
+      "layer": "PLATFORM_SERVICES",
+      "name": "Platform Lifecycle and Portfolio Governor",
+      "requirement_ids": [
+        "REQ-LIFE-0001",
+        "REQ-LIFE-0002",
+        "REQ-LIFE-0003",
+        "REQ-LIFE-0004",
+        "REQ-LIFE-0005",
+        "REQ-LIFE-0006",
+        "REQ-LIFE-0007",
+        "REQ-LIFE-0008",
+        "REQ-LIFE-0009",
+        "REQ-LIFE-0010",
+        "REQ-LIFE-0011",
+        "REQ-LIFE-0012",
+        "REQ-LIFE-0013",
+        "REQ-LIFE-0014",
+        "REQ-LIFE-0015",
+        "REQ-LIFE-0016",
+        "REQ-LIFE-0017",
+        "REQ-LIFE-0018"
+      ],
+      "responsibility": "Govern multi-project allocation, multi-repository change coordination, environment and test-data lifecycle, contract evolution, retention/closure planning, version qualification, safe platform-release eligibility, and adoption maturity through deterministic non-destructive state machines.",
+      "source_references": [
+        "GOV-001:L000733-L000747",
+        "SRC-017:L000597-L001175"
+      ],
+      "tags": [
+        "lifecycle",
+        "portfolio",
+        "retention",
+        "upgrade"
+      ]
+    }
+  ],
+  "layers": [
+    "PROJECT_DEFINITION",
+    "DETERMINISTIC_CONTROL",
+    "ADVISORY_INTELLIGENCE",
+    "EXECUTION",
+    "ASSURANCE",
+    "INTEGRATION",
+    "OPERATOR_EXPERIENCE",
+    "PLATFORM_SERVICES"
+  ],
+  "schema_version": "1.0.0"
+}

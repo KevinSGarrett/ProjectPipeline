@@ -1,0 +1,96 @@
+{
+  "$defs": {
+    "RetryPolicy": {
+      "additionalProperties": false,
+      "properties": {
+        "initial_backoff_seconds": {
+          "default": 1.0,
+          "maximum": 86400.0,
+          "minimum": 0.0,
+          "title": "Initial Backoff Seconds",
+          "type": "number"
+        },
+        "max_attempts": {
+          "default": 3,
+          "maximum": 100,
+          "minimum": 1,
+          "title": "Max Attempts",
+          "type": "integer"
+        },
+        "max_backoff_seconds": {
+          "default": 60.0,
+          "maximum": 604800.0,
+          "minimum": 0.0,
+          "title": "Max Backoff Seconds",
+          "type": "number"
+        },
+        "multiplier": {
+          "default": 2.0,
+          "maximum": 100.0,
+          "minimum": 1.0,
+          "title": "Multiplier",
+          "type": "number"
+        }
+      },
+      "title": "RetryPolicy",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/orchestration_step_definition.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "execution_timeout_seconds": {
+      "default": 900,
+      "maximum": 604800,
+      "minimum": 1,
+      "title": "Execution Timeout Seconds",
+      "type": "integer"
+    },
+    "name": {
+      "maxLength": 240,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "recoverable": {
+      "default": true,
+      "title": "Recoverable",
+      "type": "boolean"
+    },
+    "requires_checkpoint": {
+      "default": false,
+      "title": "Requires Checkpoint",
+      "type": "boolean"
+    },
+    "retry_policy": {
+      "$ref": "#/$defs/RetryPolicy",
+      "default": {
+        "initial_backoff_seconds": 1.0,
+        "max_attempts": 3,
+        "max_backoff_seconds": 60.0,
+        "multiplier": 2.0
+      }
+    },
+    "schedule_timeout_seconds": {
+      "default": 3600,
+      "maximum": 2592000,
+      "minimum": 1,
+      "title": "Schedule Timeout Seconds",
+      "type": "integer"
+    },
+    "step_id": {
+      "maxLength": 160,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+      "title": "Step Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "step_id",
+    "name"
+  ],
+  "title": "WorkflowStepDefinition",
+  "type": "object"
+}

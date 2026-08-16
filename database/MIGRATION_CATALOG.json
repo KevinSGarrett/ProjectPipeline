@@ -1,0 +1,365 @@
+{
+  "catalog_id": "PROJECT-PIPELINE-DATABASE-MIGRATIONS",
+  "migrations": [
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [],
+      "migration_id": "PPDB-0001",
+      "name": "core_state",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0001_core_state.down.sql",
+      "postgresql_down_sha256": "e7e8d5bd0c78f61b24fb869a335bfc0372ffdc9d9798c5ae1b605d4052f6698f",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0001_core_state.up.sql",
+      "postgresql_up_sha256": "5bf3311239afbc0246a9750925e1c7fb69e865c28b49963d1b6bccd0526cecc9",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 1,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0001_core_state.down.sql",
+      "sqlite_down_sha256": "e7e8d5bd0c78f61b24fb869a335bfc0372ffdc9d9798c5ae1b605d4052f6698f",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0001_core_state.up.sql",
+      "sqlite_up_sha256": "aa1be5356848d0e08edb2fda5e08896c3eb39279798a4f170b79a44084c31a92"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0001"
+      ],
+      "migration_id": "PPDB-0002",
+      "name": "requirement_traceability",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0002_requirement_traceability.down.sql",
+      "postgresql_down_sha256": "967364d7bebbe1d7bd09116d90a03c3d00c5bcc046a576471cd55154ac7dc67c",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0002_requirement_traceability.up.sql",
+      "postgresql_up_sha256": "00646eb7301537db893af691f9d61a532baae16a0002406e02848e74a8ef2047",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 2,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0002_requirement_traceability.down.sql",
+      "sqlite_down_sha256": "967364d7bebbe1d7bd09116d90a03c3d00c5bcc046a576471cd55154ac7dc67c",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0002_requirement_traceability.up.sql",
+      "sqlite_up_sha256": "395be9685a4f88867b5a7371787ca52be6a4a5e71087916a346181a6949b4253"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0002"
+      ],
+      "migration_id": "PPDB-0003",
+      "name": "project_intake_compilation",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0003_project_intake_compilation.down.sql",
+      "postgresql_down_sha256": "74e121477ea4dec97322a2b062e43e52211066ee959ff0142fbb16569f0f2fec",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0003_project_intake_compilation.up.sql",
+      "postgresql_up_sha256": "f5b4a480926c2936b33d34d8a8ca95e30df2c64cce98f3f72393eeec25e4126f",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 3,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0003_project_intake_compilation.down.sql",
+      "sqlite_down_sha256": "74e121477ea4dec97322a2b062e43e52211066ee959ff0142fbb16569f0f2fec",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0003_project_intake_compilation.up.sql",
+      "sqlite_up_sha256": "1c1b5a6ebaf1120eba14f31aecb42915af50e7a1f34ba2ce0f71dac85e4b69ef"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0003"
+      ],
+      "migration_id": "PPDB-0004",
+      "name": "jira_steward_sync",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0004_jira_steward_sync.down.sql",
+      "postgresql_down_sha256": "6a1ab82f9827b55d3fbb05155068cb0e2f3e922db9d54b23c12e38631fb003f2",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0004_jira_steward_sync.up.sql",
+      "postgresql_up_sha256": "c874f11fc4791aba7449f651e0f07006967997a819781d8f334cf454c24a23c1",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 4,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0004_jira_steward_sync.down.sql",
+      "sqlite_down_sha256": "6a1ab82f9827b55d3fbb05155068cb0e2f3e922db9d54b23c12e38631fb003f2",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0004_jira_steward_sync.up.sql",
+      "sqlite_up_sha256": "66f9ad5288b0cc09b1eecf1016d5ce4b1162407b95abe2138c6aa26f35b10ace"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0004"
+      ],
+      "migration_id": "PPDB-0005",
+      "name": "repository_github_stewardship",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0005_repository_github_stewardship.down.sql",
+      "postgresql_down_sha256": "78e55ec6ebca490e50e3da6dae8159c99ae529cc0c0ddf4ca03c1a4f6e67aca6",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0005_repository_github_stewardship.up.sql",
+      "postgresql_up_sha256": "afe9aa65747790ea875d3959c62586c0062ad09e59dd73fb30b36f0357f9e516",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 5,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0005_repository_github_stewardship.down.sql",
+      "sqlite_down_sha256": "78e55ec6ebca490e50e3da6dae8159c99ae529cc0c0ddf4ca03c1a4f6e67aca6",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0005_repository_github_stewardship.up.sql",
+      "sqlite_up_sha256": "09e397fe551152c4c60b42961f0ecfeb3b44bb7367ef76a5a50270e1ad78094a"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0005"
+      ],
+      "migration_id": "PPDB-0006",
+      "name": "project_control_sequencing",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0006_project_control_sequencing.down.sql",
+      "postgresql_down_sha256": "c7c3d0ddc21c8677e416458abbda8054ad50b54a9da7f22755cc9984c69b72cf",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0006_project_control_sequencing.up.sql",
+      "postgresql_up_sha256": "f0d2f435b9836e546bdb8e4a53eecdaf38d8f02fd849e1f3db5ef86662fb6239",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 6,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0006_project_control_sequencing.down.sql",
+      "sqlite_down_sha256": "c7c3d0ddc21c8677e416458abbda8054ad50b54a9da7f22755cc9984c69b72cf",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0006_project_control_sequencing.up.sql",
+      "sqlite_up_sha256": "4ca580d72b78244340394a9fad9ca0270da00093d251ea515496aecf7e68e022"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0006"
+      ],
+      "migration_id": "PPDB-0007",
+      "name": "dynamic_scheduler_resources",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0007_dynamic_scheduler_resources.down.sql",
+      "postgresql_down_sha256": "b3152c7afc305f825e67e27adbd934cc3a897ce0c8bd3b9523379ed3228aa46d",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0007_dynamic_scheduler_resources.up.sql",
+      "postgresql_up_sha256": "8f043ec0ea00270d350cfabd2227160a6c810847073bce533b65ddbe3d7ce067",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 7,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0007_dynamic_scheduler_resources.down.sql",
+      "sqlite_down_sha256": "b3152c7afc305f825e67e27adbd934cc3a897ce0c8bd3b9523379ed3228aa46d",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0007_dynamic_scheduler_resources.up.sql",
+      "sqlite_up_sha256": "78ff580e11c698991ce9b654b6c18a3418eedcd0af2ce5d647e7a7e0f999650d"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0007"
+      ],
+      "migration_id": "PPDB-0008",
+      "name": "agent_router_provider_state",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0008_agent_router_provider_state.down.sql",
+      "postgresql_down_sha256": "b42542688b0451e00aa3338e88c090900abd8bb017036d136705d9983807fc8e",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0008_agent_router_provider_state.up.sql",
+      "postgresql_up_sha256": "128b10527addda40c8b6feaddbd6c310e7a4c25ac0f24077aa8013bf7dd60e31",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 8,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0008_agent_router_provider_state.down.sql",
+      "sqlite_down_sha256": "b42542688b0451e00aa3338e88c090900abd8bb017036d136705d9983807fc8e",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0008_agent_router_provider_state.up.sql",
+      "sqlite_up_sha256": "ed94fdc5d748b5d4c7c1c2e50228078a869fc65244ad8ae8ad71cb2be8196beb"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0008"
+      ],
+      "migration_id": "PPDB-0009",
+      "name": "context_delegation",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0009_context_delegation.down.sql",
+      "postgresql_down_sha256": "6b625d6874df5933d4b840903323adebb7f863235ab74bf14203f885239a3551",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0009_context_delegation.up.sql",
+      "postgresql_up_sha256": "ff6d7dc81e770d9f1319e9b45ee2273caea15d8d4733338e20ea0fe06cde5f65",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 9,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0009_context_delegation.down.sql",
+      "sqlite_down_sha256": "6b625d6874df5933d4b840903323adebb7f863235ab74bf14203f885239a3551",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0009_context_delegation.up.sql",
+      "sqlite_up_sha256": "7c291ea9293a06d65749675ba7e6dea11a3a1161c4bb3855d27dd6dd16cbed72"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0009"
+      ],
+      "migration_id": "PPDB-0010",
+      "name": "durable_orchestration_recovery",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0010_durable_orchestration_recovery.down.sql",
+      "postgresql_down_sha256": "caa99bd47716e34589fe4382c7259a792353b745fef7511f44bbe38eecaacbd3",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0010_durable_orchestration_recovery.up.sql",
+      "postgresql_up_sha256": "09482a38e1c289e505ac84780a8f7c4687e9eb5ad87d2d44b543344102f9555a",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 10,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0010_durable_orchestration_recovery.down.sql",
+      "sqlite_down_sha256": "caa99bd47716e34589fe4382c7259a792353b745fef7511f44bbe38eecaacbd3",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0010_durable_orchestration_recovery.up.sql",
+      "sqlite_up_sha256": "adb61ebe4251e9495c8681f85ec78f30c293ae970ffd1d3cdf21adc2b5eeb05d"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0010"
+      ],
+      "migration_id": "PPDB-0011",
+      "name": "budget_governor",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0011_budget_governor.down.sql",
+      "postgresql_down_sha256": "05784026c02fc3f3f8a576f8b6ed7a95739599b737ac84813781fdda7263cc4b",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0011_budget_governor.up.sql",
+      "postgresql_up_sha256": "af1560e45ad6d63cfb653a1ebaab2cb8ce17f581f68ac033c01ff4dd4c4fe4ba",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 11,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0011_budget_governor.down.sql",
+      "sqlite_down_sha256": "05784026c02fc3f3f8a576f8b6ed7a95739599b737ac84813781fdda7263cc4b",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0011_budget_governor.up.sql",
+      "sqlite_up_sha256": "7be4f46d0c297c4d795fed0955d71f9a01222f0363c5f7903e389a75dcec3df3"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0011"
+      ],
+      "migration_id": "PPDB-0012",
+      "name": "execution_assurance_completion_gate",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0012_execution_assurance_completion_gate.down.sql",
+      "postgresql_down_sha256": "090a923c0dface90382fa033e5f1cdc9b6676165b3100a699b60790fba57710b",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0012_execution_assurance_completion_gate.up.sql",
+      "postgresql_up_sha256": "d10c9b5dfe10e7295de7a055b24399d186566d02ac57866e07084ca2464efdcf",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 12,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0012_execution_assurance_completion_gate.down.sql",
+      "sqlite_down_sha256": "090a923c0dface90382fa033e5f1cdc9b6676165b3100a699b60790fba57710b",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0012_execution_assurance_completion_gate.up.sql",
+      "sqlite_up_sha256": "3738d8fe21353840edd5a5d592aaaaa4a9fe571edac43b1118818f162a853fd6"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0012"
+      ],
+      "migration_id": "PPDB-0013",
+      "name": "verification_harness",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0013_verification_harness.down.sql",
+      "postgresql_down_sha256": "0f31cecf670c68f296f100261a22b019c3b09986e0c35e32749d34236638bbee",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0013_verification_harness.up.sql",
+      "postgresql_up_sha256": "d7b70a80cee19af3e2a76fa68977f406b3097acea93b64eb1d78ec4feb1d6ef1",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 13,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0013_verification_harness.down.sql",
+      "sqlite_down_sha256": "0f31cecf670c68f296f100261a22b019c3b09986e0c35e32749d34236638bbee",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0013_verification_harness.up.sql",
+      "sqlite_up_sha256": "86baba49661d2b7a1cfd81fded7282809b140edcc072511aa5a5da5022a62b28"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0013"
+      ],
+      "migration_id": "PPDB-0014",
+      "name": "security_identity_policy_secrets_supply_chain",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0014_security_identity_policy_secrets_supply_chain.down.sql",
+      "postgresql_down_sha256": "cd14de83413f8f111283e7f31b5683ecd4349cbfeb6f000fd1a7bb1737f33411",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0014_security_identity_policy_secrets_supply_chain.up.sql",
+      "postgresql_up_sha256": "5895e6d73153cab659152e15250617a842f296cbf0c6dacaa7e5ede4999dbd09",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 14,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0014_security_identity_policy_secrets_supply_chain.down.sql",
+      "sqlite_down_sha256": "cd14de83413f8f111283e7f31b5683ecd4349cbfeb6f000fd1a7bb1737f33411",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0014_security_identity_policy_secrets_supply_chain.up.sql",
+      "sqlite_up_sha256": "b83e5a3983d3b88d6a339b4bbf9b9d44e13508377cde7da9afa1c2ed1a4158e6"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0014"
+      ],
+      "migration_id": "PPDB-0015",
+      "name": "resilience_recovery_local_runtime",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0015_resilience_recovery_local_runtime.down.sql",
+      "postgresql_down_sha256": "976148c4c75dc5f2a2885a7d6586c0824acf6d174d8b4b867aaf3c10ecd4f5cb",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0015_resilience_recovery_local_runtime.up.sql",
+      "postgresql_up_sha256": "4542c0bc6e07874e453d47ac1b44fef8587db50dbd744dd5229656bebf184bf8",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 15,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0015_resilience_recovery_local_runtime.down.sql",
+      "sqlite_down_sha256": "976148c4c75dc5f2a2885a7d6586c0824acf6d174d8b4b867aaf3c10ecd4f5cb",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0015_resilience_recovery_local_runtime.up.sql",
+      "sqlite_up_sha256": "950c9c5f3ecf8dfb7d8787302c6d99c1feab43dd20852851026c535fcfc40bbb"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0015"
+      ],
+      "migration_id": "PPDB-0016",
+      "name": "command_center_realtime",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0016_command_center_realtime.down.sql",
+      "postgresql_down_sha256": "a58eef8889e4d874bb2ddce4af44a900f095566b7b3a3c8c9df4cd01514972b0",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0016_command_center_realtime.up.sql",
+      "postgresql_up_sha256": "50b50114779c68bccf2f577329cf9149b14e8d3841e7c7de656f83a370cf6e6c",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 16,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0016_command_center_realtime.down.sql",
+      "sqlite_down_sha256": "a58eef8889e4d874bb2ddce4af44a900f095566b7b3a3c8c9df4cd01514972b0",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0016_command_center_realtime.up.sql",
+      "sqlite_up_sha256": "5554912346c8197252c70b5b0dc9db58fdf93837328563f9cf58599609eeb2da"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0016"
+      ],
+      "migration_id": "PPDB-0017",
+      "name": "director_incident_notifications",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0017_director_incident_notifications.down.sql",
+      "postgresql_down_sha256": "6f8251ee2eb543321bbaf897df47c7608b06960640dbc0892cc536b92a682ca9",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0017_director_incident_notifications.up.sql",
+      "postgresql_up_sha256": "0aed0b16cc46a063710ddcaef4d2e42c2fcf8536e10093c86bfbac850e87f0ea",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 17,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0017_director_incident_notifications.down.sql",
+      "sqlite_down_sha256": "6f8251ee2eb543321bbaf897df47c7608b06960640dbc0892cc536b92a682ca9",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0017_director_incident_notifications.up.sql",
+      "sqlite_up_sha256": "370276638bab6c9092671640dfcf3b39160dd7375a83e0cc00820a548612a39c"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0017"
+      ],
+      "migration_id": "PPDB-0018",
+      "name": "advanced_platform_lifecycle",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0018_advanced_platform_lifecycle.down.sql",
+      "postgresql_down_sha256": "46728c84f10141d864a069f5e219c86ee8120f271e4a6507a71408093169ef52",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0018_advanced_platform_lifecycle.up.sql",
+      "postgresql_up_sha256": "b964abc376da16d33e2cda473579af2c49300035a02ccadfb09f87bdb72c7de6",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 18,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0018_advanced_platform_lifecycle.down.sql",
+      "sqlite_down_sha256": "46728c84f10141d864a069f5e219c86ee8120f271e4a6507a71408093169ef52",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0018_advanced_platform_lifecycle.up.sql",
+      "sqlite_up_sha256": "16b82a907b4dbaf4f1e932be5fc00831a1cfdef564ebe2313f574b3819f2dceb"
+    },
+    {
+      "compatibility_phase": "VERIFY",
+      "depends_on": [
+        "PPDB-0018"
+      ],
+      "migration_id": "PPDB-0019",
+      "name": "audit_immutability",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0019_audit_immutability.down.sql",
+      "postgresql_down_sha256": "780cbca64bfc071e9dc171ff997cdec9e668a4ae27279e42468109063991dba2",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0019_audit_immutability.up.sql",
+      "postgresql_up_sha256": "de87c49f9959f615b2c182561c7c0f3850b229a4d7f75ec75bea40be685cf270",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 19,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0019_audit_immutability.down.sql",
+      "sqlite_down_sha256": "7875b4bb23269d66050a8a3d4af9a5f9e3f049cbc181e085d0cac43933e78dc7",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0019_audit_immutability.up.sql",
+      "sqlite_up_sha256": "e12cf134e4e83a9a7a9006506445dba2e94a735f797ba341639be817c41e56b8"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

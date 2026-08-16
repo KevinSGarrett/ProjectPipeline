@@ -1,0 +1,622 @@
+{
+  "schema_version": "1.0.0",
+  "source": "local_pass16_final_harness",
+  "tool_activations": [
+    {
+      "activation_id": "VTOOL-F5DF9257CFCCEE76453D",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [
+        "src/project_pipeline/verification/external_tools.py"
+      ],
+      "license": "BSD-3-Clause",
+      "reason": "Concrete adapter/harness path is implemented; external executable/module is not installed in the current environment.",
+      "repository": "boxed/mutmut",
+      "schema_version": "1.0.0",
+      "source_revision": null,
+      "state": "ADAPTER_IMPLEMENTED",
+      "upstream_id": "UPSTREAM-015"
+    },
+    {
+      "activation_id": "VTOOL-692AAB8033C1A94E6E28",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [
+        "src/project_pipeline/verification/external_tools.py"
+      ],
+      "license": "MPL-2.0",
+      "reason": "Concrete adapter/harness path is implemented; external executable/module is not installed in the current environment.",
+      "repository": "dequelabs/axe-core",
+      "schema_version": "1.0.0",
+      "source_revision": null,
+      "state": "ADAPTER_IMPLEMENTED",
+      "upstream_id": "UPSTREAM-027"
+    },
+    {
+      "activation_id": "VTOOL-805F8CF901B1171244D6",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [],
+      "license": "MIT",
+      "reason": "Test/verification pattern source; no runtime activation is required.",
+      "repository": "EleutherAI/lm-evaluation-harness",
+      "schema_version": "1.0.0",
+      "source_revision": null,
+      "state": "PATTERN_ONLY",
+      "upstream_id": "UPSTREAM-032"
+    },
+    {
+      "activation_id": "VTOOL-18CB7ABB612EB594679D",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [
+        "src/project_pipeline/verification/external_tools.py"
+      ],
+      "license": "Apache-2.0",
+      "reason": "Concrete adapter/harness path is implemented; external executable/module is not installed in the current environment.",
+      "repository": "GoogleChrome/lighthouse-ci",
+      "schema_version": "1.0.0",
+      "source_revision": null,
+      "state": "ADAPTER_IMPLEMENTED",
+      "upstream_id": "UPSTREAM-044"
+    },
+    {
+      "activation_id": "VTOOL-1954AA54759FD4276B24",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [
+        "src/project_pipeline/verification/property_checks.py"
+      ],
+      "license": "MPL-2.0",
+      "reason": "Concrete adapter/harness path is implemented; external executable/module is not installed in the current environment.",
+      "repository": "HypothesisWorks/hypothesis",
+      "schema_version": "1.0.0",
+      "source_revision": "16f24b76015dbaabca40608eb9e73b46ac64e249",
+      "state": "ADAPTER_IMPLEMENTED",
+      "upstream_id": "UPSTREAM-051"
+    },
+    {
+      "activation_id": "VTOOL-1D6AE6B9F93E2060E01A",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [
+        "evidence/verification/browser_evidence.json",
+        "evidence/verification/browser/verification_report_1280x720.png",
+        "evidence/verification/browser/verification_report_390x844.png"
+      ],
+      "executable_path": "/opt/pyvenv/bin/playwright",
+      "installed_version": "1.57.0",
+      "integration_paths": [
+        "src/project_pipeline/verification/browser.py"
+      ],
+      "license": "Apache-2.0",
+      "reason": "Verification capability executed in the current Pass 16 environment with captured evidence.",
+      "repository": "microsoft/playwright",
+      "schema_version": "1.0.0",
+      "source_revision": "d5a185a894ab3ab17ff77a44e116a1339c6bdaed",
+      "state": "EXECUTED",
+      "upstream_id": "UPSTREAM-063"
+    },
+    {
+      "activation_id": "VTOOL-FD5EC9D9D89EDC2D7BCC",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [
+        "src/project_pipeline/verification/external_tools.py"
+      ],
+      "license": "Apache-2.0",
+      "reason": "Concrete adapter/harness path is implemented; external executable/module is not installed in the current environment.",
+      "repository": "microsoft/playwright-mcp",
+      "schema_version": "1.0.0",
+      "source_revision": "7e0457a7cbf88823bf0146d12c46ae12c6818247",
+      "state": "ADAPTER_IMPLEMENTED",
+      "upstream_id": "UPSTREAM-064"
+    },
+    {
+      "activation_id": "VTOOL-C6DFEA36AF90E7292D5C",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [
+        "src/project_pipeline/upstream_integrations/evaluation.py"
+      ],
+      "license": "MIT",
+      "reason": "Concrete adapter/harness path is implemented; external executable/module is not installed in the current environment.",
+      "repository": "promptfoo/promptfoo",
+      "schema_version": "1.0.0",
+      "source_revision": "fded938b65a81e12070a66e90ca4ad2d42a8062e",
+      "state": "ADAPTER_IMPLEMENTED",
+      "upstream_id": "UPSTREAM-085"
+    },
+    {
+      "activation_id": "VTOOL-15DE95CEC2102697C0F3",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [
+        "src/project_pipeline/verification/external_tools.py"
+      ],
+      "license": "MIT",
+      "reason": "Concrete adapter/harness path is implemented; external executable/module is not installed in the current environment.",
+      "repository": "schemathesis/schemathesis",
+      "schema_version": "1.0.0",
+      "source_revision": "c60bde9733dad2fc4ef8f6451f58a10e8c7b6663",
+      "state": "ADAPTER_IMPLEMENTED",
+      "upstream_id": "UPSTREAM-092"
+    },
+    {
+      "activation_id": "VTOOL-82BAF8FF528343CD39B9",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [
+        "src/project_pipeline/verification/external_tools.py"
+      ],
+      "license": "MIT",
+      "reason": "Concrete adapter/harness path is implemented; external executable/module is not installed in the current environment.",
+      "repository": "Shopify/toxiproxy",
+      "schema_version": "1.0.0",
+      "source_revision": "94d6d4b3c385e48534622b138da61e95014196d5",
+      "state": "ADAPTER_IMPLEMENTED",
+      "upstream_id": "UPSTREAM-093"
+    },
+    {
+      "activation_id": "VTOOL-522EDBC95255D9052819",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [],
+      "license": "Apache-2.0",
+      "reason": "Test/verification pattern source; no runtime activation is required.",
+      "repository": "stryker-mutator/stryker-js",
+      "schema_version": "1.0.0",
+      "source_revision": null,
+      "state": "PATTERN_ONLY",
+      "upstream_id": "UPSTREAM-101"
+    },
+    {
+      "activation_id": "VTOOL-9DDB8755DC55B85405CC",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [
+        "src/project_pipeline/upstream_integrations/evaluation.py"
+      ],
+      "license": "MIT",
+      "reason": "Concrete adapter/harness path is implemented; external executable/module is not installed in the current environment.",
+      "repository": "UKGovernmentBEIS/inspect_ai",
+      "schema_version": "1.0.0",
+      "source_revision": "c07dff4f8c029d92e785bf4109f5ed43f582c880",
+      "state": "ADAPTER_IMPLEMENTED",
+      "upstream_id": "UPSTREAM-108"
+    },
+    {
+      "activation_id": "VTOOL-DE4847CAF4B74ABE117D",
+      "activation_phase": "PASS16_VERIFICATION_HARNESS",
+      "evidence_paths": [],
+      "executable_path": null,
+      "installed_version": null,
+      "integration_paths": [
+        "src/project_pipeline/verification/external_tools.py"
+      ],
+      "license": "Apache-2.0",
+      "reason": "Concrete adapter/harness path is implemented; external executable/module is not installed in the current environment.",
+      "repository": "vercel-labs/agent-browser",
+      "schema_version": "1.0.0",
+      "source_revision": "548b159b30eef119ccf6846c8bc807d0eaa3f6f8",
+      "state": "ADAPTER_IMPLEMENTED",
+      "upstream_id": "UPSTREAM-111"
+    }
+  ],
+  "verification_run": {
+    "completed_at_utc": "2026-08-15T20:14:03.499769Z",
+    "final_state": "PASS",
+    "optional_skipped_count": 0,
+    "profile": "local-pass16",
+    "project_id": "PROJECT-PIPELINE",
+    "required_blocked_count": 0,
+    "required_fail_count": 0,
+    "results": [
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-D1FF5E24ADA2F2267F3D",
+            "kind": "LOG",
+            "media_type": "text/plain",
+            "produced_by_check_id": "VCHK-E6BFD4BE8DB5BC12D1D1",
+            "relative_path": "evidence/verification/runs/VCHK-E6BFD4BE8DB5BC12D1D1.stdout.txt",
+            "schema_version": "1.0.0",
+            "sha256": "633e94b1f5f31868282c3747277fb33b0560f329488e867ba094a51daf3f39df",
+            "size_bytes": 99
+          }
+        ],
+        "category": "CONTRACT",
+        "check_id": "VCHK-E6BFD4BE8DB5BC12D1D1",
+        "completed_at_utc": "2026-08-15T20:13:07.764946Z",
+        "duration_ms": 3885,
+        "reason": "command exit code 0",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:13:03.878550Z",
+        "state": "PASS",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "633e94b1f5f31868282c3747277fb33b0560f329488e867ba094a51daf3f39df"
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-5AEBC8D38CE90BF9DE0C",
+            "kind": "LOG",
+            "media_type": "text/plain",
+            "produced_by_check_id": "VCHK-35E1CF03F3DF07A722A4",
+            "relative_path": "evidence/verification/runs/VCHK-35E1CF03F3DF07A722A4.stdout.txt",
+            "schema_version": "1.0.0",
+            "sha256": "79244d046953d3191619f119cbc44716edbb19b12e45ef2d3a706ba5b6f2cc80",
+            "size_bytes": 99
+          }
+        ],
+        "category": "API",
+        "check_id": "VCHK-35E1CF03F3DF07A722A4",
+        "completed_at_utc": "2026-08-15T20:13:11.683187Z",
+        "duration_ms": 3917,
+        "reason": "command exit code 0",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:13:07.765201Z",
+        "state": "PASS",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "79244d046953d3191619f119cbc44716edbb19b12e45ef2d3a706ba5b6f2cc80"
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-3DD21D509B934B41ED94",
+            "kind": "LOG",
+            "media_type": "text/plain",
+            "produced_by_check_id": "VCHK-41E6C6E022EE25A54536",
+            "relative_path": "evidence/verification/runs/VCHK-41E6C6E022EE25A54536.stdout.txt",
+            "schema_version": "1.0.0",
+            "sha256": "07473d9729abab2d2f130922794fd79a06dceff4b5d02ca4d4cc860261b749ff",
+            "size_bytes": 99
+          }
+        ],
+        "category": "INTEGRATION",
+        "check_id": "VCHK-41E6C6E022EE25A54536",
+        "completed_at_utc": "2026-08-15T20:13:17.355130Z",
+        "duration_ms": 5670,
+        "reason": "command exit code 0",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:13:11.683255Z",
+        "state": "PASS",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "07473d9729abab2d2f130922794fd79a06dceff4b5d02ca4d4cc860261b749ff"
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-F391FD457333E6471665",
+            "kind": "LOG",
+            "media_type": "text/plain",
+            "produced_by_check_id": "VCHK-6C4D4E1B6BAD54CE469A",
+            "relative_path": "evidence/verification/runs/VCHK-6C4D4E1B6BAD54CE469A.stdout.txt",
+            "schema_version": "1.0.0",
+            "sha256": "e2afb94fa4c9aeb7607fb7085a4273cf009d4904e13112f096dfc0e3b8c1400e",
+            "size_bytes": 98
+          }
+        ],
+        "category": "END_TO_END",
+        "check_id": "VCHK-6C4D4E1B6BAD54CE469A",
+        "completed_at_utc": "2026-08-15T20:13:20.582904Z",
+        "duration_ms": 3227,
+        "reason": "command exit code 0",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:13:17.355183Z",
+        "state": "PASS",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_sha256": "e2afb94fa4c9aeb7607fb7085a4273cf009d4904e13112f096dfc0e3b8c1400e"
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-A4491847535507407391",
+            "kind": "JSON",
+            "media_type": "application/json",
+            "produced_by_check_id": "VCHK-DD9410846658A134E59D",
+            "relative_path": "evidence/verification/golden_journeys.json",
+            "schema_version": "1.0.0",
+            "sha256": "b7957d133604424b4bbbbffb37acfbcc32066a54ff649eb908f47690cb5b5be4",
+            "size_bytes": 1293
+          }
+        ],
+        "category": "GOLDEN_JOURNEY",
+        "check_id": "VCHK-DD9410846658A134E59D",
+        "completed_at_utc": "2026-08-15T20:13:20.714481Z",
+        "duration_ms": 131,
+        "reason": "verification passed",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:13:20.582957Z",
+        "state": "PASS",
+        "stderr_sha256": null,
+        "stdout_sha256": null
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-0724BB396765AFC198FB",
+            "kind": "JSON",
+            "media_type": "application/json",
+            "produced_by_check_id": "VCHK-EB2FD7109A9DFF504E64",
+            "relative_path": "evidence/verification/adversarial_checks.json",
+            "schema_version": "1.0.0",
+            "sha256": "a27bdfd754c959a6bc008e33e5a19afdc23214475a8bcf66607f491597d7bd39",
+            "size_bytes": 204
+          }
+        ],
+        "category": "ADVERSARIAL",
+        "check_id": "VCHK-EB2FD7109A9DFF504E64",
+        "completed_at_utc": "2026-08-15T20:13:20.716693Z",
+        "duration_ms": 1,
+        "reason": "verification passed",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:13:20.714515Z",
+        "state": "PASS",
+        "stderr_sha256": null,
+        "stdout_sha256": null
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-650FAC5F1214FEC4485D",
+            "kind": "JSON",
+            "media_type": "application/json",
+            "produced_by_check_id": "VCHK-A0A49472F86569FEE5C9",
+            "relative_path": "evidence/verification/property_probes.json",
+            "schema_version": "1.0.0",
+            "sha256": "25aa0d8ad89b380a655eaa355ef5281d743d225e5619e24b6450fe790fd7fa95",
+            "size_bytes": 624
+          }
+        ],
+        "category": "PROPERTY",
+        "check_id": "VCHK-A0A49472F86569FEE5C9",
+        "completed_at_utc": "2026-08-15T20:13:20.729792Z",
+        "duration_ms": 12,
+        "reason": "verification passed",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:13:20.716716Z",
+        "state": "PASS",
+        "stderr_sha256": null,
+        "stdout_sha256": null
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-7BB4FE8089372EB449B2",
+            "kind": "JSON",
+            "media_type": "application/json",
+            "produced_by_check_id": "VCHK-56990E59B5000A902D73",
+            "relative_path": "evidence/verification/mutation_probes.json",
+            "schema_version": "1.0.0",
+            "sha256": "90fb1787d32974eb75881858c16b60f9010c74aca9b83ef504629cef18251b0a",
+            "size_bytes": 709
+          }
+        ],
+        "category": "MUTATION",
+        "check_id": "VCHK-56990E59B5000A902D73",
+        "completed_at_utc": "2026-08-15T20:13:30.536015Z",
+        "duration_ms": 9805,
+        "reason": "verification passed",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:13:20.729820Z",
+        "state": "PASS",
+        "stderr_sha256": null,
+        "stdout_sha256": null
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-65F67D0E02E3C588AD4D",
+            "kind": "JSON",
+            "media_type": "application/json",
+            "produced_by_check_id": "VCHK-F45FA7824CB17CA64962",
+            "relative_path": "evidence/verification/fault_scenarios.json",
+            "schema_version": "1.0.0",
+            "sha256": "97ec96f8ccf2fb4b66ff75dce0b3269478e3da2ffbd5ac4ae645726f7aa1547e",
+            "size_bytes": 3085
+          }
+        ],
+        "category": "FAULT",
+        "check_id": "VCHK-F45FA7824CB17CA64962",
+        "completed_at_utc": "2026-08-15T20:13:30.632351Z",
+        "duration_ms": 95,
+        "reason": "verification passed",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:13:30.536086Z",
+        "state": "PASS",
+        "stderr_sha256": null,
+        "stdout_sha256": null
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-4FDC16CB3370ED2487B9",
+            "kind": "JSON",
+            "media_type": "application/json",
+            "produced_by_check_id": "VCHK-250709C4E869F1C509FF",
+            "relative_path": "evidence/verification/browser_evidence.json",
+            "schema_version": "1.0.0",
+            "sha256": "c392c91b38da0b7f3863d767ad20d4eb62072065ad9b16198d1bcd50b36c585a",
+            "size_bytes": 1173
+          },
+          {
+            "artifact_id": "VART-798250875815191B1951",
+            "kind": "SCREENSHOT",
+            "media_type": "image/png",
+            "produced_by_check_id": "VCHK-250709C4E869F1C509FF",
+            "relative_path": "evidence/verification/browser/verification_report_1280x720.png",
+            "schema_version": "1.0.0",
+            "sha256": "254c103d41e5ef62cc8ff23de25179f9ee3ab61704e8f710da753d0c1875f0ee",
+            "size_bytes": 89323
+          },
+          {
+            "artifact_id": "VART-0BE401917E33DAD83A16",
+            "kind": "SCREENSHOT",
+            "media_type": "image/png",
+            "produced_by_check_id": "VCHK-250709C4E869F1C509FF",
+            "relative_path": "evidence/verification/browser/verification_report_390x844.png",
+            "schema_version": "1.0.0",
+            "sha256": "36a761946a2d5b921dd8198ee59542fe1e6e20526599f078ddc4dbd5b6667d9c",
+            "size_bytes": 88373
+          }
+        ],
+        "category": "BROWSER",
+        "check_id": "VCHK-250709C4E869F1C509FF",
+        "completed_at_utc": "2026-08-15T20:13:30.633381Z",
+        "duration_ms": 4113,
+        "reason": "headless Chromium browser checks passed",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:12:59.721098Z",
+        "state": "PASS",
+        "stderr_sha256": null,
+        "stdout_sha256": null
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-798250875815191B1951",
+            "kind": "SCREENSHOT",
+            "media_type": "image/png",
+            "produced_by_check_id": "VCHK-250709C4E869F1C509FF",
+            "relative_path": "evidence/verification/browser/verification_report_1280x720.png",
+            "schema_version": "1.0.0",
+            "sha256": "254c103d41e5ef62cc8ff23de25179f9ee3ab61704e8f710da753d0c1875f0ee",
+            "size_bytes": 89323
+          },
+          {
+            "artifact_id": "VART-0BE401917E33DAD83A16",
+            "kind": "SCREENSHOT",
+            "media_type": "image/png",
+            "produced_by_check_id": "VCHK-250709C4E869F1C509FF",
+            "relative_path": "evidence/verification/browser/verification_report_390x844.png",
+            "schema_version": "1.0.0",
+            "sha256": "36a761946a2d5b921dd8198ee59542fe1e6e20526599f078ddc4dbd5b6667d9c",
+            "size_bytes": 88373
+          }
+        ],
+        "category": "VISUAL",
+        "check_id": "VCHK-079AF65E1877B7AE688B",
+        "completed_at_utc": "2026-08-15T20:13:30.633399Z",
+        "duration_ms": 4113,
+        "reason": "desktop/mobile screenshots captured without overflow or console errors",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:12:59.721098Z",
+        "state": "PASS",
+        "stderr_sha256": null,
+        "stdout_sha256": null
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-FB9B3A624161DE511EE3",
+            "kind": "JSON",
+            "media_type": "application/json",
+            "produced_by_check_id": "VCHK-812D535037993E9F7B88",
+            "relative_path": "evidence/verification/accessibility_evidence.json",
+            "schema_version": "1.0.0",
+            "sha256": "b1ac5b0a0377a729f2662953c1688244a5107be56f00fbdb020643af88224161",
+            "size_bytes": 354
+          }
+        ],
+        "category": "ACCESSIBILITY",
+        "check_id": "VCHK-812D535037993E9F7B88",
+        "completed_at_utc": "2026-08-15T20:13:30.633473Z",
+        "duration_ms": 4113,
+        "reason": "semantic accessibility baseline violations=0",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:12:59.721098Z",
+        "state": "PASS",
+        "stderr_sha256": null,
+        "stdout_sha256": null
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-7C2B44CA73A1331FFBF5",
+            "kind": "JSON",
+            "media_type": "application/json",
+            "produced_by_check_id": "VCHK-896EF62B674B1EC44F82",
+            "relative_path": "evidence/verification/performance_results.json",
+            "schema_version": "1.0.0",
+            "sha256": "c8820e97d8ca0b184d25411ea2a935e8cb230b6cfd31757c537350088b780af8",
+            "size_bytes": 526
+          }
+        ],
+        "category": "PERFORMANCE",
+        "check_id": "VCHK-896EF62B674B1EC44F82",
+        "completed_at_utc": "2026-08-15T20:13:58.991878Z",
+        "duration_ms": 28247,
+        "reason": "verification passed",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:13:30.744004Z",
+        "state": "PASS",
+        "stderr_sha256": null,
+        "stdout_sha256": null
+      },
+      {
+        "artifacts": [
+          {
+            "artifact_id": "VART-6516FB0B609E82CF0A19",
+            "kind": "JSON",
+            "media_type": "application/json",
+            "produced_by_check_id": "VCHK-56475F72E5CF16E96C0C",
+            "relative_path": "evidence/verification/post_merge_report.json",
+            "schema_version": "1.0.0",
+            "sha256": "e8356e6104e9ac50b8a84d766f971b1d99e545c1e820eeda0431514dd3a6e8b4",
+            "size_bytes": 485
+          }
+        ],
+        "category": "POST_MERGE",
+        "check_id": "VCHK-56475F72E5CF16E96C0C",
+        "completed_at_utc": "2026-08-15T20:14:03.386860Z",
+        "duration_ms": 4281,
+        "reason": "verification passed",
+        "required": true,
+        "schema_version": "1.0.0",
+        "started_at_utc": "2026-08-15T20:13:59.105004Z",
+        "state": "PASS",
+        "stderr_sha256": null,
+        "stdout_sha256": null
+      }
+    ],
+    "run_id": "VRUN-23B429F6EBF873EE9A70",
+    "schema_version": "1.0.0",
+    "source_fingerprint": "616ff2d6f4a9b589b1a42625953569d07bd26dcd8bc2fd8c2879eff5065581f0",
+    "started_at_utc": "2026-08-15T20:12:59.721098Z"
+  }
+}

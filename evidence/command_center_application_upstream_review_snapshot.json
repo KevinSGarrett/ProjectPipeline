@@ -1,0 +1,29 @@
+{
+  "browser_verification_passed": true,
+  "candidate_upstream_ids": [
+    "UPSTREAM-003",
+    "UPSTREAM-009",
+    "UPSTREAM-023",
+    "UPSTREAM-084",
+    "UPSTREAM-103",
+    "UPSTREAM-110"
+  ],
+  "copied_source_paths": [],
+  "integrated_boundaries": [
+    "UPSTREAM-003",
+    "UPSTREAM-103"
+  ],
+  "observed_at_utc": "2026-08-15T22:47:01.844322+00:00",
+  "pass_id": "PASS-20",
+  "pattern_only": [
+    "UPSTREAM-009",
+    "UPSTREAM-023",
+    "UPSTREAM-084",
+    "UPSTREAM-110"
+  ],
+  "react_vite_dependency_install": "UNAVAILABLE_IN_EXECUTION_ENVIRONMENT",
+  "review_artifact": "provenance/reviews/PASS-20_command_center_application_upstream_review.md",
+  "review_state": "INTEGRATED",
+  "schema_version": "1.0.0",
+  "tauri_rust_windows_build": "UNAVAILABLE_IN_EXECUTION_ENVIRONMENT"
+}

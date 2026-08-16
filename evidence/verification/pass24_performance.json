@@ -1,0 +1,26 @@
+{
+  "cli_help": {
+    "budget_p95_ms": 2500,
+    "max_ms": 1199,
+    "p50_ms": 1168,
+    "p95_ms": 1199,
+    "passed": true,
+    "performance_id": "PERF-60B35B27EB2B0AB497DF",
+    "sample_count": 5,
+    "schema_version": "1.0.0",
+    "subject": "project-pipeline-cli-help"
+  },
+  "phase": "final_local_hardening_performance",
+  "qualification_boundary": "LOCAL_ONLY_NO_EXTERNAL_RUNTIME_CLAIM",
+  "repository_validator": {
+    "budget_p95_ms": 7000,
+    "max_ms": 3615,
+    "p50_ms": 3479,
+    "p95_ms": 3615,
+    "passed": true,
+    "performance_id": "PERF-912D20FAD0186FC568F6",
+    "sample_count": 3,
+    "schema_version": "1.0.0",
+    "subject": "repository-validator"
+  }
+}

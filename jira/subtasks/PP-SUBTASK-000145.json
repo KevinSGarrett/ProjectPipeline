@@ -1,0 +1,130 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000145-01",
+      "statement": "Every linked requirement is explicitly dispositioned, mapped, and represented by the stated implementation or planned artifacts.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000145-02",
+      "statement": "Applicable behavior-specific tests and evidence support completion; unavailable external verification remains explicitly blocked.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000010",
+    "EVID-000015"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Run behavior-specific verification for implement requirement query and summary interfaces and preserve evidence.",
+  "evidence_required": [
+    "EVID-000010",
+    "EVID-000015"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/01_requirements/GLOSSARY.md",
+    "plans/01_requirements/OPEN_DECISIONS.md",
+    "plans/01_requirements/REQUIREMENT_CATALOG_STATUS.md",
+    "plans/01_requirements/SOURCE_EVOLUTION.md",
+    "src/project_pipeline/cli.py",
+    "src/project_pipeline/requirement_views.py",
+    "src/project_pipeline/requirements.py",
+    "src/project_pipeline/traceability.py"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/01_requirements/GLOSSARY.md",
+    "plans/01_requirements/OPEN_DECISIONS.md",
+    "plans/01_requirements/REQUIREMENT_CATALOG_STATUS.md",
+    "plans/01_requirements/SOURCE_EVOLUTION.md",
+    "src/project_pipeline/cli.py",
+    "src/project_pipeline/requirement_views.py",
+    "src/project_pipeline/requirements.py",
+    "src/project_pipeline/traceability.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "SUBTASK",
+  "labels": [
+    "catalog-foundation",
+    "verification"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25343",
+    "remote_key": "PP-374",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-SUBTASK-000145",
+  "objective": "Verify implement requirement query and summary interfaces through the declared tests and evidence.",
+  "observability_impact": "Record structured validation, state, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-TASK-000144",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/01_requirements/PLAN-REQ-002_requirement_catalog_and_coverage.md",
+      "end_line": 31,
+      "line_numbered_path": "plans/_line_numbered/PLAN-REQ-002_requirement_catalog_and_coverage.lines.txt",
+      "line_reference": "PLAN-REQ-002:SEC-06:L000028-L000031",
+      "plan_id": "PLAN-REQ-002",
+      "section_id": "PLAN-REQ-002:SEC-06",
+      "start_line": 28
+    }
+  ],
+  "rationale": "This work is required to convert source-grounded requirements into bounded implementation, verification, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-TASK-000144",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-374",
+  "required_tests": [
+    "TEST-REQUIREMENT-QUERY-001",
+    "TEST-REQUIREMENT-VIEWS-001",
+    "TEST-REQUIREMENT-VIEWS-002",
+    "TEST-TRACEABILITY-002"
+  ],
+  "requirement_ids": [
+    "REQ-REQ-0015",
+    "REQ-REQ-0016",
+    "REQ-REQ-0017"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Verify implement requirement query and summary interfaces through the declared tests and evidence."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, data-egress, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L001162-L001215",
+    "GOV-001:L001998-L002024",
+    "GOV-001:L002200-L002231",
+    "SRC-017:L000490-L000596"
+  ],
+  "state": "BACKLOG",
+  "title": "Verify implement requirement query and summary interfaces",
+  "upstream_dependencies": []
+}

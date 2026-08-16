@@ -1,0 +1,14 @@
+{
+  "git": ">=2.40",
+  "go": ">=1.22 when required by the benchmark",
+  "network": "optional except for exact upstream acquisition and designated outage overlays",
+  "node": ">=20 when required by the benchmark",
+  "python": ">=3.11",
+  "rust": "stable when required by the benchmark",
+  "schema_version": "1.0.0",
+  "supported_host": [
+    "Windows 11",
+    "Linux container or VM"
+  ],
+  "time_zone": "UTC for machine records; operator display may localize"
+}

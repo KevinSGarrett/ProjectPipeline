@@ -1,0 +1,130 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000192-01",
+      "statement": "The local quality orchestrator runs compilation, tests, dependency, schema, and repository checks and reports unavailable optional tools without reporting false success.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline quality --root . --output evidence/repository_quality_report.json",
+        "method": "automated_behavior_and_evidence_validation",
+        "path": "evidence/repository_quality_report.json",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000192-02",
+      "statement": "The CI workflow requires configured lint, format, type, coverage, build, and dependency-audit gates with read-only permissions and bounded execution.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "automated_behavior_and_evidence_validation",
+        "path": ".github/workflows/quality.yml",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000025",
+    "EVID-000026",
+    "EVID-000027"
+  ],
+  "definition_of_done": [
+    "Implementation and configuration for the bounded objective are complete.",
+    "Acceptance criteria have current automated or machine-readable evidence.",
+    "Required behavior tests pass for the affected foundation.",
+    "Traceability, plans, Jira, schemas, and developer documentation are current.",
+    "Security, provenance, observability, and rollback effects are explicit.",
+    "Unavailable external verification is represented without inflating completion."
+  ],
+  "dependencies": [],
+  "description": "Configure Ruff, Mypy, pytest, coverage, build, dependency audit, pre-commit, read-only CI permissions, bounded timeouts, Python matrix execution, and a machine-readable local quality report.",
+  "evidence_required": [
+    "EVID-000025",
+    "EVID-000026",
+    "EVID-000027"
+  ],
+  "exclusions": [
+    "No remote GitHub, Jira, AWS, package-index, or paid-service mutation is authorized.",
+    "No later persistent-state, durable-orchestration, scheduler, or Command Center capability is represented as complete."
+  ],
+  "expected_file_locations": [
+    "pyproject.toml",
+    ".pre-commit-config.yaml",
+    ".github/workflows/quality.yml",
+    "src/project_pipeline/quality.py",
+    "docs/development/quality_and_ci.md"
+  ],
+  "expected_implementation_artifacts": [
+    "pyproject.toml",
+    ".pre-commit-config.yaml",
+    ".github/workflows/quality.yml",
+    "src/project_pipeline/quality.py",
+    "docs/development/quality_and_ci.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "quality",
+    "ci",
+    "security",
+    "testing",
+    "evidence-backed"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25186",
+    "remote_key": "PP-217",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000192",
+  "objective": "Define one executable quality contract for local development and CI with explicit handling of unavailable optional tools.",
+  "observability_impact": "Record stable correlation, diagnostic, quality, test, and evidence identities for later operational telemetry.",
+  "owner_required_capability": "python_platform_engineering_quality_and_verification",
+  "parent": "PP-STORY-000099",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/15_platform_lifecycle/PLAN-LIFE-002_repository_engineering_foundation.md",
+      "end_line": 121,
+      "line_numbered_path": "plans/_line_numbered/PLAN-LIFE-002_repository_engineering_foundation.lines.txt",
+      "line_reference": "PLAN-LIFE-002:SEC-08:L000105-L000121",
+      "plan_id": "PLAN-LIFE-002",
+      "section_id": "PLAN-LIFE-002:SEC-08",
+      "start_line": 105
+    }
+  ],
+  "rationale": "This bounded repository-engineering work converts accepted plans into executable, tested, self-validating foundation behavior without claiming later runtime capabilities.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000099",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-217",
+  "required_tests": [
+    "TEST-DEPEND-001",
+    "TEST-CLI-FOUNDATION-002",
+    "TEST-REPOSITORY-001"
+  ],
+  "requirement_ids": [
+    "REQ-ASSURE-0022",
+    "REQ-ASSURE-0029",
+    "REQ-SEC-0018",
+    "REQ-SEC-0022",
+    "REQ-SEC-0004"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Revert the bounded package/configuration changes, remove generated local runtime state, regenerate indexes and manifests, and retain the prior cumulative archive.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Define one executable quality contract for local development and CI with explicit handling of unavailable optional tools."
+  ],
+  "security_impact": "Preserve least privilege, secret references, dependency provenance, input validation, and fail-closed external-effect boundaries.",
+  "source_references": [
+    "GOV-001:L001364-L001385",
+    "GOV-001:L002066-L002103",
+    "GOV-001:L002200-L002231"
+  ],
+  "state": "BACKLOG",
+  "title": "Configure code-quality, type, test, coverage, and CI gates",
+  "upstream_dependencies": []
+}

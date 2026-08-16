@@ -1,0 +1,636 @@
+{
+  "$defs": {
+    "AdoptionStage": {
+      "enum": [
+        "DISCOVERY",
+        "BASELINE",
+        "GAP_ANALYSIS",
+        "ADOPTION_PLAN",
+        "CONTROLLED_BOOTSTRAP",
+        "SHADOW_AUTONOMY",
+        "LIMITED_AUTONOMY",
+        "FULL_AUTONOMY"
+      ],
+      "title": "AdoptionStage",
+      "type": "string"
+    },
+    "CompiledRepositoryMap": {
+      "additionalProperties": false,
+      "properties": {
+        "entries": {
+          "items": {
+            "$ref": "#/$defs/RepositoryMapEntry"
+          },
+          "title": "Entries",
+          "type": "array"
+        },
+        "file_count": {
+          "minimum": 0,
+          "title": "File Count",
+          "type": "integer"
+        },
+        "fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "language_counts": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Language Counts",
+          "type": "object"
+        },
+        "role_counts": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Role Counts",
+          "type": "object"
+        },
+        "root_path": {
+          "title": "Root Path",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "top_level_counts": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Top Level Counts",
+          "type": "object"
+        },
+        "total_bytes": {
+          "minimum": 0,
+          "title": "Total Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "root_path",
+        "fingerprint",
+        "file_count",
+        "total_bytes",
+        "top_level_counts",
+        "language_counts",
+        "role_counts",
+        "entries"
+      ],
+      "title": "CompiledRepositoryMap",
+      "type": "object"
+    },
+    "DiscoveryArtifactKind": {
+      "enum": [
+        "SOURCE",
+        "TEST",
+        "INSTRUCTION",
+        "PLAN",
+        "JIRA",
+        "REQUIREMENT",
+        "EVIDENCE",
+        "CONFIGURATION",
+        "BUILD",
+        "CI",
+        "DEPLOYMENT",
+        "DOCUMENTATION",
+        "SECRET_REFERENCE",
+        "REPOSITORY_METADATA",
+        "OTHER"
+      ],
+      "title": "DiscoveryArtifactKind",
+      "type": "string"
+    },
+    "GapCategory": {
+      "enum": [
+        "AUTHORITY",
+        "BOUNDARY",
+        "DOCUMENTATION",
+        "GOVERNANCE",
+        "INSTRUCTIONS",
+        "PLANNING",
+        "REQUIREMENTS",
+        "TESTING",
+        "CI",
+        "DEPLOYMENT",
+        "SECURITY",
+        "BUILD",
+        "PERSISTENCE",
+        "PROFILE"
+      ],
+      "title": "GapCategory",
+      "type": "string"
+    },
+    "GapSeverity": {
+      "enum": [
+        "INFO",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "GapSeverity",
+      "type": "string"
+    },
+    "IntakeMode": {
+      "enum": [
+        "NEW_PROJECT",
+        "EXISTING_PROJECT"
+      ],
+      "title": "IntakeMode",
+      "type": "string"
+    },
+    "ProjectGap": {
+      "additionalProperties": false,
+      "properties": {
+        "affected_paths": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Affected Paths",
+          "type": "array"
+        },
+        "blocks_autonomy": {
+          "default": false,
+          "title": "Blocks Autonomy",
+          "type": "boolean"
+        },
+        "bootstrap_eligible": {
+          "default": false,
+          "title": "Bootstrap Eligible",
+          "type": "boolean"
+        },
+        "category": {
+          "$ref": "#/$defs/GapCategory"
+        },
+        "description": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "gap_id": {
+          "pattern": "^GAP-[A-F0-9]{20}$",
+          "title": "Gap Id",
+          "type": "string"
+        },
+        "remediation": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Remediation",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/GapSeverity"
+        },
+        "title": {
+          "maxLength": 512,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gap_id",
+        "category",
+        "severity",
+        "title",
+        "description",
+        "remediation"
+      ],
+      "title": "ProjectGap",
+      "type": "object"
+    },
+    "ProjectGapReport": {
+      "additionalProperties": false,
+      "properties": {
+        "blocks_autonomy": {
+          "title": "Blocks Autonomy",
+          "type": "boolean"
+        },
+        "counts_by_severity": {
+          "additionalProperties": {
+            "type": "integer"
+          },
+          "title": "Counts By Severity",
+          "type": "object"
+        },
+        "fingerprint": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Fingerprint",
+          "type": "string"
+        },
+        "gaps": {
+          "items": {
+            "$ref": "#/$defs/ProjectGap"
+          },
+          "title": "Gaps",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "gaps",
+        "counts_by_severity",
+        "blocks_autonomy",
+        "fingerprint"
+      ],
+      "title": "ProjectGapReport",
+      "type": "object"
+    },
+    "ProjectOrigin": {
+      "enum": [
+        "NEW",
+        "ADOPTED"
+      ],
+      "title": "ProjectOrigin",
+      "type": "string"
+    },
+    "ProjectProfile": {
+      "enum": [
+        "GENERIC",
+        "PYTHON_LIBRARY",
+        "PYTHON_SERVICE",
+        "WEB_APPLICATION",
+        "TYPESCRIPT_APPLICATION",
+        "RUST_APPLICATION",
+        "MACHINE_LEARNING",
+        "INFRASTRUCTURE",
+        "DOCUMENTATION",
+        "POLYGLOT_APPLICATION",
+        "EMPTY"
+      ],
+      "title": "ProjectProfile",
+      "type": "string"
+    },
+    "ProjectScale": {
+      "enum": [
+        "SMALL",
+        "STANDARD",
+        "LARGE",
+        "CRITICAL"
+      ],
+      "title": "ProjectScale",
+      "type": "string"
+    },
+    "RepositoryIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_url": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Canonical Url"
+        },
+        "default_branch": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Branch"
+        },
+        "head_revision": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Head Revision"
+        },
+        "nested": {
+          "default": false,
+          "title": "Nested",
+          "type": "boolean"
+        },
+        "repository_id": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Repository Id",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/RepositoryRole",
+          "default": "PRIMARY"
+        },
+        "root_path": {
+          "title": "Root Path",
+          "type": "string"
+        },
+        "version_control": {
+          "$ref": "#/$defs/VersionControlKind",
+          "default": "NONE"
+        }
+      },
+      "required": [
+        "repository_id",
+        "root_path"
+      ],
+      "title": "RepositoryIdentity",
+      "type": "object"
+    },
+    "RepositoryMapEntry": {
+      "additionalProperties": false,
+      "properties": {
+        "change_relevance": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Change Relevance",
+          "type": "array"
+        },
+        "dependencies": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "array"
+        },
+        "language": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "owners": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Owners",
+          "type": "array"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/DiscoveryArtifactKind"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        },
+        "symbols": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Symbols",
+          "type": "array"
+        },
+        "tested_by": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Tested By",
+          "type": "array"
+        }
+      },
+      "required": [
+        "path",
+        "role",
+        "size_bytes"
+      ],
+      "title": "RepositoryMapEntry",
+      "type": "object"
+    },
+    "RepositoryRole": {
+      "enum": [
+        "PRIMARY",
+        "SUPPORTING",
+        "REFERENCE"
+      ],
+      "title": "RepositoryRole",
+      "type": "string"
+    },
+    "VersionControlKind": {
+      "enum": [
+        "GIT",
+        "NONE",
+        "UNKNOWN"
+      ],
+      "title": "VersionControlKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/compiled_project_manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adoption_stage": {
+      "$ref": "#/$defs/AdoptionStage"
+    },
+    "build_systems": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Build Systems",
+      "type": "array"
+    },
+    "compilation_id": {
+      "title": "Compilation Id",
+      "type": "string"
+    },
+    "compiled_at_utc": {
+      "format": "date-time",
+      "title": "Compiled At Utc",
+      "type": "string"
+    },
+    "deployment_surfaces": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Deployment Surfaces",
+      "type": "array"
+    },
+    "evidence_paths": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Paths",
+      "type": "array"
+    },
+    "gap_report": {
+      "$ref": "#/$defs/ProjectGapReport"
+    },
+    "instruction_paths": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Instruction Paths",
+      "type": "array"
+    },
+    "intake_mode": {
+      "$ref": "#/$defs/IntakeMode"
+    },
+    "jira_paths": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Jira Paths",
+      "type": "array"
+    },
+    "operating_constraints": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Operating Constraints",
+      "type": "array"
+    },
+    "origin": {
+      "$ref": "#/$defs/ProjectOrigin"
+    },
+    "plan_paths": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Plan Paths",
+      "type": "array"
+    },
+    "primary_profile": {
+      "$ref": "#/$defs/ProjectProfile"
+    },
+    "profiles": {
+      "items": {
+        "$ref": "#/$defs/ProjectProfile"
+      },
+      "title": "Profiles",
+      "type": "array"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "project_name": {
+      "title": "Project Name",
+      "type": "string"
+    },
+    "repositories": {
+      "items": {
+        "$ref": "#/$defs/RepositoryIdentity"
+      },
+      "title": "Repositories",
+      "type": "array"
+    },
+    "repository_map": {
+      "$ref": "#/$defs/CompiledRepositoryMap"
+    },
+    "request_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Request Fingerprint",
+      "type": "string"
+    },
+    "requirement_paths": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Requirement Paths",
+      "type": "array"
+    },
+    "scale": {
+      "$ref": "#/$defs/ProjectScale"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_authorities": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Authorities",
+      "type": "array"
+    },
+    "target_root": {
+      "title": "Target Root",
+      "type": "string"
+    },
+    "test_commands": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Test Commands",
+      "type": "array"
+    }
+  },
+  "required": [
+    "compilation_id",
+    "project_id",
+    "project_name",
+    "origin",
+    "intake_mode",
+    "adoption_stage",
+    "target_root",
+    "scale",
+    "primary_profile",
+    "profiles",
+    "repositories",
+    "instruction_paths",
+    "plan_paths",
+    "jira_paths",
+    "requirement_paths",
+    "evidence_paths",
+    "build_systems",
+    "test_commands",
+    "deployment_surfaces",
+    "operating_constraints",
+    "source_authorities",
+    "repository_map",
+    "gap_report",
+    "request_fingerprint"
+  ],
+  "title": "CompiledProjectManifest",
+  "type": "object"
+}

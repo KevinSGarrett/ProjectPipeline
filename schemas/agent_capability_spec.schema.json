@@ -1,0 +1,60 @@
+{
+  "$id": "https://project-pipeline.local/schemas/agent_capability_spec.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {
+      "title": "Capability Id",
+      "type": "string"
+    },
+    "description": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "title": "Description",
+      "type": "string"
+    },
+    "quality_tiers": {
+      "default": [
+        "standard"
+      ],
+      "items": {
+        "type": "string"
+      },
+      "title": "Quality Tiers",
+      "type": "array"
+    },
+    "requires_tools": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Requires Tools",
+      "type": "array"
+    },
+    "risk_ceiling": {
+      "default": "HIGH",
+      "title": "Risk Ceiling",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "task_classes": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Task Classes",
+      "type": "array"
+    }
+  },
+  "required": [
+    "capability_id",
+    "description"
+  ],
+  "title": "CapabilitySpec",
+  "type": "object"
+}

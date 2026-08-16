@@ -1,0 +1,103 @@
+{
+  "$defs": {
+    "BranchRole": {
+      "enum": [
+        "DEFAULT",
+        "FEATURE",
+        "RELEASE",
+        "HOTFIX",
+        "UNKNOWN"
+      ],
+      "title": "BranchRole",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_branch.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "ahead": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Ahead",
+      "type": "integer"
+    },
+    "behind": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Behind",
+      "type": "integer"
+    },
+    "branch_id": {
+      "title": "Branch Id",
+      "type": "string"
+    },
+    "is_current": {
+      "default": false,
+      "title": "Is Current",
+      "type": "boolean"
+    },
+    "is_default": {
+      "default": false,
+      "title": "Is Default",
+      "type": "boolean"
+    },
+    "merged_into_default": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Merged Into Default"
+    },
+    "name": {
+      "maxLength": 255,
+      "minLength": 1,
+      "title": "Name",
+      "type": "string"
+    },
+    "protected": {
+      "anyOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Protected"
+    },
+    "role": {
+      "$ref": "#/$defs/BranchRole",
+      "default": "UNKNOWN"
+    },
+    "sha": {
+      "title": "Sha",
+      "type": "string"
+    },
+    "upstream": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Upstream"
+    }
+  },
+  "required": [
+    "branch_id",
+    "name",
+    "sha"
+  ],
+  "title": "GitBranch",
+  "type": "object"
+}

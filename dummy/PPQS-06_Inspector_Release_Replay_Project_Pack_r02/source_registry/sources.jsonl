@@ -1,0 +1,14 @@
+{"authority": "BENCHMARK_OWNER", "content_sha256": "06ec49902406c149bb6b36373efd9be92b6f36d9843e35d76932a694958f9526", "path": "BENCHMARK_BRIEF.md", "source_id": "SRC-MI-BRIEF", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "content_sha256": "740c1ced9e61598b7910e03ea1f3bd9421bdc5eb2e3857f09bce9476fd792a8d", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-CATALOG", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Packaged sandbox assets", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-01", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "List failure surfacing", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-02", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Keychain degradation", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-03", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Lazy optional native loading", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-04", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Structured tool output", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-05", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Docker loopback and writable state", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-06", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Schema number input stability", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-07", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Duplicate tool name rendering", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-08", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Protocol header forwarding", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-09", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Streaming compatibility", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-10", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "TUI dependency bundling", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-11", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Release integration and documentation", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-MI-FEATURE-12", "trust": "TRUSTED_NORMATIVE"}

@@ -1,0 +1,23 @@
+{
+  "adaptation_type": "BOUNDED_DATA_CONTRACT",
+  "approval_state": "APPROVED_BOUNDED",
+  "license": "MIT",
+  "notice_path": "third_party/NOTICES.md",
+  "project_paths": [
+    "src/project_pipeline/upstream_data/pydantic_ai_provider_compatibility.json"
+  ],
+  "project_sha256": {
+    "src/project_pipeline/upstream_data/pydantic_ai_provider_compatibility.json": "26e536699b37c00322ce67511d0184d4c19b96137810f13ef99080c1ba4e8b19"
+  },
+  "review_basis": "Permissive license reviewed; bounded facts/data identifiers only; no upstream control semantics imported.",
+  "schema_version": "1.0.0",
+  "source_paths": [
+    "pydantic_ai_slim/pydantic_ai/models/__init__.py"
+  ],
+  "source_repository": "pydantic/pydantic-ai",
+  "source_revision": "v2.31.0",
+  "tests": [
+    "tests/test_upstream_contract_assets.py"
+  ],
+  "upstream_id": "UPSTREAM-086"
+}

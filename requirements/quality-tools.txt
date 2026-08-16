@@ -1,0 +1,7 @@
+# Exact direct quality-tool intents; transitive resolver lock is externally blocked.
+# Generate uv.lock and replace this export when package-index access is available.
+build==1.5.0
+mypy==2.3.0
+pip-audit==2.10.1
+pre-commit==4.6.0
+ruff==0.16.3

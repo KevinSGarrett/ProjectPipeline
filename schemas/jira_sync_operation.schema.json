@@ -1,0 +1,125 @@
+{
+  "$defs": {
+    "JiraOperationState": {
+      "enum": [
+        "PLANNED",
+        "PENDING",
+        "APPLIED",
+        "RECONCILED",
+        "FAILED",
+        "UNKNOWN_OUTCOME",
+        "REJECTED"
+      ],
+      "title": "JiraOperationState",
+      "type": "string"
+    },
+    "JiraSyncOperationType": {
+      "enum": [
+        "CREATE_REMOTE_ISSUE",
+        "UPDATE_REMOTE_FIELDS",
+        "TRANSITION_REMOTE_ISSUE",
+        "ADD_REMOTE_COMMENT",
+        "CREATE_REMOTE_LINK",
+        "RECORD_REMOTE_MAPPING",
+        "IMPORT_REMOTE_ISSUE",
+        "ACCEPT_REMOTE_FIELDS",
+        "NO_OPERATION"
+      ],
+      "title": "JiraSyncOperationType",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/jira_sync_operation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "expected_remote_version": {
+      "anyOf": [
+        {
+          "minimum": 1,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expected Remote Version"
+    },
+    "idempotency_key": {
+      "maxLength": 255,
+      "minLength": 8,
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "local_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Local Id"
+    },
+    "operation_id": {
+      "title": "Operation Id",
+      "type": "string"
+    },
+    "operation_type": {
+      "$ref": "#/$defs/JiraSyncOperationType"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "remote_key": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Remote Key"
+    },
+    "request_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Request Fingerprint",
+      "type": "string"
+    },
+    "requires_human_approval": {
+      "default": false,
+      "title": "Requires Human Approval",
+      "type": "boolean"
+    },
+    "requires_remote_write": {
+      "title": "Requires Remote Write",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/JiraOperationState",
+      "default": "PLANNED"
+    }
+  },
+  "required": [
+    "operation_id",
+    "operation_type",
+    "idempotency_key",
+    "request_fingerprint",
+    "requires_remote_write"
+  ],
+  "title": "JiraSyncOperation",
+  "type": "object"
+}

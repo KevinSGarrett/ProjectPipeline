@@ -1,0 +1,11 @@
+{
+  "logging": {
+    "level": "INFO"
+  },
+  "retry": {
+    "count": 1,
+    "delay_seconds": 1
+  },
+  "schema_version": 1,
+  "service": {}
+}

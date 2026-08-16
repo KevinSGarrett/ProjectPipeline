@@ -1,0 +1,114 @@
+{
+  "$defs": {
+    "CompletionProjectionState": {
+      "enum": [
+        "INCOMPLETE",
+        "BLOCKED",
+        "FAILED",
+        "READY_FOR_COMPLETION_GATE"
+      ],
+      "title": "CompletionProjectionState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/control_completion_projection.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accepted_requirements": {
+      "minimum": 0,
+      "title": "Accepted Requirements",
+      "type": "integer"
+    },
+    "active_work_items": {
+      "minimum": 0,
+      "title": "Active Work Items",
+      "type": "integer"
+    },
+    "blocked_work_items": {
+      "minimum": 0,
+      "title": "Blocked Work Items",
+      "type": "integer"
+    },
+    "completed_work_items": {
+      "minimum": 0,
+      "title": "Completed Work Items",
+      "type": "integer"
+    },
+    "failed_work_items": {
+      "minimum": 0,
+      "title": "Failed Work Items",
+      "type": "integer"
+    },
+    "final_completion_gate_satisfied": {
+      "default": false,
+      "title": "Final Completion Gate Satisfied",
+      "type": "boolean"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "implemented_or_external_blocked_requirements": {
+      "minimum": 0,
+      "title": "Implemented Or External Blocked Requirements",
+      "type": "integer"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "projection_id": {
+      "title": "Projection Id",
+      "type": "string"
+    },
+    "ready_work_items": {
+      "minimum": 0,
+      "title": "Ready Work Items",
+      "type": "integer"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/CompletionProjectionState"
+    },
+    "total_work_items": {
+      "minimum": 0,
+      "title": "Total Work Items",
+      "type": "integer"
+    },
+    "verification_eligible": {
+      "title": "Verification Eligible",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "projection_id",
+    "project_id",
+    "state",
+    "total_work_items",
+    "completed_work_items",
+    "active_work_items",
+    "blocked_work_items",
+    "failed_work_items",
+    "accepted_requirements",
+    "implemented_or_external_blocked_requirements",
+    "ready_work_items",
+    "verification_eligible",
+    "reasons"
+  ],
+  "title": "CompletionProjection",
+  "type": "object"
+}

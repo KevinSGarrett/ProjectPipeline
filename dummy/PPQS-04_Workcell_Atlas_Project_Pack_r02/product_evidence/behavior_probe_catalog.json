@@ -1,0 +1,406 @@
+{
+  "probes": [
+    {
+      "actions": [
+        "Open the Project registry workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Project registry",
+      "observations_available_to_candidate": [
+        "projects are discoverable without leaking unrelated filesystem data",
+        "missing or nested repositories receive actionable diagnostics",
+        "Principal artifact category: project registry and selector"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-001",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Issue board workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Issue board",
+      "observations_available_to_candidate": [
+        "issue state and ordering survive restart",
+        "invalid transitions and stale writes do not overwrite newer state",
+        "Principal artifact category: issue board and persistence"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-002",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Workspace creation workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Workspace creation",
+      "observations_available_to_candidate": [
+        "workspace creation is atomic and traceable",
+        "partial workspaces are detected and recovered",
+        "Principal artifact category: workspace service and creation flow"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-003",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Git branch and worktree isolation workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Git branch and worktree isolation",
+      "observations_available_to_candidate": [
+        "parallel work remains isolated",
+        "unsafe cleanup and branch collisions are blocked",
+        "Principal artifact category: Git workspace adapter"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-004",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Agent provider profiles workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Agent provider profiles",
+      "observations_available_to_candidate": [
+        "supported providers can be selected and unavailable providers are explained",
+        "untrusted project content cannot change provider policy",
+        "Principal artifact category: provider registry and settings UI"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-005",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Session orchestration workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Session orchestration",
+      "observations_available_to_candidate": [
+        "session state survives application restart",
+        "duplicate start and unknown-result operations reconcile safely",
+        "Principal artifact category: session manager and event journal"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-006",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Terminal streaming workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Terminal streaming",
+      "observations_available_to_candidate": [
+        "output remains ordered and responsive",
+        "binary floods and orphaned processes are contained",
+        "Principal artifact category: terminal transport and component"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-007",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Diff review workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Diff review",
+      "observations_available_to_candidate": [
+        "diffs match Git truth and update after changes",
+        "large or malformed diffs degrade safely",
+        "Principal artifact category: diff service and viewer"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-008",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Inline review comments workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Inline review comments",
+      "observations_available_to_candidate": [
+        "comments preserve anchors or report drift",
+        "stale anchors are never silently applied to the wrong line",
+        "Principal artifact category: review comment model and UI"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-009",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Development server preview workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Development server preview",
+      "observations_available_to_candidate": [
+        "healthy previews open only for approved local origins",
+        "dead or hostile endpoints are isolated",
+        "Principal artifact category: dev-server manager and preview frame"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-010",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Embedded browser tools workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Embedded browser tools",
+      "observations_available_to_candidate": [
+        "browser tools operate without escaping security boundaries",
+        "unexpected origins and downloads are blocked",
+        "Principal artifact category: browser preview and inspector controls"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-011",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Source control integration workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Source control integration",
+      "observations_available_to_candidate": [
+        "displayed state reconciles to command results",
+        "dirty and detached states receive explicit handling",
+        "Principal artifact category: source-control status service"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-012",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Pull request workflow workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Pull request workflow",
+      "observations_available_to_candidate": [
+        "unknown write outcomes are reconciled before retry",
+        "external mutation never occurs without explicit approval",
+        "Principal artifact category: PR workflow and receipt store"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-013",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Agent feedback loop workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Agent feedback loop",
+      "observations_available_to_candidate": [
+        "feedback is attributable and ordered",
+        "prompt injection in repository content is not elevated to authority",
+        "Principal artifact category: feedback composer and context boundary"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-014",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Desktop packaging and updates workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Desktop packaging and updates",
+      "observations_available_to_candidate": [
+        "signed or hashed artifacts install and rollback safely",
+        "mismatched update metadata is rejected",
+        "Principal artifact category: desktop packaging and updater"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-015",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Configuration and secret boundaries workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Configuration and secret boundaries",
+      "observations_available_to_candidate": [
+        "configuration round-trips without secret disclosure",
+        "canary secrets never appear in logs or exported support bundles",
+        "Principal artifact category: settings store and redaction"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-016",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Remote access workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Remote access",
+      "observations_available_to_candidate": [
+        "authorized remote views work with explicit enablement",
+        "local services are not publicly exposed by default",
+        "Principal artifact category: remote access gateway and status"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-017",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Concurrency and conflict handling workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Concurrency and conflict handling",
+      "observations_available_to_candidate": [
+        "conflicts are deterministic and recoverable",
+        "last-writer-wins data loss is prohibited",
+        "Principal artifact category: concurrency controls and conflict UI"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-018",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Notifications and recovery workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Notifications and recovery",
+      "observations_available_to_candidate": [
+        "notifications link to authoritative state",
+        "duplicate notifications and false completion are suppressed",
+        "Principal artifact category: notification center and recovery director"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-019",
+      "source_implementation_visible": false
+    },
+    {
+      "actions": [
+        "Open the Accessibility responsive operation and handoff workflow",
+        "Perform one valid action",
+        "Perform one invalid or conflicting action",
+        "Restart or refresh state"
+      ],
+      "feature": "Accessibility responsive operation and handoff",
+      "observations_available_to_candidate": [
+        "critical flows work by keyboard and at supported viewport sizes",
+        "visual polish cannot hide inaccessible controls or missing evidence",
+        "Principal artifact category: accessible UI, docs, diagnostics, and release bundle"
+      ],
+      "preconditions": [
+        "Start from a reset reference profile",
+        "Use only synthetic repositories and accounts"
+      ],
+      "probe_id": "BB-WA-020",
+      "source_implementation_visible": false
+    }
+  ],
+  "product_alias": "Workcell Atlas",
+  "schema_version": "1.0.0"
+}

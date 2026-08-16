@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "authority": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "component_id": {
+      "pattern": "^COMP-[A-Z0-9-]+-[0-9]{3}$",
+      "type": "string"
+    },
+    "decision_ids": {
+      "items": {
+        "pattern": "^ADR-[0-9]{4}$",
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "depends_on": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "implementation_state": {
+      "enum": [
+        "IMPLEMENTED",
+        "PARTIALLY_IMPLEMENTED",
+        "PLANNED_ONLY"
+      ]
+    },
+    "interfaces_consumed": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "interfaces_provided": {
+      "type": "array"
+    },
+    "layer": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "requirement_ids": {
+      "items": {
+        "pattern": "^REQ-[A-Z0-9-]+-[0-9]{4}$",
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "responsibility": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "component_id",
+    "name",
+    "layer",
+    "responsibility",
+    "authority",
+    "requirement_ids",
+    "decision_ids",
+    "interfaces_provided",
+    "interfaces_consumed",
+    "depends_on",
+    "implementation_state"
+  ],
+  "title": "Architecture Component",
+  "type": "object"
+}

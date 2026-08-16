@@ -1,0 +1,8 @@
+{"authority": "BENCHMARK_OWNER", "content_sha256": "4b2300fb3a2d505ed7724f92c97b94ab859f0e2f7135a9864ccaf2dfd167096b", "path": "BENCHMARK_BRIEF.md", "source_id": "SRC-RP-BRIEF", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "content_sha256": "785a5936b6b8a8c939982797ff1c50046df9146bf2fae79903ecb5b12680012b", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-RP-CATALOG", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Truncated key metadata", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-RP-FEATURE-01", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Truncated configuration metadata", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-RP-FEATURE-02", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Error compatibility", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-RP-FEATURE-03", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Focused regression tests", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-RP-FEATURE-04", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Build format and scope discipline", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-RP-FEATURE-05", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Changelog and handoff", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-RP-FEATURE-06", "trust": "TRUSTED_NORMATIVE"}

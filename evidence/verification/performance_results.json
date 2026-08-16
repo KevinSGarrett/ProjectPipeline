@@ -1,0 +1,24 @@
+[
+  {
+    "budget_p95_ms": 7000,
+    "max_ms": 4848,
+    "p50_ms": 4824,
+    "p95_ms": 4848,
+    "passed": true,
+    "performance_id": "PERF-912D20FAD0186FC568F6",
+    "sample_count": 3,
+    "schema_version": "1.0.0",
+    "subject": "repository-validator"
+  },
+  {
+    "budget_p95_ms": 3000,
+    "max_ms": 1836,
+    "p50_ms": 1744,
+    "p95_ms": 1836,
+    "passed": true,
+    "performance_id": "PERF-5A1BDDDC74F627C91C45",
+    "sample_count": 7,
+    "schema_version": "1.0.0",
+    "subject": "project-pipeline-cli-help"
+  }
+]

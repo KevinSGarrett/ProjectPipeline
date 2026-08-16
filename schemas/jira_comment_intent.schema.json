@@ -1,0 +1,90 @@
+{
+  "$defs": {
+    "JiraCommentKind": {
+      "enum": [
+        "WORK_STARTED",
+        "DECISION",
+        "BLOCKER",
+        "SCOPE_CHANGE",
+        "REVIEW_REQUESTED",
+        "REVIEW_FINDING",
+        "RECOVERY_HANDOFF",
+        "VALIDATION_EVIDENCE",
+        "COMPLETION_SUMMARY"
+      ],
+      "title": "JiraCommentKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/jira_comment_intent.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "maxLength": 191,
+      "minLength": 3,
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "body": {
+      "maxLength": 12000,
+      "minLength": 10,
+      "title": "Body",
+      "type": "string"
+    },
+    "comment_intent_id": {
+      "title": "Comment Intent Id",
+      "type": "string"
+    },
+    "correlation_id": {
+      "maxLength": 191,
+      "minLength": 3,
+      "title": "Correlation Id",
+      "type": "string"
+    },
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "decision_references": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Decision References",
+      "type": "array"
+    },
+    "evidence_references": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence References",
+      "type": "array"
+    },
+    "kind": {
+      "$ref": "#/$defs/JiraCommentKind"
+    },
+    "local_id": {
+      "title": "Local Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "comment_intent_id",
+    "local_id",
+    "kind",
+    "body",
+    "actor_id",
+    "correlation_id"
+  ],
+  "title": "JiraCommentIntent",
+  "type": "object"
+}

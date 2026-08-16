@@ -1,0 +1,30 @@
+{
+  "adoption_candidate_count": 62,
+  "catalog_count": 116,
+  "catalog_review_complete": true,
+  "deep_or_focused_review_count": 23,
+  "disposition_counts": {
+    "ADAPT_COMPONENT": 14,
+    "ADOPT_DEPENDENCY": 48,
+    "MINE_ARCHITECTURE": 28,
+    "MINE_IMPLEMENTATION_PATTERN": 15,
+    "MINE_TEST_PATTERN": 3,
+    "NOT_RELEVANT": 3,
+    "REJECT": 5
+  },
+  "disposition_ledger_path": "provenance/catalog_dispositions.jsonl",
+  "evaluate_later_count": 0,
+  "gate_path": "provenance/upstream_adoption_gate.json",
+  "queue_path": "provenance/adoption_queue.json",
+  "rejected_or_not_relevant_count": 8,
+  "schema_version": "1.0.0",
+  "source_level_review_ids": [
+    "UPSTREAM-011",
+    "UPSTREAM-041",
+    "UPSTREAM-074",
+    "UPSTREAM-085",
+    "UPSTREAM-102",
+    "UPSTREAM-115"
+  ],
+  "terminal_disposition_count": 116
+}

@@ -1,0 +1,47 @@
+{
+  "$id": "https://project-pipeline.local/schemas/orchestration_workflow_signal.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "idempotency_key": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "signal_id": {
+      "title": "Signal Id",
+      "type": "string"
+    },
+    "signal_name": {
+      "maxLength": 160,
+      "minLength": 1,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$",
+      "title": "Signal Name",
+      "type": "string"
+    },
+    "workflow_id": {
+      "title": "Workflow Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "signal_id",
+    "workflow_id",
+    "signal_name",
+    "idempotency_key",
+    "observed_at_utc"
+  ],
+  "title": "WorkflowSignal",
+  "type": "object"
+}

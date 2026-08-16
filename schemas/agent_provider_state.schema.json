@@ -1,0 +1,82 @@
+{
+  "$defs": {
+    "ProviderRuntimeState": {
+      "enum": [
+        "HEALTHY",
+        "DEGRADED",
+        "RATE_LIMITED",
+        "QUOTA_LOW",
+        "BUDGET_EXHAUSTED",
+        "AUTH_FAILED",
+        "UNAVAILABLE",
+        "DISABLED",
+        "MAINTENANCE",
+        "RECOVERING"
+      ],
+      "title": "ProviderRuntimeState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/agent_provider_state.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "provider_id": {
+      "title": "Provider Id",
+      "type": "string"
+    },
+    "quota_remaining_milli": {
+      "anyOf": [
+        {
+          "maximum": 1000,
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Quota Remaining Milli"
+    },
+    "reason": {
+      "default": "",
+      "title": "Reason",
+      "type": "string"
+    },
+    "retry_after_utc": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Retry After Utc"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/ProviderRuntimeState"
+    }
+  },
+  "required": [
+    "provider_id",
+    "state",
+    "observed_at_utc"
+  ],
+  "title": "ProviderStateObservation",
+  "type": "object"
+}

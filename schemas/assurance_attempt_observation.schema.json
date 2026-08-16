@@ -1,0 +1,85 @@
+{
+  "$id": "https://project-pipeline.local/schemas/assurance_attempt_observation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "action_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Action Fingerprint",
+      "type": "string"
+    },
+    "attempt_number": {
+      "minimum": 1,
+      "title": "Attempt Number",
+      "type": "integer"
+    },
+    "failure_signature": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Failure Signature"
+    },
+    "novelty_dimensions": {
+      "default": [],
+      "items": {
+        "enum": [
+          "HYPOTHESIS",
+          "INPUT",
+          "TOOL",
+          "ENVIRONMENT",
+          "RECOVERY_STRATEGY"
+        ],
+        "type": "string"
+      },
+      "title": "Novelty Dimensions",
+      "type": "array"
+    },
+    "output_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Output Fingerprint",
+      "type": "string"
+    },
+    "progress_units": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Progress Units",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "State Fingerprint",
+      "type": "string"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "tool_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Tool Fingerprint",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_id",
+    "attempt_number",
+    "action_fingerprint",
+    "tool_fingerprint",
+    "output_fingerprint",
+    "state_fingerprint"
+  ],
+  "title": "AttemptObservation",
+  "type": "object"
+}

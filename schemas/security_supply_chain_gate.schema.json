@@ -1,0 +1,160 @@
+{
+  "$defs": {
+    "GateState": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED"
+      ],
+      "title": "GateState",
+      "type": "string"
+    },
+    "SupplyChainFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "blocking": {
+          "default": false,
+          "title": "Blocking",
+          "type": "boolean"
+        },
+        "evidence_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Evidence Path"
+        },
+        "finding_id": {
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/SupplyChainFindingKind"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/SupplyChainSeverity"
+        },
+        "source_tool": {
+          "title": "Source Tool",
+          "type": "string"
+        },
+        "subject": {
+          "title": "Subject",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finding_id",
+        "kind",
+        "severity",
+        "subject",
+        "message",
+        "source_tool"
+      ],
+      "title": "SupplyChainFinding",
+      "type": "object"
+    },
+    "SupplyChainFindingKind": {
+      "enum": [
+        "SECRET",
+        "VULNERABILITY",
+        "MISCONFIGURATION",
+        "LICENSE",
+        "PROVENANCE",
+        "INTEGRITY",
+        "CI_PERMISSION",
+        "ACTION_PINNING",
+        "SBOM",
+        "SIGNATURE"
+      ],
+      "title": "SupplyChainFindingKind",
+      "type": "string"
+    },
+    "SupplyChainSeverity": {
+      "enum": [
+        "INFO",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "SupplyChainSeverity",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/security_supply_chain_gate.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/SupplyChainFinding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "gate_id": {
+      "title": "Gate Id",
+      "type": "string"
+    },
+    "integrity_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Integrity Ids",
+      "type": "array"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "sbom_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Sbom Id"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/GateState"
+    }
+  },
+  "required": [
+    "gate_id",
+    "state",
+    "findings",
+    "reasons"
+  ],
+  "title": "SupplyChainGateResult",
+  "type": "object"
+}

@@ -1,0 +1,122 @@
+{
+  "$defs": {
+    "ContextSourceKind": {
+      "enum": [
+        "SOURCE",
+        "REQUIREMENT",
+        "PLAN",
+        "JIRA",
+        "DECISION",
+        "EVIDENCE",
+        "POLICY",
+        "INSTRUCTION",
+        "REPOSITORY_MAP",
+        "SOURCE_FILE",
+        "TEST",
+        "DIFF",
+        "REVIEW_RUBRIC",
+        "DOCUMENT",
+        "OTHER"
+      ],
+      "title": "ContextSourceKind",
+      "type": "string"
+    },
+    "ContextTrust": {
+      "enum": [
+        "GOVERNING",
+        "AUTHORITATIVE",
+        "SOURCE_CONTROLLED",
+        "VERIFIED_EXTERNAL",
+        "UNTRUSTED_REPOSITORY",
+        "UNTRUSTED_EXTERNAL"
+      ],
+      "title": "ContextTrust",
+      "type": "string"
+    },
+    "Sensitivity": {
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "title": "Sensitivity",
+      "type": "integer"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/context_candidate.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "content": {
+      "title": "Content",
+      "type": "string"
+    },
+    "context_key": {
+      "maxLength": 500,
+      "minLength": 1,
+      "title": "Context Key",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/ContextSourceKind"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Metadata",
+      "type": "object"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "relevance_tags": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Relevance Tags",
+      "type": "array"
+    },
+    "revision_id": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Revision Id",
+      "type": "string"
+    },
+    "sensitivity": {
+      "$ref": "#/$defs/Sensitivity",
+      "default": 1
+    },
+    "source_reference": {
+      "anyOf": [
+        {
+          "maxLength": 1000,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Source Reference"
+    },
+    "trust": {
+      "$ref": "#/$defs/ContextTrust"
+    }
+  },
+  "required": [
+    "context_key",
+    "kind",
+    "content",
+    "revision_id",
+    "observed_at_utc",
+    "trust"
+  ],
+  "title": "ContextCandidate",
+  "type": "object"
+}

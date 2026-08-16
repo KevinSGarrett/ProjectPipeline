@@ -1,0 +1,54 @@
+{
+  "$defs": {
+    "EligibilityState": {
+      "enum": [
+        "ELIGIBLE",
+        "ALREADY_ACTIVE",
+        "TERMINAL",
+        "BLOCKED",
+        "HUMAN_REQUIRED",
+        "EXTERNAL_BLOCKED",
+        "POLICY_DENIED"
+      ],
+      "title": "EligibilityState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/control_task_eligibility.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "eligible": {
+      "title": "Eligible",
+      "type": "boolean"
+    },
+    "reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/EligibilityState"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_id",
+    "state",
+    "eligible"
+  ],
+  "title": "TaskEligibility",
+  "type": "object"
+}

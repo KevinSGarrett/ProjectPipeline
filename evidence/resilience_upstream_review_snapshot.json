@@ -1,0 +1,108 @@
+{
+  "all_focused_review_complete": true,
+  "authority_boundary": "Project Pipeline retains deterministic control; no copied upstream source and no live external qualification claim.",
+  "candidate_upstream_ids": [
+    "UPSTREAM-040",
+    "UPSTREAM-058",
+    "UPSTREAM-068",
+    "UPSTREAM-072",
+    "UPSTREAM-082",
+    "UPSTREAM-090",
+    "UPSTREAM-093"
+  ],
+  "records": [
+    {
+      "copied_source_paths": [],
+      "inspection_state": "FOCUSED_REVIEW_COMPLETE",
+      "integration_paths": [
+        "src/project_pipeline/resilience/local_models.py",
+        "src/project_pipeline/upstream_integrations/resilience.py",
+        "tests/test_resilience_upstream_adapters.py"
+      ],
+      "license": "MIT",
+      "repository": "ggml-org/llama.cpp",
+      "upstream_id": "UPSTREAM-040",
+      "usage_state": "OPTIONAL_ADAPTER_IMPLEMENTED"
+    },
+    {
+      "copied_source_paths": [],
+      "inspection_state": "FOCUSED_REVIEW_COMPLETE",
+      "integration_paths": [
+        "src/project_pipeline/resilience/local_models.py",
+        "provenance/reviews/resilience_local_runtime_backup_review.md",
+        "tests/test_resilience_upstream_adapters.py"
+      ],
+      "license": "Apache-2.0",
+      "repository": "kvcache-ai/ktransformers",
+      "upstream_id": "UPSTREAM-058",
+      "usage_state": "IMPLEMENTATION_PATTERN_ADOPTED"
+    },
+    {
+      "copied_source_paths": [],
+      "inspection_state": "FOCUSED_REVIEW_COMPLETE",
+      "integration_paths": [
+        "src/project_pipeline/resilience/local_models.py",
+        "src/project_pipeline/upstream_integrations/resilience.py",
+        "tests/test_resilience_upstream_adapters.py"
+      ],
+      "license": "MIT",
+      "repository": "mostlygeek/llama-swap",
+      "upstream_id": "UPSTREAM-068",
+      "usage_state": "OPTIONAL_ADAPTER_IMPLEMENTED"
+    },
+    {
+      "copied_source_paths": [],
+      "inspection_state": "FOCUSED_REVIEW_COMPLETE",
+      "integration_paths": [
+        "src/project_pipeline/resilience/local_models.py",
+        "src/project_pipeline/upstream_integrations/resilience.py",
+        "tests/test_resilience_upstream_adapters.py"
+      ],
+      "license": "MIT",
+      "repository": "ollama/ollama",
+      "upstream_id": "UPSTREAM-072",
+      "usage_state": "OPTIONAL_ADAPTER_IMPLEMENTED"
+    },
+    {
+      "copied_source_paths": [],
+      "inspection_state": "FOCUSED_REVIEW_COMPLETE",
+      "integration_paths": [
+        "src/project_pipeline/resilience/backup.py",
+        "src/project_pipeline/upstream_integrations/resilience.py",
+        "tests/test_resilience_upstream_adapters.py"
+      ],
+      "license": "MIT",
+      "repository": "pgbackrest/pgbackrest",
+      "upstream_id": "UPSTREAM-082",
+      "usage_state": "OPTIONAL_ADAPTER_IMPLEMENTED"
+    },
+    {
+      "copied_source_paths": [],
+      "inspection_state": "FOCUSED_REVIEW_COMPLETE",
+      "integration_paths": [
+        "src/project_pipeline/resilience/backup.py",
+        "src/project_pipeline/upstream_integrations/resilience.py",
+        "tests/test_resilience_upstream_adapters.py"
+      ],
+      "license": "BSD-2-Clause",
+      "repository": "restic/restic",
+      "upstream_id": "UPSTREAM-090",
+      "usage_state": "OPTIONAL_ADAPTER_IMPLEMENTED"
+    },
+    {
+      "copied_source_paths": [],
+      "inspection_state": "FOCUSED_REVIEW_COMPLETE",
+      "integration_paths": [
+        "src/project_pipeline/upstream_integrations/resilience.py",
+        "src/project_pipeline/verification/external_tools.py",
+        "src/project_pipeline/verification/faults.py",
+        "tests/test_resilience_upstream_adapters.py"
+      ],
+      "license": "MIT",
+      "repository": "Shopify/toxiproxy",
+      "upstream_id": "UPSTREAM-093",
+      "usage_state": "OPTIONAL_ADAPTER_IMPLEMENTED"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

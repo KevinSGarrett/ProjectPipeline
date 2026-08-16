@@ -1,0 +1,120 @@
+{
+  "$defs": {
+    "SBOMComponent": {
+      "additionalProperties": false,
+      "properties": {
+        "component_id": {
+          "title": "Component Id",
+          "type": "string"
+        },
+        "component_type": {
+          "title": "Component Type",
+          "type": "string"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License"
+        },
+        "metadata_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Metadata Sha256"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source"
+        },
+        "version": {
+          "title": "Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "component_id",
+        "name",
+        "version",
+        "component_type"
+      ],
+      "title": "SBOMComponent",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/security_sbom.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "components": {
+      "items": {
+        "$ref": "#/$defs/SBOMComponent"
+      },
+      "title": "Components",
+      "type": "array"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "sbom_id": {
+      "title": "Sbom Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_manifest_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Source Manifest Sha256",
+      "type": "string"
+    }
+  },
+  "required": [
+    "sbom_id",
+    "project_id",
+    "source_manifest_sha256",
+    "components"
+  ],
+  "title": "SoftwareBillOfMaterials",
+  "type": "object"
+}

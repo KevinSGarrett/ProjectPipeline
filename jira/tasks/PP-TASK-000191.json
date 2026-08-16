@@ -1,0 +1,132 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000191-01",
+      "statement": "Submitting the same semantic command twice returns the original result without invoking its handler again, while semantic-key reuse fails closed.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_command_processor.py",
+        "method": "automated_behavior_and_evidence_validation",
+        "path": "tests/test_command_processor.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000191-02",
+      "statement": "The smoke journey emits typed transition and event records and verifies content-addressed artifact integrity.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline smoke --root .",
+        "method": "automated_behavior_and_evidence_validation",
+        "path": "evidence/repository_foundation_smoke.json",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000022",
+    "EVID-000024"
+  ],
+  "definition_of_done": [
+    "Implementation and configuration for the bounded objective are complete.",
+    "Acceptance criteria have current automated or machine-readable evidence.",
+    "Required behavior tests pass for the affected foundation.",
+    "Traceability, plans, Jira, schemas, and developer documentation are current.",
+    "Security, provenance, observability, and rollback effects are explicit.",
+    "Unavailable external verification is represented without inflating completion."
+  ],
+  "dependencies": [],
+  "description": "Extend the CLI with doctor, configuration, bootstrap, smoke, schema, dependency, quality, and validation commands; implement an atomic semantic idempotency journal and a content-addressed smoke journey.",
+  "evidence_required": [
+    "EVID-000022",
+    "EVID-000024"
+  ],
+  "exclusions": [
+    "No remote GitHub, Jira, AWS, package-index, or paid-service mutation is authorized.",
+    "No later persistent-state, durable-orchestration, scheduler, or Command Center capability is represented as complete."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/cli.py",
+    "src/project_pipeline/core/",
+    "src/project_pipeline/runtime/",
+    "src/project_pipeline/artifacts.py"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/cli.py",
+    "src/project_pipeline/core/",
+    "src/project_pipeline/runtime/",
+    "src/project_pipeline/artifacts.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "cli",
+    "bootstrap",
+    "idempotency",
+    "artifacts",
+    "evidence-backed"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25300",
+    "remote_key": "PP-331",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000191",
+  "objective": "Provide bounded diagnostics and a real local execution path that proves typed commands, idempotent replay, transitions, events, and artifact integrity.",
+  "observability_impact": "Record stable correlation, diagnostic, quality, test, and evidence identities for later operational telemetry.",
+  "owner_required_capability": "python_platform_engineering_quality_and_verification",
+  "parent": "PP-STORY-000060",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/15_platform_lifecycle/PLAN-LIFE-002_repository_engineering_foundation.md",
+      "end_line": 104,
+      "line_numbered_path": "plans/_line_numbered/PLAN-LIFE-002_repository_engineering_foundation.lines.txt",
+      "line_reference": "PLAN-LIFE-002:SEC-07:L000090-L000104",
+      "plan_id": "PLAN-LIFE-002",
+      "section_id": "PLAN-LIFE-002:SEC-07",
+      "start_line": 90
+    }
+  ],
+  "rationale": "This bounded repository-engineering work converts accepted plans into executable, tested, self-validating foundation behavior without claiming later runtime capabilities.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000060",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-331",
+  "required_tests": [
+    "TEST-COMMAND-001",
+    "TEST-COMMAND-002",
+    "TEST-COMMAND-003",
+    "TEST-COMMAND-004",
+    "TEST-RUNTIME-001",
+    "TEST-RUNTIME-002",
+    "TEST-RUNTIME-003",
+    "TEST-CLI-FOUNDATION-001",
+    "TEST-CLI-FOUNDATION-002",
+    "TEST-CLI-FOUNDATION-003"
+  ],
+  "requirement_ids": [
+    "REQ-ARCH-0002",
+    "REQ-ARCH-0010",
+    "REQ-SEC-0003",
+    "REQ-SEC-0023",
+    "REQ-OPS-0019"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Revert the bounded package/configuration changes, remove generated local runtime state, regenerate indexes and manifests, and retain the prior cumulative archive.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Provide bounded diagnostics and a real local execution path that proves typed commands, idempotent replay, transitions, events, and artifact integrity."
+  ],
+  "security_impact": "Preserve least privilege, secret references, dependency provenance, input validation, and fail-closed external-effect boundaries.",
+  "source_references": [
+    "GOV-001:L001219-L001285",
+    "SRC-017:L000072-L000141"
+  ],
+  "state": "BACKLOG",
+  "title": "Implement bootstrap CLI and idempotent executable core slice",
+  "upstream_dependencies": []
+}

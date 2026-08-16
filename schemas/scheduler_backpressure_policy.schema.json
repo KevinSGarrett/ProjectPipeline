@@ -1,0 +1,86 @@
+{
+  "$id": "https://project-pipeline.local/schemas/scheduler_backpressure_policy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "brownout_lag_seconds": {
+      "default": 120,
+      "minimum": 0,
+      "title": "Brownout Lag Seconds",
+      "type": "number"
+    },
+    "brownout_queue_depth": {
+      "default": 200,
+      "minimum": 1,
+      "title": "Brownout Queue Depth",
+      "type": "integer"
+    },
+    "congested_lag_seconds": {
+      "default": 30,
+      "minimum": 0,
+      "title": "Congested Lag Seconds",
+      "type": "number"
+    },
+    "congested_lane_fraction": {
+      "default": 0.5,
+      "exclusiveMinimum": 0,
+      "maximum": 1,
+      "title": "Congested Lane Fraction",
+      "type": "number"
+    },
+    "congested_queue_depth": {
+      "default": 50,
+      "minimum": 1,
+      "title": "Congested Queue Depth",
+      "type": "integer"
+    },
+    "disk_brownout_free_percent": {
+      "default": 10,
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Disk Brownout Free Percent",
+      "type": "number"
+    },
+    "disk_halt_free_percent": {
+      "default": 3,
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Disk Halt Free Percent",
+      "type": "number"
+    },
+    "halt_queue_depth": {
+      "default": 1000,
+      "minimum": 1,
+      "title": "Halt Queue Depth",
+      "type": "integer"
+    },
+    "memory_brownout_percent": {
+      "default": 90,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Memory Brownout Percent",
+      "type": "number"
+    },
+    "memory_halt_percent": {
+      "default": 97,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Memory Halt Percent",
+      "type": "number"
+    },
+    "retry_storm_brownout_count": {
+      "default": 8,
+      "minimum": 1,
+      "title": "Retry Storm Brownout Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "title": "BackpressurePolicy",
+  "type": "object"
+}

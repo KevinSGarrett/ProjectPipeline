@@ -1,0 +1,75 @@
+{
+  "$defs": {
+    "ReviewState": {
+      "enum": [
+        "APPROVED",
+        "CHANGES_REQUESTED",
+        "COMMENTED",
+        "DISMISSED",
+        "PENDING"
+      ],
+      "title": "ReviewState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_pull_request_review.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "author": {
+      "title": "Author",
+      "type": "string"
+    },
+    "commit_sha": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Commit Sha"
+    },
+    "review_id": {
+      "title": "Review Id",
+      "type": "string"
+    },
+    "review_node_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Review Node Id"
+    },
+    "state": {
+      "$ref": "#/$defs/ReviewState"
+    },
+    "submitted_at_utc": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Submitted At Utc"
+    }
+  },
+  "required": [
+    "review_id",
+    "author",
+    "state"
+  ],
+  "title": "PullRequestReview",
+  "type": "object"
+}

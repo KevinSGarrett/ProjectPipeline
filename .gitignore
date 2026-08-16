@@ -1,0 +1,145 @@
+
+# Python bytecode and tool caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+.cache/
+.ipynb_checkpoints/
+
+# Test, coverage, and profiling output
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+junit*.xml
+*.prof
+
+# Virtual environments and local Python tooling
+.venv/
+venv/
+env/
+ENV/
+.direnv/
+.python-version.local
+
+# Python build and packaging output
+build/
+dist/
+.eggs/
+*.egg
+*.egg-info/
+pip-wheel-metadata/
+MANIFEST
+
+# JavaScript, browser-test, and frontend output
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/unplugged/
+.next/
+.nuxt/
+.svelte-kit/
+.parcel-cache/
+.vite/
+playwright-report/
+test-results/
+blob-report/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Terraform local state and provider downloads
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+!.env.sample
+!.env.template
+*.local.env
+.secrets/
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Runtime state and local databases
+/.local/
+/state/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+*.sqlite-journal
+*.pid
+*.pid.lock
+*.log
+
+# Local AI-assistant/session state. The repository-owned /.agents/ instruction
+# skills are intentionally tracked and must not be covered by these rules.
+/.codex*
+/.claude/
+/.cursor/
+/.aider.chat.history.md
+/.aider.input.history
+
+# Local working corpora and recoverable Codex backups
+/.codex_backups/
+/Github_Repo/
+
+# Generated release archives
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# IDE and editor state
+.vscode/
+.idea/
+.fleet/
+.vs/
+*.code-workspace
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.swp
+*.swo
+*~
+
+# Operating-system metadata
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Temporary and patch-recovery files
+*.tmp
+*.temp
+*.bak
+*.orig
+*.rej

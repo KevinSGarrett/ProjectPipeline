@@ -1,0 +1,114 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000106-01",
+      "statement": "Every linked requirement is explicitly dispositioned, mapped, and represented by the stated implementation or planned artifacts.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000106-02",
+      "statement": "Applicable behavior-specific tests and evidence support completion; unavailable external verification remains explicitly blocked.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000129",
+    "EVID-000130",
+    "EVID-000133",
+    "EVID-000134"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement and verify the source-grounded requirements grouped under human recovery for Resilience, Recovery, and Disaster Readiness.",
+  "evidence_required": [
+    "EVID-000129",
+    "EVID-000130"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "STORY",
+  "labels": [
+    "capability-story",
+    "domain-res",
+    "cluster-human-recovery"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25047",
+    "remote_key": "PP-78",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-STORY-000106",
+  "objective": "Deliver the human recovery capability for Resilience, Recovery, and Disaster Readiness.",
+  "observability_impact": "Record structured validation, state, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-EPIC-000023",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md",
+      "end_line": 23,
+      "line_numbered_path": "plans/_line_numbered/PLAN-RES-001_resilience_recovery.lines.txt",
+      "line_reference": "PLAN-RES-001:SEC-04:L000020-L000023",
+      "plan_id": "PLAN-RES-001",
+      "section_id": "PLAN-RES-001:SEC-04",
+      "start_line": 20
+    }
+  ],
+  "rationale": "This work is required to convert source-grounded requirements into bounded implementation, verification, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-EPIC-000023",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-78",
+  "required_tests": [
+    "TEST-RES-FAILOVER-005",
+    "TEST-RES-VALIDATION-001"
+  ],
+  "requirement_ids": [
+    "REQ-RES-0022",
+    "REQ-RES-0023"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the human recovery capability for Resilience, Recovery, and Disaster Readiness."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, data-egress, and external-mutation effects.",
+  "source_references": [
+    "SRC-009:L000026-L000026",
+    "SRC-015:L000589-L000661"
+  ],
+  "state": "BACKLOG",
+  "title": "Human Recovery \u2014 Resilience, Recovery, and Disaster Readiness",
+  "upstream_dependencies": []
+}

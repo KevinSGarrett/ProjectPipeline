@@ -1,0 +1,6770 @@
+{
+  "control_status": {
+    "completion_state": "INCOMPLETE",
+    "latest_snapshot_at_utc": "2026-08-15T04:53:37.604974+00:00",
+    "latest_snapshot_id": "CTRL-C269A911A0E5FBDD4DD1",
+    "project_id": "PROJECT-PIPELINE",
+    "ready_count": 88,
+    "schema_version": "1.0.0",
+    "scope_finding_count": 0,
+    "snapshot_count": 1
+  },
+  "database": ":memory:",
+  "snapshot": {
+    "completion": {
+      "accepted_requirements": 351,
+      "active_work_items": 30,
+      "blocked_work_items": 0,
+      "completed_work_items": 113,
+      "failed_work_items": 0,
+      "final_completion_gate_satisfied": false,
+      "generated_at_utc": "2026-08-15T04:53:37.603358Z",
+      "implemented_or_external_blocked_requirements": 66,
+      "project_id": "PROJECT-PIPELINE",
+      "projection_id": "COMPLETE-FAE817E9A6914A7952AE",
+      "ready_work_items": 88,
+      "reasons": [
+        "127 work items are not terminal",
+        "285 accepted requirements are not implemented or externally blocked",
+        "88 independent work items are ready to continue"
+      ],
+      "schema_version": "1.0.0",
+      "state": "INCOMPLETE",
+      "total_work_items": 240,
+      "verification_eligible": false
+    },
+    "eligibility": [
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000001"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000003"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000005"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000007"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000009"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000011"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000013"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000015"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000017"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000019"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000021"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000023"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000025"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000027"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000029"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000031"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000033"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "POLICY_DENIED",
+        "task_id": "PP-EPIC-000035"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000002"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000004"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000006"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000008"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000010"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000012"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000014"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000016"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000018"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000020"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000022"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000024"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000026"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000028"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000030"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000032"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000034"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000036"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000049"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000050"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000051"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000052"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000053"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000054"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000055"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000056"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000057"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000058"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000059"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000060"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000061"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000062"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000063"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000064"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000065"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000066"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000067"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000068"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000069"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000070"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000071"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000072"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000073"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000074"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000075"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000076"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000077"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000078"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000079"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000080"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000081"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000082"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000083"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000084"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000085"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000086"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000087"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000088"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000089"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000090"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000091"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000092"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000093"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000094"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000095"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000096"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000097"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000098"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000099"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000100"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000101"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000102"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000103"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000104"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000105"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000106"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000107"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000108"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000109"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000110"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000111"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000112"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000113"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000114"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000115"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000116"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000117"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000118"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000119"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000120"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000121"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000122"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000123"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000124"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000125"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000126"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000127"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000128"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000129"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000130"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000131"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000132"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-STORY-000133"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000134"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000135"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000136"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-STORY-000137"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000045"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000046"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000047"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-SUBTASK-000048"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000139"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000141"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000143"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000145"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000147"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000149"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000151"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000153"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000182"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000183"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000184"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000185"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000037"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000038"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000039"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000040"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000041"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000042"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000043"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ALREADY_ACTIVE",
+        "task_id": "PP-TASK-000044"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000138"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000140"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000142"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000144"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000146"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000148"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000150"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000152"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000154"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000155"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000156"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000157"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000158"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000159"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000160"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000161"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000162"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000163"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000164"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000165"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000166"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000167"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000168"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000169"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000170"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000171"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000172"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000173"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000174"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000175"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000176"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000177"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000178"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000179"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000180"
+      },
+      {
+        "eligible": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "ELIGIBLE",
+        "task_id": "PP-TASK-000181"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000186"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000187"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000188"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000189"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000190"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000191"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000192"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000193"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000194"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000195"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000196"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000197"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000198"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000199"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000200"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000201"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000202"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000203"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000204"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000205"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000206"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000207"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000208"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000209"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000210"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000211"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000212"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000213"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000214"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000215"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000216"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000217"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000218"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000219"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000220"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000221"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000222"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000223"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000224"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000225"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000226"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000227"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000228"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000229"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000230"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000231"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000232"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000233"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000234"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000235"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000236"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000237"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000238"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000239"
+      },
+      {
+        "eligible": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000240"
+      }
+    ],
+    "generated_at_utc": "2026-08-15T04:53:37.604974Z",
+    "project_id": "PROJECT-PIPELINE",
+    "readiness": [
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000001",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000003",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000005",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000007",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000009",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000011",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000013",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000015",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000017",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000019",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000021",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000023",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000025",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000027",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000029",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000031",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000033",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "epic is a structural work container and is not directly executable"
+        ],
+        "schema_version": "1.0.0",
+        "state": "NOT_ELIGIBLE",
+        "task_id": "PP-EPIC-000035",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000002",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000004",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000006",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000008",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000010",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000012",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000014",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000016",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000018",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000020",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000022",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000024",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000026",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000028",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000030",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000032",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000034",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000036",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000049",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000050",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000051",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000052",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000053",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000054",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000055",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000056",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000057",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000058",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000059",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000060",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000061",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000062",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000063",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000064",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000065",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000066",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000067",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000068",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000069",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000070",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000071",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000072",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000073",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000074",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000075",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000076",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000077",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000078",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000079",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000080",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000081",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000082",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000083",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000084",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000085",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000086",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000087",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000088",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000089",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000090",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000091",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000092",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000093",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000094",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000095",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000096",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000097",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000098",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000099",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000100",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000101",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000102",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000103",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000104",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000105",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000106",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000107",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000108",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000109",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000110",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000111",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000112",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000113",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000114",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000115",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000116",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000117",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000118",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000119",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000120",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000121",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000122",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000123",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000124",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000125",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000126",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000127",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000128",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000129",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000130",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000131",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-STORY-000132",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-STORY-000133",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000134",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000135",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000136",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-STORY-000137",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000045",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000046",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000047",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-SUBTASK-000048",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000139",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000141",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000143",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000145",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000147",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000149",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000151",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000153",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000182",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000183",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000184",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-SUBTASK-000185",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000037",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000038",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000039",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000040",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000041",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000042",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000043",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task already has active execution state: IN_PROGRESS"
+        ],
+        "schema_version": "1.0.0",
+        "state": "ACTIVE",
+        "task_id": "PP-TASK-000044",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000138",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000140",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000142",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000144",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000146",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000148",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000150",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000152",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000154",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000155",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000156",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000157",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000158",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000159",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000160",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000161",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000162",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000163",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000164",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000165",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000166",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000167",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000168",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000169",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000170",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000171",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000172",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000173",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000174",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000175",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000176",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000177",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000178",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000179",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000180",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": true,
+        "reasons": [],
+        "schema_version": "1.0.0",
+        "state": "READY",
+        "task_id": "PP-TASK-000181",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000186",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000187",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000188",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000189",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000190",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000191",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000192",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000193",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000194",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000195",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000196",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000197",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000198",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000199",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000200",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000201",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000202",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000203",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000204",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000205",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000206",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000207",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000208",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000209",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000210",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000211",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000212",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000213",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000214",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000215",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000216",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000217",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000218",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000219",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000220",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000221",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000222",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000223",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000224",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000225",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000226",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000227",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000228",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000229",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000230",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000231",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000232",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000233",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000234",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000235",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000236",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000237",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000238",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000239",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      },
+      {
+        "ready": false,
+        "reasons": [
+          "task is terminal: DONE"
+        ],
+        "schema_version": "1.0.0",
+        "state": "TERMINAL",
+        "task_id": "PP-TASK-000240",
+        "unresolved_blockers": [],
+        "unresolved_dependencies": []
+      }
+    ],
+    "schema_version": "1.0.0",
+    "scope": {
+      "findings": [],
+      "fingerprint": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "generated_at_utc": "2026-08-15T04:53:37.596122Z",
+      "project_id": "PROJECT-PIPELINE",
+      "report_id": "SCOPE-235673A1CC9ACA01E2F0",
+      "requirement_count": 351,
+      "schema_version": "1.0.0",
+      "work_item_count": 240
+    },
+    "sequence": {
+      "active_count": 21,
+      "blocked_count": 0,
+      "critical_path": {
+        "duration_source": "DEFAULT_HEURISTIC",
+        "earliest_finish_minutes": {
+          "PP-EPIC-000001": 0,
+          "PP-EPIC-000003": 0,
+          "PP-EPIC-000005": 0,
+          "PP-EPIC-000007": 0,
+          "PP-EPIC-000009": 0,
+          "PP-EPIC-000011": 0,
+          "PP-EPIC-000013": 0,
+          "PP-EPIC-000015": 0,
+          "PP-EPIC-000017": 0,
+          "PP-EPIC-000019": 0,
+          "PP-EPIC-000021": 0,
+          "PP-EPIC-000023": 0,
+          "PP-EPIC-000025": 0,
+          "PP-EPIC-000027": 0,
+          "PP-EPIC-000029": 0,
+          "PP-EPIC-000031": 0,
+          "PP-EPIC-000033": 0,
+          "PP-EPIC-000035": 0,
+          "PP-STORY-000002": 60,
+          "PP-STORY-000004": 0,
+          "PP-STORY-000006": 60,
+          "PP-STORY-000008": 60,
+          "PP-STORY-000010": 60,
+          "PP-STORY-000012": 60,
+          "PP-STORY-000014": 60,
+          "PP-STORY-000016": 60,
+          "PP-STORY-000018": 60,
+          "PP-STORY-000020": 60,
+          "PP-STORY-000022": 60,
+          "PP-STORY-000024": 60,
+          "PP-STORY-000026": 60,
+          "PP-STORY-000028": 60,
+          "PP-STORY-000030": 60,
+          "PP-STORY-000032": 60,
+          "PP-STORY-000034": 60,
+          "PP-STORY-000036": 60,
+          "PP-STORY-000049": 60,
+          "PP-STORY-000050": 0,
+          "PP-STORY-000051": 60,
+          "PP-STORY-000052": 0,
+          "PP-STORY-000053": 0,
+          "PP-STORY-000054": 0,
+          "PP-STORY-000055": 60,
+          "PP-STORY-000056": 0,
+          "PP-STORY-000057": 0,
+          "PP-STORY-000058": 0,
+          "PP-STORY-000059": 0,
+          "PP-STORY-000060": 60,
+          "PP-STORY-000061": 0,
+          "PP-STORY-000062": 0,
+          "PP-STORY-000063": 0,
+          "PP-STORY-000064": 0,
+          "PP-STORY-000065": 60,
+          "PP-STORY-000066": 60,
+          "PP-STORY-000067": 60,
+          "PP-STORY-000068": 60,
+          "PP-STORY-000069": 60,
+          "PP-STORY-000070": 60,
+          "PP-STORY-000071": 60,
+          "PP-STORY-000072": 60,
+          "PP-STORY-000073": 60,
+          "PP-STORY-000074": 60,
+          "PP-STORY-000075": 60,
+          "PP-STORY-000076": 60,
+          "PP-STORY-000077": 60,
+          "PP-STORY-000078": 60,
+          "PP-STORY-000079": 60,
+          "PP-STORY-000080": 60,
+          "PP-STORY-000081": 60,
+          "PP-STORY-000082": 60,
+          "PP-STORY-000083": 60,
+          "PP-STORY-000084": 60,
+          "PP-STORY-000085": 60,
+          "PP-STORY-000086": 60,
+          "PP-STORY-000087": 60,
+          "PP-STORY-000088": 60,
+          "PP-STORY-000089": 60,
+          "PP-STORY-000090": 60,
+          "PP-STORY-000091": 60,
+          "PP-STORY-000092": 60,
+          "PP-STORY-000093": 60,
+          "PP-STORY-000094": 60,
+          "PP-STORY-000095": 60,
+          "PP-STORY-000096": 60,
+          "PP-STORY-000097": 60,
+          "PP-STORY-000098": 60,
+          "PP-STORY-000099": 60,
+          "PP-STORY-000100": 60,
+          "PP-STORY-000101": 60,
+          "PP-STORY-000102": 60,
+          "PP-STORY-000103": 60,
+          "PP-STORY-000104": 60,
+          "PP-STORY-000105": 60,
+          "PP-STORY-000106": 60,
+          "PP-STORY-000107": 60,
+          "PP-STORY-000108": 60,
+          "PP-STORY-000109": 60,
+          "PP-STORY-000110": 60,
+          "PP-STORY-000111": 60,
+          "PP-STORY-000112": 60,
+          "PP-STORY-000113": 60,
+          "PP-STORY-000114": 60,
+          "PP-STORY-000115": 60,
+          "PP-STORY-000116": 60,
+          "PP-STORY-000117": 60,
+          "PP-STORY-000118": 60,
+          "PP-STORY-000119": 60,
+          "PP-STORY-000120": 60,
+          "PP-STORY-000121": 60,
+          "PP-STORY-000122": 60,
+          "PP-STORY-000123": 60,
+          "PP-STORY-000124": 60,
+          "PP-STORY-000125": 0,
+          "PP-STORY-000126": 60,
+          "PP-STORY-000127": 60,
+          "PP-STORY-000128": 60,
+          "PP-STORY-000129": 60,
+          "PP-STORY-000130": 60,
+          "PP-STORY-000131": 0,
+          "PP-STORY-000132": 0,
+          "PP-STORY-000133": 60,
+          "PP-STORY-000134": 60,
+          "PP-STORY-000135": 60,
+          "PP-STORY-000136": 60,
+          "PP-STORY-000137": 60,
+          "PP-SUBTASK-000045": 0,
+          "PP-SUBTASK-000046": 0,
+          "PP-SUBTASK-000047": 0,
+          "PP-SUBTASK-000048": 60,
+          "PP-SUBTASK-000139": 0,
+          "PP-SUBTASK-000141": 0,
+          "PP-SUBTASK-000143": 0,
+          "PP-SUBTASK-000145": 0,
+          "PP-SUBTASK-000147": 0,
+          "PP-SUBTASK-000149": 0,
+          "PP-SUBTASK-000151": 0,
+          "PP-SUBTASK-000153": 0,
+          "PP-SUBTASK-000182": 0,
+          "PP-SUBTASK-000183": 0,
+          "PP-SUBTASK-000184": 0,
+          "PP-SUBTASK-000185": 0,
+          "PP-TASK-000037": 0,
+          "PP-TASK-000038": 0,
+          "PP-TASK-000039": 0,
+          "PP-TASK-000040": 0,
+          "PP-TASK-000041": 0,
+          "PP-TASK-000042": 0,
+          "PP-TASK-000043": 0,
+          "PP-TASK-000044": 60,
+          "PP-TASK-000138": 0,
+          "PP-TASK-000140": 0,
+          "PP-TASK-000142": 0,
+          "PP-TASK-000144": 0,
+          "PP-TASK-000146": 0,
+          "PP-TASK-000148": 0,
+          "PP-TASK-000150": 0,
+          "PP-TASK-000152": 0,
+          "PP-TASK-000154": 0,
+          "PP-TASK-000155": 0,
+          "PP-TASK-000156": 0,
+          "PP-TASK-000157": 0,
+          "PP-TASK-000158": 0,
+          "PP-TASK-000159": 0,
+          "PP-TASK-000160": 0,
+          "PP-TASK-000161": 60,
+          "PP-TASK-000162": 60,
+          "PP-TASK-000163": 60,
+          "PP-TASK-000164": 60,
+          "PP-TASK-000165": 60,
+          "PP-TASK-000166": 0,
+          "PP-TASK-000167": 60,
+          "PP-TASK-000168": 60,
+          "PP-TASK-000169": 60,
+          "PP-TASK-000170": 60,
+          "PP-TASK-000171": 60,
+          "PP-TASK-000172": 60,
+          "PP-TASK-000173": 0,
+          "PP-TASK-000174": 0,
+          "PP-TASK-000175": 0,
+          "PP-TASK-000176": 60,
+          "PP-TASK-000177": 0,
+          "PP-TASK-000178": 60,
+          "PP-TASK-000179": 60,
+          "PP-TASK-000180": 60,
+          "PP-TASK-000181": 60,
+          "PP-TASK-000186": 0,
+          "PP-TASK-000187": 0,
+          "PP-TASK-000188": 0,
+          "PP-TASK-000189": 0,
+          "PP-TASK-000190": 0,
+          "PP-TASK-000191": 0,
+          "PP-TASK-000192": 0,
+          "PP-TASK-000193": 0,
+          "PP-TASK-000194": 0,
+          "PP-TASK-000195": 0,
+          "PP-TASK-000196": 0,
+          "PP-TASK-000197": 0,
+          "PP-TASK-000198": 0,
+          "PP-TASK-000199": 0,
+          "PP-TASK-000200": 0,
+          "PP-TASK-000201": 0,
+          "PP-TASK-000202": 0,
+          "PP-TASK-000203": 0,
+          "PP-TASK-000204": 0,
+          "PP-TASK-000205": 0,
+          "PP-TASK-000206": 0,
+          "PP-TASK-000207": 0,
+          "PP-TASK-000208": 0,
+          "PP-TASK-000209": 0,
+          "PP-TASK-000210": 0,
+          "PP-TASK-000211": 0,
+          "PP-TASK-000212": 0,
+          "PP-TASK-000213": 0,
+          "PP-TASK-000214": 0,
+          "PP-TASK-000215": 0,
+          "PP-TASK-000216": 0,
+          "PP-TASK-000217": 0,
+          "PP-TASK-000218": 0,
+          "PP-TASK-000219": 0,
+          "PP-TASK-000220": 0,
+          "PP-TASK-000221": 0,
+          "PP-TASK-000222": 0,
+          "PP-TASK-000223": 0,
+          "PP-TASK-000224": 0,
+          "PP-TASK-000225": 0,
+          "PP-TASK-000226": 0,
+          "PP-TASK-000227": 0,
+          "PP-TASK-000228": 0,
+          "PP-TASK-000229": 0,
+          "PP-TASK-000230": 0,
+          "PP-TASK-000231": 0,
+          "PP-TASK-000232": 0,
+          "PP-TASK-000233": 0,
+          "PP-TASK-000234": 0,
+          "PP-TASK-000235": 0,
+          "PP-TASK-000236": 0,
+          "PP-TASK-000237": 0,
+          "PP-TASK-000238": 0,
+          "PP-TASK-000239": 0,
+          "PP-TASK-000240": 0
+        },
+        "path": [
+          "PP-TASK-000181"
+        ],
+        "schema_version": "1.0.0",
+        "slack_minutes": {
+          "PP-EPIC-000001": 60,
+          "PP-EPIC-000003": 60,
+          "PP-EPIC-000005": 60,
+          "PP-EPIC-000007": 60,
+          "PP-EPIC-000009": 60,
+          "PP-EPIC-000011": 60,
+          "PP-EPIC-000013": 60,
+          "PP-EPIC-000015": 60,
+          "PP-EPIC-000017": 60,
+          "PP-EPIC-000019": 60,
+          "PP-EPIC-000021": 60,
+          "PP-EPIC-000023": 60,
+          "PP-EPIC-000025": 60,
+          "PP-EPIC-000027": 60,
+          "PP-EPIC-000029": 60,
+          "PP-EPIC-000031": 60,
+          "PP-EPIC-000033": 60,
+          "PP-EPIC-000035": 60,
+          "PP-STORY-000002": 0,
+          "PP-STORY-000004": 60,
+          "PP-STORY-000006": 0,
+          "PP-STORY-000008": 0,
+          "PP-STORY-000010": 0,
+          "PP-STORY-000012": 0,
+          "PP-STORY-000014": 0,
+          "PP-STORY-000016": 0,
+          "PP-STORY-000018": 0,
+          "PP-STORY-000020": 0,
+          "PP-STORY-000022": 0,
+          "PP-STORY-000024": 0,
+          "PP-STORY-000026": 0,
+          "PP-STORY-000028": 0,
+          "PP-STORY-000030": 0,
+          "PP-STORY-000032": 0,
+          "PP-STORY-000034": 0,
+          "PP-STORY-000036": 0,
+          "PP-STORY-000049": 0,
+          "PP-STORY-000050": 60,
+          "PP-STORY-000051": 0,
+          "PP-STORY-000052": 60,
+          "PP-STORY-000053": 60,
+          "PP-STORY-000054": 60,
+          "PP-STORY-000055": 0,
+          "PP-STORY-000056": 60,
+          "PP-STORY-000057": 60,
+          "PP-STORY-000058": 60,
+          "PP-STORY-000059": 60,
+          "PP-STORY-000060": 0,
+          "PP-STORY-000061": 60,
+          "PP-STORY-000062": 60,
+          "PP-STORY-000063": 60,
+          "PP-STORY-000064": 60,
+          "PP-STORY-000065": 0,
+          "PP-STORY-000066": 0,
+          "PP-STORY-000067": 0,
+          "PP-STORY-000068": 0,
+          "PP-STORY-000069": 0,
+          "PP-STORY-000070": 0,
+          "PP-STORY-000071": 0,
+          "PP-STORY-000072": 0,
+          "PP-STORY-000073": 0,
+          "PP-STORY-000074": 0,
+          "PP-STORY-000075": 0,
+          "PP-STORY-000076": 0,
+          "PP-STORY-000077": 0,
+          "PP-STORY-000078": 0,
+          "PP-STORY-000079": 0,
+          "PP-STORY-000080": 0,
+          "PP-STORY-000081": 0,
+          "PP-STORY-000082": 0,
+          "PP-STORY-000083": 0,
+          "PP-STORY-000084": 0,
+          "PP-STORY-000085": 0,
+          "PP-STORY-000086": 0,
+          "PP-STORY-000087": 0,
+          "PP-STORY-000088": 0,
+          "PP-STORY-000089": 0,
+          "PP-STORY-000090": 0,
+          "PP-STORY-000091": 0,
+          "PP-STORY-000092": 0,
+          "PP-STORY-000093": 0,
+          "PP-STORY-000094": 0,
+          "PP-STORY-000095": 0,
+          "PP-STORY-000096": 0,
+          "PP-STORY-000097": 0,
+          "PP-STORY-000098": 0,
+          "PP-STORY-000099": 0,
+          "PP-STORY-000100": 0,
+          "PP-STORY-000101": 0,
+          "PP-STORY-000102": 0,
+          "PP-STORY-000103": 0,
+          "PP-STORY-000104": 0,
+          "PP-STORY-000105": 0,
+          "PP-STORY-000106": 0,
+          "PP-STORY-000107": 0,
+          "PP-STORY-000108": 0,
+          "PP-STORY-000109": 0,
+          "PP-STORY-000110": 0,
+          "PP-STORY-000111": 0,
+          "PP-STORY-000112": 0,
+          "PP-STORY-000113": 0,
+          "PP-STORY-000114": 0,
+          "PP-STORY-000115": 0,
+          "PP-STORY-000116": 0,
+          "PP-STORY-000117": 0,
+          "PP-STORY-000118": 0,
+          "PP-STORY-000119": 0,
+          "PP-STORY-000120": 0,
+          "PP-STORY-000121": 0,
+          "PP-STORY-000122": 0,
+          "PP-STORY-000123": 0,
+          "PP-STORY-000124": 0,
+          "PP-STORY-000125": 60,
+          "PP-STORY-000126": 0,
+          "PP-STORY-000127": 0,
+          "PP-STORY-000128": 0,
+          "PP-STORY-000129": 0,
+          "PP-STORY-000130": 0,
+          "PP-STORY-000131": 60,
+          "PP-STORY-000132": 60,
+          "PP-STORY-000133": 0,
+          "PP-STORY-000134": 0,
+          "PP-STORY-000135": 0,
+          "PP-STORY-000136": 0,
+          "PP-STORY-000137": 0,
+          "PP-SUBTASK-000045": 60,
+          "PP-SUBTASK-000046": 60,
+          "PP-SUBTASK-000047": 60,
+          "PP-SUBTASK-000048": 0,
+          "PP-SUBTASK-000139": 60,
+          "PP-SUBTASK-000141": 60,
+          "PP-SUBTASK-000143": 60,
+          "PP-SUBTASK-000145": 60,
+          "PP-SUBTASK-000147": 60,
+          "PP-SUBTASK-000149": 60,
+          "PP-SUBTASK-000151": 60,
+          "PP-SUBTASK-000153": 60,
+          "PP-SUBTASK-000182": 60,
+          "PP-SUBTASK-000183": 60,
+          "PP-SUBTASK-000184": 60,
+          "PP-SUBTASK-000185": 60,
+          "PP-TASK-000037": 60,
+          "PP-TASK-000038": 60,
+          "PP-TASK-000039": 60,
+          "PP-TASK-000040": 0,
+          "PP-TASK-000041": 0,
+          "PP-TASK-000042": 0,
+          "PP-TASK-000043": 0,
+          "PP-TASK-000044": 0,
+          "PP-TASK-000138": 60,
+          "PP-TASK-000140": 60,
+          "PP-TASK-000142": 60,
+          "PP-TASK-000144": 60,
+          "PP-TASK-000146": 60,
+          "PP-TASK-000148": 60,
+          "PP-TASK-000150": 60,
+          "PP-TASK-000152": 60,
+          "PP-TASK-000154": 60,
+          "PP-TASK-000155": 60,
+          "PP-TASK-000156": 60,
+          "PP-TASK-000157": 60,
+          "PP-TASK-000158": 60,
+          "PP-TASK-000159": 60,
+          "PP-TASK-000160": 60,
+          "PP-TASK-000161": 0,
+          "PP-TASK-000162": 0,
+          "PP-TASK-000163": 0,
+          "PP-TASK-000164": 0,
+          "PP-TASK-000165": 0,
+          "PP-TASK-000166": 60,
+          "PP-TASK-000167": 0,
+          "PP-TASK-000168": 0,
+          "PP-TASK-000169": 0,
+          "PP-TASK-000170": 0,
+          "PP-TASK-000171": 0,
+          "PP-TASK-000172": 0,
+          "PP-TASK-000173": 60,
+          "PP-TASK-000174": 60,
+          "PP-TASK-000175": 60,
+          "PP-TASK-000176": 0,
+          "PP-TASK-000177": 60,
+          "PP-TASK-000178": 0,
+          "PP-TASK-000179": 0,
+          "PP-TASK-000180": 0,
+          "PP-TASK-000181": 0,
+          "PP-TASK-000186": 60,
+          "PP-TASK-000187": 60,
+          "PP-TASK-000188": 60,
+          "PP-TASK-000189": 60,
+          "PP-TASK-000190": 60,
+          "PP-TASK-000191": 60,
+          "PP-TASK-000192": 60,
+          "PP-TASK-000193": 60,
+          "PP-TASK-000194": 60,
+          "PP-TASK-000195": 60,
+          "PP-TASK-000196": 60,
+          "PP-TASK-000197": 60,
+          "PP-TASK-000198": 60,
+          "PP-TASK-000199": 60,
+          "PP-TASK-000200": 60,
+          "PP-TASK-000201": 60,
+          "PP-TASK-000202": 60,
+          "PP-TASK-000203": 60,
+          "PP-TASK-000204": 60,
+          "PP-TASK-000205": 60,
+          "PP-TASK-000206": 60,
+          "PP-TASK-000207": 60,
+          "PP-TASK-000208": 60,
+          "PP-TASK-000209": 60,
+          "PP-TASK-000210": 60,
+          "PP-TASK-000211": 60,
+          "PP-TASK-000212": 60,
+          "PP-TASK-000213": 60,
+          "PP-TASK-000214": 60,
+          "PP-TASK-000215": 60,
+          "PP-TASK-000216": 60,
+          "PP-TASK-000217": 60,
+          "PP-TASK-000218": 60,
+          "PP-TASK-000219": 60,
+          "PP-TASK-000220": 60,
+          "PP-TASK-000221": 60,
+          "PP-TASK-000222": 60,
+          "PP-TASK-000223": 60,
+          "PP-TASK-000224": 60,
+          "PP-TASK-000225": 60,
+          "PP-TASK-000226": 60,
+          "PP-TASK-000227": 60,
+          "PP-TASK-000228": 60,
+          "PP-TASK-000229": 60,
+          "PP-TASK-000230": 60,
+          "PP-TASK-000231": 60,
+          "PP-TASK-000232": 60,
+          "PP-TASK-000233": 60,
+          "PP-TASK-000234": 60,
+          "PP-TASK-000235": 60,
+          "PP-TASK-000236": 60,
+          "PP-TASK-000237": 60,
+          "PP-TASK-000238": 60,
+          "PP-TASK-000239": 60,
+          "PP-TASK-000240": 60
+        },
+        "total_duration_minutes": 60
+      },
+      "edge_count": 108,
+      "generated_at_utc": "2026-08-15T04:53:37.579491Z",
+      "graph_fingerprint": "76e593f0c22999dffc406334ee8b5ac237f4f13d7f48bca00d5c3043cdcf9ad3",
+      "ordered_ready_work": [
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 1,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000020",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000020"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 2,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000024",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000024"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 3,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000066",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000066"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 4,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000078",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000078"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 5,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000087",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000087"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 6,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000089",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000089"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 7,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000091",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000091"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 8,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000093",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000093"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 9,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000094",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000094"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 10,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000095",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000095"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 11,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000096",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000096"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 12,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000097",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000097"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 13,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000098",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000098"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 14,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000099",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000099"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 15,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000101",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000101"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 16,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000103",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000103"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 17,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000104",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000104"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 18,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000105",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000105"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 19,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000106",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000106"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 20,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000107",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000107"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 21,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000110",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000110"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 22,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000111",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000111"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 23,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000112",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000112"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 24,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000113",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000113"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 25,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000114",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000114"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 26,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000116",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000116"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 27,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000119",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000119"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 28,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000121",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000121"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 29,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000122",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000122"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 30,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000123",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000123"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 31,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000126",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000126"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 32,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000128",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000128"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 33,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000129",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000129"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 34,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000136",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000136"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 35,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000137",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000137"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 36,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000162",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000162"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 37,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000163",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000163"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 38,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000164",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000164"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 39,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000168",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000168"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 40,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000169",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000169"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 41,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000172",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000172"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 42,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 25,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000176",
+            "total_score": 925,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000176"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 43,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000010",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000010"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 44,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000012",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000012"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 45,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000014",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000014"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 46,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000022",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000022"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 47,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000026",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000026"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 48,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000028",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000028"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 49,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000032",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000032"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 50,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000049",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000049"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 51,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000055",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000055"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 52,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000067",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000067"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 53,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000069",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000069"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 54,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000070",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000070"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 55,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000072",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000072"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 56,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000074",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000074"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 57,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000076",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000076"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 58,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000077",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000077"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 59,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000079",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000079"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 60,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000080",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000080"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 61,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000081",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000081"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 62,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000082",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000082"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 63,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000083",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000083"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 64,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000084",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000084"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 65,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000088",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000088"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 66,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000090",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000090"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 67,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000092",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000092"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 68,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000100",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000100"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 69,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000102",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000102"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 70,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000108",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000108"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 71,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000109",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000109"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 72,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000115",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000115"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 73,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000117",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000117"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 74,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000118",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000118"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 75,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000120",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000120"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 76,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000124",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000124"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 77,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000127",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000127"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 78,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000134",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000134"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 79,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-STORY-000135",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-STORY-000135"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 80,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000161",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000161"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 81,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000165",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000165"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 82,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000167",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000167"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 83,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000170",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000170"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 84,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000171",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000171"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 85,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000178",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000178"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 86,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000179",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000179"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 87,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000180",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000180"
+        },
+        {
+          "dependency_depth": 0,
+          "downstream_count": 0,
+          "on_critical_path": true,
+          "rank": 88,
+          "readiness": "READY",
+          "schema_version": "1.0.0",
+          "score": {
+            "critical_path_score": 200,
+            "deadline_score": 0,
+            "duration_score": 0,
+            "priority_score": 700,
+            "risk_score": 10,
+            "schema_version": "1.0.0",
+            "task_id": "PP-TASK-000181",
+            "total_score": 910,
+            "unblock_score": 0
+          },
+          "task_id": "PP-TASK-000181"
+        }
+      ],
+      "project_id": "PROJECT-PIPELINE",
+      "ready_count": 88,
+      "schema_version": "1.0.0",
+      "sequence_id": "SEQ-C10919AD530084E36D1D",
+      "task_count": 240
+    },
+    "snapshot_fingerprint": "abdf37e811729e16a6e2cb60f6ed031198c6c1348a0d13c6e2fc30633dce7061",
+    "snapshot_id": "CTRL-C269A911A0E5FBDD4DD1"
+  }
+}

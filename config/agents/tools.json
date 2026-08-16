@@ -1,0 +1,3 @@
+[
+  {"tool_id":"tool:mock-safe","adapter_id":"adapter:mock-tool","version":"1.0.0","capabilities":["routine_reasoning"],"qualification":"QUALIFIED","mutating":false,"required_authority_scope":[]}
+]

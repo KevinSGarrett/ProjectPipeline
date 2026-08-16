@@ -1,0 +1,91 @@
+{
+  "$defs": {
+    "SupplyChainFindingKind": {
+      "enum": [
+        "SECRET",
+        "VULNERABILITY",
+        "MISCONFIGURATION",
+        "LICENSE",
+        "PROVENANCE",
+        "INTEGRITY",
+        "CI_PERMISSION",
+        "ACTION_PINNING",
+        "SBOM",
+        "SIGNATURE"
+      ],
+      "title": "SupplyChainFindingKind",
+      "type": "string"
+    },
+    "SupplyChainSeverity": {
+      "enum": [
+        "INFO",
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "SupplyChainSeverity",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/security_supply_chain_finding.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "blocking": {
+      "default": false,
+      "title": "Blocking",
+      "type": "boolean"
+    },
+    "evidence_path": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Evidence Path"
+    },
+    "finding_id": {
+      "title": "Finding Id",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/SupplyChainFindingKind"
+    },
+    "message": {
+      "title": "Message",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "severity": {
+      "$ref": "#/$defs/SupplyChainSeverity"
+    },
+    "source_tool": {
+      "title": "Source Tool",
+      "type": "string"
+    },
+    "subject": {
+      "title": "Subject",
+      "type": "string"
+    }
+  },
+  "required": [
+    "finding_id",
+    "kind",
+    "severity",
+    "subject",
+    "message",
+    "source_tool"
+  ],
+  "title": "SupplyChainFinding",
+  "type": "object"
+}

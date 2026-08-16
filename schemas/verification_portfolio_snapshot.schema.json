@@ -1,0 +1,203 @@
+{
+  "$defs": {
+    "ToolActivationState": {
+      "enum": [
+        "EXECUTED",
+        "ADAPTER_IMPLEMENTED",
+        "QUALIFIED_NOT_INSTALLED",
+        "PATTERN_ONLY",
+        "DEFERRED_TO_LATER_SURFACE"
+      ],
+      "title": "ToolActivationState",
+      "type": "string"
+    },
+    "VerificationCategory": {
+      "enum": [
+        "CONTRACT",
+        "API",
+        "INTEGRATION",
+        "END_TO_END",
+        "GOLDEN_JOURNEY",
+        "BROWSER",
+        "VISUAL",
+        "ACCESSIBILITY",
+        "PERFORMANCE",
+        "ADVERSARIAL",
+        "PROPERTY",
+        "MUTATION",
+        "FAULT",
+        "POST_MERGE"
+      ],
+      "title": "VerificationCategory",
+      "type": "string"
+    },
+    "VerificationToolActivation": {
+      "additionalProperties": false,
+      "properties": {
+        "activation_id": {
+          "title": "Activation Id",
+          "type": "string"
+        },
+        "activation_phase": {
+          "title": "Activation Phase",
+          "type": "string"
+        },
+        "evidence_paths": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence Paths",
+          "type": "array"
+        },
+        "executable_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Executable Path"
+        },
+        "installed_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Installed Version"
+        },
+        "integration_paths": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Integration Paths",
+          "type": "array"
+        },
+        "license": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "License"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "repository": {
+          "title": "Repository",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_revision": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Revision"
+        },
+        "state": {
+          "$ref": "#/$defs/ToolActivationState"
+        },
+        "upstream_id": {
+          "title": "Upstream Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "activation_id",
+        "upstream_id",
+        "repository",
+        "state",
+        "activation_phase",
+        "reason"
+      ],
+      "title": "VerificationToolActivation",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/verification_portfolio_snapshot.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activation_review_complete": {
+      "title": "Activation Review Complete",
+      "type": "boolean"
+    },
+    "activations": {
+      "items": {
+        "$ref": "#/$defs/VerificationToolActivation"
+      },
+      "title": "Activations",
+      "type": "array"
+    },
+    "category_coverage": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Category Coverage",
+      "type": "object"
+    },
+    "fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "portfolio_id": {
+      "title": "Portfolio Id",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "required_categories": {
+      "items": {
+        "$ref": "#/$defs/VerificationCategory"
+      },
+      "title": "Required Categories",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "portfolio_id",
+    "project_id",
+    "activations",
+    "required_categories",
+    "category_coverage",
+    "activation_review_complete",
+    "fingerprint"
+  ],
+  "title": "VerificationPortfolioSnapshot",
+  "type": "object"
+}

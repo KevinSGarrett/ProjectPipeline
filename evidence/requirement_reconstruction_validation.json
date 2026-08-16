@@ -1,0 +1,43 @@
+{
+  "by_domain": {
+    "AGENT": 19,
+    "ARCH": 16,
+    "ASSURE": 35,
+    "BUDGET": 19,
+    "CTRL": 16,
+    "CTX": 18,
+    "GOV": 25,
+    "INFRA": 19,
+    "LIFE": 18,
+    "OPS": 19,
+    "PDEF": 10,
+    "REL": 14,
+    "REQ": 17,
+    "RES": 25,
+    "SCHED": 17,
+    "SEC": 24,
+    "UPSTREAM": 14,
+    "UX": 26
+  },
+  "by_implementation_state": {
+    "IMPLEMENTED": 26,
+    "PARTIALLY_IMPLEMENTED": 16,
+    "PLANNED_ONLY": 309
+  },
+  "by_priority": {
+    "P0": 237,
+    "P1": 109,
+    "P2": 5
+  },
+  "domain_count": 18,
+  "missing_required_fields": {},
+  "requirement_count": 351,
+  "requirements_with_jira_mapping": 351,
+  "requirements_with_plan_mapping": 351,
+  "result": "PASS",
+  "schema_version": "1.0.0",
+  "source_section_count": 1109,
+  "source_section_expected_count": 1109,
+  "source_sections_with_explicit_disposition": 1109,
+  "unique_requirement_id_count": 351
+}

@@ -1,0 +1,14 @@
+{
+  "environment": "recovery",
+  "paths": {
+    "artifact_dir": ".local/environments/recovery/artifacts",
+    "cache_dir": ".local/environments/recovery/cache",
+    "data_dir": ".local/environments/recovery/data",
+    "log_dir": ".local/environments/recovery/logs",
+    "state_dir": ".local/environments/recovery/state"
+  },
+  "security": {
+    "external_writes_default": "DENY",
+    "require_explicit_approval": true
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000115-01",
+      "statement": "Every linked requirement is explicitly dispositioned, mapped, and represented by the stated implementation or planned artifacts.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000115-02",
+      "statement": "Applicable behavior-specific tests and evidence support completion; unavailable external verification remains explicitly blocked.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000141",
+    "EVID-000142"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement and verify the source-grounded requirements grouped under surfaces for Command Center and Operator Experience.",
+  "evidence_required": [],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "STORY",
+  "labels": [
+    "capability-story",
+    "cluster-surfaces",
+    "domain-ux",
+    "pass-20"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25001",
+    "remote_key": "PP-32",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-STORY-000115",
+  "objective": "Deliver the surfaces capability for Command Center and Operator Experience.",
+  "observability_impact": "Record structured validation, state, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-EPIC-000025",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md",
+      "end_line": 12,
+      "line_numbered_path": "plans/_line_numbered/PLAN-UX-001_command_center_operator.lines.txt",
+      "line_reference": "PLAN-UX-001:SEC-01:L000009-L000012",
+      "plan_id": "PLAN-UX-001",
+      "section_id": "PLAN-UX-001:SEC-01",
+      "start_line": 9
+    }
+  ],
+  "rationale": "This work is required to convert source-grounded requirements into bounded implementation, verification, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-EPIC-000025",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-32",
+  "required_tests": [],
+  "requirement_ids": [
+    "REQ-UX-0004",
+    "REQ-UX-0005",
+    "REQ-UX-0011",
+    "REQ-UX-0026"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the surfaces capability for Command Center and Operator Experience."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, data-egress, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L000574-L000584",
+    "SRC-002:L000516-L000680",
+    "SRC-006:L001079-L001140",
+    "SRC-006:L001141-L001179",
+    "SRC-006:L001578-L001604"
+  ],
+  "state": "BACKLOG",
+  "title": "Surfaces \u2014 Command Center and Operator Experience",
+  "upstream_dependencies": []
+}

@@ -1,0 +1,134 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000338-01",
+      "statement": "Integrate PPDB-0013 verification CLI schemas persistence and validation has executable implementation and behavior-specific automated verification.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_verification_*.py",
+        "method": "automated_behavior_validation",
+        "path": "database/migrations/sqlite/PPDB-0013_verification_harness.up.sql",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000338-02",
+      "statement": "Required verification state remains truthfully represented and repository traceability remains consistent.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_contract_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000115",
+    "EVID-000119"
+  ],
+  "definition_of_done": [
+    "Implementation is present and locally behaviorally verified.",
+    "Applicable requirement/test/evidence mappings are current.",
+    "Required failed/blocked verification cannot be silently skipped or converted to PASS.",
+    "No upstream verifier, worker, or model can directly authorize final project completion."
+  ],
+  "dependencies": [],
+  "description": "Integrate PPDB-0013 verification CLI schemas persistence and validation. This Pass 16 task implements executable verification evidence without transferring completion authority away from the deterministic Completion Gate.",
+  "evidence_required": [
+    "EVID-000115",
+    "EVID-000119"
+  ],
+  "exclusions": [
+    "No unfinished Pass 17 security architecture is claimed complete.",
+    "No unfinished Pass 18 resilience/DR architecture is claimed complete.",
+    "No Command Center implementation is claimed complete.",
+    "No remote GitHub/Jira/provider/cloud mutation."
+  ],
+  "expected_file_locations": [
+    "database/migrations/sqlite/PPDB-0013_verification_harness.up.sql",
+    "src/project_pipeline/verification/persistence.py",
+    "src/project_pipeline/cli.py",
+    "schemas/verification_run.schema.json"
+  ],
+  "expected_implementation_artifacts": [
+    "database/migrations/sqlite/PPDB-0013_verification_harness.up.sql",
+    "src/project_pipeline/verification/persistence.py",
+    "src/project_pipeline/cli.py",
+    "schemas/verification_run.schema.json"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "assurance",
+    "verification"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25231",
+    "remote_key": "PP-262",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000338",
+  "objective": "Integrate PPDB-0013 verification CLI schemas persistence and validation",
+  "observability_impact": "Verification runs, categories, artifacts, golden observations, browser evidence, performance samples, mutations, properties, and faults are structured and queryable.",
+  "owner_required_capability": "verification_execution_and_evidence",
+  "parent": "PP-STORY-000093",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/08_execution_assurance_and_testing/PLAN-VERIFY-001_verification_harness_golden_journeys.md",
+      "end_line": 39,
+      "line_numbered_path": "plans/_line_numbered/PLAN-VERIFY-001_verification_harness_golden_journeys.lines.txt",
+      "line_reference": "PLAN-VERIFY-001:SEC-08:L000036-L000039",
+      "plan_id": "PLAN-VERIFY-001",
+      "section_id": "PLAN-VERIFY-001:SEC-08",
+      "start_line": 36
+    },
+    {
+      "authoritative_path": "plans/08_execution_assurance_and_testing/PLAN-VERIFY-001_verification_harness_golden_journeys.md",
+      "end_line": 43,
+      "line_numbered_path": "plans/_line_numbered/PLAN-VERIFY-001_verification_harness_golden_journeys.lines.txt",
+      "line_reference": "PLAN-VERIFY-001:SEC-09:L000040-L000043",
+      "plan_id": "PLAN-VERIFY-001",
+      "section_id": "PLAN-VERIFY-001:SEC-09",
+      "start_line": 40
+    }
+  ],
+  "rationale": "Verification must prove current behavior with fresh structured evidence; missing, failed, blocked, or stale required evidence must remain visible and cannot be converted into completion.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-262",
+  "required_tests": [
+    "TEST-VERIFY-PERSIST-001",
+    "TEST-VERIFY-MIGRATION-001",
+    "TEST-VERIFY-CLI-001",
+    "TEST-VERIFY-CLI-002"
+  ],
+  "requirement_ids": [
+    "REQ-ASSURE-0021",
+    "REQ-ASSURE-0026",
+    "REQ-ASSURE-0029"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Preserve immutable verification/evidence history; roll back code/schema without rewriting prior observed results.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "database/migrations/sqlite/PPDB-0013_verification_harness.up.sql",
+    "src/project_pipeline/verification/persistence.py",
+    "src/project_pipeline/cli.py",
+    "schemas/verification_run.schema.json"
+  ],
+  "security_impact": "Verification inputs, external tool paths, browser content, and mutation/fault boundaries are fail-closed and cannot elevate authority.",
+  "source_references": [
+    "SRC-008:L000771-L000839",
+    "SRC-008:L000986-L001015",
+    "SRC-008:L001067-L001092"
+  ],
+  "state": "BACKLOG",
+  "title": "Integrate PPDB-0013 verification CLI schemas persistence and validation",
+  "upstream_dependencies": []
+}

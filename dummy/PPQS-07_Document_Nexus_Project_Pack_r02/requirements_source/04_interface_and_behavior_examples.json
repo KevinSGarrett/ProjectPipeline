@@ -1,0 +1,102 @@
+{
+  "benchmark_id": "PPQS-07",
+  "examples": [
+    {
+      "artifact": "job API and request model",
+      "example_id": "EX-DN-001",
+      "expected_failure": "duplicate or malformed submissions do not create duplicate work",
+      "expected_result": "valid jobs receive stable identifiers and immutable request fingerprints",
+      "feature": "Conversion job submission",
+      "request_or_action": "Representative valid action for Conversion job submission"
+    },
+    {
+      "artifact": "adapter interface and approved adapters",
+      "example_id": "EX-DN-002",
+      "expected_failure": "path traversal, SSRF, and unsupported media are blocked",
+      "expected_result": "approved sources become immutable input artifacts",
+      "feature": "Source adapter boundary",
+      "request_or_action": "Representative valid action for Source adapter boundary"
+    },
+    {
+      "artifact": "conversion adapter and worker",
+      "example_id": "EX-DN-003",
+      "expected_failure": "worker failure never marks a job complete",
+      "expected_result": "conversion results are attributable to exact engine versions",
+      "feature": "Conversion worker integration",
+      "request_or_action": "Representative valid action for Conversion worker integration"
+    },
+    {
+      "artifact": "artifact store and manifest schema",
+      "example_id": "EX-DN-004",
+      "expected_failure": "partial or tampered artifacts are quarantined",
+      "expected_result": "published artifacts verify against their manifests",
+      "feature": "Artifact storage",
+      "request_or_action": "Representative valid action for Artifact storage"
+    },
+    {
+      "artifact": "plugin policy and registry",
+      "example_id": "EX-DN-005",
+      "expected_failure": "project documents cannot self-enable plugins",
+      "expected_result": "approved plugins are explicit and observable",
+      "feature": "Plugin allowlist",
+      "request_or_action": "Representative valid action for Plugin allowlist"
+    },
+    {
+      "artifact": "redaction engine and report",
+      "example_id": "EX-DN-006",
+      "expected_failure": "raw sensitive content does not cross an unauthorized boundary",
+      "expected_result": "redaction findings are counted without exposing matched secrets",
+      "feature": "Redaction policy",
+      "request_or_action": "Representative valid action for Redaction policy"
+    },
+    {
+      "artifact": "trust labels and context firewall integration",
+      "example_id": "EX-DN-007",
+      "expected_failure": "instruction injection cannot trigger external mutation",
+      "expected_result": "prompt-like document text remains inert content",
+      "feature": "Content safety and untrusted instructions",
+      "request_or_action": "Representative valid action for Content safety and untrusted instructions"
+    },
+    {
+      "artifact": "job state machine and recovery worker",
+      "example_id": "EX-DN-008",
+      "expected_failure": "unknown result and duplicate delivery cannot publish conflicting artifacts",
+      "expected_result": "a crash or provider outage resumes exactly once",
+      "feature": "Retry idempotency and recovery",
+      "request_or_action": "Representative valid action for Retry idempotency and recovery"
+    },
+    {
+      "artifact": "audit ledger and evidence export",
+      "example_id": "EX-DN-009",
+      "expected_failure": "missing evidence prevents final completion",
+      "expected_result": "the complete lineage is exportable and tamper-evident",
+      "feature": "Audit provenance and evidence",
+      "request_or_action": "Representative valid action for Audit provenance and evidence"
+    },
+    {
+      "artifact": "web console and browser tests",
+      "example_id": "EX-DN-010",
+      "expected_failure": "UI state never overrides backend truth",
+      "expected_result": "critical workflows are keyboard accessible and freshness-labeled",
+      "feature": "Operator dashboard",
+      "request_or_action": "Representative valid action for Operator dashboard"
+    },
+    {
+      "artifact": "outbox, webhook sender, and mock service",
+      "example_id": "EX-DN-011",
+      "expected_failure": "provider outage does not lose events or expose payloads",
+      "expected_result": "events reconcile to the audit ledger",
+      "feature": "Webhooks and events",
+      "request_or_action": "Representative valid action for Webhooks and events"
+    },
+    {
+      "artifact": "security policy, containers, runbooks, and release bundle",
+      "example_id": "EX-DN-012",
+      "expected_failure": "unsafe defaults and missing configuration block startup",
+      "expected_result": "a clean deployment is reproducible and tenant boundaries are tested",
+      "feature": "Tenancy RBAC deployment and handoff",
+      "request_or_action": "Representative valid action for Tenancy RBAC deployment and handoff"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

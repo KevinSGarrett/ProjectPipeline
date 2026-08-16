@@ -1,0 +1,118 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000105-01",
+      "statement": "Every linked requirement is explicitly dispositioned, mapped, and represented by the stated implementation or planned artifacts.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000105-02",
+      "statement": "Applicable behavior-specific tests and evidence support completion; unavailable external verification remains explicitly blocked.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement and verify the source-grounded requirements grouped under external systems for Resilience, Recovery, and Disaster Readiness.",
+  "evidence_required": [],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "STORY",
+  "labels": [
+    "capability-story",
+    "domain-res",
+    "cluster-external-systems"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25012",
+    "remote_key": "PP-43",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-STORY-000105",
+  "objective": "Deliver the external systems capability for Resilience, Recovery, and Disaster Readiness.",
+  "observability_impact": "Record structured validation, state, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-EPIC-000023",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md",
+      "end_line": 19,
+      "line_numbered_path": "plans/_line_numbered/PLAN-RES-001_resilience_recovery.lines.txt",
+      "line_reference": "PLAN-RES-001:SEC-03:L000016-L000019",
+      "plan_id": "PLAN-RES-001",
+      "section_id": "PLAN-RES-001:SEC-03",
+      "start_line": 16
+    }
+  ],
+  "rationale": "This work is required to convert source-grounded requirements into bounded implementation, verification, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-EPIC-000023",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-43",
+  "required_tests": [
+    "TEST-GITHUB-STEWARDSHIP-001",
+    "TEST-GITHUB-STEWARDSHIP-002",
+    "TEST-JIRA-PERSIST-002",
+    "TEST-JIRA-SYNC-004",
+    "TEST-RES-AWS-001",
+    "TEST-RES-FAILOVER-003",
+    "TEST-RES-SIM-001"
+  ],
+  "requirement_ids": [
+    "REQ-RES-0015",
+    "REQ-RES-0016",
+    "REQ-RES-0017",
+    "REQ-RES-0025"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the external systems capability for Resilience, Recovery, and Disaster Readiness."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, data-egress, and external-mutation effects.",
+  "source_references": [
+    "SRC-005:L000604-L000640",
+    "SRC-005:L000649-L000694",
+    "SRC-005:L000695-L000735",
+    "SRC-006:L000649-L000694",
+    "SRC-006:L000695-L000735",
+    "SRC-012:L000001-L000113",
+    "SRC-012:L000496-L000676"
+  ],
+  "state": "BACKLOG",
+  "title": "External Systems \u2014 Resilience, Recovery, and Disaster Readiness",
+  "upstream_dependencies": []
+}

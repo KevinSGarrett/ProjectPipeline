@@ -1,0 +1,60 @@
+{
+  "$id": "https://project-pipeline.local/schemas/verification_post_merge_report.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "evidence_integrity_ok": {
+      "title": "Evidence Integrity Ok",
+      "type": "boolean"
+    },
+    "final_passed": {
+      "title": "Final Passed",
+      "type": "boolean"
+    },
+    "observations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Observations",
+      "type": "array"
+    },
+    "report_id": {
+      "title": "Report Id",
+      "type": "string"
+    },
+    "repository_manifest_ok": {
+      "title": "Repository Manifest Ok",
+      "type": "boolean"
+    },
+    "repository_validation_ok": {
+      "title": "Repository Validation Ok",
+      "type": "boolean"
+    },
+    "required_test_suite_ok": {
+      "title": "Required Test Suite Ok",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "traceability_ok": {
+      "title": "Traceability Ok",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "report_id",
+    "repository_manifest_ok",
+    "repository_validation_ok",
+    "traceability_ok",
+    "evidence_integrity_ok",
+    "required_test_suite_ok",
+    "final_passed",
+    "observations"
+  ],
+  "title": "PostMergeReport",
+  "type": "object"
+}

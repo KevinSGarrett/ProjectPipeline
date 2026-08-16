@@ -1,0 +1,116 @@
+{
+  "$defs": {
+    "ScopeFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "detail": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Detail",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ScopeFindingKind"
+        },
+        "related_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Related Id"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "subject_id": {
+          "title": "Subject Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "subject_id",
+        "detail"
+      ],
+      "title": "ScopeFinding",
+      "type": "object"
+    },
+    "ScopeFindingKind": {
+      "enum": [
+        "REQUIREMENT_WITHOUT_WORK",
+        "WORK_WITHOUT_REQUIREMENT",
+        "UNKNOWN_REQUIREMENT",
+        "UNKNOWN_DEPENDENCY",
+        "DONE_WITHOUT_EVIDENCE",
+        "DONE_WITHOUT_IMPLEMENTATION",
+        "IMPLEMENTED_REQUIREMENT_WITHOUT_ARTIFACT"
+      ],
+      "title": "ScopeFindingKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/control_scope_reconciliation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/ScopeFinding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Fingerprint",
+      "type": "string"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "report_id": {
+      "title": "Report Id",
+      "type": "string"
+    },
+    "requirement_count": {
+      "minimum": 0,
+      "title": "Requirement Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "work_item_count": {
+      "minimum": 0,
+      "title": "Work Item Count",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "report_id",
+    "project_id",
+    "requirement_count",
+    "work_item_count",
+    "findings",
+    "fingerprint"
+  ],
+  "title": "ScopeReconciliationReport",
+  "type": "object"
+}

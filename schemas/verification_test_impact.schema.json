@@ -1,0 +1,111 @@
+{
+  "$defs": {
+    "VerificationCategory": {
+      "enum": [
+        "CONTRACT",
+        "API",
+        "INTEGRATION",
+        "END_TO_END",
+        "GOLDEN_JOURNEY",
+        "BROWSER",
+        "VISUAL",
+        "ACCESSIBILITY",
+        "PERFORMANCE",
+        "ADVERSARIAL",
+        "PROPERTY",
+        "MUTATION",
+        "FAULT",
+        "POST_MERGE"
+      ],
+      "title": "VerificationCategory",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/verification_test_impact.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "acceptance_methods": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Acceptance Methods",
+      "type": "array"
+    },
+    "changed_paths": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Changed Paths",
+      "type": "array"
+    },
+    "dependency_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Dependency Paths",
+      "type": "array"
+    },
+    "impact_id": {
+      "title": "Impact Id",
+      "type": "string"
+    },
+    "profile_categories": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/VerificationCategory"
+      },
+      "title": "Profile Categories",
+      "type": "array"
+    },
+    "rationale": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Rationale",
+      "type": "array"
+    },
+    "required_categories": {
+      "items": {
+        "$ref": "#/$defs/VerificationCategory"
+      },
+      "title": "Required Categories",
+      "type": "array"
+    },
+    "requirement_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Requirement Ids",
+      "type": "array"
+    },
+    "risk": {
+      "default": "MEDIUM",
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Risk",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.1.0",
+      "default": "1.1.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "impact_id",
+    "changed_paths",
+    "required_categories",
+    "rationale"
+  ],
+  "title": "VerificationImpactSet",
+  "type": "object"
+}

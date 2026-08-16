@@ -1,0 +1,132 @@
+{
+  "$id": "https://project-pipeline.local/schemas/assurance_completion_gate_facts.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accepted_requirements_complete_or_external": {
+      "title": "Accepted Requirements Complete Or External",
+      "type": "boolean"
+    },
+    "ai_continuable_from_repo_and_jira": {
+      "title": "Ai Continuable From Repo And Jira",
+      "type": "boolean"
+    },
+    "command_center_truthful": {
+      "title": "Command Center Truthful",
+      "type": "boolean"
+    },
+    "critical_paths_tested": {
+      "title": "Critical Paths Tested",
+      "type": "boolean"
+    },
+    "deployment_reproducible": {
+      "title": "Deployment Reproducible",
+      "type": "boolean"
+    },
+    "engineer_operable_from_docs": {
+      "title": "Engineer Operable From Docs",
+      "type": "boolean"
+    },
+    "evidence_by_question": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Evidence By Question",
+      "type": "object"
+    },
+    "externally_blocked_question_numbers": {
+      "default": [],
+      "items": {
+        "type": "integer"
+      },
+      "title": "Externally Blocked Question Numbers",
+      "type": "array"
+    },
+    "golden_journeys_pass": {
+      "title": "Golden Journeys Pass",
+      "type": "boolean"
+    },
+    "implementation_traceability_complete": {
+      "title": "Implementation Traceability Complete",
+      "type": "boolean"
+    },
+    "jira_truthful": {
+      "title": "Jira Truthful",
+      "type": "boolean"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "reasons_by_question": {
+      "additionalProperties": {
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "title": "Reasons By Question",
+      "type": "object"
+    },
+    "resilience_verified": {
+      "title": "Resilience Verified",
+      "type": "boolean"
+    },
+    "rollback_verified": {
+      "title": "Rollback Verified",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "security_gates_satisfied": {
+      "title": "Security Gates Satisfied",
+      "type": "boolean"
+    },
+    "snapshot_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Snapshot Fingerprint",
+      "type": "string"
+    },
+    "source_requirements_dispositioned": {
+      "title": "Source Requirements Dispositioned",
+      "type": "boolean"
+    },
+    "unexplained_gap_count": {
+      "minimum": 0,
+      "title": "Unexplained Gap Count",
+      "type": "integer"
+    },
+    "unresolved_items_truthful": {
+      "title": "Unresolved Items Truthful",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "project_id",
+    "source_requirements_dispositioned",
+    "accepted_requirements_complete_or_external",
+    "implementation_traceability_complete",
+    "critical_paths_tested",
+    "golden_journeys_pass",
+    "security_gates_satisfied",
+    "resilience_verified",
+    "deployment_reproducible",
+    "rollback_verified",
+    "engineer_operable_from_docs",
+    "ai_continuable_from_repo_and_jira",
+    "unresolved_items_truthful",
+    "command_center_truthful",
+    "jira_truthful",
+    "unexplained_gap_count",
+    "snapshot_fingerprint"
+  ],
+  "title": "CompletionGateFacts",
+  "type": "object"
+}

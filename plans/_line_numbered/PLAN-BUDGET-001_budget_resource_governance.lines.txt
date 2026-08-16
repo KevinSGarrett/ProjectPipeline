@@ -1,0 +1,27 @@
+L000001 | # PLAN-BUDGET-001 — Budget and Resource Governance
+L000002 | 
+L000003 | - **Plan ID:** `PLAN-BUDGET-001`
+L000004 | - **Status:** `PLANNED`
+L000005 | - **Authority:** source-derived requirements plus explicitly labeled implementation detail
+L000006 | - **Source basis:** `GOV-001:L000607-L000619`, `GOV-001:L001604-L001616`
+L000007 | 
+L000008 | 
+L000009 | ## PLAN-BUDGET-001:SEC-01 Ledgers
+L000010 | 
+L000011 | Project Pipeline records monetary spend, provider quota, subscription allocation, local compute, storage, network, and verification cost using immutable usage entries and normalized units.
+L000012 | 
+L000013 | ## PLAN-BUDGET-001:SEC-02 Spend leases
+L000014 | 
+L000015 | Potentially billable work reserves a bounded spend lease before admission. The lease includes project, task, provider, maximum amount or quota, expiry, and reconciliation state. Unknown provider outcomes are reconciled before additional spend.
+L000016 | 
+L000017 | ## PLAN-BUDGET-001:SEC-03 Pressure modes
+L000018 | 
+L000019 | Budget pressure modes progressively reduce speculative, redundant, or lower-priority work while preserving control, recovery, and required verification. Exhaustion produces an explicit blocked or degraded state rather than hidden failure.
+L000020 | 
+L000021 | ## PLAN-BUDGET-001:SEC-04 Forecasting
+L000022 | 
+L000023 | Forecasts use observed rates, queued demand, expected retries, and verification burden. The key efficiency measure is cost per verified outcome, not cost per generated token or task attempt alone.
+L000024 | 
+L000025 | ## PLAN-BUDGET-001:SEC-05 Resource admission
+L000026 | 
+L000027 | Admission combines budget, quotas, hardware, provider health, environmental availability, task priority, and risk. Cloud cost preflight is required before optional AWS resources are created.

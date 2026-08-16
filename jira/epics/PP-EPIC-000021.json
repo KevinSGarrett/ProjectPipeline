@@ -1,0 +1,128 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000021-01",
+      "statement": "Every accepted domain requirement is linked to at least one valid child work item.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "automated_graph_and_traceability_check",
+        "path": "plans/_traceability/requirements_to_jira.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Own all accepted requirements, decisions, implementation, tests, evidence, and operational readiness for PLAN-BUDGET-001.",
+  "evidence_required": [
+    "EVID-000004"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "EPIC",
+  "labels": [
+    "domain-epic",
+    "plan-budget-001"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "24976",
+    "remote_key": "PP-7",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-EPIC-000021",
+  "objective": "Deliver the complete budget and resource governance capability and its verified operational contract.",
+  "observability_impact": "Record structured validation and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": null,
+  "plan_references": [
+    {
+      "authoritative_path": "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md",
+      "end_line": 12,
+      "line_numbered_path": "plans/_line_numbered/PLAN-BUDGET-001_budget_resource_governance.lines.txt",
+      "line_reference": "PLAN-BUDGET-001:SEC-01:L000009-L000012",
+      "plan_id": "PLAN-BUDGET-001",
+      "section_id": "PLAN-BUDGET-001:SEC-01",
+      "start_line": 9
+    }
+  ],
+  "rationale": "The source corpus requires this domain as part of the end-to-end platform.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000022",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000100",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000101",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000102",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000103",
+      "type": "PARENT_OF"
+    }
+  ],
+  "remote_jira_key": "PP-7",
+  "required_tests": [
+    "TEST-JIRA-GRAPH-001"
+  ],
+  "requirement_ids": [
+    "REQ-BUDGET-0001",
+    "REQ-BUDGET-0002",
+    "REQ-BUDGET-0003",
+    "REQ-BUDGET-0004",
+    "REQ-BUDGET-0005",
+    "REQ-BUDGET-0006",
+    "REQ-BUDGET-0007",
+    "REQ-BUDGET-0008",
+    "REQ-BUDGET-0009",
+    "REQ-BUDGET-0010",
+    "REQ-BUDGET-0011",
+    "REQ-BUDGET-0012",
+    "REQ-BUDGET-0013",
+    "REQ-BUDGET-0014",
+    "REQ-BUDGET-0015",
+    "REQ-BUDGET-0016",
+    "REQ-BUDGET-0017",
+    "REQ-BUDGET-0018",
+    "REQ-BUDGET-0019"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the complete budget and resource governance capability and its verified operational contract."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L000607-L000619"
+  ],
+  "state": "BACKLOG",
+  "title": "Budget and Resource Governance",
+  "upstream_dependencies": []
+}

@@ -1,0 +1,83 @@
+{
+  "$id": "https://project-pipeline.local/schemas/assurance_scope_contract.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Paths",
+      "type": "array"
+    },
+    "change_budget": {
+      "default": 3,
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Change Budget",
+      "type": "integer"
+    },
+    "consumed_changes": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Consumed Changes",
+      "type": "integer"
+    },
+    "escalation_conditions": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Escalation Conditions",
+      "type": "array"
+    },
+    "excluded_behavior": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Excluded Behavior",
+      "type": "array"
+    },
+    "frozen_at_utc": {
+      "format": "date-time",
+      "title": "Frozen At Utc",
+      "type": "string"
+    },
+    "frozen_criteria_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Frozen Criteria Fingerprint",
+      "type": "string"
+    },
+    "included_behavior": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Included Behavior",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope_id": {
+      "title": "Scope Id",
+      "type": "string"
+    },
+    "work_item_id": {
+      "title": "Work Item Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "scope_id",
+    "work_item_id",
+    "included_behavior",
+    "excluded_behavior",
+    "escalation_conditions",
+    "frozen_criteria_fingerprint"
+  ],
+  "title": "ScopeContract",
+  "type": "object"
+}

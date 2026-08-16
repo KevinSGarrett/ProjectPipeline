@@ -1,0 +1,38 @@
+{
+  "$id": "https://project-pipeline.local/schemas/context_coverage.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "missing_keys": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Missing Keys",
+      "type": "array"
+    },
+    "represented_count": {
+      "minimum": 0,
+      "title": "Represented Count",
+      "type": "integer"
+    },
+    "required_count": {
+      "minimum": 0,
+      "title": "Required Count",
+      "type": "integer"
+    },
+    "score": {
+      "maximum": 1.0,
+      "minimum": 0.0,
+      "title": "Score",
+      "type": "number"
+    }
+  },
+  "required": [
+    "required_count",
+    "represented_count",
+    "score"
+  ],
+  "title": "CoverageReport",
+  "type": "object"
+}

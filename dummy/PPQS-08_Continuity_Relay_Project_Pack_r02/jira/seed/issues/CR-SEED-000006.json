@@ -1,0 +1,63 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-CRSEED000006-01",
+      "statement": "Reconcile this issue against authoritative source, repository, tests, and evidence before assigning a terminal state.",
+      "verification": {
+        "command": "python -m ppqs_eval compare-jira",
+        "method": "TRUTH_RECONCILIATION",
+        "path": "candidate_outputs/jira",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Repository truth, tests, evidence, and Jira state agree."
+  ],
+  "dependencies": [],
+  "description": "Imported brownfield issue. The requirement was superseded by a later authority decision.",
+  "evidence_required": [
+    "reconciliation_receipt"
+  ],
+  "exclusions": [
+    "Oracle access",
+    "Unsupported destructive cleanup"
+  ],
+  "expected_file_locations": [],
+  "expected_implementation_artifacts": [],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "EPIC",
+  "labels": [
+    "ppqs-08",
+    "seed-jira"
+  ],
+  "last_observed_remote_state": null,
+  "local_id": "CR-SEED-000006",
+  "objective": "Deliver CI repair",
+  "observability_impact": "Record state and reconciliation evidence.",
+  "owner_required_capability": "project-control-and-reconciliation",
+  "parent": null,
+  "plan_references": [],
+  "rationale": "This issue exists in the visible seed board and must be preserved, decomposed, reconciled, or corrected according to repository and requirement truth.",
+  "relationships": [],
+  "remote_jira_key": null,
+  "required_tests": [
+    "TRUTH_RECONCILIATION"
+  ],
+  "requirement_ids": [],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Preserve the seed state and unrelated work.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Imported brownfield issue. The requirement was superseded by a later authority decision."
+  ],
+  "security_impact": "Assess before mutation.",
+  "source_references": [
+    "SRC-CR-BRIEF"
+  ],
+  "state": "BACKLOG",
+  "title": "Deliver CI repair",
+  "upstream_dependencies": []
+}

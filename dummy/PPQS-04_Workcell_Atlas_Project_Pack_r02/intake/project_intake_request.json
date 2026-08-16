@@ -1,0 +1,22 @@
+{
+  "actor_id": "actor:ppqs-benchmark-owner",
+  "allow_nested_repositories": false,
+  "canonical_url": null,
+  "correlation_id": "corr:ppqs-04-run",
+  "max_files": 250000,
+  "max_hash_bytes_per_file": 64000000,
+  "max_total_bytes": 20000000000,
+  "mode": "NEW_PROJECT",
+  "project_id": "ppqs-04",
+  "project_name": "Workcell Atlas",
+  "requested_profiles": [
+    "RUST_APPLICATION",
+    "TYPESCRIPT_APPLICATION",
+    "WEB_APPLICATION",
+    "POLYGLOT_APPLICATION",
+    "DOCUMENTATION"
+  ],
+  "scale": "CRITICAL",
+  "schema_version": "1.0.0",
+  "target_root": "./workspace/PPQS-04"
+}

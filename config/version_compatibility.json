@@ -1,0 +1,31 @@
+{
+  "adapter_error_schema": "1.0.0",
+  "bootstrap_plan_schema": "1.0.0",
+  "bootstrap_receipt_schema": "1.0.0",
+  "command_contract_schema": "1.0.0",
+  "compatibility_policy": "Minor platform releases preserve configuration and contract compatibility unless an accepted architecture decision records migration, qualification, and rollback.",
+  "compiled_project_manifest_schema": "1.0.0",
+  "compiled_repository_map_schema": "1.0.0",
+  "domain_project_manifest_schema": "1.0.0",
+  "event_contract_schema": "1.0.0",
+  "latest_database_migration": "PPDB-0014",
+  "migration_catalog_schema": "1.0.0",
+  "platform_version": "0.9.0",
+  "project_gap_report_schema": "1.0.0",
+  "project_intake_request_schema": "1.0.0",
+  "project_profile_detection_schema": "1.0.0",
+  "project_state_schema": "1.0.0",
+  "python": ">=3.11,<3.14",
+  "repository_discovery_schema": "1.0.0",
+  "requirement_record_schema": "2.0.0",
+  "runtime_configuration_schema": "1.0.0",
+  "schema_version": "1.0.0",
+  "supported_profiles": [
+    "ci",
+    "local",
+    "windows"
+  ],
+  "task_state_schema": "1.0.0",
+  "traceability_schema": "1.0.0",
+  "verification_contract_schema": "1.0.0"
+}

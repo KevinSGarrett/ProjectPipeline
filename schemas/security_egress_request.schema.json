@@ -1,0 +1,83 @@
+{
+  "$defs": {
+    "DataClassification": {
+      "enum": [
+        "PUBLIC",
+        "INTERNAL",
+        "CONFIDENTIAL",
+        "SECRET",
+        "LOCAL_ONLY"
+      ],
+      "title": "DataClassification",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/security_egress_request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_identity_id": {
+      "title": "Actor Identity Id",
+      "type": "string"
+    },
+    "classification": {
+      "$ref": "#/$defs/DataClassification"
+    },
+    "contains_secret": {
+      "default": false,
+      "title": "Contains Secret",
+      "type": "boolean"
+    },
+    "contains_untrusted_instructions": {
+      "default": false,
+      "title": "Contains Untrusted Instructions",
+      "type": "boolean"
+    },
+    "content_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Content Fingerprint",
+      "type": "string"
+    },
+    "context_keys": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Context Keys",
+      "type": "array"
+    },
+    "destination": {
+      "title": "Destination",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "provider_id": {
+      "title": "Provider Id",
+      "type": "string"
+    },
+    "request_id": {
+      "title": "Request Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "request_id",
+    "actor_identity_id",
+    "project_id",
+    "destination",
+    "provider_id",
+    "classification",
+    "content_fingerprint"
+  ],
+  "title": "EgressRequest",
+  "type": "object"
+}

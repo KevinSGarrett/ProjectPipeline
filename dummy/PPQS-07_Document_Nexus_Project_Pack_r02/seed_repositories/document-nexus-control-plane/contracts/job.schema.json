@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "idempotency_key": {
+      "minLength": 8,
+      "type": "string"
+    },
+    "output_policy": {
+      "enum": [
+        "ARTIFACT_REFERENCE_ONLY",
+        "INLINE_SMALL_OUTPUT"
+      ]
+    },
+    "source": {
+      "type": "object"
+    },
+    "tenant_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "source",
+    "output_policy",
+    "idempotency_key"
+  ],
+  "type": "object"
+}

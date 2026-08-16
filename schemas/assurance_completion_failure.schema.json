@@ -1,0 +1,65 @@
+{
+  "$defs": {
+    "FailureCategory": {
+      "enum": [
+        "REQUIREMENT",
+        "TRACEABILITY",
+        "WORK",
+        "TEST",
+        "GOLDEN_JOURNEY",
+        "SECURITY",
+        "RESILIENCE",
+        "DEPLOYMENT",
+        "ROLLBACK",
+        "DOCUMENTATION",
+        "CONTINUATION",
+        "STATE_RECONCILIATION",
+        "COVERAGE",
+        "EVIDENCE",
+        "REVIEW",
+        "SCOPE"
+      ],
+      "title": "FailureCategory",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/assurance_completion_failure.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "category": {
+      "$ref": "#/$defs/FailureCategory"
+    },
+    "detail": {
+      "title": "Detail",
+      "type": "string"
+    },
+    "failure_id": {
+      "title": "Failure Id",
+      "type": "string"
+    },
+    "rework_route": {
+      "title": "Rework Route",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "subject_id": {
+      "title": "Subject Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "failure_id",
+    "category",
+    "subject_id",
+    "detail",
+    "rework_route"
+  ],
+  "title": "CompletionFailure",
+  "type": "object"
+}

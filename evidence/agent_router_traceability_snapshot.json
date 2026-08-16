@@ -1,0 +1,103 @@
+{
+  "agent_jira_task_ids": [
+    "PP-TASK-000251",
+    "PP-TASK-000252",
+    "PP-TASK-000253",
+    "PP-TASK-000254",
+    "PP-TASK-000255",
+    "PP-TASK-000256",
+    "PP-TASK-000257",
+    "PP-TASK-000258",
+    "PP-TASK-000259",
+    "PP-TASK-000260"
+  ],
+  "agent_requirement_count": 19,
+  "agent_requirement_ids": [
+    "REQ-AGENT-0001",
+    "REQ-AGENT-0002",
+    "REQ-AGENT-0003",
+    "REQ-AGENT-0004",
+    "REQ-AGENT-0005",
+    "REQ-AGENT-0006",
+    "REQ-AGENT-0007",
+    "REQ-AGENT-0008",
+    "REQ-AGENT-0009",
+    "REQ-AGENT-0010",
+    "REQ-AGENT-0011",
+    "REQ-AGENT-0012",
+    "REQ-AGENT-0013",
+    "REQ-AGENT-0014",
+    "REQ-AGENT-0015",
+    "REQ-AGENT-0016",
+    "REQ-AGENT-0017",
+    "REQ-AGENT-0018",
+    "REQ-AGENT-0019"
+  ],
+  "agent_requirement_states": {
+    "IMPLEMENTED": 10,
+    "PARTIALLY_IMPLEMENTED": 7,
+    "PLANNED_ONLY": 2
+  },
+  "captured_at_utc": "2026-08-15T05:38:23.550291+00:00",
+  "evidence_ids": [
+    "EVID-000069",
+    "EVID-000070",
+    "EVID-000071",
+    "EVID-000072"
+  ],
+  "jira_summary": {
+    "counts_by_state": {
+      "BACKLOG": 87,
+      "DONE": 136,
+      "IN_PROGRESS": 37
+    },
+    "counts_by_type": {
+      "BUG": 0,
+      "EPIC": 18,
+      "SPIKE": 0,
+      "STORY": 107,
+      "SUBTASK": 16,
+      "TASK": 119
+    },
+    "edge_count": 608,
+    "issue_count": 260,
+    "requirements_referenced": 351,
+    "schema_version": "1.0.0"
+  },
+  "plan_id": "PLAN-AGENT-002",
+  "repository_mapped_counts": {
+    "evidence": 152,
+    "implementation": 152,
+    "jira": 351,
+    "plan": 351,
+    "tests": 152
+  },
+  "repository_requirement_count": 351,
+  "repository_unexplained_gap_count": 0,
+  "schema_version": "1.0.0",
+  "test_ids": [
+    "TEST-AGENT-ADAPTER-001",
+    "TEST-AGENT-ADAPTER-002",
+    "TEST-AGENT-ADAPTER-003",
+    "TEST-AGENT-ADAPTER-004",
+    "TEST-AGENT-ADAPTER-005",
+    "TEST-AGENT-ADAPTER-006",
+    "TEST-AGENT-CIRCUIT-001",
+    "TEST-AGENT-CIRCUIT-002",
+    "TEST-AGENT-CIRCUIT-003",
+    "TEST-AGENT-CLI-001",
+    "TEST-AGENT-CLI-002",
+    "TEST-AGENT-DOMAIN-001",
+    "TEST-AGENT-DOMAIN-004",
+    "TEST-AGENT-PERF-001",
+    "TEST-AGENT-PERSIST-001",
+    "TEST-AGENT-ROUTER-001",
+    "TEST-AGENT-ROUTER-002",
+    "TEST-AGENT-ROUTER-003",
+    "TEST-AGENT-ROUTER-004",
+    "TEST-AGENT-ROUTER-005",
+    "TEST-AGENT-ROUTER-006",
+    "TEST-AGENT-SERVICE-001",
+    "TEST-AGENT-VALIDATION-001"
+  ]
+}

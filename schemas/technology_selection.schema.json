@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "decision_id": {
+      "pattern": "^ADR-[0-9]{4}$",
+      "type": "string"
+    },
+    "lifecycle_status": {
+      "enum": [
+        "SELECTED",
+        "QUALIFIED_FALLBACK",
+        "PROFILE_OPTIONAL",
+        "DEFERRED",
+        "ACTIVATION_BLOCKED"
+      ]
+    },
+    "technology_id": {
+      "pattern": "^TECH-[A-Z0-9-]+-[0-9]{3}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "technology_id",
+    "role",
+    "selection",
+    "lifecycle_status",
+    "decision_id",
+    "component_ids",
+    "upstream_ids",
+    "activation_gate",
+    "rationale"
+  ],
+  "title": "Technology Selection",
+  "type": "object"
+}

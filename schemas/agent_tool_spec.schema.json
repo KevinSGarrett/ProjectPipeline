@@ -1,0 +1,71 @@
+{
+  "$defs": {
+    "QualificationState": {
+      "enum": [
+        "QUARANTINED",
+        "SHADOW",
+        "CANARY",
+        "QUALIFIED",
+        "REJECTED",
+        "EXPIRED"
+      ],
+      "title": "QualificationState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/agent_tool_spec.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adapter_id": {
+      "title": "Adapter Id",
+      "type": "string"
+    },
+    "capabilities": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "mutating": {
+      "default": false,
+      "title": "Mutating",
+      "type": "boolean"
+    },
+    "qualification": {
+      "$ref": "#/$defs/QualificationState",
+      "default": "QUARANTINED"
+    },
+    "required_authority_scope": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Authority Scope",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tool_id": {
+      "title": "Tool Id",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "tool_id",
+    "adapter_id",
+    "version",
+    "capabilities"
+  ],
+  "title": "ToolSpec",
+  "type": "object"
+}

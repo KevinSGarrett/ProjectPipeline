@@ -1,0 +1,103 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000038-01",
+      "statement": "Compare the two supplied master-prompt representations, record hashes and only their observed formatting differences.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest tests.test_provenance",
+        "method": "command_and_artifact_inspection",
+        "path": "provenance/governing_prompt_comparison.json",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000038-02",
+      "statement": "The resulting state is represented accurately in traceability and evidence records.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "registry_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000002",
+    "EVID-000006"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Compare the two supplied master-prompt representations, record hashes and only their observed formatting differences.",
+  "evidence_required": [
+    "EVID-000002",
+    "EVID-000006"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "provenance/governing_prompt_comparison.json"
+  ],
+  "expected_implementation_artifacts": [
+    "provenance/governing_prompt_comparison.json"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "foundation",
+    "executable"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25289",
+    "remote_key": "PP-320",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000038",
+  "objective": "Compare the two supplied master-prompt representations, record hashes and only their observed formatting differences.",
+  "observability_impact": "Record structured validation and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-STORY-000002",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
+      "end_line": 35,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-001_project_definition.lines.txt",
+      "line_reference": "PLAN-PDEF-001:SEC-05:L000032-L000035",
+      "plan_id": "PLAN-PDEF-001",
+      "section_id": "PLAN-PDEF-001:SEC-05",
+      "start_line": 32
+    }
+  ],
+  "rationale": "This bounded task creates evidence-bearing foundation capability required before deeper subsystem implementation.",
+  "relationships": [],
+  "remote_jira_key": "PP-320",
+  "required_tests": [
+    "TEST-PROVENANCE-002"
+  ],
+  "requirement_ids": [
+    "REQ-PDEF-0001"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Compare the two supplied master-prompt representations, record hashes and only their observed formatting differences."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L000052-L000119"
+  ],
+  "state": "BACKLOG",
+  "title": "Reconcile governing prompt aliases",
+  "upstream_dependencies": []
+}

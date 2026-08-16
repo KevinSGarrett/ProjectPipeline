@@ -1,0 +1,141 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000104-01",
+      "statement": "Every linked requirement is explicitly dispositioned, mapped, and represented by the stated implementation or planned artifacts.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000104-02",
+      "statement": "Applicable behavior-specific tests and evidence support completion; unavailable external verification remains explicitly blocked.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000096",
+    "EVID-000097",
+    "EVID-000098",
+    "EVID-000100",
+    "EVID-000101"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement and verify the source-grounded requirements grouped under durable state for Resilience, Recovery, and Disaster Readiness.",
+  "evidence_required": [
+    "EVID-000096",
+    "EVID-000097",
+    "EVID-000098",
+    "EVID-000100",
+    "EVID-000101"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "STORY",
+  "labels": [
+    "capability-story",
+    "domain-res",
+    "cluster-durable-state"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25018",
+    "remote_key": "PP-49",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-STORY-000104",
+  "objective": "Deliver the durable state capability for Resilience, Recovery, and Disaster Readiness.",
+  "observability_impact": "Record structured validation, state, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-EPIC-000023",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md",
+      "end_line": 15,
+      "line_numbered_path": "plans/_line_numbered/PLAN-RES-001_resilience_recovery.lines.txt",
+      "line_reference": "PLAN-RES-001:SEC-02:L000012-L000015",
+      "plan_id": "PLAN-RES-001",
+      "section_id": "PLAN-RES-001:SEC-02",
+      "start_line": 12
+    }
+  ],
+  "rationale": "This work is required to convert source-grounded requirements into bounded implementation, verification, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-EPIC-000023",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-49",
+  "required_tests": [
+    "TEST-GITHUB-STEWARDSHIP-001",
+    "TEST-GITHUB-STEWARDSHIP-002",
+    "TEST-ORCH-ADAPTER-004",
+    "TEST-ORCH-MIGRATION-001",
+    "TEST-ORCH-RECOVERY-001",
+    "TEST-ORCH-RECOVERY-003",
+    "TEST-ORCH-RUNTIME-001",
+    "TEST-ORCH-RUNTIME-002",
+    "TEST-ORCH-RUNTIME-004",
+    "TEST-RES-BACKUP-001",
+    "TEST-RES-FAILOVER-001",
+    "TEST-RES-FAILOVER-002",
+    "TEST-RES-PERSIST-001",
+    "TEST-RES-SIM-001"
+  ],
+  "requirement_ids": [
+    "REQ-RES-0008",
+    "REQ-RES-0009",
+    "REQ-RES-0010",
+    "REQ-RES-0011",
+    "REQ-RES-0012"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the durable state capability for Resilience, Recovery, and Disaster Readiness."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, data-egress, and external-mutation effects.",
+  "source_references": [
+    "SRC-005:L000373-L000405",
+    "SRC-005:L000406-L000441",
+    "SRC-005:L000442-L000478",
+    "SRC-005:L000479-L000518",
+    "SRC-005:L000519-L000541",
+    "SRC-006:L000373-L000405",
+    "SRC-006:L000406-L000441",
+    "SRC-006:L000442-L000478",
+    "SRC-006:L000479-L000518",
+    "SRC-006:L000519-L000541"
+  ],
+  "state": "BACKLOG",
+  "title": "Durable State \u2014 Resilience, Recovery, and Disaster Readiness",
+  "upstream_dependencies": []
+}

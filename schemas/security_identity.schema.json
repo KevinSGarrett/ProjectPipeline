@@ -1,0 +1,101 @@
+{
+  "$defs": {
+    "IdentityKind": {
+      "enum": [
+        "HUMAN",
+        "AGENT",
+        "SERVICE",
+        "ADAPTER"
+      ],
+      "title": "IdentityKind",
+      "type": "string"
+    },
+    "IdentityState": {
+      "enum": [
+        "ACTIVE",
+        "SUSPENDED",
+        "REVOKED"
+      ],
+      "title": "IdentityState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/security_identity.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "display_name": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Display Name",
+      "type": "string"
+    },
+    "environment_scopes": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Environment Scopes",
+      "type": "array"
+    },
+    "identity_id": {
+      "title": "Identity Id",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/IdentityKind"
+    },
+    "metadata": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Metadata",
+      "type": "object"
+    },
+    "principal": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Principal",
+      "type": "string"
+    },
+    "project_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Project Ids",
+      "type": "array"
+    },
+    "role_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Role Ids",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/IdentityState",
+      "default": "ACTIVE"
+    }
+  },
+  "required": [
+    "identity_id",
+    "kind",
+    "display_name",
+    "principal"
+  ],
+  "title": "SecurityIdentity",
+  "type": "object"
+}

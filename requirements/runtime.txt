@@ -1,0 +1,11 @@
+# Generated from requirements/environment.lock.json.
+# Exact package versions are environment-observed; wheel hashes require resolver access.
+annotated-types==0.8.0
+networkx==3.6.1
+opentelemetry-api==1.44.0
+opentelemetry-sdk==1.44.0
+opentelemetry-semantic-conventions==0.65b0
+pydantic==2.13.4
+pydantic-core==2.46.4
+typing-extensions==4.16.0
+typing-inspection==0.4.4

@@ -1,0 +1,67 @@
+{
+  "$defs": {
+    "PolicyDisposition": {
+      "enum": [
+        "ALLOW",
+        "DENY",
+        "REQUIRE_APPROVAL",
+        "CONSTRAIN"
+      ],
+      "title": "PolicyDisposition",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/security_egress_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed_context_keys": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Allowed Context Keys",
+      "type": "array"
+    },
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "disposition": {
+      "$ref": "#/$defs/PolicyDisposition"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "redacted_context_keys": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Redacted Context Keys",
+      "type": "array"
+    },
+    "request_id": {
+      "title": "Request Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "decision_id",
+    "request_id",
+    "disposition",
+    "reasons"
+  ],
+  "title": "EgressDecision",
+  "type": "object"
+}

@@ -1,0 +1,94 @@
+{
+  "$id": "https://project-pipeline.local/schemas/github_repository_snapshot.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "captured_at_utc": {
+      "format": "date-time",
+      "title": "Captured At Utc",
+      "type": "string"
+    },
+    "current_branch": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Current Branch"
+    },
+    "default_branch": {
+      "title": "Default Branch",
+      "type": "string"
+    },
+    "detached_head": {
+      "default": false,
+      "title": "Detached Head",
+      "type": "boolean"
+    },
+    "dirty": {
+      "default": false,
+      "title": "Dirty",
+      "type": "boolean"
+    },
+    "head_sha": {
+      "title": "Head Sha",
+      "type": "string"
+    },
+    "remotes": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Remotes",
+      "type": "object"
+    },
+    "repository_id": {
+      "title": "Repository Id",
+      "type": "string"
+    },
+    "repository_slug": {
+      "title": "Repository Slug",
+      "type": "string"
+    },
+    "root_path": {
+      "title": "Root Path",
+      "type": "string"
+    },
+    "staged_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Staged Paths",
+      "type": "array"
+    },
+    "unstaged_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Unstaged Paths",
+      "type": "array"
+    },
+    "untracked_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Untracked Paths",
+      "type": "array"
+    }
+  },
+  "required": [
+    "repository_id",
+    "repository_slug",
+    "root_path",
+    "default_branch",
+    "head_sha",
+    "current_branch"
+  ],
+  "title": "GitRepositorySnapshot",
+  "type": "object"
+}

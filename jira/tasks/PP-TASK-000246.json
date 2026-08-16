@@ -1,0 +1,119 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000246-01",
+      "statement": "Apply deterministic normal, congested, brownout, and halt-new-work admission modes that preserve authoritative state and control-plane capacity. is implemented with deterministic, fail-closed behavior.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_scheduler_domain.py tests/test_scheduler_conflicts.py tests/test_scheduler_engine.py tests/test_scheduler_persistence.py tests/test_scheduler_backpressure.py tests/test_scheduler_cli.py tests/test_scheduler_validation.py",
+        "method": "automated_behavior_and_contract_validation",
+        "path": "src/project_pipeline/scheduler/backpressure.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000246-02",
+      "statement": "The work is source/plan/Jira/test/evidence traceable and does not overstate unavailable downstream or live capabilities.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000061",
+    "EVID-000063"
+  ],
+  "definition_of_done": [
+    "The bounded scheduler/resource objective is implemented.",
+    "Acceptance criteria are behaviorally verified.",
+    "Plans, Jira, requirements, tests, traceability, and evidence are current.",
+    "Unsafe or ambiguous admission fails closed.",
+    "Unavailable downstream integrations remain explicitly partial or planned."
+  ],
+  "dependencies": [],
+  "description": "Apply deterministic normal, congested, brownout, and halt-new-work admission modes that preserve authoritative state and control-plane capacity. The implementation is deterministic, fail-closed for unsafe admission, and evidence-backed.",
+  "evidence_required": [
+    "EVID-000061",
+    "EVID-000063"
+  ],
+  "exclusions": [
+    "This work does not activate provider/model routing or monetary budget governance.",
+    "This work does not claim live distributed-worker or external-system verification.",
+    "No external system mutation is required for verification."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/scheduler/backpressure.py",
+    "src/project_pipeline/scheduler/engine.py"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/scheduler/backpressure.py",
+    "src/project_pipeline/scheduler/engine.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "dynamic-scheduler",
+    "resource-governance",
+    "parallel-execution",
+    "deterministic"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25321",
+    "remote_key": "PP-352",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000246",
+  "objective": "Apply deterministic normal, congested, brownout, and halt-new-work admission modes that preserve authoritative state and control-plane capacity.",
+  "observability_impact": "Expose stable scheduler plan, conflict, resource, lease, fencing, backpressure, and simulation identities for later telemetry.",
+  "owner_required_capability": "dynamic_scheduling_and_resource_governance",
+  "parent": "PP-STORY-000070",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-002_dynamic_lane_scheduler_resource_governance.md",
+      "end_line": 39,
+      "line_numbered_path": "plans/_line_numbered/PLAN-SCHED-002_dynamic_lane_scheduler_resource_governance.lines.txt",
+      "line_reference": "PLAN-SCHED-002:SEC-08:L000036-L000039",
+      "plan_id": "PLAN-SCHED-002",
+      "section_id": "PLAN-SCHED-002:SEC-08",
+      "start_line": 36
+    }
+  ],
+  "rationale": "Project Pipeline requires conflict-safe, capacity-aware autonomous parallel execution with deterministic lease authority rather than unconstrained worker fan-out.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000070",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-352",
+  "required_tests": [
+    "TEST-SCHED-BACKPRESSURE-001",
+    "TEST-SCHED-SIM-001"
+  ],
+  "requirement_ids": [
+    "REQ-SCHED-0015"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Restore the prior cumulative archive; roll back PPDB-0007 when appropriate; expire or reconcile leases before resuming admission.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Apply deterministic normal, congested, brownout, and halt-new-work admission modes that preserve authoritative state and control-plane capacity."
+  ],
+  "security_impact": "Preserve exclusive resource ownership, bounded capacity, fencing, explicit mutation approval, and fail-closed admission.",
+  "source_references": [
+    "SRC-001:L000492-L000568",
+    "SRC-009:L000022-L000022",
+    "SRC-014:L000378-L000748",
+    "SRC-014:L000859-L000946",
+    "SRC-017:L000360-L000438",
+    "GOV-001:L000436-L000455"
+  ],
+  "state": "BACKLOG",
+  "title": "Backpressure and brownout admission modes",
+  "upstream_dependencies": []
+}

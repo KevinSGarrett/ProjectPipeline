@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "canonical_url": {
+      "pattern": "^https://github\\.com/",
+      "type": "string"
+    },
+    "disposition": {
+      "type": "string"
+    },
+    "evidence_sources": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "inspection_state": {
+      "type": "string"
+    },
+    "upstream_id": {
+      "pattern": "^UPSTREAM-[0-9]{3}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "upstream_id",
+    "canonical_url",
+    "inspection_state",
+    "disposition",
+    "license",
+    "inspected_revision",
+    "purpose",
+    "architectural_lessons",
+    "security_concerns",
+    "maintenance_concerns",
+    "evidence_sources"
+  ],
+  "title": "Upstream Review",
+  "type": "object"
+}

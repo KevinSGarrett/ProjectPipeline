@@ -1,0 +1,81 @@
+{
+  "$defs": {
+    "CheckConclusion": {
+      "enum": [
+        "SUCCESS",
+        "NEUTRAL",
+        "SKIPPED",
+        "FAILURE",
+        "CANCELLED",
+        "TIMED_OUT",
+        "ACTION_REQUIRED",
+        "STALE",
+        "STARTUP_FAILURE",
+        "UNKNOWN"
+      ],
+      "title": "CheckConclusion",
+      "type": "string"
+    },
+    "CheckState": {
+      "enum": [
+        "QUEUED",
+        "IN_PROGRESS",
+        "COMPLETED",
+        "UNKNOWN"
+      ],
+      "title": "CheckState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_pull_request_check.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "check_id": {
+      "title": "Check Id",
+      "type": "string"
+    },
+    "conclusion": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/CheckConclusion"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "details_url": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Details Url"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "required": {
+      "default": false,
+      "title": "Required",
+      "type": "boolean"
+    },
+    "state": {
+      "$ref": "#/$defs/CheckState"
+    }
+  },
+  "required": [
+    "check_id",
+    "name",
+    "state"
+  ],
+  "title": "PullRequestCheck",
+  "type": "object"
+}

@@ -1,0 +1,97 @@
+{
+  "$defs": {
+    "JiraLifecycleState": {
+      "enum": [
+        "DISCOVERED",
+        "BACKLOG",
+        "READY",
+        "IN_PROGRESS",
+        "REVIEW",
+        "VALIDATION",
+        "MERGE_READY",
+        "BLOCKED",
+        "FAILED",
+        "CANCELLED",
+        "DEFERRED",
+        "DONE"
+      ],
+      "title": "JiraLifecycleState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/jira_transition_readiness.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "acceptance_criteria_verified": {
+      "default": false,
+      "title": "Acceptance Criteria Verified",
+      "type": "boolean"
+    },
+    "allowed": {
+      "title": "Allowed",
+      "type": "boolean"
+    },
+    "assigned": {
+      "default": false,
+      "title": "Assigned",
+      "type": "boolean"
+    },
+    "blockers_clear": {
+      "default": false,
+      "title": "Blockers Clear",
+      "type": "boolean"
+    },
+    "branch_present": {
+      "default": false,
+      "title": "Branch Present",
+      "type": "boolean"
+    },
+    "completion_evidence_present": {
+      "default": false,
+      "title": "Completion Evidence Present",
+      "type": "boolean"
+    },
+    "from_state": {
+      "$ref": "#/$defs/JiraLifecycleState"
+    },
+    "implementation_evidence_present": {
+      "default": false,
+      "title": "Implementation Evidence Present",
+      "type": "boolean"
+    },
+    "independent_review_complete": {
+      "default": false,
+      "title": "Independent Review Complete",
+      "type": "boolean"
+    },
+    "local_id": {
+      "title": "Local Id",
+      "type": "string"
+    },
+    "reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "required_tests_passed": {
+      "default": false,
+      "title": "Required Tests Passed",
+      "type": "boolean"
+    },
+    "to_state": {
+      "$ref": "#/$defs/JiraLifecycleState"
+    }
+  },
+  "required": [
+    "local_id",
+    "from_state",
+    "to_state",
+    "allowed"
+  ],
+  "title": "JiraTransitionReadiness",
+  "type": "object"
+}

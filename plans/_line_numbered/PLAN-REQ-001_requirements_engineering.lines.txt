@@ -1,0 +1,31 @@
+L000001 | # PLAN-REQ-001 — Requirements Engineering and Traceability
+L000002 | 
+L000003 | - **Plan ID:** `PLAN-REQ-001`
+L000004 | - **Status:** `ACTIVE`
+L000005 | - **Authority:** source-derived requirements plus explicitly labeled implementation detail
+L000006 | - **Source basis:** `GOV-001:L000123-L000221`, `GOV-001:L001162-L001215`, `SRC-008:L000648-L000760`
+L000007 | 
+L000008 | 
+L000009 | ## PLAN-REQ-001:SEC-01 Requirement identity
+L000010 | 
+L000011 | Every requirement receives a stable domain-prefixed ID and records its statement, type, authority, source references, chronology, disposition, risk, plan IDs, work-item IDs, implementation paths, test IDs, evidence IDs, and current implementation state.
+L000012 | 
+L000013 | ## PLAN-REQ-001:SEC-02 Provenance and chronology
+L000014 | 
+L000015 | Canonical source lines are retained using exact `SRC-NNN:Lxxxxxx-Lxxxxxx` references. Governing requirements use `GOV-001:Lxxxxxx-Lxxxxxx`. Exact duplicates are not counted as independent confirmation. Later sources may refine or supersede earlier recommendations, but the earlier record remains discoverable.
+L000016 | 
+L000017 | ## PLAN-REQ-001:SEC-03 Requirement classes
+L000018 | 
+L000019 | The registry supports functional, nonfunctional, constraint, interface, security, resilience, operational, testing, completion, and governance requirements. Engineering-added detail must declare its authority classification rather than being silently presented as source-derived.
+L000020 | 
+L000021 | ## PLAN-REQ-001:SEC-04 Disposition model
+L000022 | 
+L000023 | Accepted requirements progress through `PLANNED_ONLY`, `PARTIALLY_IMPLEMENTED`, `IMPLEMENTED`, `MOCK_VERIFIED`, `LIVE_VERIFIED`, or `BLOCKED_EXTERNAL`. A separate disposition records accepted, superseded, excluded, rejected, or open-decision state.
+L000024 | 
+L000025 | ## PLAN-REQ-001:SEC-05 Bidirectional mappings
+L000026 | 
+L000027 | Machine-readable registries map source to requirement; requirement to plan, decision, work, implementation, tests, and evidence; and implementation, test, or work back to requirement and source. Validators reject dangling identifiers and unexplained gaps.
+L000028 | 
+L000029 | ## PLAN-REQ-001:SEC-06 Coverage computation
+L000030 | 
+L000031 | Coverage is computed from registry facts rather than document counts. A requirement is fully mapped only when all required relationships are present. Verification coverage additionally requires applicable tests and current evidence. Unknown remains an explicit state.

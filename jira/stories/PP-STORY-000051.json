@@ -1,0 +1,122 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000051-01",
+      "statement": "Every linked requirement is explicitly dispositioned, mapped, and represented by the stated implementation or planned artifacts.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000051-02",
+      "statement": "Applicable behavior-specific tests and evidence support completion; unavailable external verification remains explicitly blocked.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement and verify the source-grounded requirements grouped under mission for Project Definition and Scope.",
+  "evidence_required": [
+    "EVID-000036"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "fixtures/intake/polyglot_application",
+    "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
+    "src/project_pipeline/intake/profiles.py"
+  ],
+  "expected_implementation_artifacts": [
+    "fixtures/intake/polyglot_application",
+    "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
+    "src/project_pipeline/intake/profiles.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "STORY",
+  "labels": [
+    "capability-story",
+    "domain-pdef",
+    "cluster-mission"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25049",
+    "remote_key": "PP-80",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-STORY-000051",
+  "objective": "Deliver the mission capability for Project Definition and Scope.",
+  "observability_impact": "Record structured validation, state, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-EPIC-000001",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
+      "end_line": 12,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-001_project_definition.lines.txt",
+      "line_reference": "PLAN-PDEF-001:SEC-01:L000009-L000012",
+      "plan_id": "PLAN-PDEF-001",
+      "section_id": "PLAN-PDEF-001:SEC-01",
+      "start_line": 9
+    },
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-002_project_intake_and_compilation.md",
+      "end_line": 59,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-002_project_intake_and_compilation.lines.txt",
+      "line_reference": "PLAN-PDEF-002:SEC-04:L000052-L000059",
+      "plan_id": "PLAN-PDEF-002",
+      "section_id": "PLAN-PDEF-002:SEC-04",
+      "start_line": 52
+    }
+  ],
+  "rationale": "This work is required to convert source-grounded requirements into bounded implementation, verification, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-EPIC-000001",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-80",
+  "required_tests": [
+    "TEST-INTAKE-COMPILER-003",
+    "TEST-INTAKE-COMPILER-005"
+  ],
+  "requirement_ids": [
+    "REQ-PDEF-0004",
+    "REQ-PDEF-0007"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the mission capability for Project Definition and Scope."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, data-egress, and external-mutation effects.",
+  "source_references": [
+    "SRC-001:L000001-L000020",
+    "SRC-001:L000021-L000061",
+    "SRC-012:L000001-L000113"
+  ],
+  "state": "BACKLOG",
+  "title": "Mission \u2014 Project Definition and Scope",
+  "upstream_dependencies": []
+}

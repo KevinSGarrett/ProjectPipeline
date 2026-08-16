@@ -1,0 +1,10 @@
+{"authority": "BENCHMARK_OWNER", "content_sha256": "2cb90fd259e62ccc4667a7e1fc3fd82615ce6587c128b28a3c1af6b0427819c3", "path": "BENCHMARK_BRIEF.md", "source_id": "SRC-SS-BRIEF", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "content_sha256": "258ef9a7474489d2365416cf69af1e09ddf7891ff7245c8411d6d305016828e5", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-SS-CATALOG", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Schema registry", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-SS-FEATURE-01", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Version one to version two migration", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-SS-FEATURE-02", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Version two to version three migration", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-SS-FEATURE-03", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Validation diagnostics", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-SS-FEATURE-04", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Migration planning", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-SS-FEATURE-05", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Dry-run semantic diff", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-SS-FEATURE-06", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "Backup and rollback", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-SS-FEATURE-07", "trust": "TRUSTED_NORMATIVE"}
+{"authority": "BENCHMARK_OWNER", "feature": "CLI SDK documentation and release", "path": "requirements_source/01_feature_and_requirement_catalog.md", "source_id": "SRC-SS-FEATURE-08", "trust": "TRUSTED_NORMATIVE"}

@@ -1,0 +1,19 @@
+{
+  "actor_id": "actor:ppqs-benchmark-owner",
+  "allow_nested_repositories": false,
+  "canonical_url": "https://github.com/restic/restic",
+  "correlation_id": "corr:ppqs-05-run",
+  "max_files": 100000,
+  "max_hash_bytes_per_file": 64000000,
+  "max_total_bytes": 8000000000,
+  "mode": "EXISTING_PROJECT",
+  "project_id": "ppqs-05",
+  "project_name": "Repository Safety Patch",
+  "requested_profiles": [
+    "GENERIC",
+    "DOCUMENTATION"
+  ],
+  "scale": "SMALL",
+  "schema_version": "1.0.0",
+  "target_root": "./workspace/PPQS-05"
+}

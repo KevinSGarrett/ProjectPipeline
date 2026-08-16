@@ -1,0 +1,22 @@
+{
+  "actor_id": "actor:ppqs-benchmark-owner",
+  "allow_nested_repositories": false,
+  "canonical_url": null,
+  "correlation_id": "corr:ppqs-02-run",
+  "max_files": 100000,
+  "max_hash_bytes_per_file": 64000000,
+  "max_total_bytes": 8000000000,
+  "mode": "NEW_PROJECT",
+  "project_id": "ppqs-02",
+  "project_name": "FieldDesk",
+  "requested_profiles": [
+    "WEB_APPLICATION",
+    "TYPESCRIPT_APPLICATION",
+    "PYTHON_SERVICE",
+    "INFRASTRUCTURE",
+    "POLYGLOT_APPLICATION"
+  ],
+  "scale": "STANDARD",
+  "schema_version": "1.0.0",
+  "target_root": "./workspace/PPQS-02"
+}

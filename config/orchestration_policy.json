@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "initial_backend": "HATCHET",
+  "fallback_backends": ["DBOS", "TEMPORAL"],
+  "allow_active_backend_migration": false,
+  "blind_retry_unknown_outcome": false,
+  "worker_heartbeat_ttl_seconds": 60,
+  "recover_stale_workers": true,
+  "max_automated_recovery_count": 5
+}

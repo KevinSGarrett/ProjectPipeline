@@ -1,0 +1,163 @@
+{
+  "$defs": {
+    "ReserveReason": {
+      "enum": [
+        "P0_FAILURE_RECOVERY",
+        "CRITICAL_PATH",
+        "RELEASE_BLOCKER",
+        "SECURITY",
+        "PRODUCTION_RECOVERY",
+        "CRITICAL_ARCHITECTURE",
+        "DEADLINE_PROTECTION",
+        "REQUIRED_VERIFICATION"
+      ],
+      "title": "ReserveReason",
+      "type": "string"
+    },
+    "SpendLeaseState": {
+      "enum": [
+        "RESERVED",
+        "SETTLED",
+        "RELEASED",
+        "EXPIRED",
+        "CANCELLED",
+        "UNKNOWN_OUTCOME",
+        "OVERSPENT"
+      ],
+      "title": "SpendLeaseState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/budget_spend_lease.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "consumed_microunits": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Consumed Microunits",
+      "type": "integer"
+    },
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "expires_at_utc": {
+      "format": "date-time",
+      "title": "Expires At Utc",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "lease_id": {
+      "title": "Lease Id",
+      "type": "string"
+    },
+    "maximum_microunits": {
+      "minimum": 0,
+      "title": "Maximum Microunits",
+      "type": "integer"
+    },
+    "project_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Project Id",
+      "type": "string"
+    },
+    "provider_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Id"
+    },
+    "quota_reservations": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Quota Reservations",
+      "type": "object"
+    },
+    "reconciliation_required": {
+      "default": false,
+      "title": "Reconciliation Required",
+      "type": "boolean"
+    },
+    "reservation_evidence": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Reservation Evidence",
+      "type": "array"
+    },
+    "reserve_reason": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ReserveReason"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "reserved_microunits": {
+      "minimum": 0,
+      "title": "Reserved Microunits",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope_keys": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Scope Keys",
+      "type": "array"
+    },
+    "state": {
+      "$ref": "#/$defs/SpendLeaseState",
+      "default": "RESERVED"
+    },
+    "task_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Task Id",
+      "type": "string"
+    },
+    "updated_at_utc": {
+      "format": "date-time",
+      "title": "Updated At Utc",
+      "type": "string"
+    }
+  },
+  "required": [
+    "lease_id",
+    "idempotency_key",
+    "project_id",
+    "task_id",
+    "scope_keys",
+    "maximum_microunits",
+    "reserved_microunits",
+    "created_at_utc",
+    "expires_at_utc",
+    "updated_at_utc"
+  ],
+  "title": "SpendLease",
+  "type": "object"
+}

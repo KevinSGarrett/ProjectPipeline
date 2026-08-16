@@ -1,0 +1,144 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000185-01",
+      "statement": "Add self-auditing checks that reject stale diagrams, invalid component links, unreviewed selected dependencies, source-copy permission drift, and unresolved decision inconsistencies.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "automated_test_and_registry_validation",
+        "path": "TEST-ARCHITECTURE-001",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000185-02",
+      "statement": "Traceability, source context, completion evidence, and generated indexes represent the verified result without overstating runtime implementation.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_contract_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000016",
+    "EVID-000017",
+    "EVID-000018",
+    "EVID-000019"
+  ],
+  "definition_of_done": [
+    "Applicable planning, decision, registry, or executable validation work is complete.",
+    "Acceptance criteria have current automated evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and source context are current.",
+    "Security, licensing, and recovery implications are explicit.",
+    "No runtime or external verification is overstated."
+  ],
+  "dependencies": [
+    "PP-TASK-000160"
+  ],
+  "description": "Add self-auditing checks that reject stale diagrams, invalid component links, unreviewed selected dependencies, source-copy permission drift, and unresolved decision inconsistencies.",
+  "evidence_required": [
+    "EVID-000016",
+    "EVID-000017",
+    "EVID-000018",
+    "EVID-000019"
+  ],
+  "exclusions": [
+    "No claim of live external integration, deployed runtime, or production qualification."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/validation/repository.py",
+    "tests/test_architecture_registry.py",
+    "tests/test_upstream_reviews.py",
+    "tests/test_decision_resolution.py"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/validation/repository.py",
+    "tests/test_architecture_registry.py",
+    "tests/test_upstream_reviews.py",
+    "tests/test_decision_resolution.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "SUBTASK",
+  "labels": [
+    "architecture",
+    "provenance",
+    "evidence-backed"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25341",
+    "remote_key": "PP-372",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-SUBTASK-000185",
+  "objective": "Add self-auditing checks that reject stale diagrams, invalid component links, unreviewed selected dependencies, source-copy permission drift, and unresolved decision inconsistencies.",
+  "observability_impact": "Records stable decision, component, upstream, test, and evidence identities for later telemetry correlation.",
+  "owner_required_capability": "systems_architecture_supply_chain_and_verification",
+  "parent": "PP-TASK-000160",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md",
+      "end_line": 46,
+      "line_numbered_path": "plans/_line_numbered/PLAN-ARCH-001_system_architecture.lines.txt",
+      "line_reference": "PLAN-ARCH-001:SEC-10:L000044-L000046",
+      "plan_id": "PLAN-ARCH-001",
+      "section_id": "PLAN-ARCH-001:SEC-10",
+      "start_line": 44
+    },
+    {
+      "authoritative_path": "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-002_dependency_provenance_policy.md",
+      "end_line": 30,
+      "line_numbered_path": "plans/_line_numbered/PLAN-UPSTREAM-002_dependency_provenance_policy.lines.txt",
+      "line_reference": "PLAN-UPSTREAM-002:SEC-06:L000028-L000030",
+      "plan_id": "PLAN-UPSTREAM-002",
+      "section_id": "PLAN-UPSTREAM-002:SEC-06",
+      "start_line": 28
+    }
+  ],
+  "rationale": "This bounded architecture and provenance work closes a scheduled design obligation with machine-readable records, tests, and evidence before runtime activation.",
+  "relationships": [],
+  "remote_jira_key": "PP-372",
+  "required_tests": [
+    "TEST-ARCHITECTURE-001",
+    "TEST-UPSTREAM-004",
+    "TEST-DECISION-001",
+    "TEST-DECISION-002"
+  ],
+  "requirement_ids": [
+    "REQ-ARCH-0001",
+    "REQ-ARCH-0003",
+    "REQ-ARCH-0012",
+    "REQ-ARCH-0014",
+    "REQ-ARCH-0015",
+    "REQ-UPSTREAM-0001",
+    "REQ-UPSTREAM-0002",
+    "REQ-UPSTREAM-0005",
+    "REQ-UPSTREAM-0006",
+    "REQ-UPSTREAM-0007",
+    "REQ-UPSTREAM-0008",
+    "REQ-UPSTREAM-0009",
+    "REQ-UPSTREAM-0010",
+    "REQ-UPSTREAM-0011",
+    "REQ-UPSTREAM-0013",
+    "REQ-UPSTREAM-0014"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid records; generated indexes and summaries are deterministic and can be regenerated after rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Add self-auditing checks that reject stale diagrams, invalid component links, unreviewed selected dependencies, source-copy permission drift, and unresolved decision inconsistencies."
+  ],
+  "security_impact": "Records authority, dependency, licensing, secret, external-effect, and trust-boundary implications.",
+  "source_references": [
+    "GOV-001:L002200-L002231",
+    "GOV-001:L002028-L002062"
+  ],
+  "state": "BACKLOG",
+  "title": "Validate architecture, decisions, upstream adoption, and generated views",
+  "upstream_dependencies": []
+}

@@ -1,0 +1,95 @@
+{
+  "$defs": {
+    "BranchGuardianFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "pattern": "^[A-Z][A-Z0-9_]{2,80}$",
+          "title": "Code",
+          "type": "string"
+        },
+        "message": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Message",
+          "type": "string"
+        },
+        "remediation": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Remediation",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/GuardianFindingSeverity"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "message",
+        "remediation"
+      ],
+      "title": "BranchGuardianFinding",
+      "type": "object"
+    },
+    "GuardianFindingSeverity": {
+      "enum": [
+        "INFO",
+        "WARNING",
+        "BLOCKING"
+      ],
+      "title": "GuardianFindingSeverity",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_branch_guardian_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "branch": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "title": "Branch"
+    },
+    "evaluated_at_utc": {
+      "format": "date-time",
+      "title": "Evaluated At Utc",
+      "type": "string"
+    },
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/BranchGuardianFinding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "repository_slug": {
+      "title": "Repository Slug",
+      "type": "string"
+    },
+    "safe_for_cleanup": {
+      "title": "Safe For Cleanup",
+      "type": "boolean"
+    },
+    "safe_for_work": {
+      "title": "Safe For Work",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "repository_slug",
+    "branch",
+    "safe_for_work",
+    "safe_for_cleanup",
+    "findings"
+  ],
+  "title": "BranchGuardianDecision",
+  "type": "object"
+}

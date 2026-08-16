@@ -1,0 +1,23 @@
+{
+  "authority_mode": "SOURCE_CONTROLLED_LOCAL",
+  "database": ":memory:",
+  "local_mirror": {
+    "edge_count": 339,
+    "errors": [],
+    "issue_count": 210,
+    "schema_version": "1.0.0",
+    "valid": true,
+    "warnings": []
+  },
+  "provider": "mock-jira",
+  "schema_version": "1.0.0",
+  "sync_store": {
+    "mappings": 0,
+    "operation_states": {},
+    "outbox": [],
+    "plans": 0,
+    "project_key": "PP",
+    "schema_version": "1.0.0",
+    "snapshots": 0
+  }
+}

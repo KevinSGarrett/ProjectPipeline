@@ -1,0 +1,62 @@
+{
+  "$id": "https://project-pipeline.local/schemas/security_integrity.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifact_path": {
+      "title": "Artifact Path",
+      "type": "string"
+    },
+    "integrity_id": {
+      "title": "Integrity Id",
+      "type": "string"
+    },
+    "provenance_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provenance Id"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Sha256",
+      "type": "string"
+    },
+    "signature_state": {
+      "default": "UNVERIFIED",
+      "enum": [
+        "NOT_REQUIRED",
+        "UNVERIFIED",
+        "VERIFIED",
+        "FAILED"
+      ],
+      "title": "Signature State",
+      "type": "string"
+    },
+    "size_bytes": {
+      "minimum": 0,
+      "title": "Size Bytes",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "integrity_id",
+    "artifact_path",
+    "sha256",
+    "size_bytes"
+  ],
+  "title": "ArtifactIntegrityRecord",
+  "type": "object"
+}

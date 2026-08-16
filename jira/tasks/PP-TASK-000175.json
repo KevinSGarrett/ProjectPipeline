@@ -1,0 +1,123 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000175-01",
+      "statement": "The specified artifacts implement or precisely disposition the linked requirements and preserve stable architecture, source, ADR, and work-item traceability.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "behavior_and_traceability_validation",
+        "path": "provenance/upstream_registry.json",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000175-02",
+      "statement": "Applicable behavior tests and evidence pass, and unavailable live or external verification remains explicitly represented.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000017",
+    "EVID-000019",
+    "EVID-000020"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability, ADRs, plans, Jira, and documentation are updated.",
+    "Security, provenance, observability, and rollback effects are addressed.",
+    "No unresolved blocker or external verification gap is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Reconcile all catalog entries with explicit dispositions.",
+  "evidence_required": [
+    "EVID-000017",
+    "EVID-000019",
+    "EVID-000020"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion.",
+    "No external write or source incorporation is authorized by this item."
+  ],
+  "expected_file_locations": [
+    "provenance/upstream_registry.json",
+    "src/project_pipeline/upstream.py",
+    "provenance/upstream_summary.json"
+  ],
+  "expected_implementation_artifacts": [
+    "provenance/upstream_registry.json",
+    "src/project_pipeline/upstream.py",
+    "provenance/upstream_summary.json"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "platform",
+    "upstream"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25260",
+    "remote_key": "PP-291",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000175",
+  "objective": "Reconcile all catalog entries with explicit dispositions",
+  "observability_impact": "Record structured state, correlation, validation, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-STORY-000132",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md",
+      "end_line": 11,
+      "line_numbered_path": "plans/_line_numbered/PLAN-UPSTREAM-001_upstream_adoption.lines.txt",
+      "line_reference": "PLAN-UPSTREAM-001:SEC-01:L000008-L000011",
+      "plan_id": "PLAN-UPSTREAM-001",
+      "section_id": "PLAN-UPSTREAM-001:SEC-01",
+      "start_line": 8
+    }
+  ],
+  "rationale": "This bounded work converts accepted architecture or upstream requirements into explicit implementation, verification, provenance, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000132",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-291",
+  "required_tests": [
+    "TEST-PROVENANCE-003",
+    "TEST-REPOSITORY-001",
+    "TEST-UPSTREAM-003",
+    "TEST-UPSTREAM-REVIEWS-001",
+    "TEST-UPSTREAM-REVIEWS-002",
+    "TEST-UPSTREAM-REVIEWS-003"
+  ],
+  "requirement_ids": [
+    "REQ-UPSTREAM-0001",
+    "REQ-UPSTREAM-0003",
+    "REQ-UPSTREAM-0009"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration, adapter replacement, or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Reconcile all catalog entries with explicit dispositions"
+  ],
+  "security_impact": "Enforce authority, secret, dependency, data-egress, provenance, and external-mutation boundaries.",
+  "source_references": [
+    "GOV-001:L000797-L000876",
+    "GOV-001:L000855-L000865"
+  ],
+  "state": "BACKLOG",
+  "title": "Reconcile all catalog entries with explicit dispositions",
+  "upstream_dependencies": []
+}

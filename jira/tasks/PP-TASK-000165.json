@@ -1,0 +1,113 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000165-01",
+      "statement": "The specified artifacts implement or precisely disposition the linked requirements and preserve stable architecture, source, ADR, and work-item traceability.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "behavior_and_traceability_validation",
+        "path": "src/project_pipeline/scheduling/",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000165-02",
+      "statement": "Applicable behavior tests and evidence pass, and unavailable live or external verification remains explicitly represented.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability, ADRs, plans, Jira, and documentation are updated.",
+    "Security, provenance, observability, and rollback effects are addressed.",
+    "No unresolved blocker or external verification gap is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement NetworkX-backed dependency, conflict, resource, and critical-path analysis with an optional OR-Tools optimizer whose output is revalidated.",
+  "evidence_required": [],
+  "exclusions": [
+    "No unverified claim of live external-system completion.",
+    "No external write or source incorporation is authorized by this item."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/scheduling/",
+    "tests/test_scheduling.py"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/scheduling/",
+    "tests/test_scheduling.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "backlog",
+    "implementation",
+    "platform"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25251",
+    "remote_key": "PP-282",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000165",
+  "objective": "Implement deterministic graph analysis and bounded scheduling optimization",
+  "observability_impact": "Record structured state, correlation, validation, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-STORY-000071",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md",
+      "end_line": 16,
+      "line_numbered_path": "plans/_line_numbered/PLAN-SCHED-001_scheduling_parallel_execution.lines.txt",
+      "line_reference": "PLAN-SCHED-001:SEC-02:L000013-L000016",
+      "plan_id": "PLAN-SCHED-001",
+      "section_id": "PLAN-SCHED-001:SEC-02",
+      "start_line": 13
+    }
+  ],
+  "rationale": "This bounded work converts accepted architecture or upstream requirements into explicit implementation, verification, provenance, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000071",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-282",
+  "required_tests": [],
+  "requirement_ids": [
+    "REQ-SCHED-0001",
+    "REQ-SCHED-0004",
+    "REQ-SCHED-0008"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration, adapter replacement, or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Implement authoritative graph analysis and a bounded optimizer adapter."
+  ],
+  "security_impact": "Enforce authority, secret, dependency, data-egress, provenance, and external-mutation boundaries.",
+  "source_references": [
+    "GOV-001:L000423-L000435",
+    "GOV-001:L000424-L000455",
+    "SRC-003:L000225-L000371",
+    "SRC-006:L001399-L001440",
+    "SRC-014:L000210-L000373"
+  ],
+  "state": "BACKLOG",
+  "title": "Implement deterministic graph analysis and bounded scheduling optimization",
+  "upstream_dependencies": [
+    "UPSTREAM-046",
+    "UPSTREAM-070"
+  ]
+}

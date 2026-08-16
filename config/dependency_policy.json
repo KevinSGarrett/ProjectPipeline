@@ -1,0 +1,103 @@
+{
+  "active_lock_groups": [
+    "runtime",
+    "group:test"
+  ],
+  "authoritative_definition": "pyproject.toml",
+  "commands": {
+    "audit": "uv run --group quality pip-audit --skip-editable",
+    "observe_environment": "python -m project_pipeline dependencies lock --root .",
+    "resolve_portable": "uv lock",
+    "sync": "uv sync --locked --group test --group quality",
+    "verify_environment": "python -m project_pipeline dependencies validate --root . --verify-installed"
+  },
+  "environment_lock": {
+    "kind": "OBSERVED_ENVIRONMENT",
+    "path": "requirements/environment.lock.json",
+    "scope": "Exact versions and installed METADATA hashes for active runtime and test groups",
+    "state": "READY"
+  },
+  "optional_groups": {
+    "group:quality": {
+      "purpose": "Formatting, linting, static typing, build, hooks, and vulnerability audit",
+      "state": "DECLARED_ACTIVATION_BLOCKED"
+    },
+    "optional:api": {
+      "purpose": "Typed HTTP service boundary",
+      "state": "DECLARED_NOT_ACTIVATED"
+    },
+    "optional:database": {
+      "purpose": "PostgreSQL persistence and migrations",
+      "state": "DECLARED_NOT_ACTIVATED"
+    },
+    "optional:orchestration-hatchet": {
+      "purpose": "Initial Hatchet durable-execution backend behind the Project Pipeline DurableExecutionPort; adapter implemented, live runtime not qualified.",
+      "state": "DECLARED_NOT_ACTIVATED"
+    },
+    "optional:otlp": {
+      "purpose": "Remote OTLP trace export",
+      "state": "DECLARED_NOT_ACTIVATED"
+    },
+    "optional:verification-browser": {
+      "purpose": "Pass 16 direct browser, visual, and screenshot evidence using Playwright behind the verification harness.",
+      "state": "PROFILE_OPTIONAL_EXECUTED_IN_PASS16_ENVIRONMENT"
+    }
+  },
+  "portable_exports": [
+    "requirements/runtime.txt",
+    "requirements/development.txt",
+    "requirements/quality-tools.txt"
+  ],
+  "quality_tool_intents": [
+    {
+      "name": "build",
+      "requirement": "build==1.5.0",
+      "source": "https://pypi.org/project/build/",
+      "state": "DECLARED_NOT_LIVE_VERIFIED"
+    },
+    {
+      "name": "mypy",
+      "requirement": "mypy==2.3.0",
+      "source": "https://pypi.org/project/mypy/",
+      "state": "DECLARED_NOT_LIVE_VERIFIED"
+    },
+    {
+      "name": "pip-audit",
+      "requirement": "pip-audit==2.10.1",
+      "source": "https://pypi.org/project/pip-audit/",
+      "state": "DECLARED_NOT_LIVE_VERIFIED"
+    },
+    {
+      "name": "pre-commit",
+      "requirement": "pre-commit==4.6.0",
+      "source": "https://pypi.org/project/pre-commit/",
+      "state": "DECLARED_NOT_LIVE_VERIFIED"
+    },
+    {
+      "name": "ruff",
+      "requirement": "ruff==0.16.3",
+      "source": "https://pypi.org/project/ruff/",
+      "state": "DECLARED_NOT_LIVE_VERIFIED"
+    }
+  ],
+  "resolver_lock": {
+    "activation_command": "uv lock && uv export --locked --no-dev --no-emit-project --output-file requirements/runtime.txt",
+    "blocker": "The execution environment cannot resolve package-index DNS; uv cannot obtain registry metadata not already cached.",
+    "manager": "uv",
+    "manager_version_attempted": "0.10.0",
+    "path": "uv.lock",
+    "state": "BLOCKED_EXTERNAL",
+    "verification_command": "uv lock --check"
+  },
+  "rules": {
+    "active_environment_lock_required": true,
+    "dependency_addition_requires_capability_rationale": true,
+    "dependency_audit_required_in_ci": true,
+    "direct_url_dependencies_allowed": false,
+    "license_and_provenance_review_required": true,
+    "resolver_lock_required_before_release": true,
+    "source_incorporation_requires_separate_approval": true,
+    "vcs_dependencies_allowed": false
+  },
+  "schema_version": "1.0.0"
+}

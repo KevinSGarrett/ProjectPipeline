@@ -1,0 +1,32 @@
+L000001 | # PLAN-LIFE-001 — Platform Lifecycle and Portfolio Governance
+L000002 | 
+L000003 | - **Plan ID:** `PLAN-LIFE-001`
+L000004 | - **Status:** `ACTIVE`
+L000005 | - **Authority:** source-derived requirements plus explicitly labeled implementation detail
+L000006 | - **Source basis:** `GOV-001:L000733-L000747`, `GOV-001:L001736-L001748`
+L000007 | 
+L000008 | 
+L000009 | ## PLAN-LIFE-001:SEC-01 Multi-project operation
+L000010 | 
+L000011 | The platform supports isolated projects with shared provider, model, machine, and policy registries. Portfolio coordination cannot erase per-project authority, budget, evidence, or completion state.
+L000012 | 
+L000013 | ## PLAN-LIFE-001:SEC-02 Multi-repository projects
+L000014 | 
+L000015 | A project may span multiple repositories with explicit roles, dependency relationships, release coordination, and repository-specific stewardship. Cross-repository changes require a shared change identity and reconciliation.
+L000016 | 
+L000017 | ## PLAN-LIFE-001:SEC-03 Contract and data evolution
+L000018 | 
+L000019 | Schemas, events, APIs, contexts, and adapter contracts are versioned. Compatibility policy, migrations, qualification, and rollback are required before promotion.
+L000020 | 
+L000021 | ## PLAN-LIFE-001:SEC-04 Safe platform change
+L000022 | 
+L000023 | Self-modification is governed as normal high-risk project work. The platform cannot exempt its own changes from review, evidence, or recovery requirements.
+L000024 | 
+L000025 | ## PLAN-LIFE-001:SEC-05 Closure and retention
+L000026 | 
+L000027 | Project closure verifies final state, archives sources and evidence, resolves external synchronization, records retention and deletion policy, and preserves sufficient context for audit or later reactivation.
+L000028 | 
+L000029 | 
+L000030 | ## PLAN-LIFE-001:SEC-06 Pass 22 executable lifecycle boundary
+L000031 | 
+L000032 | Pass 22 implements deterministic lifecycle models and planners under `src/project_pipeline/lifecycle/`, reversible persistence migration `PPDB-0018`, a Project Pipeline-owned lifecycle policy, five lifecycle fault simulations, and repository validation. External destructive cleanup, live project closure side effects, cloud teardown, credential revocation, and platform promotion remain typed/evidence-gated operations and are not inferred from an eligibility decision.

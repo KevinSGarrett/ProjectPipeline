@@ -1,0 +1,62 @@
+{
+  "$id": "https://project-pipeline.local/schemas/verification_performance_result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "budget_p95_ms": {
+      "exclusiveMinimum": 0,
+      "title": "Budget P95 Ms",
+      "type": "integer"
+    },
+    "max_ms": {
+      "minimum": 0,
+      "title": "Max Ms",
+      "type": "integer"
+    },
+    "p50_ms": {
+      "minimum": 0,
+      "title": "P50 Ms",
+      "type": "integer"
+    },
+    "p95_ms": {
+      "minimum": 0,
+      "title": "P95 Ms",
+      "type": "integer"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "performance_id": {
+      "title": "Performance Id",
+      "type": "string"
+    },
+    "sample_count": {
+      "minimum": 1,
+      "title": "Sample Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "subject": {
+      "title": "Subject",
+      "type": "string"
+    }
+  },
+  "required": [
+    "performance_id",
+    "subject",
+    "sample_count",
+    "p50_ms",
+    "p95_ms",
+    "max_ms",
+    "budget_p95_ms",
+    "passed"
+  ],
+  "title": "PerformanceResult",
+  "type": "object"
+}

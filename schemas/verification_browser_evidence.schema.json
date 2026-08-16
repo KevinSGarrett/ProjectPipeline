@@ -1,0 +1,82 @@
+{
+  "$id": "https://project-pipeline.local/schemas/verification_browser_evidence.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "browser_evidence_id": {
+      "title": "Browser Evidence Id",
+      "type": "string"
+    },
+    "browser_name": {
+      "title": "Browser Name",
+      "type": "string"
+    },
+    "browser_version": {
+      "title": "Browser Version",
+      "type": "string"
+    },
+    "console_error_count": {
+      "minimum": 0,
+      "title": "Console Error Count",
+      "type": "integer"
+    },
+    "horizontal_overflow": {
+      "title": "Horizontal Overflow",
+      "type": "boolean"
+    },
+    "load_duration_ms": {
+      "minimum": 0,
+      "title": "Load Duration Ms",
+      "type": "integer"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "screenshot_path": {
+      "title": "Screenshot Path",
+      "type": "string"
+    },
+    "screenshot_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Screenshot Sha256",
+      "type": "string"
+    },
+    "target": {
+      "title": "Target",
+      "type": "string"
+    },
+    "viewport_height": {
+      "exclusiveMinimum": 0,
+      "title": "Viewport Height",
+      "type": "integer"
+    },
+    "viewport_width": {
+      "exclusiveMinimum": 0,
+      "title": "Viewport Width",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "browser_evidence_id",
+    "target",
+    "browser_name",
+    "browser_version",
+    "viewport_width",
+    "viewport_height",
+    "screenshot_path",
+    "screenshot_sha256",
+    "horizontal_overflow",
+    "console_error_count",
+    "load_duration_ms",
+    "passed"
+  ],
+  "title": "BrowserEvidence",
+  "type": "object"
+}

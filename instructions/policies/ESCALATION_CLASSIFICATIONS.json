@@ -1,0 +1,59 @@
+{
+  "classes": [
+    {
+      "global_stop": false,
+      "id": "EXT_CREDENTIAL",
+      "trigger": "required secret, token, permission, MFA, or account action is unavailable"
+    },
+    {
+      "global_stop": "only_when_critical_path_global",
+      "id": "REQUIREMENT_CONFLICT",
+      "trigger": "higher-authority sources remain irreconcilable after traceable analysis"
+    },
+    {
+      "global_stop": "affected_scope_or_global_when_containment_requires",
+      "id": "SECURITY_INCIDENT",
+      "trigger": "credential exposure, suspected compromise, unsafe egress, or identity failure"
+    },
+    {
+      "global_stop": false,
+      "id": "LEGAL_LICENSE",
+      "trigger": "license, notice, export, or legal status cannot be resolved from accepted policy"
+    },
+    {
+      "global_stop": false,
+      "id": "MATERIAL_COST",
+      "trigger": "operation exceeds budget policy or requires new recurring spend"
+    },
+    {
+      "global_stop": false,
+      "id": "EXTERNAL_OUTAGE",
+      "trigger": "provider or remote machine is unavailable beyond bounded retries"
+    },
+    {
+      "global_stop": false,
+      "id": "HARDWARE_PHYSICAL",
+      "trigger": "physical access, restart, cabling, BIOS, or other non-software action is required"
+    },
+    {
+      "global_stop": false,
+      "id": "DESTRUCTIVE_SCOPE",
+      "trigger": "requested operation is destructive and outside an established project authorization"
+    }
+  ],
+  "project_id": "PROJECT-PIPELINE",
+  "required_fields": [
+    "escalation_id",
+    "class",
+    "owning_work_item",
+    "failed_operation",
+    "why_automation_cannot_resolve",
+    "impact",
+    "exact_human_action",
+    "verification_after_action",
+    "resume_point",
+    "preserved_state",
+    "unaffected_work_continuation"
+  ],
+  "schema_version": "1.0.0"
+}

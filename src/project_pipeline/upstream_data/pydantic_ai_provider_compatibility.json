@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0.0",
+  "upstream_id": "UPSTREAM-086",
+  "source_repository": "pydantic/pydantic-ai",
+  "source_revision": "v2.31.0",
+  "source_commit_observed": "25a70926cfafdfc63b3d32c1b5f2c7f139e2c58c",
+  "source_path": "pydantic_ai_slim/pydantic_ai/models/__init__.py",
+  "license": "MIT",
+  "adaptation": "Bounded machine-readable extraction of provider compatibility identifiers used to validate optional Pydantic AI gateway configuration.",
+  "openai_chat_compatible_providers": [
+    "alibaba", "azure", "cerebras", "crusoe", "deepseek", "fireworks", "github",
+    "heroku", "litellm", "moonshotai", "nebius", "ollama", "openrouter", "ovhcloud",
+    "sambanova", "snowflake", "together", "vercel", "zai"
+  ],
+  "openai_responses_compatible_providers": [
+    "azure", "deepseek", "fireworks", "nebius", "openrouter", "ovhcloud", "sambanova", "together"
+  ]
+}

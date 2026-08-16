@@ -1,0 +1,125 @@
+{
+  "by_authority": {
+    "REQUIRED_IMPLEMENTATION_DETAIL": 4,
+    "SOURCE_DERIVED": 347
+  },
+  "by_disposition": {
+    "ACCEPTED": 351
+  },
+  "by_domain": {
+    "AGENT": 19,
+    "ARCH": 16,
+    "ASSURE": 35,
+    "BUDGET": 19,
+    "CTRL": 16,
+    "CTX": 18,
+    "GOV": 25,
+    "INFRA": 19,
+    "LIFE": 18,
+    "OPS": 19,
+    "PDEF": 10,
+    "REL": 14,
+    "REQ": 17,
+    "RES": 25,
+    "SCHED": 17,
+    "SEC": 24,
+    "UPSTREAM": 14,
+    "UX": 26
+  },
+  "by_implementation_state": {
+    "IMPLEMENTED": 185,
+    "PARTIALLY_IMPLEMENTED": 136,
+    "PLANNED_ONLY": 30
+  },
+  "by_priority": {
+    "P0": 237,
+    "P1": 109,
+    "P2": 5
+  },
+  "by_requirement_type": {
+    "architecture": 5,
+    "completion": 2,
+    "constraint": 5,
+    "functional": 302,
+    "governance": 8,
+    "observability": 2,
+    "operational": 6,
+    "resilience": 5,
+    "security": 13,
+    "testing": 3
+  },
+  "mapped_counts": {
+    "evidence": 321,
+    "implementation": 321,
+    "jira": 351,
+    "plan": 351,
+    "tests": 321
+  },
+  "mapped_percent": {
+    "evidence": 91.45,
+    "implementation": 91.45,
+    "jira": 100.0,
+    "plan": 100.0,
+    "tests": 91.45
+  },
+  "requirement_count": 351,
+  "requirements_by_source": {
+    "GOV-001": 116,
+    "SRC-001": 19,
+    "SRC-002": 22,
+    "SRC-003": 16,
+    "SRC-004": 16,
+    "SRC-005": 6,
+    "SRC-006": 43,
+    "SRC-007": 24,
+    "SRC-008": 37,
+    "SRC-009": 44,
+    "SRC-010": 1,
+    "SRC-011": 4,
+    "SRC-012": 12,
+    "SRC-013": 8,
+    "SRC-014": 13,
+    "SRC-015": 11,
+    "SRC-016": 4,
+    "SRC-017": 41
+  },
+  "schema_version": "2.0.0",
+  "source_section_coverage": {
+    "by_disposition": {
+      "DESIGN_RATIONALE": 167,
+      "DUPLICATE_SOURCE": 35,
+      "OPEN_DECISION_CONTEXT": 4,
+      "PREFIX_OVERLAP_SOURCE": 55,
+      "REQUIREMENT_LINKED": 626,
+      "SUPPORTING_EXAMPLE": 66,
+      "UPSTREAM_RESEARCH_CONTEXT": 146,
+      "USER_INTENT_CONTEXT": 10
+    },
+    "by_source": {
+      "SRC-001": 89,
+      "SRC-002": 71,
+      "SRC-003": 58,
+      "SRC-004": 47,
+      "SRC-005": 55,
+      "SRC-006": 156,
+      "SRC-007": 51,
+      "SRC-008": 86,
+      "SRC-009": 2,
+      "SRC-010": 53,
+      "SRC-011": 70,
+      "SRC-012": 34,
+      "SRC-013": 48,
+      "SRC-014": 57,
+      "SRC-015": 93,
+      "SRC-016": 69,
+      "SRC-017": 35,
+      "SRC-018": 35
+    },
+    "explicit_disposition_count": 1109,
+    "linked_requirement_section_count": 645,
+    "schema_version": "1.0.0",
+    "section_count": 1109
+  },
+  "unexplained_gap_count": 0,
+  "unexplained_gaps": []
+}

@@ -1,0 +1,65 @@
+{
+  "$defs": {
+    "VerificationResultState": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "SKIPPED"
+      ],
+      "title": "VerificationResultState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/verification_golden_journey_result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "duration_ms": {
+      "minimum": 0,
+      "title": "Duration Ms",
+      "type": "integer"
+    },
+    "evidence_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Paths",
+      "type": "array"
+    },
+    "journey_id": {
+      "title": "Journey Id",
+      "type": "string"
+    },
+    "observations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Observations",
+      "type": "array"
+    },
+    "result_id": {
+      "title": "Result Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/VerificationResultState"
+    }
+  },
+  "required": [
+    "result_id",
+    "journey_id",
+    "state",
+    "observations",
+    "duration_ms"
+  ],
+  "title": "GoldenJourneyResult",
+  "type": "object"
+}

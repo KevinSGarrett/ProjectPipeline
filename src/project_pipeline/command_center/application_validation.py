@@ -1,0 +1,144 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+_REQUIRED_FILES = (
+    "apps/command_center/package.json",
+    "apps/command_center/index.html",
+    "apps/command_center/src/App.jsx",
+    "apps/command_center/src/app.css",
+    "apps/command_center/src/appModel.mjs",
+    "apps/command_center/src/apiClient.mjs",
+    "apps/command_center/src/desktopBridge.mjs",
+    "apps/command_center/preview/index.html",
+    "apps/desktop_shell/src-tauri/Cargo.toml",
+    "apps/desktop_shell/src-tauri/src/main.rs",
+    "apps/desktop_shell/src-tauri/tauri.conf.json",
+    "apps/desktop_shell/src-tauri/capabilities/main.json",
+    "docs/command_center/application_and_desktop_shell.md",
+    "runbooks/command_center_windows_qualification.md",
+)
+
+
+def validate_command_center_application(root: Path) -> list[str]:
+    root = root.resolve()
+    errors: list[str] = []
+    for relative in _REQUIRED_FILES:
+        if not (root / relative).is_file():
+            errors.append(f"missing Command Center application artifact: {relative}")
+
+    package_path = root / "apps/command_center/package.json"
+    if package_path.is_file():
+        package = json.loads(package_path.read_text(encoding="utf-8"))
+        dependencies = package.get("dependencies", {})
+        dev_dependencies = package.get("devDependencies", {})
+        if "react" not in dependencies or "react-dom" not in dependencies:
+            errors.append("Command Center application must declare React and react-dom")
+        if "vite" not in dev_dependencies:
+            errors.append("Command Center application must declare Vite")
+        if "@tauri-apps/cli" not in dev_dependencies:
+            errors.append("Command Center application must declare the Tauri v2 CLI boundary")
+        if "@tauri-apps/plugin-notification" not in dependencies:
+            errors.append(
+                "Command Center desktop boundary must declare the official notification plugin"
+            )
+
+    client_paths = (
+        root / "apps/command_center/src/apiClient.mjs",
+        root / "apps/command_center/src/desktopBridge.mjs",
+        root / "apps/command_center/src/App.jsx",
+    )
+    for path in client_paths:
+        if not path.is_file():
+            continue
+        text = path.read_text(encoding="utf-8")
+        if "localStorage" in text or "sessionStorage" in text or "indexedDB" in text:
+            errors.append(
+                f"credential-capable Command Center source must not persist auth state: {path.relative_to(root)}"
+            )
+
+    tauri_path = root / "apps/desktop_shell/src-tauri/tauri.conf.json"
+    if tauri_path.is_file():
+        tauri = json.loads(tauri_path.read_text(encoding="utf-8"))
+        security = tauri.get("app", {}).get("security", {})
+        csp = str(security.get("csp", ""))
+        if "127.0.0.1:8765" not in csp:
+            errors.append(
+                "Tauri CSP must restrict Command Center API transport to the loopback control endpoint"
+            )
+        if "https:" in csp or "*" in csp:
+            errors.append("Tauri CSP must not grant arbitrary remote network origins")
+
+    capability_path = root / "apps/desktop_shell/src-tauri/capabilities/main.json"
+    if capability_path.is_file():
+        capability = json.loads(capability_path.read_text(encoding="utf-8"))
+        permissions = set(capability.get("permissions", []))
+        if "notification:default" not in permissions:
+            errors.append(
+                "Tauri desktop shell must explicitly allow the bounded notification capability"
+            )
+        if any(
+            str(value).startswith(("shell:", "fs:", "opener:", "http:")) for value in permissions
+        ):
+            errors.append("Tauri desktop shell grants an unnecessary high-risk capability")
+
+    app_path = root / "apps/command_center/src/App.jsx"
+    model_path = root / "apps/command_center/src/appModel.mjs"
+    if app_path.is_file():
+        app_text = app_path.read_text(encoding="utf-8")
+        model_text = model_path.read_text(encoding="utf-8") if model_path.is_file() else ""
+        surface_text = app_text + "\n" + model_text
+        for surface in (
+            "Project Graph",
+            "Live Work",
+            "Budget",
+            "Provider",
+            "Context",
+            "Recovery",
+            "Director Chat",
+            "Incident Manager",
+            "Approval",
+            "Jira / GitHub",
+            "Evidence",
+        ):
+            if surface not in surface_text:
+                errors.append(
+                    f"Command Center application is missing required surface text: {surface}"
+                )
+        if "makeControlCommand" not in app_text or ".control(" not in app_text:
+            errors.append("Command Center mutation controls must use the typed control client path")
+        if "makeDirectorRequest" not in app_text or ".directorChat(" not in app_text:
+            errors.append("Director Chat must use the bounded API client path")
+        if "verifyIncident" not in (root / "apps/command_center/src/apiClient.mjs").read_text(
+            encoding="utf-8"
+        ):
+            errors.append("Incident Manager must expose repair verification through the API client")
+        if "actionLinkQualification" not in (
+            root / "apps/command_center/src/desktopBridge.mjs"
+        ).read_text(encoding="utf-8"):
+            errors.append(
+                "desktop notification bridge must expose native action-link qualification"
+            )
+
+    preview_path = root / "apps/command_center/preview/index.html"
+    if preview_path.is_file():
+        preview = preview_path.read_text(encoding="utf-8")
+        if "http://" in preview or "https://" in preview:
+            errors.append(
+                "offline Command Center verification preview must not depend on external network resources"
+            )
+        if preview.count("<main") != 1 or preview.count("<h1") != 1:
+            errors.append(
+                "offline Command Center verification preview must have one main landmark and one h1"
+            )
+
+    evidence_path = root / "evidence/command_center_ui_browser_accessibility.json"
+    if evidence_path.is_file():
+        evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
+        if evidence.get("passed") is not True:
+            errors.append(
+                "recorded Command Center browser/accessibility verification is not passing"
+            )
+
+    return errors

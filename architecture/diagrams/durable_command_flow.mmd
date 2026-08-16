@@ -1,0 +1,17 @@
+sequenceDiagram
+    participant O as Operator or Director
+    participant A as Control API
+    participant K as Project Control Kernel
+    participant P as PostgreSQL
+    participant W as DurableExecutionPort / Hatchet
+    participant X as External Adapter
+    O->>A: Typed command + idempotency key
+    A->>K: Authenticated action intent
+    K->>P: Transaction: command ledger + state + outbox
+    P-->>K: Commit
+    K-->>A: Accepted command identity
+    W->>P: Claim durable work
+    W->>X: Idempotent external effect
+    X-->>W: Outcome or unknown outcome
+    W->>P: Persist result / reconciliation state
+    K->>P: Recompute authoritative state

@@ -1,0 +1,45 @@
+{
+  "$id": "https://projectpipeline.local/schemas/instruction_coverage_matrix.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "domains": {
+      "items": {
+        "properties": {
+          "domain": {
+            "type": "string"
+          },
+          "primary": {
+            "type": "string"
+          },
+          "supporting": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "domain",
+          "primary",
+          "supporting"
+        ],
+        "type": "object"
+      },
+      "minItems": 20,
+      "type": "array"
+    },
+    "project_id": {
+      "type": "string"
+    },
+    "schema_version": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "project_id",
+    "domains"
+  ],
+  "title": "Instruction Coverage Matrix",
+  "type": "object"
+}

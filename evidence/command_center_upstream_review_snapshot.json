@@ -1,0 +1,105 @@
+{
+  "candidate_upstream_ids": [
+    "UPSTREAM-003",
+    "UPSTREAM-009",
+    "UPSTREAM-023",
+    "UPSTREAM-084",
+    "UPSTREAM-103",
+    "UPSTREAM-110"
+  ],
+  "candidates": [
+    {
+      "activation_phase": "PASS19_COMMAND_CENTER_PROTOCOL_BOUNDARY",
+      "copied_source_paths": [],
+      "disposition": "ADOPT_DEPENDENCY",
+      "inspection_state": "DEEPLY_REVIEWED",
+      "integration_paths": [
+        "src/project_pipeline/command_center/agui.py",
+        "src/project_pipeline/command_center/realtime.py",
+        "tests/test_command_center_agui.py",
+        "docs/command_center/backend_realtime_api.md"
+      ],
+      "maturity": "ACTIVE_EMERGING",
+      "repository": "ag-ui",
+      "review_artifact": "provenance/reviews/UPSTREAM-003.md",
+      "upstream_id": "UPSTREAM-003",
+      "usage_state": "OPTIONAL_ADAPTER_IMPLEMENTED"
+    },
+    {
+      "activation_phase": null,
+      "copied_source_paths": [],
+      "disposition": "MINE_IMPLEMENTATION_PATTERN",
+      "inspection_state": "FOCUSED_REVIEW_COMPLETE",
+      "integration_paths": [],
+      "maturity": "ACTIVE_PRODUCTION_UI_ECOSYSTEM",
+      "repository": "assistant-ui",
+      "review_artifact": "provenance/reviews/PASS-19_command_center_upstream_review.md",
+      "upstream_id": "UPSTREAM-009",
+      "usage_state": null
+    },
+    {
+      "activation_phase": null,
+      "copied_source_paths": [],
+      "disposition": "MINE_IMPLEMENTATION_PATTERN",
+      "inspection_state": "FOCUSED_REVIEW_COMPLETE",
+      "integration_paths": [],
+      "maturity": "ACTIVE_AGENT_UI_ECOSYSTEM",
+      "repository": "CopilotKit",
+      "review_artifact": "provenance/reviews/PASS-19_command_center_upstream_review.md",
+      "upstream_id": "UPSTREAM-023",
+      "usage_state": null
+    },
+    {
+      "activation_phase": null,
+      "copied_source_paths": [],
+      "disposition": "MINE_IMPLEMENTATION_PATTERN",
+      "inspection_state": "FOCUSED_REVIEW_COMPLETE",
+      "integration_paths": [],
+      "maturity": "ACTIVE_REFERENCE_CONTROL_SURFACE",
+      "repository": "t3code",
+      "review_artifact": "provenance/reviews/PASS-19_command_center_upstream_review.md",
+      "upstream_id": "UPSTREAM-084",
+      "usage_state": null
+    },
+    {
+      "activation_phase": "SELECTED_SUBSYSTEM_BOUNDARY",
+      "copied_source_paths": [],
+      "disposition": "ADOPT_DEPENDENCY",
+      "inspection_state": "DEEPLY_REVIEWED",
+      "integration_paths": [],
+      "maturity": "ACTIVE_OFFICIAL_ECOSYSTEM",
+      "repository": "plugins-workspace",
+      "review_artifact": "provenance/reviews/UPSTREAM-103.md",
+      "upstream_id": "UPSTREAM-103",
+      "usage_state": "SELECTED_NOT_ACTIVATED"
+    },
+    {
+      "activation_phase": null,
+      "copied_source_paths": [],
+      "disposition": "MINE_ARCHITECTURE",
+      "inspection_state": "FOCUSED_REVIEW_COMPLETE",
+      "integration_paths": [],
+      "maturity": "ARCHIVED_REFERENCE",
+      "repository": "mozzie",
+      "review_artifact": "provenance/reviews/PASS-19_command_center_upstream_review.md",
+      "upstream_id": "UPSTREAM-110",
+      "usage_state": null
+    }
+  ],
+  "deferred_upstream_ids": [
+    "UPSTREAM-103"
+  ],
+  "gate_review_state": "INTEGRATED",
+  "integration_upstream_ids": [
+    "UPSTREAM-003"
+  ],
+  "pass_id": "PASS-19",
+  "pattern_upstream_ids": [
+    "UPSTREAM-009",
+    "UPSTREAM-023",
+    "UPSTREAM-084",
+    "UPSTREAM-110"
+  ],
+  "schema_version": "1.0.0",
+  "subsystem": "command_center"
+}

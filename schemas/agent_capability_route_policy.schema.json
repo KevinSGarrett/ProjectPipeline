@@ -1,0 +1,43 @@
+{
+  "$id": "https://project-pipeline.local/schemas/agent_capability_route_policy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {
+      "title": "Capability Id",
+      "type": "string"
+    },
+    "fallback_provider_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Fallback Provider Ids",
+      "type": "array"
+    },
+    "prefer_local_under_pressure": {
+      "default": true,
+      "title": "Prefer Local Under Pressure",
+      "type": "boolean"
+    },
+    "preferred_provider_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Preferred Provider Ids",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "capability_id"
+  ],
+  "title": "CapabilityRoutePolicy",
+  "type": "object"
+}

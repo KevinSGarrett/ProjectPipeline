@@ -1,0 +1,66 @@
+{
+  "dispatch_decision": "Use remote execution only when transfer cost, reproducibility, isolation, and conflict risk are favorable.",
+  "dispatch_record_fields": [
+    "machine_id",
+    "capability_profile",
+    "workspace",
+    "branch",
+    "task",
+    "base_sha",
+    "resource_claims",
+    "heartbeat",
+    "lease",
+    "expected_artifacts",
+    "return_channel"
+  ],
+  "machines": [
+    {
+      "authority": "primary only while a valid fenced control lease exists",
+      "capabilities": [
+        "PRIMARY_CONTROL_CANDIDATE",
+        "GPU_WORKER",
+        "CPU_WORKER",
+        "OPERATOR_ACCESS"
+      ],
+      "declared_identity": "primary laptop",
+      "hardware": {
+        "cpu": "UNVERIFIED",
+        "gpu": "NVIDIA RTX 5060",
+        "os": "WINDOWS_EXPECTED_NOT_LIVE_VERIFIED",
+        "ram": "UNVERIFIED"
+      },
+      "machine_id": "PRIMARY-CODEX-WORKSTATION",
+      "verification_state": "DECLARED_NOT_LIVE_VERIFIED"
+    },
+    {
+      "alternate_operator_name": "FIVERR-AI-RUNNER",
+      "authority": "bounded worker only; never concurrent editor of a shared mutable working tree",
+      "capabilities": [
+        "CPU_WORKER",
+        "TEST_WORKER",
+        "BUILD_WORKER",
+        "BENCHMARK_WORKER",
+        "PACKAGING_WORKER"
+      ],
+      "declared_identity": "COMFY-V4-CPU-01",
+      "fallback_channel": "CHROME_REMOTE_DESKTOP_OPERATOR_PATH",
+      "hardware": {
+        "cpu": "UNVERIFIED",
+        "gpu": "NONE_DECLARED",
+        "os": "WINDOWS_EXPECTED_NOT_LIVE_VERIFIED",
+        "ram": "UNVERIFIED"
+      },
+      "machine_id": "COMFY-V4-CPU-01",
+      "preferred_channels": [
+        "SSH",
+        "POWERSHELL_REMOTING",
+        "WINRM",
+        "TAILSCALE_WORKER_SERVICE",
+        "BOUNDED_JOB_RUNNER"
+      ],
+      "verification_state": "DECLARED_NOT_LIVE_VERIFIED"
+    }
+  ],
+  "project_id": "PROJECT-PIPELINE",
+  "schema_version": "1.0.0"
+}

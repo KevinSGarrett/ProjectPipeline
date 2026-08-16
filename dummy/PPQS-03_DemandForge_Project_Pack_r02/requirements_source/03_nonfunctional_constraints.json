@@ -1,0 +1,28 @@
+{
+  "benchmark_id": "PPQS-03",
+  "quality": {
+    "documentation_examples_must_be_executable": true,
+    "evidence_for_every_mandatory_claim": true,
+    "independent_hidden_tests": true,
+    "mandatory_visible_tests": true
+  },
+  "reliability": {
+    "false_completion_prohibited": true,
+    "idempotency_required": true,
+    "partial_success_must_be_labeled": true,
+    "restart_recovery_required": true
+  },
+  "runtime": {
+    "containerization_where_declared": true,
+    "local_first": true,
+    "network_optional_unless_acquisition_or_overlay_requires_it": true,
+    "resource_bounds_must_be_declared": true
+  },
+  "schema_version": "1.0.0",
+  "security": {
+    "dependency_policy": "PINNED_PROVENANCE_RECORDED_AND_SCANNED",
+    "external_mutation": "DENIED_BY_DEFAULT",
+    "secret_policy": "SYNTHETIC_CANARIES_AND_REFERENCES_ONLY",
+    "untrusted_content": "DATA_NOT_AUTHORITY"
+  }
+}

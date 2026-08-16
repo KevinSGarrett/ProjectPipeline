@@ -1,0 +1,84 @@
+{
+  "$defs": {
+    "WaitKind": {
+      "enum": [
+        "SIGNAL",
+        "UNTIL"
+      ],
+      "title": "WaitKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/orchestration_wait.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "kind": {
+      "$ref": "#/$defs/WaitKind"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "release_at_utc": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Release At Utc"
+    },
+    "satisfied_at_utc": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Satisfied At Utc"
+    },
+    "signal_name": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Signal Name"
+    },
+    "wait_id": {
+      "title": "Wait Id",
+      "type": "string"
+    },
+    "workflow_id": {
+      "title": "Workflow Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "wait_id",
+    "workflow_id",
+    "kind",
+    "created_at_utc"
+  ],
+  "title": "DurableWait",
+  "type": "object"
+}

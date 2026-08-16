@@ -1,0 +1,17 @@
+{
+  "counts_by_state": {
+    "BACKLOG": 378
+  },
+  "counts_by_type": {
+    "BUG": 0,
+    "EPIC": 18,
+    "SPIKE": 0,
+    "STORY": 107,
+    "SUBTASK": 16,
+    "TASK": 237
+  },
+  "edge_count": 848,
+  "issue_count": 378,
+  "requirements_referenced": 351,
+  "schema_version": "1.0.0"
+}

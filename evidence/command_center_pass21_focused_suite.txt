@@ -1,0 +1,71 @@
+Pass 21 focused verification
+UTC: 2026-08-15T23:20:00Z
+
+== Python focused Pass 21 ==
+..............                                                           [100%]
+14 passed in 0.73s
+
+== Migration-sensitive regression ==
+.....................                                                    [100%]
+21 passed in 9.82s
+
+== Command Center validators/application ==
+........                                                                 [100%]
+8 passed in 0.75s
+
+== Node application model ==
+TAP version 13
+# Subtest: navigation contains all Pass 21 operator surfaces
+ok 1 - navigation contains all Pass 21 operator surfaces
+  ---
+  duration_ms: 0.665869
+  type: 'test'
+  ...
+# Subtest: summary keeps readiness dimensions distinct
+ok 2 - summary keeps readiness dimensions distinct
+  ---
+  duration_ms: 0.824595
+  type: 'test'
+  ...
+# Subtest: graph filtering only retains valid visible edges
+ok 3 - graph filtering only retains valid visible edges
+  ---
+  duration_ms: 0.173208
+  type: 'test'
+  ...
+# Subtest: typed control command carries actor, project, correlation, and idempotency
+ok 4 - typed control command carries actor, project, correlation, and idempotency
+  ---
+  duration_ms: 0.454315
+  type: 'test'
+  ...
+# Subtest: format helpers are bounded and health tones are deterministic
+ok 5 - format helpers are bounded and health tones are deterministic
+  ---
+  duration_ms: 0.175511
+  type: 'test'
+  ...
+# Subtest: live application projection normalizes canonical backend contract
+ok 6 - live application projection normalizes canonical backend contract
+  ---
+  duration_ms: 0.316901
+  type: 'test'
+  ...
+# Subtest: Director request cannot smuggle incident context into project scope
+ok 7 - Director request cannot smuggle incident context into project scope
+  ---
+  duration_ms: 0.179777
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 48.729778
+
+== Browser verification ==
+{"passed": true, "target": "apps/command_center/preview/index.html", "viewports": 3}

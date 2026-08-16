@@ -1,0 +1,55 @@
+{
+  "$id": "https://project-pipeline.local/schemas/github_branch_protection.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "branch": {
+      "title": "Branch",
+      "type": "string"
+    },
+    "dismiss_stale_reviews": {
+      "default": false,
+      "title": "Dismiss Stale Reviews",
+      "type": "boolean"
+    },
+    "enforce_admins": {
+      "default": false,
+      "title": "Enforce Admins",
+      "type": "boolean"
+    },
+    "protected": {
+      "title": "Protected",
+      "type": "boolean"
+    },
+    "repository_slug": {
+      "title": "Repository Slug",
+      "type": "string"
+    },
+    "require_code_owner_reviews": {
+      "default": false,
+      "title": "Require Code Owner Reviews",
+      "type": "boolean"
+    },
+    "required_approving_review_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Required Approving Review Count",
+      "type": "integer"
+    },
+    "required_status_checks": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Status Checks",
+      "type": "array"
+    }
+  },
+  "required": [
+    "repository_slug",
+    "branch",
+    "protected"
+  ],
+  "title": "GitHubBranchProtection",
+  "type": "object"
+}

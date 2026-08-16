@@ -1,0 +1,12 @@
+flowchart LR
+    Source[Source Range] --> Req[Requirement]
+    Req --> Plan[Plan Section]
+    Plan --> ADR[Architecture Decision]
+    ADR --> Work[Jira Work]
+    Work --> Code[Code / Config / Infrastructure]
+    Code --> Test[Test]
+    Test --> Evidence[Evidence]
+    Evidence --> Gate[Completion Gate]
+    Gate --> State[Verified State]
+    Code -. reverse lookup .-> Req
+    Work -. reverse lookup .-> Source

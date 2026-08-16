@@ -1,0 +1,80 @@
+{
+  "$defs": {
+    "CircuitState": {
+      "enum": [
+        "CLOSED",
+        "OPEN",
+        "HALF_OPEN"
+      ],
+      "title": "CircuitState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/agent_circuit_breaker_record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "consecutive_failures": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Consecutive Failures",
+      "type": "integer"
+    },
+    "half_open_probes": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Half Open Probes",
+      "type": "integer"
+    },
+    "last_failure": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Failure"
+    },
+    "opened_at_utc": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Opened At Utc"
+    },
+    "provider_id": {
+      "title": "Provider Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/CircuitState",
+      "default": "CLOSED"
+    },
+    "updated_at_utc": {
+      "format": "date-time",
+      "title": "Updated At Utc",
+      "type": "string"
+    }
+  },
+  "required": [
+    "provider_id",
+    "updated_at_utc"
+  ],
+  "title": "CircuitBreakerRecord",
+  "type": "object"
+}

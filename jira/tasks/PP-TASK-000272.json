@@ -1,0 +1,118 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000272-01",
+      "statement": "Map subsystem implementation boundaries to relevant upstream candidates is represented in permanent machine-readable project state and fails closed when its invariant is violated.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_upstream_reviews.py tests/test_upstream_adoption_gate.py",
+        "method": "automated_behavior_and_contract_validation",
+        "path": "tests/test_upstream_adoption_gate.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000272-02",
+      "statement": "Repository validation confirms catalog/provenance/usage/traceability consistency without unverified live claims.",
+      "verification": {
+        "command": "python scripts/validate_repository.py --root .",
+        "method": "repository_traceability_validation",
+        "path": "provenance/upstream_adoption_gate.json",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000079",
+    "EVID-000080"
+  ],
+  "definition_of_done": [
+    "Implementation/data is present.",
+    "Applicable automated tests pass.",
+    "Traceability and evidence are updated.",
+    "No unavailable live external behavior is represented as verified."
+  ],
+  "dependencies": [],
+  "description": "Map subsystem implementation boundaries to relevant upstream candidates. The result is part of the permanent upstream adoption governance and is verified by executable repository tests.",
+  "evidence_required": [
+    "EVID-000079",
+    "EVID-000080"
+  ],
+  "exclusions": [
+    "No remote GitHub/Jira/AWS mutation.",
+    "No source incorporation without a separate bounded approval.",
+    "No dependency is represented as active solely because it was selected."
+  ],
+  "expected_file_locations": [
+    "provenance/upstream_adoption_gate.json",
+    "docs/engineering/upstream_adoption_gate.md"
+  ],
+  "expected_implementation_artifacts": [
+    "provenance/upstream_adoption_gate.json",
+    "docs/engineering/upstream_adoption_gate.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "upstream-reuse",
+    "provenance",
+    "adoption-gate"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25096",
+    "remote_key": "PP-127",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000272",
+  "objective": "Map subsystem implementation boundaries to relevant upstream candidates",
+  "observability_impact": "Upstream adoption state becomes queryable and auditable.",
+  "owner_required_capability": "upstream_repository_adoption",
+  "parent": "PP-STORY-000130",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-005_catalog_disposition_and_adoption_gate.md",
+      "end_line": 23,
+      "line_numbered_path": "plans/_line_numbered/PLAN-UPSTREAM-005_catalog_disposition_and_adoption_gate.lines.txt",
+      "line_reference": "PLAN-UPSTREAM-005:SEC-04:L000020-L000023",
+      "plan_id": "PLAN-UPSTREAM-005",
+      "section_id": "PLAN-UPSTREAM-005:SEC-04",
+      "start_line": 20
+    }
+  ],
+  "rationale": "The supplied upstream catalog is an implementation input. This work makes the adoption decision explicit and machine-verifiable so mature upstream capabilities cannot be silently ignored or falsely represented as integrated.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-127",
+  "required_tests": [
+    "TEST-UPSTREAM-GATE-005"
+  ],
+  "requirement_ids": [
+    "REQ-UPSTREAM-0001",
+    "REQ-UPSTREAM-0006",
+    "REQ-UPSTREAM-0010",
+    "REQ-UPSTREAM-0014"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Revert registry/gate changes together and regenerate indexes; never leave selection/usage states inconsistent.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "provenance/upstream_adoption_gate.json",
+    "docs/engineering/upstream_adoption_gate.md"
+  ],
+  "security_impact": "Strengthens dependency/source provenance and blocks unsafe or unreviewed adoption.",
+  "source_references": [
+    "GOV-001:L000797-L000876",
+    "GOV-001:L001219-L001285",
+    "SRC-016:L001691-L001832",
+    "SRC-016:L002181-L002303"
+  ],
+  "state": "BACKLOG",
+  "title": "Map subsystem implementation boundaries to relevant upstream candidates",
+  "upstream_dependencies": []
+}

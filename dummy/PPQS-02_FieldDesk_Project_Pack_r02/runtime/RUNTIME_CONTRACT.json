@@ -1,0 +1,18 @@
+{
+  "benchmark_id": "PPQS-02",
+  "external_acquisition_required": false,
+  "network_policy": "Network permitted only for frozen baseline acquisition when external_acquisition_required is true.",
+  "runtime": {
+    "browser": "Chromium via Playwright",
+    "node": ">=22.19.0",
+    "postgresql": "16.x",
+    "python": ">=3.11,<3.14"
+  },
+  "schema_version": "2.0",
+  "timeout_policy": {
+    "candidate_run_defined_by_suite_controller": true,
+    "individual_authoring_check_seconds": 30
+  },
+  "trust_zone": "CANDIDATE_VISIBLE",
+  "upstream_baseline": null
+}

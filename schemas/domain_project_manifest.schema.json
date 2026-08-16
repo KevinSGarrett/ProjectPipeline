@@ -1,0 +1,157 @@
+{
+  "$defs": {
+    "ProjectOrigin": {
+      "enum": [
+        "NEW",
+        "ADOPTED"
+      ],
+      "title": "ProjectOrigin",
+      "type": "string"
+    },
+    "ProjectRepository": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_url": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Canonical Url"
+        },
+        "repository_id": {
+          "maxLength": 191,
+          "minLength": 3,
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Repository Id",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/RepositoryRole",
+          "default": "PRIMARY"
+        },
+        "root_path": {
+          "maxLength": 1024,
+          "minLength": 1,
+          "title": "Root Path",
+          "type": "string"
+        }
+      },
+      "required": [
+        "repository_id",
+        "root_path"
+      ],
+      "title": "ProjectRepository",
+      "type": "object"
+    },
+    "RepositoryRole": {
+      "enum": [
+        "PRIMARY",
+        "SUPPORTING",
+        "REFERENCE"
+      ],
+      "title": "RepositoryRole",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/domain_project_manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Domain manifest describing one controlled project, not the file-integrity manifest.",
+  "properties": {
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "evidence_ledger_path": {
+      "title": "Evidence Ledger Path",
+      "type": "string"
+    },
+    "jira_index_path": {
+      "title": "Jira Index Path",
+      "type": "string"
+    },
+    "origin": {
+      "$ref": "#/$defs/ProjectOrigin",
+      "default": "ADOPTED"
+    },
+    "plan_catalog_path": {
+      "title": "Plan Catalog Path",
+      "type": "string"
+    },
+    "profile": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Profile",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "project_name": {
+      "maxLength": 512,
+      "minLength": 1,
+      "title": "Project Name",
+      "type": "string"
+    },
+    "repositories": {
+      "items": {
+        "$ref": "#/$defs/ProjectRepository"
+      },
+      "title": "Repositories",
+      "type": "array"
+    },
+    "requirement_registry_path": {
+      "title": "Requirement Registry Path",
+      "type": "string"
+    },
+    "revision": {
+      "default": 1,
+      "minimum": 1,
+      "title": "Revision",
+      "type": "integer"
+    },
+    "root_path": {
+      "maxLength": 1024,
+      "minLength": 1,
+      "title": "Root Path",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_registry_path": {
+      "title": "Source Registry Path",
+      "type": "string"
+    },
+    "updated_at_utc": {
+      "format": "date-time",
+      "title": "Updated At Utc",
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "project_name",
+    "root_path",
+    "profile",
+    "repositories",
+    "source_registry_path",
+    "requirement_registry_path",
+    "plan_catalog_path",
+    "jira_index_path",
+    "evidence_ledger_path"
+  ],
+  "title": "ProjectManifest",
+  "type": "object"
+}

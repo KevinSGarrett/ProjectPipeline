@@ -1,0 +1,70 @@
+{
+  "benchmark_id": "PPQS-01",
+  "examples": [
+    {
+      "artifact": "schema registry module and machine-readable catalog",
+      "example_id": "EX-SS-001",
+      "expected_failure": "unknown or duplicated schema identifiers are rejected",
+      "expected_result": "supported schemas are discoverable and immutable once published",
+      "feature": "Schema registry",
+      "request_or_action": "Representative valid action for Schema registry"
+    },
+    {
+      "artifact": "v1_to_v2 migration implementation",
+      "example_id": "EX-SS-002",
+      "expected_failure": "invalid or ambiguous legacy values fail without changing the source",
+      "expected_result": "valid v1 inputs become semantically equivalent v2 documents",
+      "feature": "Version one to version two migration",
+      "request_or_action": "Representative valid action for Version one to version two migration"
+    },
+    {
+      "artifact": "v2_to_v3 migration implementation",
+      "example_id": "EX-SS-003",
+      "expected_failure": "unsupported downgrade-only constructs are reported clearly",
+      "expected_result": "valid v2 inputs become canonical v3 documents",
+      "feature": "Version two to version three migration",
+      "request_or_action": "Representative valid action for Version two to version three migration"
+    },
+    {
+      "artifact": "validator and diagnostic schema",
+      "example_id": "EX-SS-004",
+      "expected_failure": "validation never crashes or silently coerces unsafe values",
+      "expected_result": "all invalid fixtures receive precise diagnostics",
+      "feature": "Validation diagnostics",
+      "request_or_action": "Representative valid action for Validation diagnostics"
+    },
+    {
+      "artifact": "migration plan model and CLI command",
+      "example_id": "EX-SS-005",
+      "expected_failure": "missing path or cycle conditions are blocked",
+      "expected_result": "the plan is complete, minimal, and deterministic",
+      "feature": "Migration planning",
+      "request_or_action": "Representative valid action for Migration planning"
+    },
+    {
+      "artifact": "semantic diff engine and report",
+      "example_id": "EX-SS-006",
+      "expected_failure": "sensitive values are never echoed",
+      "expected_result": "the diff distinguishes added, removed, moved, and transformed values",
+      "feature": "Dry-run semantic diff",
+      "request_or_action": "Representative valid action for Dry-run semantic diff"
+    },
+    {
+      "artifact": "transaction and rollback subsystem",
+      "example_id": "EX-SS-007",
+      "expected_failure": "partial or mismatched backups are quarantined",
+      "expected_result": "a failed write restores the original and a permitted rollback is verifiable",
+      "feature": "Backup and rollback",
+      "request_or_action": "Representative valid action for Backup and rollback"
+    },
+    {
+      "artifact": "Python package, CLI, examples, release notes, and runbook",
+      "example_id": "EX-SS-008",
+      "expected_failure": "unsupported usage returns stable nonzero exit codes",
+      "expected_result": "the package installs, commands are discoverable, and examples are executable",
+      "feature": "CLI SDK documentation and release",
+      "request_or_action": "Representative valid action for CLI SDK documentation and release"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

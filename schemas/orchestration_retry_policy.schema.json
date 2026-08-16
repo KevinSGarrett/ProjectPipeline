@@ -1,0 +1,37 @@
+{
+  "$id": "https://project-pipeline.local/schemas/orchestration_retry_policy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "initial_backoff_seconds": {
+      "default": 1.0,
+      "maximum": 86400.0,
+      "minimum": 0.0,
+      "title": "Initial Backoff Seconds",
+      "type": "number"
+    },
+    "max_attempts": {
+      "default": 3,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Max Attempts",
+      "type": "integer"
+    },
+    "max_backoff_seconds": {
+      "default": 60.0,
+      "maximum": 604800.0,
+      "minimum": 0.0,
+      "title": "Max Backoff Seconds",
+      "type": "number"
+    },
+    "multiplier": {
+      "default": 2.0,
+      "maximum": 100.0,
+      "minimum": 1.0,
+      "title": "Multiplier",
+      "type": "number"
+    }
+  },
+  "title": "RetryPolicy",
+  "type": "object"
+}

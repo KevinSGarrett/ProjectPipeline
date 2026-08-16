@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0.0",
+  "remote_to_internal": {
+    "Backlog": "BACKLOG",
+    "Blocked": "BLOCKED",
+    "Cancelled": "CANCELLED",
+    "Code Review": "REVIEW",
+    "Complete": "DONE",
+    "Deferred": "DEFERRED",
+    "Done": "DONE",
+    "In Progress": "IN_PROGRESS",
+    "Merge Ready": "MERGE_READY",
+    "QA": "VALIDATION",
+    "Ready": "READY",
+    "Review": "REVIEW",
+    "To Do": "BACKLOG",
+    "Validation": "VALIDATION"
+  }
+}

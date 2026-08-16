@@ -1,0 +1,19 @@
+<service>
+  <id>project-pipeline-command-center</id>
+  <name>Project Pipeline Command Center</name>
+  <description>Bounded Project Pipeline Command Center API service. Canonical project authority remains inside Project Pipeline.</description>
+  <executable>%BASE%\venv\Scripts\python.exe</executable>
+  <arguments>&quot;%BASE%\scripts\run_command_center_service.py&quot; --root &quot;%BASE%&quot; --host 127.0.0.1 --port 8765</arguments>
+  <workingdirectory>%BASE%</workingdirectory>
+  <env name="PYTHONPATH" value="%BASE%\src" />
+  <log mode="roll-by-size-time">
+    <sizeThreshold>10240</sizeThreshold>
+    <pattern>yyyyMMdd</pattern>
+    <autoRollAtTime>00:00:00</autoRollAtTime>
+    <zipOlderThanNumDays>7</zipOlderThanNumDays>
+  </log>
+  <stoptimeout>30sec</stoptimeout>
+  <onfailure action="restart" delay="10 sec" />
+  <onfailure action="restart" delay="30 sec" />
+  <onfailure action="none" />
+</service>

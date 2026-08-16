@@ -1,0 +1,5 @@
+$ PYTHONPATH=src python -m pytest -q --ignore=tests/test_repository_contract.py --ignore=tests/test_requirements_detailed.py
+.................................................................... [ 48%]
+.......................................................................  [100%]
+139 passed, 4 subtests passed in 4.13s
+NOTE: requirement-evidence resolution and final repository-manifest contracts are verified after appending the evidence ledger and regenerating manifests.

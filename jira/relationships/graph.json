@@ -1,0 +1,6517 @@
+{
+  "edge_count": 848,
+  "edges": [
+    {
+      "from": "PP-EPIC-000001",
+      "to": "PP-STORY-000002",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000001",
+      "to": "PP-STORY-000049",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000001",
+      "to": "PP-STORY-000050",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000001",
+      "to": "PP-STORY-000051",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000001",
+      "to": "PP-STORY-000052",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000003",
+      "to": "PP-STORY-000004",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000003",
+      "to": "PP-STORY-000053",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000003",
+      "to": "PP-STORY-000054",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000003",
+      "to": "PP-STORY-000055",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000003",
+      "to": "PP-STORY-000056",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000003",
+      "to": "PP-STORY-000057",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000003",
+      "to": "PP-STORY-000058",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000005",
+      "to": "PP-STORY-000006",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000005",
+      "to": "PP-STORY-000059",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000005",
+      "to": "PP-STORY-000060",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000005",
+      "to": "PP-STORY-000061",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000005",
+      "to": "PP-STORY-000062",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000005",
+      "to": "PP-STORY-000063",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000005",
+      "to": "PP-STORY-000064",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000007",
+      "to": "PP-STORY-000008",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000007",
+      "to": "PP-STORY-000065",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000007",
+      "to": "PP-STORY-000066",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000007",
+      "to": "PP-STORY-000067",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000007",
+      "to": "PP-STORY-000068",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000009",
+      "to": "PP-STORY-000010",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000009",
+      "to": "PP-STORY-000069",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000009",
+      "to": "PP-STORY-000070",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000009",
+      "to": "PP-STORY-000071",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000009",
+      "to": "PP-STORY-000072",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000009",
+      "to": "PP-STORY-000073",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000011",
+      "to": "PP-STORY-000012",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000011",
+      "to": "PP-STORY-000074",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000011",
+      "to": "PP-STORY-000075",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000011",
+      "to": "PP-STORY-000076",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000011",
+      "to": "PP-STORY-000077",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000011",
+      "to": "PP-STORY-000078",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000013",
+      "to": "PP-STORY-000014",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000013",
+      "to": "PP-STORY-000079",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000013",
+      "to": "PP-STORY-000080",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000013",
+      "to": "PP-STORY-000081",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000013",
+      "to": "PP-STORY-000082",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000013",
+      "to": "PP-STORY-000083",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000013",
+      "to": "PP-STORY-000084",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000015",
+      "to": "PP-STORY-000016",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000015",
+      "to": "PP-STORY-000085",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000015",
+      "to": "PP-STORY-000086",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000015",
+      "to": "PP-STORY-000087",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000015",
+      "to": "PP-STORY-000088",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000017",
+      "to": "PP-STORY-000018",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000017",
+      "to": "PP-STORY-000089",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000017",
+      "to": "PP-STORY-000090",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000017",
+      "to": "PP-STORY-000091",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000017",
+      "to": "PP-STORY-000092",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000017",
+      "to": "PP-STORY-000093",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000017",
+      "to": "PP-STORY-000094",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000019",
+      "to": "PP-STORY-000020",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000019",
+      "to": "PP-STORY-000095",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000019",
+      "to": "PP-STORY-000096",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000019",
+      "to": "PP-STORY-000097",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000019",
+      "to": "PP-STORY-000098",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000019",
+      "to": "PP-STORY-000099",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000021",
+      "to": "PP-STORY-000022",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000021",
+      "to": "PP-STORY-000100",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000021",
+      "to": "PP-STORY-000101",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000021",
+      "to": "PP-STORY-000102",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000021",
+      "to": "PP-STORY-000103",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000023",
+      "to": "PP-STORY-000024",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000023",
+      "to": "PP-STORY-000104",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000023",
+      "to": "PP-STORY-000105",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000023",
+      "to": "PP-STORY-000106",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000023",
+      "to": "PP-STORY-000107",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000023",
+      "to": "PP-STORY-000108",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000023",
+      "to": "PP-STORY-000109",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000023",
+      "to": "PP-STORY-000110",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000025",
+      "to": "PP-STORY-000026",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000025",
+      "to": "PP-STORY-000111",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000025",
+      "to": "PP-STORY-000112",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000025",
+      "to": "PP-STORY-000113",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000025",
+      "to": "PP-STORY-000114",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000025",
+      "to": "PP-STORY-000115",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000027",
+      "to": "PP-STORY-000028",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000027",
+      "to": "PP-STORY-000116",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000027",
+      "to": "PP-STORY-000117",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000027",
+      "to": "PP-STORY-000118",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000027",
+      "to": "PP-STORY-000119",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000027",
+      "to": "PP-STORY-000120",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000029",
+      "to": "PP-STORY-000030",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000029",
+      "to": "PP-STORY-000121",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000029",
+      "to": "PP-STORY-000122",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000029",
+      "to": "PP-STORY-000123",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000029",
+      "to": "PP-STORY-000124",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000031",
+      "to": "PP-STORY-000032",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000031",
+      "to": "PP-STORY-000125",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000031",
+      "to": "PP-STORY-000126",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000031",
+      "to": "PP-STORY-000127",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000031",
+      "to": "PP-STORY-000128",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000031",
+      "to": "PP-STORY-000129",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000033",
+      "to": "PP-STORY-000034",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000033",
+      "to": "PP-STORY-000130",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000033",
+      "to": "PP-STORY-000131",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000033",
+      "to": "PP-STORY-000132",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000033",
+      "to": "PP-STORY-000133",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000035",
+      "to": "PP-STORY-000036",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000035",
+      "to": "PP-STORY-000134",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000035",
+      "to": "PP-STORY-000135",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000035",
+      "to": "PP-STORY-000136",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000035",
+      "to": "PP-STORY-000137",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000002",
+      "to": "PP-EPIC-000001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000002",
+      "to": "PP-TASK-000038",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000002",
+      "to": "PP-TASK-000040",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000004",
+      "to": "PP-EPIC-000003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000004",
+      "to": "PP-TASK-000037",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000004",
+      "to": "PP-TASK-000041",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000006",
+      "to": "PP-EPIC-000005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000008",
+      "to": "PP-EPIC-000007",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000010",
+      "to": "PP-EPIC-000009",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000012",
+      "to": "PP-EPIC-000011",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000012",
+      "to": "PP-TASK-000299",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000014",
+      "to": "PP-EPIC-000013",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000014",
+      "to": "PP-TASK-000259",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000014",
+      "to": "PP-TASK-000260",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000016",
+      "to": "PP-EPIC-000015",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000016",
+      "to": "PP-TASK-000042",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000018",
+      "to": "PP-EPIC-000017",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000018",
+      "to": "PP-TASK-000043",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000018",
+      "to": "PP-TASK-000328",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000018",
+      "to": "PP-TASK-000329",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000020",
+      "to": "PP-EPIC-000019",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000020",
+      "to": "PP-TASK-000340",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000020",
+      "to": "PP-TASK-000349",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000022",
+      "to": "PP-EPIC-000021",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000022",
+      "to": "PP-TASK-000310",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000022",
+      "to": "PP-TASK-000319",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000024",
+      "to": "PP-EPIC-000023",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000024",
+      "to": "PP-TASK-000357",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000024",
+      "to": "PP-TASK-000358",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000026",
+      "to": "PP-EPIC-000025",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000028",
+      "to": "PP-EPIC-000027",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000030",
+      "to": "PP-EPIC-000029",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000030",
+      "to": "PP-TASK-000188",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000032",
+      "to": "PP-EPIC-000031",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000032",
+      "to": "PP-TASK-000364",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000034",
+      "to": "PP-EPIC-000033",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000034",
+      "to": "PP-TASK-000039",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000036",
+      "to": "PP-EPIC-000035",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000036",
+      "to": "PP-TASK-000044",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000049",
+      "to": "PP-EPIC-000001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000050",
+      "to": "PP-EPIC-000001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000050",
+      "to": "PP-TASK-000202",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000050",
+      "to": "PP-TASK-000204",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000050",
+      "to": "PP-TASK-000207",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000050",
+      "to": "PP-TASK-000210",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000051",
+      "to": "PP-EPIC-000001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000052",
+      "to": "PP-EPIC-000001",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000052",
+      "to": "PP-TASK-000205",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000053",
+      "to": "PP-EPIC-000003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000053",
+      "to": "PP-TASK-000138",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000053",
+      "to": "PP-TASK-000199",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000054",
+      "to": "PP-EPIC-000003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000054",
+      "to": "PP-TASK-000142",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000055",
+      "to": "PP-EPIC-000003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000056",
+      "to": "PP-EPIC-000003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000056",
+      "to": "PP-TASK-000144",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000056",
+      "to": "PP-TASK-000150",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000056",
+      "to": "PP-TASK-000200",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000057",
+      "to": "PP-EPIC-000003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000057",
+      "to": "PP-TASK-000140",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000058",
+      "to": "PP-EPIC-000003",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000058",
+      "to": "PP-TASK-000148",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000059",
+      "to": "PP-EPIC-000005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000059",
+      "to": "PP-TASK-000154",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000059",
+      "to": "PP-TASK-000160",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000060",
+      "to": "PP-EPIC-000005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000060",
+      "to": "PP-TASK-000155",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000060",
+      "to": "PP-TASK-000161",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000060",
+      "to": "PP-TASK-000177",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000060",
+      "to": "PP-TASK-000178",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000060",
+      "to": "PP-TASK-000191",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000060",
+      "to": "PP-TASK-000194",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000060",
+      "to": "PP-TASK-000195",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000060",
+      "to": "PP-TASK-000197",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000060",
+      "to": "PP-TASK-000201",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000060",
+      "to": "PP-TASK-000209",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000061",
+      "to": "PP-EPIC-000005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000061",
+      "to": "PP-TASK-000156",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000062",
+      "to": "PP-EPIC-000005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000062",
+      "to": "PP-TASK-000157",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000063",
+      "to": "PP-EPIC-000005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000063",
+      "to": "PP-TASK-000159",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000064",
+      "to": "PP-EPIC-000005",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000064",
+      "to": "PP-TASK-000158",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000065",
+      "to": "PP-EPIC-000007",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000065",
+      "to": "PP-TASK-000196",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000065",
+      "to": "PP-TASK-000231",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000065",
+      "to": "PP-TASK-000237",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000065",
+      "to": "PP-TASK-000238",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000065",
+      "to": "PP-TASK-000239",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000065",
+      "to": "PP-TASK-000240",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-EPIC-000007",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-TASK-000162",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-TASK-000163",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-TASK-000181",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-TASK-000300",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-TASK-000301",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-TASK-000302",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-TASK-000303",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-TASK-000304",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-TASK-000306",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-TASK-000308",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000066",
+      "to": "PP-TASK-000309",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000067",
+      "to": "PP-EPIC-000007",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000068",
+      "to": "PP-EPIC-000007",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000068",
+      "to": "PP-TASK-000236",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000069",
+      "to": "PP-EPIC-000009",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000069",
+      "to": "PP-TASK-000241",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000069",
+      "to": "PP-TASK-000242",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000069",
+      "to": "PP-TASK-000250",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000070",
+      "to": "PP-EPIC-000009",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000070",
+      "to": "PP-TASK-000243",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000070",
+      "to": "PP-TASK-000244",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000070",
+      "to": "PP-TASK-000245",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000070",
+      "to": "PP-TASK-000246",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000070",
+      "to": "PP-TASK-000249",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000071",
+      "to": "PP-EPIC-000009",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000071",
+      "to": "PP-TASK-000165",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000071",
+      "to": "PP-TASK-000233",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000071",
+      "to": "PP-TASK-000234",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000071",
+      "to": "PP-TASK-000235",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000071",
+      "to": "PP-TASK-000247",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000072",
+      "to": "PP-EPIC-000009",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000072",
+      "to": "PP-TASK-000248",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000073",
+      "to": "PP-EPIC-000009",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000073",
+      "to": "PP-TASK-000232",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000074",
+      "to": "PP-EPIC-000011",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000074",
+      "to": "PP-TASK-000180",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000074",
+      "to": "PP-TASK-000292",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000075",
+      "to": "PP-EPIC-000011",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000075",
+      "to": "PP-TASK-000206",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000075",
+      "to": "PP-TASK-000290",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000075",
+      "to": "PP-TASK-000293",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000075",
+      "to": "PP-TASK-000297",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000075",
+      "to": "PP-TASK-000298",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000076",
+      "to": "PP-EPIC-000011",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000076",
+      "to": "PP-TASK-000291",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000076",
+      "to": "PP-TASK-000296",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000077",
+      "to": "PP-EPIC-000011",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000077",
+      "to": "PP-TASK-000295",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000078",
+      "to": "PP-EPIC-000011",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000078",
+      "to": "PP-TASK-000294",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000079",
+      "to": "PP-EPIC-000013",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000079",
+      "to": "PP-TASK-000166",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000079",
+      "to": "PP-TASK-000167",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000079",
+      "to": "PP-TASK-000252",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000079",
+      "to": "PP-TASK-000258",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000080",
+      "to": "PP-EPIC-000013",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000080",
+      "to": "PP-TASK-000254",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000081",
+      "to": "PP-EPIC-000013",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000081",
+      "to": "PP-TASK-000257",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000081",
+      "to": "PP-TASK-000353",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000082",
+      "to": "PP-EPIC-000013",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000082",
+      "to": "PP-TASK-000253",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000082",
+      "to": "PP-TASK-000256",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000083",
+      "to": "PP-EPIC-000013",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000083",
+      "to": "PP-TASK-000251",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000084",
+      "to": "PP-EPIC-000013",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000084",
+      "to": "PP-TASK-000255",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000085",
+      "to": "PP-EPIC-000015",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000085",
+      "to": "PP-TASK-000221",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000085",
+      "to": "PP-TASK-000222",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000085",
+      "to": "PP-TASK-000223",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000085",
+      "to": "PP-TASK-000224",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000085",
+      "to": "PP-TASK-000225",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000085",
+      "to": "PP-TASK-000226",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000085",
+      "to": "PP-TASK-000227",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000085",
+      "to": "PP-TASK-000228",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000085",
+      "to": "PP-TASK-000229",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000085",
+      "to": "PP-TASK-000230",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-EPIC-000015",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-TASK-000146",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-TASK-000211",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-TASK-000212",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-TASK-000213",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-TASK-000214",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-TASK-000215",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-TASK-000216",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-TASK-000217",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-TASK-000218",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-TASK-000219",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000086",
+      "to": "PP-TASK-000220",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000087",
+      "to": "PP-EPIC-000015",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000088",
+      "to": "PP-EPIC-000015",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000088",
+      "to": "PP-TASK-000186",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000089",
+      "to": "PP-EPIC-000017",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000089",
+      "to": "PP-TASK-000321",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000089",
+      "to": "PP-TASK-000326",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000089",
+      "to": "PP-TASK-000327",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000090",
+      "to": "PP-EPIC-000017",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000090",
+      "to": "PP-TASK-000323",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000091",
+      "to": "PP-EPIC-000017",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000091",
+      "to": "PP-TASK-000325",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000092",
+      "to": "PP-EPIC-000017",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000092",
+      "to": "PP-TASK-000187",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000092",
+      "to": "PP-TASK-000324",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-EPIC-000017",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000152",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000172",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000320",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000330",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000331",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000332",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000333",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000334",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000335",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000336",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000338",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000365",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000366",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000367",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000093",
+      "to": "PP-TASK-000368",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000094",
+      "to": "PP-EPIC-000017",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000094",
+      "to": "PP-TASK-000322",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000094",
+      "to": "PP-TASK-000339",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000095",
+      "to": "PP-EPIC-000019",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000095",
+      "to": "PP-TASK-000343",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000096",
+      "to": "PP-EPIC-000019",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000096",
+      "to": "PP-TASK-000341",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000097",
+      "to": "PP-EPIC-000019",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000097",
+      "to": "PP-TASK-000168",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000097",
+      "to": "PP-TASK-000342",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000098",
+      "to": "PP-EPIC-000019",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000098",
+      "to": "PP-TASK-000169",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000098",
+      "to": "PP-TASK-000344",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000098",
+      "to": "PP-TASK-000345",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000099",
+      "to": "PP-EPIC-000019",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000099",
+      "to": "PP-TASK-000192",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000099",
+      "to": "PP-TASK-000346",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000099",
+      "to": "PP-TASK-000347",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000099",
+      "to": "PP-TASK-000348",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000099",
+      "to": "PP-TASK-000369",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000100",
+      "to": "PP-EPIC-000021",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000100",
+      "to": "PP-TASK-000315",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000100",
+      "to": "PP-TASK-000317",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000100",
+      "to": "PP-TASK-000318",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000101",
+      "to": "PP-EPIC-000021",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000101",
+      "to": "PP-TASK-000313",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000102",
+      "to": "PP-EPIC-000021",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000102",
+      "to": "PP-TASK-000311",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000102",
+      "to": "PP-TASK-000312",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000103",
+      "to": "PP-EPIC-000021",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000103",
+      "to": "PP-TASK-000314",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000103",
+      "to": "PP-TASK-000316",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000103",
+      "to": "PP-TASK-000376",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000104",
+      "to": "PP-EPIC-000023",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000104",
+      "to": "PP-TASK-000305",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000104",
+      "to": "PP-TASK-000307",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000105",
+      "to": "PP-EPIC-000023",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000106",
+      "to": "PP-EPIC-000023",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000106",
+      "to": "PP-TASK-000355",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000107",
+      "to": "PP-EPIC-000023",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000107",
+      "to": "PP-TASK-000352",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000108",
+      "to": "PP-EPIC-000023",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000108",
+      "to": "PP-TASK-000350",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000109",
+      "to": "PP-EPIC-000023",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000109",
+      "to": "PP-TASK-000351",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000110",
+      "to": "PP-EPIC-000023",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000110",
+      "to": "PP-TASK-000337",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000110",
+      "to": "PP-TASK-000354",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000111",
+      "to": "PP-EPIC-000025",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000112",
+      "to": "PP-EPIC-000025",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000113",
+      "to": "PP-EPIC-000025",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000114",
+      "to": "PP-EPIC-000025",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000115",
+      "to": "PP-EPIC-000025",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000115",
+      "to": "PP-TASK-000164",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000115",
+      "to": "PP-TASK-000171",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000116",
+      "to": "PP-EPIC-000027",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000116",
+      "to": "PP-TASK-000374",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000117",
+      "to": "PP-EPIC-000027",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000118",
+      "to": "PP-EPIC-000027",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000119",
+      "to": "PP-EPIC-000027",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000119",
+      "to": "PP-TASK-000193",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000119",
+      "to": "PP-TASK-000375",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000120",
+      "to": "PP-EPIC-000027",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000120",
+      "to": "PP-TASK-000170",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000120",
+      "to": "PP-TASK-000190",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000121",
+      "to": "PP-EPIC-000029",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000121",
+      "to": "PP-TASK-000356",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000122",
+      "to": "PP-EPIC-000029",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000122",
+      "to": "PP-TASK-000372",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000123",
+      "to": "PP-EPIC-000029",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000124",
+      "to": "PP-EPIC-000029",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000124",
+      "to": "PP-TASK-000179",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000124",
+      "to": "PP-TASK-000371",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000125",
+      "to": "PP-EPIC-000031",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000125",
+      "to": "PP-TASK-000203",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000125",
+      "to": "PP-TASK-000208",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000126",
+      "to": "PP-EPIC-000031",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000126",
+      "to": "PP-TASK-000189",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000126",
+      "to": "PP-TASK-000198",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000126",
+      "to": "PP-TASK-000360",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000126",
+      "to": "PP-TASK-000361",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000127",
+      "to": "PP-EPIC-000031",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000127",
+      "to": "PP-TASK-000359",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000128",
+      "to": "PP-EPIC-000031",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000128",
+      "to": "PP-TASK-000362",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000129",
+      "to": "PP-EPIC-000031",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000129",
+      "to": "PP-TASK-000363",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-EPIC-000033",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000261",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000262",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000263",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000264",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000265",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000266",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000267",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000268",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000269",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000270",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000271",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000272",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000273",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000274",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000275",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000276",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000277",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000278",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000279",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000280",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000281",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000282",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000283",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000284",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000285",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000286",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000287",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000288",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000130",
+      "to": "PP-TASK-000289",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000131",
+      "to": "PP-EPIC-000033",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000131",
+      "to": "PP-TASK-000173",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000131",
+      "to": "PP-TASK-000176",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000132",
+      "to": "PP-EPIC-000033",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000132",
+      "to": "PP-TASK-000175",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000133",
+      "to": "PP-EPIC-000033",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000133",
+      "to": "PP-TASK-000174",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000134",
+      "to": "PP-EPIC-000035",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000135",
+      "to": "PP-EPIC-000035",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000136",
+      "to": "PP-EPIC-000035",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000136",
+      "to": "PP-TASK-000373",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000136",
+      "to": "PP-TASK-000378",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000137",
+      "to": "PP-EPIC-000035",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000137",
+      "to": "PP-TASK-000370",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000137",
+      "to": "PP-TASK-000377",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000045",
+      "to": "PP-TASK-000043",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000046",
+      "to": "PP-TASK-000043",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000047",
+      "to": "PP-TASK-000044",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000048",
+      "to": "PP-TASK-000044",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000139",
+      "to": "PP-TASK-000138",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000141",
+      "to": "PP-TASK-000140",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000143",
+      "to": "PP-TASK-000142",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000145",
+      "to": "PP-TASK-000144",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000147",
+      "to": "PP-TASK-000146",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000149",
+      "to": "PP-TASK-000148",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000151",
+      "to": "PP-TASK-000150",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000153",
+      "to": "PP-TASK-000152",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000182",
+      "to": "PP-TASK-000154",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000182",
+      "to": "PP-TASK-000154",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-SUBTASK-000183",
+      "to": "PP-TASK-000156",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000183",
+      "to": "PP-TASK-000156",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-SUBTASK-000184",
+      "to": "PP-TASK-000158",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000184",
+      "to": "PP-TASK-000158",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-SUBTASK-000185",
+      "to": "PP-TASK-000160",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-SUBTASK-000185",
+      "to": "PP-TASK-000160",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000037",
+      "to": "PP-STORY-000004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000038",
+      "to": "PP-STORY-000002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000039",
+      "to": "PP-STORY-000034",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000040",
+      "to": "PP-STORY-000002",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000041",
+      "to": "PP-STORY-000004",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000041",
+      "to": "PP-TASK-000040",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000042",
+      "to": "PP-STORY-000016",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000042",
+      "to": "PP-TASK-000041",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000043",
+      "to": "PP-STORY-000018",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000043",
+      "to": "PP-SUBTASK-000045",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000043",
+      "to": "PP-SUBTASK-000046",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000043",
+      "to": "PP-TASK-000042",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000044",
+      "to": "PP-STORY-000036",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000044",
+      "to": "PP-SUBTASK-000047",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000044",
+      "to": "PP-SUBTASK-000048",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000044",
+      "to": "PP-TASK-000043",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000138",
+      "to": "PP-STORY-000053",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000138",
+      "to": "PP-SUBTASK-000139",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000140",
+      "to": "PP-STORY-000057",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000140",
+      "to": "PP-SUBTASK-000141",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000142",
+      "to": "PP-STORY-000054",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000142",
+      "to": "PP-SUBTASK-000143",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000144",
+      "to": "PP-STORY-000056",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000144",
+      "to": "PP-SUBTASK-000145",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000146",
+      "to": "PP-STORY-000086",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000146",
+      "to": "PP-SUBTASK-000147",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000148",
+      "to": "PP-STORY-000058",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000148",
+      "to": "PP-SUBTASK-000149",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000150",
+      "to": "PP-STORY-000056",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000150",
+      "to": "PP-SUBTASK-000151",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000152",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000152",
+      "to": "PP-SUBTASK-000153",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000154",
+      "to": "PP-STORY-000059",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000154",
+      "to": "PP-SUBTASK-000182",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000155",
+      "to": "PP-STORY-000060",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000156",
+      "to": "PP-STORY-000061",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000156",
+      "to": "PP-SUBTASK-000183",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000157",
+      "to": "PP-STORY-000062",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000158",
+      "to": "PP-STORY-000064",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000158",
+      "to": "PP-SUBTASK-000184",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000159",
+      "to": "PP-STORY-000063",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000160",
+      "to": "PP-STORY-000059",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000160",
+      "to": "PP-SUBTASK-000185",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-TASK-000161",
+      "to": "PP-STORY-000060",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000162",
+      "to": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000163",
+      "to": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000164",
+      "to": "PP-STORY-000115",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000165",
+      "to": "PP-STORY-000071",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000166",
+      "to": "PP-STORY-000079",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000167",
+      "to": "PP-STORY-000079",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000168",
+      "to": "PP-STORY-000097",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000169",
+      "to": "PP-STORY-000098",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000170",
+      "to": "PP-STORY-000120",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000171",
+      "to": "PP-STORY-000115",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000172",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000173",
+      "to": "PP-STORY-000131",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000174",
+      "to": "PP-STORY-000133",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000175",
+      "to": "PP-STORY-000132",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000176",
+      "to": "PP-STORY-000131",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000177",
+      "to": "PP-STORY-000060",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000178",
+      "to": "PP-STORY-000060",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000179",
+      "to": "PP-STORY-000124",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000180",
+      "to": "PP-STORY-000074",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000181",
+      "to": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000186",
+      "to": "PP-STORY-000088",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000187",
+      "to": "PP-STORY-000092",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000188",
+      "to": "PP-STORY-000030",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000189",
+      "to": "PP-STORY-000126",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000190",
+      "to": "PP-STORY-000120",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000191",
+      "to": "PP-STORY-000060",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000192",
+      "to": "PP-STORY-000099",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000193",
+      "to": "PP-STORY-000119",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000194",
+      "to": "PP-STORY-000060",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000195",
+      "to": "PP-STORY-000060",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000195",
+      "to": "PP-TASK-000194",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000196",
+      "to": "PP-STORY-000065",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000196",
+      "to": "PP-TASK-000194",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000196",
+      "to": "PP-TASK-000195",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000197",
+      "to": "PP-STORY-000060",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000197",
+      "to": "PP-TASK-000194",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000197",
+      "to": "PP-TASK-000195",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000197",
+      "to": "PP-TASK-000196",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000198",
+      "to": "PP-STORY-000126",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000198",
+      "to": "PP-TASK-000197",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000199",
+      "to": "PP-STORY-000053",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000199",
+      "to": "PP-TASK-000194",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000199",
+      "to": "PP-TASK-000197",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000199",
+      "to": "PP-TASK-000198",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000200",
+      "to": "PP-STORY-000056",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000200",
+      "to": "PP-TASK-000196",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000200",
+      "to": "PP-TASK-000197",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000200",
+      "to": "PP-TASK-000199",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000201",
+      "to": "PP-STORY-000060",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000201",
+      "to": "PP-TASK-000194",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000201",
+      "to": "PP-TASK-000195",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000201",
+      "to": "PP-TASK-000196",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000201",
+      "to": "PP-TASK-000197",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000201",
+      "to": "PP-TASK-000198",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000201",
+      "to": "PP-TASK-000199",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000201",
+      "to": "PP-TASK-000200",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000202",
+      "to": "PP-STORY-000050",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000203",
+      "to": "PP-STORY-000125",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000203",
+      "to": "PP-TASK-000202",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000204",
+      "to": "PP-STORY-000050",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000204",
+      "to": "PP-TASK-000203",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000205",
+      "to": "PP-STORY-000052",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000205",
+      "to": "PP-TASK-000204",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000206",
+      "to": "PP-STORY-000075",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000206",
+      "to": "PP-TASK-000203",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000207",
+      "to": "PP-STORY-000050",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000207",
+      "to": "PP-TASK-000205",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000207",
+      "to": "PP-TASK-000206",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000208",
+      "to": "PP-STORY-000125",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000208",
+      "to": "PP-TASK-000207",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000209",
+      "to": "PP-STORY-000060",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000209",
+      "to": "PP-TASK-000207",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000210",
+      "to": "PP-STORY-000050",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000210",
+      "to": "PP-TASK-000202",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000210",
+      "to": "PP-TASK-000203",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000210",
+      "to": "PP-TASK-000204",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000210",
+      "to": "PP-TASK-000205",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000210",
+      "to": "PP-TASK-000206",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000210",
+      "to": "PP-TASK-000207",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000210",
+      "to": "PP-TASK-000208",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000210",
+      "to": "PP-TASK-000209",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000211",
+      "to": "PP-STORY-000086",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000212",
+      "to": "PP-STORY-000086",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000212",
+      "to": "PP-TASK-000211",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000213",
+      "to": "PP-STORY-000086",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000213",
+      "to": "PP-TASK-000211",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000214",
+      "to": "PP-STORY-000086",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000214",
+      "to": "PP-TASK-000213",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000215",
+      "to": "PP-STORY-000086",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000215",
+      "to": "PP-TASK-000213",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000216",
+      "to": "PP-STORY-000086",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000216",
+      "to": "PP-TASK-000212",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000216",
+      "to": "PP-TASK-000213",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000217",
+      "to": "PP-STORY-000086",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000217",
+      "to": "PP-TASK-000216",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000218",
+      "to": "PP-STORY-000086",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000218",
+      "to": "PP-TASK-000211",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000219",
+      "to": "PP-STORY-000086",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000219",
+      "to": "PP-TASK-000214",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000219",
+      "to": "PP-TASK-000215",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000219",
+      "to": "PP-TASK-000216",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000219",
+      "to": "PP-TASK-000217",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000219",
+      "to": "PP-TASK-000218",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000220",
+      "to": "PP-STORY-000086",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000220",
+      "to": "PP-TASK-000211",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000220",
+      "to": "PP-TASK-000212",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000220",
+      "to": "PP-TASK-000213",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000220",
+      "to": "PP-TASK-000214",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000220",
+      "to": "PP-TASK-000215",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000220",
+      "to": "PP-TASK-000216",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000220",
+      "to": "PP-TASK-000217",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000220",
+      "to": "PP-TASK-000218",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000220",
+      "to": "PP-TASK-000219",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000221",
+      "to": "PP-STORY-000085",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000222",
+      "to": "PP-STORY-000085",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000222",
+      "to": "PP-TASK-000221",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000223",
+      "to": "PP-STORY-000085",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000223",
+      "to": "PP-TASK-000221",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000224",
+      "to": "PP-STORY-000085",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000224",
+      "to": "PP-TASK-000221",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000224",
+      "to": "PP-TASK-000222",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000224",
+      "to": "PP-TASK-000223",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000225",
+      "to": "PP-STORY-000085",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000225",
+      "to": "PP-TASK-000221",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000226",
+      "to": "PP-STORY-000085",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000226",
+      "to": "PP-TASK-000224",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000226",
+      "to": "PP-TASK-000225",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000227",
+      "to": "PP-STORY-000085",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000227",
+      "to": "PP-TASK-000225",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000228",
+      "to": "PP-STORY-000085",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000228",
+      "to": "PP-TASK-000227",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000229",
+      "to": "PP-STORY-000085",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000229",
+      "to": "PP-TASK-000224",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000229",
+      "to": "PP-TASK-000227",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000229",
+      "to": "PP-TASK-000228",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000230",
+      "to": "PP-STORY-000085",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000230",
+      "to": "PP-TASK-000221",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000230",
+      "to": "PP-TASK-000222",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000230",
+      "to": "PP-TASK-000223",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000230",
+      "to": "PP-TASK-000224",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000230",
+      "to": "PP-TASK-000225",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000230",
+      "to": "PP-TASK-000226",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000230",
+      "to": "PP-TASK-000227",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000230",
+      "to": "PP-TASK-000228",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000230",
+      "to": "PP-TASK-000229",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000231",
+      "to": "PP-STORY-000065",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000232",
+      "to": "PP-STORY-000073",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000233",
+      "to": "PP-STORY-000071",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000233",
+      "to": "PP-TASK-000232",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000234",
+      "to": "PP-STORY-000071",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000234",
+      "to": "PP-TASK-000232",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000235",
+      "to": "PP-STORY-000071",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000235",
+      "to": "PP-TASK-000231",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000235",
+      "to": "PP-TASK-000234",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000236",
+      "to": "PP-STORY-000068",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000236",
+      "to": "PP-TASK-000231",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000237",
+      "to": "PP-STORY-000065",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000237",
+      "to": "PP-TASK-000231",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000237",
+      "to": "PP-TASK-000236",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000238",
+      "to": "PP-STORY-000065",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000238",
+      "to": "PP-TASK-000235",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000239",
+      "to": "PP-STORY-000065",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000239",
+      "to": "PP-TASK-000231",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000239",
+      "to": "PP-TASK-000233",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000239",
+      "to": "PP-TASK-000234",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000240",
+      "to": "PP-STORY-000065",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000240",
+      "to": "PP-TASK-000231",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000240",
+      "to": "PP-TASK-000232",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000240",
+      "to": "PP-TASK-000233",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000240",
+      "to": "PP-TASK-000234",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000240",
+      "to": "PP-TASK-000235",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000240",
+      "to": "PP-TASK-000236",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000240",
+      "to": "PP-TASK-000237",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000240",
+      "to": "PP-TASK-000238",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000240",
+      "to": "PP-TASK-000239",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000241",
+      "to": "PP-STORY-000069",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000242",
+      "to": "PP-STORY-000069",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000243",
+      "to": "PP-STORY-000070",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000244",
+      "to": "PP-STORY-000070",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000245",
+      "to": "PP-STORY-000070",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000245",
+      "to": "PP-TASK-000241",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000246",
+      "to": "PP-STORY-000070",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000247",
+      "to": "PP-STORY-000071",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000247",
+      "to": "PP-TASK-000241",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000248",
+      "to": "PP-STORY-000072",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000249",
+      "to": "PP-STORY-000070",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000250",
+      "to": "PP-STORY-000069",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000250",
+      "to": "PP-TASK-000241",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000250",
+      "to": "PP-TASK-000242",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000250",
+      "to": "PP-TASK-000243",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000250",
+      "to": "PP-TASK-000244",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000250",
+      "to": "PP-TASK-000245",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000250",
+      "to": "PP-TASK-000246",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000250",
+      "to": "PP-TASK-000247",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000250",
+      "to": "PP-TASK-000248",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000250",
+      "to": "PP-TASK-000249",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000251",
+      "to": "PP-STORY-000083",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000252",
+      "to": "PP-STORY-000079",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000252",
+      "to": "PP-TASK-000251",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000253",
+      "to": "PP-STORY-000082",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000253",
+      "to": "PP-TASK-000252",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000254",
+      "to": "PP-STORY-000080",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000254",
+      "to": "PP-TASK-000253",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000255",
+      "to": "PP-STORY-000084",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000255",
+      "to": "PP-TASK-000254",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000256",
+      "to": "PP-STORY-000082",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000256",
+      "to": "PP-TASK-000255",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000257",
+      "to": "PP-STORY-000081",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000257",
+      "to": "PP-TASK-000256",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000258",
+      "to": "PP-STORY-000079",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000258",
+      "to": "PP-TASK-000257",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000259",
+      "to": "PP-STORY-000014",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000259",
+      "to": "PP-TASK-000258",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000260",
+      "to": "PP-STORY-000014",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000260",
+      "to": "PP-TASK-000259",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000261",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000262",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000263",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000264",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000265",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000266",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000267",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000268",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000269",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000270",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000271",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000272",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000273",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000274",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000275",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000276",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000277",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000278",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000279",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000280",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000281",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000282",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000283",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000284",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000285",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000286",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000287",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000288",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000289",
+      "to": "PP-STORY-000130",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000290",
+      "to": "PP-STORY-000075",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000291",
+      "to": "PP-STORY-000076",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000292",
+      "to": "PP-STORY-000074",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000293",
+      "to": "PP-STORY-000075",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000294",
+      "to": "PP-STORY-000078",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000295",
+      "to": "PP-STORY-000077",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000296",
+      "to": "PP-STORY-000076",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000297",
+      "to": "PP-STORY-000075",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000298",
+      "to": "PP-STORY-000075",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000299",
+      "to": "PP-STORY-000012",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000300",
+      "to": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000301",
+      "to": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000302",
+      "to": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000303",
+      "to": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000304",
+      "to": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000305",
+      "to": "PP-STORY-000104",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000306",
+      "to": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000307",
+      "to": "PP-STORY-000104",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000308",
+      "to": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000309",
+      "to": "PP-STORY-000066",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000310",
+      "to": "PP-STORY-000022",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000311",
+      "to": "PP-STORY-000102",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000312",
+      "to": "PP-STORY-000102",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000313",
+      "to": "PP-STORY-000101",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000314",
+      "to": "PP-STORY-000103",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000315",
+      "to": "PP-STORY-000100",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000316",
+      "to": "PP-STORY-000103",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000317",
+      "to": "PP-STORY-000100",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000318",
+      "to": "PP-STORY-000100",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000319",
+      "to": "PP-STORY-000022",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000320",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000321",
+      "to": "PP-STORY-000089",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000322",
+      "to": "PP-STORY-000094",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000323",
+      "to": "PP-STORY-000090",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000324",
+      "to": "PP-STORY-000092",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000325",
+      "to": "PP-STORY-000091",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000326",
+      "to": "PP-STORY-000089",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000327",
+      "to": "PP-STORY-000089",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000328",
+      "to": "PP-STORY-000018",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000329",
+      "to": "PP-STORY-000018",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000330",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000331",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000332",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000333",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000334",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000335",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000336",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000337",
+      "to": "PP-STORY-000110",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000338",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000339",
+      "to": "PP-STORY-000094",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000340",
+      "to": "PP-STORY-000020",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000341",
+      "to": "PP-STORY-000096",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000342",
+      "to": "PP-STORY-000097",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000343",
+      "to": "PP-STORY-000095",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000344",
+      "to": "PP-STORY-000098",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000345",
+      "to": "PP-STORY-000098",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000346",
+      "to": "PP-STORY-000099",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000347",
+      "to": "PP-STORY-000099",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000348",
+      "to": "PP-STORY-000099",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000349",
+      "to": "PP-STORY-000020",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000350",
+      "to": "PP-STORY-000108",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000351",
+      "to": "PP-STORY-000109",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000352",
+      "to": "PP-STORY-000107",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000353",
+      "to": "PP-STORY-000081",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000354",
+      "to": "PP-STORY-000110",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000355",
+      "to": "PP-STORY-000106",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000356",
+      "to": "PP-STORY-000121",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000357",
+      "to": "PP-STORY-000024",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000358",
+      "to": "PP-STORY-000024",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000359",
+      "to": "PP-STORY-000127",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000360",
+      "to": "PP-STORY-000126",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000361",
+      "to": "PP-STORY-000126",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000362",
+      "to": "PP-STORY-000128",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000363",
+      "to": "PP-STORY-000129",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000364",
+      "to": "PP-STORY-000032",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000365",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000366",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000367",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000368",
+      "to": "PP-STORY-000093",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000369",
+      "to": "PP-STORY-000099",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000370",
+      "to": "PP-STORY-000137",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000371",
+      "to": "PP-STORY-000124",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000372",
+      "to": "PP-STORY-000122",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000373",
+      "to": "PP-STORY-000136",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000374",
+      "to": "PP-STORY-000116",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000375",
+      "to": "PP-STORY-000119",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000376",
+      "to": "PP-STORY-000103",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000377",
+      "to": "PP-STORY-000137",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000378",
+      "to": "PP-STORY-000136",
+      "type": "CHILD_OF"
+    }
+  ],
+  "node_count": 378,
+  "nodes": [
+    {
+      "id": "PP-EPIC-000001",
+      "state": "BACKLOG",
+      "title": "Project Definition and Scope",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000002",
+      "state": "BACKLOG",
+      "title": "Implement and verify Project Definition and Scope",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000003",
+      "state": "BACKLOG",
+      "title": "Requirements Engineering and Traceability",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000004",
+      "state": "BACKLOG",
+      "title": "Implement and verify Requirements Engineering and Traceability",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000005",
+      "state": "BACKLOG",
+      "title": "System Architecture",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000006",
+      "state": "BACKLOG",
+      "title": "Implement and verify System Architecture",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000007",
+      "state": "BACKLOG",
+      "title": "Control Plane and Orchestration Authority",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000008",
+      "state": "BACKLOG",
+      "title": "Implement and verify Control Plane and Orchestration Authority",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000009",
+      "state": "BACKLOG",
+      "title": "Sequencing and Conflict-Safe Parallel Execution",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000010",
+      "state": "BACKLOG",
+      "title": "Implement and verify Sequencing and Conflict-Safe Parallel Execution",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000011",
+      "state": "BACKLOG",
+      "title": "Context and Knowledge Architecture",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000012",
+      "state": "BACKLOG",
+      "title": "Implement and verify Context and Knowledge Architecture",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000013",
+      "state": "BACKLOG",
+      "title": "Agents, Models, Providers, and Tools",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000014",
+      "state": "BACKLOG",
+      "title": "Implement and verify Agents, Models, Providers, and Tools",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000015",
+      "state": "BACKLOG",
+      "title": "Jira and Repository Governance",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000016",
+      "state": "BACKLOG",
+      "title": "Implement and verify Jira and Repository Governance",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000017",
+      "state": "BACKLOG",
+      "title": "Execution Assurance, Testing, and Completion",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000018",
+      "state": "BACKLOG",
+      "title": "Implement and verify Execution Assurance, Testing, and Completion",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000019",
+      "state": "BACKLOG",
+      "title": "Security, Identity, Policy, and Supply Chain",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000020",
+      "state": "BACKLOG",
+      "title": "Implement and verify Security, Identity, Policy, and Supply Chain",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000021",
+      "state": "BACKLOG",
+      "title": "Budget and Resource Governance",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000022",
+      "state": "BACKLOG",
+      "title": "Implement and verify Budget and Resource Governance",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000023",
+      "state": "BACKLOG",
+      "title": "Resilience, Recovery, and Disaster Readiness",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000024",
+      "state": "BACKLOG",
+      "title": "Implement and verify Resilience, Recovery, and Disaster Readiness",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000025",
+      "state": "BACKLOG",
+      "title": "Command Center and Operator Experience",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000026",
+      "state": "BACKLOG",
+      "title": "Implement and verify Command Center and Operator Experience",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000027",
+      "state": "BACKLOG",
+      "title": "Observability and Operations",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000028",
+      "state": "BACKLOG",
+      "title": "Implement and verify Observability and Operations",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000029",
+      "state": "BACKLOG",
+      "title": "Deployment and Infrastructure",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000030",
+      "state": "BACKLOG",
+      "title": "Implement and verify Deployment and Infrastructure",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000031",
+      "state": "BACKLOG",
+      "title": "Platform Lifecycle and Portfolio Governance",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000032",
+      "state": "BACKLOG",
+      "title": "Implement and verify Platform Lifecycle and Portfolio Governance",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000033",
+      "state": "BACKLOG",
+      "title": "Upstream Repository Evaluation and Adoption",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000034",
+      "state": "BACKLOG",
+      "title": "Implement and verify Upstream Repository Evaluation and Adoption",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000035",
+      "state": "BACKLOG",
+      "title": "Release, Handoff, and Completion Audit",
+      "type": "EPIC"
+    },
+    {
+      "id": "PP-STORY-000036",
+      "state": "BACKLOG",
+      "title": "Implement and verify Release, Handoff, and Completion Audit",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-TASK-000037",
+      "state": "BACKLOG",
+      "title": "Validate the supplied knowledge corpus",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000038",
+      "state": "BACKLOG",
+      "title": "Reconcile governing prompt aliases",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000039",
+      "state": "BACKLOG",
+      "title": "Inventory the upstream repository catalog",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000040",
+      "state": "BACKLOG",
+      "title": "Establish the professional repository foundation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000041",
+      "state": "BACKLOG",
+      "title": "Establish requirements and plan traceability",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000042",
+      "state": "BACKLOG",
+      "title": "Establish the structured local Jira mirror",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000043",
+      "state": "BACKLOG",
+      "title": "Implement self-auditing repository tooling",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000044",
+      "state": "BACKLOG",
+      "title": "Build and verify cumulative delivery archives",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-SUBTASK-000045",
+      "state": "BACKLOG",
+      "title": "Implement manifest and repository-map generation",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-SUBTASK-000046",
+      "state": "BACKLOG",
+      "title": "Implement repository policy and traceability validation",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-SUBTASK-000047",
+      "state": "BACKLOG",
+      "title": "Implement deterministic archive creation and verification",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-SUBTASK-000048",
+      "state": "BACKLOG",
+      "title": "Record final test, validation, and archive evidence",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-STORY-000049",
+      "state": "BACKLOG",
+      "title": "Boundaries — Project Definition and Scope",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000050",
+      "state": "BACKLOG",
+      "title": "Intake — Project Definition and Scope",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000051",
+      "state": "BACKLOG",
+      "title": "Mission — Project Definition and Scope",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000052",
+      "state": "BACKLOG",
+      "title": "Profiles — Project Definition and Scope",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000053",
+      "state": "BACKLOG",
+      "title": "Catalog — Requirements Engineering and Traceability",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000054",
+      "state": "BACKLOG",
+      "title": "Coverage — Requirements Engineering and Traceability",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000055",
+      "state": "BACKLOG",
+      "title": "Decisions — Requirements Engineering and Traceability",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000056",
+      "state": "BACKLOG",
+      "title": "Interfaces — Requirements Engineering and Traceability",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000057",
+      "state": "BACKLOG",
+      "title": "Provenance — Requirements Engineering and Traceability",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000058",
+      "state": "BACKLOG",
+      "title": "Terminology — Requirements Engineering and Traceability",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000059",
+      "state": "BACKLOG",
+      "title": "Boundaries — System Architecture",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000060",
+      "state": "BACKLOG",
+      "title": "Data — System Architecture",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000061",
+      "state": "BACKLOG",
+      "title": "Decisions — System Architecture",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000062",
+      "state": "BACKLOG",
+      "title": "Planes — System Architecture",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000063",
+      "state": "BACKLOG",
+      "title": "Profiles — System Architecture",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000064",
+      "state": "BACKLOG",
+      "title": "Topology — System Architecture",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000065",
+      "state": "BACKLOG",
+      "title": "Authority — Control Plane and Orchestration",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000066",
+      "state": "BACKLOG",
+      "title": "Durability — Control Plane and Orchestration",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000067",
+      "state": "BACKLOG",
+      "title": "Guardrails — Control Plane and Orchestration",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000068",
+      "state": "BACKLOG",
+      "title": "Intelligence — Control Plane and Orchestration",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000069",
+      "state": "BACKLOG",
+      "title": "Parallelism — Scheduling and Parallel Execution",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000070",
+      "state": "BACKLOG",
+      "title": "Resources — Scheduling and Parallel Execution",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000071",
+      "state": "BACKLOG",
+      "title": "Sequencing — Scheduling and Parallel Execution",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000072",
+      "state": "BACKLOG",
+      "title": "Verification — Scheduling and Parallel Execution",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000073",
+      "state": "BACKLOG",
+      "title": "Work Graph — Scheduling and Parallel Execution",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000074",
+      "state": "BACKLOG",
+      "title": "Broker — Context and Knowledge",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000075",
+      "state": "BACKLOG",
+      "title": "Compiler — Context and Knowledge",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000076",
+      "state": "BACKLOG",
+      "title": "Delegation — Context and Knowledge",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000077",
+      "state": "BACKLOG",
+      "title": "Freshness — Context and Knowledge",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000078",
+      "state": "BACKLOG",
+      "title": "Trust — Context and Knowledge",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000079",
+      "state": "BACKLOG",
+      "title": "Adapters — Agents, Models, Providers, and Tools",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000080",
+      "state": "BACKLOG",
+      "title": "Fallback — Agents, Models, Providers, and Tools",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000081",
+      "state": "BACKLOG",
+      "title": "Local Models — Agents, Models, Providers, and Tools",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000082",
+      "state": "BACKLOG",
+      "title": "Qualification — Agents, Models, Providers, and Tools",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000083",
+      "state": "BACKLOG",
+      "title": "Registry — Agents, Models, Providers, and Tools",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000084",
+      "state": "BACKLOG",
+      "title": "Routing — Agents, Models, Providers, and Tools",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000085",
+      "state": "BACKLOG",
+      "title": "Git — Jira and Repository Governance",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000086",
+      "state": "BACKLOG",
+      "title": "Jira — Jira and Repository Governance",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000087",
+      "state": "BACKLOG",
+      "title": "Merge — Jira and Repository Governance",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000088",
+      "state": "BACKLOG",
+      "title": "Structure — Jira and Repository Governance",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000089",
+      "state": "BACKLOG",
+      "title": "Completion — Execution Assurance and Testing",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000090",
+      "state": "BACKLOG",
+      "title": "Guardrails — Execution Assurance and Testing",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000091",
+      "state": "BACKLOG",
+      "title": "Review — Execution Assurance and Testing",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000092",
+      "state": "BACKLOG",
+      "title": "Scope — Execution Assurance and Testing",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000093",
+      "state": "BACKLOG",
+      "title": "Testing — Execution Assurance and Testing",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000094",
+      "state": "BACKLOG",
+      "title": "Truth — Execution Assurance and Testing",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000095",
+      "state": "BACKLOG",
+      "title": "Egress — Security, Identity, and Policy",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000096",
+      "state": "BACKLOG",
+      "title": "Identity — Security, Identity, and Policy",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000097",
+      "state": "BACKLOG",
+      "title": "Policy — Security, Identity, and Policy",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000098",
+      "state": "BACKLOG",
+      "title": "Secrets — Security, Identity, and Policy",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000099",
+      "state": "BACKLOG",
+      "title": "Supply Chain — Security, Identity, and Policy",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000100",
+      "state": "BACKLOG",
+      "title": "Forecast — Budget and Resource Governance",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000101",
+      "state": "BACKLOG",
+      "title": "Leases — Budget and Resource Governance",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000102",
+      "state": "BACKLOG",
+      "title": "Ledger — Budget and Resource Governance",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000103",
+      "state": "BACKLOG",
+      "title": "Pressure — Budget and Resource Governance",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000104",
+      "state": "BACKLOG",
+      "title": "Durable State — Resilience, Recovery, and Disaster Readiness",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000105",
+      "state": "BACKLOG",
+      "title": "External Systems — Resilience, Recovery, and Disaster Readiness",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000106",
+      "state": "BACKLOG",
+      "title": "Human Recovery — Resilience, Recovery, and Disaster Readiness",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000107",
+      "state": "BACKLOG",
+      "title": "Machine Failure — Resilience, Recovery, and Disaster Readiness",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000108",
+      "state": "BACKLOG",
+      "title": "Operating Modes — Resilience, Recovery, and Disaster Readiness",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000109",
+      "state": "BACKLOG",
+      "title": "Provider Failure — Resilience, Recovery, and Disaster Readiness",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000110",
+      "state": "BACKLOG",
+      "title": "Recovery Verification — Resilience, Recovery, and Disaster Readiness",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000111",
+      "state": "BACKLOG",
+      "title": "Controls — Command Center and Operator Experience",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000112",
+      "state": "BACKLOG",
+      "title": "Director — Command Center and Operator Experience",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000113",
+      "state": "BACKLOG",
+      "title": "Operator Inbox — Command Center and Operator Experience",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000114",
+      "state": "BACKLOG",
+      "title": "Project Intelligence — Command Center and Operator Experience",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000115",
+      "state": "BACKLOG",
+      "title": "Surfaces — Command Center and Operator Experience",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000116",
+      "state": "BACKLOG",
+      "title": "Audit — Observability and Operations",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000117",
+      "state": "BACKLOG",
+      "title": "Health — Observability and Operations",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000118",
+      "state": "BACKLOG",
+      "title": "Intelligence — Observability and Operations",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000119",
+      "state": "BACKLOG",
+      "title": "Operations — Observability and Operations",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000120",
+      "state": "BACKLOG",
+      "title": "Telemetry — Observability and Operations",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000121",
+      "state": "BACKLOG",
+      "title": "Aws — Deployment and Infrastructure",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000122",
+      "state": "BACKLOG",
+      "title": "Environments — Deployment and Infrastructure",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000123",
+      "state": "BACKLOG",
+      "title": "Local — Deployment and Infrastructure",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000124",
+      "state": "BACKLOG",
+      "title": "Packaging — Deployment and Infrastructure",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000125",
+      "state": "BACKLOG",
+      "title": "Adoption — Platform Lifecycle",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000126",
+      "state": "BACKLOG",
+      "title": "Contracts — Platform Lifecycle",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000127",
+      "state": "BACKLOG",
+      "title": "Portfolio — Platform Lifecycle",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000128",
+      "state": "BACKLOG",
+      "title": "Retention — Platform Lifecycle",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000129",
+      "state": "BACKLOG",
+      "title": "Upgrade — Platform Lifecycle",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000130",
+      "state": "BACKLOG",
+      "title": "Architecture — Upstream Repository Adoption",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000131",
+      "state": "BACKLOG",
+      "title": "Legal — Upstream Repository Adoption",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000132",
+      "state": "BACKLOG",
+      "title": "Registry — Upstream Repository Adoption",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000133",
+      "state": "BACKLOG",
+      "title": "Review — Upstream Repository Adoption",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000134",
+      "state": "BACKLOG",
+      "title": "Archive — Release and Handoff",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000135",
+      "state": "BACKLOG",
+      "title": "Candidate — Release and Handoff",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000136",
+      "state": "BACKLOG",
+      "title": "Handoff — Release and Handoff",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-STORY-000137",
+      "state": "BACKLOG",
+      "title": "Verification — Release and Handoff",
+      "type": "STORY"
+    },
+    {
+      "id": "PP-TASK-000138",
+      "state": "BACKLOG",
+      "title": "Generate the detailed requirement catalog",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-SUBTASK-000139",
+      "state": "BACKLOG",
+      "title": "Verify generate the detailed requirement catalog",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-TASK-000140",
+      "state": "BACKLOG",
+      "title": "Implement source-reference validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-SUBTASK-000141",
+      "state": "BACKLOG",
+      "title": "Verify implement source-reference validation",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-TASK-000142",
+      "state": "BACKLOG",
+      "title": "Generate canonical source-section dispositions",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-SUBTASK-000143",
+      "state": "BACKLOG",
+      "title": "Verify generate canonical source-section dispositions",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-TASK-000144",
+      "state": "BACKLOG",
+      "title": "Implement requirement query and summary interfaces",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-SUBTASK-000145",
+      "state": "BACKLOG",
+      "title": "Verify implement requirement query and summary interfaces",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-TASK-000146",
+      "state": "BACKLOG",
+      "title": "Implement deterministic Jira index and graph rebuilding",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-SUBTASK-000147",
+      "state": "BACKLOG",
+      "title": "Verify implement deterministic jira index and graph rebuilding",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-TASK-000148",
+      "state": "BACKLOG",
+      "title": "Build glossary, source evolution, and open-decision registries",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-SUBTASK-000149",
+      "state": "BACKLOG",
+      "title": "Verify build glossary, source evolution, and open-decision registries",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-TASK-000150",
+      "state": "BACKLOG",
+      "title": "Expand self-validation for detailed registries",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-SUBTASK-000151",
+      "state": "BACKLOG",
+      "title": "Verify expand self-validation for detailed registries",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-TASK-000152",
+      "state": "BACKLOG",
+      "title": "Add behavior-specific catalog, source, and Jira tests",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-SUBTASK-000153",
+      "state": "BACKLOG",
+      "title": "Verify add behavior-specific catalog, source, and jira tests",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-TASK-000154",
+      "state": "BACKLOG",
+      "title": "Build the component and trust-boundary registries",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000155",
+      "state": "BACKLOG",
+      "title": "Define state ownership and authoritative data flows",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000156",
+      "state": "BACKLOG",
+      "title": "Complete the architecture decision and technology-selection set",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000157",
+      "state": "BACKLOG",
+      "title": "Implement deterministic authority and replaceable port contracts",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000158",
+      "state": "BACKLOG",
+      "title": "Create architecture and deployment diagrams as code",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000159",
+      "state": "BACKLOG",
+      "title": "Define local, offline, and hybrid feature profiles",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000160",
+      "state": "BACKLOG",
+      "title": "Implement architecture query, view generation, and validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000161",
+      "state": "BACKLOG",
+      "title": "Implement PostgreSQL persistence and migration foundation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000162",
+      "state": "BACKLOG",
+      "title": "Implement and qualify the Hatchet DurableExecutionPort adapter",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000163",
+      "state": "BACKLOG",
+      "title": "Implement transactional command, inbox, and outbox records",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000164",
+      "state": "BACKLOG",
+      "title": "Implement the FastAPI and Pydantic control boundary",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000165",
+      "state": "BACKLOG",
+      "title": "Implement deterministic graph analysis and bounded scheduling optimization",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000166",
+      "state": "BACKLOG",
+      "title": "Implement provider, tool, repository, and work-tracker ports",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000167",
+      "state": "BACKLOG",
+      "title": "Implement Docker MCP Gateway conformance behind GovernedToolPort and preserve Context Forge as a later profile",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000168",
+      "state": "BACKLOG",
+      "title": "Prototype OPA runtime policy and Conftest configuration checks",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000169",
+      "state": "BACKLOG",
+      "title": "Implement SOPS and age secret-provisioning workflow",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000170",
+      "state": "BACKLOG",
+      "title": "Implement OpenTelemetry telemetry and OpenLIT agent instrumentation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000171",
+      "state": "BACKLOG",
+      "title": "Prototype the React operator client and Tauri shell boundary",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000172",
+      "state": "BACKLOG",
+      "title": "Activate Playwright and Testcontainers verification infrastructure",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000173",
+      "state": "BACKLOG",
+      "title": "Implement dependency, license, and provenance activation policy",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000174",
+      "state": "BACKLOG",
+      "title": "Complete the bounded high-value upstream review cohort",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000175",
+      "state": "BACKLOG",
+      "title": "Reconcile all catalog entries with explicit dispositions",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000176",
+      "state": "BACKLOG",
+      "title": "Resolve the remaining mixed-license and alternative observability review queue",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000177",
+      "state": "BACKLOG",
+      "title": "Implement local content-addressed artifact storage",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000178",
+      "state": "BACKLOG",
+      "title": "Implement PostgreSQL artifact metadata and optional S3 bytes",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000179",
+      "state": "BACKLOG",
+      "title": "Qualify WinSW service installation, recovery, and rollback",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000180",
+      "state": "BACKLOG",
+      "title": "Qualify pgvector migrations, indexes, backup, exact-retrieval fallback, and retrieval quality",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000181",
+      "state": "BACKLOG",
+      "title": "Maintain Temporal and DBOS DurableExecutionPort fallback compatibility",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-SUBTASK-000182",
+      "state": "BACKLOG",
+      "title": "Create architecture-as-code trust, flow, and deployment views",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-SUBTASK-000183",
+      "state": "BACKLOG",
+      "title": "Reconcile architecture choices with source chronology and open decisions",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-SUBTASK-000184",
+      "state": "BACKLOG",
+      "title": "Enforce dependency, license, and source-incorporation policy",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-SUBTASK-000185",
+      "state": "BACKLOG",
+      "title": "Validate architecture, decisions, upstream adoption, and generated views",
+      "type": "SUBTASK"
+    },
+    {
+      "id": "PP-TASK-000186",
+      "state": "BACKLOG",
+      "title": "Establish the authoritative Python source and repository layout",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000187",
+      "state": "BACKLOG",
+      "title": "Declare dependencies and verify explicit lock state",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000188",
+      "state": "BACKLOG",
+      "title": "Implement typed layered configuration and secret references",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000189",
+      "state": "BACKLOG",
+      "title": "Implement versioned contracts and deterministic schema generation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000190",
+      "state": "BACKLOG",
+      "title": "Implement correlation-aware structured logging and telemetry boundary",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000191",
+      "state": "BACKLOG",
+      "title": "Implement bootstrap CLI and idempotent executable core slice",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000192",
+      "state": "BACKLOG",
+      "title": "Configure code-quality, type, test, coverage, and CI gates",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000193",
+      "state": "BACKLOG",
+      "title": "Provide deterministic developer bootstrap and operating documentation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000194",
+      "state": "BACKLOG",
+      "title": "Implement stable domain identifiers and strict requirement entities",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000195",
+      "state": "BACKLOG",
+      "title": "Implement the domain project manifest and repository identity boundary",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000196",
+      "state": "BACKLOG",
+      "title": "Implement versioned project and task lifecycle state",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000197",
+      "state": "BACKLOG",
+      "title": "Implement persistence ports, SQLite execution, and PostgreSQL schema parity",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000198",
+      "state": "BACKLOG",
+      "title": "Implement reversible database migrations and integrity validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000199",
+      "state": "BACKLOG",
+      "title": "Implement transactional bidirectional requirement traceability",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000200",
+      "state": "BACKLOG",
+      "title": "Expose core state and traceability through fail-closed CLI commands",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000201",
+      "state": "BACKLOG",
+      "title": "Integrate core state schemas, documentation, validation, and evidence",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000202",
+      "state": "BACKLOG",
+      "title": "Define strict project-intake and compilation contracts",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000203",
+      "state": "BACKLOG",
+      "title": "Implement safe read-only repository discovery",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000204",
+      "state": "BACKLOG",
+      "title": "Discover project authorities and operating surfaces",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000205",
+      "state": "BACKLOG",
+      "title": "Detect project profiles and activate bounded policies",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000206",
+      "state": "BACKLOG",
+      "title": "Compile an enriched deterministic repository map",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000207",
+      "state": "BACKLOG",
+      "title": "Compile project manifests and structured gap analysis",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000208",
+      "state": "BACKLOG",
+      "title": "Implement controlled idempotent non-destructive bootstrap",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000209",
+      "state": "BACKLOG",
+      "title": "Persist compilations and bootstrap receipts through migration PPDB-0003",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000210",
+      "state": "BACKLOG",
+      "title": "Integrate intake CLI, schemas, fixtures, self-validation, and evidence",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000211",
+      "state": "BACKLOG",
+      "title": "Implement typed Jira domain model and deterministic serialization",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000212",
+      "state": "BACKLOG",
+      "title": "Validate Jira hierarchy, relationships, and local mirror semantics",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000213",
+      "state": "BACKLOG",
+      "title": "Define governed Jira remote adapter port and capabilities",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000214",
+      "state": "BACKLOG",
+      "title": "Implement Jira Cloud REST adapter with typed safety behavior",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000215",
+      "state": "BACKLOG",
+      "title": "Implement deterministic mock Jira provider and fault controls",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000216",
+      "state": "BACKLOG",
+      "title": "Implement deterministic Jira diff and reconciliation plans",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000217",
+      "state": "BACKLOG",
+      "title": "Persist Jira snapshots, outbox operations, mappings, and receipts",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000218",
+      "state": "BACKLOG",
+      "title": "Enforce Jira lifecycle readiness and meaningful comment hygiene",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000219",
+      "state": "BACKLOG",
+      "title": "Expose Jira import, export, status, planning, and dry-run CLI",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000220",
+      "state": "BACKLOG",
+      "title": "Integrate Jira Steward validation, documentation, and evidence",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000221",
+      "state": "BACKLOG",
+      "title": "Repository Steward domain and local Git authority",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000222",
+      "state": "BACKLOG",
+      "title": "Branch contract and work-in-progress preservation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000223",
+      "state": "BACKLOG",
+      "title": "Worktree isolation and resource ownership",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000224",
+      "state": "BACKLOG",
+      "title": "Branch Guardian safety evaluation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000225",
+      "state": "BACKLOG",
+      "title": "Pull-request review and check state model",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000226",
+      "state": "BACKLOG",
+      "title": "Deterministic Merge Gate",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000227",
+      "state": "BACKLOG",
+      "title": "GitHub REST port and deterministic mock",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000228",
+      "state": "BACKLOG",
+      "title": "Persistent GitHub operations and unknown outcomes",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000229",
+      "state": "BACKLOG",
+      "title": "Stale-branch cleanup and reconciliation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000230",
+      "state": "BACKLOG",
+      "title": "Repository and GitHub CLI, schemas, tests, and operations",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000231",
+      "state": "BACKLOG",
+      "title": "Project Control Kernel deterministic authority",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000232",
+      "state": "BACKLOG",
+      "title": "Validated dependency DAG and graph analysis",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000233",
+      "state": "BACKLOG",
+      "title": "Task eligibility and readiness computation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000234",
+      "state": "BACKLOG",
+      "title": "Critical path and deterministic priority sequencing",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000235",
+      "state": "BACKLOG",
+      "title": "Control recomputation and semantic snapshot identity",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000236",
+      "state": "BACKLOG",
+      "title": "Scope reconciliation projection",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000237",
+      "state": "BACKLOG",
+      "title": "Completion recomputation authority boundary",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000238",
+      "state": "BACKLOG",
+      "title": "Control persistence and reversible migration",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000239",
+      "state": "BACKLOG",
+      "title": "Control CLI, schemas, and operator interfaces",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000240",
+      "state": "BACKLOG",
+      "title": "Integrated Project Control and Build Sequencer validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000241",
+      "state": "BACKLOG",
+      "title": "Conflict graph and scheduler resource-claim model",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000242",
+      "state": "BACKLOG",
+      "title": "Safe parallel-set selection and dynamic lanes",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000243",
+      "state": "BACKLOG",
+      "title": "Resource registry and machine-capacity observation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000244",
+      "state": "BACKLOG",
+      "title": "Atomic resource leases and fencing tokens",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000245",
+      "state": "BACKLOG",
+      "title": "High-contention resource admission",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000246",
+      "state": "BACKLOG",
+      "title": "Backpressure and brownout admission modes",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000247",
+      "state": "BACKLOG",
+      "title": "Control-to-scheduler bridge and dynamic recomputation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000248",
+      "state": "BACKLOG",
+      "title": "Scheduler simulation harness",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000249",
+      "state": "BACKLOG",
+      "title": "Scheduler persistence, migration, and operator CLI",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000250",
+      "state": "BACKLOG",
+      "title": "Integrated scheduler and resource-governance validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000251",
+      "state": "BACKLOG",
+      "title": "Capability and execution-target registries",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000252",
+      "state": "BACKLOG",
+      "title": "Provider-neutral execution contracts and hosted/local adapters",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000253",
+      "state": "BACKLOG",
+      "title": "Adapter qualification and version quarantine",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000254",
+      "state": "BACKLOG",
+      "title": "Provider runtime states and bounded circuit breakers",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000255",
+      "state": "BACKLOG",
+      "title": "Capability-first routing and deterministic fallback chains",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000256",
+      "state": "BACKLOG",
+      "title": "Performance registry and measured routing evidence",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000257",
+      "state": "BACKLOG",
+      "title": "Local and hosted model abstraction boundary",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000258",
+      "state": "BACKLOG",
+      "title": "Governed tool adapter boundary and allowlist enforcement",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000259",
+      "state": "BACKLOG",
+      "title": "Agent routing persistence, migration, CLI, and failover simulation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000260",
+      "state": "BACKLOG",
+      "title": "Integrated Agent Router validation, schemas, traceability, and documentation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000261",
+      "state": "BACKLOG",
+      "title": "Enforce upstream usage state and integration-path evidence",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000262",
+      "state": "BACKLOG",
+      "title": "Integrate OR-Tools as a bounded safe-set optimizer",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000263",
+      "state": "BACKLOG",
+      "title": "Integrate Worktrunk behind Repository Steward approval",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000264",
+      "state": "BACKLOG",
+      "title": "Integrate Pydantic AI as an optional typed advisory adapter",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000265",
+      "state": "BACKLOG",
+      "title": "Integrate LiteLLM stable proxy boundary without routing authority",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000266",
+      "state": "BACKLOG",
+      "title": "Integrate Docker MCP Gateway with reviewed secure defaults",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000267",
+      "state": "BACKLOG",
+      "title": "Integrate OpenLIT as an optional OpenTelemetry instrumentation bridge",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000268",
+      "state": "BACKLOG",
+      "title": "Authorize and validate bounded upstream data adaptations",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000269",
+      "state": "BACKLOG",
+      "title": "Complete terminal disposition review for every catalog repository",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000270",
+      "state": "BACKLOG",
+      "title": "Implement machine-enforced Upstream Adoption Gate",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000271",
+      "state": "BACKLOG",
+      "title": "Enforce selection versus actual integration truth",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000272",
+      "state": "BACKLOG",
+      "title": "Map subsystem implementation boundaries to relevant upstream candidates",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000273",
+      "state": "BACKLOG",
+      "title": "Create prioritized upstream adoption and pattern-mining queue",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000274",
+      "state": "BACKLOG",
+      "title": "Perform source-level review of highest-leverage integration candidates",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000275",
+      "state": "BACKLOG",
+      "title": "Close license, duplication, supersession, and non-relevance decisions",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000276",
+      "state": "BACKLOG",
+      "title": "Preserve upstream-adoption safeguards in continuation and handoff state",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000277",
+      "state": "BACKLOG",
+      "title": "Integrate SWE-ReX worker execution runtime",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000278",
+      "state": "BACKLOG",
+      "title": "Integrate Repomix bounded repository context packaging",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000279",
+      "state": "BACKLOG",
+      "title": "Integrate official GitHub MCP server profile",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000280",
+      "state": "BACKLOG",
+      "title": "Integrate official Atlassian MCP server profile",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000281",
+      "state": "BACKLOG",
+      "title": "Integrate Codex headless worker adapter",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000282",
+      "state": "BACKLOG",
+      "title": "Integrate Gemini CLI headless worker adapter",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000283",
+      "state": "BACKLOG",
+      "title": "Integrate Promptfoo evaluation adapter",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000284",
+      "state": "BACKLOG",
+      "title": "Integrate Inspect AI evaluation adapter",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000285",
+      "state": "BACKLOG",
+      "title": "Integrate Gitleaks secret-scanning adapter",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000286",
+      "state": "BACKLOG",
+      "title": "Integrate OSV-Scanner vulnerability adapter",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000287",
+      "state": "BACKLOG",
+      "title": "Integrate Cosign artifact-verification adapter",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000288",
+      "state": "BACKLOG",
+      "title": "Integrate Zizmor CI-security adapter",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000289",
+      "state": "BACKLOG",
+      "title": "Enforce P0 upstream implementation convergence gate",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000290",
+      "state": "BACKLOG",
+      "title": "Apply upstream gate to Context implementation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000291",
+      "state": "BACKLOG",
+      "title": "Implement immutable delegation envelope and context domain",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000292",
+      "state": "BACKLOG",
+      "title": "Implement deterministic Context Broker minimality",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000293",
+      "state": "BACKLOG",
+      "title": "Implement content-addressed Context Compiler",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000294",
+      "state": "BACKLOG",
+      "title": "Implement context trust classification and firewall",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000295",
+      "state": "BACKLOG",
+      "title": "Implement context freshness and required coverage",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000296",
+      "state": "BACKLOG",
+      "title": "Implement context receipts reviewer package and telemetry",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000297",
+      "state": "BACKLOG",
+      "title": "Persist context packs and add PPDB-0009",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000298",
+      "state": "BACKLOG",
+      "title": "Integrate bounded document normalization for context",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000299",
+      "state": "BACKLOG",
+      "title": "Integrate Context CLI schemas documentation and validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000300",
+      "state": "BACKLOG",
+      "title": "Complete Pass 13 orchestration upstream gate",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000301",
+      "state": "BACKLOG",
+      "title": "Implement durable orchestration domain and stable port",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000302",
+      "state": "BACKLOG",
+      "title": "Implement ordered events inbox outbox and unknown outcome state",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000303",
+      "state": "BACKLOG",
+      "title": "Implement deterministic retries timeouts and checkpoints",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000304",
+      "state": "BACKLOG",
+      "title": "Implement durable signal and timer waits",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000305",
+      "state": "BACKLOG",
+      "title": "Implement worker heartbeat fencing and loss recovery",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000306",
+      "state": "BACKLOG",
+      "title": "Implement Hatchet adapter and fallback backend boundaries",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000307",
+      "state": "BACKLOG",
+      "title": "Persist PPDB-0010 durable workflow and recovery state",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000308",
+      "state": "BACKLOG",
+      "title": "Expose orchestration CLI schemas simulations and recovery runbook",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000309",
+      "state": "BACKLOG",
+      "title": "Verify durable orchestration recovery and truth boundary",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000310",
+      "state": "BACKLOG",
+      "title": "Complete Pass 14 budget upstream gate",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000311",
+      "state": "BACKLOG",
+      "title": "Implement immutable unified cost and quota ledger",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000312",
+      "state": "BACKLOG",
+      "title": "Implement hierarchy soft allocation protected reserve and quotas",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000313",
+      "state": "BACKLOG",
+      "title": "Implement atomic spend leases settlement and uncertain outcome reconciliation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000314",
+      "state": "BACKLOG",
+      "title": "Implement pressure hard stop admission and runaway anomaly policy",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000315",
+      "state": "BACKLOG",
+      "title": "Implement historical forecasts burn runway and outcome economics",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000316",
+      "state": "BACKLOG",
+      "title": "Implement deterministic budget change impact and allocation analysis",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000317",
+      "state": "BACKLOG",
+      "title": "Couple budget admission to scheduler router context and verification economics",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000318",
+      "state": "BACKLOG",
+      "title": "Implement upstream cost evidence and Infracost preflight boundary",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000319",
+      "state": "BACKLOG",
+      "title": "Integrate PPDB-0011 CLI schemas simulations documentation and validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000320",
+      "state": "BACKLOG",
+      "title": "Complete Pass 15 verification upstream gate",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000321",
+      "state": "BACKLOG",
+      "title": "Implement Acceptance Criteria Compiler and executable Definition of Done",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000322",
+      "state": "BACKLOG",
+      "title": "Implement Truth Registry evidence sufficiency and freshness",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000323",
+      "state": "BACKLOG",
+      "title": "Implement Loop Guard attempt novelty and progress controls",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000324",
+      "state": "BACKLOG",
+      "title": "Implement Scope Governor acceptance freeze and change budget",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000325",
+      "state": "BACKLOG",
+      "title": "Implement independent review identity and evidence multiplicity",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000326",
+      "state": "BACKLOG",
+      "title": "Implement lazy-completion challenge and candidate-complete state",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000327",
+      "state": "BACKLOG",
+      "title": "Implement deterministic fifteen-question Completion Gate",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000328",
+      "state": "BACKLOG",
+      "title": "Implement completion failure localization and rework routing",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000329",
+      "state": "BACKLOG",
+      "title": "Integrate PPDB-0012 CLI schemas documentation and assurance validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000330",
+      "state": "BACKLOG",
+      "title": "Activate the Pass 16 verification upstream portfolio",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000331",
+      "state": "BACKLOG",
+      "title": "Implement profile risk acceptance and dependency-aware test-impact derivation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000332",
+      "state": "BACKLOG",
+      "title": "Implement contract API integration and end-to-end verification harness",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000333",
+      "state": "BACKLOG",
+      "title": "Implement explicit golden journey contracts and executable scenarios",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000334",
+      "state": "BACKLOG",
+      "title": "Execute real Chromium browser visual and accessibility evidence",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000335",
+      "state": "BACKLOG",
+      "title": "Implement performance budgets and integrated target post-merge verification",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000336",
+      "state": "BACKLOG",
+      "title": "Implement adversarial property mutation and no-silent-skip verification",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000337",
+      "state": "BACKLOG",
+      "title": "Implement repeatable resilience fault-injection verification",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000338",
+      "state": "BACKLOG",
+      "title": "Integrate PPDB-0013 verification CLI schemas persistence and validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000339",
+      "state": "BACKLOG",
+      "title": "Bind verification evidence and recompute deterministic completion state",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000340",
+      "state": "BACKLOG",
+      "title": "Complete security upstream-first review and activation gate",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000341",
+      "state": "BACKLOG",
+      "title": "Implement distinct identities, least privilege, and root of trust",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000342",
+      "state": "BACKLOG",
+      "title": "Implement independent approval and deterministic policy authority",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000343",
+      "state": "BACKLOG",
+      "title": "Implement data classification, egress, and instruction-trust controls",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000344",
+      "state": "BACKLOG",
+      "title": "Implement scoped Secrets Broker leases and runtime-only materialization",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000345",
+      "state": "BACKLOG",
+      "title": "Implement SOPS, age, and OpenBao secret-provider boundaries",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000346",
+      "state": "BACKLOG",
+      "title": "Implement supply-chain scanner and policy-conformance adapters",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000347",
+      "state": "BACKLOG",
+      "title": "Implement SBOM, integrity, provenance, and license gate",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000348",
+      "state": "BACKLOG",
+      "title": "Harden CI and safe self-modification controls",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000349",
+      "state": "BACKLOG",
+      "title": "Integrate security persistence, schemas, CLI, and repository validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000350",
+      "state": "BACKLOG",
+      "title": "Implement explicit failure domains and deterministic operating modes",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000351",
+      "state": "BACKLOG",
+      "title": "Implement capability-preserving provider substitution",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000352",
+      "state": "BACKLOG",
+      "title": "Implement fenced control-machine failover and recovery roles",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000353",
+      "state": "BACKLOG",
+      "title": "Implement provider-neutral local model outage gateway",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000354",
+      "state": "BACKLOG",
+      "title": "Implement recovery objectives and backup restore planning",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000355",
+      "state": "BACKLOG",
+      "title": "Implement machine-readable human-required recovery and repair verification",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000356",
+      "state": "BACKLOG",
+      "title": "Implement optional local-primary AWS recovery spine blueprint",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000357",
+      "state": "BACKLOG",
+      "title": "Complete resilience local-runtime and backup upstream adoption review",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000358",
+      "state": "BACKLOG",
+      "title": "Integrate resilience persistence migration CLI simulations and repository validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000359",
+      "state": "BACKLOG",
+      "title": "Implement portfolio and multi-repository lifecycle coordination",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000360",
+      "state": "BACKLOG",
+      "title": "Implement environment and test-data lifecycle safety",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000361",
+      "state": "BACKLOG",
+      "title": "Implement contract evolution and compatibility gates",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000362",
+      "state": "BACKLOG",
+      "title": "Implement reference-aware retention and project closure planning",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000363",
+      "state": "BACKLOG",
+      "title": "Implement version qualification and safe platform-upgrade eligibility",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000364",
+      "state": "BACKLOG",
+      "title": "Integrate PPDB-0018 lifecycle persistence simulations and repository validation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000365",
+      "state": "BACKLOG",
+      "title": "Complete Pass 23 upstream E2E preflight and runtime qualification",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000366",
+      "state": "BACKLOG",
+      "title": "Implement full-system E2E journey runner and acceptance matrix",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000367",
+      "state": "BACKLOG",
+      "title": "Repair control-authority and traceability defects found by E2E integration",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000368",
+      "state": "BACKLOG",
+      "title": "Freeze Pass 23 cumulative regression, Completion Gate, repository validation, and archive evidence",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000369",
+      "state": "BACKLOG",
+      "title": "Re-qualify Pass 24 hardening and packaging upstream cohort",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000370",
+      "state": "BACKLOG",
+      "title": "Implement release hardening, security, performance, and truthful readiness gates",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000371",
+      "state": "BACKLOG",
+      "title": "Implement bounded Windows-service and Docker packaging sources",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000372",
+      "state": "BACKLOG",
+      "title": "Implement separated deployment environment profiles and target qualification",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000373",
+      "state": "BACKLOG",
+      "title": "Implement release candidate identity, operator handoff, cleanup, rollback, and release procedures",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000374",
+      "state": "BACKLOG",
+      "title": "Enforce database-backed append-only audit integrity",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000375",
+      "state": "BACKLOG",
+      "title": "Implement approved versioned recovery runbook executor",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000376",
+      "state": "BACKLOG",
+      "title": "Implement fail-closed AWS external budget circuit-breaker source",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000377",
+      "state": "BACKLOG",
+      "title": "Implement fail-closed post-deployment verification contract",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000378",
+      "state": "BACKLOG",
+      "title": "Execute exhaustive final convergence and completion audit",
+      "type": "TASK"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,107 @@
+{
+  "$defs": {
+    "CriterionState": {
+      "enum": [
+        "PENDING",
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "UNKNOWN",
+        "STALE"
+      ],
+      "title": "CriterionState",
+      "type": "string"
+    },
+    "VerificationMethod": {
+      "enum": [
+        "STATIC",
+        "UNIT",
+        "COMPONENT",
+        "CONTRACT",
+        "API",
+        "INTEGRATION",
+        "END_TO_END",
+        "PROPERTY",
+        "MUTATION",
+        "ADVERSARIAL",
+        "FAULT",
+        "PERFORMANCE",
+        "SECURITY",
+        "ACCESSIBILITY",
+        "VISUAL",
+        "BROWSER",
+        "RESILIENCE",
+        "RECOVERY",
+        "INSTALLER",
+        "UPGRADE",
+        "ROLLBACK",
+        "REVIEW",
+        "TRACEABILITY",
+        "DOCUMENTATION"
+      ],
+      "title": "VerificationMethod",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/assurance_evidence_assessment.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "age_seconds": {
+      "minimum": 0,
+      "title": "Age Seconds",
+      "type": "integer"
+    },
+    "criterion_id": {
+      "title": "Criterion Id",
+      "type": "string"
+    },
+    "evidence_id": {
+      "title": "Evidence Id",
+      "type": "string"
+    },
+    "max_age_seconds": {
+      "exclusiveMinimum": 0,
+      "title": "Max Age Seconds",
+      "type": "integer"
+    },
+    "method": {
+      "$ref": "#/$defs/VerificationMethod"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "producer_id": {
+      "title": "Producer Id",
+      "type": "string"
+    },
+    "reason": {
+      "title": "Reason",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/CriterionState"
+    }
+  },
+  "required": [
+    "evidence_id",
+    "criterion_id",
+    "state",
+    "method",
+    "producer_id",
+    "observed_at_utc",
+    "age_seconds",
+    "max_age_seconds",
+    "reason"
+  ],
+  "title": "EvidenceAssessment",
+  "type": "object"
+}

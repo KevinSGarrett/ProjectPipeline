@@ -1,0 +1,80 @@
+{
+  "$defs": {
+    "TraceabilityAuthority": {
+      "enum": [
+        "AUTHORITATIVE_CATALOG",
+        "PERSISTED_PROJECTION",
+        "PROPOSED_CHANGE"
+      ],
+      "title": "TraceabilityAuthority",
+      "type": "string"
+    },
+    "TraceabilityLinkType": {
+      "enum": [
+        "SOURCE",
+        "PLAN",
+        "PLAN_SECTION",
+        "JIRA",
+        "IMPLEMENTATION",
+        "TEST",
+        "EVIDENCE",
+        "DECISION",
+        "OPEN_DECISION",
+        "EVOLUTION"
+      ],
+      "title": "TraceabilityLinkType",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/traceability_link.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "authority": {
+      "$ref": "#/$defs/TraceabilityAuthority",
+      "default": "AUTHORITATIVE_CATALOG"
+    },
+    "link_id": {
+      "title": "Link Id",
+      "type": "string"
+    },
+    "link_type": {
+      "$ref": "#/$defs/TraceabilityLinkType"
+    },
+    "metadata": {
+      "additionalProperties": true,
+      "title": "Metadata",
+      "type": "object"
+    },
+    "ordinal": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Ordinal",
+      "type": "integer"
+    },
+    "requirement_id": {
+      "title": "Requirement Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target": {
+      "maxLength": 2048,
+      "minLength": 1,
+      "title": "Target",
+      "type": "string"
+    }
+  },
+  "required": [
+    "link_id",
+    "requirement_id",
+    "link_type",
+    "target"
+  ],
+  "title": "TraceabilityLink",
+  "type": "object"
+}

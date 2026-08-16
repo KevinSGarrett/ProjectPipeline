@@ -1,0 +1,57 @@
+{
+  "$id": "https://project-pipeline.local/schemas/control_sequence_score.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "critical_path_score": {
+      "title": "Critical Path Score",
+      "type": "integer"
+    },
+    "deadline_score": {
+      "title": "Deadline Score",
+      "type": "integer"
+    },
+    "duration_score": {
+      "title": "Duration Score",
+      "type": "integer"
+    },
+    "priority_score": {
+      "title": "Priority Score",
+      "type": "integer"
+    },
+    "risk_score": {
+      "title": "Risk Score",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "total_score": {
+      "title": "Total Score",
+      "type": "integer"
+    },
+    "unblock_score": {
+      "title": "Unblock Score",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "task_id",
+    "priority_score",
+    "critical_path_score",
+    "deadline_score",
+    "risk_score",
+    "unblock_score",
+    "duration_score",
+    "total_score"
+  ],
+  "title": "SequenceScore",
+  "type": "object"
+}

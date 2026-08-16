@@ -1,0 +1,283 @@
+{
+  "$defs": {
+    "CircuitState": {
+      "enum": [
+        "CLOSED",
+        "OPEN",
+        "HALF_OPEN"
+      ],
+      "title": "CircuitState",
+      "type": "string"
+    },
+    "PerformanceSummary": {
+      "additionalProperties": false,
+      "properties": {
+        "capability_id": {
+          "title": "Capability Id",
+          "type": "string"
+        },
+        "mean_cost_microunits": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Mean Cost Microunits"
+        },
+        "mean_latency_ms": {
+          "minimum": 0,
+          "title": "Mean Latency Ms",
+          "type": "integer"
+        },
+        "quality_milli": {
+          "maximum": 1000,
+          "minimum": 0,
+          "title": "Quality Milli",
+          "type": "integer"
+        },
+        "sample_count": {
+          "minimum": 0,
+          "title": "Sample Count",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "success_milli": {
+          "maximum": 1000,
+          "minimum": 0,
+          "title": "Success Milli",
+          "type": "integer"
+        },
+        "target_id": {
+          "title": "Target Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "target_id",
+        "capability_id",
+        "sample_count",
+        "success_milli",
+        "quality_milli",
+        "mean_latency_ms"
+      ],
+      "title": "PerformanceSummary",
+      "type": "object"
+    },
+    "ProviderRuntimeState": {
+      "enum": [
+        "HEALTHY",
+        "DEGRADED",
+        "RATE_LIMITED",
+        "QUOTA_LOW",
+        "BUDGET_EXHAUSTED",
+        "AUTH_FAILED",
+        "UNAVAILABLE",
+        "DISABLED",
+        "MAINTENANCE",
+        "RECOVERING"
+      ],
+      "title": "ProviderRuntimeState",
+      "type": "string"
+    },
+    "QualificationState": {
+      "enum": [
+        "QUARANTINED",
+        "SHADOW",
+        "CANARY",
+        "QUALIFIED",
+        "REJECTED",
+        "EXPIRED"
+      ],
+      "title": "QualificationState",
+      "type": "string"
+    },
+    "RouteCandidate": {
+      "additionalProperties": false,
+      "properties": {
+        "adapter_id": {
+          "title": "Adapter Id",
+          "type": "string"
+        },
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "circuit_state": {
+          "$ref": "#/$defs/CircuitState"
+        },
+        "eligible": {
+          "title": "Eligible",
+          "type": "boolean"
+        },
+        "fallback_rank": {
+          "default": 9999,
+          "minimum": 0,
+          "title": "Fallback Rank",
+          "type": "integer"
+        },
+        "model_id": {
+          "title": "Model Id",
+          "type": "string"
+        },
+        "performance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/PerformanceSummary"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "provider_id": {
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "provider_state": {
+          "$ref": "#/$defs/ProviderRuntimeState"
+        },
+        "qualification": {
+          "$ref": "#/$defs/QualificationState"
+        },
+        "reasons": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Reasons",
+          "type": "array"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "score": {
+          "default": 0,
+          "title": "Score",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "agent_id",
+        "model_id",
+        "provider_id",
+        "adapter_id",
+        "eligible",
+        "provider_state",
+        "circuit_state",
+        "qualification"
+      ],
+      "title": "RouteCandidate",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/agent_routing_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "candidates": {
+      "items": {
+        "$ref": "#/$defs/RouteCandidate"
+      },
+      "title": "Candidates",
+      "type": "array"
+    },
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "no_route_reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "No Route Reasons",
+      "type": "array"
+    },
+    "request_fingerprint": {
+      "title": "Request Fingerprint",
+      "type": "string"
+    },
+    "required_capabilities": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Capabilities",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "selected_agent_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Selected Agent Id"
+    },
+    "selected_model_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Selected Model Id"
+    },
+    "selected_provider_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Selected Provider Id"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "decision_id",
+    "request_fingerprint",
+    "task_id",
+    "required_capabilities",
+    "candidates",
+    "generated_at_utc"
+  ],
+  "title": "RoutingDecision",
+  "type": "object"
+}

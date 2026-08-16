@@ -1,0 +1,6 @@
+{
+  "provider": "synthetic-notify",
+  "response_code": 503,
+  "retry_after_seconds": 120,
+  "state": "UNAVAILABLE"
+}

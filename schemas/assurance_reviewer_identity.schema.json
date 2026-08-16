@@ -1,0 +1,51 @@
+{
+  "$id": "https://project-pipeline.local/schemas/assurance_reviewer_identity.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "conflicts": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Conflicts",
+      "type": "array"
+    },
+    "context_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Context Fingerprint",
+      "type": "string"
+    },
+    "implementation_context_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Implementation Context Fingerprint",
+      "type": "string"
+    },
+    "implementer_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Implementer Id",
+      "type": "string"
+    },
+    "reviewer_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Reviewer Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "reviewer_id",
+    "implementer_id",
+    "context_fingerprint",
+    "implementation_context_fingerprint"
+  ],
+  "title": "ReviewerIdentity",
+  "type": "object"
+}

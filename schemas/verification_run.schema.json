@@ -1,0 +1,261 @@
+{
+  "$defs": {
+    "ArtifactKind": {
+      "enum": [
+        "LOG",
+        "JSON",
+        "SCREENSHOT",
+        "TRACE",
+        "HTML",
+        "REPORT"
+      ],
+      "title": "ArtifactKind",
+      "type": "string"
+    },
+    "VerificationArtifact": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_id": {
+          "title": "Artifact Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ArtifactKind"
+        },
+        "media_type": {
+          "title": "Media Type",
+          "type": "string"
+        },
+        "produced_by_check_id": {
+          "title": "Produced By Check Id",
+          "type": "string"
+        },
+        "relative_path": {
+          "title": "Relative Path",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Sha256",
+          "type": "string"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "artifact_id",
+        "kind",
+        "relative_path",
+        "sha256",
+        "size_bytes",
+        "media_type",
+        "produced_by_check_id"
+      ],
+      "title": "VerificationArtifact",
+      "type": "object"
+    },
+    "VerificationCategory": {
+      "enum": [
+        "CONTRACT",
+        "API",
+        "INTEGRATION",
+        "END_TO_END",
+        "GOLDEN_JOURNEY",
+        "BROWSER",
+        "VISUAL",
+        "ACCESSIBILITY",
+        "PERFORMANCE",
+        "ADVERSARIAL",
+        "PROPERTY",
+        "MUTATION",
+        "FAULT",
+        "POST_MERGE"
+      ],
+      "title": "VerificationCategory",
+      "type": "string"
+    },
+    "VerificationCheckResult": {
+      "additionalProperties": false,
+      "properties": {
+        "artifacts": {
+          "default": [],
+          "items": {
+            "$ref": "#/$defs/VerificationArtifact"
+          },
+          "title": "Artifacts",
+          "type": "array"
+        },
+        "category": {
+          "$ref": "#/$defs/VerificationCategory"
+        },
+        "check_id": {
+          "title": "Check Id",
+          "type": "string"
+        },
+        "completed_at_utc": {
+          "format": "date-time",
+          "title": "Completed At Utc",
+          "type": "string"
+        },
+        "duration_ms": {
+          "minimum": 0,
+          "title": "Duration Ms",
+          "type": "integer"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "started_at_utc": {
+          "format": "date-time",
+          "title": "Started At Utc",
+          "type": "string"
+        },
+        "state": {
+          "$ref": "#/$defs/VerificationResultState"
+        },
+        "stderr_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stderr Sha256"
+        },
+        "stdout_sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stdout Sha256"
+        }
+      },
+      "required": [
+        "check_id",
+        "state",
+        "required",
+        "category",
+        "duration_ms",
+        "reason"
+      ],
+      "title": "VerificationCheckResult",
+      "type": "object"
+    },
+    "VerificationResultState": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "BLOCKED",
+        "SKIPPED"
+      ],
+      "title": "VerificationResultState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/verification_run.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "completed_at_utc": {
+      "format": "date-time",
+      "title": "Completed At Utc",
+      "type": "string"
+    },
+    "final_state": {
+      "$ref": "#/$defs/VerificationResultState"
+    },
+    "optional_skipped_count": {
+      "minimum": 0,
+      "title": "Optional Skipped Count",
+      "type": "integer"
+    },
+    "profile": {
+      "title": "Profile",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "required_blocked_count": {
+      "minimum": 0,
+      "title": "Required Blocked Count",
+      "type": "integer"
+    },
+    "required_fail_count": {
+      "minimum": 0,
+      "title": "Required Fail Count",
+      "type": "integer"
+    },
+    "results": {
+      "items": {
+        "$ref": "#/$defs/VerificationCheckResult"
+      },
+      "title": "Results",
+      "type": "array"
+    },
+    "run_id": {
+      "title": "Run Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Source Fingerprint",
+      "type": "string"
+    },
+    "started_at_utc": {
+      "format": "date-time",
+      "title": "Started At Utc",
+      "type": "string"
+    }
+  },
+  "required": [
+    "run_id",
+    "project_id",
+    "profile",
+    "source_fingerprint",
+    "results",
+    "final_state",
+    "required_fail_count",
+    "required_blocked_count",
+    "optional_skipped_count"
+  ],
+  "title": "VerificationRun",
+  "type": "object"
+}

@@ -1,0 +1,172 @@
+{
+  "all_passed": true,
+  "scenario_count": 6,
+  "scenarios": [
+    {
+      "details": {
+        "blocked": false,
+        "candidate_count": 1,
+        "required_capabilities": [
+          "reasoning"
+        ],
+        "selected_provider_id": "local",
+        "task_semantics_preserved": true
+      },
+      "deterministic_authority_preserved": true,
+      "external_mutation_performed": false,
+      "passed": true,
+      "scenario": "provider-loss"
+    },
+    {
+      "details": {
+        "active_machine_id": "control-a",
+        "candidate_machine_id": "control-b",
+        "decided_at_utc": "2026-08-15T21:50:04.289660Z",
+        "decision_id": "FAILOVER-03CAAE11BC68FCA9A966",
+        "eligible": true,
+        "reasons": [
+          "active authority is fenced and candidate is eligible for reconciled takeover"
+        ],
+        "reconcile_before_commit": true,
+        "required_fencing_token": 8,
+        "schema_version": "1.0.0",
+        "witness_confirmed": true,
+        "witness_required": true
+      },
+      "deterministic_authority_preserved": true,
+      "external_mutation_performed": false,
+      "passed": true,
+      "scenario": "control-machine-loss"
+    },
+    {
+      "details": {
+        "active_machine_id": "control-a",
+        "candidate_machine_id": "control-b",
+        "decided_at_utc": "2026-08-15T21:50:04.289725Z",
+        "decision_id": "FAILOVER-CCB0E4C23ABEA2CB57E6",
+        "eligible": false,
+        "reasons": [
+          "active authority lease is not expired or fenced",
+          "external or independent witness has not confirmed takeover"
+        ],
+        "reconcile_before_commit": true,
+        "required_fencing_token": 8,
+        "schema_version": "1.0.0",
+        "witness_confirmed": false,
+        "witness_required": true
+      },
+      "deterministic_authority_preserved": true,
+      "external_mutation_performed": false,
+      "passed": true,
+      "scenario": "split-brain"
+    },
+    {
+      "details": {
+        "allowed_capabilities": [
+          "deterministic_control",
+          "local_workers",
+          "local_models",
+          "local_repository",
+          "local_evidence"
+        ],
+        "blocked_capabilities": [
+          "unavailable_remote_capabilities"
+        ],
+        "decided_at_utc": "2026-08-15T21:50:04.289758Z",
+        "decision_id": "MODE-2250DCCD3A5E1B47EF6C",
+        "failure_domains": [
+          "CLOUD",
+          "NETWORK"
+        ],
+        "mode": "LOCAL_FIRST",
+        "reasons": [
+          "remote connectivity or cloud dependency is unavailable; preserve local deterministic work"
+        ],
+        "schema_version": "1.0.0"
+      },
+      "deterministic_authority_preserved": true,
+      "external_mutation_performed": false,
+      "passed": true,
+      "scenario": "aws-outage"
+    },
+    {
+      "details": {
+        "argv": [
+          "pgbackrest",
+          "--stanza=project-pipeline",
+          "restore",
+          "--pg1-path=.local/recovery/isolated-postgres"
+        ],
+        "backup_status_is_not_restore_status": true,
+        "domain": "canonical_state",
+        "isolated_target": ".local/recovery/isolated-postgres",
+        "live_execution_performed": false,
+        "objective": {
+          "backup_strategy": "pgBackRest incremental backups plus restore verification against an isolated PostgreSQL target",
+          "destructive_restore_interval_days": 30,
+          "domain": "canonical_state",
+          "objective_id": "RPO-42212FB068394FD9DCF5",
+          "rationale": "Canonical project, workflow, reconciliation, and authority state has the strictest recovery target.",
+          "rpo_seconds": 300,
+          "rto_seconds": 1800,
+          "schema_version": "1.0.0"
+        },
+        "tool": "PGBACKREST",
+        "verification_required": true
+      },
+      "deterministic_authority_preserved": true,
+      "external_mutation_performed": false,
+      "passed": true,
+      "scenario": "backup-restore"
+    },
+    {
+      "details": {
+        "mode": {
+          "allowed_capabilities": [
+            "deterministic_control",
+            "unaffected_capabilities",
+            "local_work"
+          ],
+          "blocked_capabilities": [
+            "failed:gpu"
+          ],
+          "decided_at_utc": "2026-08-15T21:50:04.290052Z",
+          "decision_id": "MODE-D77D30A8387AC46783C7",
+          "failure_domains": [
+            "GPU"
+          ],
+          "mode": "DEGRADED",
+          "reasons": [
+            "one or more non-canonical dependencies are unavailable; continue unaffected work"
+          ],
+          "schema_version": "1.0.0"
+        },
+        "selected_runtime": {
+          "advisory_only": true,
+          "capabilities": [
+            "triage",
+            "summarization",
+            "review_support",
+            "routing_assistance",
+            "outage_fallback"
+          ],
+          "endpoint": "http://127.0.0.1:11434",
+          "kind": "OLLAMA",
+          "metadata": {
+            "role": "default_local_service_candidate",
+            "upstream_id": "UPSTREAM-072"
+          },
+          "qualified": false,
+          "remote_network_allowed": false,
+          "runtime_id": "RUNTIME-07B3C2E7A51A55FD1D37",
+          "schema_version": "1.0.0"
+        }
+      },
+      "deterministic_authority_preserved": true,
+      "external_mutation_performed": false,
+      "passed": true,
+      "scenario": "gpu-unavailable"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

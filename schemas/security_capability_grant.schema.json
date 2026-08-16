@@ -1,0 +1,101 @@
+{
+  "$defs": {
+    "AuthorityCapability": {
+      "enum": [
+        "READ",
+        "PROPOSE",
+        "APPROVE",
+        "MUTATE",
+        "MERGE",
+        "DEPLOY",
+        "SPEND",
+        "EXTERNAL_MODEL",
+        "ACCESS_SECRET",
+        "MODIFY_INSTRUCTIONS",
+        "MODIFY_POLICY",
+        "COMPLETE_PROJECT",
+        "EMERGENCY"
+      ],
+      "title": "AuthorityCapability",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/security_capability_grant.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability": {
+      "$ref": "#/$defs/AuthorityCapability"
+    },
+    "environment": {
+      "title": "Environment",
+      "type": "string"
+    },
+    "expires_at_utc": {
+      "format": "date-time",
+      "title": "Expires At Utc",
+      "type": "string"
+    },
+    "grant_id": {
+      "title": "Grant Id",
+      "type": "string"
+    },
+    "identity_id": {
+      "title": "Identity Id",
+      "type": "string"
+    },
+    "issued_at_utc": {
+      "format": "date-time",
+      "title": "Issued At Utc",
+      "type": "string"
+    },
+    "issued_by": {
+      "title": "Issued By",
+      "type": "string"
+    },
+    "operation_class": {
+      "title": "Operation Class",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "revoked_at_utc": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Revoked At Utc"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target_prefix": {
+      "title": "Target Prefix",
+      "type": "string"
+    }
+  },
+  "required": [
+    "grant_id",
+    "identity_id",
+    "capability",
+    "project_id",
+    "target_prefix",
+    "environment",
+    "operation_class",
+    "issued_by",
+    "expires_at_utc"
+  ],
+  "title": "CapabilityGrant",
+  "type": "object"
+}

@@ -1,0 +1,27 @@
+L000001 | # PLAN-UX-001 — Command Center and Operator Experience
+L000002 | 
+L000003 | - **Plan ID:** `PLAN-UX-001`
+L000004 | - **Status:** `PLANNED`
+L000005 | - **Authority:** source-derived requirements plus explicitly labeled implementation detail
+L000006 | - **Source basis:** `GOV-001:L000643-L000693`, `SRC-015:L000003-L000112`
+L000007 | 
+L000008 | 
+L000009 | ## PLAN-UX-001:SEC-01 Surfaces
+L000010 | 
+L000011 | The Command Center is a Windows-capable application with a network-accessible interface. It exposes system and project health, live work, dependencies, completion, context, budgets, providers, risks, approvals, recovery, evidence, Jira/GitHub synchronization, and historical playback.
+L000012 | 
+L000013 | ## PLAN-UX-001:SEC-02 Director interaction
+L000014 | 
+L000015 | Director Chat is grounded in current project state and scoped to global, project, or incident context. It may explain, propose, and request typed actions. Actions pass through normal authorization, policy, idempotency, and audit controls.
+L000016 | 
+L000017 | ## PLAN-UX-001:SEC-03 Operator Inbox
+L000018 | 
+L000019 | The inbox consolidates human-required work, approvals, incidents, expiring leases, failed verification, security events, and unresolved decisions. Every item includes severity, impact, exact requested action, affected work, and post-action verification.
+L000020 | 
+L000021 | ## PLAN-UX-001:SEC-04 Notifications
+L000022 | 
+L000023 | A broker applies severity, deduplication, escalation, quiet hours, actionable payloads, and delivery adapters such as Windows tray or remote channels. Return summaries explain what occurred during operator absence.
+L000024 | 
+L000025 | ## PLAN-UX-001:SEC-05 Accessibility and visual quality
+L000026 | 
+L000027 | The interface requires keyboard navigation, semantic structure, contrast, responsive layouts, clear status language, automated browser checks, accessibility tests, and independent visual review.

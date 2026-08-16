@@ -1,0 +1,365 @@
+{
+  "journeys": [
+    {
+      "actor": "developer",
+      "expected_artifact": "project registry and selector",
+      "journey_id": "JNY-WA-001",
+      "negative_case": "missing or nested repositories receive actionable diagnostics",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Project registry workflow.",
+        "Provide a valid representative input for Users register local repositories, customize display metadata, validate paths, and reopen recent projects safely.",
+        "Observe progress and authoritative state.",
+        "Verify that projects are discoverable without leaking unrelated filesystem data.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Developer completes Project registry"
+    },
+    {
+      "actor": "technical lead",
+      "expected_artifact": "issue board and persistence",
+      "journey_id": "JNY-WA-002",
+      "negative_case": "invalid transitions and stale writes do not overwrite newer state",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Issue board workflow.",
+        "Provide a valid representative input for A kanban-style board creates, prioritizes, edits, filters, and archives engineering issues with durable ordering.",
+        "Observe progress and authoritative state.",
+        "Verify that issue state and ordering survive restart.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Technical Lead completes Issue board"
+    },
+    {
+      "actor": "developer",
+      "expected_artifact": "workspace service and creation flow",
+      "journey_id": "JNY-WA-003",
+      "negative_case": "partial workspaces are detected and recovered",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Workspace creation workflow.",
+        "Provide a valid representative input for Starting work creates an isolated workspace tied to an issue, repository, branch, and selected agent provider.",
+        "Observe progress and authoritative state.",
+        "Verify that workspace creation is atomic and traceable.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Developer completes Workspace creation"
+    },
+    {
+      "actor": "source-control operator",
+      "expected_artifact": "Git workspace adapter",
+      "journey_id": "JNY-WA-004",
+      "negative_case": "unsafe cleanup and branch collisions are blocked",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Git branch and worktree isolation workflow.",
+        "Provide a valid representative input for Each workspace uses a unique branch/worktree, protects the default branch, and records ownership and cleanup eligibility.",
+        "Observe progress and authoritative state.",
+        "Verify that parallel work remains isolated.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Source-Control Operator completes Git branch and worktree isolation"
+    },
+    {
+      "actor": "developer",
+      "expected_artifact": "provider registry and settings UI",
+      "journey_id": "JNY-WA-005",
+      "negative_case": "untrusted project content cannot change provider policy",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Agent provider profiles workflow.",
+        "Provide a valid representative input for Provider profiles detect installed coding agents, validate authentication readiness, and expose permission modes without storing provider secrets.",
+        "Observe progress and authoritative state.",
+        "Verify that supported providers can be selected and unavailable providers are explained.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Developer completes Agent provider profiles"
+    },
+    {
+      "actor": "developer",
+      "expected_artifact": "session manager and event journal",
+      "journey_id": "JNY-WA-006",
+      "negative_case": "duplicate start and unknown-result operations reconcile safely",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Session orchestration workflow.",
+        "Provide a valid representative input for A workspace can start, stop, resume, and inspect one or more agent sessions while preserving event order and ownership.",
+        "Observe progress and authoritative state.",
+        "Verify that session state survives application restart.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Developer completes Session orchestration"
+    },
+    {
+      "actor": "developer",
+      "expected_artifact": "terminal transport and component",
+      "journey_id": "JNY-WA-007",
+      "negative_case": "binary floods and orphaned processes are contained",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Terminal streaming workflow.",
+        "Provide a valid representative input for The application streams terminal output, accepts bounded input, preserves ANSI behavior, and handles process exit and reconnect.",
+        "Observe progress and authoritative state.",
+        "Verify that output remains ordered and responsive.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Developer completes Terminal streaming"
+    },
+    {
+      "actor": "reviewer",
+      "expected_artifact": "diff service and viewer",
+      "journey_id": "JNY-WA-008",
+      "negative_case": "large or malformed diffs degrade safely",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Diff review workflow.",
+        "Provide a valid representative input for Users inspect changed files, unified diffs, additions/deletions, binary status, and refresh state relative to the workspace base.",
+        "Observe progress and authoritative state.",
+        "Verify that diffs match Git truth and update after changes.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Reviewer completes Diff review"
+    },
+    {
+      "actor": "reviewer",
+      "expected_artifact": "review comment model and UI",
+      "journey_id": "JNY-WA-009",
+      "negative_case": "stale anchors are never silently applied to the wrong line",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Inline review comments workflow.",
+        "Provide a valid representative input for Reviewers attach comments to files and lines, edit or resolve feedback, and send actionable review context back to an agent.",
+        "Observe progress and authoritative state.",
+        "Verify that comments preserve anchors or report drift.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Reviewer completes Inline review comments"
+    },
+    {
+      "actor": "developer",
+      "expected_artifact": "dev-server manager and preview frame",
+      "journey_id": "JNY-WA-010",
+      "negative_case": "dead or hostile endpoints are isolated",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Development server preview workflow.",
+        "Provide a valid representative input for Workspaces can register a local development server and expose status, logs, restart, and preview readiness.",
+        "Observe progress and authoritative state.",
+        "Verify that healthy previews open only for approved local origins.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Developer completes Development server preview"
+    },
+    {
+      "actor": "reviewer",
+      "expected_artifact": "browser preview and inspector controls",
+      "journey_id": "JNY-WA-011",
+      "negative_case": "unexpected origins and downloads are blocked",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Embedded browser tools workflow.",
+        "Provide a valid representative input for A preview browser supports navigation, responsive viewport selection, reload, inspect mode, console visibility, and safe external links.",
+        "Observe progress and authoritative state.",
+        "Verify that browser tools operate without escaping security boundaries.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Reviewer completes Embedded browser tools"
+    },
+    {
+      "actor": "developer",
+      "expected_artifact": "source-control status service",
+      "journey_id": "JNY-WA-012",
+      "negative_case": "dirty and detached states receive explicit handling",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Source control integration workflow.",
+        "Provide a valid representative input for Repository status, remotes, commits, staged state, upstream relation, and default-branch policy are visible and refreshed from Git.",
+        "Observe progress and authoritative state.",
+        "Verify that displayed state reconciles to command results.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Developer completes Source control integration"
+    },
+    {
+      "actor": "reviewer",
+      "expected_artifact": "PR workflow and receipt store",
+      "journey_id": "JNY-WA-013",
+      "negative_case": "external mutation never occurs without explicit approval",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Pull request workflow workflow.",
+        "Provide a valid representative input for Authorized users can prepare a pull request description, validate base/head, create at most one PR, and observe checks and merge readiness.",
+        "Observe progress and authoritative state.",
+        "Verify that unknown write outcomes are reconciled before retry.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Reviewer completes Pull request workflow"
+    },
+    {
+      "actor": "reviewer",
+      "expected_artifact": "feedback composer and context boundary",
+      "journey_id": "JNY-WA-014",
+      "negative_case": "prompt injection in repository content is not elevated to authority",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Agent feedback loop workflow.",
+        "Provide a valid representative input for Review comments, test failures, and operator instructions can be routed back into an active session with scoped context.",
+        "Observe progress and authoritative state.",
+        "Verify that feedback is attributable and ordered.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Reviewer completes Agent feedback loop"
+    },
+    {
+      "actor": "operator",
+      "expected_artifact": "desktop packaging and updater",
+      "journey_id": "JNY-WA-015",
+      "negative_case": "mismatched update metadata is rejected",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Desktop packaging and updates workflow.",
+        "Provide a valid representative input for The application packages for Windows and other supported desktops, reports version, and verifies update artifacts before installation.",
+        "Observe progress and authoritative state.",
+        "Verify that signed or hashed artifacts install and rollback safely.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Operator completes Desktop packaging and updates"
+    },
+    {
+      "actor": "operator",
+      "expected_artifact": "settings store and redaction",
+      "journey_id": "JNY-WA-016",
+      "negative_case": "canary secrets never appear in logs or exported support bundles",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Configuration and secret boundaries workflow.",
+        "Provide a valid representative input for Settings distinguish public preferences, local paths, provider readiness, and secret references with safe export/import.",
+        "Observe progress and authoritative state.",
+        "Verify that configuration round-trips without secret disclosure.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Operator completes Configuration and secret boundaries"
+    },
+    {
+      "actor": "remote operator",
+      "expected_artifact": "remote access gateway and status",
+      "journey_id": "JNY-WA-017",
+      "negative_case": "local services are not publicly exposed by default",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Remote access workflow.",
+        "Provide a valid representative input for Optional remote access exposes controlled project/session views through an authenticated tunnel while defaulting to local-only binding.",
+        "Observe progress and authoritative state.",
+        "Verify that authorized remote views work with explicit enablement.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Remote Operator completes Remote access"
+    },
+    {
+      "actor": "developer",
+      "expected_artifact": "concurrency controls and conflict UI",
+      "journey_id": "JNY-WA-018",
+      "negative_case": "last-writer-wins data loss is prohibited",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Concurrency and conflict handling workflow.",
+        "Provide a valid representative input for Concurrent workspace, issue, Git, and settings operations use leases or optimistic checks and expose conflicts for review.",
+        "Observe progress and authoritative state.",
+        "Verify that conflicts are deterministic and recoverable.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Developer completes Concurrency and conflict handling"
+    },
+    {
+      "actor": "operator",
+      "expected_artifact": "notification center and recovery director",
+      "journey_id": "JNY-WA-019",
+      "negative_case": "duplicate notifications and false completion are suppressed",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Notifications and recovery workflow.",
+        "Provide a valid representative input for The application notifies operators about session completion, failures, blockers, and recoverable abandoned state after restart.",
+        "Observe progress and authoritative state.",
+        "Verify that notifications link to authoritative state.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Operator completes Notifications and recovery"
+    },
+    {
+      "actor": "developer and reviewer",
+      "expected_artifact": "accessible UI, docs, diagnostics, and release bundle",
+      "journey_id": "JNY-WA-020",
+      "negative_case": "visual polish cannot hide inaccessible controls or missing evidence",
+      "preconditions": [
+        "The project is running in an approved benchmark environment",
+        "The actor has the minimum authorized role"
+      ],
+      "steps": [
+        "Open or invoke the Accessibility responsive operation and handoff workflow.",
+        "Provide a valid representative input for Keyboard navigation, screen-reader labels, responsive layouts, diagnostics, documentation, and release evidence make the product usable and supportable.",
+        "Observe progress and authoritative state.",
+        "Verify that critical flows work by keyboard and at supported viewport sizes.",
+        "Inspect evidence, audit history, and recovery guidance."
+      ],
+      "title": "Developer And Reviewer completes Accessibility responsive operation and handoff"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,20 @@
+{
+  "actor_id": "actor:ppqs-benchmark-owner",
+  "allow_nested_repositories": false,
+  "canonical_url": null,
+  "correlation_id": "corr:ppqs-03-run",
+  "max_files": 100000,
+  "max_hash_bytes_per_file": 64000000,
+  "max_total_bytes": 8000000000,
+  "mode": "NEW_PROJECT",
+  "project_id": "ppqs-03",
+  "project_name": "DemandForge",
+  "requested_profiles": [
+    "MACHINE_LEARNING",
+    "PYTHON_SERVICE",
+    "INFRASTRUCTURE"
+  ],
+  "scale": "LARGE",
+  "schema_version": "1.0.0",
+  "target_root": "./workspace/PPQS-03"
+}

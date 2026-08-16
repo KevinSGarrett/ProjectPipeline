@@ -1,0 +1,158 @@
+{
+  "$id": "https://project-pipeline.local/schemas/requirement.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "acceptance_summary": {
+      "minLength": 20,
+      "type": "string"
+    },
+    "authority_classification": {
+      "enum": [
+        "SOURCE_DERIVED",
+        "ENGINEERING_INFERENCE",
+        "ENGINEERING_PROPOSAL",
+        "REQUIRED_IMPLEMENTATION_DETAIL",
+        "OPEN_DECISION"
+      ]
+    },
+    "disposition": {
+      "enum": [
+        "ACCEPTED",
+        "SUPERSEDED",
+        "EXCLUDED",
+        "REJECTED",
+        "OPEN_DECISION"
+      ]
+    },
+    "disposition_reason": {
+      "minLength": 20,
+      "type": "string"
+    },
+    "domain": {
+      "pattern": "^[A-Z]+$",
+      "type": "string"
+    },
+    "implementation_state": {
+      "enum": [
+        "IMPLEMENTED",
+        "PARTIALLY_IMPLEMENTED",
+        "MOCK_VERIFIED",
+        "LIVE_VERIFIED",
+        "BLOCKED_EXTERNAL",
+        "PLANNED_ONLY"
+      ]
+    },
+    "jira_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "normative_strength": {
+      "enum": [
+        "SHALL",
+        "SHOULD",
+        "MAY"
+      ]
+    },
+    "plan_ids": {
+      "items": {
+        "pattern": "^PLAN-[A-Z]+-[0-9]{3}$",
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "plan_section_ids": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "priority": {
+      "enum": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ]
+    },
+    "rationale": {
+      "minLength": 20,
+      "type": "string"
+    },
+    "requirement_id": {
+      "pattern": "^REQ-[A-Z]+-[0-9]{4}$",
+      "type": "string"
+    },
+    "requirement_type": {
+      "type": "string"
+    },
+    "risk": {
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ]
+    },
+    "schema_version": {
+      "const": "2.0.0"
+    },
+    "source_references": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "source_sequence": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "statement": {
+      "minLength": 20,
+      "type": "string"
+    },
+    "title": {
+      "minLength": 5,
+      "type": "string"
+    },
+    "verification_class": {
+      "type": "string"
+    },
+    "verification_expectation": {
+      "minLength": 20,
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "requirement_id",
+    "domain",
+    "title",
+    "statement",
+    "requirement_type",
+    "normative_strength",
+    "authority_classification",
+    "source_references",
+    "source_sequence",
+    "rationale",
+    "priority",
+    "risk",
+    "disposition",
+    "disposition_reason",
+    "implementation_state",
+    "plan_ids",
+    "plan_section_ids",
+    "jira_ids",
+    "verification_class",
+    "verification_expectation",
+    "acceptance_summary"
+  ],
+  "title": "Project Pipeline Requirement",
+  "type": "object"
+}

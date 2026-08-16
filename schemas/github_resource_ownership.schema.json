@@ -1,0 +1,92 @@
+{
+  "$defs": {
+    "OwnershipKind": {
+      "enum": [
+        "FILE",
+        "DIRECTORY",
+        "SCHEMA",
+        "DATABASE",
+        "PORT",
+        "ENVIRONMENT",
+        "REPOSITORY"
+      ],
+      "title": "OwnershipKind",
+      "type": "string"
+    },
+    "OwnershipState": {
+      "enum": [
+        "ACTIVE",
+        "RELEASED",
+        "EXPIRED"
+      ],
+      "title": "OwnershipState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_resource_ownership.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "acquired_at_utc": {
+      "format": "date-time",
+      "title": "Acquired At Utc",
+      "type": "string"
+    },
+    "expires_at_utc": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expires At Utc"
+    },
+    "owner_task_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Owner Task Id",
+      "type": "string"
+    },
+    "ownership_id": {
+      "title": "Ownership Id",
+      "type": "string"
+    },
+    "repository_slug": {
+      "title": "Repository Slug",
+      "type": "string"
+    },
+    "resource": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Resource",
+      "type": "string"
+    },
+    "resource_kind": {
+      "$ref": "#/$defs/OwnershipKind"
+    },
+    "state": {
+      "$ref": "#/$defs/OwnershipState",
+      "default": "ACTIVE"
+    },
+    "workspace_id": {
+      "maxLength": 128,
+      "minLength": 1,
+      "title": "Workspace Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "ownership_id",
+    "repository_slug",
+    "resource_kind",
+    "resource",
+    "owner_task_id",
+    "workspace_id"
+  ],
+  "title": "ResourceOwnershipClaim",
+  "type": "object"
+}

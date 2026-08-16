@@ -1,0 +1,28 @@
+
+name: Defect report
+description: Report a reproducible ProjectPipeline defect
+title: "[Defect]: "
+labels: ["defect", "triage"]
+body:
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction and evidence
+    validations:
+      required: true
+  - type: input
+    id: requirements
+    attributes:
+      label: Related requirement or work-item IDs

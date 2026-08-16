@@ -1,0 +1,344 @@
+{
+  "accepted_incomplete_count": 166,
+  "accepted_requirement_count": 351,
+  "critical_requirement_count": 83,
+  "critical_requirements_lacking_test_or_evidence": 0,
+  "critical_uncovered_requirement_ids": [],
+  "failed_questions": [
+    2,
+    6,
+    7,
+    8,
+    13
+  ],
+  "final_complete": false,
+  "question_results": [
+    {
+      "evidence_ids": [],
+      "externally_blocked": false,
+      "passed": true,
+      "question": "Are all source-derived requirements dispositioned?",
+      "question_number": 1,
+      "reasons": [
+        "351 requirements inspected"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [],
+      "externally_blocked": false,
+      "passed": false,
+      "question": "Are all accepted requirements implemented or explicitly externally blocked?",
+      "question_number": 2,
+      "reasons": [
+        "166 accepted requirements remain incomplete"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [],
+      "externally_blocked": false,
+      "passed": true,
+      "question": "Are all implementation artifacts traceable?",
+      "question_number": 3,
+      "reasons": [
+        "satisfied by deterministic repository facts"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [
+        "EVID-000003",
+        "EVID-000005",
+        "EVID-000006",
+        "EVID-000007",
+        "EVID-000017",
+        "EVID-000019",
+        "EVID-000020",
+        "EVID-000022",
+        "EVID-000023",
+        "EVID-000024",
+        "EVID-000025",
+        "EVID-000027",
+        "EVID-000029",
+        "EVID-000030",
+        "EVID-000035",
+        "EVID-000036",
+        "EVID-000037",
+        "EVID-000040",
+        "EVID-000041",
+        "EVID-000042",
+        "EVID-000043",
+        "EVID-000046",
+        "EVID-000047",
+        "EVID-000048",
+        "EVID-000049",
+        "EVID-000050",
+        "EVID-000051",
+        "EVID-000052",
+        "EVID-000053",
+        "EVID-000055",
+        "EVID-000058",
+        "EVID-000062",
+        "EVID-000065",
+        "EVID-000075",
+        "EVID-000076",
+        "EVID-000077",
+        "EVID-000078",
+        "EVID-000083",
+        "EVID-000084",
+        "EVID-000085",
+        "EVID-000086",
+        "EVID-000087",
+        "EVID-000088",
+        "EVID-000089",
+        "EVID-000091",
+        "EVID-000093",
+        "EVID-000094",
+        "EVID-000096",
+        "EVID-000097",
+        "EVID-000098",
+        "EVID-000099",
+        "EVID-000100",
+        "EVID-000101",
+        "EVID-000103",
+        "EVID-000104",
+        "EVID-000105",
+        "EVID-000106",
+        "EVID-000108",
+        "EVID-000109",
+        "EVID-000110",
+        "EVID-000111",
+        "EVID-000112",
+        "EVID-000113",
+        "EVID-000115",
+        "EVID-000116",
+        "EVID-000117",
+        "EVID-000118",
+        "EVID-000119",
+        "EVID-000121",
+        "EVID-000122",
+        "EVID-000123",
+        "EVID-000124",
+        "EVID-000125",
+        "EVID-000126",
+        "EVID-000127",
+        "EVID-000128",
+        "EVID-000129",
+        "EVID-000130",
+        "EVID-000131",
+        "EVID-000132",
+        "EVID-000136",
+        "EVID-000137",
+        "EVID-000138",
+        "EVID-000139",
+        "EVID-000141",
+        "EVID-000147",
+        "EVID-000148",
+        "EVID-000149",
+        "EVID-000150",
+        "EVID-000153",
+        "EVID-000159",
+        "EVID-000160",
+        "EVID-000161",
+        "EVID-000162",
+        "EVID-000163",
+        "EVID-000164",
+        "EVID-000165",
+        "EVID-000169",
+        "EVID-000170",
+        "EVID-000171"
+      ],
+      "externally_blocked": false,
+      "passed": true,
+      "question": "Are all critical paths tested?",
+      "question_number": 4,
+      "reasons": [
+        "critical requirement set has test/evidence mappings"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [
+        "EVID-000116"
+      ],
+      "externally_blocked": false,
+      "passed": true,
+      "question": "Do the golden journeys pass?",
+      "question_number": 5,
+      "reasons": [
+        "verified golden-journey evidence is present"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [
+        "EVID-000003",
+        "EVID-000005",
+        "EVID-000006",
+        "EVID-000007",
+        "EVID-000022",
+        "EVID-000023",
+        "EVID-000024",
+        "EVID-000025",
+        "EVID-000027",
+        "EVID-000123",
+        "EVID-000124",
+        "EVID-000125",
+        "EVID-000126",
+        "EVID-000127",
+        "EVID-000128",
+        "EVID-000163",
+        "EVID-000164"
+      ],
+      "externally_blocked": false,
+      "passed": false,
+      "question": "Are security gates satisfied?",
+      "question_number": 6,
+      "reasons": [
+        "completion prerequisite is not satisfied"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [
+        "EVID-000043",
+        "EVID-000049",
+        "EVID-000050",
+        "EVID-000051",
+        "EVID-000052",
+        "EVID-000053",
+        "EVID-000062",
+        "EVID-000096",
+        "EVID-000097",
+        "EVID-000100",
+        "EVID-000101",
+        "EVID-000115",
+        "EVID-000116",
+        "EVID-000118",
+        "EVID-000121",
+        "EVID-000122",
+        "EVID-000129",
+        "EVID-000130",
+        "EVID-000131",
+        "EVID-000132"
+      ],
+      "externally_blocked": false,
+      "passed": false,
+      "question": "Are resilience/recovery expectations verified?",
+      "question_number": 7,
+      "reasons": [
+        "completion prerequisite is not satisfied"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [
+        "EVID-000005",
+        "EVID-000006",
+        "EVID-000007",
+        "EVID-000008",
+        "EVID-000022",
+        "EVID-000023",
+        "EVID-000024",
+        "EVID-000026",
+        "EVID-000027",
+        "EVID-000075",
+        "EVID-000076",
+        "EVID-000129",
+        "EVID-000132",
+        "EVID-000164"
+      ],
+      "externally_blocked": false,
+      "passed": false,
+      "question": "Is deployment reproducible?",
+      "question_number": 8,
+      "reasons": [
+        "completion prerequisite is not satisfied"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [],
+      "externally_blocked": false,
+      "passed": true,
+      "question": "Is rollback documented and tested where practical?",
+      "question_number": 9,
+      "reasons": [
+        "satisfied by deterministic repository facts"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [],
+      "externally_blocked": false,
+      "passed": true,
+      "question": "Can another engineer operate the system from the supplied documentation?",
+      "question_number": 10,
+      "reasons": [
+        "satisfied by deterministic repository facts"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [],
+      "externally_blocked": false,
+      "passed": true,
+      "question": "Can another AI continue development using the repository and Jira structure?",
+      "question_number": 11,
+      "reasons": [
+        "satisfied by deterministic repository facts"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [],
+      "externally_blocked": false,
+      "passed": true,
+      "question": "Are unresolved items accurately represented rather than hidden?",
+      "question_number": 12,
+      "reasons": [
+        "satisfied by deterministic repository facts"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [],
+      "externally_blocked": false,
+      "passed": false,
+      "question": "Does the Command Center accurately reflect actual system state?",
+      "question_number": 13,
+      "reasons": [
+        "Command Center requirements are not yet complete"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [],
+      "externally_blocked": false,
+      "passed": true,
+      "question": "Does Jira accurately reflect actual implementation state?",
+      "question_number": 14,
+      "reasons": [
+        "satisfied by deterministic repository facts"
+      ],
+      "schema_version": "1.0.0"
+    },
+    {
+      "evidence_ids": [],
+      "externally_blocked": false,
+      "passed": true,
+      "question": "Does the final coverage audit show any unexplained gaps?",
+      "question_number": 15,
+      "reasons": [
+        "unexplained traceability gaps: 0"
+      ],
+      "schema_version": "1.0.0"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "snapshot_id": "PASS-25-FINAL-COMPLETION-GATE",
+  "source_snapshot_fingerprint": "1b0c75a99ed41244a2e19349a8299b53bdd47137a2035cb2e14f9cbbc471fadd",
+  "state": "NOT_COMPLETE",
+  "truth_boundary": "NOT_COMPLETE is authoritative whenever any question fails; Pass 25 audit completion cannot override this gate."
+}

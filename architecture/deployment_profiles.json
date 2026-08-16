@@ -1,0 +1,85 @@
+{
+  "profile_count": 3,
+  "profiles": [
+    {
+      "degraded_mode": "Continue deterministic planning, local repository work, and queued reconciliation when optional providers or cloud services are unavailable.",
+      "external_dependencies": [
+        "PostgreSQL with pgvector",
+        "Hatchet",
+        "OPA",
+        "SOPS with age",
+        "Docker MCP Gateway"
+      ],
+      "network_rule": "Private local or authenticated overlay access only",
+      "profile_id": "LOCAL_CORE",
+      "purpose": "Primary Windows workstation/control-machine deployment with native Python services and Docker or WSL2 only for dependencies that require a Linux-oriented runtime.",
+      "required_components": [
+        "COMP-INTAKE-001",
+        "COMP-TRACE-001",
+        "COMP-PERSIST-001",
+        "COMP-CTRL-001",
+        "COMP-DIRECTOR-001",
+        "COMP-SEQUENCE-001",
+        "COMP-GRAPH-001",
+        "COMP-SCHED-001",
+        "COMP-RESOURCE-001",
+        "COMP-WORKFLOW-001",
+        "COMP-CONTEXT-001",
+        "COMP-ROUTER-001",
+        "COMP-PROVIDER-001",
+        "COMP-TOOL-001",
+        "COMP-WORKER-001",
+        "COMP-REPO-001",
+        "COMP-JIRA-001",
+        "COMP-ASSURE-001",
+        "COMP-EVIDENCE-001",
+        "COMP-ARTIFACT-001",
+        "COMP-POLICY-001",
+        "COMP-SECRET-001",
+        "COMP-BUDGET-001",
+        "COMP-OUTBOX-001",
+        "COMP-OBS-001",
+        "COMP-RECOVERY-001",
+        "COMP-API-001",
+        "COMP-UI-001",
+        "COMP-CHAT-001",
+        "COMP-NOTIFY-001",
+        "COMP-DEPLOY-001"
+      ]
+    },
+    {
+      "degraded_mode": "Return to local-primary operation; cloud-only work waits or reconciles.",
+      "external_dependencies": [
+        "AWS services selected by later infrastructure ADR"
+      ],
+      "network_rule": "No public database or worker endpoints; scoped cloud credentials and encrypted transport required",
+      "profile_id": "HYBRID_AWS",
+      "purpose": "Local-primary deployment with optional AWS backup, ingress, notification, witness, and burst resources.",
+      "required_components": [
+        "COMP-CTRL-001",
+        "COMP-PERSIST-001",
+        "COMP-WORKFLOW-001",
+        "COMP-OUTBOX-001",
+        "COMP-OBS-001",
+        "COMP-RECOVERY-001",
+        "COMP-DEPLOY-001"
+      ]
+    },
+    {
+      "degraded_mode": "Remote synchronization and provider-backed work remain queued.",
+      "external_dependencies": [],
+      "network_rule": "No network required",
+      "profile_id": "OFFLINE_PORTABLE",
+      "purpose": "Bounded offline analysis and repository operations without remote SaaS mutation.",
+      "required_components": [
+        "COMP-TRACE-001",
+        "COMP-GRAPH-001",
+        "COMP-SEQUENCE-001",
+        "COMP-CONTEXT-001",
+        "COMP-ASSURE-001",
+        "COMP-ARTIFACT-001"
+      ]
+    }
+  ],
+  "schema_version": "1.0.0"
+}

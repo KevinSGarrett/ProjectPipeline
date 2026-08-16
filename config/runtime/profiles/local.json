@@ -1,0 +1,16 @@
+{
+  "environment": "development",
+  "logging": {
+    "level": "INFO",
+    "format": "JSON"
+  },
+  "telemetry": {
+    "enabled": false,
+    "exporter": "NONE",
+    "otlp_endpoint": null
+  },
+  "security": {
+    "external_writes_default": "DENY",
+    "require_explicit_approval": true
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "$id": "https://project-pipeline.local/schemas/agent_performance_summary.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {
+      "title": "Capability Id",
+      "type": "string"
+    },
+    "mean_cost_microunits": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Mean Cost Microunits"
+    },
+    "mean_latency_ms": {
+      "minimum": 0,
+      "title": "Mean Latency Ms",
+      "type": "integer"
+    },
+    "quality_milli": {
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Quality Milli",
+      "type": "integer"
+    },
+    "sample_count": {
+      "minimum": 0,
+      "title": "Sample Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "success_milli": {
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Success Milli",
+      "type": "integer"
+    },
+    "target_id": {
+      "title": "Target Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "target_id",
+    "capability_id",
+    "sample_count",
+    "success_milli",
+    "quality_milli",
+    "mean_latency_ms"
+  ],
+  "title": "PerformanceSummary",
+  "type": "object"
+}

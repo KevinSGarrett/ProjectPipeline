@@ -1,0 +1,20 @@
+{
+  "benchmark_id": "PPQS-07",
+  "external_acquisition_required": true,
+  "network_policy": "Network permitted only for frozen baseline acquisition when external_acquisition_required is true.",
+  "runtime": {
+    "node": ">=22.19.0",
+    "python": ">=3.10"
+  },
+  "schema_version": "2.0",
+  "timeout_policy": {
+    "candidate_run_defined_by_suite_controller": true,
+    "individual_authoring_check_seconds": 30
+  },
+  "trust_zone": "CANDIDATE_VISIBLE",
+  "upstream_baseline": {
+    "baseline_commit": "fd239d5d2be43d9b68329730206b9312c7d5a388",
+    "license": "MIT",
+    "repository": "https://github.com/microsoft/markitdown.git"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "benchmark_id": "PPQS-03",
+  "candidate_must_add_tests": true,
+  "files": [
+    "visible_tests/test_visible_forecast.py"
+  ],
+  "hidden_tests_exist": true,
+  "mandatory_test_bypass_is_hard_gate": true,
+  "minimum_test_classes": [
+    "contract",
+    "documentation_or_runtime_smoke",
+    "integration",
+    "negative_regression",
+    "restart_or_recovery",
+    "security_or_policy",
+    "unit"
+  ],
+  "schema_version": "1.0.0"
+}

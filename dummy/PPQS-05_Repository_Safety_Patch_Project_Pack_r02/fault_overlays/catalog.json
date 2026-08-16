@@ -1,0 +1,20 @@
+{
+  "benchmark_id": "PPQS-05",
+  "overlays": [
+    {
+      "candidate_knows_overlay_exists": true,
+      "fault_id": "FLT-RP-001",
+      "overlay": "GITHUB_JIRA_UNKNOWN_WRITE_OUTCOME",
+      "required_general_behavior": "Preserve truth, evidence, security, idempotency, and explicit blocked/degraded state.",
+      "trigger_details_withheld": true
+    },
+    {
+      "candidate_knows_overlay_exists": true,
+      "fault_id": "FLT-RP-002",
+      "overlay": "NETWORK_LOSS",
+      "required_general_behavior": "Preserve truth, evidence, security, idempotency, and explicit blocked/degraded state.",
+      "trigger_details_withheld": true
+    }
+  ],
+  "schema_version": "1.0.0"
+}

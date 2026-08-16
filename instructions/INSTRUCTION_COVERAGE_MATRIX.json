@@ -1,0 +1,321 @@
+{
+  "domains": [
+    {
+      "domain": "startup",
+      "primary": "instructions/00_START_HERE.md",
+      "supporting": [
+        "AGENTS.md",
+        "instructions/03_SESSION_BOOTSTRAP_AND_PREFLIGHT.md"
+      ]
+    },
+    {
+      "domain": "project_identity",
+      "primary": "instructions/00_START_HERE.md",
+      "supporting": [
+        "config/project.json",
+        "config/project_manifest.json"
+      ]
+    },
+    {
+      "domain": "authority",
+      "primary": "instructions/01_AUTHORITY_AND_SOURCE_OF_TRUTH.md",
+      "supporting": [
+        "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
+        "instructions/AUTHORITY_MAP.json"
+      ]
+    },
+    {
+      "domain": "plans",
+      "primary": "instructions/01_AUTHORITY_AND_SOURCE_OF_TRUTH.md",
+      "supporting": [
+        "plans/PLAN_CATALOG.json",
+        "plans/_line_numbered"
+      ]
+    },
+    {
+      "domain": "requirements",
+      "primary": "instructions/01_AUTHORITY_AND_SOURCE_OF_TRUTH.md",
+      "supporting": [
+        "plans/_traceability/requirements.jsonl",
+        "plans/_traceability/requirements_by_id.json"
+      ]
+    },
+    {
+      "domain": "autonomous_cycle",
+      "primary": "instructions/02_AUTONOMOUS_OPERATING_CONTRACT.md",
+      "supporting": [
+        "config/orchestration_policy.json",
+        "config/assurance_policy.json"
+      ]
+    },
+    {
+      "domain": "definition_of_ready",
+      "primary": "instructions/02_AUTONOMOUS_OPERATING_CONTRACT.md",
+      "supporting": [
+        "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md"
+      ]
+    },
+    {
+      "domain": "preflight",
+      "primary": "instructions/03_SESSION_BOOTSTRAP_AND_PREFLIGHT.md",
+      "supporting": [
+        "docs/DEVELOPMENT.md",
+        "README.md"
+      ]
+    },
+    {
+      "domain": "windows_compatibility",
+      "primary": "instructions/03_SESSION_BOOTSTRAP_AND_PREFLIGHT.md",
+      "supporting": [
+        "docs/development/setup.md",
+        "instructions/16_REMOTE_MACHINE_AND_RESOURCE_PROTOCOL.md"
+      ]
+    },
+    {
+      "domain": "context_retrieval",
+      "primary": "instructions/04_CONTEXT_RETRIEVAL_AND_NAVIGATION.md",
+      "supporting": [
+        "docs/NAVIGATION.md",
+        "docs/architecture/context_and_delegation.md",
+        "instructions/policies/CONTEXT_ROUTING.json"
+      ]
+    },
+    {
+      "domain": "work_selection",
+      "primary": "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
+      "supporting": [
+        "docs/control/project_control_kernel.md",
+        "docs/control/build_sequencer.md"
+      ]
+    },
+    {
+      "domain": "budgeting",
+      "primary": "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
+      "supporting": [
+        "config/budget_policy.json",
+        "docs/operations/budget_governor.md"
+      ]
+    },
+    {
+      "domain": "jira",
+      "primary": "instructions/06_JIRA_OPERATING_PROTOCOL.md",
+      "supporting": [
+        "config/jira/sync_policy.json",
+        "docs/jira/README.md"
+      ]
+    },
+    {
+      "domain": "git",
+      "primary": "instructions/07_GIT_AND_GITHUB_OPERATING_PROTOCOL.md",
+      "supporting": [
+        "docs/github/repository_steward.md"
+      ]
+    },
+    {
+      "domain": "github",
+      "primary": "instructions/07_GIT_AND_GITHUB_OPERATING_PROTOCOL.md",
+      "supporting": [
+        "docs/github/merge_gate.md",
+        "docs/github/rest_contract.md"
+      ]
+    },
+    {
+      "domain": "branches",
+      "primary": "instructions/08_BRANCH_WORKTREE_AND_PR_POLICY.md",
+      "supporting": [
+        "instructions/policies/BRANCH_PR_POLICY.json"
+      ]
+    },
+    {
+      "domain": "worktrees",
+      "primary": "instructions/08_BRANCH_WORKTREE_AND_PR_POLICY.md",
+      "supporting": [
+        "docs/github/repository_steward.md",
+        "adr/ADR-0020_use_worktrunk_behind_repository_steward_for_worktree_lifecycle_mechanics.md"
+      ]
+    },
+    {
+      "domain": "pull_requests",
+      "primary": "instructions/08_BRANCH_WORKTREE_AND_PR_POLICY.md",
+      "supporting": [
+        ".github/pull_request_template.md",
+        "instructions/templates/PULL_REQUEST_BODY.md"
+      ]
+    },
+    {
+      "domain": "ci",
+      "primary": "instructions/09_CI_QUALITY_SECURITY_AND_MERGE_GATES.md",
+      "supporting": [
+        ".github/workflows/quality.yml",
+        "instructions/policies/CI_RISK_MATRIX.json"
+      ]
+    },
+    {
+      "domain": "merge_gate",
+      "primary": "instructions/09_CI_QUALITY_SECURITY_AND_MERGE_GATES.md",
+      "supporting": [
+        "docs/github/merge_gate.md",
+        "config/assurance_policy.json"
+      ]
+    },
+    {
+      "domain": "security",
+      "primary": "instructions/09_CI_QUALITY_SECURITY_AND_MERGE_GATES.md",
+      "supporting": [
+        "config/security_policy.json",
+        "SECURITY.md"
+      ]
+    },
+    {
+      "domain": "parallel_execution",
+      "primary": "instructions/10_PARALLEL_AGENT_COORDINATION.md",
+      "supporting": [
+        "config/orchestration_policy.json",
+        "docs/scheduling/dynamic_lane_scheduler.md"
+      ]
+    },
+    {
+      "domain": "observability",
+      "primary": "instructions/10_PARALLEL_AGENT_COORDINATION.md",
+      "supporting": [
+        "docs/development/observability.md",
+        "config/orchestration_policy.json"
+      ]
+    },
+    {
+      "domain": "anti_loop",
+      "primary": "instructions/11_ANTI_LOOP_AND_ANTI_OVERENGINEERING.md",
+      "supporting": [
+        "config/assurance_policy.json"
+      ]
+    },
+    {
+      "domain": "anti_overengineering",
+      "primary": "instructions/11_ANTI_LOOP_AND_ANTI_OVERENGINEERING.md",
+      "supporting": [
+        "plans/00_project_definition/PLAN-PDEF-001_project_definition.md"
+      ]
+    },
+    {
+      "domain": "testing",
+      "primary": "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md",
+      "supporting": [
+        "docs/verification/pass16_verification_harness.md",
+        "config/verification_policy.json"
+      ]
+    },
+    {
+      "domain": "evidence",
+      "primary": "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md",
+      "supporting": [
+        "evidence/EVIDENCE_LEDGER.jsonl",
+        "docs/assurance/execution_assurance.md"
+      ]
+    },
+    {
+      "domain": "completion",
+      "primary": "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md",
+      "supporting": [
+        "docs/assurance/completion_gate.md",
+        "config/assurance_policy.json"
+      ]
+    },
+    {
+      "domain": "ppqs_benchmarks",
+      "primary": "instructions/13_PPQS_BENCHMARK_PROTOCOL.md",
+      "supporting": [
+        "dummy",
+        "instructions/policies/PPQS_BENCHMARK_REGISTRY.json"
+      ]
+    },
+    {
+      "domain": "upstream_repositories",
+      "primary": "instructions/14_UPSTREAM_REPOSITORY_PROTOCOL.md",
+      "supporting": [
+        "provenance/upstream_registry.json",
+        "docs/engineering/upstream_adoption_gate.md"
+      ]
+    },
+    {
+      "domain": "dependencies",
+      "primary": "instructions/14_UPSTREAM_REPOSITORY_PROTOCOL.md",
+      "supporting": [
+        "requirements/environment.lock.json",
+        "docs/development/dependency_management.md"
+      ]
+    },
+    {
+      "domain": "external_mutation",
+      "primary": "instructions/15_SECRETS_AUTHORITY_AND_EXTERNAL_MUTATION.md",
+      "supporting": [
+        "config/repository_policy.json",
+        "instructions/policies/EXTERNAL_MUTATION_AUTHORITY.json"
+      ]
+    },
+    {
+      "domain": "secrets",
+      "primary": "instructions/15_SECRETS_AUTHORITY_AND_EXTERNAL_MUTATION.md",
+      "supporting": [
+        "config/security_policy.json",
+        "docs/security/secrets_and_egress.md"
+      ]
+    },
+    {
+      "domain": "remote_machines",
+      "primary": "instructions/16_REMOTE_MACHINE_AND_RESOURCE_PROTOCOL.md",
+      "supporting": [
+        "config/resilience_policy.json",
+        "instructions/policies/MACHINE_REGISTRY.json"
+      ]
+    },
+    {
+      "domain": "failure_recovery",
+      "primary": "instructions/17_FAILURE_RECOVERY_AND_RESUMPTION.md",
+      "supporting": [
+        "config/resilience_policy.json",
+        "docs/operations/resilience_and_recovery.md"
+      ]
+    },
+    {
+      "domain": "session_resumption",
+      "primary": "instructions/17_FAILURE_RECOVERY_AND_RESUMPTION.md",
+      "supporting": [
+        "instructions/templates/SESSION_CHECKPOINT.md"
+      ]
+    },
+    {
+      "domain": "human_escalation",
+      "primary": "instructions/18_HUMAN_ESCALATION_PROTOCOL.md",
+      "supporting": [
+        "instructions/policies/ESCALATION_CLASSIFICATIONS.json",
+        "instructions/templates/HUMAN_INTERVENTION_REQUEST.md"
+      ]
+    },
+    {
+      "domain": "release",
+      "primary": "instructions/19_RELEASE_HANDOFF_AND_CLEANUP.md",
+      "supporting": [
+        "docs/lifecycle/advanced_platform_lifecycle.md",
+        "instructions/templates/RELEASE_HANDOFF.md"
+      ]
+    },
+    {
+      "domain": "post_merge",
+      "primary": "instructions/19_RELEASE_HANDOFF_AND_CLEANUP.md",
+      "supporting": [
+        "docs/github/merge_gate.md"
+      ]
+    },
+    {
+      "domain": "instruction_maintenance",
+      "primary": "instructions/20_INSTRUCTION_MAINTENANCE.md",
+      "supporting": [
+        "instructions/INSTRUCTION_MANIFEST.json",
+        "instructions/CHANGELOG.md"
+      ]
+    }
+  ],
+  "project_id": "PROJECT-PIPELINE",
+  "rule": "Each domain has exactly one primary governing instruction. Supporting references do not create parallel authority.",
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,99 @@
+{
+  "$defs": {
+    "QualificationCheckResult": {
+      "additionalProperties": false,
+      "properties": {
+        "check_name": {
+          "title": "Check Name",
+          "type": "string"
+        },
+        "detail": {
+          "default": "",
+          "title": "Detail",
+          "type": "string"
+        },
+        "passed": {
+          "title": "Passed",
+          "type": "boolean"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "check_name",
+        "passed"
+      ],
+      "title": "QualificationCheckResult",
+      "type": "object"
+    },
+    "QualificationState": {
+      "enum": [
+        "QUARANTINED",
+        "SHADOW",
+        "CANARY",
+        "QUALIFIED",
+        "REJECTED",
+        "EXPIRED"
+      ],
+      "title": "QualificationState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/agent_adapter_qualification.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "checks": {
+      "items": {
+        "$ref": "#/$defs/QualificationCheckResult"
+      },
+      "title": "Checks",
+      "type": "array"
+    },
+    "evaluated_at_utc": {
+      "format": "date-time",
+      "title": "Evaluated At Utc",
+      "type": "string"
+    },
+    "report_id": {
+      "title": "Report Id",
+      "type": "string"
+    },
+    "rollback_ready": {
+      "default": false,
+      "title": "Rollback Ready",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/QualificationState"
+    },
+    "subject_id": {
+      "title": "Subject Id",
+      "type": "string"
+    },
+    "subject_version": {
+      "title": "Subject Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "report_id",
+    "subject_id",
+    "subject_version",
+    "checks",
+    "state",
+    "evaluated_at_utc"
+  ],
+  "title": "AdapterQualificationReport",
+  "type": "object"
+}

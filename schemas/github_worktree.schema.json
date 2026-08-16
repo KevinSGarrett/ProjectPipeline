@@ -1,0 +1,90 @@
+{
+  "$defs": {
+    "WorktreeState": {
+      "enum": [
+        "CLEAN",
+        "DIRTY",
+        "DETACHED",
+        "MISSING"
+      ],
+      "title": "WorktreeState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_worktree.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "branch": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Branch"
+    },
+    "head_sha": {
+      "title": "Head Sha",
+      "type": "string"
+    },
+    "lock_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Lock Reason"
+    },
+    "locked": {
+      "default": false,
+      "title": "Locked",
+      "type": "boolean"
+    },
+    "owner_task_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Owner Task Id"
+    },
+    "path": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Path",
+      "type": "string"
+    },
+    "prunable": {
+      "default": false,
+      "title": "Prunable",
+      "type": "boolean"
+    },
+    "state": {
+      "$ref": "#/$defs/WorktreeState"
+    },
+    "worktree_id": {
+      "title": "Worktree Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "worktree_id",
+    "path",
+    "head_sha",
+    "state"
+  ],
+  "title": "GitWorktree",
+  "type": "object"
+}

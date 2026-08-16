@@ -1,0 +1,14 @@
+{
+  "environment": "staging",
+  "paths": {
+    "artifact_dir": ".local/environments/staging/artifacts",
+    "cache_dir": ".local/environments/staging/cache",
+    "data_dir": ".local/environments/staging/data",
+    "log_dir": ".local/environments/staging/logs",
+    "state_dir": ".local/environments/staging/state"
+  },
+  "security": {
+    "external_writes_default": "DRY_RUN",
+    "require_explicit_approval": true
+  }
+}

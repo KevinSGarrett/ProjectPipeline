@@ -1,0 +1,106 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000039-01",
+      "statement": "Validate and register every supplied public repository URL without inferring license, revision, or adoption.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest tests.test_provenance",
+        "method": "command_and_artifact_inspection",
+        "path": "provenance/upstream_registry.json",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000039-02",
+      "statement": "The resulting state is represented accurately in traceability and evidence records.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "registry_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000003",
+    "EVID-000006"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Validate and register every supplied public repository URL without inferring license, revision, or adoption.",
+  "evidence_required": [
+    "EVID-000003",
+    "EVID-000006"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "provenance/upstream_registry.json",
+    "provenance/upstream_inventory_summary.json"
+  ],
+  "expected_implementation_artifacts": [
+    "provenance/upstream_registry.json",
+    "provenance/upstream_inventory_summary.json"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "foundation",
+    "executable"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25252",
+    "remote_key": "PP-283",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000039",
+  "objective": "Validate and register every supplied public repository URL without inferring license, revision, or adoption.",
+  "observability_impact": "Record structured validation and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-STORY-000034",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md",
+      "end_line": 11,
+      "line_numbered_path": "plans/_line_numbered/PLAN-UPSTREAM-001_upstream_adoption.lines.txt",
+      "line_reference": "PLAN-UPSTREAM-001:SEC-01:L000008-L000011",
+      "plan_id": "PLAN-UPSTREAM-001",
+      "section_id": "PLAN-UPSTREAM-001:SEC-01",
+      "start_line": 8
+    }
+  ],
+  "rationale": "This bounded task creates evidence-bearing foundation capability required before deeper subsystem implementation.",
+  "relationships": [],
+  "remote_jira_key": "PP-283",
+  "required_tests": [
+    "TEST-PROVENANCE-003"
+  ],
+  "requirement_ids": [
+    "REQ-UPSTREAM-0001",
+    "REQ-UPSTREAM-0003"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Validate and register every supplied public repository URL without inferring license, revision, or adoption."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L000797-L000876"
+  ],
+  "state": "BACKLOG",
+  "title": "Inventory the upstream repository catalog",
+  "upstream_dependencies": []
+}

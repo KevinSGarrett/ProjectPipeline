@@ -1,0 +1,57 @@
+{
+  "$id": "https://project-pipeline.local/schemas/verification_accessibility_evidence.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accessibility_id": {
+      "title": "Accessibility Id",
+      "type": "string"
+    },
+    "method": {
+      "title": "Method",
+      "type": "string"
+    },
+    "passed": {
+      "title": "Passed",
+      "type": "boolean"
+    },
+    "rule_count": {
+      "minimum": 0,
+      "title": "Rule Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target": {
+      "title": "Target",
+      "type": "string"
+    },
+    "violation_count": {
+      "minimum": 0,
+      "title": "Violation Count",
+      "type": "integer"
+    },
+    "violations": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Violations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "accessibility_id",
+    "target",
+    "method",
+    "rule_count",
+    "violation_count",
+    "passed"
+  ],
+  "title": "AccessibilityEvidence",
+  "type": "object"
+}

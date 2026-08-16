@@ -1,0 +1,291 @@
+{
+  "$defs": {
+    "ExecutionAttempt": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "title": "Agent Id",
+          "type": "string"
+        },
+        "attempt_id": {
+          "title": "Attempt Id",
+          "type": "string"
+        },
+        "error_kind": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Kind"
+        },
+        "error_message": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Error Message"
+        },
+        "finished_at_utc": {
+          "format": "date-time",
+          "title": "Finished At Utc",
+          "type": "string"
+        },
+        "model_id": {
+          "title": "Model Id",
+          "type": "string"
+        },
+        "provider_id": {
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "result": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/ProviderInvocationResult"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "retryable": {
+          "default": false,
+          "title": "Retryable",
+          "type": "boolean"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "started_at_utc": {
+          "format": "date-time",
+          "title": "Started At Utc",
+          "type": "string"
+        },
+        "succeeded": {
+          "title": "Succeeded",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "attempt_id",
+        "provider_id",
+        "model_id",
+        "agent_id",
+        "succeeded",
+        "started_at_utc",
+        "finished_at_utc"
+      ],
+      "title": "ExecutionAttempt",
+      "type": "object"
+    },
+    "NormalizedUsage": {
+      "additionalProperties": false,
+      "properties": {
+        "cached_input_units": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Cached Input Units",
+          "type": "integer"
+        },
+        "cost_microunits": {
+          "anyOf": [
+            {
+              "minimum": 0,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Cost Microunits"
+        },
+        "input_units": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Input Units",
+          "type": "integer"
+        },
+        "output_units": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Output Units",
+          "type": "integer"
+        },
+        "request_count": {
+          "default": 1,
+          "minimum": 0,
+          "title": "Request Count",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "title": "NormalizedUsage",
+      "type": "object"
+    },
+    "ProviderInvocationResult": {
+      "additionalProperties": false,
+      "properties": {
+        "agent_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Agent Id"
+        },
+        "evidence_references": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Evidence References",
+          "type": "array"
+        },
+        "finish_reason": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Finish Reason"
+        },
+        "model_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Model Id"
+        },
+        "output": {
+          "additionalProperties": true,
+          "title": "Output",
+          "type": "object"
+        },
+        "provider_id": {
+          "title": "Provider Id",
+          "type": "string"
+        },
+        "provider_request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Provider Request Id"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "usage": {
+          "$ref": "#/$defs/NormalizedUsage"
+        }
+      },
+      "required": [
+        "provider_id",
+        "output"
+      ],
+      "title": "ProviderInvocationResult",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/agent_execution_receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "attempts": {
+      "items": {
+        "$ref": "#/$defs/ExecutionAttempt"
+      },
+      "title": "Attempts",
+      "type": "array"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "receipt_id": {
+      "title": "Receipt Id",
+      "type": "string"
+    },
+    "result": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ProviderInvocationResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "routing_decision_id": {
+      "title": "Routing Decision Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "succeeded": {
+      "title": "Succeeded",
+      "type": "boolean"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "receipt_id",
+    "task_id",
+    "routing_decision_id",
+    "attempts",
+    "succeeded",
+    "generated_at_utc"
+  ],
+  "title": "ExecutionReceipt",
+  "type": "object"
+}

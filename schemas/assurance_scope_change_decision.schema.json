@@ -1,0 +1,77 @@
+{
+  "$defs": {
+    "ScopeChangeDisposition": {
+      "enum": [
+        "WITHIN_FROZEN_SCOPE",
+        "REQUIRE_REVIEW",
+        "CHANGE_BUDGET_EXHAUSTED"
+      ],
+      "title": "ScopeChangeDisposition",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/assurance_scope_change_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "change_id": {
+      "title": "Change Id",
+      "type": "string"
+    },
+    "disposition": {
+      "$ref": "#/$defs/ScopeChangeDisposition"
+    },
+    "material": {
+      "title": "Material",
+      "type": "boolean"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "remaining_change_budget": {
+      "minimum": 0,
+      "title": "Remaining Change Budget",
+      "type": "integer"
+    },
+    "requested_behavior": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Requested Behavior",
+      "type": "array"
+    },
+    "requested_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Requested Paths",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope_id": {
+      "title": "Scope Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "change_id",
+    "scope_id",
+    "disposition",
+    "material",
+    "remaining_change_budget",
+    "reasons"
+  ],
+  "title": "ScopeChangeDecision",
+  "type": "object"
+}

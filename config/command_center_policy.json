@@ -1,0 +1,46 @@
+{
+  "anonymous_control_allowed": false,
+  "canonical_authority": "PROJECT_PIPELINE",
+  "director": {
+    "deterministic_grounded_fallback": true,
+    "model_adapter_optional": true,
+    "private_reasoning_exposed": false,
+    "proposal_execution_requires_typed_control": true,
+    "raw_text_may_mutate_state": false,
+    "scopes": [
+      "GLOBAL",
+      "PROJECT",
+      "INCIDENT"
+    ],
+    "typed_action_intent_required_for_mutation": true
+  },
+  "network_access_requires_authentication": true,
+  "notifications": {
+    "decision_id": "OPEN-DEC-0021",
+    "delivery_retries": {
+      "base_backoff_seconds": 60,
+      "max_attempts": 3
+    },
+    "initial_local_channel": "tauri_windows_notification",
+    "initial_remote_adapter": "apprise",
+    "native_action_click_qualification": "UNAVAILABLE_IN_CURRENT_EXECUTION_ENVIRONMENT",
+    "ntfy_role": "optional_self_hosted_target_or_adapter",
+    "quiet_hours_end": 7,
+    "quiet_hours_start": 22,
+    "remote_channels_enabled_by_default": false,
+    "windows_notifications_enabled": true
+  },
+  "realtime": {
+    "ag_ui_compatibility": true,
+    "ag_ui_internal_authority": false,
+    "replay_cursor": "EventEnvelope.sequence",
+    "retention_events": 2000,
+    "transports": [
+      "sse",
+      "websocket"
+    ]
+  },
+  "safe_default_bind": "127.0.0.1",
+  "schema_version": "1.0.0",
+  "ui_state_authoritative": false
+}

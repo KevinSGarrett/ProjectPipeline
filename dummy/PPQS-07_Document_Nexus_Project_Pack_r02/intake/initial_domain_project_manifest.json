@@ -1,0 +1,30 @@
+{
+  "created_at_utc": "2026-08-16T04:00:00Z",
+  "evidence_ledger_path": "candidate_outputs/evidence/evidence.jsonl",
+  "jira_index_path": "candidate_outputs/jira/indexes/issues.jsonl",
+  "origin": "ADOPTED",
+  "plan_catalog_path": "candidate_outputs/plans/catalog.json",
+  "profile": "POLYGLOT_APPLICATION",
+  "project_id": "ppqs-07",
+  "project_name": "Document Nexus",
+  "repositories": [
+    {
+      "canonical_url": "https://github.com/microsoft/markitdown",
+      "repository_id": "markitdown-baseline",
+      "role": "PRIMARY",
+      "root_path": "seed_repositories/markitdown"
+    },
+    {
+      "canonical_url": null,
+      "repository_id": "document-nexus-control-plane",
+      "role": "SUPPORTING",
+      "root_path": "seed_repositories/document-nexus-control-plane"
+    }
+  ],
+  "requirement_registry_path": "candidate_outputs/requirements.jsonl",
+  "revision": 1,
+  "root_path": "./workspace/PPQS-07",
+  "schema_version": "1.0.0",
+  "source_registry_path": "source_registry/sources.jsonl",
+  "updated_at_utc": "2026-08-16T04:00:00Z"
+}

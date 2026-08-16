@@ -1,0 +1,122 @@
+{
+  "$defs": {
+    "DurableBackendKind": {
+      "enum": [
+        "LOCAL_REFERENCE",
+        "HATCHET",
+        "DBOS",
+        "TEMPORAL",
+        "MOCK"
+      ],
+      "title": "DurableBackendKind",
+      "type": "string"
+    },
+    "DurableOperationState": {
+      "enum": [
+        "PENDING",
+        "SENT",
+        "ACKNOWLEDGED",
+        "UNKNOWN_OUTCOME",
+        "RECONCILED",
+        "FAILED"
+      ],
+      "title": "DurableOperationState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/orchestration_operation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "attempt_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Attempt Count",
+      "type": "integer"
+    },
+    "backend": {
+      "$ref": "#/$defs/DurableBackendKind"
+    },
+    "backend_operation_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Backend Operation Id"
+    },
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "idempotency_key": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "last_error": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Last Error"
+    },
+    "operation_id": {
+      "title": "Operation Id",
+      "type": "string"
+    },
+    "operation_type": {
+      "maxLength": 100,
+      "minLength": 1,
+      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "title": "Operation Type",
+      "type": "string"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "payload_sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Payload Sha256",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/DurableOperationState"
+    },
+    "updated_at_utc": {
+      "format": "date-time",
+      "title": "Updated At Utc",
+      "type": "string"
+    },
+    "workflow_id": {
+      "title": "Workflow Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "operation_id",
+    "workflow_id",
+    "operation_type",
+    "idempotency_key",
+    "state",
+    "payload_sha256",
+    "backend",
+    "created_at_utc",
+    "updated_at_utc"
+  ],
+  "title": "DurableOperation",
+  "type": "object"
+}

@@ -1,0 +1,14 @@
+{
+  "environment": "production",
+  "paths": {
+    "artifact_dir": ".local/environments/production/artifacts",
+    "cache_dir": ".local/environments/production/cache",
+    "data_dir": ".local/environments/production/data",
+    "log_dir": ".local/environments/production/logs",
+    "state_dir": ".local/environments/production/state"
+  },
+  "security": {
+    "external_writes_default": "REQUIRE_APPROVAL",
+    "require_explicit_approval": true
+  }
+}

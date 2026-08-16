@@ -1,0 +1,85 @@
+{
+  "$defs": {
+    "TraceabilityLinkType": {
+      "enum": [
+        "SOURCE",
+        "PLAN",
+        "PLAN_SECTION",
+        "JIRA",
+        "IMPLEMENTATION",
+        "TEST",
+        "EVIDENCE",
+        "DECISION",
+        "OPEN_DECISION",
+        "EVOLUTION"
+      ],
+      "title": "TraceabilityLinkType",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/traceability_mutation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "maxLength": 191,
+      "minLength": 3,
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "correlation_id": {
+      "maxLength": 191,
+      "minLength": 3,
+      "title": "Correlation Id",
+      "type": "string"
+    },
+    "expected_revision": {
+      "minimum": 1,
+      "title": "Expected Revision",
+      "type": "integer"
+    },
+    "link_type": {
+      "$ref": "#/$defs/TraceabilityLinkType"
+    },
+    "operation": {
+      "enum": [
+        "ADD",
+        "REMOVE"
+      ],
+      "title": "Operation",
+      "type": "string"
+    },
+    "reason": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Reason",
+      "type": "string"
+    },
+    "requirement_id": {
+      "title": "Requirement Id",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "target": {
+      "title": "Target",
+      "type": "string"
+    }
+  },
+  "required": [
+    "requirement_id",
+    "operation",
+    "link_type",
+    "target",
+    "expected_revision",
+    "actor_id",
+    "correlation_id",
+    "reason"
+  ],
+  "title": "TraceabilityMutation",
+  "type": "object"
+}

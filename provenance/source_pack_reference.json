@@ -1,0 +1,43 @@
+{
+  "archive_sha256": "b0f1f69246c36b8c5a0035dd141fbddc757003cf0715f2e6a0e0e150a2482c6b",
+  "artifact_id": "INPUT-KNOWLEDGE-001",
+  "exact_duplicates": [
+    {
+      "exact_duplicate_of": "SRC-017",
+      "raw_sha256": "2f79e7a85c442b80e08c88ffb1805c05d31492808c186b599d86e0d571639003",
+      "source_id": "SRC-018"
+    }
+  ],
+  "exact_prefix_relations": [
+    {
+      "exact_prefix_of": "SRC-006",
+      "note": "The entire normalized text of source_id is a prefix of exact_prefix_of.",
+      "source_id": "SRC-005"
+    }
+  ],
+  "format_version": "1.0.0",
+  "generated_at_utc": "2026-08-14T17:42:32.784478+00:00",
+  "independent_validation_result": "PASS",
+  "pack_name": "Universal_Autonomous_Parallel_System_AI_Knowledge_Pack_v1",
+  "permanent_repository_policy": "Reference only; raw corpus is not copied into the permanent project tree.",
+  "raw_archive_location": "Separate continuation package under SOURCE_INPUTS/",
+  "schema_version": "1.0.0",
+  "statistics": {
+    "chunk_count": 179,
+    "concept_occurrence_count": 786,
+    "deduplicated_chunk_count": 171,
+    "exact_duplicate_count": 1,
+    "line_count": 26941,
+    "normalized_characters": 544718,
+    "prefix_relation_count": 1,
+    "raw_bytes": 601620,
+    "repository_tool_signal_count": 592,
+    "section_count": 1109,
+    "sensitive_pattern_hit_count": 0,
+    "signal_count": 1858,
+    "source_count": 18,
+    "sqlite_bytes": 12759040,
+    "topic_record_count": 1375
+  },
+  "validation_command_from_pack": "python 07_TOOLS/validate_pack.py"
+}

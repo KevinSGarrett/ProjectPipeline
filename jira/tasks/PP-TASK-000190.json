@@ -1,0 +1,120 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000190-01",
+      "statement": "Structured logs include available correlation identities and recursively redact sensitive fields and secret types.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_observability.py",
+        "method": "automated_behavior_and_evidence_validation",
+        "path": "tests/test_observability.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000190-02",
+      "statement": "Local telemetry initialization works without a remote exporter, and export cannot be enabled without an endpoint.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline doctor --root .",
+        "method": "automated_behavior_and_evidence_validation",
+        "path": "evidence/repository_foundation_smoke.json",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000022",
+    "EVID-000024"
+  ],
+  "definition_of_done": [
+    "Implementation and configuration for the bounded objective are complete.",
+    "Acceptance criteria have current automated or machine-readable evidence.",
+    "Required behavior tests pass for the affected foundation.",
+    "Traceability, plans, Jira, schemas, and developer documentation are current.",
+    "Security, provenance, observability, and rollback effects are explicit.",
+    "Unavailable external verification is represented without inflating completion."
+  ],
+  "dependencies": [],
+  "description": "Implement project/workflow/task/run/actor/correlation/causation context, structured JSON logs, nested secret redaction, trace identifiers, local OTel initialization, and profile-gated export settings.",
+  "evidence_required": [
+    "EVID-000022",
+    "EVID-000024"
+  ],
+  "exclusions": [
+    "No remote GitHub, Jira, AWS, package-index, or paid-service mutation is authorized.",
+    "No later persistent-state, durable-orchestration, scheduler, or Command Center capability is represented as complete."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/observability/",
+    "docs/development/observability.md"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/observability/",
+    "docs/development/observability.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "observability",
+    "logging",
+    "correlation",
+    "evidence-backed"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25113",
+    "remote_key": "PP-144",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000190",
+  "objective": "Establish portable structured logging, correlation propagation, recursive redaction, and a local OpenTelemetry provider boundary.",
+  "observability_impact": "Record stable correlation, diagnostic, quality, test, and evidence identities for later operational telemetry.",
+  "owner_required_capability": "python_platform_engineering_quality_and_verification",
+  "parent": "PP-STORY-000120",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/15_platform_lifecycle/PLAN-LIFE-002_repository_engineering_foundation.md",
+      "end_line": 89,
+      "line_numbered_path": "plans/_line_numbered/PLAN-LIFE-002_repository_engineering_foundation.lines.txt",
+      "line_reference": "PLAN-LIFE-002:SEC-06:L000084-L000089",
+      "plan_id": "PLAN-LIFE-002",
+      "section_id": "PLAN-LIFE-002:SEC-06",
+      "start_line": 84
+    }
+  ],
+  "rationale": "This bounded repository-engineering work converts accepted plans into executable, tested, self-validating foundation behavior without claiming later runtime capabilities.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000120",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-144",
+  "required_tests": [
+    "TEST-OBS-001",
+    "TEST-OBS-002",
+    "TEST-OBS-003",
+    "TEST-OBS-004",
+    "TEST-OBS-005"
+  ],
+  "requirement_ids": [
+    "REQ-OPS-0001",
+    "REQ-OPS-0004",
+    "REQ-SEC-0012"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Revert the bounded package/configuration changes, remove generated local runtime state, regenerate indexes and manifests, and retain the prior cumulative archive.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Establish portable structured logging, correlation propagation, recursive redaction, and a local OpenTelemetry provider boundary."
+  ],
+  "security_impact": "Preserve least privilege, secret references, dependency provenance, input validation, and fail-closed external-effect boundaries.",
+  "source_references": [
+    "GOV-001:L000695-L000710",
+    "SRC-001:L001058-L001092"
+  ],
+  "state": "BACKLOG",
+  "title": "Implement correlation-aware structured logging and telemetry boundary",
+  "upstream_dependencies": []
+}

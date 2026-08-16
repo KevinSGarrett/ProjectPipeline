@@ -1,0 +1,45 @@
+{
+  "$defs": {
+    "JiraLifecycleState": {
+      "enum": [
+        "DISCOVERED",
+        "BACKLOG",
+        "READY",
+        "IN_PROGRESS",
+        "REVIEW",
+        "VALIDATION",
+        "MERGE_READY",
+        "BLOCKED",
+        "FAILED",
+        "CANCELLED",
+        "DEFERRED",
+        "DONE"
+      ],
+      "title": "JiraLifecycleState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/jira_status_mapping.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "remote_to_internal": {
+      "additionalProperties": {
+        "$ref": "#/$defs/JiraLifecycleState"
+      },
+      "title": "Remote To Internal",
+      "type": "object"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "remote_to_internal"
+  ],
+  "title": "JiraStatusMapping",
+  "type": "object"
+}

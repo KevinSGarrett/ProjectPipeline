@@ -1,0 +1,49 @@
+{
+  "$id": "https://project-pipeline.local/schemas/assurance_attempt_budget.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "max_attempts": {
+      "default": 5,
+      "maximum": 100,
+      "minimum": 1,
+      "title": "Max Attempts",
+      "type": "integer"
+    },
+    "max_same_failure": {
+      "default": 2,
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Max Same Failure",
+      "type": "integer"
+    },
+    "max_unchanged_outputs": {
+      "default": 2,
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Max Unchanged Outputs",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "used_attempts": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Used Attempts",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "task_id"
+  ],
+  "title": "AttemptBudget",
+  "type": "object"
+}

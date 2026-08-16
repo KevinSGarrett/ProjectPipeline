@@ -1,0 +1,138 @@
+{
+  "$defs": {
+    "ReserveReason": {
+      "enum": [
+        "P0_FAILURE_RECOVERY",
+        "CRITICAL_PATH",
+        "RELEASE_BLOCKER",
+        "SECURITY",
+        "PRODUCTION_RECOVERY",
+        "CRITICAL_ARCHITECTURE",
+        "DEADLINE_PROTECTION",
+        "REQUIRED_VERIFICATION"
+      ],
+      "title": "ReserveReason",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/budget_policy.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "anomaly_block_ratio_milli": {
+      "default": 2500,
+      "minimum": 1001,
+      "title": "Anomaly Block Ratio Milli",
+      "type": "integer"
+    },
+    "anomaly_warn_ratio_milli": {
+      "default": 1500,
+      "minimum": 1000,
+      "title": "Anomaly Warn Ratio Milli",
+      "type": "integer"
+    },
+    "currency": {
+      "const": "USD",
+      "default": "USD",
+      "title": "Currency",
+      "type": "string"
+    },
+    "default_p90_multiplier_milli": {
+      "default": 1500,
+      "maximum": 5000,
+      "minimum": 1000,
+      "title": "Default P90 Multiplier Milli",
+      "type": "integer"
+    },
+    "lease_ttl_seconds": {
+      "default": 3600,
+      "maximum": 604800,
+      "minimum": 30,
+      "title": "Lease Ttl Seconds",
+      "type": "integer"
+    },
+    "minimum_history_samples_high": {
+      "default": 12,
+      "minimum": 2,
+      "title": "Minimum History Samples High",
+      "type": "integer"
+    },
+    "minimum_history_samples_medium": {
+      "default": 4,
+      "minimum": 1,
+      "title": "Minimum History Samples Medium",
+      "type": "integer"
+    },
+    "orange_pace_ratio_milli": {
+      "default": 1250,
+      "minimum": 1000,
+      "title": "Orange Pace Ratio Milli",
+      "type": "integer"
+    },
+    "orange_projected_ratio_milli": {
+      "default": 900,
+      "maximum": 999,
+      "minimum": 1,
+      "title": "Orange Projected Ratio Milli",
+      "type": "integer"
+    },
+    "red_pace_ratio_milli": {
+      "default": 1500,
+      "minimum": 1000,
+      "title": "Red Pace Ratio Milli",
+      "type": "integer"
+    },
+    "red_projected_ratio_milli": {
+      "default": 975,
+      "maximum": 999,
+      "minimum": 1,
+      "title": "Red Projected Ratio Milli",
+      "type": "integer"
+    },
+    "reevaluate_at_consumed_milli": {
+      "default": 800,
+      "maximum": 999,
+      "minimum": 1,
+      "title": "Reevaluate At Consumed Milli",
+      "type": "integer"
+    },
+    "reserve_reasons": {
+      "default": [
+        "P0_FAILURE_RECOVERY",
+        "CRITICAL_PATH",
+        "RELEASE_BLOCKER",
+        "SECURITY",
+        "PRODUCTION_RECOVERY",
+        "CRITICAL_ARCHITECTURE",
+        "DEADLINE_PROTECTION",
+        "REQUIRED_VERIFICATION"
+      ],
+      "items": {
+        "$ref": "#/$defs/ReserveReason"
+      },
+      "title": "Reserve Reasons",
+      "type": "array"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "yellow_pace_ratio_milli": {
+      "default": 1100,
+      "minimum": 1000,
+      "title": "Yellow Pace Ratio Milli",
+      "type": "integer"
+    },
+    "yellow_projected_ratio_milli": {
+      "default": 800,
+      "maximum": 999,
+      "minimum": 1,
+      "title": "Yellow Projected Ratio Milli",
+      "type": "integer"
+    }
+  },
+  "title": "BudgetPolicy",
+  "type": "object"
+}

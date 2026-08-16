@@ -1,0 +1,14 @@
+{
+  "acquisition_command": "python common/tooling/acquire_repository.py --manifest acquisition/source.json --destination seed_repository",
+  "clone_url": "https://github.com/modelcontextprotocol/inspector.git",
+  "expected_commit_sha": "c7bccd477d38c2c17afb4878bcca8ee5f563c5d2",
+  "integrity_rule": "git rev-parse HEAD must exactly match expected_commit_sha",
+  "license": "MIT",
+  "network_required": true,
+  "repository_url": "https://github.com/modelcontextprotocol/inspector",
+  "requested_ref": "2.1.0",
+  "role": "CANDIDATE_BASELINE_RELEASE",
+  "schema_version": "1.0.0",
+  "source_type": "GIT",
+  "target_directory": "seed_repository"
+}

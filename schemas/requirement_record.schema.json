@@ -1,0 +1,263 @@
+{
+  "$defs": {
+    "ImplementationState": {
+      "enum": [
+        "IMPLEMENTED",
+        "PARTIALLY_IMPLEMENTED",
+        "MOCK_VERIFIED",
+        "LIVE_VERIFIED",
+        "BLOCKED_EXTERNAL",
+        "PLANNED_ONLY"
+      ],
+      "title": "ImplementationState",
+      "type": "string"
+    },
+    "RequirementDisposition": {
+      "enum": [
+        "ACCEPTED",
+        "SUPERSEDED",
+        "EXCLUDED",
+        "BLOCKED"
+      ],
+      "title": "RequirementDisposition",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/requirement_record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "description": "Typed representation of one authoritative requirement registry row.",
+  "properties": {
+    "acceptance_summary": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "title": "Acceptance Summary",
+      "type": "string"
+    },
+    "authority_classification": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Authority Classification",
+      "type": "string"
+    },
+    "decision_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Decision Ids",
+      "type": "array"
+    },
+    "disposition": {
+      "$ref": "#/$defs/RequirementDisposition"
+    },
+    "disposition_reason": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "title": "Disposition Reason",
+      "type": "string"
+    },
+    "domain": {
+      "maxLength": 32,
+      "minLength": 2,
+      "pattern": "^[A-Z]+$",
+      "title": "Domain",
+      "type": "string"
+    },
+    "evidence_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "evolution_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evolution Ids",
+      "type": "array"
+    },
+    "implementation_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Implementation Paths",
+      "type": "array"
+    },
+    "implementation_state": {
+      "$ref": "#/$defs/ImplementationState"
+    },
+    "jira_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Jira Ids",
+      "type": "array"
+    },
+    "normative_strength": {
+      "maxLength": 32,
+      "minLength": 1,
+      "title": "Normative Strength",
+      "type": "string"
+    },
+    "open_decision_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Open Decision Ids",
+      "type": "array"
+    },
+    "plan_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Plan Ids",
+      "type": "array"
+    },
+    "plan_section_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Plan Section Ids",
+      "type": "array"
+    },
+    "priority": {
+      "pattern": "^P[0-3]$",
+      "title": "Priority",
+      "type": "string"
+    },
+    "rationale": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "title": "Rationale",
+      "type": "string"
+    },
+    "requirement_id": {
+      "title": "Requirement Id",
+      "type": "string"
+    },
+    "requirement_type": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Requirement Type",
+      "type": "string"
+    },
+    "risk": {
+      "maxLength": 32,
+      "minLength": 1,
+      "title": "Risk",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "2.0.0",
+      "default": "2.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "source_kind": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Source Kind",
+      "type": "string"
+    },
+    "source_references": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Source References",
+      "type": "array"
+    },
+    "source_sequence": {
+      "minimum": 0,
+      "title": "Source Sequence",
+      "type": "integer"
+    },
+    "statement": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "title": "Statement",
+      "type": "string"
+    },
+    "superseded_by_requirement_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Superseded By Requirement Ids",
+      "type": "array"
+    },
+    "supersedes_requirement_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Supersedes Requirement Ids",
+      "type": "array"
+    },
+    "tags": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "array"
+    },
+    "test_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Test Ids",
+      "type": "array"
+    },
+    "title": {
+      "maxLength": 1000,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "verification_class": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Verification Class",
+      "type": "string"
+    },
+    "verification_expectation": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "title": "Verification Expectation",
+      "type": "string"
+    }
+  },
+  "required": [
+    "requirement_id",
+    "domain",
+    "title",
+    "statement",
+    "requirement_type",
+    "normative_strength",
+    "authority_classification",
+    "source_references",
+    "source_sequence",
+    "source_kind",
+    "rationale",
+    "priority",
+    "risk",
+    "disposition",
+    "disposition_reason",
+    "implementation_state",
+    "plan_ids",
+    "plan_section_ids",
+    "jira_ids",
+    "verification_class",
+    "verification_expectation",
+    "acceptance_summary"
+  ],
+  "title": "RequirementRecord",
+  "type": "object"
+}

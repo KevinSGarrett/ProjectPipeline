@@ -1,0 +1,402 @@
+{
+  "$defs": {
+    "DiscoveredFile": {
+      "additionalProperties": false,
+      "properties": {
+        "change_relevance": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Change Relevance",
+          "type": "array"
+        },
+        "dependencies": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Dependencies",
+          "type": "array"
+        },
+        "diagnostics": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Diagnostics",
+          "type": "array"
+        },
+        "language": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Language"
+        },
+        "owners": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Owners",
+          "type": "array"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/DiscoveryArtifactKind",
+          "default": "OTHER"
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "pattern": "^[a-f0-9]{64}$",
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Sha256"
+        },
+        "size_bytes": {
+          "minimum": 0,
+          "title": "Size Bytes",
+          "type": "integer"
+        },
+        "suffix": {
+          "default": "",
+          "maxLength": 32,
+          "title": "Suffix",
+          "type": "string"
+        },
+        "symbols": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Symbols",
+          "type": "array"
+        },
+        "tested_by": {
+          "default": [],
+          "items": {
+            "type": "string"
+          },
+          "title": "Tested By",
+          "type": "array"
+        },
+        "trust": {
+          "$ref": "#/$defs/DiscoveryTrust",
+          "default": "UNTRUSTED_DISCOVERED"
+        }
+      },
+      "required": [
+        "path",
+        "size_bytes"
+      ],
+      "title": "DiscoveredFile",
+      "type": "object"
+    },
+    "DiscoveredSymlink": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "target": {
+          "title": "Target",
+          "type": "string"
+        },
+        "target_within_root": {
+          "title": "Target Within Root",
+          "type": "boolean"
+        },
+        "traversed": {
+          "const": false,
+          "default": false,
+          "title": "Traversed",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "path",
+        "target",
+        "target_within_root"
+      ],
+      "title": "DiscoveredSymlink",
+      "type": "object"
+    },
+    "DiscoveryArtifactKind": {
+      "enum": [
+        "SOURCE",
+        "TEST",
+        "INSTRUCTION",
+        "PLAN",
+        "JIRA",
+        "REQUIREMENT",
+        "EVIDENCE",
+        "CONFIGURATION",
+        "BUILD",
+        "CI",
+        "DEPLOYMENT",
+        "DOCUMENTATION",
+        "SECRET_REFERENCE",
+        "REPOSITORY_METADATA",
+        "OTHER"
+      ],
+      "title": "DiscoveryArtifactKind",
+      "type": "string"
+    },
+    "DiscoveryTrust": {
+      "enum": [
+        "UNTRUSTED_DISCOVERED",
+        "SOURCE_CONTROLLED_DECLARATION"
+      ],
+      "title": "DiscoveryTrust",
+      "type": "string"
+    },
+    "RepositoryIdentity": {
+      "additionalProperties": false,
+      "properties": {
+        "canonical_url": {
+          "anyOf": [
+            {
+              "maxLength": 2048,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Canonical Url"
+        },
+        "default_branch": {
+          "anyOf": [
+            {
+              "maxLength": 255,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Default Branch"
+        },
+        "head_revision": {
+          "anyOf": [
+            {
+              "maxLength": 128,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Head Revision"
+        },
+        "nested": {
+          "default": false,
+          "title": "Nested",
+          "type": "boolean"
+        },
+        "repository_id": {
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "title": "Repository Id",
+          "type": "string"
+        },
+        "role": {
+          "$ref": "#/$defs/RepositoryRole",
+          "default": "PRIMARY"
+        },
+        "root_path": {
+          "title": "Root Path",
+          "type": "string"
+        },
+        "version_control": {
+          "$ref": "#/$defs/VersionControlKind",
+          "default": "NONE"
+        }
+      },
+      "required": [
+        "repository_id",
+        "root_path"
+      ],
+      "title": "RepositoryIdentity",
+      "type": "object"
+    },
+    "RepositoryRole": {
+      "enum": [
+        "PRIMARY",
+        "SUPPORTING",
+        "REFERENCE"
+      ],
+      "title": "RepositoryRole",
+      "type": "string"
+    },
+    "VersionControlKind": {
+      "enum": [
+        "GIT",
+        "NONE",
+        "UNKNOWN"
+      ],
+      "title": "VersionControlKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/repository_discovery.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "boundary_violations": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Boundary Violations",
+      "type": "array"
+    },
+    "build_systems": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Build Systems",
+      "type": "array"
+    },
+    "deployment_surfaces": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Deployment Surfaces",
+      "type": "array"
+    },
+    "diagnostics": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Diagnostics",
+      "type": "array"
+    },
+    "evidence_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Paths",
+      "type": "array"
+    },
+    "files": {
+      "items": {
+        "$ref": "#/$defs/DiscoveredFile"
+      },
+      "title": "Files",
+      "type": "array"
+    },
+    "instruction_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Instruction Paths",
+      "type": "array"
+    },
+    "jira_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Jira Paths",
+      "type": "array"
+    },
+    "plan_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Plan Paths",
+      "type": "array"
+    },
+    "repositories": {
+      "items": {
+        "$ref": "#/$defs/RepositoryIdentity"
+      },
+      "title": "Repositories",
+      "type": "array"
+    },
+    "requirement_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Requirement Paths",
+      "type": "array"
+    },
+    "root_path": {
+      "title": "Root Path",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "secret_reference_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Secret Reference Count",
+      "type": "integer"
+    },
+    "symlinks": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/DiscoveredSymlink"
+      },
+      "title": "Symlinks",
+      "type": "array"
+    },
+    "test_commands": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Test Commands",
+      "type": "array"
+    },
+    "total_bytes": {
+      "minimum": 0,
+      "title": "Total Bytes",
+      "type": "integer"
+    },
+    "truncated": {
+      "default": false,
+      "title": "Truncated",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "root_path",
+    "repositories",
+    "files",
+    "total_bytes"
+  ],
+  "title": "RepositoryDiscovery",
+  "type": "object"
+}

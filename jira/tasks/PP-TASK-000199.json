@@ -1,0 +1,156 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000199-01",
+      "statement": "All 351 requirements and every normalized relationship import transactionally and compare exactly with the authoritative catalog.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_traceability_store.py",
+        "method": "automated_behavior_and_evidence_validation",
+        "path": "tests/test_traceability_store.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000199-02",
+      "statement": "Changed, no-op, and stale proposed mutations have correct revision behavior and cannot silently overwrite the authoritative catalog.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_traceability_store.py",
+        "method": "automated_behavior_and_evidence_validation",
+        "path": "src/project_pipeline/services/traceability.py",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000031"
+  ],
+  "definition_of_done": [
+    "Implementation and configuration for the bounded objective are complete.",
+    "Acceptance criteria have current automated or machine-readable evidence.",
+    "Required behavior tests pass for the affected state or traceability capability.",
+    "Traceability, plans, Jira, schemas, documentation, and evidence are current.",
+    "Security, authority, observability, migration, and rollback effects are explicit.",
+    "Unavailable live PostgreSQL or external verification is represented without inflating completion."
+  ],
+  "dependencies": [
+    "PP-TASK-000194",
+    "PP-TASK-000197",
+    "PP-TASK-000198"
+  ],
+  "description": "Implement strict catalog import, normalized typed links, source and target reverse lookup, exact equivalence verification, optimistic proposed mutations, immutable mutation audit, and projection export.",
+  "evidence_required": [
+    "EVID-000031"
+  ],
+  "exclusions": [
+    "No remote GitHub, Jira, AWS, PostgreSQL, package-index, or paid-service mutation is authorized.",
+    "No complete Project Control Kernel, durable orchestration runtime, scheduler, or Command Center capability is represented as complete."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/domain/traceability.py",
+    "src/project_pipeline/services/traceability.py",
+    "src/project_pipeline/persistence/sqlite.py",
+    "database/migrations/sqlite/PPDB-0002_requirement_traceability.up.sql",
+    "schemas/traceability_link.schema.json",
+    "schemas/traceability_mutation.schema.json"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/domain/traceability.py",
+    "src/project_pipeline/services/traceability.py",
+    "src/project_pipeline/persistence/sqlite.py",
+    "database/migrations/sqlite/PPDB-0002_requirement_traceability.up.sql",
+    "schemas/traceability_link.schema.json",
+    "schemas/traceability_mutation.schema.json"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "traceability",
+    "requirements",
+    "transactions",
+    "bidirectional",
+    "evidence-backed"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25201",
+    "remote_key": "PP-232",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000199",
+  "objective": "Persist and query the complete requirement graph without weakening repository catalog authority.",
+  "observability_impact": "Persist actor, correlation, revision, transition, migration, import, and evidence identities for later operational telemetry.",
+  "owner_required_capability": "python_domain_modeling_persistence_migrations_and_verification",
+  "parent": "PP-STORY-000053",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/02_system_architecture/PLAN-ARCH-004_core_state_and_traceability.md",
+      "end_line": 108,
+      "line_numbered_path": "plans/_line_numbered/PLAN-ARCH-004_core_state_and_traceability.lines.txt",
+      "line_reference": "PLAN-ARCH-004:SEC-07:L000096-L000108",
+      "plan_id": "PLAN-ARCH-004",
+      "section_id": "PLAN-ARCH-004:SEC-07",
+      "start_line": 96
+    },
+    {
+      "authoritative_path": "plans/02_system_architecture/PLAN-ARCH-004_core_state_and_traceability.md",
+      "end_line": 140,
+      "line_numbered_path": "plans/_line_numbered/PLAN-ARCH-004_core_state_and_traceability.lines.txt",
+      "line_reference": "PLAN-ARCH-004:SEC-09:L000122-L000140",
+      "plan_id": "PLAN-ARCH-004",
+      "section_id": "PLAN-ARCH-004:SEC-09",
+      "start_line": 122
+    }
+  ],
+  "rationale": "This bounded core-state implementation converts validated planning and registries into typed, transactional, queryable behavior while preserving explicit authority and live-verification boundaries.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000053",
+      "type": "CHILD_OF"
+    },
+    {
+      "target": "PP-TASK-000194",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "target": "PP-TASK-000197",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "target": "PP-TASK-000198",
+      "type": "DEPENDS_ON"
+    }
+  ],
+  "remote_jira_key": "PP-232",
+  "required_tests": [
+    "TEST-TRACE-STORE-001",
+    "TEST-TRACE-STORE-002",
+    "TEST-TRACE-STORE-003",
+    "TEST-TRACE-STORE-004",
+    "TEST-TRACE-STORE-005"
+  ],
+  "requirement_ids": [
+    "REQ-REQ-0003",
+    "REQ-REQ-0013",
+    "REQ-REQ-0014",
+    "REQ-REQ-0015",
+    "REQ-REQ-0016",
+    "REQ-ARCH-0008"
+  ],
+  "risk_classification": "CRITICAL",
+  "rollback_recovery_consideration": "Restore the prior cumulative archive, remove local runtime state, reapply the committed migration catalog, and reimport authoritative registries; no external state requires rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Persist and query the complete requirement graph without weakening repository catalog authority."
+  ],
+  "security_impact": "Preserve strict validation, least privilege, source authority, secret-reference handling, optimistic concurrency, and fail-closed mutation boundaries.",
+  "source_references": [
+    "GOV-001:L000187-L000221",
+    "GOV-001:L001162-L001215",
+    "SRC-017:L000490-L000596"
+  ],
+  "state": "BACKLOG",
+  "title": "Implement transactional bidirectional requirement traceability",
+  "upstream_dependencies": []
+}

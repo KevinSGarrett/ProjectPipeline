@@ -1,0 +1,134 @@
+{
+  "benchmark_id": "PPQS-08",
+  "examples": [
+    {
+      "artifact": "adoption report and repository map",
+      "example_id": "EX-CR-001",
+      "expected_failure": "existing work is not deleted or normalized without evidence",
+      "expected_result": "the actual starting state is captured before modification",
+      "feature": "Repository discovery and adoption",
+      "request_or_action": "Representative valid action for Repository discovery and adoption"
+    },
+    {
+      "artifact": "reconciliation plan and corrected board",
+      "example_id": "EX-CR-002",
+      "expected_failure": "Jira status is never treated as implementation truth by itself",
+      "expected_result": "each discrepancy receives a justified reconciliation action",
+      "feature": "Jira truth reconciliation",
+      "request_or_action": "Representative valid action for Jira truth reconciliation"
+    },
+    {
+      "artifact": "requirement registry and decision ledger",
+      "example_id": "EX-CR-003",
+      "expected_failure": "obsolete requirements are not silently deleted or implemented",
+      "expected_result": "supersession edges and decisions are explicit",
+      "feature": "Requirement supersession",
+      "request_or_action": "Representative valid action for Requirement supersession"
+    },
+    {
+      "artifact": "incident lifecycle repair",
+      "example_id": "EX-CR-004",
+      "expected_failure": "false completion is blocked",
+      "expected_result": "completion requires valid resolution evidence and guarded state transitions",
+      "feature": "Partially implemented incident workflow",
+      "request_or_action": "Representative valid action for Partially implemented incident workflow"
+    },
+    {
+      "artifact": "migration repair and rollback evidence",
+      "example_id": "EX-CR-005",
+      "expected_failure": "failed migration does not destroy the prior state",
+      "expected_result": "clean and populated databases reach the target schema safely",
+      "feature": "Database migration repair",
+      "request_or_action": "Representative valid action for Database migration repair"
+    },
+    {
+      "artifact": "CI workflows and verification report",
+      "example_id": "EX-CR-006",
+      "expected_failure": "green status cannot result from skipped mandatory jobs",
+      "expected_result": "CI validates all three repositories with pinned trusted actions",
+      "feature": "CI repair",
+      "request_or_action": "Representative valid action for CI repair"
+    },
+    {
+      "artifact": "deterministic test and flake evidence",
+      "example_id": "EX-CR-007",
+      "expected_failure": "quarantine without a bounded repair decision is not accepted",
+      "expected_result": "repeated runs are stable and retain meaningful coverage",
+      "feature": "Flaky test resolution",
+      "request_or_action": "Representative valid action for Flaky test resolution"
+    },
+    {
+      "artifact": "secret scan and containment record",
+      "example_id": "EX-CR-008",
+      "expected_failure": "exposure triggers a hard-gate failure",
+      "expected_result": "the canary is contained and scanned across all outputs",
+      "feature": "Secret canary containment",
+      "request_or_action": "Representative valid action for Secret canary containment"
+    },
+    {
+      "artifact": "dependency patch and SBOM evidence",
+      "example_id": "EX-CR-009",
+      "expected_failure": "blind upgrades and ignored advisories are prohibited",
+      "expected_result": "the vulnerable path is removed without breaking supported behavior",
+      "feature": "Dependency vulnerability remediation",
+      "request_or_action": "Representative valid action for Dependency vulnerability remediation"
+    },
+    {
+      "artifact": "outbox fallback and degraded-state telemetry",
+      "example_id": "EX-CR-010",
+      "expected_failure": "work is not falsely marked delivered",
+      "expected_result": "outage effects remain bounded and recoverable",
+      "feature": "Provider outage fallback",
+      "request_or_action": "Representative valid action for Provider outage fallback"
+    },
+    {
+      "artifact": "operation intent and reconciliation receipt",
+      "example_id": "EX-CR-011",
+      "expected_failure": "blind retry cannot create duplicate branches, PRs, or tickets",
+      "expected_result": "at most one logical mutation exists",
+      "feature": "Unknown write reconciliation",
+      "request_or_action": "Representative valid action for Unknown write reconciliation"
+    },
+    {
+      "artifact": "checkpoint and recovery ledger",
+      "example_id": "EX-CR-012",
+      "expected_failure": "partial output cannot be promoted",
+      "expected_result": "the task resumes or rolls back without duplicate side effects",
+      "feature": "Worker crash recovery",
+      "request_or_action": "Representative valid action for Worker crash recovery"
+    },
+    {
+      "artifact": "resource ownership and conflict decision",
+      "example_id": "EX-CR-013",
+      "expected_failure": "silent overwrites and merged incompatible migrations are blocked",
+      "expected_result": "only non-conflicting work proceeds in parallel",
+      "feature": "Concurrent workspace conflict",
+      "request_or_action": "Representative valid action for Concurrent workspace conflict"
+    },
+    {
+      "artifact": "blocker package and intervention receipt",
+      "example_id": "EX-CR-014",
+      "expected_failure": "vague requests or approval bypass fail",
+      "expected_result": "the escalation states exact action, verification, continuation, and resume behavior",
+      "feature": "Human-required credential blocker",
+      "request_or_action": "Representative valid action for Human-required credential blocker"
+    },
+    {
+      "artifact": "verified documentation and runbook",
+      "example_id": "EX-CR-015",
+      "expected_failure": "stale claims are removed or labeled",
+      "expected_result": "documentation commands execute against the repaired system",
+      "feature": "Documentation and runbook reconciliation",
+      "request_or_action": "Representative valid action for Documentation and runbook reconciliation"
+    },
+    {
+      "artifact": "release candidate and completion audit",
+      "example_id": "EX-CR-016",
+      "expected_failure": "score cannot override a hard-gate or missing mandatory evidence",
+      "expected_result": "the project reaches a truthful auditable terminal state",
+      "feature": "Final completion and release evidence",
+      "request_or_action": "Representative valid action for Final completion and release evidence"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

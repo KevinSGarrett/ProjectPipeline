@@ -1,0 +1,74 @@
+{
+  "$defs": {
+    "ReceiptStatus": {
+      "enum": [
+        "CONSUMED",
+        "PARTIAL",
+        "REJECTED",
+        "NEEDS_CONTEXT"
+      ],
+      "title": "ReceiptStatus",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/context_receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "additional_context_requested": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Additional Context Requested",
+      "type": "array"
+    },
+    "conflicts_encountered": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Conflicts Encountered",
+      "type": "array"
+    },
+    "consumed_at_utc": {
+      "format": "date-time",
+      "title": "Consumed At Utc",
+      "type": "string"
+    },
+    "omissions_detected": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Omissions Detected",
+      "type": "array"
+    },
+    "pack_id": {
+      "title": "Pack Id",
+      "type": "string"
+    },
+    "receipt_id": {
+      "title": "Receipt Id",
+      "type": "string"
+    },
+    "status": {
+      "$ref": "#/$defs/ReceiptStatus"
+    },
+    "worker_id": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Worker Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "receipt_id",
+    "pack_id",
+    "worker_id",
+    "consumed_at_utc",
+    "status"
+  ],
+  "title": "ContextReceipt",
+  "type": "object"
+}

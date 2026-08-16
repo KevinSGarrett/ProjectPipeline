@@ -1,0 +1,84 @@
+{
+  "$id": "https://project-pipeline.local/schemas/domain_state_transition.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "maxLength": 191,
+      "minLength": 3,
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "correlation_id": {
+      "maxLength": 191,
+      "minLength": 3,
+      "title": "Correlation Id",
+      "type": "string"
+    },
+    "entity_id": {
+      "title": "Entity Id",
+      "type": "string"
+    },
+    "entity_type": {
+      "enum": [
+        "project",
+        "task"
+      ],
+      "title": "Entity Type",
+      "type": "string"
+    },
+    "expected_version": {
+      "minimum": 1,
+      "title": "Expected Version",
+      "type": "integer"
+    },
+    "next_state": {
+      "title": "Next State",
+      "type": "string"
+    },
+    "occurred_at_utc": {
+      "format": "date-time",
+      "title": "Occurred At Utc",
+      "type": "string"
+    },
+    "previous_state": {
+      "title": "Previous State",
+      "type": "string"
+    },
+    "reason": {
+      "maxLength": 2000,
+      "minLength": 1,
+      "title": "Reason",
+      "type": "string"
+    },
+    "resulting_version": {
+      "minimum": 2,
+      "title": "Resulting Version",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "transition_id": {
+      "title": "Transition Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "transition_id",
+    "entity_type",
+    "entity_id",
+    "previous_state",
+    "next_state",
+    "expected_version",
+    "resulting_version",
+    "reason",
+    "actor_id",
+    "correlation_id"
+  ],
+  "title": "DomainStateTransition",
+  "type": "object"
+}

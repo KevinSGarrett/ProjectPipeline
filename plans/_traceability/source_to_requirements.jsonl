@@ -1,0 +1,299 @@
+{"requirement_ids": ["REQ-PDEF-0001", "REQ-PDEF-0002", "REQ-PDEF-0003"], "source_reference": "GOV-001:L000052-L000119"}
+{"requirement_ids": ["REQ-REQ-0009"], "source_reference": "GOV-001:L000099-L000119"}
+{"requirement_ids": ["REQ-REQ-0011"], "source_reference": "GOV-001:L000110-L000119"}
+{"requirement_ids": ["REQ-REQ-0005"], "source_reference": "GOV-001:L000123-L000175"}
+{"requirement_ids": ["REQ-REQ-0001", "REQ-REQ-0002", "REQ-REQ-0003"], "source_reference": "GOV-001:L000123-L000221"}
+{"requirement_ids": ["REQ-REQ-0007"], "source_reference": "GOV-001:L000173-L000183"}
+{"requirement_ids": ["REQ-REQ-0008"], "source_reference": "GOV-001:L000177-L000183"}
+{"requirement_ids": ["REQ-ARCH-0015"], "source_reference": "GOV-001:L000187-L000217"}
+{"requirement_ids": ["REQ-REQ-0006", "REQ-REQ-0013"], "source_reference": "GOV-001:L000187-L000221"}
+{"requirement_ids": ["REQ-REQ-0010"], "source_reference": "GOV-001:L000217-L000221"}
+{"requirement_ids": ["REQ-REL-0012"], "source_reference": "GOV-001:L000225-L000287"}
+{"requirement_ids": ["REQ-ARCH-0001", "REQ-ARCH-0002", "REQ-ARCH-0003"], "source_reference": "GOV-001:L000362-L000793"}
+{"requirement_ids": ["REQ-SCHED-0008"], "source_reference": "GOV-001:L000423-L000435"}
+{"requirement_ids": ["REQ-SCHED-0001", "REQ-SCHED-0002", "REQ-SCHED-0003"], "source_reference": "GOV-001:L000424-L000455"}
+{"requirement_ids": ["REQ-SCHED-0009", "REQ-SCHED-0015"], "source_reference": "GOV-001:L000437-L000455"}
+{"requirement_ids": ["REQ-AGENT-0001", "REQ-AGENT-0002", "REQ-AGENT-0003"], "source_reference": "GOV-001:L000457-L000470"}
+{"requirement_ids": ["REQ-UX-0026"], "source_reference": "GOV-001:L000574-L000584"}
+{"requirement_ids": ["REQ-BUDGET-0001", "REQ-BUDGET-0002", "REQ-BUDGET-0003"], "source_reference": "GOV-001:L000607-L000619"}
+{"requirement_ids": ["REQ-RES-0001", "REQ-RES-0002", "REQ-RES-0003"], "source_reference": "GOV-001:L000621-L000641"}
+{"requirement_ids": ["REQ-UX-0001", "REQ-UX-0002", "REQ-UX-0003"], "source_reference": "GOV-001:L000643-L000693"}
+{"requirement_ids": ["REQ-OPS-0004", "REQ-OPS-0006", "REQ-OPS-0007", "REQ-OPS-0008", "REQ-OPS-0010"], "source_reference": "GOV-001:L000695-L000710"}
+{"requirement_ids": ["REQ-OPS-0001", "REQ-OPS-0002", "REQ-OPS-0003"], "source_reference": "GOV-001:L000696-L000709"}
+{"requirement_ids": ["REQ-ARCH-0007"], "source_reference": "GOV-001:L000711-L000731"}
+{"requirement_ids": ["REQ-LIFE-0001", "REQ-LIFE-0002", "REQ-LIFE-0003", "REQ-LIFE-0004"], "source_reference": "GOV-001:L000733-L000747"}
+{"requirement_ids": ["REQ-INFRA-0001", "REQ-INFRA-0002", "REQ-INFRA-0003", "REQ-INFRA-0010", "REQ-INFRA-0011", "REQ-INFRA-0018"], "source_reference": "GOV-001:L000748-L000764"}
+{"requirement_ids": ["REQ-OPS-0018"], "source_reference": "GOV-001:L000765-L000780"}
+{"requirement_ids": ["REQ-REL-0004", "REQ-REL-0005", "REQ-REL-0006", "REQ-REL-0007"], "source_reference": "GOV-001:L000781-L000792"}
+{"requirement_ids": ["REQ-UPSTREAM-0005"], "source_reference": "GOV-001:L000797-L000854"}
+{"requirement_ids": ["REQ-SEC-0021", "REQ-UPSTREAM-0001", "REQ-UPSTREAM-0002", "REQ-UPSTREAM-0003", "REQ-UPSTREAM-0004"], "source_reference": "GOV-001:L000797-L000876"}
+{"requirement_ids": ["REQ-UPSTREAM-0006", "REQ-UPSTREAM-0007"], "source_reference": "GOV-001:L000831-L000854"}
+{"requirement_ids": ["REQ-UPSTREAM-0009"], "source_reference": "GOV-001:L000855-L000865"}
+{"requirement_ids": ["REQ-UPSTREAM-0008"], "source_reference": "GOV-001:L000855-L000876"}
+{"requirement_ids": ["REQ-UPSTREAM-0010", "REQ-UPSTREAM-0013"], "source_reference": "GOV-001:L000866-L000876"}
+{"requirement_ids": ["REQ-UPSTREAM-0014"], "source_reference": "GOV-001:L000872-L000876"}
+{"requirement_ids": ["REQ-GOV-0001", "REQ-GOV-0002", "REQ-GOV-0003", "REQ-GOV-0004"], "source_reference": "GOV-001:L000949-L001158"}
+{"requirement_ids": ["REQ-SCHED-0005"], "source_reference": "GOV-001:L001114-L001158"}
+{"requirement_ids": ["REQ-REQ-0004"], "source_reference": "GOV-001:L001162-L001200"}
+{"requirement_ids": ["REQ-REQ-0016", "REQ-REQ-0017"], "source_reference": "GOV-001:L001162-L001215"}
+{"requirement_ids": ["REQ-REQ-0013"], "source_reference": "GOV-001:L001175-L001215"}
+{"requirement_ids": ["REQ-REQ-0014"], "source_reference": "GOV-001:L001200-L001215"}
+{"requirement_ids": ["REQ-REQ-0010"], "source_reference": "GOV-001:L001202-L001215"}
+{"requirement_ids": ["REQ-ARCH-0014", "REQ-ARCH-0015", "REQ-REQ-0011"], "source_reference": "GOV-001:L001319-L001360"}
+{"requirement_ids": ["REQ-SEC-0001", "REQ-SEC-0002", "REQ-SEC-0003", "REQ-SEC-0004", "REQ-SEC-0018", "REQ-SEC-0022", "REQ-SEC-0023"], "source_reference": "GOV-001:L001364-L001385"}
+{"requirement_ids": ["REQ-CTRL-0014"], "source_reference": "GOV-001:L001394-L001420"}
+{"requirement_ids": ["REQ-CTRL-0015"], "source_reference": "GOV-001:L001412-L001420"}
+{"requirement_ids": ["REQ-REL-0013"], "source_reference": "GOV-001:L001794-L001838"}
+{"requirement_ids": ["REQ-REL-0010", "REQ-REL-0011"], "source_reference": "GOV-001:L001884-L001927"}
+{"requirement_ids": ["REQ-REL-0001", "REQ-REL-0002", "REQ-REL-0003"], "source_reference": "GOV-001:L001884-L001992"}
+{"requirement_ids": ["REQ-REL-0012"], "source_reference": "GOV-001:L001914-L001927"}
+{"requirement_ids": ["REQ-REL-0008", "REQ-REL-0009"], "source_reference": "GOV-001:L001928-L001992"}
+{"requirement_ids": ["REQ-REQ-0012", "REQ-REQ-0015"], "source_reference": "GOV-001:L001998-L002024"}
+{"requirement_ids": ["REQ-REL-0005", "REQ-REL-0007"], "source_reference": "GOV-001:L002066-L002103"}
+{"requirement_ids": ["REQ-REL-0014"], "source_reference": "GOV-001:L002148-L002180"}
+{"requirement_ids": ["REQ-REQ-0016", "REQ-REQ-0017", "REQ-SEC-0022"], "source_reference": "GOV-001:L002200-L002231"}
+{"requirement_ids": ["REQ-ARCH-0016"], "source_reference": "GOV-001:L002235-L002271"}
+{"requirement_ids": ["REQ-PDEF-0004", "REQ-PDEF-0008"], "source_reference": "SRC-001:L000001-L000020"}
+{"requirement_ids": ["REQ-PDEF-0007"], "source_reference": "SRC-001:L000021-L000061"}
+{"requirement_ids": ["REQ-INFRA-0004"], "source_reference": "SRC-001:L000062-L000162"}
+{"requirement_ids": ["REQ-INFRA-0005"], "source_reference": "SRC-001:L000163-L000189"}
+{"requirement_ids": ["REQ-INFRA-0006"], "source_reference": "SRC-001:L000190-L000256"}
+{"requirement_ids": ["REQ-SEC-0011"], "source_reference": "SRC-001:L000257-L000305"}
+{"requirement_ids": ["REQ-SCHED-0012"], "source_reference": "SRC-001:L000492-L000538"}
+{"requirement_ids": ["REQ-SCHED-0010"], "source_reference": "SRC-001:L000492-L000568"}
+{"requirement_ids": ["REQ-SCHED-0013"], "source_reference": "SRC-001:L000539-L000568"}
+{"requirement_ids": ["REQ-AGENT-0011"], "source_reference": "SRC-001:L000569-L000680"}
+{"requirement_ids": ["REQ-PDEF-0010"], "source_reference": "SRC-001:L000734-L000791"}
+{"requirement_ids": ["REQ-ARCH-0013"], "source_reference": "SRC-001:L000867-L000940"}
+{"requirement_ids": ["REQ-OPS-0004", "REQ-OPS-0005"], "source_reference": "SRC-001:L001058-L001092"}
+{"requirement_ids": ["REQ-PDEF-0005"], "source_reference": "SRC-001:L001255-L001301"}
+{"requirement_ids": ["REQ-AGENT-0004"], "source_reference": "SRC-001:L001302-L001346"}
+{"requirement_ids": ["REQ-AGENT-0015"], "source_reference": "SRC-001:L001347-L001372"}
+{"requirement_ids": ["REQ-CTRL-0013"], "source_reference": "SRC-001:L001480-L001526"}
+{"requirement_ids": ["REQ-CTX-0005"], "source_reference": "SRC-002:L000037-L000085"}
+{"requirement_ids": ["REQ-CTX-0004"], "source_reference": "SRC-002:L000086-L000145"}
+{"requirement_ids": ["REQ-CTX-0006"], "source_reference": "SRC-002:L000146-L000212"}
+{"requirement_ids": ["REQ-CTX-0007"], "source_reference": "SRC-002:L000213-L000260"}
+{"requirement_ids": ["REQ-CTX-0009"], "source_reference": "SRC-002:L000261-L000315"}
+{"requirement_ids": ["REQ-CTX-0008"], "source_reference": "SRC-002:L000359-L000386"}
+{"requirement_ids": ["REQ-CTX-0005"], "source_reference": "SRC-002:L000445-L000478"}
+{"requirement_ids": ["REQ-CTX-0010"], "source_reference": "SRC-002:L000479-L000515"}
+{"requirement_ids": ["REQ-UX-0026"], "source_reference": "SRC-002:L000516-L000680"}
+{"requirement_ids": ["REQ-CTX-0018"], "source_reference": "SRC-002:L000681-L000793"}
+{"requirement_ids": ["REQ-CTX-0016"], "source_reference": "SRC-002:L000794-L000884"}
+{"requirement_ids": ["REQ-CTX-0017", "REQ-CTX-0018"], "source_reference": "SRC-002:L000889-L000958"}
+{"requirement_ids": ["REQ-CTX-0007", "REQ-CTX-0014"], "source_reference": "SRC-002:L000959-L001014"}
+{"requirement_ids": ["REQ-CTX-0011"], "source_reference": "SRC-002:L001015-L001098"}
+{"requirement_ids": ["REQ-CTX-0001", "REQ-CTX-0002", "REQ-CTX-0003"], "source_reference": "SRC-002:L001015-L001156"}
+{"requirement_ids": ["REQ-ARCH-0005"], "source_reference": "SRC-002:L001099-L001314"}
+{"requirement_ids": ["REQ-CTX-0015", "REQ-OPS-0008"], "source_reference": "SRC-002:L001158-L001234"}
+{"requirement_ids": ["REQ-ARCH-0004", "REQ-CTRL-0004"], "source_reference": "SRC-003:L000005-L000084"}
+{"requirement_ids": ["REQ-CTRL-0001", "REQ-CTRL-0002", "REQ-CTRL-0003"], "source_reference": "SRC-003:L000040-L000083"}
+{"requirement_ids": ["REQ-CTRL-0005"], "source_reference": "SRC-003:L000044-L000084"}
+{"requirement_ids": ["REQ-CTRL-0006"], "source_reference": "SRC-003:L000085-L000224"}
+{"requirement_ids": ["REQ-SCHED-0005"], "source_reference": "SRC-003:L000225-L000278"}
+{"requirement_ids": ["REQ-SCHED-0004", "REQ-SCHED-0007"], "source_reference": "SRC-003:L000225-L000371"}
+{"requirement_ids": ["REQ-SCHED-0006"], "source_reference": "SRC-003:L000279-L000371"}
+{"requirement_ids": ["REQ-CTRL-0008"], "source_reference": "SRC-003:L000610-L000751"}
+{"requirement_ids": ["REQ-CTRL-0007", "REQ-CTRL-0009"], "source_reference": "SRC-003:L000752-L000875"}
+{"requirement_ids": ["REQ-CTRL-0010"], "source_reference": "SRC-003:L000882-L000961"}
+{"requirement_ids": ["REQ-ARCH-0008"], "source_reference": "SRC-003:L000962-L001001"}
+{"requirement_ids": ["REQ-BUDGET-0004", "REQ-BUDGET-0018"], "source_reference": "SRC-004:L000050-L000147"}
+{"requirement_ids": ["REQ-BUDGET-0005", "REQ-BUDGET-0006"], "source_reference": "SRC-004:L000148-L000251"}
+{"requirement_ids": ["REQ-BUDGET-0007"], "source_reference": "SRC-004:L000252-L000306"}
+{"requirement_ids": ["REQ-BUDGET-0008", "REQ-BUDGET-0009"], "source_reference": "SRC-004:L000307-L000362"}
+{"requirement_ids": ["REQ-BUDGET-0010"], "source_reference": "SRC-004:L000373-L000483"}
+{"requirement_ids": ["REQ-BUDGET-0011", "REQ-BUDGET-0012"], "source_reference": "SRC-004:L000484-L000606"}
+{"requirement_ids": ["REQ-BUDGET-0013"], "source_reference": "SRC-004:L000607-L000650"}
+{"requirement_ids": ["REQ-BUDGET-0014"], "source_reference": "SRC-004:L000651-L000718"}
+{"requirement_ids": ["REQ-BUDGET-0015", "REQ-OPS-0007"], "source_reference": "SRC-004:L000735-L000811"}
+{"requirement_ids": ["REQ-BUDGET-0016"], "source_reference": "SRC-004:L000812-L000936"}
+{"requirement_ids": ["REQ-BUDGET-0019"], "source_reference": "SRC-004:L000937-L000977"}
+{"requirement_ids": ["REQ-ARCH-0006"], "source_reference": "SRC-005:L000057-L000129"}
+{"requirement_ids": ["REQ-RES-0015"], "source_reference": "SRC-005:L000604-L000640"}
+{"requirement_ids": ["REQ-CTRL-0012"], "source_reference": "SRC-005:L000604-L000735"}
+{"requirement_ids": ["REQ-CTRL-0011"], "source_reference": "SRC-005:L000730-L000766"}
+{"requirement_ids": ["REQ-ARCH-0014"], "source_reference": "SRC-005:L000825-L000890"}
+{"requirement_ids": ["REQ-RES-0019"], "source_reference": "SRC-005:L000891-L000971"}
+{"requirement_ids": ["REQ-AGENT-0005"], "source_reference": "SRC-006:L000011-L000056"}
+{"requirement_ids": ["REQ-RES-0004"], "source_reference": "SRC-006:L000011-L000197"}
+{"requirement_ids": ["REQ-AGENT-0006"], "source_reference": "SRC-006:L000057-L000129"}
+{"requirement_ids": ["REQ-AGENT-0008"], "source_reference": "SRC-006:L000130-L000223"}
+{"requirement_ids": ["REQ-AGENT-0009"], "source_reference": "SRC-006:L000198-L000223"}
+{"requirement_ids": ["REQ-AGENT-0010"], "source_reference": "SRC-006:L000224-L000282"}
+{"requirement_ids": ["REQ-RES-0006"], "source_reference": "SRC-006:L000283-L000337"}
+{"requirement_ids": ["REQ-RES-0007"], "source_reference": "SRC-006:L000338-L000405"}
+{"requirement_ids": ["REQ-RES-0008"], "source_reference": "SRC-006:L000373-L000405"}
+{"requirement_ids": ["REQ-RES-0009"], "source_reference": "SRC-006:L000406-L000441"}
+{"requirement_ids": ["REQ-RES-0010"], "source_reference": "SRC-006:L000442-L000478"}
+{"requirement_ids": ["REQ-RES-0011"], "source_reference": "SRC-006:L000479-L000518"}
+{"requirement_ids": ["REQ-RES-0012"], "source_reference": "SRC-006:L000519-L000541"}
+{"requirement_ids": ["REQ-RES-0013"], "source_reference": "SRC-006:L000542-L000566"}
+{"requirement_ids": ["REQ-RES-0014"], "source_reference": "SRC-006:L000567-L000603"}
+{"requirement_ids": ["REQ-RES-0016"], "source_reference": "SRC-006:L000649-L000694"}
+{"requirement_ids": ["REQ-RES-0017"], "source_reference": "SRC-006:L000695-L000735"}
+{"requirement_ids": ["REQ-RES-0018"], "source_reference": "SRC-006:L000767-L000824"}
+{"requirement_ids": ["REQ-RES-0005"], "source_reference": "SRC-006:L000825-L000938"}
+{"requirement_ids": ["REQ-UX-0004"], "source_reference": "SRC-006:L001079-L001140"}
+{"requirement_ids": ["REQ-UX-0005"], "source_reference": "SRC-006:L001141-L001179"}
+{"requirement_ids": ["REQ-UX-0006"], "source_reference": "SRC-006:L001284-L001440"}
+{"requirement_ids": ["REQ-UX-0007"], "source_reference": "SRC-006:L001342-L001398"}
+{"requirement_ids": ["REQ-SCHED-0008"], "source_reference": "SRC-006:L001399-L001440"}
+{"requirement_ids": ["REQ-UX-0008"], "source_reference": "SRC-006:L001441-L001480"}
+{"requirement_ids": ["REQ-UX-0009"], "source_reference": "SRC-006:L001481-L001541"}
+{"requirement_ids": ["REQ-UX-0010"], "source_reference": "SRC-006:L001542-L001577"}
+{"requirement_ids": ["REQ-UX-0011"], "source_reference": "SRC-006:L001578-L001604"}
+{"requirement_ids": ["REQ-OPS-0009", "REQ-UX-0012"], "source_reference": "SRC-006:L001605-L001707"}
+{"requirement_ids": ["REQ-BUDGET-0016", "REQ-UX-0013"], "source_reference": "SRC-006:L001708-L001805"}
+{"requirement_ids": ["REQ-UX-0014"], "source_reference": "SRC-006:L001806-L001929"}
+{"requirement_ids": ["REQ-UX-0015"], "source_reference": "SRC-006:L001930-L001965"}
+{"requirement_ids": ["REQ-UX-0016"], "source_reference": "SRC-006:L001966-L002021"}
+{"requirement_ids": ["REQ-UX-0017"], "source_reference": "SRC-006:L002022-L002066"}
+{"requirement_ids": ["REQ-UX-0018"], "source_reference": "SRC-006:L002067-L002086"}
+{"requirement_ids": ["REQ-UX-0019"], "source_reference": "SRC-006:L002087-L002129"}
+{"requirement_ids": ["REQ-UX-0020"], "source_reference": "SRC-006:L002130-L002170"}
+{"requirement_ids": ["REQ-UX-0021"], "source_reference": "SRC-006:L002171-L002213"}
+{"requirement_ids": ["REQ-UX-0022"], "source_reference": "SRC-006:L002214-L002252"}
+{"requirement_ids": ["REQ-UX-0023"], "source_reference": "SRC-006:L002253-L002303"}
+{"requirement_ids": ["REQ-ARCH-0007"], "source_reference": "SRC-006:L002748-L002819"}
+{"requirement_ids": ["REQ-GOV-0005"], "source_reference": "SRC-007:L000009-L000056"}
+{"requirement_ids": ["REQ-GOV-0006"], "source_reference": "SRC-007:L000108-L000212"}
+{"requirement_ids": ["REQ-PDEF-0005"], "source_reference": "SRC-007:L000213-L000249"}
+{"requirement_ids": ["REQ-GOV-0007"], "source_reference": "SRC-007:L000250-L000340"}
+{"requirement_ids": ["REQ-GOV-0008"], "source_reference": "SRC-007:L000341-L000392"}
+{"requirement_ids": ["REQ-GOV-0009"], "source_reference": "SRC-007:L000393-L000419"}
+{"requirement_ids": ["REQ-GOV-0010"], "source_reference": "SRC-007:L000420-L000481"}
+{"requirement_ids": ["REQ-GOV-0011"], "source_reference": "SRC-007:L000482-L000538"}
+{"requirement_ids": ["REQ-GOV-0012"], "source_reference": "SRC-007:L000539-L000624"}
+{"requirement_ids": ["REQ-GOV-0013"], "source_reference": "SRC-007:L000625-L000648"}
+{"requirement_ids": ["REQ-GOV-0014"], "source_reference": "SRC-007:L000649-L000669"}
+{"requirement_ids": ["REQ-GOV-0015", "REQ-SCHED-0012"], "source_reference": "SRC-007:L000670-L000712"}
+{"requirement_ids": ["REQ-GOV-0016"], "source_reference": "SRC-007:L000713-L000798"}
+{"requirement_ids": ["REQ-GOV-0017"], "source_reference": "SRC-007:L000744-L000798"}
+{"requirement_ids": ["REQ-GOV-0018"], "source_reference": "SRC-007:L000799-L000848"}
+{"requirement_ids": ["REQ-GOV-0019"], "source_reference": "SRC-007:L000822-L000888"}
+{"requirement_ids": ["REQ-GOV-0020"], "source_reference": "SRC-007:L000889-L000938"}
+{"requirement_ids": ["REQ-GOV-0021"], "source_reference": "SRC-007:L000939-L000969"}
+{"requirement_ids": ["REQ-GOV-0022"], "source_reference": "SRC-007:L000970-L001003"}
+{"requirement_ids": ["REQ-GOV-0023"], "source_reference": "SRC-007:L001004-L001075"}
+{"requirement_ids": ["REQ-GOV-0024"], "source_reference": "SRC-007:L001098-L001128"}
+{"requirement_ids": ["REQ-GOV-0025", "REQ-LIFE-0018"], "source_reference": "SRC-007:L001129-L001167"}
+{"requirement_ids": ["REQ-ASSURE-0005"], "source_reference": "SRC-008:L000038-L000093"}
+{"requirement_ids": ["REQ-ASSURE-0006"], "source_reference": "SRC-008:L000094-L000130"}
+{"requirement_ids": ["REQ-ASSURE-0007"], "source_reference": "SRC-008:L000131-L000155"}
+{"requirement_ids": ["REQ-ASSURE-0008"], "source_reference": "SRC-008:L000156-L000196"}
+{"requirement_ids": ["REQ-ASSURE-0009"], "source_reference": "SRC-008:L000197-L000239"}
+{"requirement_ids": ["REQ-ASSURE-0010"], "source_reference": "SRC-008:L000240-L000294"}
+{"requirement_ids": ["REQ-ASSURE-0011"], "source_reference": "SRC-008:L000295-L000368"}
+{"requirement_ids": ["REQ-ASSURE-0012"], "source_reference": "SRC-008:L000369-L000406"}
+{"requirement_ids": ["REQ-ASSURE-0013"], "source_reference": "SRC-008:L000407-L000446"}
+{"requirement_ids": ["REQ-CTRL-0009"], "source_reference": "SRC-008:L000407-L000589"}
+{"requirement_ids": ["REQ-ASSURE-0014"], "source_reference": "SRC-008:L000447-L000492"}
+{"requirement_ids": ["REQ-ASSURE-0015"], "source_reference": "SRC-008:L000493-L000519"}
+{"requirement_ids": ["REQ-ASSURE-0016"], "source_reference": "SRC-008:L000520-L000589"}
+{"requirement_ids": ["REQ-ASSURE-0001", "REQ-ASSURE-0002", "REQ-ASSURE-0003", "REQ-ASSURE-0004"], "source_reference": "SRC-008:L000540-L000760"}
+{"requirement_ids": ["REQ-ASSURE-0017"], "source_reference": "SRC-008:L000595-L000647"}
+{"requirement_ids": ["REQ-ASSURE-0018"], "source_reference": "SRC-008:L000648-L000702"}
+{"requirement_ids": ["REQ-ASSURE-0019"], "source_reference": "SRC-008:L000685-L000714"}
+{"requirement_ids": ["REQ-ASSURE-0020"], "source_reference": "SRC-008:L000715-L000770"}
+{"requirement_ids": ["REQ-ASSURE-0021"], "source_reference": "SRC-008:L000771-L000839"}
+{"requirement_ids": ["REQ-ASSURE-0022"], "source_reference": "SRC-008:L000840-L000893"}
+{"requirement_ids": ["REQ-ASSURE-0023"], "source_reference": "SRC-008:L000894-L000923"}
+{"requirement_ids": ["REQ-ASSURE-0024"], "source_reference": "SRC-008:L000924-L000955"}
+{"requirement_ids": ["REQ-ASSURE-0025"], "source_reference": "SRC-008:L000956-L000985"}
+{"requirement_ids": ["REQ-ASSURE-0026"], "source_reference": "SRC-008:L000986-L001015"}
+{"requirement_ids": ["REQ-ASSURE-0027"], "source_reference": "SRC-008:L001016-L001066"}
+{"requirement_ids": ["REQ-ASSURE-0028"], "source_reference": "SRC-008:L001042-L001066"}
+{"requirement_ids": ["REQ-ASSURE-0029"], "source_reference": "SRC-008:L001067-L001092"}
+{"requirement_ids": ["REQ-ASSURE-0030"], "source_reference": "SRC-008:L001093-L001134"}
+{"requirement_ids": ["REQ-ASSURE-0031"], "source_reference": "SRC-008:L001109-L001167"}
+{"requirement_ids": ["REQ-ASSURE-0032"], "source_reference": "SRC-008:L001168-L001195"}
+{"requirement_ids": ["REQ-ASSURE-0033"], "source_reference": "SRC-008:L001196-L001241"}
+{"requirement_ids": ["REQ-ASSURE-0034"], "source_reference": "SRC-008:L001222-L001247"}
+{"requirement_ids": ["REQ-ASSURE-0035"], "source_reference": "SRC-008:L001248-L001270"}
+{"requirement_ids": ["REQ-CTRL-0016"], "source_reference": "SRC-008:L001271-L001317"}
+{"requirement_ids": ["REQ-SEC-0009"], "source_reference": "SRC-009:L000007-L000007"}
+{"requirement_ids": ["REQ-SEC-0010", "REQ-SEC-0011", "REQ-SEC-0017"], "source_reference": "SRC-009:L000008-L000008"}
+{"requirement_ids": ["REQ-CTX-0013", "REQ-SEC-0012"], "source_reference": "SRC-009:L000008-L000009"}
+{"requirement_ids": ["REQ-CTX-0012", "REQ-SEC-0013", "REQ-SEC-0014"], "source_reference": "SRC-009:L000009-L000009"}
+{"requirement_ids": ["REQ-OPS-0011"], "source_reference": "SRC-009:L000010-L000010"}
+{"requirement_ids": ["REQ-OPS-0012"], "source_reference": "SRC-009:L000011-L000011"}
+{"requirement_ids": ["REQ-INFRA-0007"], "source_reference": "SRC-009:L000012-L000012"}
+{"requirement_ids": ["REQ-INFRA-0011"], "source_reference": "SRC-009:L000012-L000013"}
+{"requirement_ids": ["REQ-INFRA-0008"], "source_reference": "SRC-009:L000013-L000013"}
+{"requirement_ids": ["REQ-INFRA-0009"], "source_reference": "SRC-009:L000014-L000014"}
+{"requirement_ids": ["REQ-RES-0019"], "source_reference": "SRC-009:L000015-L000015"}
+{"requirement_ids": ["REQ-ARCH-0010", "REQ-INFRA-0019"], "source_reference": "SRC-009:L000016-L000016"}
+{"requirement_ids": ["REQ-SEC-0019", "REQ-SEC-0020"], "source_reference": "SRC-009:L000017-L000017"}
+{"requirement_ids": ["REQ-SEC-0018"], "source_reference": "SRC-009:L000017-L000018"}
+{"requirement_ids": ["REQ-OPS-0013"], "source_reference": "SRC-009:L000018-L000018"}
+{"requirement_ids": ["REQ-AGENT-0007"], "source_reference": "SRC-009:L000019-L000019"}
+{"requirement_ids": ["REQ-ARCH-0006"], "source_reference": "SRC-009:L000019-L000020"}
+{"requirement_ids": ["REQ-ARCH-0009"], "source_reference": "SRC-009:L000020-L000020"}
+{"requirement_ids": ["REQ-AGENT-0016", "REQ-AGENT-0017"], "source_reference": "SRC-009:L000021-L000021"}
+{"requirement_ids": ["REQ-BUDGET-0019", "REQ-SCHED-0014"], "source_reference": "SRC-009:L000022-L000022"}
+{"requirement_ids": ["REQ-OPS-0014"], "source_reference": "SRC-009:L000023-L000023"}
+{"requirement_ids": ["REQ-ARCH-0011"], "source_reference": "SRC-009:L000024-L000024"}
+{"requirement_ids": ["REQ-RES-0021"], "source_reference": "SRC-009:L000025-L000025"}
+{"requirement_ids": ["REQ-OPS-0016", "REQ-RES-0022"], "source_reference": "SRC-009:L000026-L000026"}
+{"requirement_ids": ["REQ-OPS-0017"], "source_reference": "SRC-009:L000027-L000027"}
+{"requirement_ids": ["REQ-OPS-0015"], "source_reference": "SRC-009:L000028-L000028"}
+{"requirement_ids": ["REQ-PDEF-0009"], "source_reference": "SRC-009:L000029-L000030"}
+{"requirement_ids": ["REQ-LIFE-0017", "REQ-OPS-0019"], "source_reference": "SRC-009:L000030-L000030"}
+{"requirement_ids": ["REQ-ARCH-0004", "REQ-ARCH-0005"], "source_reference": "SRC-009:L000032-L000073"}
+{"requirement_ids": ["REQ-ARCH-0011"], "source_reference": "SRC-009:L000075-L000087"}
+{"requirement_ids": ["REQ-ARCH-0012", "REQ-PDEF-0008"], "source_reference": "SRC-009:L000080-L000095"}
+{"requirement_ids": ["REQ-UPSTREAM-0004"], "source_reference": "SRC-010:L001521-L001711"}
+{"requirement_ids": ["REQ-UPSTREAM-0011"], "source_reference": "SRC-011:L000001-L000046"}
+{"requirement_ids": ["REQ-UPSTREAM-0012"], "source_reference": "SRC-011:L000343-L000416"}
+{"requirement_ids": ["REQ-UPSTREAM-0010", "REQ-UPSTREAM-0014"], "source_reference": "SRC-011:L001212-L001345"}
+{"requirement_ids": ["REQ-ARCH-0013", "REQ-PDEF-0007", "REQ-RES-0015"], "source_reference": "SRC-012:L000001-L000113"}
+{"requirement_ids": ["REQ-INFRA-0012"], "source_reference": "SRC-012:L000001-L000217"}
+{"requirement_ids": ["REQ-INFRA-0013"], "source_reference": "SRC-012:L000114-L000217"}
+{"requirement_ids": ["REQ-INFRA-0014"], "source_reference": "SRC-012:L000218-L000379"}
+{"requirement_ids": ["REQ-RES-0024"], "source_reference": "SRC-012:L000380-L000495"}
+{"requirement_ids": ["REQ-INFRA-0016", "REQ-RES-0025"], "source_reference": "SRC-012:L000496-L000676"}
+{"requirement_ids": ["REQ-INFRA-0015"], "source_reference": "SRC-012:L000734-L000779"}
+{"requirement_ids": ["REQ-BUDGET-0017"], "source_reference": "SRC-012:L000780-L000816"}
+{"requirement_ids": ["REQ-INFRA-0017"], "source_reference": "SRC-012:L000817-L001036"}
+{"requirement_ids": ["REQ-AGENT-0013"], "source_reference": "SRC-013:L000046-L000419"}
+{"requirement_ids": ["REQ-AGENT-0012"], "source_reference": "SRC-013:L000420-L000529"}
+{"requirement_ids": ["REQ-CTX-0012"], "source_reference": "SRC-013:L000733-L000785"}
+{"requirement_ids": ["REQ-AGENT-0004"], "source_reference": "SRC-013:L000786-L000848"}
+{"requirement_ids": ["REQ-AGENT-0014"], "source_reference": "SRC-013:L000849-L000949"}
+{"requirement_ids": ["REQ-AGENT-0015"], "source_reference": "SRC-013:L000899-L000949"}
+{"requirement_ids": ["REQ-AGENT-0018"], "source_reference": "SRC-013:L000984-L001028"}
+{"requirement_ids": ["REQ-AGENT-0019"], "source_reference": "SRC-013:L001029-L001054"}
+{"requirement_ids": ["REQ-PDEF-0006"], "source_reference": "SRC-014:L000005-L000209"}
+{"requirement_ids": ["REQ-CTRL-0013", "REQ-SCHED-0004"], "source_reference": "SRC-014:L000210-L000373"}
+{"requirement_ids": ["REQ-SCHED-0006", "REQ-SCHED-0009", "REQ-SCHED-0010", "REQ-SCHED-0011", "REQ-SCHED-0013", "REQ-SCHED-0014", "REQ-SCHED-0017"], "source_reference": "SRC-014:L000378-L000748"}
+{"requirement_ids": ["REQ-SCHED-0007"], "source_reference": "SRC-014:L000859-L000946"}
+{"requirement_ids": ["REQ-SCHED-0016"], "source_reference": "SRC-014:L001548-L001747"}
+{"requirement_ids": ["REQ-CTRL-0016"], "source_reference": "SRC-014:L001748-L001810"}
+{"requirement_ids": ["REQ-CTRL-0014", "REQ-CTRL-0015", "REQ-UX-0025"], "source_reference": "SRC-015:L000031-L000150"}
+{"requirement_ids": ["REQ-UX-0024"], "source_reference": "SRC-015:L000151-L000488"}
+{"requirement_ids": ["REQ-OPS-0010", "REQ-SEC-0016"], "source_reference": "SRC-015:L000359-L000488"}
+{"requirement_ids": ["REQ-RES-0023"], "source_reference": "SRC-015:L000589-L000661"}
+{"requirement_ids": ["REQ-CTX-0013", "REQ-SEC-0012"], "source_reference": "SRC-015:L000662-L000702"}
+{"requirement_ids": ["REQ-OPS-0017"], "source_reference": "SRC-015:L000703-L000955"}
+{"requirement_ids": ["REQ-UX-0024"], "source_reference": "SRC-015:L001456-L001582"}
+{"requirement_ids": ["REQ-SCHED-0017"], "source_reference": "SRC-016:L000037-L000220"}
+{"requirement_ids": ["REQ-UPSTREAM-0012"], "source_reference": "SRC-016:L000710-L000802"}
+{"requirement_ids": ["REQ-INFRA-0010"], "source_reference": "SRC-016:L001473-L001690"}
+{"requirement_ids": ["REQ-UPSTREAM-0011"], "source_reference": "SRC-016:L001691-L001832"}
+{"requirement_ids": ["REQ-CTX-0011", "REQ-SEC-0015", "REQ-SEC-0016"], "source_reference": "SRC-017:L000009-L000071"}
+{"requirement_ids": ["REQ-SEC-0005", "REQ-SEC-0006", "REQ-SEC-0007", "REQ-SEC-0023"], "source_reference": "SRC-017:L000072-L000141"}
+{"requirement_ids": ["REQ-SEC-0008"], "source_reference": "SRC-017:L000142-L000191"}
+{"requirement_ids": ["REQ-LIFE-0010", "REQ-LIFE-0011", "REQ-SEC-0024"], "source_reference": "SRC-017:L000192-L000280"}
+{"requirement_ids": ["REQ-ARCH-0008", "REQ-CTRL-0010", "REQ-CTRL-0011", "REQ-CTRL-0012", "REQ-LIFE-0012", "REQ-OPS-0006"], "source_reference": "SRC-017:L000281-L000359"}
+{"requirement_ids": ["REQ-SCHED-0015"], "source_reference": "SRC-017:L000360-L000438"}
+{"requirement_ids": ["REQ-RES-0020"], "source_reference": "SRC-017:L000439-L000489"}
+{"requirement_ids": ["REQ-REQ-0005", "REQ-REQ-0006", "REQ-REQ-0012", "REQ-REQ-0015"], "source_reference": "SRC-017:L000490-L000596"}
+{"requirement_ids": ["REQ-INFRA-0018", "REQ-LIFE-0016"], "source_reference": "SRC-017:L000597-L000670"}
+{"requirement_ids": ["REQ-LIFE-0004", "REQ-LIFE-0005"], "source_reference": "SRC-017:L000671-L000739"}
+{"requirement_ids": ["REQ-LIFE-0006"], "source_reference": "SRC-017:L000740-L000822"}
+{"requirement_ids": ["REQ-ARCH-0009", "REQ-LIFE-0007", "REQ-LIFE-0012", "REQ-LIFE-0018"], "source_reference": "SRC-017:L000823-L000906"}
+{"requirement_ids": ["REQ-LIFE-0008", "REQ-LIFE-0009"], "source_reference": "SRC-017:L000907-L001001"}
+{"requirement_ids": ["REQ-AGENT-0016", "REQ-LIFE-0013"], "source_reference": "SRC-017:L001002-L001064"}
+{"requirement_ids": ["REQ-SEC-0021", "REQ-UPSTREAM-0013"], "source_reference": "SRC-017:L001065-L001121"}
+{"requirement_ids": ["REQ-LIFE-0014", "REQ-LIFE-0015", "REQ-PDEF-0006"], "source_reference": "SRC-017:L001122-L001217"}

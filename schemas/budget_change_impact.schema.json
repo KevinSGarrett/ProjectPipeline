@@ -1,0 +1,68 @@
+{
+  "$id": "https://project-pipeline.local/schemas/budget_change_impact.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "active_commitment_microunits": {
+      "minimum": 0,
+      "title": "Active Commitment Microunits",
+      "type": "integer"
+    },
+    "active_lease_count": {
+      "minimum": 0,
+      "title": "Active Lease Count",
+      "type": "integer"
+    },
+    "committed_over_new_cap_microunits": {
+      "minimum": 0,
+      "title": "Committed Over New Cap Microunits",
+      "type": "integer"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "impact_id": {
+      "title": "Impact Id",
+      "type": "string"
+    },
+    "new_hard_cap_microunits": {
+      "minimum": 0,
+      "title": "New Hard Cap Microunits",
+      "type": "integer"
+    },
+    "old_hard_cap_microunits": {
+      "minimum": 0,
+      "title": "Old Hard Cap Microunits",
+      "type": "integer"
+    },
+    "requires_operator_attention": {
+      "title": "Requires Operator Attention",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope_key": {
+      "title": "Scope Key",
+      "type": "string"
+    }
+  },
+  "required": [
+    "impact_id",
+    "scope_key",
+    "old_hard_cap_microunits",
+    "new_hard_cap_microunits",
+    "active_commitment_microunits",
+    "committed_over_new_cap_microunits",
+    "active_lease_count",
+    "requires_operator_attention",
+    "generated_at_utc"
+  ],
+  "title": "BudgetChangeImpact",
+  "type": "object"
+}

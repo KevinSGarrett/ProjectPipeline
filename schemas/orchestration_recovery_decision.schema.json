@@ -1,0 +1,83 @@
+{
+  "$defs": {
+    "RecoveryAction": {
+      "enum": [
+        "NO_ACTION",
+        "RETRY_STEP",
+        "RESUME_WAIT",
+        "MARK_RECOVERY_REQUIRED",
+        "RECONCILE_OPERATION",
+        "RELEASE_STALE_RESOURCES",
+        "CANCEL"
+      ],
+      "title": "RecoveryAction",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/orchestration_recovery_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "action": {
+      "$ref": "#/$defs/RecoveryAction"
+    },
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "operation_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Operation Id"
+    },
+    "reason_codes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reason Codes",
+      "type": "array"
+    },
+    "recovery_id": {
+      "title": "Recovery Id",
+      "type": "string"
+    },
+    "safe_to_automate": {
+      "default": false,
+      "title": "Safe To Automate",
+      "type": "boolean"
+    },
+    "worker_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Worker Id"
+    },
+    "workflow_id": {
+      "title": "Workflow Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "recovery_id",
+    "workflow_id",
+    "action",
+    "reason_codes",
+    "created_at_utc"
+  ],
+  "title": "RecoveryDecision",
+  "type": "object"
+}

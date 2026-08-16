@@ -1,0 +1,52 @@
+{
+  "$id": "https://project-pipeline.local/schemas/orchestration_worker_heartbeat.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "active_workflow_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Active Workflow Ids",
+      "type": "array"
+    },
+    "capabilities": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Capabilities",
+      "type": "array"
+    },
+    "expires_at_utc": {
+      "format": "date-time",
+      "title": "Expires At Utc",
+      "type": "string"
+    },
+    "fencing_epoch": {
+      "minimum": 1,
+      "title": "Fencing Epoch",
+      "type": "integer"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "worker_id": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Worker Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "worker_id",
+    "fencing_epoch",
+    "observed_at_utc",
+    "expires_at_utc"
+  ],
+  "title": "WorkerHeartbeat",
+  "type": "object"
+}

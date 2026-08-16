@@ -1,0 +1,13 @@
+{
+  "repositories": [
+    {
+      "branch_protection_expected": true,
+      "canonical_url": null,
+      "default_branch": "main",
+      "remote_write_authorized": false,
+      "repository_id": "demandforge",
+      "root_path": "."
+    }
+  ],
+  "schema_version": "1.0.0"
+}

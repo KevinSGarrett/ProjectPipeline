@@ -1,0 +1,94 @@
+{
+  "$id": "https://project-pipeline.local/schemas/budget_cost_history.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cash_microunits": {
+      "minimum": 0,
+      "title": "Cash Microunits",
+      "type": "integer"
+    },
+    "merged": {
+      "default": false,
+      "title": "Merged",
+      "type": "boolean"
+    },
+    "observation_id": {
+      "title": "Observation Id",
+      "type": "string"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "project_id": {
+      "title": "Project Id",
+      "type": "string"
+    },
+    "provider_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Id"
+    },
+    "retry_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Retry Count",
+      "type": "integer"
+    },
+    "rework_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Rework Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "shadow_cost_microunits": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Shadow Cost Microunits",
+      "type": "integer"
+    },
+    "succeeded": {
+      "title": "Succeeded",
+      "type": "boolean"
+    },
+    "task_class": {
+      "title": "Task Class",
+      "type": "string"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    },
+    "verified": {
+      "title": "Verified",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "observation_id",
+    "project_id",
+    "task_id",
+    "task_class",
+    "cash_microunits",
+    "succeeded",
+    "verified",
+    "observed_at_utc"
+  ],
+  "title": "CostHistoryObservation",
+  "type": "object"
+}

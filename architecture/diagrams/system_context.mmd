@@ -1,0 +1,13 @@
+flowchart LR
+    Operator[Operator] --> UI[Command Center]
+    UI --> API[Control API and Realtime Gateway]
+    API --> Kernel[Project Control Kernel]
+    Kernel --> State[(PostgreSQL and pgvector)]
+    Kernel --> Workflow[DurableExecutionPort]
+    Workflow --> Hatchet[Hatchet Adapter]
+    Kernel --> Policy[Policy Port / OPA]
+    Kernel --> Integrations[Jira, GitHub, providers, and tools]
+    Integrations --> External[External Systems]
+    Kernel --> Evidence[Evidence and Completion]
+    Evidence --> Bytes[(Local CAS / Optional S3)]
+    Kernel --> Telemetry[OpenTelemetry]

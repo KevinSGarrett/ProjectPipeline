@@ -1,0 +1,147 @@
+{
+  "candidate_upstream_ids": [
+    "UPSTREAM-007",
+    "UPSTREAM-043",
+    "UPSTREAM-047",
+    "UPSTREAM-048",
+    "UPSTREAM-053",
+    "UPSTREAM-069",
+    "UPSTREAM-081",
+    "UPSTREAM-089",
+    "UPSTREAM-090",
+    "UPSTREAM-094",
+    "UPSTREAM-100",
+    "UPSTREAM-114"
+  ],
+  "candidates": [
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/aquasecurity/trivy",
+      "disposition": "SOURCE_OR_ADAPTER_BOUNDARY_ONLY_RUNTIME_UNAVAILABLE",
+      "inspected_revision": "d98911ea338b061f8bef0baeef85b35660013b32",
+      "license": "Apache-2.0",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-007"
+    },
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/gitleaks/gitleaks",
+      "disposition": "SOURCE_OR_ADAPTER_BOUNDARY_ONLY_RUNTIME_UNAVAILABLE",
+      "inspected_revision": "b58d3f102cf3a2c84cb7f923d05c25c9b1aed84b",
+      "license": "MIT",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-043"
+    },
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/google/osv-scanner",
+      "disposition": "SOURCE_OR_ADAPTER_BOUNDARY_ONLY_RUNTIME_UNAVAILABLE",
+      "inspected_revision": "567f3ea998f1241e60ec3ca9c4cc9e30809cd820",
+      "license": "Apache-2.0",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-047"
+    },
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/grafana/k6",
+      "disposition": "BLOCKED_LICENSE_POLICY",
+      "inspected_revision": "grafana/k6@metadata-snapshot-20260815T062737Z",
+      "license": "AGPL-3.0-only",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-048"
+    },
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/infracost/infracost",
+      "disposition": "SOURCE_OR_ADAPTER_BOUNDARY_ONLY_RUNTIME_UNAVAILABLE",
+      "inspected_revision": "0c473ade0fd0d725fe8f5edd719ef634d9594690",
+      "license": "Apache-2.0",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-053"
+    },
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/nektos/act",
+      "disposition": "SOURCE_OR_ADAPTER_BOUNDARY_ONLY_RUNTIME_UNAVAILABLE",
+      "inspected_revision": "nektos/act@metadata-snapshot-20260815T062737Z",
+      "license": "MIT",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-069"
+    },
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/ossf/scorecard",
+      "disposition": "SOURCE_OR_ADAPTER_BOUNDARY_ONLY_RUNTIME_UNAVAILABLE",
+      "inspected_revision": "d1fab88f54636ff366076edfc5c239f97b3c8e66",
+      "license": "Apache-2.0",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-081"
+    },
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/renovatebot/renovate",
+      "disposition": "BLOCKED_LICENSE_POLICY",
+      "inspected_revision": "renovatebot/renovate@metadata-snapshot-20260815T233400Z",
+      "license": "AGPL-3.0-only",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-089"
+    },
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/restic/restic",
+      "disposition": "SOURCE_OR_ADAPTER_BOUNDARY_ONLY_RUNTIME_UNAVAILABLE",
+      "inspected_revision": "restic/restic@metadata-snapshot-20260815T062737Z",
+      "license": "BSD-2-Clause",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-090"
+    },
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/sigstore/cosign",
+      "disposition": "SOURCE_OR_ADAPTER_BOUNDARY_ONLY_RUNTIME_UNAVAILABLE",
+      "inspected_revision": "8b8c87b68a75f70c12e1adf25f9bb87f24abea7e",
+      "license": "Apache-2.0",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-094"
+    },
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/step-security/harden-runner",
+      "disposition": "KEEP_PINNED_CI_PROFILE",
+      "inspected_revision": "05e31511f85b41b11d1cf0ef85d0992719546e2c",
+      "license": "Apache-2.0",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-100"
+    },
+    {
+      "authority": "EVIDENCE_OR_MECHANICS_ONLY",
+      "canonical_url": "https://github.com/winsw/winsw",
+      "disposition": "SOURCE_OR_ADAPTER_BOUNDARY_ONLY_RUNTIME_UNAVAILABLE",
+      "inspected_revision": "1d0ee4a91bad596d5e7e9c360f2b39ef54674674",
+      "license": "MIT",
+      "maintenance_state": "CURRENT_REVALIDATION_COMPLETED",
+      "runtime_available": false,
+      "upstream_id": "UPSTREAM-114"
+    }
+  ],
+  "license_policy": "AGPL-3.0-only candidates UPSTREAM-048 and UPSTREAM-089 are not activated.",
+  "live_external_execution_performed": false,
+  "notes": [
+    "All twelve candidates were re-opened for revision/license/maintenance/usage/runtime/distribution review before Pass 24 packaging decisions.",
+    "Unavailable binaries and deployment targets remain not qualified; source or adapter existence is not live evidence."
+  ],
+  "pass_id": "PASS-24",
+  "schema_version": "1.0.0",
+  "state": "INTEGRATED_WITH_TARGET_QUALIFICATION_BLOCKERS"
+}

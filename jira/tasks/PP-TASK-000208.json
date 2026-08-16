@@ -1,0 +1,126 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000208-01",
+      "statement": "Implement controlled idempotent non-destructive bootstrap is implemented with deterministic behavior and explicit safety boundaries.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_intake_models.py tests/test_project_discovery.py tests/test_project_compiler.py tests/test_project_bootstrap.py tests/test_intake_persistence.py tests/test_intake_cli.py",
+        "method": "automated_behavior_and_evidence_validation",
+        "path": "src/project_pipeline/intake/bootstrap.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000208-02",
+      "statement": "The implementation is linked to exact source ranges, plan sections, tests, and hashed evidence with no hidden external completion claim.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000037"
+  ],
+  "definition_of_done": [
+    "Implementation for the bounded intake objective is complete.",
+    "Acceptance criteria are objectively verified.",
+    "Behavior-specific tests pass.",
+    "Plans, Jira, traceability, schemas, documentation, and evidence are current.",
+    "Security, authority, observability, and rollback effects are explicit.",
+    "No unavailable external capability is represented as complete."
+  ],
+  "dependencies": [
+    "PP-TASK-000207"
+  ],
+  "description": "Implement controlled idempotent non-destructive bootstrap with strict contracts, source-grounded safety boundaries, executable tests, and machine-readable evidence.",
+  "evidence_required": [
+    "EVID-000037"
+  ],
+  "exclusions": [
+    "No remote GitHub, Jira, cloud, package-index, or paid-service mutation is authorized.",
+    "No discovered instruction, build hook, source file, or package script is executed during intake.",
+    "No shadow, limited, or full autonomy is represented as complete."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/intake/bootstrap.py",
+    "schemas/bootstrap_plan.schema.json",
+    "schemas/bootstrap_receipt.schema.json"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/intake/bootstrap.py",
+    "schemas/bootstrap_plan.schema.json",
+    "schemas/bootstrap_receipt.schema.json"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "project-intake",
+    "project-compiler",
+    "deterministic",
+    "non-destructive"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25262",
+    "remote_key": "PP-293",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000208",
+  "objective": "Implement controlled idempotent non-destructive bootstrap.",
+  "observability_impact": "Record compilation, repository-map, gap, bootstrap, actor, correlation, diagnostic, and semantic-fingerprint identities.",
+  "owner_required_capability": "python_project_intake_repository_analysis_persistence_and_verification",
+  "parent": "PP-STORY-000125",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-002_project_intake_and_compilation.md",
+      "end_line": 116,
+      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-002_project_intake_and_compilation.lines.txt",
+      "line_reference": "PLAN-PDEF-002:SEC-08:L000099-L000116",
+      "plan_id": "PLAN-PDEF-002",
+      "section_id": "PLAN-PDEF-002:SEC-08",
+      "start_line": 99
+    }
+  ],
+  "rationale": "Project intake must turn new or existing repositories into deterministic, reviewable state without executing discovered code, overwriting human authority, or claiming unavailable external verification.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000125",
+      "type": "CHILD_OF"
+    },
+    {
+      "target": "PP-TASK-000207",
+      "type": "DEPENDS_ON"
+    }
+  ],
+  "remote_jira_key": "PP-293",
+  "required_tests": [
+    "TEST-INTAKE-BOOTSTRAP-001",
+    "TEST-INTAKE-BOOTSTRAP-002",
+    "TEST-INTAKE-BOOTSTRAP-003",
+    "TEST-INTAKE-BOOTSTRAP-004",
+    "TEST-INTAKE-BOOTSTRAP-005"
+  ],
+  "requirement_ids": [
+    "REQ-PDEF-0006",
+    "REQ-LIFE-0014",
+    "REQ-LIFE-0015"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Restore the prior cumulative archive; bootstrap rollback removes only paths it created and never changes pre-existing assets; local persistence can be recreated from migrations.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Implement controlled idempotent non-destructive bootstrap."
+  ],
+  "security_impact": "Preserve repository boundaries, no-execution discovery, secret-value suppression, no-overwrite bootstrap, and deny-by-default external mutation.",
+  "source_references": [
+    "SRC-017:L001122-L001175"
+  ],
+  "state": "BACKLOG",
+  "title": "Implement controlled idempotent non-destructive bootstrap",
+  "upstream_dependencies": []
+}

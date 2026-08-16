@@ -1,0 +1,227 @@
+{
+  "$defs": {
+    "CostClass": {
+      "enum": [
+        "PROVIDER",
+        "SUBSCRIPTION",
+        "LOCAL_COMPUTE",
+        "CLOUD",
+        "STORAGE",
+        "NETWORK",
+        "VERIFICATION",
+        "CONTEXT",
+        "TOOL",
+        "OTHER"
+      ],
+      "title": "CostClass",
+      "type": "string"
+    },
+    "CostEvidenceState": {
+      "enum": [
+        "OBSERVED",
+        "PROVIDER_REPORTED",
+        "ESTIMATED",
+        "RECONCILED",
+        "INFRACOST",
+        "UNKNOWN"
+      ],
+      "title": "CostEvidenceState",
+      "type": "string"
+    },
+    "LedgerDirection": {
+      "enum": [
+        "DEBIT",
+        "CREDIT"
+      ],
+      "title": "LedgerDirection",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/budget_ledger_entry.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cash_microunits": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Cash Microunits",
+      "type": "integer"
+    },
+    "cost_class": {
+      "$ref": "#/$defs/CostClass"
+    },
+    "direction": {
+      "$ref": "#/$defs/LedgerDirection",
+      "default": "DEBIT"
+    },
+    "entry_id": {
+      "title": "Entry Id",
+      "type": "string"
+    },
+    "evidence_references": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence References",
+      "type": "array"
+    },
+    "evidence_state": {
+      "$ref": "#/$defs/CostEvidenceState"
+    },
+    "idempotency_key": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "merged_outcome": {
+      "default": false,
+      "title": "Merged Outcome",
+      "type": "boolean"
+    },
+    "model_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Model Id"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "outcome_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Outcome Id"
+    },
+    "project_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Project Id",
+      "type": "string"
+    },
+    "provider_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Id"
+    },
+    "quota_units": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Quota Units",
+      "type": "object"
+    },
+    "recorded_at_utc": {
+      "format": "date-time",
+      "title": "Recorded At Utc",
+      "type": "string"
+    },
+    "resource_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Resource Id"
+    },
+    "retry_waste": {
+      "default": false,
+      "title": "Retry Waste",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope_keys": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Scope Keys",
+      "type": "array"
+    },
+    "shadow_cost_microunits": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Shadow Cost Microunits",
+      "type": "integer"
+    },
+    "task_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Task Id"
+    },
+    "tool_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Tool Id"
+    },
+    "usage_dimensions": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Usage Dimensions",
+      "type": "object"
+    },
+    "verified_outcome": {
+      "default": false,
+      "title": "Verified Outcome",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "entry_id",
+    "idempotency_key",
+    "project_id",
+    "cost_class",
+    "scope_keys",
+    "evidence_state",
+    "observed_at_utc",
+    "recorded_at_utc"
+  ],
+  "title": "BudgetLedgerEntry",
+  "type": "object"
+}

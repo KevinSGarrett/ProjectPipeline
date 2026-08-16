@@ -1,0 +1,89 @@
+{
+  "$id": "https://project-pipeline.local/schemas/jira_adapter_capabilities.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "api_version": {
+      "maxLength": 64,
+      "minLength": 1,
+      "title": "Api Version",
+      "type": "string"
+    },
+    "discovered_at_utc": {
+      "format": "date-time",
+      "title": "Discovered At Utc",
+      "type": "string"
+    },
+    "maximum_page_size": {
+      "maximum": 1000,
+      "minimum": 1,
+      "title": "Maximum Page Size",
+      "type": "integer"
+    },
+    "pagination_style": {
+      "enum": [
+        "NEXT_PAGE_TOKEN",
+        "START_AT",
+        "MOCK_CURSOR"
+      ],
+      "title": "Pagination Style",
+      "type": "string"
+    },
+    "provider": {
+      "enum": [
+        "ATLASSIAN_JIRA_CLOUD",
+        "MOCK_JIRA"
+      ],
+      "title": "Provider",
+      "type": "string"
+    },
+    "supports_attachments": {
+      "title": "Supports Attachments",
+      "type": "boolean"
+    },
+    "supports_comments": {
+      "title": "Supports Comments",
+      "type": "boolean"
+    },
+    "supports_issue_create": {
+      "title": "Supports Issue Create",
+      "type": "boolean"
+    },
+    "supports_issue_read": {
+      "default": true,
+      "title": "Supports Issue Read",
+      "type": "boolean"
+    },
+    "supports_issue_update": {
+      "title": "Supports Issue Update",
+      "type": "boolean"
+    },
+    "supports_links": {
+      "title": "Supports Links",
+      "type": "boolean"
+    },
+    "supports_transitions": {
+      "title": "Supports Transitions",
+      "type": "boolean"
+    },
+    "supports_webhooks": {
+      "title": "Supports Webhooks",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "provider",
+    "api_version",
+    "supports_issue_create",
+    "supports_issue_update",
+    "supports_transitions",
+    "supports_comments",
+    "supports_links",
+    "supports_attachments",
+    "supports_webhooks",
+    "pagination_style",
+    "maximum_page_size"
+  ],
+  "title": "JiraAdapterCapabilities",
+  "type": "object"
+}

@@ -1,0 +1,12 @@
+{
+  "environment": "development",
+  "logging": {
+    "level": "INFO",
+    "format": "JSON",
+    "include_process": true
+  },
+  "security": {
+    "external_writes_default": "DENY",
+    "require_explicit_approval": true
+  }
+}

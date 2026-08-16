@@ -1,0 +1,109 @@
+{
+  "$id": "https://projectpipeline.local/schemas/instruction_manifest.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": true,
+  "properties": {
+    "canonical_local_root": {
+      "const": "C:\\Project_X",
+      "type": "string"
+    },
+    "commands": {
+      "items": {
+        "properties": {
+          "command": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "requires_paths": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "name",
+          "command"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "entry_point": {
+      "const": "AGENTS.md",
+      "type": "string"
+    },
+    "files": {
+      "items": {
+        "properties": {
+          "instruction_id": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "size_bytes": {
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "instruction_id",
+          "path",
+          "sha256",
+          "size_bytes",
+          "kind"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "instruction_pack_version": {
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "type": "string"
+    },
+    "instruction_root": {
+      "const": "instructions",
+      "type": "string"
+    },
+    "project_id": {
+      "const": "PROJECT-PIPELINE",
+      "type": "string"
+    },
+    "project_name": {
+      "const": "ProjectPipeline",
+      "type": "string"
+    },
+    "repository_url": {
+      "const": "https://github.com/KevinSGarrett/ProjectPipeline",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "type": "string"
+    }
+  },
+  "required": [
+    "schema_version",
+    "instruction_pack_version",
+    "project_id",
+    "project_name",
+    "repository_url",
+    "canonical_local_root",
+    "entry_point",
+    "instruction_root",
+    "files",
+    "commands"
+  ],
+  "title": "ProjectPipeline Instruction Manifest",
+  "type": "object"
+}

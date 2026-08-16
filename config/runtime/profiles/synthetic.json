@@ -1,0 +1,14 @@
+{
+  "environment": "synthetic",
+  "paths": {
+    "artifact_dir": ".local/environments/synthetic/artifacts",
+    "cache_dir": ".local/environments/synthetic/cache",
+    "data_dir": ".local/environments/synthetic/data",
+    "log_dir": ".local/environments/synthetic/logs",
+    "state_dir": ".local/environments/synthetic/state"
+  },
+  "security": {
+    "external_writes_default": "DENY",
+    "require_explicit_approval": true
+  }
+}

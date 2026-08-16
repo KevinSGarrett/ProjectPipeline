@@ -1,0 +1,92 @@
+{
+  "$defs": {
+    "PressureMode": {
+      "enum": [
+        "GREEN",
+        "YELLOW",
+        "ORANGE",
+        "RED",
+        "HARD_STOP"
+      ],
+      "title": "PressureMode",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/budget_simulation_result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "admitted_tasks": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Admitted Tasks",
+      "type": "array"
+    },
+    "committed_microunits": {
+      "minimum": 0,
+      "title": "Committed Microunits",
+      "type": "integer"
+    },
+    "denied_tasks": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Denied Tasks",
+      "type": "array"
+    },
+    "generated_at_utc": {
+      "format": "date-time",
+      "title": "Generated At Utc",
+      "type": "string"
+    },
+    "notes": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Notes",
+      "type": "array"
+    },
+    "pressure_mode": {
+      "$ref": "#/$defs/PressureMode"
+    },
+    "remaining_microunits": {
+      "minimum": 0,
+      "title": "Remaining Microunits",
+      "type": "integer"
+    },
+    "scenario": {
+      "title": "Scenario",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "simulation_id": {
+      "title": "Simulation Id",
+      "type": "string"
+    },
+    "spent_microunits": {
+      "minimum": 0,
+      "title": "Spent Microunits",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "simulation_id",
+    "scenario",
+    "pressure_mode",
+    "admitted_tasks",
+    "denied_tasks",
+    "spent_microunits",
+    "committed_microunits",
+    "remaining_microunits",
+    "generated_at_utc"
+  ],
+  "title": "BudgetSimulationResult",
+  "type": "object"
+}

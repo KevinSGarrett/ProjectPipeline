@@ -1,0 +1,90 @@
+{
+  "runbook_set_id": "PROJECT-PIPELINE-RECOVERY-RUNBOOKS",
+  "runbooks": [
+    {
+      "approved_actions": [
+        "freeze old authority",
+        "preserve WIP/checkpoints",
+        "increment fencing token",
+        "restore/open canonical state",
+        "reconcile uncertain outcomes and external outboxes",
+        "resume eligible work",
+        "notify operator"
+      ],
+      "escalation": "HUMAN_REQUIRED if prerequisites or verification cannot be satisfied autonomously",
+      "incident": "control_machine_loss",
+      "prerequisites": [
+        "canonical state readable or restorable",
+        "active lease expired or fenced",
+        "independent witness confirmed",
+        "standby healthy"
+      ],
+      "runbook_id": "RECOVERY-CONTROL-MACHINE-LOSS",
+      "stop_conditions": [
+        "witness unavailable",
+        "active lease still valid",
+        "canonical state integrity failure",
+        "competing authority token"
+      ],
+      "verification": [
+        "exactly one director has commit authority",
+        "fencing token increased",
+        "reconciliation complete",
+        "durable work remains addressable"
+      ]
+    },
+    {
+      "approved_actions": [
+        "enter degraded or local-first mode",
+        "record mutation intent in durable local outbox where supported",
+        "continue unaffected work",
+        "probe dependency with backoff",
+        "reconcile on recovery"
+      ],
+      "escalation": "HUMAN_REQUIRED only for unresolved scoped dependency or global safety impact",
+      "incident": "external_system_outage",
+      "prerequisites": [
+        "canonical local state healthy"
+      ],
+      "runbook_id": "RECOVERY-EXTERNAL-SYSTEM-OUTAGE",
+      "stop_conditions": [
+        "canonical state becomes unsafe",
+        "outage blocks a global required capability"
+      ],
+      "verification": [
+        "outbox operations remain idempotent",
+        "recovered remote state reconciles with local intent",
+        "unaffected work remained eligible"
+      ]
+    },
+    {
+      "approved_actions": [
+        "restore to isolated target",
+        "validate migrations and integrity",
+        "measure observed RPO/RTO",
+        "record restore verification separately",
+        "promote only under explicit recovery authority"
+      ],
+      "escalation": "HUMAN_REQUIRED if restore fails or recovery objectives are exceeded",
+      "incident": "persistent_state_recovery",
+      "prerequisites": [
+        "selected backup identity exists",
+        "isolated restore target available",
+        "scoped backup credentials available"
+      ],
+      "runbook_id": "RECOVERY-BACKUP-RESTORE",
+      "stop_conditions": [
+        "target is active production",
+        "integrity validation fails",
+        "credentials exceed operation scope"
+      ],
+      "verification": [
+        "restore is readable",
+        "authority records reconcile",
+        "observed RPO/RTO recorded",
+        "backup status not treated as restore proof"
+      ]
+    }
+  ],
+  "schema_version": "1.0.0"
+}

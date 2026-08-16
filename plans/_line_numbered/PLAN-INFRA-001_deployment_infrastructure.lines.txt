@@ -1,0 +1,30 @@
+L000001 | # PLAN-INFRA-001 — Deployment and Infrastructure
+L000002 | 
+L000003 | - **Plan ID:** `PLAN-INFRA-001`
+L000004 | - **Status:** `PARTIALLY_IMPLEMENTED`
+L000005 | - **Authority:** source-derived requirements plus explicitly labeled implementation detail
+L000006 | - **Source basis:** `GOV-001:L000748-L000764`, `SRC-012:L000001-L000100`
+L000007 | 
+L000008 | ## PLAN-INFRA-001:SEC-01 Local baseline
+L000009 | 
+L000010 | Windows/local operation remains the primary deployment baseline. The control-focused machine owns primary director/database responsibilities while a GPU-capable machine is an explicit worker plus fenced standby/recovery candidate. Containers remain optional rather than a requirement for Windows-native workers.
+L000011 | 
+L000012 | ## PLAN-INFRA-001:SEC-02 Packaging
+L000013 | 
+L000014 | Release assets require reproducible installation, configuration validation, start/stop, upgrade, rollback, migration integrity, and archive verification. Environment state and secret material remain outside source control.
+L000015 | 
+L000016 | ## PLAN-INFRA-001:SEC-03 Optional AWS topology
+L000017 | 
+L000018 | The selected architecture is a local-primary hybrid cloud spine: DynamoDB witness, SQS durable event queue, S3 recovery/event storage, optional Lambda ingress/watchdog, CloudWatch observability, AWS Budgets guardrails, Parameter Store configuration references, and optional bounded recovery/burst capacity. IaC is disabled by default and cannot move canonical authority to AWS without an explicit later decision and measured evidence.
+L000019 | 
+L000020 | ## PLAN-INFRA-001:SEC-04 Environment and credential model
+L000021 | 
+L000022 | Development, test, staging, production, recovery, and synthetic certification have distinct state, credentials, policy, and data handling. Local/cloud functions use scoped role/profile credentials; cloud workers must use task/instance roles when available. No long-lived cloud key is embedded in repository configuration.
+L000023 | 
+L000024 | ## PLAN-INFRA-001:SEC-05 Recovery and backup deployment
+L000025 | 
+L000026 | Canonical PostgreSQL backup is abstracted through pgBackRest; general encrypted backup through restic; content-addressed artifacts keep one local/cloud-compatible interface. Restore verification occurs only in an isolated target and has its own status/evidence. Cloud removal does not invalidate local truth.
+L000027 | 
+L000028 | ## PLAN-INFRA-001:SEC-06 Remaining qualification
+L000029 | 
+L000030 | Live Windows service packaging, private network overlay, real AWS ingress/recovery activation, real backup repositories, destructive PostgreSQL restore exercises, and cloud burst workers remain environment-specific qualification work. The architecture decisions are resolved; operational readiness is not overclaimed.

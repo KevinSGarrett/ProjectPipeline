@@ -1,0 +1,39 @@
+{
+  "activation_block_reason": "AGPL-3.0-only activation is prohibited by current Project Pipeline license policy.",
+  "activation_blocked_upstream_ids": [
+    "UPSTREAM-048",
+    "UPSTREAM-089"
+  ],
+  "candidate_phase": "PASS_24_HARDENING",
+  "canonical_authorities": {
+    "budget": "Project Pipeline budget governor",
+    "completion": "Project Pipeline assurance Completion Gate",
+    "policy": "Project Pipeline policy engine",
+    "release": "Project Pipeline Completion Gate + human-authorized release action"
+  },
+  "cleanup_protected_prefixes": [
+    "evidence/",
+    "provenance/",
+    "plans/",
+    "jira/",
+    "adr/",
+    "architecture/",
+    "database/",
+    "release/"
+  ],
+  "external_live_qualification_default": "NOT_QUALIFIED",
+  "harden_runner_reviewed_sha": "f808768d1510423e83855289c910610ca9b43176",
+  "production_release_requires": [
+    "Completion Gate COMPLETE",
+    "resolver lock READY",
+    "security evidence current",
+    "resilience evidence current",
+    "performance evidence current",
+    "target-specific install/upgrade/rollback qualification",
+    "archive integrity verification",
+    "no hidden external blockers"
+  ],
+  "project_id": "PROJECT-PIPELINE",
+  "schema_version": "1.0.0",
+  "tool_authority": "EVIDENCE_OR_MECHANICS_ONLY"
+}

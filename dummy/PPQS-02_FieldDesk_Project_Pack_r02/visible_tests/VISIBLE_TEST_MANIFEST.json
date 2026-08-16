@@ -1,0 +1,20 @@
+{
+  "benchmark_id": "PPQS-02",
+  "candidate_must_add_tests": true,
+  "files": [
+    "visible_tests/browser_smoke.spec.ts",
+    "visible_tests/api_contract_test.py"
+  ],
+  "hidden_tests_exist": true,
+  "mandatory_test_bypass_is_hard_gate": true,
+  "minimum_test_classes": [
+    "contract",
+    "documentation_or_runtime_smoke",
+    "integration",
+    "negative_regression",
+    "restart_or_recovery",
+    "security_or_policy",
+    "unit"
+  ],
+  "schema_version": "1.0.0"
+}

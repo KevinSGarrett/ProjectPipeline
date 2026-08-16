@@ -1,0 +1,102 @@
+{
+  "$id": "https://project-pipeline.local/schemas/agent_execution_task_contract.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allow_canary": {
+      "default": false,
+      "title": "Allow Canary",
+      "type": "boolean"
+    },
+    "allow_data_egress": {
+      "default": true,
+      "title": "Allow Data Egress",
+      "type": "boolean"
+    },
+    "allow_degraded": {
+      "default": true,
+      "title": "Allow Degraded",
+      "type": "boolean"
+    },
+    "context": {
+      "additionalProperties": true,
+      "title": "Context",
+      "type": "object"
+    },
+    "instructions": {
+      "maxLength": 100000,
+      "minLength": 1,
+      "title": "Instructions",
+      "type": "string"
+    },
+    "maximum_cost_microunits": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Maximum Cost Microunits"
+    },
+    "output_schema": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Output Schema"
+    },
+    "quality_tier": {
+      "default": "standard",
+      "title": "Quality Tier",
+      "type": "string"
+    },
+    "required_capabilities": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Required Capabilities",
+      "type": "array"
+    },
+    "risk": {
+      "default": "MEDIUM",
+      "title": "Risk",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "task_class": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Task Class",
+      "type": "string"
+    },
+    "task_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "task_id",
+    "task_class",
+    "required_capabilities",
+    "instructions"
+  ],
+  "title": "ExecutionTaskContract",
+  "type": "object"
+}

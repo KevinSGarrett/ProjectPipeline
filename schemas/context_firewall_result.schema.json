@@ -1,0 +1,73 @@
+{
+  "$defs": {
+    "ContextTrust": {
+      "enum": [
+        "GOVERNING",
+        "AUTHORITATIVE",
+        "SOURCE_CONTROLLED",
+        "VERIFIED_EXTERNAL",
+        "UNTRUSTED_REPOSITORY",
+        "UNTRUSTED_EXTERNAL"
+      ],
+      "title": "ContextTrust",
+      "type": "string"
+    },
+    "Sensitivity": {
+      "enum": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "title": "Sensitivity",
+      "type": "integer"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/context_firewall_result.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allowed": {
+      "title": "Allowed",
+      "type": "boolean"
+    },
+    "content": {
+      "title": "Content",
+      "type": "string"
+    },
+    "context_key": {
+      "title": "Context Key",
+      "type": "string"
+    },
+    "reasons": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "redaction_count": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Redaction Count",
+      "type": "integer"
+    },
+    "sensitivity": {
+      "$ref": "#/$defs/Sensitivity"
+    },
+    "trust": {
+      "$ref": "#/$defs/ContextTrust"
+    }
+  },
+  "required": [
+    "context_key",
+    "allowed",
+    "content",
+    "trust",
+    "sensitivity"
+  ],
+  "title": "FirewallResult",
+  "type": "object"
+}

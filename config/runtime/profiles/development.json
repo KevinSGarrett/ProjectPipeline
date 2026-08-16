@@ -1,0 +1,14 @@
+{
+  "environment": "development",
+  "paths": {
+    "artifact_dir": ".local/environments/development/artifacts",
+    "cache_dir": ".local/environments/development/cache",
+    "data_dir": ".local/environments/development/data",
+    "log_dir": ".local/environments/development/logs",
+    "state_dir": ".local/environments/development/state"
+  },
+  "security": {
+    "external_writes_default": "DENY",
+    "require_explicit_approval": true
+  }
+}

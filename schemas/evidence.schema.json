@@ -1,0 +1,65 @@
+{
+  "$id": "https://project-pipeline.local/schemas/evidence.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "properties": {
+    "artifact_path": {
+      "type": "string"
+    },
+    "claim": {
+      "type": "string"
+    },
+    "criterion_ids": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "evidence_id": {
+      "pattern": "^EVID-[0-9]{6}$",
+      "type": "string"
+    },
+    "method": {
+      "type": "string"
+    },
+    "observed_at_utc": {
+      "type": "string"
+    },
+    "requirement_ids": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "INFORMATIONAL",
+        "BLOCKED"
+      ]
+    },
+    "sha256": {
+      "pattern": "^[a-f0-9]{64}$",
+      "type": "string"
+    },
+    "verification_status": {
+      "enum": [
+        "UNVERIFIED",
+        "VERIFIED",
+        "SUPERSEDED"
+      ]
+    }
+  },
+  "required": [
+    "evidence_id",
+    "claim",
+    "method",
+    "artifact_path",
+    "sha256",
+    "observed_at_utc",
+    "result",
+    "verification_status"
+  ],
+  "title": "Evidence Record",
+  "type": "object"
+}

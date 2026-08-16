@@ -1,0 +1,28 @@
+{
+  "schema_version": "1.0.0",
+  "runbook_id": "RUNBOOK-CONTROL-MACHINE-RECOVERY",
+  "version": 1,
+  "approved": true,
+  "approval_reference": "ADR-0023",
+  "purpose": "Recover a fenced control-machine incident without bypassing verification or canonical authority.",
+  "steps": [
+    {
+      "step_id": "verify-witness",
+      "action": "verify_witness",
+      "stop_on_failure": true,
+      "verification_required": true
+    },
+    {
+      "step_id": "reconcile-state",
+      "action": "reconcile_state",
+      "stop_on_failure": true,
+      "verification_required": true
+    },
+    {
+      "step_id": "resume-eligible-work",
+      "action": "resume_eligible_work",
+      "stop_on_failure": true,
+      "verification_required": true
+    }
+  ]
+}

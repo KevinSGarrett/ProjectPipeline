@@ -1,0 +1,51 @@
+{
+  "$defs": {
+    "DurableBackendKind": {
+      "enum": [
+        "LOCAL_REFERENCE",
+        "HATCHET",
+        "DBOS",
+        "TEMPORAL",
+        "MOCK"
+      ],
+      "title": "DurableBackendKind",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/orchestration_backend_run_observation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "backend": {
+      "$ref": "#/$defs/DurableBackendKind"
+    },
+    "backend_run_id": {
+      "title": "Backend Run Id",
+      "type": "string"
+    },
+    "observed_at_utc": {
+      "format": "date-time",
+      "title": "Observed At Utc",
+      "type": "string"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "state": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "State",
+      "type": "string"
+    }
+  },
+  "required": [
+    "backend",
+    "backend_run_id",
+    "state",
+    "observed_at_utc"
+  ],
+  "title": "BackendRunObservation",
+  "type": "object"
+}

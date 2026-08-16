@@ -1,0 +1,139 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000025-01",
+      "statement": "Every accepted domain requirement is linked to at least one valid child work item.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "automated_graph_and_traceability_check",
+        "path": "plans/_traceability/requirements_to_jira.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Own all accepted requirements, decisions, implementation, tests, evidence, and operational readiness for PLAN-UX-001.",
+  "evidence_required": [
+    "EVID-000004"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "EPIC",
+  "labels": [
+    "domain-epic",
+    "plan-ux-001"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "24978",
+    "remote_key": "PP-9",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-EPIC-000025",
+  "objective": "Deliver the complete command center and operator experience capability and its verified operational contract.",
+  "observability_impact": "Record structured validation and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": null,
+  "plan_references": [
+    {
+      "authoritative_path": "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md",
+      "end_line": 12,
+      "line_numbered_path": "plans/_line_numbered/PLAN-UX-001_command_center_operator.lines.txt",
+      "line_reference": "PLAN-UX-001:SEC-01:L000009-L000012",
+      "plan_id": "PLAN-UX-001",
+      "section_id": "PLAN-UX-001:SEC-01",
+      "start_line": 9
+    }
+  ],
+  "rationale": "The source corpus requires this domain as part of the end-to-end platform.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000026",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000111",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000112",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000113",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000114",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000115",
+      "type": "PARENT_OF"
+    }
+  ],
+  "remote_jira_key": "PP-9",
+  "required_tests": [
+    "TEST-JIRA-GRAPH-001"
+  ],
+  "requirement_ids": [
+    "REQ-UX-0001",
+    "REQ-UX-0002",
+    "REQ-UX-0003",
+    "REQ-UX-0004",
+    "REQ-UX-0005",
+    "REQ-UX-0006",
+    "REQ-UX-0007",
+    "REQ-UX-0008",
+    "REQ-UX-0009",
+    "REQ-UX-0010",
+    "REQ-UX-0011",
+    "REQ-UX-0012",
+    "REQ-UX-0013",
+    "REQ-UX-0014",
+    "REQ-UX-0015",
+    "REQ-UX-0016",
+    "REQ-UX-0017",
+    "REQ-UX-0018",
+    "REQ-UX-0019",
+    "REQ-UX-0020",
+    "REQ-UX-0021",
+    "REQ-UX-0022",
+    "REQ-UX-0023",
+    "REQ-UX-0024",
+    "REQ-UX-0025",
+    "REQ-UX-0026"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the complete command center and operator experience capability and its verified operational contract."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L000643-L000693"
+  ],
+  "state": "BACKLOG",
+  "title": "Command Center and Operator Experience",
+  "upstream_dependencies": []
+}

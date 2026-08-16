@@ -1,0 +1,141 @@
+{
+  "boundaries": [
+    {
+      "boundary_id": "BOUNDARY-TRUST-001",
+      "component_ids": [
+        "COMP-UI-001",
+        "COMP-CHAT-001",
+        "COMP-API-001",
+        "COMP-CTRL-001",
+        "COMP-POLICY-001"
+      ],
+      "controls": [
+        "authenticated identity",
+        "role and approval evaluation",
+        "typed action intent",
+        "idempotency key",
+        "audit event"
+      ],
+      "description": "Human and client requests cross authentication, authorization, action-intent, rate, and audit controls before reaching deterministic control.",
+      "name": "Operator to control boundary",
+      "source_references": [
+        "SRC-014:L000185-L000220"
+      ]
+    },
+    {
+      "boundary_id": "BOUNDARY-AI-001",
+      "component_ids": [
+        "COMP-DIRECTOR-001",
+        "COMP-ROUTER-001",
+        "COMP-PROVIDER-001",
+        "COMP-CTRL-001",
+        "COMP-ASSURE-001"
+      ],
+      "controls": [
+        "typed output validation",
+        "source grounding",
+        "policy evaluation",
+        "confidence and fallback",
+        "independent verification"
+      ],
+      "description": "Model and agent outputs are untrusted recommendations until schema, source, policy, and deterministic-state checks succeed.",
+      "name": "Probabilistic intelligence boundary",
+      "source_references": [
+        "SRC-003:L000081-L000110",
+        "SRC-003:L000876-L000928"
+      ]
+    },
+    {
+      "boundary_id": "BOUNDARY-EXEC-001",
+      "component_ids": [
+        "COMP-WORKER-001",
+        "COMP-CONTEXT-001",
+        "COMP-RESOURCE-001",
+        "COMP-SECRET-001",
+        "COMP-TOOL-001"
+      ],
+      "controls": [
+        "isolated workspace",
+        "context receipt",
+        "lease fencing",
+        "scoped credentials",
+        "tool allowlist",
+        "telemetry"
+      ],
+      "description": "Workers receive bounded context, workspace, resource, credential, spend, and time leases and cannot access unrestricted host resources.",
+      "name": "Execution sandbox boundary",
+      "source_references": [
+        "SRC-014:L000185-L000220"
+      ]
+    },
+    {
+      "boundary_id": "BOUNDARY-EXT-001",
+      "component_ids": [
+        "COMP-REPO-001",
+        "COMP-JIRA-001",
+        "COMP-PROVIDER-001",
+        "COMP-TOOL-001",
+        "COMP-OUTBOX-001"
+      ],
+      "controls": [
+        "adapter contracts",
+        "dry-run by default",
+        "outbox/inbox",
+        "retry and reconciliation",
+        "remote authority profile"
+      ],
+      "description": "GitHub, Jira, providers, MCP servers, and cloud systems are reached through adapters, durable outbox/inbox, policy, and reconciliation.",
+      "name": "External system boundary",
+      "source_references": [
+        "SRC-006:L000730-L000760",
+        "SRC-017:L000345-L000365"
+      ]
+    },
+    {
+      "boundary_id": "BOUNDARY-DATA-001",
+      "component_ids": [
+        "COMP-PERSIST-001",
+        "COMP-WORKFLOW-001",
+        "COMP-REPO-001",
+        "COMP-JIRA-001",
+        "COMP-ARTIFACT-001"
+      ],
+      "controls": [
+        "owner-specific writes",
+        "versioned schemas",
+        "transactional outbox",
+        "content hashes",
+        "reconciliation"
+      ],
+      "description": "Canonical business state, workflow execution state, repository state, Jira state, and artifact bytes have explicit owners and reconciliation rules.",
+      "name": "Canonical state boundary",
+      "source_references": [
+        "SRC-003:L000962-L001000",
+        "SRC-009:L000016-L000016"
+      ]
+    },
+    {
+      "boundary_id": "BOUNDARY-NET-001",
+      "component_ids": [
+        "COMP-API-001",
+        "COMP-DEPLOY-001",
+        "COMP-SECRET-001",
+        "COMP-OBS-001"
+      ],
+      "controls": [
+        "private bind defaults",
+        "TLS where remote",
+        "authenticated network overlay",
+        "profile-controlled egress",
+        "no public database exposure"
+      ],
+      "description": "Local services are private by default; remote access and optional cloud components require explicit profile, authentication, encrypted transport, and degraded-mode behavior.",
+      "name": "Network and deployment boundary",
+      "source_references": [
+        "SRC-001:L000170-L000190"
+      ]
+    }
+  ],
+  "boundary_count": 6,
+  "schema_version": "1.0.0"
+}

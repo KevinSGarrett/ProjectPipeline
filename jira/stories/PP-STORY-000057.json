@@ -1,0 +1,116 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000057-01",
+      "statement": "Every linked requirement is explicitly dispositioned, mapped, and represented by the stated implementation or planned artifacts.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000057-02",
+      "statement": "Applicable behavior-specific tests and evidence support completion; unavailable external verification remains explicitly blocked.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000010"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement and verify the source-grounded requirements grouped under provenance for Requirements Engineering and Traceability.",
+  "evidence_required": [
+    "EVID-000010"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/source_references.py"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/source_references.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "STORY",
+  "labels": [
+    "capability-story",
+    "cluster-provenance",
+    "domain-req"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25014",
+    "remote_key": "PP-45",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-STORY-000057",
+  "objective": "Deliver the provenance capability for Requirements Engineering and Traceability.",
+  "observability_impact": "Record structured validation, state, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-EPIC-000003",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/01_requirements/PLAN-REQ-002_requirement_catalog_and_coverage.md",
+      "end_line": 15,
+      "line_numbered_path": "plans/_line_numbered/PLAN-REQ-002_requirement_catalog_and_coverage.lines.txt",
+      "line_reference": "PLAN-REQ-002:SEC-02:L000012-L000015",
+      "plan_id": "PLAN-REQ-002",
+      "section_id": "PLAN-REQ-002:SEC-02",
+      "start_line": 12
+    }
+  ],
+  "rationale": "This work is required to convert source-grounded requirements into bounded implementation, verification, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-EPIC-000003",
+      "type": "CHILD_OF"
+    },
+    {
+      "target": "PP-TASK-000140",
+      "type": "PARENT_OF"
+    }
+  ],
+  "remote_jira_key": "PP-45",
+  "required_tests": [
+    "TEST-SOURCE-REFERENCES-001"
+  ],
+  "requirement_ids": [
+    "REQ-REQ-0005",
+    "REQ-REQ-0007",
+    "REQ-REQ-0008"
+  ],
+  "risk_classification": "MEDIUM",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the provenance capability for Requirements Engineering and Traceability."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, data-egress, and external-mutation effects.",
+  "source_references": [
+    "GOV-001:L000123-L000175",
+    "GOV-001:L000173-L000183",
+    "GOV-001:L000177-L000183",
+    "SRC-017:L000490-L000596"
+  ],
+  "state": "BACKLOG",
+  "title": "Provenance \u2014 Requirements Engineering and Traceability",
+  "upstream_dependencies": []
+}

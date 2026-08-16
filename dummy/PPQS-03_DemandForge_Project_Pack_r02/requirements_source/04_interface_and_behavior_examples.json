@@ -1,0 +1,134 @@
+{
+  "benchmark_id": "PPQS-03",
+  "examples": [
+    {
+      "artifact": "ingestion pipeline and dataset manifest",
+      "example_id": "EX-DF-001",
+      "expected_failure": "duplicate or partially uploaded batches are quarantined",
+      "expected_result": "valid batches are registered once with immutable fingerprints",
+      "feature": "Dataset ingestion",
+      "request_or_action": "Representative valid action for Dataset ingestion"
+    },
+    {
+      "artifact": "data quality engine and report",
+      "example_id": "EX-DF-002",
+      "expected_failure": "bad rows never silently enter training",
+      "expected_result": "quality findings are severity-ranked and block only according to policy",
+      "feature": "Schema and data quality",
+      "request_or_action": "Representative valid action for Schema and data quality"
+    },
+    {
+      "artifact": "feature pipeline and registry",
+      "example_id": "EX-DF-003",
+      "expected_failure": "look-ahead leakage is detected by hidden adversarial tests",
+      "expected_result": "every feature has an as-of timestamp and provenance",
+      "feature": "Point in time feature generation",
+      "request_or_action": "Representative valid action for Point in time feature generation"
+    },
+    {
+      "artifact": "split planner and manifests",
+      "example_id": "EX-DF-004",
+      "expected_failure": "random row splitting is prohibited for time-series evaluation",
+      "expected_result": "splits are reproducible and leakage-free",
+      "feature": "Temporal split strategy",
+      "request_or_action": "Representative valid action for Temporal split strategy"
+    },
+    {
+      "artifact": "training orchestrator and job store",
+      "example_id": "EX-DF-005",
+      "expected_failure": "duplicate job submissions do not consume duplicate budget",
+      "expected_result": "an interrupted job can resume or fail cleanly without corrupt artifacts",
+      "feature": "Training orchestration",
+      "request_or_action": "Representative valid action for Training orchestration"
+    },
+    {
+      "artifact": "baseline model implementation",
+      "example_id": "EX-DF-006",
+      "expected_failure": "complex models cannot be promoted without beating the baseline policy",
+      "expected_result": "baseline metrics are always available and reproducible",
+      "feature": "Seasonal naive baseline",
+      "request_or_action": "Representative valid action for Seasonal naive baseline"
+    },
+    {
+      "artifact": "candidate model adapter",
+      "example_id": "EX-DF-007",
+      "expected_failure": "missing optional dependencies trigger a documented fallback",
+      "expected_result": "the candidate trains within declared resource limits",
+      "feature": "Gradient boosted candidate",
+      "request_or_action": "Representative valid action for Gradient boosted candidate"
+    },
+    {
+      "artifact": "evaluation and calibration package",
+      "example_id": "EX-DF-008",
+      "expected_failure": "aggregate improvements cannot hide severe segment regressions",
+      "expected_result": "metrics are computed from the frozen holdout and retain uncertainty",
+      "feature": "Evaluation and calibration",
+      "request_or_action": "Representative valid action for Evaluation and calibration"
+    },
+    {
+      "artifact": "model registry and promotion gate",
+      "example_id": "EX-DF-009",
+      "expected_failure": "artifact mismatch or missing evidence blocks promotion",
+      "expected_result": "only a qualified model can become champion",
+      "feature": "Champion challenger registry",
+      "request_or_action": "Representative valid action for Champion challenger registry"
+    },
+    {
+      "artifact": "batch forecast job and artifact schema",
+      "example_id": "EX-DF-010",
+      "expected_failure": "partial output is never published as complete",
+      "expected_result": "reruns with identical inputs are idempotent",
+      "feature": "Batch forecasting",
+      "request_or_action": "Representative valid action for Batch forecasting"
+    },
+    {
+      "artifact": "inference service and OpenAPI contract",
+      "example_id": "EX-DF-011",
+      "expected_failure": "unknown entities and unavailable models fail explicitly",
+      "expected_result": "valid requests return stable schemas within latency limits",
+      "feature": "Inference API",
+      "request_or_action": "Representative valid action for Inference API"
+    },
+    {
+      "artifact": "uncertainty policy and fallback engine",
+      "example_id": "EX-DF-012",
+      "expected_failure": "the service never fabricates precision for unsupported cases",
+      "expected_result": "low-confidence forecasts are labeled and traceable",
+      "feature": "Uncertainty and fallback",
+      "request_or_action": "Representative valid action for Uncertainty and fallback"
+    },
+    {
+      "artifact": "monitoring jobs and dashboards",
+      "example_id": "EX-DF-013",
+      "expected_failure": "monitoring does not retrain or promote automatically outside policy",
+      "expected_result": "alerts include scope, evidence, severity, and recommended action",
+      "feature": "Drift and data quality monitoring",
+      "request_or_action": "Representative valid action for Drift and data quality monitoring"
+    },
+    {
+      "artifact": "experiment record and replay command",
+      "example_id": "EX-DF-014",
+      "expected_failure": "untracked notebook state is not accepted as evidence",
+      "expected_result": "independent reruns reproduce metrics within tolerance",
+      "feature": "Experiment reproducibility",
+      "request_or_action": "Representative valid action for Experiment reproducibility"
+    },
+    {
+      "artifact": "resource governor and lease ledger",
+      "example_id": "EX-DF-015",
+      "expected_failure": "resource scarcity never causes uncontrolled oversubscription",
+      "expected_result": "jobs wait, degrade, or fall back according to policy",
+      "feature": "Resource admission and scheduling",
+      "request_or_action": "Representative valid action for Resource admission and scheduling"
+    },
+    {
+      "artifact": "budget governor, reports, model card, and runbook",
+      "example_id": "EX-DF-016",
+      "expected_failure": "cost uncertainty is labeled rather than ignored",
+      "expected_result": "budget breaches block admission and all outcomes are explainable",
+      "feature": "Budget governance reporting and handoff",
+      "request_or_action": "Representative valid action for Budget governance reporting and handoff"
+    }
+  ],
+  "schema_version": "1.0.0"
+}

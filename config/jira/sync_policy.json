@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0.0",
+  "authority_mode": "SOURCE_CONTROLLED_LOCAL",
+  "import_remote_only_issues": false,
+  "preferred_remote_status": {
+    "BACKLOG": "To Do",
+    "BLOCKED": "Blocked",
+    "CANCELLED": "Cancelled",
+    "DEFERRED": "Deferred",
+    "DISCOVERED": "To Do",
+    "DONE": "Done",
+    "FAILED": "Blocked",
+    "IN_PROGRESS": "In Progress",
+    "MERGE_READY": "Merge Ready",
+    "READY": "To Do",
+    "REVIEW": "Code Review",
+    "VALIDATION": "QA"
+  },
+  "require_human_for_remote_done": true
+}

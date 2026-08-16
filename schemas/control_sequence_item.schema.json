@@ -1,0 +1,126 @@
+{
+  "$defs": {
+    "ReadinessState": {
+      "enum": [
+        "READY",
+        "WAITING_DEPENDENCIES",
+        "BLOCKED",
+        "WAITING_APPROVAL",
+        "WAITING_CONTEXT",
+        "WAITING_RESOURCES",
+        "WAITING_ENVIRONMENT",
+        "NOT_ELIGIBLE",
+        "ACTIVE",
+        "TERMINAL"
+      ],
+      "title": "ReadinessState",
+      "type": "string"
+    },
+    "SequenceScore": {
+      "additionalProperties": false,
+      "properties": {
+        "critical_path_score": {
+          "title": "Critical Path Score",
+          "type": "integer"
+        },
+        "deadline_score": {
+          "title": "Deadline Score",
+          "type": "integer"
+        },
+        "duration_score": {
+          "title": "Duration Score",
+          "type": "integer"
+        },
+        "priority_score": {
+          "title": "Priority Score",
+          "type": "integer"
+        },
+        "risk_score": {
+          "title": "Risk Score",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "task_id": {
+          "title": "Task Id",
+          "type": "string"
+        },
+        "total_score": {
+          "title": "Total Score",
+          "type": "integer"
+        },
+        "unblock_score": {
+          "title": "Unblock Score",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "task_id",
+        "priority_score",
+        "critical_path_score",
+        "deadline_score",
+        "risk_score",
+        "unblock_score",
+        "duration_score",
+        "total_score"
+      ],
+      "title": "SequenceScore",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/control_sequence_item.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "dependency_depth": {
+      "minimum": 0,
+      "title": "Dependency Depth",
+      "type": "integer"
+    },
+    "downstream_count": {
+      "minimum": 0,
+      "title": "Downstream Count",
+      "type": "integer"
+    },
+    "on_critical_path": {
+      "title": "On Critical Path",
+      "type": "boolean"
+    },
+    "rank": {
+      "minimum": 1,
+      "title": "Rank",
+      "type": "integer"
+    },
+    "readiness": {
+      "$ref": "#/$defs/ReadinessState"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "score": {
+      "$ref": "#/$defs/SequenceScore"
+    },
+    "task_id": {
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "rank",
+    "task_id",
+    "readiness",
+    "score",
+    "dependency_depth",
+    "downstream_count",
+    "on_critical_path"
+  ],
+  "title": "SequenceItem",
+  "type": "object"
+}

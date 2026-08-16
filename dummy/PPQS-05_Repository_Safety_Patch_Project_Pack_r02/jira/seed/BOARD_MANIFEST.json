@@ -1,0 +1,20 @@
+{
+  "board_id": "PPQS-05-SEED",
+  "counts_by_state": {
+    "DISCOVERED": 1,
+    "DONE": 4
+  },
+  "counts_by_type": {
+    "BUG": 1,
+    "TASK": 4
+  },
+  "generated_at_utc": "2026-08-16T04:00:00Z",
+  "issue_count": 5,
+  "issue_index": "indexes/issues.jsonl",
+  "project_key": "RP",
+  "relationship_graph": "relationships/graph.json",
+  "remote_board_state": "SIMULATED_LOCAL_MIRROR",
+  "remote_write_state": "DENIED_BY_DEFAULT",
+  "schema_version": "1.0.0",
+  "seed_state": true
+}

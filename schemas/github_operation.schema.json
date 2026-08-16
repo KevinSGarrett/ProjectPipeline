@@ -1,0 +1,138 @@
+{
+  "$defs": {
+    "GitOperationState": {
+      "enum": [
+        "PLANNED",
+        "PENDING",
+        "APPLIED",
+        "FAILED",
+        "UNKNOWN_OUTCOME",
+        "RECONCILED",
+        "REJECTED"
+      ],
+      "title": "GitOperationState",
+      "type": "string"
+    },
+    "GitOperationType": {
+      "enum": [
+        "CREATE_BRANCH",
+        "CREATE_PULL_REQUEST",
+        "UPDATE_PULL_REQUEST",
+        "MERGE_PULL_REQUEST",
+        "DELETE_BRANCH",
+        "CREATE_WORKTREE",
+        "REMOVE_WORKTREE",
+        "RELEASE_OWNERSHIP"
+      ],
+      "title": "GitOperationType",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_operation.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "actor_id": {
+      "title": "Actor Id",
+      "type": "string"
+    },
+    "authorization_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Authorization Id"
+    },
+    "correlation_id": {
+      "title": "Correlation Id",
+      "type": "string"
+    },
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "expected_head_sha": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Expected Head Sha"
+    },
+    "idempotency_key": {
+      "maxLength": 255,
+      "minLength": 1,
+      "title": "Idempotency Key",
+      "type": "string"
+    },
+    "observed_result": {
+      "anyOf": [
+        {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Observed Result"
+    },
+    "operation_id": {
+      "title": "Operation Id",
+      "type": "string"
+    },
+    "operation_type": {
+      "$ref": "#/$defs/GitOperationType"
+    },
+    "payload": {
+      "additionalProperties": true,
+      "title": "Payload",
+      "type": "object"
+    },
+    "repository_slug": {
+      "title": "Repository Slug",
+      "type": "string"
+    },
+    "request_fingerprint": {
+      "pattern": "^[0-9a-f]{64}$",
+      "title": "Request Fingerprint",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/GitOperationState",
+      "default": "PLANNED"
+    },
+    "target": {
+      "title": "Target",
+      "type": "string"
+    },
+    "updated_at_utc": {
+      "format": "date-time",
+      "title": "Updated At Utc",
+      "type": "string"
+    }
+  },
+  "required": [
+    "operation_id",
+    "operation_type",
+    "repository_slug",
+    "target",
+    "request_fingerprint",
+    "idempotency_key",
+    "actor_id",
+    "correlation_id"
+  ],
+  "title": "GitHubOperation",
+  "type": "object"
+}

@@ -1,0 +1,52 @@
+{
+  "$id": "https://project-pipeline.local/schemas/agent_normalized_usage.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cached_input_units": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Cached Input Units",
+      "type": "integer"
+    },
+    "cost_microunits": {
+      "anyOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Cost Microunits"
+    },
+    "input_units": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Input Units",
+      "type": "integer"
+    },
+    "output_units": {
+      "default": 0,
+      "minimum": 0,
+      "title": "Output Units",
+      "type": "integer"
+    },
+    "request_count": {
+      "default": 1,
+      "minimum": 0,
+      "title": "Request Count",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    }
+  },
+  "title": "NormalizedUsage",
+  "type": "object"
+}

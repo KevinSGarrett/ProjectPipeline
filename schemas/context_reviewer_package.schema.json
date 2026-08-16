@@ -1,0 +1,61 @@
+{
+  "$id": "https://project-pipeline.local/schemas/context_reviewer_package.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "context_pack_id": {
+      "title": "Context Pack Id",
+      "type": "string"
+    },
+    "diff_keys": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Diff Keys",
+      "type": "array"
+    },
+    "evidence_keys": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Keys",
+      "type": "array"
+    },
+    "review_package_id": {
+      "title": "Review Package Id",
+      "type": "string"
+    },
+    "rubric_keys": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Rubric Keys",
+      "type": "array"
+    },
+    "source_keys": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Source Keys",
+      "type": "array"
+    },
+    "test_keys": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Test Keys",
+      "type": "array"
+    }
+  },
+  "required": [
+    "review_package_id",
+    "context_pack_id",
+    "diff_keys",
+    "source_keys",
+    "test_keys",
+    "evidence_keys",
+    "rubric_keys"
+  ],
+  "title": "ReviewerPackage",
+  "type": "object"
+}

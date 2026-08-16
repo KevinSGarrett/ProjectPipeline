@@ -1,0 +1,122 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000103-01",
+      "statement": "Every linked requirement is explicitly dispositioned, mapped, and represented by the stated implementation or planned artifacts.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "repository_traceability_validation",
+        "path": "plans/_traceability/requirements.jsonl",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000103-02",
+      "statement": "Applicable behavior-specific tests and evidence support completion; unavailable external verification remains explicitly blocked.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "method": "tests_and_evidence_review",
+        "path": "evidence/EVIDENCE_LEDGER.jsonl",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000102",
+    "EVID-000103",
+    "EVID-000104",
+    "EVID-000105",
+    "EVID-000106"
+  ],
+  "definition_of_done": [
+    "Applicable implementation is complete or accurately dispositioned.",
+    "Acceptance criteria have current verification evidence.",
+    "Required tests pass for affected behavior.",
+    "Traceability and documentation are updated.",
+    "Security and recovery impact are addressed.",
+    "No unresolved blocker is hidden by status."
+  ],
+  "dependencies": [],
+  "description": "Implement and verify the source-grounded requirements grouped under pressure for Budget and Resource Governance.",
+  "evidence_required": [
+    "EVID-000102",
+    "EVID-000103",
+    "EVID-000104",
+    "EVID-000105",
+    "EVID-000106"
+  ],
+  "exclusions": [
+    "No unverified claim of live external-system completion."
+  ],
+  "expected_file_locations": [
+    "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
+  ],
+  "expected_implementation_artifacts": [
+    "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "STORY",
+  "labels": [
+    "capability-story",
+    "domain-budget",
+    "cluster-pressure"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25029",
+    "remote_key": "PP-60",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-STORY-000103",
+  "objective": "Deliver the pressure capability for Budget and Resource Governance.",
+  "observability_impact": "Record structured validation, state, and evidence with stable identifiers.",
+  "owner_required_capability": "systems_architecture_and_implementation",
+  "parent": "PP-EPIC-000021",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md",
+      "end_line": 20,
+      "line_numbered_path": "plans/_line_numbered/PLAN-BUDGET-001_budget_resource_governance.lines.txt",
+      "line_reference": "PLAN-BUDGET-001:SEC-03:L000017-L000020",
+      "plan_id": "PLAN-BUDGET-001",
+      "section_id": "PLAN-BUDGET-001:SEC-03",
+      "start_line": 17
+    }
+  ],
+  "rationale": "This work is required to convert source-grounded requirements into bounded implementation, verification, and operational state.",
+  "relationships": [
+    {
+      "target": "PP-EPIC-000021",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-60",
+  "required_tests": [
+    "TEST-BUDGET-FORECAST-001",
+    "TEST-BUDGET-LEASE-001",
+    "TEST-BUDGET-POLICY-001"
+  ],
+  "requirement_ids": [
+    "REQ-BUDGET-0010",
+    "REQ-BUDGET-0016",
+    "REQ-BUDGET-0017"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration or rollback.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver the pressure capability for Budget and Resource Governance."
+  ],
+  "security_impact": "Assess authority, secrets, dependency, data-egress, and external-mutation effects.",
+  "source_references": [
+    "SRC-004:L000373-L000483",
+    "SRC-004:L000812-L000936",
+    "SRC-006:L001708-L001805",
+    "SRC-012:L000780-L000816"
+  ],
+  "state": "BACKLOG",
+  "title": "Pressure \u2014 Budget and Resource Governance",
+  "upstream_dependencies": []
+}

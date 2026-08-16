@@ -1,0 +1,23 @@
+{
+  "board_id": "PROJECT-PIPELINE-LOCAL",
+  "counts_by_state": {
+    "BACKLOG": 378
+  },
+  "counts_by_type": {
+    "BUG": 0,
+    "EPIC": 18,
+    "SPIKE": 0,
+    "STORY": 107,
+    "SUBTASK": 16,
+    "TASK": 237
+  },
+  "issue_count": 378,
+  "issue_index": "jira/indexes/issues.jsonl",
+  "last_generated_date": "2026-08-14",
+  "project_key": "PP",
+  "relationship_graph": "jira/relationships/graph.json",
+  "remote_board_state": "NOT_CONNECTED",
+  "remote_write_state": "DENIED_BY_DEFAULT",
+  "schema_version": "1.0.0",
+  "source_context_directory": "jira/source_context"
+}

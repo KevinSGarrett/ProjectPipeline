@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "PROJECT-PIPELINE",
+  "project_name": "ProjectPipeline",
+  "profile": "local",
+  "environment": "development",
+  "paths": {
+    "data_dir": ".local/data",
+    "state_dir": ".local/state",
+    "evidence_dir": "evidence",
+    "artifact_dir": ".local/artifacts",
+    "cache_dir": ".local/cache",
+    "log_dir": ".local/logs",
+    "create_on_boot": true
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "JSON",
+    "service_name": "project-pipeline",
+    "include_source": false,
+    "include_process": true,
+    "include_thread": false,
+    "redacted_fields": [
+      "api_key",
+      "authorization",
+      "client_secret",
+      "cookie",
+      "password",
+      "private_key",
+      "secret",
+      "token"
+    ]
+  },
+  "telemetry": {
+    "enabled": false,
+    "exporter": "NONE",
+    "otlp_endpoint": null,
+    "service_name": "project-pipeline",
+    "service_namespace": "project-pipeline"
+  },
+  "security": {
+    "external_writes_default": "DENY",
+    "require_explicit_approval": true
+  },
+  "integrations": {
+    "jira_base_url": null,
+    "jira_user_email": null,
+    "jira_api_token": null,
+    "github_token": null,
+    "aws_profile": null
+  },
+  "persistence": {
+    "backend": "SQLITE_LOCAL",
+    "sqlite_path": ".local/state/project_pipeline.db",
+    "postgresql_dsn": null,
+    "migration_catalog": "database/MIGRATION_CATALOG.json",
+    "auto_migrate": true
+  }
+}

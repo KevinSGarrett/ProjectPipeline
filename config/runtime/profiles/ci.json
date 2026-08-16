@@ -1,0 +1,20 @@
+{
+  "environment": "test",
+  "paths": {
+    "data_dir": ".local/ci/data",
+    "state_dir": ".local/ci/state",
+    "artifact_dir": ".local/ci/artifacts",
+    "cache_dir": ".local/ci/cache",
+    "log_dir": ".local/ci/logs"
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "JSON",
+    "include_process": false,
+    "include_thread": false
+  },
+  "security": {
+    "external_writes_default": "DENY",
+    "require_explicit_approval": true
+  }
+}

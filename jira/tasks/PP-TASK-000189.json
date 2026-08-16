@@ -1,0 +1,136 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000189-01",
+      "statement": "Contract invariants distinguish retries, failure, unknown outcome, authority, idempotency, and state-transition semantics.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_contracts.py",
+        "method": "automated_behavior_and_evidence_validation",
+        "path": "tests/test_contracts.py",
+        "status": "PLANNED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000189-02",
+      "statement": "Committed generated schemas exactly match authoritative models and repository validation rejects drift.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline schemas check --root .",
+        "method": "automated_behavior_and_evidence_validation",
+        "path": "evidence/repository_foundation_validation.json",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [
+    "EVID-000022",
+    "EVID-000027"
+  ],
+  "definition_of_done": [
+    "Implementation and configuration for the bounded objective are complete.",
+    "Acceptance criteria have current automated or machine-readable evidence.",
+    "Required behavior tests pass for the affected foundation.",
+    "Traceability, plans, Jira, schemas, and developer documentation are current.",
+    "Security, provenance, observability, and rollback effects are explicit.",
+    "Unavailable external verification is represented without inflating completion."
+  ],
+  "dependencies": [],
+  "description": "Implement authoritative Pydantic contracts, reject unknown fields and invalid identity/state combinations, export Draft 2020-12 JSON Schemas deterministically, and fail validation on schema drift.",
+  "evidence_required": [
+    "EVID-000022",
+    "EVID-000027"
+  ],
+  "exclusions": [
+    "No remote GitHub, Jira, AWS, package-index, or paid-service mutation is authorized.",
+    "No later persistent-state, durable-orchestration, scheduler, or Command Center capability is represented as complete."
+  ],
+  "expected_file_locations": [
+    "src/project_pipeline/contracts/",
+    "schemas/action_intent.schema.json",
+    "schemas/command_envelope.schema.json",
+    "schemas/command_result.schema.json",
+    "schemas/event_envelope.schema.json",
+    "schemas/state_transition.schema.json",
+    "schemas/adapter_error.schema.json",
+    "schemas/diagnostic_snapshot.schema.json"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/contracts/",
+    "schemas/action_intent.schema.json",
+    "schemas/command_envelope.schema.json",
+    "schemas/command_result.schema.json",
+    "schemas/event_envelope.schema.json",
+    "schemas/state_transition.schema.json",
+    "schemas/adapter_error.schema.json",
+    "schemas/diagnostic_snapshot.schema.json"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "contracts",
+    "schemas",
+    "versioning",
+    "evidence-backed"
+  ],
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "remote_id": "25302",
+    "remote_key": "PP-333",
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
+  },
+  "local_id": "PP-TASK-000189",
+  "objective": "Provide strict, versioned command, event, transition, error, diagnostic, configuration, and action-intent contracts with current JSON Schemas.",
+  "observability_impact": "Record stable correlation, diagnostic, quality, test, and evidence identities for later operational telemetry.",
+  "owner_required_capability": "python_platform_engineering_quality_and_verification",
+  "parent": "PP-STORY-000126",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/15_platform_lifecycle/PLAN-LIFE-002_repository_engineering_foundation.md",
+      "end_line": 83,
+      "line_numbered_path": "plans/_line_numbered/PLAN-LIFE-002_repository_engineering_foundation.lines.txt",
+      "line_reference": "PLAN-LIFE-002:SEC-05:L000069-L000083",
+      "plan_id": "PLAN-LIFE-002",
+      "section_id": "PLAN-LIFE-002:SEC-05",
+      "start_line": 69
+    }
+  ],
+  "rationale": "This bounded repository-engineering work converts accepted plans into executable, tested, self-validating foundation behavior without claiming later runtime capabilities.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000126",
+      "type": "CHILD_OF"
+    }
+  ],
+  "remote_jira_key": "PP-333",
+  "required_tests": [
+    "TEST-CONTRACT-001",
+    "TEST-CONTRACT-002",
+    "TEST-CONTRACT-003",
+    "TEST-CONTRACT-004",
+    "TEST-CONTRACT-005",
+    "TEST-CONTRACT-006"
+  ],
+  "requirement_ids": [
+    "REQ-ARCH-0009",
+    "REQ-LIFE-0002",
+    "REQ-LIFE-0007",
+    "REQ-SEC-0023"
+  ],
+  "risk_classification": "HIGH",
+  "rollback_recovery_consideration": "Revert the bounded package/configuration changes, remove generated local runtime state, regenerate indexes and manifests, and retain the prior cumulative archive.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Provide strict, versioned command, event, transition, error, diagnostic, configuration, and action-intent contracts with current JSON Schemas."
+  ],
+  "security_impact": "Preserve least privilege, secret references, dependency provenance, input validation, and fail-closed external-effect boundaries.",
+  "source_references": [
+    "GOV-001:L000711-L000731",
+    "GOV-001:L000733-L000747",
+    "SRC-017:L000072-L000141",
+    "SRC-017:L000823-L000906"
+  ],
+  "state": "BACKLOG",
+  "title": "Implement versioned contracts and deterministic schema generation",
+  "upstream_dependencies": []
+}

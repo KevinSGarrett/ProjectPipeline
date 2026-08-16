@@ -1,0 +1,147 @@
+{
+  "$defs": {
+    "ReserveReason": {
+      "enum": [
+        "P0_FAILURE_RECOVERY",
+        "CRITICAL_PATH",
+        "RELEASE_BLOCKER",
+        "SECURITY",
+        "PRODUCTION_RECOVERY",
+        "CRITICAL_ARCHITECTURE",
+        "DEADLINE_PROTECTION",
+        "REQUIRED_VERIFICATION"
+      ],
+      "title": "ReserveReason",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/budget_admission_request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "critical_path": {
+      "default": false,
+      "title": "Critical Path",
+      "type": "boolean"
+    },
+    "deadline_at_utc": {
+      "anyOf": [
+        {
+          "format": "date-time",
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Deadline At Utc"
+    },
+    "estimated_p50_microunits": {
+      "minimum": 0,
+      "title": "Estimated P50 Microunits",
+      "type": "integer"
+    },
+    "estimated_p90_microunits": {
+      "minimum": 0,
+      "title": "Estimated P90 Microunits",
+      "type": "integer"
+    },
+    "local_or_subscription_alternative": {
+      "default": false,
+      "title": "Local Or Subscription Alternative",
+      "type": "boolean"
+    },
+    "paid_incremental": {
+      "default": true,
+      "title": "Paid Incremental",
+      "type": "boolean"
+    },
+    "priority": {
+      "default": "P2",
+      "title": "Priority",
+      "type": "string"
+    },
+    "project_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Project Id",
+      "type": "string"
+    },
+    "provider_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Provider Id"
+    },
+    "quota_requirements": {
+      "additionalProperties": {
+        "type": "integer"
+      },
+      "title": "Quota Requirements",
+      "type": "object"
+    },
+    "required_verification": {
+      "default": false,
+      "title": "Required Verification",
+      "type": "boolean"
+    },
+    "reserve_reason": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/ReserveReason"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "risk": {
+      "default": "MEDIUM",
+      "title": "Risk",
+      "type": "string"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "scope_keys": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Scope Keys",
+      "type": "array"
+    },
+    "task_class": {
+      "maxLength": 100,
+      "minLength": 1,
+      "title": "Task Class",
+      "type": "string"
+    },
+    "task_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Task Id",
+      "type": "string"
+    }
+  },
+  "required": [
+    "project_id",
+    "task_id",
+    "task_class",
+    "scope_keys",
+    "estimated_p50_microunits",
+    "estimated_p90_microunits"
+  ],
+  "title": "BudgetAdmissionRequest",
+  "type": "object"
+}

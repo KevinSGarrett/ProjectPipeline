@@ -1,0 +1,22 @@
+{
+  "canonical_internal_reference": "GOV-001",
+  "comparison_result": "SUBSTANTIVELY_EQUIVALENT_AFTER_MARKDOWN_NORMALIZATION",
+  "decision": "Use the preserved execution contract as the governing line-addressable reference; retain both input hashes.",
+  "input_a": {
+    "line_count": 2344,
+    "name": "Initial_Prompt.txt",
+    "sha256": "b519951b9414600a11f05e866ccf7615fda98d31e51e483a423ad7668c7132de"
+  },
+  "input_b": {
+    "line_count": 2350,
+    "name": "Pasted markdown",
+    "sha256": "c70109685508ea4ed45c01eabb85b27b2866dc5b4885ec3130efdb1828ed034e"
+  },
+  "normalized_sha256": "2715b8241faed8f8744c50b790c2ef8b9b746bb659e85c6837a767ae4a32bca5",
+  "observed_differences": [
+    "Markdown bullet marker style",
+    "Code-fence language labels",
+    "Blank-line placement"
+  ],
+  "schema_version": "1.0.0"
+}
