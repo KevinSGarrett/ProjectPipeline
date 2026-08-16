@@ -293,10 +293,20 @@ class ProjectControlKernel:
             snapshot_fingerprint=fingerprint,
         )
 
-    def readiness_transition_plan(self) -> tuple[dict[str, Any], ...]:
+    def readiness_transition_plan(
+        self, *, task_ids: frozenset[str] | None = None
+    ) -> tuple[dict[str, Any], ...]:
         snapshot = self.evaluate()
         ready = {item.task_id for item in snapshot.readiness if item.ready}
         states = {item.task_id: item for item in self.store.list_task_states(self.project_id)}
+        if task_ids is not None:
+            unknown = task_ids - states.keys()
+            if unknown:
+                raise ValueError(
+                    "unknown task IDs in readiness transition request: "
+                    + ", ".join(sorted(unknown))
+                )
+            ready &= task_ids
         operations: list[dict[str, Any]] = []
         for task_id in sorted(ready):
             state = states[task_id]
@@ -317,8 +327,9 @@ class ProjectControlKernel:
         *,
         actor_id: str,
         correlation_id: str,
+        task_ids: frozenset[str] | None = None,
     ) -> tuple[dict[str, Any], ...]:
-        operations = self.readiness_transition_plan()
+        operations = self.readiness_transition_plan(task_ids=task_ids)
         results: list[dict[str, Any]] = []
         for operation in operations:
             state = self.store.transition_task(

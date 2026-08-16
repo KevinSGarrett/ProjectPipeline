@@ -28,6 +28,60 @@ def test_ready_plan_is_dry_run(tmp_path: Path, capsys) -> None:
     assert result["operations"]
 
 
+def test_ready_plan_can_target_one_task(tmp_path: Path, capsys) -> None:
+    db = tmp_path / "control.db"
+    assert main(["control", "ready-plan", "--root", str(ROOT), "--database", str(db)]) == 0
+    all_operations = json.loads(capsys.readouterr().out)["operations"]
+    target_id = all_operations[0]["task_id"]
+
+    assert (
+        main(
+            [
+                "control",
+                "ready-plan",
+                "--root",
+                str(ROOT),
+                "--database",
+                str(db),
+                "--task-id",
+                target_id,
+            ]
+        )
+        == 0
+    )
+    targeted = json.loads(capsys.readouterr().out)
+    assert [item["task_id"] for item in targeted["operations"]] == [target_id]
+
+
+def test_ready_apply_can_target_one_task(tmp_path: Path, capsys) -> None:
+    db = tmp_path / "control.db"
+    assert main(["control", "ready-plan", "--root", str(ROOT), "--database", str(db)]) == 0
+    all_operations = json.loads(capsys.readouterr().out)["operations"]
+    target_id = all_operations[0]["task_id"]
+
+    assert (
+        main(
+            [
+                "control",
+                "ready-apply",
+                "--root",
+                str(ROOT),
+                "--database",
+                str(db),
+                "--task-id",
+                target_id,
+                "--apply",
+                "--approve",
+            ]
+        )
+        == 0
+    )
+    result = json.loads(capsys.readouterr().out)
+    assert result["applied_transition_count"] == 1
+    assert result["applied_transitions"][0]["task_id"] == target_id
+    assert result["applied_transitions"][0]["version"] == 2
+
+
 def test_ready_apply_requires_explicit_apply_and_approval(tmp_path: Path, capsys) -> None:
     db = tmp_path / "control.db"
     code = main(["control", "ready-apply", "--root", str(ROOT), "--database", str(db)])

@@ -595,6 +595,11 @@ def build_parser() -> argparse.ArgumentParser:
     control.add_argument("--root", type=_root, default=Path.cwd())
     control.add_argument("--database", type=Path)
     control.add_argument("--project-id")
+    control.add_argument(
+        "--task-id",
+        action="append",
+        help="Limit ready-plan or ready-apply to a specific task; may be repeated",
+    )
     control.add_argument("--apply", action="store_true")
     control.add_argument("--approve", action="store_true")
     control.add_argument("--actor-id", default="actor:local-control")
@@ -1283,7 +1288,9 @@ def _run_control_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]
                     "ready-apply requires both --apply and --approve; control evaluation remains read-only by default"
                 )
             applied = kernel.apply_readiness_transitions(
-                actor_id=args.actor_id, correlation_id=args.correlation_id
+                actor_id=args.actor_id,
+                correlation_id=args.correlation_id,
+                task_ids=frozenset(args.task_id) if args.task_id else None,
             )
             state_service.refresh_task_counts(project_id)
             snapshot = kernel.evaluate()
@@ -1321,7 +1328,11 @@ def _run_control_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]
             elif args.action == "ready-plan":
                 result = {
                     "database": str(database),
-                    "operations": list(kernel.readiness_transition_plan()),
+                    "operations": list(
+                        kernel.readiness_transition_plan(
+                            task_ids=frozenset(args.task_id) if args.task_id else None
+                        )
+                    ),
                     "dry_run": True,
                 }
             else:
