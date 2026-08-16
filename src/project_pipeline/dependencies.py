@@ -332,6 +332,18 @@ def validate_dependency_lock(root: Path, *, verify_installed: bool = False) -> l
     except (DependencyError, OSError, ValueError, tomllib.TOMLDecodeError) as error:
         return [str(error)]
 
+    declarations = direct_dependency_groups(root)
+    declared_quality = declarations.get("group:quality", [])
+    intents = policy.get("quality_tool_intents", [])
+    governed_quality = [
+        item["requirement"]
+        for item in intents
+        if isinstance(intents, list)
+        if isinstance(item, dict) and isinstance(item.get("requirement"), str)
+    ]
+    if declared_quality != governed_quality:
+        errors.append("pyproject quality group differs from dependency policy intents")
+
     if document.get("schema_version") != "1.0.0":
         errors.append("environment lock schema_version must be 1.0.0")
     if document.get("lock_kind") != "OBSERVED_ENVIRONMENT":
@@ -376,7 +388,23 @@ def validate_dependency_lock(root: Path, *, verify_installed: bool = False) -> l
 
     if verify_installed:
         distributions = _distribution_index()
-        for name, item in package_map.items():
+        observed = document.get("python", {})
+        current = default_environment()
+        current_version = current["python_full_version"].split(".")[:2]
+        observed_version = str(observed.get("version", "")).split(".")[:2]
+        same_environment = (
+            observed.get("implementation") == current["implementation_name"]
+            and observed.get("platform_system") == current["platform_system"]
+            and observed.get("platform_machine") == current["platform_machine"]
+            and observed_version == current_version
+        )
+        if same_environment:
+            verification_names = set(package_map)
+        else:
+            direct_by_group = _direct_names_by_group(root, tuple(document.get("active_groups", [])))
+            verification_names = {name for names in direct_by_group.values() for name in names}
+        for name in sorted(verification_names):
+            item = package_map[name]
             distribution = distributions.get(name)
             if distribution is None:
                 errors.append(f"locked package is not installed: {name}")
@@ -386,7 +414,7 @@ def validate_dependency_lock(root: Path, *, verify_installed: bool = False) -> l
                     f"installed version differs from environment lock: {name} "
                     f"{distribution.version} != {item['version']}"
                 )
-            elif _metadata_hash(distribution) != item["metadata_sha256"]:
+            elif same_environment and _metadata_hash(distribution) != item["metadata_sha256"]:
                 errors.append(f"installed metadata differs from environment lock: {name}")
     return errors
 

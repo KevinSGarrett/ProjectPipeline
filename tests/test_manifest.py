@@ -28,6 +28,17 @@ class ManifestTests(unittest.TestCase):
             second = build_manifest(root)["aggregate_sha256"]
             self.assertEqual(first, second)
 
+    def test_manifest_text_digests_are_line_ending_neutral(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            path = root / "data.txt"
+            path.write_bytes(b"first\nsecond\n")
+            lf_record = build_manifest(root)["files"][0]
+            path.write_bytes(b"first\r\nsecond\r\n")
+            crlf_record = build_manifest(root)["files"][0]
+            self.assertEqual(lf_record["sha256"], crlf_record["sha256"])
+            self.assertEqual(lf_record["size_bytes"], crlf_record["size_bytes"])
+
     def test_manifest_excludes_local_secrets_and_internal_working_state(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
