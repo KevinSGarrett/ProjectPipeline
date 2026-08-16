@@ -33,10 +33,27 @@ from project_pipeline.lifecycle.takeover import (
 )
 from project_pipeline.lifecycle.validation import validate_lifecycle_foundation
 
+CANONICAL_PURSUING_GOAL = (
+    "Deliver and qualify ProjectPipeline as a continuously operating, local-first autonomous "
+    "engineering organization that accepts complete project inputs, compiles a verified project "
+    "model, autonomously selects and executes genuinely missing work through conflict-safe "
+    "parallel lanes and qualified workers, verifies results, governs GitHub and Jira, merges "
+    "accepted changes, reconciles external state, recomputes project state, handles "
+    "HUMAN_REQUIRED incidents without stopping unaffected work, exposes truthful live state "
+    "through the Command Center, and continues until the deterministic Completion Gate reports "
+    "COMPLETE for the integrated, released, and operationally verified system."
+)
+CANONICAL_SOURCE_REFERENCES = (
+    "SRC-014:L000001-L000087",
+    "SRC-015:L000031-L000150",
+)
+
 __all__ = [
     "PP327_BLOCKED_PATHS",
     "AttestationState",
     "AttestationValidation",
+    "CANONICAL_PURSUING_GOAL",
+    "CANONICAL_SOURCE_REFERENCES",
     "CheckpointDecision",
     "ContractEvolutionManager",
     "DurableAttestation",
