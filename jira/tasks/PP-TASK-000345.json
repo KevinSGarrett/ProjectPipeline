@@ -63,7 +63,7 @@
     "supply-chain"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-16T16:50:05.418151Z",
+    "observed_at_utc": "2026-08-16T17:03:41.035109Z",
     "remote_id": "25139",
     "remote_key": "PP-170",
     "snapshot_id": "JSNAP-BF9AE79785CAD5A59DA8",
@@ -111,7 +111,7 @@
   "source_references": [
     "SRC-009:L000008-L000008"
   ],
-  "state": "IN_PROGRESS",
+  "state": "MERGE_READY",
   "title": "Implement SOPS, age, and OpenBao secret-provider boundaries",
   "upstream_dependencies": []
 }
