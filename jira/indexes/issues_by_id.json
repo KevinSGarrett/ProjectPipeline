@@ -42364,10 +42364,10 @@
       "supply-chain"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-16T16:00:54.065612Z",
+      "observed_at_utc": "2026-08-16T16:12:53.472978Z",
       "remote_id": "25149",
       "remote_key": "PP-180",
-      "snapshot_id": "JSNAP-29F76D854EEEC5AED298",
+      "snapshot_id": "JSNAP-C22DB24AA95B46199799",
       "status_name": "In Progress"
     },
     "local_id": "PP-TASK-000344",
@@ -42417,7 +42417,7 @@
       "SRC-009:L000008-L000009",
       "SRC-015:L000662-L000702"
     ],
-    "state": "REVIEW",
+    "state": "VALIDATION",
     "title": "Implement scoped Secrets Broker leases and runtime-only materialization",
     "upstream_dependencies": []
   },
