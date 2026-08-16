@@ -1372,9 +1372,12 @@ def _resolve_takeover_evidence(
         if "invalid_evidence_payload" not in reasons:
             reasons.append("invalid_evidence_payload")
         payload = None
-    if isinstance(payload, dict):
-        if payload.get("project_id") != expected_project_id or payload.get("provider_id") != expected_provider_id or payload.get("scope") != expected_scope:
-            reasons.append("evidence_identity_mismatch")
+    if isinstance(payload, dict) and (
+        payload.get("project_id") != expected_project_id
+        or payload.get("provider_id") != expected_provider_id
+        or payload.get("scope") != expected_scope
+    ):
+        reasons.append("evidence_identity_mismatch")
     return {
         "valid": not reasons,
         "reasons": reasons,
