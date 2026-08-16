@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "f86e7e98f91e9a12ff4b153178f8967915636bdbb4a63345b83834246ce32547",
+  "aggregate_sha256": "05d91391a2dfd4deeb2375103488b9606e0d956269274c68f1de5e22a9ed8439",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2702,
+  "file_count": 2715,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -604,6 +604,11 @@
       "path": "config/platform_lifecycle_policy.json",
       "sha256": "cacdaa9eddd5e4e7b2dbae59438385d0a3d322cbf054bdc3121a5ee5d5c8e41d",
       "size_bytes": 1966
+    },
+    {
+      "path": "config/product_outcome.json",
+      "sha256": "5dea20a301c8b66e4980412ceb35892b522363435592eca318ac5610070e75cc",
+      "size_bytes": 7745
     },
     {
       "path": "config/project.json",
@@ -4071,6 +4076,11 @@
       "size_bytes": 255
     },
     {
+      "path": "evidence/lane_c_verification_report.json",
+      "sha256": "04ae0b2a7618bcefa6951528b06afcdb451a60f835b0fbc5feac828711595291",
+      "size_bytes": 2190
+    },
+    {
       "path": "evidence/migration_validation.txt",
       "sha256": "a120868bd3fc09d509fffc59557d83c4a1b7c4ac7ff8bd6cf4e1a6bd1c89bd3b",
       "size_bytes": 98
@@ -4164,6 +4174,31 @@
       "path": "evidence/pp19_regression_part04.txt",
       "sha256": "438a2f1328e6f6099e4765efb44b8131efcf76d8c911e798d67a2a42b6fc05a7",
       "size_bytes": 261
+    },
+    {
+      "path": "evidence/pp379_phase1_boundary_handoff_checkpoint_2026-08-16.md",
+      "sha256": "83e2639f6607cbf10370b91c9a0c6a2ce56fdd4fc43770aa1976fc4739f84571",
+      "size_bytes": 6483
+    },
+    {
+      "path": "evidence/pp379_phase1_control_sequence_snapshot.json",
+      "sha256": "b11d8b09b6f4aef11c8e9860328cbf2e7e312873d44a3adae40129dba2bd7353",
+      "size_bytes": 234250
+    },
+    {
+      "path": "evidence/pp379_phase1_scheduler_plan_snapshot.json",
+      "sha256": "50c4d6ffd63aab8c474cf8884084c8387258990c6218a5c59a225fa0408fa625",
+      "size_bytes": 170193
+    },
+    {
+      "path": "evidence/pp379_product_outcome_contract_alignment_checkpoint_2026-08-16.md",
+      "sha256": "559f14e7592280e79d02f5a589c4bba7edbc57dd543bef62b20036b07a8ee6c3",
+      "size_bytes": 1349
+    },
+    {
+      "path": "evidence/pp379_takeover_lane_scope_merge_ready_packet_2026-08-16.md",
+      "sha256": "ec3de52b7d66c3fe31dad79f74ff0c9660c26f5db351914b4979ca7b5c330cd2",
+      "size_bytes": 4237
     },
     {
       "path": "evidence/project_intake_foundation_validation.json",
@@ -8937,8 +8972,8 @@
     },
     {
       "path": "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
-      "sha256": "627e023cbf7a3fb4714e82c14c76588279880abc0711b70220cffb31db1d8143",
-      "size_bytes": 3910
+      "sha256": "e327ed1e43d7c11a278fa71f39e496bd7ed942a5c1c16f4ecf53c5eda14cd865",
+      "size_bytes": 3403
     },
     {
       "path": "plans/00_project_definition/PLAN-PDEF-002_project_intake_and_compilation.md",
@@ -9387,8 +9422,8 @@
     },
     {
       "path": "plans/_line_numbered/PLAN-PDEF-001_project_definition.lines.txt",
-      "sha256": "196fa2bbe022c54d922553080778d0263e04874cfcc5a54f613606030e238c0b",
-      "size_bytes": 4370
+      "sha256": "0c15a037d4b144ceb64b9de1a1f7c50aa2aad3fc902ac65fc6177746de518060",
+      "size_bytes": 3863
     },
     {
       "path": "plans/_line_numbered/PLAN-PDEF-002_project_intake_and_compilation.lines.txt",
@@ -10906,6 +10941,11 @@
       "size_bytes": 1079
     },
     {
+      "path": "schemas/product_outcome.schema.json",
+      "sha256": "e041b4567e516da6f499cf3b4fcf875fdf2830d76b168f191f1e788e00bc4d1c",
+      "size_bytes": 7232
+    },
+    {
       "path": "schemas/project_gap_report.schema.json",
       "sha256": "07da875375b7671034d04717525bf06bf66d08a164827a9d3deb4877f88e629e",
       "size_bytes": 3066
@@ -11306,6 +11346,11 @@
       "size_bytes": 2374
     },
     {
+      "path": "scripts/run_takeover_lane_c_verification.py",
+      "sha256": "dca7cd39ccc36fd07139026f90eab10780f4c157e7194002aaab9ec3007f5a9b",
+      "size_bytes": 6186
+    },
+    {
       "path": "scripts/validate_instructions.py",
       "sha256": "1bafac1c353ca7bb6dd02651d7368279bc8d69931b29e23f15a5a81ce0235502",
       "size_bytes": 36721
@@ -11547,8 +11592,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "417a91bc35adb520cdcf016cf258f7501c0edf0d51be48305cb59b24d01ac900",
-      "size_bytes": 120858
+      "sha256": "79e3ae667ff19f3a877b7ff81526b9692729351c0f3f3277ce1adbb6891d59c1",
+      "size_bytes": 125768
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -11792,8 +11837,8 @@
     },
     {
       "path": "src/project_pipeline/cursor_takeover.py",
-      "sha256": "1ce6b453fbd83a1067c2c86322929d5d6ad45a9738cb1890d432964635f6b0b1",
-      "size_bytes": 18911
+      "sha256": "04c10aa022a1d88425b7156c07521db0ce01a4dfa7431a22b0b906fbe8eaaaed",
+      "size_bytes": 18211
     },
     {
       "path": "src/project_pipeline/dependencies.py",
@@ -12077,8 +12122,8 @@
     },
     {
       "path": "src/project_pipeline/lifecycle/__init__.py",
-      "sha256": "75185ab4679a49f16dd7e16c260f74f405e346d7d308a8c60134f4d776d389dd",
-      "size_bytes": 1195
+      "sha256": "a036f06d48a83d5c943e7cd91dc1e67e4f6047f8da1a05843ca42310dc89b98a",
+      "size_bytes": 2055
     },
     {
       "path": "src/project_pipeline/lifecycle/adoption.py",
@@ -12124,6 +12169,11 @@
       "path": "src/project_pipeline/lifecycle/simulation.py",
       "sha256": "b29262970b97e2977fd8642894f8fb016c974cc23fe85bec1aa56c7a46b48751",
       "size_bytes": 3888
+    },
+    {
+      "path": "src/project_pipeline/lifecycle/takeover.py",
+      "sha256": "e56ea23f2013b2db6a3609cbc07f4c202d1e9a3a8537be1c026b8aa6a4892bbc",
+      "size_bytes": 5427
     },
     {
       "path": "src/project_pipeline/lifecycle/validation.py",
@@ -12192,8 +12242,8 @@
     },
     {
       "path": "src/project_pipeline/orchestration/runtime.py",
-      "sha256": "04599427b8490943a3d18d95bc165b0b6aaa580a012eaa450f55c0f7c4e03c06",
-      "size_bytes": 21292
+      "sha256": "fbbabbec5870e0e67c370b91aac9810236f5bd96f380c5d9326e970211db39ea",
+      "size_bytes": 21918
     },
     {
       "path": "src/project_pipeline/orchestration/service.py",
@@ -12377,8 +12427,8 @@
     },
     {
       "path": "src/project_pipeline/scheduler/engine.py",
-      "sha256": "e25389048c18051975df4c05de41d85961884d6cb5d37e05fd02f92492963bf7",
-      "size_bytes": 12970
+      "sha256": "3a821f33384ca36a4955a3487e13b1498fdc9c9412f5f7aa348aa1974ee97625",
+      "size_bytes": 13559
     },
     {
       "path": "src/project_pipeline/scheduler/ortools_optimizer.py",
@@ -12957,8 +13007,8 @@
     },
     {
       "path": "tests/test_control_cli.py",
-      "sha256": "bf9ed486d897d26e31e5965b0039f5599d438e88b5d151dffa352109a366d29b",
-      "size_bytes": 3712
+      "sha256": "fa3b3912f541c3e35b26590d0fd8429ea00236859669648c674c92b8fee5c785",
+      "size_bytes": 4415
     },
     {
       "path": "tests/test_control_domain.py",
@@ -13167,8 +13217,8 @@
     },
     {
       "path": "tests/test_orchestration_runtime.py",
-      "sha256": "d15e0f992710838a22e04b93a0287bc9e2a582566be007d63d42ca2dd13faa9e",
-      "size_bytes": 7397
+      "sha256": "5118fb431098550857dccfb42538f9c6b29013cfb8aa2f91271c28b6ff5b8611",
+      "size_bytes": 7885
     },
     {
       "path": "tests/test_orchestration_simulation.py",
@@ -13199,6 +13249,11 @@
       "path": "tests/test_pass25_final_convergence.py",
       "sha256": "ad19339b9726eee4cff700073e1bfe18f776f81314fce3dbc43614b504905839",
       "size_bytes": 7302
+    },
+    {
+      "path": "tests/test_product_outcome_reconciliation.py",
+      "sha256": "276d358bfdab95a5bdab0d9de0b504f23f8683a2b90afc66eff123753521169b",
+      "size_bytes": 2931
     },
     {
       "path": "tests/test_project_bootstrap.py",
@@ -13317,8 +13372,8 @@
     },
     {
       "path": "tests/test_scheduler_cli.py",
-      "sha256": "a7dbf76c2c820b7d2642e3ee72e3ebbc4d1633f4283a61fb2e7210a047cfdbe2",
-      "size_bytes": 5293
+      "sha256": "47aff9d1953be69525f19aa68a24cf6a3beba1bc9a510fefa37828270460ee98",
+      "size_bytes": 6311
     },
     {
       "path": "tests/test_scheduler_conflicts.py",
@@ -13332,8 +13387,8 @@
     },
     {
       "path": "tests/test_scheduler_engine.py",
-      "sha256": "c649b9e9a247ecdd6ca4c36a2be986c121f51a9d6f877ac5e2bd68e48735c312",
-      "size_bytes": 7256
+      "sha256": "d047c3f13d18175b2508378a7f3211ae89b16fe7cd6d2f2909ad5c2f6b787379",
+      "size_bytes": 7955
     },
     {
       "path": "tests/test_scheduler_persistence.py",
@@ -13394,6 +13449,16 @@
       "path": "tests/test_state_cli.py",
       "sha256": "56f6edec2c6400e4d3cde5e4c9747cefdfa2e4fc851fd9a9c5f475696a8932be",
       "size_bytes": 2609
+    },
+    {
+      "path": "tests/test_takeover_governor.py",
+      "sha256": "53d22e45482a9460801a14f854275d401d2665c6af7e4a58c655ab69ac79879d",
+      "size_bytes": 4771
+    },
+    {
+      "path": "tests/test_takeover_lane_invariants_meta.py",
+      "sha256": "21a274f92ce8ed63ed9d2e024fc6214ca47ad48772af6e2eb11e2cff802901be",
+      "size_bytes": 2674
     },
     {
       "path": "tests/test_traceability.py",
@@ -13521,7 +13586,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T20:08:36.434792+00:00",
+  "generated_at_utc": "2026-08-16T22:22:36.779647+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13530,5 +13595,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22676936
+  "total_bytes": 23140783
 }

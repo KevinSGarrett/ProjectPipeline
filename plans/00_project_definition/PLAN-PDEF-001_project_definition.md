@@ -41,6 +41,6 @@ Success requires bidirectional traceability, reproducible deployment, verified c
 
 The target Windows path and locally downloaded upstream repositories are not available in the current execution environment. External GitHub, Jira, provider, purchasing, and cloud mutations remain disabled without explicit authorization and credentials. These constraints do not prevent local implementation, mock verification, contracts, tests, packaging, or exact activation procedures.
 
-## PLAN-PDEF-001:SEC-08 Continuous autonomous operating outcome
+## PLAN-PDEF-001:SEC-08 Autonomous operating outcome
 
-ProjectPipeline shall operate as a continuously running autonomous engineering organization: project input flows through intake and verified model compilation; the Autonomy Director and deterministic control plane select genuinely missing critical-path work; conflict-safe lanes implement and verify cohesive slices; governed GitHub and Jira adapters merge and reconcile accepted results; Control recomputes the next work; HUMAN_REQUIRED incidents pause only affected resources; and the cycle repeats until the deterministic Completion Gate proves the integrated, released, and operationally verified product complete. Component presence, advisory chat, mock-only stages, or Jira lifecycle movement cannot satisfy this outcome.
+ProjectPipeline SHALL preserve and enforce the complete source-derived autonomous operating-loop product outcome in requirements, completion controls, and runtime governance without reducing it to disconnected component checklists.

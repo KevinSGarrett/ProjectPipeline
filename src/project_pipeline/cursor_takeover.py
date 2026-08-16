@@ -14,20 +14,11 @@ from project_pipeline.control import ProjectControlKernel
 from project_pipeline.domain.agents import ExecutionTaskContract
 from project_pipeline.io import write_json
 from project_pipeline.jira import load_issues
+from project_pipeline.lifecycle import CANONICAL_PURSUING_GOAL, CANONICAL_SOURCE_REFERENCES
 from project_pipeline.persistence import SQLiteStateStore
 from project_pipeline.requirements import load_requirement_catalog
 
-CURSOR_GOAL = (
-    "Deliver and qualify ProjectPipeline as a continuously operating, local-first "
-    "autonomous engineering organization that accepts complete project inputs, "
-    "compiles a verified project model, autonomously selects and executes genuinely "
-    "missing work through conflict-safe parallel lanes and qualified workers, verifies "
-    "results, governs GitHub and Jira, merges accepted changes, reconciles external "
-    "state, recomputes project state, handles HUMAN_REQUIRED incidents without stopping "
-    "unaffected work, exposes truthful live state through the Command Center, and "
-    "continues until the deterministic Completion Gate reports COMPLETE for the "
-    "integrated, released, and operationally verified system."
-)
+CURSOR_GOAL = CANONICAL_PURSUING_GOAL
 
 
 class CandidateClassification(StrEnum):
@@ -124,7 +115,7 @@ def validate_cursor_takeover(root: Path) -> CursorSetupReport:
     project = json.loads((root / "config/project.json").read_text(encoding="utf-8"))
     if project.get("pursuing_goal") != CURSOR_GOAL:
         errors.append("canonical project pursuing goal does not match the autonomous outcome")
-    if policy.get("source_references") != ["SRC-014:L000001-L000087", "SRC-015:L000031-L000150"]:
+    if tuple(policy.get("source_references", ())) != CANONICAL_SOURCE_REFERENCES:
         errors.append("Cursor takeover policy does not bind the canonical source ranges")
     pack = policy.get("original_knowledge_pack")
     if not isinstance(pack, dict) or pack.get("archive_sha256") != (
@@ -159,10 +150,7 @@ def validate_cursor_takeover(root: Path) -> CursorSetupReport:
             "and operationally verified system."
         ):
             errors.append("REQ-PDEF-0011 no longer preserves the complete operating loop")
-        if outcome.get("source_references") != [
-            "SRC-014:L000001-L000087",
-            "SRC-015:L000031-L000150",
-        ]:
+        if tuple(outcome.get("source_references", ())) != CANONICAL_SOURCE_REFERENCES:
             errors.append("REQ-PDEF-0011 source binding has drifted")
 
     source_sections = root / "plans/_traceability/source_sections.jsonl"

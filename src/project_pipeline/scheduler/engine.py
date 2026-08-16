@@ -20,6 +20,7 @@ from project_pipeline.domain.scheduler import (
     SchedulerTaskProfile,
     scheduler_identifier,
 )
+from project_pipeline.lifecycle import claim_is_admissible
 from project_pipeline.scheduler.backpressure import evaluate_backpressure
 from project_pipeline.scheduler.conflicts import build_conflict_graph
 from project_pipeline.scheduler.ortools_optimizer import (
@@ -102,6 +103,17 @@ class DynamicLaneScheduler:
                     state=AdmissionState.WORKSPACE_UNSAFE,
                     admitted=False,
                     reasons=("workspace_not_isolated",),
+                )
+                continue
+            path_claims = tuple(
+                claim.resource_key for claim in candidate.claims if claim.resource_type.value == "PATH"
+            )
+            if path_claims and not claim_is_admissible(path_claims):
+                admissions[candidate.task_id] = AdmissionDecision(
+                    task_id=candidate.task_id,
+                    state=AdmissionState.POLICY_DENIED,
+                    admitted=False,
+                    reasons=("pp327_owned_path_collision",),
                 )
                 continue
             reasons = admission_reasons(candidate.claims, registry, when=now)

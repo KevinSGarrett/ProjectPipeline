@@ -227,3 +227,24 @@ def test_scheduler_is_deterministic_for_same_semantic_inputs() -> None:
     second = DynamicLaneScheduler().plan(control, profiles, registry(cpu=4, reserve=1), now=NOW)
     assert first.plan_id == second.plan_id
     assert first.lanes == second.lanes
+
+
+def test_scheduler_blocks_pp327_owned_path_claims() -> None:
+    control = control_snapshot(task_ids=("PP-TASK-000001",))
+    profiles = (
+        profile(
+            "PP-TASK-000001",
+            1,
+            100,
+            ResourceClaim(
+                resource_key="src/project_pipeline/domain/state.py",
+                resource_type=ResourceType.PATH,
+            ),
+        ),
+    )
+    plan = DynamicLaneScheduler().plan(
+        control, profiles, ResourceRegistrySnapshot.create(pools=(), observed_at_utc=NOW), now=NOW
+    )
+    assert not plan.lanes
+    assert plan.admissions[0].state.value == "POLICY_DENIED"
+    assert "pp327_owned_path_collision" in plan.admissions[0].reasons
