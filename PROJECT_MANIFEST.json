@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "f58df9a720b49a10c3e9a709b072c6f1caa276e7af5b69472b36128076b8c0bd",
+  "aggregate_sha256": "75f4731c3446afacde7b9ef1051674d43ae5c06dbe1e5059eae0724a439fdc89",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -4932,8 +4932,8 @@
     },
     {
       "path": "jira/BOARD_MANIFEST.json",
-      "sha256": "bf90419415db6895d715d16b507c1158e02dba442c520fec6a6ee2fdaa7e8eb7",
-      "size_bytes": 615
+      "sha256": "e1ff940bd3fb5e5dbb1c8590a7c9110956d511f8dc9f36105123e1b4712086b7",
+      "size_bytes": 610
     },
     {
       "path": "jira/bugs/README.md",
@@ -5042,13 +5042,13 @@
     },
     {
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "77d816bab709d12186a6948ad91171299ed94d1807063107deb35ecb21212645",
-      "size_bytes": 1590634
+      "sha256": "9d4ed6c6fa13216b71b8933cb41ee0386da6176f94ff10f5e784614240fc42b3",
+      "size_bytes": 1590635
     },
     {
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "e40335b8d6ee3d95ae4a22d13e9c2270143ba867dcb49e41b77161aa8a6b30ea",
-      "size_bytes": 1879554
+      "sha256": "069b9e21d4c7181aa8f76e5cbb340065bc5247c214f903de6c522b3542f2cbc7",
+      "size_bytes": 1879555
     },
     {
       "path": "jira/README.md",
@@ -5057,8 +5057,8 @@
     },
     {
       "path": "jira/relationships/graph.json",
-      "sha256": "16645611cf5627423a90f8dd7a3eedc47b5dca571e52c501881d45e4e24625a7",
-      "size_bytes": 147912
+      "sha256": "27390e454bf857b8cc2c7dc25f572a20d9cee6e4055d6e7b80355be812ae77bc",
+      "size_bytes": 147907
     },
     {
       "path": "jira/relationships/issues.jsonl",
@@ -5067,8 +5067,8 @@
     },
     {
       "path": "jira/reports/backlog_status.json",
-      "sha256": "8d877441294ef310a86c4ed1c2a4b9d655eba74efda73f8d8b523066a0c5be63",
-      "size_bytes": 326
+      "sha256": "8a541c664814adb99b4cb604d65a428fe0a3127ec4faa45f5545dfceff215af8",
+      "size_bytes": 321
     },
     {
       "path": "jira/reports/foundation_status.json",
@@ -8617,8 +8617,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000341.json",
-      "sha256": "276155362fdd930e31642731c5afc5dbc6a4a723e41beaf62cc04280425c57c6",
-      "size_bytes": 4652
+      "sha256": "45e0070acb61aea2ae9d807f12b2793f77cb81bf2ea1fb776e4bff4a11c2880d",
+      "size_bytes": 4653
     },
     {
       "path": "jira/tasks/PP-TASK-000342.json",
@@ -13396,7 +13396,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T12:30:05.664793+00:00",
+  "generated_at_utc": "2026-08-16T12:45:48.731629+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13405,5 +13405,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22559540
+  "total_bytes": 22559528
 }
