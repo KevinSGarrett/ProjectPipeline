@@ -3,13 +3,6 @@ name: CodeQL security analysis
 on:
   pull_request:
     branches: [main]
-    paths:
-      - "src/**"
-      - "tests/**"
-      - "scripts/**"
-      - "pyproject.toml"
-      - "requirements/**"
-      - ".github/workflows/codeql.yml"
   push:
     branches: [main]
   schedule:

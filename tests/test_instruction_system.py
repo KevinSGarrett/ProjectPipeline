@@ -84,6 +84,13 @@ def test_mutable_action_reference_is_rejected() -> None:
     assert any(item.code == "ACT002" for item in report.errors)
 
 
+def test_required_codeql_check_runs_for_every_pull_request() -> None:
+    workflow = (ROOT / ".github/workflows/codeql.yml").read_text(encoding="utf-8")
+    pull_request_block = workflow.split("  pull_request:\n", 1)[1].split("  push:\n", 1)[0]
+    assert "branches: [main]" in pull_request_block
+    assert "paths:" not in pull_request_block
+
+
 def test_context_and_security_policy_weakening_are_rejected() -> None:
     module = load_script(
         "validate_instructions_policy_guard", ROOT / "scripts/validate_instructions.py"

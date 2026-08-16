@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "9e7d491481dc22151d7fa1fbc78c15f371322557d07521d73769635ffc89b23f",
+  "aggregate_sha256": "c3bf1662918b693ea78dd4d2ef99c64044b1dfa8903875558e435f54f7ecaabb",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -87,8 +87,8 @@
     },
     {
       "path": ".github/workflows/codeql.yml",
-      "sha256": "5d525ed4a55628f563062f7004074277f767eb137cf8e66eb8ce5678c1cefc62",
-      "size_bytes": 1141
+      "sha256": "8b0654b40428cb7f05de4a67f5d1496755268c767c82dcd7b6d4f2175bad3f27",
+      "size_bytes": 983
     },
     {
       "path": ".github/workflows/quality.yml",
@@ -4837,8 +4837,8 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "64d4eae38b6deb1e8965dd3cfcb90808592e969e4c34bf4e5234a9d30d001f8a",
-      "size_bytes": 24883
+      "sha256": "d50c59c116e894a5ae9b6e51f22a29ae63ed8f3d9e25430b438b2c8949a79fbb",
+      "size_bytes": 24882
     },
     {
       "path": "instructions/policies/BRANCH_PR_POLICY.json",
@@ -12922,8 +12922,8 @@
     },
     {
       "path": "tests/test_instruction_system.py",
-      "sha256": "09555659c08045cd930e47f514d0fe9dd9d0130b5e3bc2ccd490c3163f3f13f5",
-      "size_bytes": 5342
+      "sha256": "43f0264215e5524ea653bffc762e37f9cf7008af25425fc601ae7f49919fda7a",
+      "size_bytes": 5687
     },
     {
       "path": "tests/test_intake_cli.py",
@@ -13396,7 +13396,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T11:06:50.190220+00:00",
+  "generated_at_utc": "2026-08-16T11:19:18.521327+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13405,5 +13405,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22559317
+  "total_bytes": 22559503
 }
