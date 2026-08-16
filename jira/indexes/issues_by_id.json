@@ -41872,10 +41872,10 @@
       "supply-chain"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-16T10:28:57.127010Z",
+      "observed_at_utc": "2026-08-16T11:05:39.299173Z",
       "remote_id": "25224",
       "remote_key": "PP-255",
-      "snapshot_id": "JSNAP-A8C331AEB5B5D58ACD80",
+      "snapshot_id": "JSNAP-3D72B2934FDDB41C9DD3",
       "status_name": "To Do"
     },
     "local_id": "PP-TASK-000340",
@@ -41924,7 +41924,7 @@
       "GOV-001:L001364-L001385",
       "SRC-011:L001212-L001345"
     ],
-    "state": "READY",
+    "state": "IN_PROGRESS",
     "title": "Complete security upstream-first review and activation gate",
     "upstream_dependencies": []
   },

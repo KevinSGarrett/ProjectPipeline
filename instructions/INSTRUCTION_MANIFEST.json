@@ -136,8 +136,8 @@
       "instruction_id": "PP-ASSET-GITHUB-WORKFLOWS-CODEQL-YML",
       "kind": "GITHUB_GOVERNANCE",
       "path": ".github/workflows/codeql.yml",
-      "sha256": "5d525ed4a55628f563062f7004074277f767eb137cf8e66eb8ce5678c1cefc62",
-      "size_bytes": 1141
+      "sha256": "8b0654b40428cb7f05de4a67f5d1496755268c767c82dcd7b6d4f2175bad3f27",
+      "size_bytes": 983
     },
     {
       "instruction_id": "PP-ASSET-GITHUB-WORKFLOWS-QUALITY-YML",
@@ -598,8 +598,8 @@
       "instruction_id": "PP-ASSET-TESTS-TEST-INSTRUCTION-SYSTEM-PY",
       "kind": "TEST",
       "path": "tests/test_instruction_system.py",
-      "sha256": "09555659c08045cd930e47f514d0fe9dd9d0130b5e3bc2ccd490c3163f3f13f5",
-      "size_bytes": 5342
+      "sha256": "43f0264215e5524ea653bffc762e37f9cf7008af25425fc601ae7f49919fda7a",
+      "size_bytes": 5687
     },
     {
       "instruction_id": "PP-ASSET-TESTS-TEST-SECURITY-UPSTREAM-ADAPTERS-PY",
