@@ -14,6 +14,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "properties": {
+    "administrative_ratio_milli": {
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Administrative Ratio Milli",
+      "type": "integer"
+    },
     "attempts_used": {
       "minimum": 0,
       "title": "Attempts Used",
@@ -29,6 +35,11 @@
     "progress_detected": {
       "title": "Progress Detected",
       "type": "boolean"
+    },
+    "progressless_cycle_count": {
+      "minimum": 0,
+      "title": "Progressless Cycle Count",
+      "type": "integer"
     },
     "reasons": {
       "items": {
@@ -72,6 +83,8 @@
     "unchanged_output_count",
     "repeated_action_count",
     "progress_detected",
+    "progressless_cycle_count",
+    "administrative_ratio_milli",
     "reasons"
   ],
   "title": "LoopGuardDecision",

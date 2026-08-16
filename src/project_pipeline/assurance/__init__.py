@@ -4,6 +4,11 @@ from project_pipeline.assurance.completion import (
     build_repository_gate_facts,
     evaluate_completion_gate,
 )
+from project_pipeline.assurance.delivery_progress import (
+    calculate_progress_delta,
+    evaluate_delivery_gate,
+    load_delivery_policy,
+)
 from project_pipeline.assurance.evidence import (
     assess_evidence_for_criterion,
     evidence_sufficient,
@@ -22,12 +27,15 @@ __all__ = [
     "assess_candidate_completion",
     "assess_evidence_for_criterion",
     "build_repository_gate_facts",
+    "calculate_progress_delta",
     "compile_issue_criteria",
     "compile_repository_plan",
     "evaluate_completion_gate",
+    "evaluate_delivery_gate",
     "evaluate_loop",
     "evaluate_scope_change",
     "evidence_sufficient",
+    "load_delivery_policy",
     "load_evidence",
     "truth_from_claim",
     "verified_fact",

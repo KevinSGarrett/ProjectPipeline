@@ -27,6 +27,9 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
         with:
           python-version: ${{ matrix.python-version }}
@@ -46,6 +49,12 @@ jobs:
         run: |
           python scripts/validate_instructions.py --root .
           python scripts/instruction_cold_start.py --root .
+      - name: Enforce cohesive delivery progress
+        if: github.event_name == 'pull_request' && matrix.python-version == '3.11'
+        run: >-
+          project-pipeline assurance delivery-gate --root .
+          --base-ref "${{ github.event.pull_request.base.sha }}"
+          --head-ref "${{ github.event.pull_request.head.sha }}"
       - name: Lint and formatting check
         run: |
           ruff check src tests

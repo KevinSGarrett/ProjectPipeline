@@ -252,6 +252,7 @@
         "BLOCKED",
         "HUMAN_REQUIRED",
         "EXTERNAL_BLOCKED",
+        "RECONCILIATION_REQUIRED",
         "POLICY_DENIED"
       ],
       "title": "EligibilityState",

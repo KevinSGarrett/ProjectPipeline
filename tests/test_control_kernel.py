@@ -2,7 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from project_pipeline.control import ProjectControlKernel
+from project_pipeline.control import BuildSequencer, ProjectControlKernel
+from project_pipeline.control.kernel import issue_has_reconciliation_evidence
+from project_pipeline.domain.control import EligibilityState, TaskControlFact
+from project_pipeline.domain.state import TaskLifecycleState
 from project_pipeline.jira import load_issues
 from project_pipeline.persistence import SQLiteStateStore
 from project_pipeline.services import CoreStateService
@@ -114,3 +117,90 @@ def test_repeated_unchanged_evaluation_has_same_semantic_snapshot_id(tmp_path: P
         assert first.snapshot_id == second.snapshot_id
         assert first.snapshot_fingerprint == second.snapshot_fingerprint
         assert first.sequence.sequence_id == second.sequence.sequence_id
+
+
+def test_already_implemented_work_requires_reconciliation_not_new_implementation() -> None:
+    fact = TaskControlFact(
+        task_id="PP-TASK-000001",
+        project_id="PROJECT-PIPELINE",
+        state=TaskLifecycleState.BACKLOG,
+        priority="P1",
+        risk="MEDIUM",
+        requirement_ids=("REQ-ASSURE-0008",),
+        reconciliation_required=True,
+    )
+
+    decision = BuildSequencer((fact,)).eligibility(fact)
+
+    assert decision.state is EligibilityState.RECONCILIATION_REQUIRED
+    assert not decision.eligible
+    assert "batch-reconcile" in decision.reasons[0]
+
+
+def test_issue_level_proof_is_required_before_reconciliation_routing(tmp_path: Path) -> None:
+    artifact = tmp_path / "src" / "feature.py"
+    artifact.parent.mkdir(parents=True)
+    artifact.write_text("VALUE = 1\n", encoding="utf-8")
+    issue = {
+        "implementation_state": "PLANNED_ONLY",
+        "expected_implementation_artifacts": ["src/feature.py"],
+        "acceptance_criteria": [
+            {"verification": {"status": "PLANNED", "path": "src/feature.py"}},
+        ],
+        "required_tests": ["TEST-FEATURE-001"],
+        "completion_evidence": [],
+    }
+
+    assert not issue_has_reconciliation_evidence(tmp_path, issue)
+
+    issue["implementation_state"] = "IMPLEMENTED"
+    issue["acceptance_criteria"][0]["verification"]["status"] = "VERIFIED"
+    issue["completion_evidence"] = ["EVID-000001"]
+    assert issue_has_reconciliation_evidence(tmp_path, issue)
+
+
+def test_planned_issue_with_existing_artifacts_and_evidence_routes_to_audit(
+    tmp_path: Path,
+) -> None:
+    artifact = tmp_path / "src" / "feature.py"
+    artifact.parent.mkdir(parents=True)
+    artifact.write_text("VALUE = 1\n", encoding="utf-8")
+    issue = {
+        "implementation_state": "PLANNED_ONLY",
+        "expected_implementation_artifacts": ["src/feature.py"],
+        "acceptance_criteria": [
+            {"verification": {"status": "PLANNED", "path": "src/feature.py"}},
+        ],
+        "required_tests": ["TEST-FEATURE-001"],
+        "completion_evidence": ["EVID-000001"],
+    }
+
+    assert issue_has_reconciliation_evidence(tmp_path, issue)
+
+
+def test_missing_issue_artifact_cannot_be_hidden_by_complete_requirement_evidence(
+    tmp_path: Path,
+) -> None:
+    issue = {
+        "implementation_state": "IMPLEMENTED",
+        "expected_implementation_artifacts": ["src/missing.py"],
+        "acceptance_criteria": [{"verification": {"status": "VERIFIED", "path": "src/missing.py"}}],
+        "required_tests": ["TEST-FEATURE-001"],
+        "completion_evidence": ["EVID-000001"],
+    }
+
+    assert not issue_has_reconciliation_evidence(tmp_path, issue)
+
+
+def test_known_mismapped_incomplete_task_remains_implementation_eligible(
+    tmp_path: Path,
+) -> None:
+    with initialized_store(tmp_path / "control.db") as store:
+        kernel = ProjectControlKernel(ROOT, store, "PROJECT-PIPELINE")
+        fact = next(item for item in kernel.task_facts() if item.task_id == "PP-TASK-000168")
+
+        assert not fact.reconciliation_required
+        assert (
+            BuildSequencer(kernel.task_facts()).eligibility(fact).state
+            is not EligibilityState.RECONCILIATION_REQUIRED
+        )

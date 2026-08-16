@@ -70,6 +70,15 @@ PYTHONPATH=src python -m project_pipeline validate --root .
 PYTHONPATH=src python -m pytest -q
 ```
 
+Before opening or updating a pull request, commit the cohesive candidate and enforce objective delivery progress against its exact base:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m project_pipeline assurance delivery-gate --root . --base-ref <base-sha> --head-ref HEAD
+```
+
+The gate rejects lifecycle-only micro-PRs. Already-implemented/evidenced work is bulk-reconciled; expensive validation belongs to the cohesive vertical-slice boundary. See [`docs/assurance/delivery_progress.md`](docs/assurance/delivery_progress.md).
+
 
 ## Project intake and compilation
 

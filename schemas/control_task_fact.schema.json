@@ -131,6 +131,11 @@
       "title": "Project Id",
       "type": "string"
     },
+    "reconciliation_required": {
+      "default": false,
+      "title": "Reconciliation Required",
+      "type": "boolean"
+    },
     "requirement_ids": {
       "default": [],
       "items": {

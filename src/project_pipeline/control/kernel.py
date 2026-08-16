@@ -37,6 +37,41 @@ _ACTIVE_WORK = {
     TaskLifecycleState.IN_REVIEW,
     TaskLifecycleState.VALIDATING,
 }
+_RECONCILABLE_ISSUE_IMPLEMENTATION_STATES = {
+    ImplementationState.IMPLEMENTED.value,
+    ImplementationState.MOCK_VERIFIED.value,
+    ImplementationState.LIVE_VERIFIED.value,
+}
+
+
+def issue_has_reconciliation_evidence(root: Path, issue: dict[str, Any]) -> bool:
+    implementation_state = issue.get("implementation_state")
+    if implementation_state not in _RECONCILABLE_ISSUE_IMPLEMENTATION_STATES | {
+        ImplementationState.PLANNED_ONLY.value,
+        ImplementationState.PARTIALLY_IMPLEMENTED.value,
+    }:
+        return False
+    artifacts = issue.get("expected_implementation_artifacts", ())
+    if not artifacts or not all(
+        isinstance(path, str) and (root / path).exists() for path in artifacts
+    ):
+        return False
+    criteria = issue.get("acceptance_criteria", ())
+    if not criteria:
+        return False
+    for item in criteria:
+        if not isinstance(item, dict) or not isinstance(item.get("verification"), dict):
+            return False
+        verification = item["verification"]
+        path = verification.get("path")
+        if not isinstance(path, str) or not (root / path).exists():
+            return False
+        if (
+            implementation_state in _RECONCILABLE_ISSUE_IMPLEMENTATION_STATES
+            and verification.get("status") != "VERIFIED"
+        ):
+            return False
+    return bool(issue.get("required_tests")) and bool(issue.get("completion_evidence"))
 
 
 def _json_fingerprint(value: Any) -> str:
@@ -77,6 +112,18 @@ class ProjectControlKernel:
                 item.get("implementation_state") == ImplementationState.BLOCKED_EXTERNAL.value
                 for item in linked
             )
+            implementation_complete = bool(linked) and all(
+                item.get("implementation_state") in _COMPLETE_REQUIREMENT_STATES for item in linked
+            )
+            implementation_mapped = implementation_complete and all(
+                item.get("implementation_state") == ImplementationState.BLOCKED_EXTERNAL.value
+                or (
+                    bool(item.get("implementation_paths"))
+                    and all((self.root / path).exists() for path in item["implementation_paths"])
+                    and bool(item.get("evidence_ids"))
+                )
+                for item in linked
+            )
             priority = state.priority
             facts.append(
                 TaskControlFact(
@@ -91,6 +138,8 @@ class ProjectControlKernel:
                     requirement_ids=tuple(issue.get("requirement_ids", ())),
                     accepted=accepted,
                     external_blocked=external_blocked,
+                    reconciliation_required=implementation_mapped
+                    and issue_has_reconciliation_evidence(self.root, issue),
                 )
             )
         return tuple(sorted(facts, key=lambda item: item.task_id))

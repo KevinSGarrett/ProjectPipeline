@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-09` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.1.0` |
 | Primary domains | `ci`, `merge_gate`, `security` |
 | Governing entry point | `AGENTS.md` |
 
@@ -64,3 +64,5 @@ Source-controlled workflow files do not prove live settings. Verify through GitH
 ## Local parity
 
 Required CI checks have documented local commands in `README.md`, `Makefile`, and the instruction manifest. A merge-critical check should not exist only as unexplained hosted behavior when local reproduction is feasible.
+
+Every pull request runs the delivery-progress gate against the exact base and head. It rejects lifecycle-only micro-PRs and reports objective progress plus administrative ratio. Reproduce it locally after committing the candidate with `python -m project_pipeline assurance delivery-gate --root . --base-ref <base-sha> --head-ref HEAD`. The expensive risk-tier gate runs once for the cohesive slice boundary, not once for each internal lifecycle transition.

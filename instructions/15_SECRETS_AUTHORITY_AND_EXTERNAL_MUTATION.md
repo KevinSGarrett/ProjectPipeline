@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-15` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.1.0` |
 | Primary domains | `external_mutation`, `secrets` |
 | Governing entry point | `AGENTS.md` |
 

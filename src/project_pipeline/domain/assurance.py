@@ -12,7 +12,7 @@ from pydantic import Field, field_validator, model_validator
 from project_pipeline.domain.base import DomainModel, utc_now
 
 ASSURANCE_ID = re.compile(
-    r"^(CRIT|VPLAN|TRUTH|REVIEW|GATE|LOOP|SCOPE|SCHANGE|CAND|FAIL|SIM)-[A-F0-9]{20}$"
+    r"^(CRIT|VPLAN|TRUTH|REVIEW|GATE|LOOP|SCOPE|SCHANGE|CAND|FAIL|SIM|PDELTA|DELIVERY)-[A-F0-9]{20}$"
 )
 
 
@@ -29,6 +29,8 @@ def assurance_identifier(
         "CAND",
         "FAIL",
         "SIM",
+        "PDELTA",
+        "DELIVERY",
     ],
     *parts: str,
 ) -> str:
@@ -112,6 +114,25 @@ class LoopDisposition(StrEnum):
     CONTINUE = "CONTINUE"
     REQUIRE_NOVELTY = "REQUIRE_NOVELTY"
     STOP_AND_ESCALATE = "STOP_AND_ESCALATE"
+
+
+class DeliveryGateState(StrEnum):
+    PASS = "PASS"
+    BLOCKED = "BLOCKED"
+
+
+class WorkUnitKind(StrEnum):
+    IMPLEMENTATION = "IMPLEMENTATION"
+    VERIFICATION = "VERIFICATION"
+    EVIDENCE = "EVIDENCE"
+    BLOCKER_REDUCTION = "BLOCKER_REDUCTION"
+    CORRECTED_DIAGNOSIS = "CORRECTED_DIAGNOSIS"
+    INTEGRATION = "INTEGRATION"
+    DOCUMENTATION = "DOCUMENTATION"
+    GOVERNANCE = "GOVERNANCE"
+    LIFECYCLE = "LIFECYCLE"
+    GENERATED = "GENERATED"
+    HYGIENE = "HYGIENE"
 
 
 class CandidateCompletionState(StrEnum):
@@ -311,6 +332,14 @@ class AttemptObservation(DomainModel):
         Literal["HYPOTHESIS", "INPUT", "TOOL", "ENVIRONMENT", "RECOVERY_STRATEGY"], ...
     ] = ()
     progress_units: int = Field(default=0, ge=0)
+    activity_units: int = Field(default=1, ge=0)
+    administrative_units: int = Field(default=0, ge=0)
+
+    @model_validator(mode="after")
+    def validate_work_units(self) -> AttemptObservation:
+        if self.administrative_units > self.activity_units:
+            raise ValueError("administrative units cannot exceed activity units")
+        return self
 
 
 class AttemptBudget(DomainModel):
@@ -320,6 +349,8 @@ class AttemptBudget(DomainModel):
     used_attempts: int = Field(default=0, ge=0)
     max_same_failure: int = Field(default=2, ge=1, le=20)
     max_unchanged_outputs: int = Field(default=2, ge=1, le=20)
+    max_progressless_cycles: int = Field(default=2, ge=1, le=20)
+    max_noncritical_administrative_ratio_milli: int = Field(default=100, ge=0, le=1000)
 
     @model_validator(mode="after")
     def validate_budget(self) -> AttemptBudget:
@@ -338,12 +369,78 @@ class LoopGuardDecision(DomainModel):
     unchanged_output_count: int = Field(ge=0)
     repeated_action_count: int = Field(ge=0)
     progress_detected: bool
+    progressless_cycle_count: int = Field(ge=0)
+    administrative_ratio_milli: int = Field(ge=0, le=1000)
     reasons: tuple[str, ...]
 
     @model_validator(mode="after")
     def validate_decision(self) -> LoopGuardDecision:
         if not ASSURANCE_ID.fullmatch(self.decision_id) or not self.decision_id.startswith("LOOP-"):
             raise ValueError("invalid loop decision id")
+        return self
+
+
+class ProgressDelta(DomainModel):
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    delta_id: str
+    implemented_requirement_delta: int
+    verified_criterion_delta: int
+    blocker_reduction_delta: int
+    failure_reduction_delta: int
+    verified_evidence_delta: int
+    tested_implementation_delta: int
+    integrated_change_delta: int
+    progress_units: int = Field(ge=0)
+    activity_units: int = Field(ge=0)
+    administrative_units: int = Field(ge=0)
+    administrative_ratio_milli: int = Field(ge=0, le=1000)
+    noncritical_administrative_units: int = Field(ge=0)
+    noncritical_administrative_ratio_milli: int = Field(ge=0, le=1000)
+    meaningful_progress: bool
+
+    @model_validator(mode="after")
+    def validate_delta(self) -> ProgressDelta:
+        if not ASSURANCE_ID.fullmatch(self.delta_id) or not self.delta_id.startswith("PDELTA-"):
+            raise ValueError("invalid progress delta id")
+        if self.administrative_units > self.activity_units:
+            raise ValueError("administrative units cannot exceed activity units")
+        if self.noncritical_administrative_units > self.administrative_units:
+            raise ValueError("noncritical administration cannot exceed total administration")
+        if self.meaningful_progress != (self.progress_units > 0):
+            raise ValueError("meaningful progress must agree with progress units")
+        return self
+
+
+class DeliveryGateDecision(DomainModel):
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    decision_id: str
+    state: DeliveryGateState
+    base_ref: str
+    head_ref: str
+    task_ids: tuple[str, ...]
+    changed_paths: tuple[str, ...]
+    lifecycle_only_task_ids: tuple[str, ...]
+    objective_progress_units: int = Field(ge=0)
+    activity_units: int = Field(ge=0)
+    administrative_units: int = Field(ge=0)
+    administrative_ratio_milli: int = Field(ge=0, le=1000)
+    noncritical_administrative_units: int = Field(ge=0)
+    noncritical_administrative_ratio_milli: int = Field(ge=0, le=1000)
+    reconciliation_batch: bool = False
+    reasons: tuple[str, ...]
+
+    @model_validator(mode="after")
+    def validate_delivery_gate(self) -> DeliveryGateDecision:
+        if not ASSURANCE_ID.fullmatch(self.decision_id) or not self.decision_id.startswith(
+            "DELIVERY-"
+        ):
+            raise ValueError("invalid delivery gate id")
+        if self.administrative_units > self.activity_units:
+            raise ValueError("administrative units cannot exceed activity units")
+        if self.noncritical_administrative_units > self.administrative_units:
+            raise ValueError("noncritical administration cannot exceed total administration")
+        if self.state is DeliveryGateState.BLOCKED and not self.reasons:
+            raise ValueError("blocked delivery gate requires reasons")
         return self
 
 

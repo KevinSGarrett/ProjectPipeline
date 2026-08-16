@@ -20,6 +20,14 @@
     "single rollback unit",
     "coherent review"
   ],
+  "delivery_progress_gate": {
+    "already_implemented_work": "RECONCILIATION_REQUIRED_NOT_IMPLEMENTATION_READY",
+    "expensive_gate_boundary": "COHESIVE_VERTICAL_SLICE",
+    "lifecycle_transition_is_deliverable": false,
+    "lifecycle_only_pr_allowed": false,
+    "minimum_evidence_backed_reconciliation_batch_items": 3,
+    "single_task_lifecycle_pr_exception": "NONE"
+  },
   "permanent_development_branch": false,
   "pr_split_required_when": [
     "unrelated architectural domains",

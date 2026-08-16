@@ -3034,11 +3034,17 @@
       "EVID-000108",
       "EVID-000110",
       "EVID-000112",
-      "EVID-000113"
+      "EVID-000113",
+      "EVID-000176"
     ],
     "evolution_ids": [],
     "implementation_paths": [
+      ".github/workflows/quality.yml",
+      "config/assurance_policy.json",
+      "src/project_pipeline/assurance/delivery_progress.py",
       "src/project_pipeline/assurance/loop_guard.py",
+      "src/project_pipeline/control/graph.py",
+      "src/project_pipeline/control/kernel.py",
       "src/project_pipeline/domain/assurance.py"
     ],
     "implementation_state": "IMPLEMENTED",
@@ -3077,6 +3083,7 @@
       "progress-detection"
     ],
     "test_ids": [
+      "TEST-ASSURE-DELIVERY-001",
       "TEST-ASSURE-LOOP-002"
     ],
     "title": "Meaningful progress detection",
@@ -3219,13 +3226,22 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "ASSURE",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000176"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      ".github/workflows/quality.yml",
+      "config/assurance_policy.json",
+      "src/project_pipeline/assurance/delivery_progress.py",
+      "src/project_pipeline/assurance/loop_guard.py",
+      "src/project_pipeline/assurance/policy.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000017",
-      "PP-STORY-000092"
+      "PP-STORY-000092",
+      "PP-TASK-000323"
     ],
     "normative_strength": "SHALL",
     "open_decision_ids": [],
@@ -3256,7 +3272,10 @@
       "hygiene-budget",
       "scope"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-ASSURE-DELIVERY-001",
+      "TEST-ASSURE-LOOP-002"
+    ],
     "title": "Hygiene budget",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."

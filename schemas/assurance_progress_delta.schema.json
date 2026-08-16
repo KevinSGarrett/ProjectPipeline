@@ -1,0 +1,100 @@
+{
+  "$id": "https://project-pipeline.local/schemas/assurance_progress_delta.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activity_units": {
+      "minimum": 0,
+      "title": "Activity Units",
+      "type": "integer"
+    },
+    "administrative_ratio_milli": {
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Administrative Ratio Milli",
+      "type": "integer"
+    },
+    "administrative_units": {
+      "minimum": 0,
+      "title": "Administrative Units",
+      "type": "integer"
+    },
+    "blocker_reduction_delta": {
+      "title": "Blocker Reduction Delta",
+      "type": "integer"
+    },
+    "delta_id": {
+      "title": "Delta Id",
+      "type": "string"
+    },
+    "failure_reduction_delta": {
+      "title": "Failure Reduction Delta",
+      "type": "integer"
+    },
+    "implemented_requirement_delta": {
+      "title": "Implemented Requirement Delta",
+      "type": "integer"
+    },
+    "integrated_change_delta": {
+      "title": "Integrated Change Delta",
+      "type": "integer"
+    },
+    "meaningful_progress": {
+      "title": "Meaningful Progress",
+      "type": "boolean"
+    },
+    "noncritical_administrative_ratio_milli": {
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Noncritical Administrative Ratio Milli",
+      "type": "integer"
+    },
+    "noncritical_administrative_units": {
+      "minimum": 0,
+      "title": "Noncritical Administrative Units",
+      "type": "integer"
+    },
+    "progress_units": {
+      "minimum": 0,
+      "title": "Progress Units",
+      "type": "integer"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "tested_implementation_delta": {
+      "title": "Tested Implementation Delta",
+      "type": "integer"
+    },
+    "verified_criterion_delta": {
+      "title": "Verified Criterion Delta",
+      "type": "integer"
+    },
+    "verified_evidence_delta": {
+      "title": "Verified Evidence Delta",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "delta_id",
+    "implemented_requirement_delta",
+    "verified_criterion_delta",
+    "blocker_reduction_delta",
+    "failure_reduction_delta",
+    "verified_evidence_delta",
+    "tested_implementation_delta",
+    "integrated_change_delta",
+    "progress_units",
+    "activity_units",
+    "administrative_units",
+    "administrative_ratio_milli",
+    "noncritical_administrative_units",
+    "noncritical_administrative_ratio_milli",
+    "meaningful_progress"
+  ],
+  "title": "ProgressDelta",
+  "type": "object"
+}

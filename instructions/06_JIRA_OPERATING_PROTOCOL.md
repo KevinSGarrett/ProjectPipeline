@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-06` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.1.0` |
 | Primary domains | `jira` |
 | Governing entry point | `AGENTS.md` |
 

@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-00` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.1.0` |
 | Primary domains | `startup`, `project_identity` |
 | Governing entry point | `AGENTS.md` |
 

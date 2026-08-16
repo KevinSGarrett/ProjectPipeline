@@ -23,13 +23,16 @@ from project_pipeline.architecture import (
 )
 from project_pipeline.archive import create_archive, verify_archive
 from project_pipeline.assurance import (
+    AssurancePolicy,
     AssuranceStore,
     assess_candidate_completion,
     build_repository_gate_facts,
     compile_repository_plan,
     evaluate_completion_gate,
+    evaluate_delivery_gate,
     evaluate_loop,
     evaluate_scope_change,
+    load_delivery_policy,
 )
 from project_pipeline.assurance.simulation import (
     simulate_scenario as simulate_assurance_scenario,
@@ -794,6 +797,7 @@ def build_parser() -> argparse.ArgumentParser:
             "completion-gate",
             "candidate",
             "loop-guard",
+            "delivery-gate",
             "scope-change",
             "simulate",
         ),
@@ -802,6 +806,8 @@ def build_parser() -> argparse.ArgumentParser:
     assurance.add_argument("--database", type=Path)
     assurance.add_argument("--project-id", default="PROJECT-PIPELINE")
     assurance.add_argument("--input", type=Path)
+    assurance.add_argument("--base-ref")
+    assurance.add_argument("--head-ref", default="HEAD")
     assurance.add_argument("--scope", type=Path)
     assurance.add_argument("--requested-behavior", action="append", default=[])
     assurance.add_argument("--requested-path", action="append", default=[])
@@ -2178,6 +2184,25 @@ def _run_assurance_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             "candidate_completion": result.model_dump(mode="json")
         }, 0 if result.state.value == "READY_FOR_COMPLETION_GATE" else 1
 
+    if args.action == "delivery-gate":
+        base_ref = str(_require_argument(args, "base_ref"))
+        delivery_policy = load_delivery_policy(args.root)
+        delivery_decision = evaluate_delivery_gate(
+            args.root,
+            base_ref=base_ref,
+            head_ref=str(args.head_ref),
+            minimum_reconciliation_batch_items=int(
+                delivery_policy["minimum_reconciliation_batch_items"]
+            ),
+            maximum_noncritical_administrative_ratio_milli=int(
+                delivery_policy["maximum_noncritical_administrative_ratio_milli"]
+            ),
+        )
+        return {
+            "delivery_gate": delivery_decision.model_dump(mode="json"),
+            "policy": delivery_policy,
+        }, 0 if delivery_decision.state.value == "PASS" else 1
+
     database = _assurance_database(args)
     store = AssuranceStore(database)
     if args.action == "status":
@@ -2211,7 +2236,18 @@ def _run_assurance_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
         observations = tuple(
             AttemptObservation.model_validate(item) for item in payload.get("observations", ())
         )
-        budget = AttemptBudget.model_validate(payload.get("budget", {}))
+        assurance_policy = AssurancePolicy.model_validate_json(
+            (args.root / "config" / "assurance_policy.json").read_text(encoding="utf-8")
+        )
+        budget_payload = {
+            "max_attempts": assurance_policy.loop_max_attempts,
+            "max_same_failure": assurance_policy.loop_max_same_failure,
+            "max_unchanged_outputs": assurance_policy.loop_max_unchanged_outputs,
+            "max_progressless_cycles": assurance_policy.loop_max_progressless_cycles,
+            "max_noncritical_administrative_ratio_milli": assurance_policy.delivery_progress.maximum_noncritical_administrative_ratio_milli,
+            **payload.get("budget", {}),
+        }
+        budget = AttemptBudget.model_validate(budget_payload)
         decision = evaluate_loop(observations, budget)
         if args.record:
             store.save_loop(args.project_id, decision)
