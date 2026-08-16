@@ -220,6 +220,49 @@ class JiraStewardDomainTests(unittest.TestCase):
     def test_jira_review_maps_to_internal_review_state(self) -> None:
         self.assertIs(task_state_from_jira("REVIEW"), TaskLifecycleState.IN_REVIEW)
 
+    def test_review_to_validation_requires_governed_branch_and_passing_tests(self) -> None:
+        issue = next(item for item in self.issues if item.local_id == "PP-TASK-000327")
+        review_issue = issue.model_copy(update={"state": JiraLifecycleState.REVIEW})
+        evidence = {
+            "assigned": True,
+            "branch_present": True,
+            "implementation_evidence_present": True,
+            "required_tests_passed": True,
+            "acceptance_criteria_verified": True,
+            "independent_review_complete": True,
+            "blockers_clear": True,
+            "completion_evidence_present": True,
+        }
+
+        ready_for_validation = evaluate_transition(
+            review_issue,
+            JiraLifecycleState.VALIDATION,
+            **evidence,
+        )
+        missing_branch = evaluate_transition(
+            review_issue,
+            JiraLifecycleState.VALIDATION,
+            **{**evidence, "branch_present": False},
+        )
+        failing_tests = evaluate_transition(
+            review_issue,
+            JiraLifecycleState.VALIDATION,
+            **{**evidence, "required_tests_passed": False},
+        )
+        missing_review = evaluate_transition(
+            review_issue,
+            JiraLifecycleState.VALIDATION,
+            **{**evidence, "independent_review_complete": False},
+        )
+
+        self.assertTrue(ready_for_validation.allowed, ready_for_validation.reasons)
+        self.assertFalse(missing_branch.allowed)
+        self.assertTrue(any("governed branch" in reason for reason in missing_branch.reasons))
+        self.assertFalse(failing_tests.allowed)
+        self.assertTrue(any("tests" in reason for reason in failing_tests.reasons))
+        self.assertFalse(missing_review.allowed)
+        self.assertTrue(any("independent review" in reason for reason in missing_review.reasons))
+
     def test_reconciliation_is_deterministic_and_detects_remote_drift(self) -> None:
         issue = self.issues[0].model_copy(update={"remote_jira_key": None})
         local = _bundle(issue)

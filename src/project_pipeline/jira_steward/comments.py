@@ -130,11 +130,19 @@ def evaluate_transition(
             reasons.append("A governed branch or equivalent workspace must exist before review.")
         if not required_tests_passed:
             reasons.append("Required tests must pass before review or completion.")
+    if (
+        to_state
+        in {
+            JiraLifecycleState.VALIDATION,
+            JiraLifecycleState.MERGE_READY,
+            JiraLifecycleState.DONE,
+        }
+        and not independent_review_complete
+    ):
+        reasons.append("Required independent review must be complete.")
     if to_state in {JiraLifecycleState.MERGE_READY, JiraLifecycleState.DONE}:
         if not acceptance_criteria_verified:
             reasons.append("Acceptance criteria must be verified before merge-ready or done.")
-        if not independent_review_complete:
-            reasons.append("Required independent review must be complete.")
         if not blockers_clear:
             reasons.append("Unresolved blockers prevent merge-ready or done.")
         if not completion_evidence_present:
