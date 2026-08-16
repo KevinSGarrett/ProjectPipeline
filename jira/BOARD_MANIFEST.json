@@ -2,7 +2,7 @@
   "board_id": "PROJECT-PIPELINE-LOCAL",
   "counts_by_state": {
     "BACKLOG": 377,
-    "VALIDATION": 1
+    "MERGE_READY": 1
   },
   "counts_by_type": {
     "BUG": 0,

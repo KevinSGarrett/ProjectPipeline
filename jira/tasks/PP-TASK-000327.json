@@ -58,10 +58,10 @@
     "pass-15"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-16T09:44:30.274744Z",
+    "observed_at_utc": "2026-08-16T10:04:47.176593Z",
     "remote_id": "25287",
     "remote_key": "PP-318",
-    "snapshot_id": "JSNAP-BB122CAF17909D8EE034",
+    "snapshot_id": "JSNAP-82AE395F4E0C8D61BF54",
     "status_name": "In Progress"
   },
   "local_id": "PP-TASK-000327",
@@ -112,7 +112,7 @@
     "SRC-008:L001016-L001066",
     "SRC-008:L001067-L001092"
   ],
-  "state": "VALIDATION",
+  "state": "MERGE_READY",
   "title": "Implement deterministic fifteen-question Completion Gate",
   "upstream_dependencies": []
 }
