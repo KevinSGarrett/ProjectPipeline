@@ -152,6 +152,34 @@ class JiraStewardDomainTests(unittest.TestCase):
         self.assertTrue(any("Acceptance criteria" in reason for reason in readiness.reasons))
         self.assertTrue(any("Completion evidence" in reason for reason in readiness.reasons))
 
+    def test_ready_to_in_progress_requires_assignment(self) -> None:
+        issue = next(item for item in self.issues if item.local_id == "PP-TASK-000327")
+        ready_issue = issue.model_copy(update={"state": JiraLifecycleState.READY})
+        evidence = {
+            "branch_present": True,
+            "implementation_evidence_present": True,
+            "required_tests_passed": True,
+            "acceptance_criteria_verified": True,
+            "independent_review_complete": True,
+            "blockers_clear": True,
+            "completion_evidence_present": True,
+        }
+        assigned = evaluate_transition(
+            ready_issue,
+            JiraLifecycleState.IN_PROGRESS,
+            assigned=True,
+            **evidence,
+        )
+        unassigned = evaluate_transition(
+            ready_issue,
+            JiraLifecycleState.IN_PROGRESS,
+            assigned=False,
+            **evidence,
+        )
+        self.assertTrue(assigned.allowed, assigned.reasons)
+        self.assertFalse(unassigned.allowed)
+        self.assertTrue(any("assigned" in reason for reason in unassigned.reasons))
+
     def test_reconciliation_is_deterministic_and_detects_remote_drift(self) -> None:
         issue = self.issues[0].model_copy(update={"remote_jira_key": None})
         local = _bundle(issue)

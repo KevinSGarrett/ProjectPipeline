@@ -6202,7 +6202,7 @@
     },
     {
       "id": "PP-TASK-000327",
-      "state": "READY",
+      "state": "IN_PROGRESS",
       "title": "Implement deterministic fifteen-question Completion Gate",
       "type": "TASK"
     },

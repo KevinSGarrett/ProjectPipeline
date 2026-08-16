@@ -1,7 +1,7 @@
 {
   "counts_by_state": {
     "BACKLOG": 377,
-    "READY": 1
+    "IN_PROGRESS": 1
   },
   "counts_by_type": {
     "BUG": 0,
