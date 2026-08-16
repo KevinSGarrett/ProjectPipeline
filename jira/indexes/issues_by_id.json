@@ -42486,10 +42486,10 @@
       "supply-chain"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+      "observed_at_utc": "2026-08-16T16:36:32.305111Z",
       "remote_id": "25139",
       "remote_key": "PP-170",
-      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "snapshot_id": "JSNAP-FB597D0005EAD008AA82",
       "status_name": "To Do"
     },
     "local_id": "PP-TASK-000345",
@@ -42534,7 +42534,7 @@
     "source_references": [
       "SRC-009:L000008-L000008"
     ],
-    "state": "BACKLOG",
+    "state": "READY",
     "title": "Implement SOPS, age, and OpenBao secret-provider boundaries",
     "upstream_dependencies": []
   },
