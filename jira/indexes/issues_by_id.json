@@ -42295,7 +42295,7 @@
       "SRC-009:L000009-L000009",
       "SRC-017:L000009-L000071"
     ],
-    "state": "VALIDATION",
+    "state": "MERGE_READY",
     "title": "Implement data classification, egress, and instruction-trust controls",
     "upstream_dependencies": []
   },
