@@ -267,6 +267,18 @@ def _render_export(document: dict[str, Any], groups: tuple[str, ...]) -> str:
     return "\n".join([*header, *rows, ""])
 
 
+def _render_quality_export(policy: dict[str, Any]) -> str:
+    tools = policy.get("quality_tool_intents", [])
+    lines = [
+        "# Exact direct quality-tool intents; transitive resolver lock is externally blocked.",
+        "# Generate uv.lock and replace this export when package-index access is available.",
+    ]
+    for item in tools if isinstance(tools, list) else []:
+        if isinstance(item, dict) and isinstance(item.get("requirement"), str):
+            lines.append(item["requirement"])
+    return "\n".join([*lines, ""])
+
+
 def _write_portable_exports(root: Path, document: dict[str, Any]) -> None:
     runtime_groups = ("runtime",)
     development_groups = tuple(document.get("active_groups", []))
@@ -277,16 +289,9 @@ def _write_portable_exports(root: Path, document: dict[str, Any]) -> None:
         _render_export(document, development_groups), encoding="utf-8", newline="\n"
     )
     policy = load_dependency_policy(root)
-    tools = policy.get("quality_tool_intents", [])
-    lines = [
-        "# Exact direct quality-tool intents; transitive resolver lock is externally blocked.",
-        "# Generate uv.lock and replace this export when package-index access is available.",
-    ]
-    for item in tools if isinstance(tools, list) else []:
-        if isinstance(item, dict) and isinstance(item.get("requirement"), str):
-            lines.append(item["requirement"])
-    lines.append("")
-    (root / _QUALITY_EXPORT).write_text("\n".join(lines), encoding="utf-8", newline="\n")
+    (root / _QUALITY_EXPORT).write_text(
+        _render_quality_export(policy), encoding="utf-8", newline="\n"
+    )
 
 
 def _validate_direct_requirements(
@@ -351,8 +356,11 @@ def validate_dependency_lock(root: Path, *, verify_installed: bool = False) -> l
         elif path.read_text(encoding="utf-8") != expected:
             errors.append(f"portable dependency export is stale: {relative}")
     quality_path = root / _QUALITY_EXPORT
-    if not quality_path.is_file() or not quality_path.read_text(encoding="utf-8").strip():
-        errors.append(f"quality-tool intent export is missing or empty: {_QUALITY_EXPORT}")
+    expected_quality = _render_quality_export(policy)
+    if not quality_path.is_file():
+        errors.append(f"quality-tool intent export is missing: {_QUALITY_EXPORT}")
+    elif quality_path.read_text(encoding="utf-8") != expected_quality:
+        errors.append(f"quality-tool intent export is stale: {_QUALITY_EXPORT}")
 
     resolver = policy.get("resolver_lock", {})
     if not isinstance(resolver, dict) or resolver.get("manager") != "uv":

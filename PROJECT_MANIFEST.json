@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "c6387da0db9fc40ba001c130e60bf07125c50f2b451b0559923eaa989e648734",
+  "aggregate_sha256": "d1eb0e848959966c6c6b72e4db654a676078c2157eb84b4abab9165bd3419d3d",
   "exclusions": [
     "FILE_MANIFEST.sha256",
     "PROJECT_MANIFEST.json",
@@ -495,8 +495,8 @@
     },
     {
       "path": "config/dependency_policy.json",
-      "sha256": "87959a384b0b0aafacb65f7729a46aea175b1f2554e4a835072e0b649ae649d8",
-      "size_bytes": 3690
+      "sha256": "153a6104fd176d759e6ebdd8b60d4e5572a4e13dfa026d685a965031f11a7d07",
+      "size_bytes": 5389
     },
     {
       "path": "config/feature_profiles.json",
@@ -9930,8 +9930,8 @@
     },
     {
       "path": "pyproject.toml",
-      "sha256": "c653ca1e0b33b237ca87f50817d0753d9dc8f4fa4dc73811e86999dd4d4c0dc8",
-      "size_bytes": 3481
+      "sha256": "b1d584afeb63061e7c199c3376e85a2731f153508ea9eeb6288ea2c710d81348",
+      "size_bytes": 3578
     },
     {
       "path": "README.md",
@@ -9965,18 +9965,18 @@
     },
     {
       "path": "requirements/development.txt",
-      "sha256": "b4d1c3576f7081fd51ff384ad683abafd82479e233cb9d02fd20116a249382ec",
-      "size_bytes": 602
+      "sha256": "96492b74442742826818f6aca2836a8c20ae8856fda3e93459821025d41106c3",
+      "size_bytes": 743
     },
     {
       "path": "requirements/environment.lock.json",
-      "sha256": "283e8c8142d3cde67a5f9261d663e657f7ef5b2fd787e60aedabd08882994638",
-      "size_bytes": 8455
+      "sha256": "4342cd2f160193cf11cccce99dacb6f351ea1addbd02565464b3b9af8841c777",
+      "size_bytes": 11755
     },
     {
       "path": "requirements/quality-tools.txt",
-      "sha256": "8d614b85e00e2fdf8e16e9f748212595d8e97012494a258f277a2bffdbf93fa4",
-      "size_bytes": 273
+      "sha256": "a89ce5ec7150253fd3358ffa314d3f73bdcca146e277a14bc34cc232414b6473",
+      "size_bytes": 286
     },
     {
       "path": "requirements/README.md",
@@ -11675,8 +11675,8 @@
     },
     {
       "path": "src/project_pipeline/dependencies.py",
-      "sha256": "a5c3e1f7376e3a186db400f8b12c0adeb9f1763b0e6293d22e1b3377a332f31c",
-      "size_bytes": 18982
+      "sha256": "c59215965e701a8dd874eb00f2da8fc59d0109263b5a242148bebcf100fa7c00",
+      "size_bytes": 19226
     },
     {
       "path": "src/project_pipeline/domain/__init__.py",
@@ -12870,8 +12870,8 @@
     },
     {
       "path": "tests/test_dependencies.py",
-      "sha256": "1f75ec67ab94e20673fd7afdf7bd313372106aa7d7757ddc95d14d10dd9e98db",
-      "size_bytes": 2756
+      "sha256": "dbec7e87a47b689addd4561b0f726f7010fce6adca54f228c88c6be5c42de06d",
+      "size_bytes": 3843
     },
     {
       "path": "tests/test_docker_mcp_gateway.py",
@@ -13394,7 +13394,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T07:10:10.152572+00:00",
+  "generated_at_utc": "2026-08-16T07:21:12.473546+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13403,5 +13403,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22582003
+  "total_bytes": 22588584
 }

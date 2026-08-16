@@ -5,20 +5,33 @@
   ],
   "closure": {
     "group:test": [
+      "annotated-doc",
+      "annotated-types",
+      "anyio",
       "attrs",
+      "certifi",
       "colorama",
       "coverage",
+      "fastapi",
+      "h11",
+      "httpcore",
+      "httpx",
+      "idna",
       "iniconfig",
       "jsonschema",
       "jsonschema-specifications",
       "packaging",
       "pluggy",
+      "pydantic",
+      "pydantic-core",
       "pygments",
       "pytest",
       "pytest-cov",
       "referencing",
       "rpds-py",
-      "typing-extensions"
+      "starlette",
+      "typing-extensions",
+      "typing-inspection"
     ],
     "runtime": [
       "annotated-types",
@@ -34,6 +47,8 @@
   },
   "direct_dependencies": {
     "group:test": [
+      "fastapi",
+      "httpx",
       "jsonschema",
       "pytest",
       "pytest-cov"
@@ -46,10 +61,21 @@
     ]
   },
   "lock_kind": "OBSERVED_ENVIRONMENT",
-  "package_count": 22,
+  "package_count": 31,
   "packages": [
     {
       "closure_groups": [
+        "group:test"
+      ],
+      "direct_groups": [],
+      "metadata_sha256": "8c24d70c5d9153d22123353a906042fd7603df2d15c2196290b0f8a962558c46",
+      "name": "annotated-doc",
+      "requires_dist": [],
+      "version": "0.0.5"
+    },
+    {
+      "closure_groups": [
+        "group:test",
         "runtime"
       ],
       "direct_groups": [],
@@ -63,10 +89,33 @@
         "group:test"
       ],
       "direct_groups": [],
+      "metadata_sha256": "c5e6fc4dfd833319913b287be7a30d9935e9208c7ef917630621855aaac4d419",
+      "name": "anyio",
+      "requires_dist": [
+        "idna>=2.8",
+        "typing_extensions>=4.5; python_version < \"3.13\""
+      ],
+      "version": "4.14.2"
+    },
+    {
+      "closure_groups": [
+        "group:test"
+      ],
+      "direct_groups": [],
       "metadata_sha256": "4cd40e690f23bf37cbcad34efd6758e062df1df07c86833f7e3ce95bf1fa38cc",
       "name": "attrs",
       "requires_dist": [],
       "version": "26.1.0"
+    },
+    {
+      "closure_groups": [
+        "group:test"
+      ],
+      "direct_groups": [],
+      "metadata_sha256": "ef5af1638fbb23676ac3c5777dfcfc2cd9c348fe4172ed5ba3d277655b248090",
+      "name": "certifi",
+      "requires_dist": [],
+      "version": "2026.7.22"
     },
     {
       "closure_groups": [
@@ -87,6 +136,74 @@
       "name": "coverage",
       "requires_dist": [],
       "version": "7.15.4"
+    },
+    {
+      "closure_groups": [
+        "group:test"
+      ],
+      "direct_groups": [
+        "group:test"
+      ],
+      "metadata_sha256": "1010c29547b4026bdb3cd1c406e0570b9d79bb448b5a61fa4d5bb5a5eb0b752c",
+      "name": "fastapi",
+      "requires_dist": [
+        "annotated-doc>=0.0.2",
+        "pydantic>=2.9.0",
+        "starlette>=0.46.0",
+        "typing-extensions>=4.8.0",
+        "typing-inspection>=0.4.2"
+      ],
+      "version": "0.141.1"
+    },
+    {
+      "closure_groups": [
+        "group:test"
+      ],
+      "direct_groups": [],
+      "metadata_sha256": "28f326098ac09fcba79b8f180f96087c841fe2456215cb7b872a9c7d5cd19d64",
+      "name": "h11",
+      "requires_dist": [],
+      "version": "0.16.0"
+    },
+    {
+      "closure_groups": [
+        "group:test"
+      ],
+      "direct_groups": [],
+      "metadata_sha256": "fe2d4fda6199128978779e0cf27f3c045c531863fcdd987eacc74f3a18d41c21",
+      "name": "httpcore",
+      "requires_dist": [
+        "certifi",
+        "h11>=0.16"
+      ],
+      "version": "1.0.9"
+    },
+    {
+      "closure_groups": [
+        "group:test"
+      ],
+      "direct_groups": [
+        "group:test"
+      ],
+      "metadata_sha256": "febb9b0f8f3e80d57c8199c304f35c4336e8581d1d18d7983c92766b82793b25",
+      "name": "httpx",
+      "requires_dist": [
+        "anyio",
+        "certifi",
+        "httpcore==1.*",
+        "idna"
+      ],
+      "version": "0.28.1"
+    },
+    {
+      "closure_groups": [
+        "group:test"
+      ],
+      "direct_groups": [],
+      "metadata_sha256": "46dfe6e5ac462d0f680ecd9abcf66e829b6a2334824b4d9e3979b31135caf281",
+      "name": "idna",
+      "requires_dist": [],
+      "version": "3.18"
     },
     {
       "closure_groups": [
@@ -204,6 +321,7 @@
     },
     {
       "closure_groups": [
+        "group:test",
         "runtime"
       ],
       "direct_groups": [
@@ -221,6 +339,7 @@
     },
     {
       "closure_groups": [
+        "group:test",
         "runtime"
       ],
       "direct_groups": [],
@@ -301,6 +420,19 @@
     },
     {
       "closure_groups": [
+        "group:test"
+      ],
+      "direct_groups": [],
+      "metadata_sha256": "43f6240f976044f4cf9a573506d96d895391094717c55682700c931d5cd3c5a2",
+      "name": "starlette",
+      "requires_dist": [
+        "anyio<5,>=3.6.2",
+        "typing-extensions>=4.10.0; python_version < \"3.13\""
+      ],
+      "version": "1.6.0"
+    },
+    {
+      "closure_groups": [
         "group:test",
         "runtime"
       ],
@@ -312,6 +444,7 @@
     },
     {
       "closure_groups": [
+        "group:test",
         "runtime"
       ],
       "direct_groups": [],
