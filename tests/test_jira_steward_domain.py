@@ -21,6 +21,7 @@ from project_pipeline.domain.jira import (
     JiraSyncOperationType,
     RemoteJiraIssue,
 )
+from project_pipeline.domain.state import TaskLifecycleState, task_state_from_jira
 from project_pipeline.jira_steward.comments import evaluate_transition
 from project_pipeline.jira_steward.reconciliation import (
     JiraReconciler,
@@ -179,6 +180,45 @@ class JiraStewardDomainTests(unittest.TestCase):
         self.assertTrue(assigned.allowed, assigned.reasons)
         self.assertFalse(unassigned.allowed)
         self.assertTrue(any("assigned" in reason for reason in unassigned.reasons))
+
+    def test_in_progress_to_review_requires_governed_branch_and_tests(self) -> None:
+        issue = next(item for item in self.issues if item.local_id == "PP-TASK-000327")
+        in_progress_issue = issue.model_copy(update={"state": JiraLifecycleState.IN_PROGRESS})
+        evidence = {
+            "assigned": True,
+            "branch_present": True,
+            "implementation_evidence_present": True,
+            "required_tests_passed": True,
+            "acceptance_criteria_verified": True,
+            "independent_review_complete": False,
+            "blockers_clear": True,
+            "completion_evidence_present": True,
+        }
+
+        ready_for_review = evaluate_transition(
+            in_progress_issue,
+            JiraLifecycleState.REVIEW,
+            **evidence,
+        )
+        missing_branch = evaluate_transition(
+            in_progress_issue,
+            JiraLifecycleState.REVIEW,
+            **{**evidence, "branch_present": False},
+        )
+        failing_tests = evaluate_transition(
+            in_progress_issue,
+            JiraLifecycleState.REVIEW,
+            **{**evidence, "required_tests_passed": False},
+        )
+
+        self.assertTrue(ready_for_review.allowed, ready_for_review.reasons)
+        self.assertFalse(missing_branch.allowed)
+        self.assertTrue(any("governed branch" in reason for reason in missing_branch.reasons))
+        self.assertFalse(failing_tests.allowed)
+        self.assertTrue(any("tests" in reason for reason in failing_tests.reasons))
+
+    def test_jira_review_maps_to_internal_review_state(self) -> None:
+        self.assertIs(task_state_from_jira("REVIEW"), TaskLifecycleState.IN_REVIEW)
 
     def test_reconciliation_is_deterministic_and_detects_remote_drift(self) -> None:
         issue = self.issues[0].model_copy(update={"remote_jira_key": None})

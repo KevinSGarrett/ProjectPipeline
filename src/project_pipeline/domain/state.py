@@ -315,6 +315,7 @@ def task_state_from_jira(value: str) -> TaskLifecycleState:
         "BACKLOG": TaskLifecycleState.BACKLOG,
         "READY": TaskLifecycleState.READY,
         "IN_PROGRESS": TaskLifecycleState.IN_PROGRESS,
+        "REVIEW": TaskLifecycleState.IN_REVIEW,
         "IN_REVIEW": TaskLifecycleState.IN_REVIEW,
         "VALIDATION": TaskLifecycleState.VALIDATING,
         "VALIDATING": TaskLifecycleState.VALIDATING,
