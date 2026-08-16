@@ -1,5 +1,9 @@
 # Instruction System Changelog
 
+## 1.0.1 — 2026-08-16
+
+- Bound Jira preferred statuses to the live PP project's three-state collaboration workflow while preserving rich local lifecycle authority and the human gate for remote Done.
+
 ## 1.0.0 — 2026-08-16
 
 - Adopted `ProjectPipeline`, `PROJECT-PIPELINE`, `KevinSGarrett/ProjectPipeline`, and `C:\Project_X` as canonical identity.

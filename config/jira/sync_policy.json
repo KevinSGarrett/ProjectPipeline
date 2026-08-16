@@ -4,17 +4,17 @@
   "import_remote_only_issues": false,
   "preferred_remote_status": {
     "BACKLOG": "To Do",
-    "BLOCKED": "Blocked",
-    "CANCELLED": "Cancelled",
-    "DEFERRED": "Deferred",
+    "BLOCKED": "In Progress",
+    "CANCELLED": "To Do",
+    "DEFERRED": "To Do",
     "DISCOVERED": "To Do",
     "DONE": "Done",
-    "FAILED": "Blocked",
+    "FAILED": "In Progress",
     "IN_PROGRESS": "In Progress",
-    "MERGE_READY": "Merge Ready",
+    "MERGE_READY": "In Progress",
     "READY": "To Do",
-    "REVIEW": "Code Review",
-    "VALIDATION": "QA"
+    "REVIEW": "In Progress",
+    "VALIDATION": "In Progress"
   },
   "require_human_for_remote_done": true
 }

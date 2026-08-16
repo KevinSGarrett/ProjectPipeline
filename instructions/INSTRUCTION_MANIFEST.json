@@ -164,8 +164,8 @@
       "instruction_id": "PP-ASSET-CONFIG-JIRA-SYNC-POLICY-JSON",
       "kind": "CONFIGURATION",
       "path": "config/jira/sync_policy.json",
-      "sha256": "9dfe571ecbe299530467002877606b5182fdb651ac1f0516e9bd98c54beafa42",
-      "size_bytes": 516
+      "sha256": "488bc4c9462961a3b43362ec84e7f157f1e63733cc2ef727307549ceab64d0f4",
+      "size_bytes": 526
     },
     {
       "instruction_id": "PP-ASSET-CONFIG-PROJECT-JSON",
@@ -213,147 +213,147 @@
       "instruction_id": "PP-INST-00",
       "kind": "INSTRUCTION",
       "path": "instructions/00_START_HERE.md",
-      "sha256": "8970edefa869ac72509d185a430e0ba93f30ea060f759958881e6ade9d5cee0c",
+      "sha256": "1198b0f3a3cc3aa7c6159911af2296c08e803e55834faae632b466e4191e5adc",
       "size_bytes": 4042
     },
     {
       "instruction_id": "PP-INST-01",
       "kind": "INSTRUCTION",
       "path": "instructions/01_AUTHORITY_AND_SOURCE_OF_TRUTH.md",
-      "sha256": "402107bcf17389cc8019022eb7cea37b8cb562b25ae5e2fc0bed604744fa2276",
+      "sha256": "2b69e8b45bc176c875cc7ca35c13f19555c6a2a708ee23ec3ea9a57935413dfe",
       "size_bytes": 4510
     },
     {
       "instruction_id": "PP-INST-02",
       "kind": "INSTRUCTION",
       "path": "instructions/02_AUTONOMOUS_OPERATING_CONTRACT.md",
-      "sha256": "deee3a58bbb16018486a94dfdf1f5454b4a277d1cd3f7935f3e6a92be1882dd5",
+      "sha256": "ac64418745311307857009a65b4e9c5aee41d721d149ca0c9b55a37edf468141",
       "size_bytes": 4062
     },
     {
       "instruction_id": "PP-INST-03",
       "kind": "INSTRUCTION",
       "path": "instructions/03_SESSION_BOOTSTRAP_AND_PREFLIGHT.md",
-      "sha256": "6231f15ca0142b4f659adf755f23cc727cf54f42027056e10d89e1cd891a320a",
+      "sha256": "7e2cac71c8fac1cad4dc882fbdf3f713ee14c51400f0fb545fb96bbfa401ea1f",
       "size_bytes": 4448
     },
     {
       "instruction_id": "PP-INST-04",
       "kind": "INSTRUCTION",
       "path": "instructions/04_CONTEXT_RETRIEVAL_AND_NAVIGATION.md",
-      "sha256": "dbf56b708fc8433e25de9ac36c06757d2b9d30dd1a3ff6c1b75c03b59dcc9e59",
+      "sha256": "e5017d6d07150ca5f1967833502ca96281727c1c91dfff6ce426adf52d74ee35",
       "size_bytes": 3407
     },
     {
       "instruction_id": "PP-INST-05",
       "kind": "INSTRUCTION",
       "path": "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
-      "sha256": "1546b2664fc8f68653b3ca9564d1dd20cd4a02071cbebfc820650872959b926d",
+      "sha256": "9354ad76de37079b322516f3b31e0e4073d6a0d8d5329be9ff360498c53b3123",
       "size_bytes": 3963
     },
     {
       "instruction_id": "PP-INST-06",
       "kind": "INSTRUCTION",
       "path": "instructions/06_JIRA_OPERATING_PROTOCOL.md",
-      "sha256": "75fedea64bc059d96c784ee6ff7d392cdf4979eec3eeb4060df4b07569ee53e0",
-      "size_bytes": 3887
+      "sha256": "8837da6ebef9beebdf545f6c4f4625063d0f6f1286b018ff95dca2784e1b6ad1",
+      "size_bytes": 4362
     },
     {
       "instruction_id": "PP-INST-07",
       "kind": "INSTRUCTION",
       "path": "instructions/07_GIT_AND_GITHUB_OPERATING_PROTOCOL.md",
-      "sha256": "9bcf7d4f815c11960b746d6339cebf674f9235c3303f56511f6c0d6311bdea36",
+      "sha256": "6ff2d653d53538c2ac84a7d032f52bd2c6374668873ab680fca6ffdf36cbc750",
       "size_bytes": 3975
     },
     {
       "instruction_id": "PP-INST-08",
       "kind": "INSTRUCTION",
       "path": "instructions/08_BRANCH_WORKTREE_AND_PR_POLICY.md",
-      "sha256": "62498b970e75a62c751850a2de32b725a4095e3dca205a138a71669557122356",
+      "sha256": "e382f7fa3603c3553561c35f9d859b041640100069876cc8a28be7c4b05092cf",
       "size_bytes": 3489
     },
     {
       "instruction_id": "PP-INST-09",
       "kind": "INSTRUCTION",
       "path": "instructions/09_CI_QUALITY_SECURITY_AND_MERGE_GATES.md",
-      "sha256": "01b60ef092d64a4c41d4a753134403ae47e8851cb82dd7269d554233288dcebd",
+      "sha256": "b14cb1a79db469a8cd7dcd4850097f5fadd60a3e865453c1a68f06d41dddcf69",
       "size_bytes": 4256
     },
     {
       "instruction_id": "PP-INST-10",
       "kind": "INSTRUCTION",
       "path": "instructions/10_PARALLEL_AGENT_COORDINATION.md",
-      "sha256": "880f08a05a7be19ad3aa95ef719a3494006a898d07d93fe7d18cbea1298789f4",
+      "sha256": "e53a36d54cc2e77dd08eb6be321a85bfaf5c3efb76b704870250de57e90b7e27",
       "size_bytes": 3525
     },
     {
       "instruction_id": "PP-INST-11",
       "kind": "INSTRUCTION",
       "path": "instructions/11_ANTI_LOOP_AND_ANTI_OVERENGINEERING.md",
-      "sha256": "9b73b9dc46dd2fb9680f0dd2b430bf2e317e2e2038057d19ecd1d21a583cb81c",
+      "sha256": "84826438715524408e2b923a12ee3995c927a52009ce33566902ab510d6c452e",
       "size_bytes": 3435
     },
     {
       "instruction_id": "PP-INST-12",
       "kind": "INSTRUCTION",
       "path": "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md",
-      "sha256": "38fff5c84798e7c7349a40bf9fc303fa972a48f37a3f37e9bc38be19d78a41d1",
+      "sha256": "d9eea22de46f82304ce32a0e317cd35f2e810ae42c5227ed1f6b8b022bd153b5",
       "size_bytes": 3660
     },
     {
       "instruction_id": "PP-INST-13",
       "kind": "INSTRUCTION",
       "path": "instructions/13_PPQS_BENCHMARK_PROTOCOL.md",
-      "sha256": "d023555a28c0338bffd83fdc4af39efd1f4cb0a3582f8c2f486f7d3f10e0b3ed",
+      "sha256": "b055f78db33474880384d9a5fc568303029d45cf69808a9f6c41fc29579153ca",
       "size_bytes": 3612
     },
     {
       "instruction_id": "PP-INST-14",
       "kind": "INSTRUCTION",
       "path": "instructions/14_UPSTREAM_REPOSITORY_PROTOCOL.md",
-      "sha256": "85995dcfe9558d5e8ddc527c66f12f3f76e41a04585d8b0b36ba6fa5212476f4",
+      "sha256": "fdd40f62a51f40a0e1092a23b48e01cab638e8b3f706dd200e129d19cd32085e",
       "size_bytes": 3124
     },
     {
       "instruction_id": "PP-INST-15",
       "kind": "INSTRUCTION",
       "path": "instructions/15_SECRETS_AUTHORITY_AND_EXTERNAL_MUTATION.md",
-      "sha256": "8401ccc48116b4253164565d00c45385affcfe5fcc4269554f3dcb5d98989a84",
+      "sha256": "8001f2c98780584ad5df2aea305c97dd4b301f6261bfcd95a07a8b7174b384b9",
       "size_bytes": 3561
     },
     {
       "instruction_id": "PP-INST-16",
       "kind": "INSTRUCTION",
       "path": "instructions/16_REMOTE_MACHINE_AND_RESOURCE_PROTOCOL.md",
-      "sha256": "66b3d68c629e8be60878b25f10a5e5c154fe25232272d399d0f2710aa07fb2a4",
+      "sha256": "d03eef7447453aaeab7e0d84f34f7e457de7612908834e3df3dc1777f458f195",
       "size_bytes": 3103
     },
     {
       "instruction_id": "PP-INST-17",
       "kind": "INSTRUCTION",
       "path": "instructions/17_FAILURE_RECOVERY_AND_RESUMPTION.md",
-      "sha256": "fd9d241fdcd7914b43120ab1efd893052f1b8f2b4c9cb6966089194cbb294061",
+      "sha256": "9b5bba3e0c24a2855d2d9f7dd0cfbf92e13bd92e0e1294f331f4a723ca16db5d",
       "size_bytes": 3354
     },
     {
       "instruction_id": "PP-INST-18",
       "kind": "INSTRUCTION",
       "path": "instructions/18_HUMAN_ESCALATION_PROTOCOL.md",
-      "sha256": "123286558fa065eb3cee27e1ee21361b0d990a01f55f856e75b6fc29a01849d5",
+      "sha256": "af252cd02106dcaf51120a566053b0e01da1aa32a3587dbb5b81be6e129ac3af",
       "size_bytes": 2657
     },
     {
       "instruction_id": "PP-INST-19",
       "kind": "INSTRUCTION",
       "path": "instructions/19_RELEASE_HANDOFF_AND_CLEANUP.md",
-      "sha256": "8b0f866a78eeaa5f3ff8f0bf5ffcbead1f809e26f7fdef65447dd5ea56ffa904",
+      "sha256": "ff855312b9591058fd246071d706734ae4adebb2bcdb94d84a733c89f852dc74",
       "size_bytes": 3123
     },
     {
       "instruction_id": "PP-INST-20",
       "kind": "INSTRUCTION",
       "path": "instructions/20_INSTRUCTION_MAINTENANCE.md",
-      "sha256": "4e55a85909756457793ced0d46198f44345ccd99e1eeaefa3340bda4834ff2e1",
+      "sha256": "071b94dc60155ce26637f84c06be1efb30b5e6e98300074476b84a4f01e531d2",
       "size_bytes": 3769
     },
     {
@@ -367,8 +367,8 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-CHANGELOG-MD",
       "kind": "INSTRUCTION",
       "path": "instructions/CHANGELOG.md",
-      "sha256": "3bd2a8436dc9db948666e9b9d85dc70d5e22e20bc8561b62cec1231e215374b2",
-      "size_bytes": 1185
+      "sha256": "83ba956dfda06a6e9a54d3a28060ab70ca39d6cae05bdb01622890a95238598f",
+      "size_bytes": 1387
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-CREATION-REPORT-MD",
@@ -486,8 +486,8 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-SECOND-PASS-REQUIRED-MD",
       "kind": "INSTRUCTION",
       "path": "instructions/SECOND_PASS_REQUIRED.md",
-      "sha256": "4fc256ea8efeb034d1e65b7f589cd38ca30af41d5c5c3c3014eaab132dc0afd6",
-      "size_bytes": 5498
+      "sha256": "c0fe98e88bc84157a46acc2aed5f7c7f3bc0111560d45d37ae0017a822706f33",
+      "size_bytes": 8262
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-TEMPLATES-HUMAN-INTERVENTION-REQUEST-MD",
@@ -563,7 +563,7 @@
       "instruction_id": "PP-ASSET-SCRIPTS-VALIDATE-INSTRUCTIONS-PY",
       "kind": "VALIDATION_TOOL",
       "path": "scripts/validate_instructions.py",
-      "sha256": "7a659f6bf8635cd03f1471fbe4673f8bcaa157cde2b77f063e495e2f2f48e6b4",
+      "sha256": "1bafac1c353ca7bb6dd02651d7368279bc8d69931b29e23f15a5a81ce0235502",
       "size_bytes": 36721
     },
     {
@@ -616,7 +616,7 @@
       "size_bytes": 4697
     }
   ],
-  "instruction_pack_version": "1.0.0",
+  "instruction_pack_version": "1.0.1",
   "instruction_root": "instructions",
   "managed_support_paths": [
     ".gitignore",

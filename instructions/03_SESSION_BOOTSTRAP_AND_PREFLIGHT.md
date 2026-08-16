@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-03` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.0` |
+| Pack version | `1.0.1` |
 | Primary domains | `preflight`, `windows_compatibility` |
 | Governing entry point | `AGENTS.md` |
 

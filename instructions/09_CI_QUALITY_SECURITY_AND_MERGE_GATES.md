@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-09` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.0` |
+| Pack version | `1.0.1` |
 | Primary domains | `ci`, `merge_gate`, `security` |
 | Governing entry point | `AGENTS.md` |
 

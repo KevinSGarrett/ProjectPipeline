@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-08` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.0` |
+| Pack version | `1.0.1` |
 | Primary domains | `branches`, `worktrees`, `pull_requests` |
 | Governing entry point | `AGENTS.md` |
 

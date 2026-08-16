@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-02` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.0` |
+| Pack version | `1.0.1` |
 | Primary domains | `autonomous_cycle`, `definition_of_ready` |
 | Governing entry point | `AGENTS.md` |
 

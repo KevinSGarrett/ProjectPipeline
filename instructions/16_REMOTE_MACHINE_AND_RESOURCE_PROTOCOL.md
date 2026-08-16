@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-16` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.0` |
+| Pack version | `1.0.1` |
 | Primary domains | `remote_machines` |
 | Governing entry point | `AGENTS.md` |
 
