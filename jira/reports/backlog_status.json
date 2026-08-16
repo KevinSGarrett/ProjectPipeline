@@ -1,8 +1,7 @@
 {
   "counts_by_state": {
     "BACKLOG": 373,
-    "MERGE_READY": 4,
-    "VALIDATION": 1
+    "MERGE_READY": 5
   },
   "counts_by_type": {
     "BUG": 0,
