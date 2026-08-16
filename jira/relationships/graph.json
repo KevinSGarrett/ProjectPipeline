@@ -6280,7 +6280,7 @@
     },
     {
       "id": "PP-TASK-000340",
-      "state": "IN_PROGRESS",
+      "state": "REVIEW",
       "title": "Complete security upstream-first review and activation gate",
       "type": "TASK"
     },
