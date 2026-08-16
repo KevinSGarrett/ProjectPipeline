@@ -267,6 +267,18 @@ def _render_export(document: dict[str, Any], groups: tuple[str, ...]) -> str:
     return "\n".join([*header, *rows, ""])
 
 
+def _render_quality_export(policy: dict[str, Any]) -> str:
+    tools = policy.get("quality_tool_intents", [])
+    lines = [
+        "# Exact direct quality-tool intents; transitive resolver lock is externally blocked.",
+        "# Generate uv.lock and replace this export when package-index access is available.",
+    ]
+    for item in tools if isinstance(tools, list) else []:
+        if isinstance(item, dict) and isinstance(item.get("requirement"), str):
+            lines.append(item["requirement"])
+    return "\n".join([*lines, ""])
+
+
 def _write_portable_exports(root: Path, document: dict[str, Any]) -> None:
     runtime_groups = ("runtime",)
     development_groups = tuple(document.get("active_groups", []))
@@ -277,16 +289,9 @@ def _write_portable_exports(root: Path, document: dict[str, Any]) -> None:
         _render_export(document, development_groups), encoding="utf-8", newline="\n"
     )
     policy = load_dependency_policy(root)
-    tools = policy.get("quality_tool_intents", [])
-    lines = [
-        "# Exact direct quality-tool intents; transitive resolver lock is externally blocked.",
-        "# Generate uv.lock and replace this export when package-index access is available.",
-    ]
-    for item in tools if isinstance(tools, list) else []:
-        if isinstance(item, dict) and isinstance(item.get("requirement"), str):
-            lines.append(item["requirement"])
-    lines.append("")
-    (root / _QUALITY_EXPORT).write_text("\n".join(lines), encoding="utf-8", newline="\n")
+    (root / _QUALITY_EXPORT).write_text(
+        _render_quality_export(policy), encoding="utf-8", newline="\n"
+    )
 
 
 def _validate_direct_requirements(
@@ -327,6 +332,18 @@ def validate_dependency_lock(root: Path, *, verify_installed: bool = False) -> l
     except (DependencyError, OSError, ValueError, tomllib.TOMLDecodeError) as error:
         return [str(error)]
 
+    declarations = direct_dependency_groups(root)
+    declared_quality = declarations.get("group:quality", [])
+    intents = policy.get("quality_tool_intents", [])
+    governed_quality = [
+        item["requirement"]
+        for item in intents
+        if isinstance(intents, list)
+        if isinstance(item, dict) and isinstance(item.get("requirement"), str)
+    ]
+    if declared_quality != governed_quality:
+        errors.append("pyproject quality group differs from dependency policy intents")
+
     if document.get("schema_version") != "1.0.0":
         errors.append("environment lock schema_version must be 1.0.0")
     if document.get("lock_kind") != "OBSERVED_ENVIRONMENT":
@@ -351,8 +368,11 @@ def validate_dependency_lock(root: Path, *, verify_installed: bool = False) -> l
         elif path.read_text(encoding="utf-8") != expected:
             errors.append(f"portable dependency export is stale: {relative}")
     quality_path = root / _QUALITY_EXPORT
-    if not quality_path.is_file() or not quality_path.read_text(encoding="utf-8").strip():
-        errors.append(f"quality-tool intent export is missing or empty: {_QUALITY_EXPORT}")
+    expected_quality = _render_quality_export(policy)
+    if not quality_path.is_file():
+        errors.append(f"quality-tool intent export is missing: {_QUALITY_EXPORT}")
+    elif quality_path.read_text(encoding="utf-8") != expected_quality:
+        errors.append(f"quality-tool intent export is stale: {_QUALITY_EXPORT}")
 
     resolver = policy.get("resolver_lock", {})
     if not isinstance(resolver, dict) or resolver.get("manager") != "uv":
@@ -368,7 +388,23 @@ def validate_dependency_lock(root: Path, *, verify_installed: bool = False) -> l
 
     if verify_installed:
         distributions = _distribution_index()
-        for name, item in package_map.items():
+        observed = document.get("python", {})
+        current = default_environment()
+        current_version = current["python_full_version"].split(".")[:2]
+        observed_version = str(observed.get("version", "")).split(".")[:2]
+        same_environment = (
+            observed.get("implementation") == current["implementation_name"]
+            and observed.get("platform_system") == current["platform_system"]
+            and observed.get("platform_machine") == current["platform_machine"]
+            and observed_version == current_version
+        )
+        if same_environment:
+            verification_names = set(package_map)
+        else:
+            direct_by_group = _direct_names_by_group(root, tuple(document.get("active_groups", [])))
+            verification_names = {name for names in direct_by_group.values() for name in names}
+        for name in sorted(verification_names):
+            item = package_map[name]
             distribution = distributions.get(name)
             if distribution is None:
                 errors.append(f"locked package is not installed: {name}")
@@ -378,7 +414,7 @@ def validate_dependency_lock(root: Path, *, verify_installed: bool = False) -> l
                     f"installed version differs from environment lock: {name} "
                     f"{distribution.version} != {item['version']}"
                 )
-            elif _metadata_hash(distribution) != item["metadata_sha256"]:
+            elif same_environment and _metadata_hash(distribution) != item["metadata_sha256"]:
                 errors.append(f"installed metadata differs from environment lock: {name}")
     return errors
 

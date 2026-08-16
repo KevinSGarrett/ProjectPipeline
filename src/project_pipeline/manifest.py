@@ -5,7 +5,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from project_pipeline.io import iter_repository_files, sha256_file, write_json
+from project_pipeline.io import iter_repository_files, write_json
 
 MANIFEST_EXCLUSIONS = frozenset(
     {
@@ -17,6 +17,17 @@ MANIFEST_EXCLUSIONS = frozenset(
 )
 ENV_TEMPLATE_NAMES = frozenset({".env.example", ".env.sample", ".env.template"})
 LOCAL_SECRET_SUFFIXES = frozenset({".pem", ".key", ".p12", ".pfx"})
+
+
+def _canonical_manifest_content(path: Path) -> bytes:
+    content = path.read_bytes()
+    if b"\0" in content:
+        return content
+    try:
+        content.decode("utf-8")
+    except UnicodeDecodeError:
+        return content
+    return content.replace(b"\r\n", b"\n")
 
 
 def is_local_only_manifest_path(relative: str) -> bool:
@@ -37,8 +48,9 @@ def build_manifest(root: Path) -> dict[str, Any]:
         relative = path.relative_to(root).as_posix()
         if is_local_only_manifest_path(relative):
             continue
-        digest = sha256_file(path)
-        size = path.stat().st_size
+        content = _canonical_manifest_content(path)
+        digest = hashlib.sha256(content).hexdigest()
+        size = len(content)
         files.append({"path": relative, "size_bytes": size, "sha256": digest})
         aggregate.update(relative.encode("utf-8"))
         aggregate.update(b"\0")
@@ -59,6 +71,7 @@ def build_manifest(root: Path) -> dict[str, Any]:
             "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
             "local assistant/runtime/upstream directories from project_pipeline.io",
         ],
+        "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
     }
 
 

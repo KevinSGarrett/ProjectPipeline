@@ -11,6 +11,24 @@
     "sync": "uv sync --locked --group test --group quality",
     "verify_environment": "python -m project_pipeline dependencies validate --root . --verify-installed"
   },
+  "dependency_addition_reviews": [
+    {
+      "license": "MIT",
+      "name": "fastapi",
+      "provenance": "Installed distribution metadata and the project API optional-dependency declaration.",
+      "rationale": "The repository's API test modules import FastAPI directly, so clean test environments must install it explicitly.",
+      "requirement": "fastapi>=0.116,<1",
+      "source": "https://pypi.org/project/fastapi/"
+    },
+    {
+      "license": "BSD-3-Clause",
+      "name": "httpx",
+      "provenance": "Installed distribution metadata and FastAPI TestClient runtime requirements.",
+      "rationale": "FastAPI TestClient requires HTTPX during test collection and execution.",
+      "requirement": "httpx>=0.28,<1",
+      "source": "https://pypi.org/project/httpx/"
+    }
+  ],
   "environment_lock": {
     "kind": "OBSERVED_ENVIRONMENT",
     "path": "requirements/environment.lock.json",
@@ -62,6 +80,15 @@
       "state": "DECLARED_NOT_LIVE_VERIFIED"
     },
     {
+      "name": "numpy",
+      "license": "BSD-3-Clause",
+      "requirement": "numpy==2.3.5",
+      "source": "https://pypi.org/project/numpy/",
+      "rationale": "Constrain the types-networkx NumPy dependency to stubs parseable for the configured Python 3.11 mypy target on every CI interpreter.",
+      "provenance": "PyPI release metadata and clean GitHub Actions Python 3.13 failure evidence.",
+      "state": "DECLARED_CI_COMPATIBILITY_PIN"
+    },
+    {
       "name": "pip-audit",
       "requirement": "pip-audit==2.10.1",
       "source": "https://pypi.org/project/pip-audit/",
@@ -78,6 +105,15 @@
       "requirement": "ruff==0.16.3",
       "source": "https://pypi.org/project/ruff/",
       "state": "DECLARED_NOT_LIVE_VERIFIED"
+    },
+    {
+      "name": "types-networkx",
+      "license": "Apache-2.0",
+      "requirement": "types-networkx==3.6.1.20260728",
+      "source": "https://pypi.org/project/types-networkx/",
+      "rationale": "Provide strict static types for the runtime NetworkX dependency without suppressing missing-stub errors.",
+      "provenance": "PyPI release metadata and clean GitHub Actions mypy failure evidence.",
+      "state": "DECLARED_CI_REQUIRED"
     }
   ],
   "resolver_lock": {

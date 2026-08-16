@@ -78,12 +78,12 @@ class SecretReference(StrictModel):
 
 
 class RuntimePaths(StrictModel):
-    data_dir: Path = Path(".local/data")
-    state_dir: Path = Path(".local/state")
-    evidence_dir: Path = Path("evidence")
-    artifact_dir: Path = Path(".local/artifacts")
-    cache_dir: Path = Path(".local/cache")
-    log_dir: Path = Path(".local/logs")
+    data_dir: Annotated[Path, Field(default=".local/data")]
+    state_dir: Annotated[Path, Field(default=".local/state")]
+    evidence_dir: Annotated[Path, Field(default="evidence")]
+    artifact_dir: Annotated[Path, Field(default=".local/artifacts")]
+    cache_dir: Annotated[Path, Field(default=".local/cache")]
+    log_dir: Annotated[Path, Field(default=".local/logs")]
     create_on_boot: bool = True
 
     @field_validator(
@@ -155,9 +155,9 @@ class SecuritySettings(StrictModel):
 
 class PersistenceSettings(StrictModel):
     backend: PersistenceBackend = PersistenceBackend.SQLITE_LOCAL
-    sqlite_path: Path = Path(".local/state/project_pipeline.db")
+    sqlite_path: Annotated[Path, Field(default=".local/state/project_pipeline.db")]
     postgresql_dsn: SecretReference | None = None
-    migration_catalog: Path = Path("database/MIGRATION_CATALOG.json")
+    migration_catalog: Annotated[Path, Field(default="database/MIGRATION_CATALOG.json")]
     auto_migrate: bool = True
 
     @field_validator("sqlite_path", "migration_catalog")
@@ -208,12 +208,14 @@ class RuntimeSettings(StrictModel):
     project_name: str = "ProjectPipeline"
     profile: str = "local"
     environment: EnvironmentName = EnvironmentName.DEVELOPMENT
-    paths: RuntimePaths = RuntimePaths()
-    logging: LoggingSettings = LoggingSettings()
-    telemetry: TelemetrySettings = TelemetrySettings()
-    security: SecuritySettings = SecuritySettings()
-    persistence: PersistenceSettings = PersistenceSettings()
-    integrations: IntegrationSettings = IntegrationSettings()
+    paths: RuntimePaths = Field(default_factory=lambda: RuntimePaths.model_validate({}))
+    logging: LoggingSettings = Field(default_factory=LoggingSettings)
+    telemetry: TelemetrySettings = Field(default_factory=TelemetrySettings)
+    security: SecuritySettings = Field(default_factory=SecuritySettings)
+    persistence: PersistenceSettings = Field(
+        default_factory=lambda: PersistenceSettings.model_validate({})
+    )
+    integrations: IntegrationSettings = Field(default_factory=IntegrationSettings)
 
     @field_validator("project_id", "project_name", "profile")
     @classmethod

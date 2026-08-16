@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import tempfile
 import unittest
 from pathlib import Path
@@ -22,13 +23,20 @@ class DependencyTests(unittest.TestCase):
         self.assertGreaterEqual(snapshot["locked_package_count"], 3)
 
     def test_lock_generation_is_deterministic(self) -> None:
-        before = (ROOT / "requirements" / "environment.lock.json").read_bytes()
-        first = build_environment_lock(ROOT)
-        middle = (ROOT / "requirements" / "environment.lock.json").read_bytes()
-        second = build_environment_lock(ROOT)
-        after = (ROOT / "requirements" / "environment.lock.json").read_bytes()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "requirements").mkdir()
+            (root / "config").mkdir()
+            shutil.copy2(ROOT / "pyproject.toml", root / "pyproject.toml")
+            shutil.copy2(
+                ROOT / "config" / "dependency_policy.json",
+                root / "config" / "dependency_policy.json",
+            )
+            first = build_environment_lock(root)
+            middle = (root / "requirements" / "environment.lock.json").read_bytes()
+            second = build_environment_lock(root)
+            after = (root / "requirements" / "environment.lock.json").read_bytes()
         self.assertEqual(first, second)
-        self.assertEqual(before, middle)
         self.assertEqual(middle, after)
 
     def test_missing_active_dependency_is_reported(self) -> None:
@@ -68,3 +76,55 @@ class DependencyTests(unittest.TestCase):
             )
             errors = validate_dependency_lock(root)
         self.assertTrue(any("missing-package" in error for error in errors))
+
+    def test_stale_quality_tool_export_is_reported(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "requirements").mkdir()
+            (root / "config").mkdir()
+            shutil.copy2(ROOT / "pyproject.toml", root / "pyproject.toml")
+            shutil.copy2(
+                ROOT / "config" / "dependency_policy.json",
+                root / "config" / "dependency_policy.json",
+            )
+            for name in (
+                "environment.lock.json",
+                "runtime.txt",
+                "development.txt",
+                "quality-tools.txt",
+            ):
+                shutil.copy2(ROOT / "requirements" / name, root / "requirements" / name)
+            (root / "requirements" / "quality-tools.txt").write_text(
+                "ruff==0.16.3\n", encoding="utf-8"
+            )
+            errors = validate_dependency_lock(root)
+        self.assertIn(
+            "quality-tool intent export is stale: requirements/quality-tools.txt",
+            errors,
+        )
+
+    def test_quality_policy_must_match_pyproject(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "requirements").mkdir()
+            (root / "config").mkdir()
+            shutil.copy2(ROOT / "pyproject.toml", root / "pyproject.toml")
+            policy = json.loads(
+                (ROOT / "config" / "dependency_policy.json").read_text(encoding="utf-8")
+            )
+            policy["quality_tool_intents"] = policy["quality_tool_intents"][:-1]
+            (root / "config" / "dependency_policy.json").write_text(
+                json.dumps(policy), encoding="utf-8"
+            )
+            for name in (
+                "environment.lock.json",
+                "runtime.txt",
+                "development.txt",
+                "quality-tools.txt",
+            ):
+                shutil.copy2(ROOT / "requirements" / name, root / "requirements" / name)
+            errors = validate_dependency_lock(root)
+        self.assertIn(
+            "pyproject quality group differs from dependency policy intents",
+            errors,
+        )

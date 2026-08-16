@@ -175,6 +175,7 @@
           "default": "SQLITE_LOCAL"
         },
         "migration_catalog": {
+          "default": "database/MIGRATION_CATALOG.json",
           "format": "path",
           "title": "Migration Catalog",
           "type": "string"
@@ -191,6 +192,7 @@
           "default": null
         },
         "sqlite_path": {
+          "default": ".local/state/project_pipeline.db",
           "format": "path",
           "title": "Sqlite Path",
           "type": "string"
@@ -203,11 +205,13 @@
       "additionalProperties": false,
       "properties": {
         "artifact_dir": {
+          "default": ".local/artifacts",
           "format": "path",
           "title": "Artifact Dir",
           "type": "string"
         },
         "cache_dir": {
+          "default": ".local/cache",
           "format": "path",
           "title": "Cache Dir",
           "type": "string"
@@ -218,21 +222,25 @@
           "type": "boolean"
         },
         "data_dir": {
+          "default": ".local/data",
           "format": "path",
           "title": "Data Dir",
           "type": "string"
         },
         "evidence_dir": {
+          "default": "evidence",
           "format": "path",
           "title": "Evidence Dir",
           "type": "string"
         },
         "log_dir": {
+          "default": ".local/logs",
           "format": "path",
           "title": "Log Dir",
           "type": "string"
         },
         "state_dir": {
+          "default": ".local/state",
           "format": "path",
           "title": "State Dir",
           "type": "string"
@@ -330,57 +338,16 @@
       "default": "development"
     },
     "integrations": {
-      "$ref": "#/$defs/IntegrationSettings",
-      "default": {
-        "aws_profile": null,
-        "github_token": null,
-        "jira_api_token": null,
-        "jira_base_url": null,
-        "jira_user_email": null
-      }
+      "$ref": "#/$defs/IntegrationSettings"
     },
     "logging": {
-      "$ref": "#/$defs/LoggingSettings",
-      "default": {
-        "format": "JSON",
-        "include_process": true,
-        "include_source": false,
-        "include_thread": false,
-        "level": "INFO",
-        "redacted_fields": [
-          "api_key",
-          "authorization",
-          "client_secret",
-          "cookie",
-          "password",
-          "private_key",
-          "secret",
-          "token"
-        ],
-        "service_name": "project-pipeline"
-      }
+      "$ref": "#/$defs/LoggingSettings"
     },
     "paths": {
-      "$ref": "#/$defs/RuntimePaths",
-      "default": {
-        "artifact_dir": ".local\\artifacts",
-        "cache_dir": ".local\\cache",
-        "create_on_boot": true,
-        "data_dir": ".local\\data",
-        "evidence_dir": "evidence",
-        "log_dir": ".local\\logs",
-        "state_dir": ".local\\state"
-      }
+      "$ref": "#/$defs/RuntimePaths"
     },
     "persistence": {
-      "$ref": "#/$defs/PersistenceSettings",
-      "default": {
-        "auto_migrate": true,
-        "backend": "SQLITE_LOCAL",
-        "migration_catalog": "database\\MIGRATION_CATALOG.json",
-        "postgresql_dsn": null,
-        "sqlite_path": ".local\\state\\project_pipeline.db"
-      }
+      "$ref": "#/$defs/PersistenceSettings"
     },
     "profile": {
       "default": "local",
@@ -404,21 +371,10 @@
       "type": "string"
     },
     "security": {
-      "$ref": "#/$defs/SecuritySettings",
-      "default": {
-        "external_writes_default": "DENY",
-        "require_explicit_approval": true
-      }
+      "$ref": "#/$defs/SecuritySettings"
     },
     "telemetry": {
-      "$ref": "#/$defs/TelemetrySettings",
-      "default": {
-        "enabled": false,
-        "exporter": "NONE",
-        "otlp_endpoint": null,
-        "service_name": "project-pipeline",
-        "service_namespace": "project-pipeline"
-      }
+      "$ref": "#/$defs/TelemetrySettings"
     }
   },
   "title": "RuntimeSettings",
