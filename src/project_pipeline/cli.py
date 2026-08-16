@@ -146,6 +146,14 @@ from project_pipeline.jira_steward import (
 )
 from project_pipeline.jira_steward.persistence import JiraSyncStore
 from project_pipeline.line_numbering import generate_line_numbered_plans
+from project_pipeline.lifecycle import (
+    ReadinessEvidence,
+    SessionIdentity,
+    claim_is_admissible,
+    global_stop_required,
+    provider_dispatch_blocked,
+    scoped_lane_state,
+)
 from project_pipeline.manifest import write_manifest
 from project_pipeline.orchestration import (
     DBOSFallbackAdapter,
@@ -1265,6 +1273,87 @@ def _run_github_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         }, 0 if receipt.state.value == "APPLIED" else 1
 
 
+def _takeover_governor_from_runtime(
+    *,
+    require_privacy_mode: bool,
+    provider_id: str,
+    provider_qualified: bool,
+    privacy_required_lane_ids: frozenset[str],
+    lane_claim_paths: Sequence[tuple[str, tuple[str, ...]]],
+) -> dict[str, Any]:
+    readiness = ReadinessEvidence(
+        exec_available=True,
+        auth_non_secret=True,
+        privacy_attested=not require_privacy_mode,
+        representative_qualified=provider_qualified,
+        rollback_verified=True,
+        external_write_isolated=True,
+        freshness_satisfied=True,
+        unattended_qualification_satisfied=False,
+    )
+    lane_rows: list[dict[str, Any]] = []
+    lane_states = []
+    for lane_id, paths in lane_claim_paths:
+        requires_privacy_attestation = (
+            require_privacy_mode
+            and (not privacy_required_lane_ids or lane_id in privacy_required_lane_ids)
+        )
+        path_collision = bool(paths) and not claim_is_admissible(paths)
+        lane_state = scoped_lane_state(
+            has_privacy_attestation=readiness.privacy_attested,
+            requires_privacy_attestation=requires_privacy_attestation,
+            missing_external_credentials=False,
+            depends_on_external_credentials=False,
+            resource_collision=path_collision,
+        )
+        lane_states.append(lane_state)
+        lane_rows.append(
+            {
+                "lane_id": lane_id,
+                "state": lane_state.value,
+                "path_claims": list(paths),
+                "resource_collision": path_collision,
+                "requires_privacy_attestation": requires_privacy_attestation,
+            }
+        )
+    return {
+        "provider_dispatch_blocked": provider_dispatch_blocked(
+            session_identity=SessionIdentity.PROGRAMMATIC_CURSOR_CLI_WORKER,
+            provider_id=provider_id,
+            provider_qualified=provider_qualified,
+        ),
+        "readiness_evidence": {
+            "activation_ready": readiness.activation_ready,
+            "unattended_ready": readiness.unattended_ready,
+            "privacy_attested": readiness.privacy_attested,
+            "representative_qualified": readiness.representative_qualified,
+        },
+        "lane_matrix": lane_rows,
+        "global_stop_required": global_stop_required(tuple(lane_states)),
+    }
+
+
+def _load_takeover_policy(root: Path) -> dict[str, Any]:
+    policy_path = root / "config" / "cursor_takeover.json"
+    if not policy_path.is_file():
+        return {}
+    return json.loads(policy_path.read_text(encoding="utf-8"))
+
+
+def _privacy_required_lane_ids(root: Path) -> frozenset[str]:
+    outcome_path = root / "config" / "product_outcome.json"
+    if not outcome_path.is_file():
+        return frozenset()
+    payload = json.loads(outcome_path.read_text(encoding="utf-8"))
+    control_selection = payload.get("control_selection")
+    if not isinstance(control_selection, dict):
+        return frozenset()
+    lane_ids = control_selection.get("allowed_issue_ids")
+    if not isinstance(lane_ids, list):
+        return frozenset()
+    return frozenset(item for item in lane_ids if isinstance(item, str) and item)
+
+
 def _run_control_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     configuration = _load_configuration(args)
     database = _state_database_path(args, configuration)
@@ -1337,6 +1426,18 @@ def _run_control_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]
                 }
             else:
                 raise ConfigurationError(f"unsupported control action: {args.action}")
+
+    policy = _load_takeover_policy(args.root)
+    result["takeover_governor"] = _takeover_governor_from_runtime(
+        require_privacy_mode=bool(policy.get("require_privacy_mode", False)),
+        provider_id=str(policy.get("provider_id", "provider:cursor-cli")),
+        provider_qualified=policy.get("activation_state") == "QUALIFIED",
+        privacy_required_lane_ids=_privacy_required_lane_ids(args.root),
+        lane_claim_paths=tuple(
+            (item.task_id, ())
+            for item in snapshot.sequence.ordered_ready_work
+        ),
+    )
 
     with ControlStore(database, args.root) as control_store:
         control_store.save_snapshot(snapshot)
@@ -1426,12 +1527,31 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             max_lanes=args.max_lanes,
         )
         scheduler_store.save_plan(plan)
+        policy = _load_takeover_policy(args.root)
+        takeover_governor = _takeover_governor_from_runtime(
+            require_privacy_mode=bool(policy.get("require_privacy_mode", False)),
+            provider_id=str(policy.get("provider_id", "provider:cursor-cli")),
+            provider_qualified=policy.get("activation_state") == "QUALIFIED",
+            privacy_required_lane_ids=_privacy_required_lane_ids(args.root),
+            lane_claim_paths=tuple(
+                (
+                    lane.lane_id,
+                    tuple(
+                        claim.resource_key
+                        for claim in lane.claims
+                        if claim.resource_type.value == "PATH"
+                    ),
+                )
+                for lane in plan.lanes
+            ),
+        )
 
         if args.action == "plan":
             return {
                 "database": str(database),
                 "control_snapshot_id": control.snapshot_id,
                 "plan": plan.model_dump(mode="json"),
+                "takeover_governor": takeover_governor,
                 "dry_run": True,
             }, 0
         if args.action == "simulate":
@@ -1452,7 +1572,11 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 )
                 scheduler_store.save_simulation(result)
                 results.append(result.model_dump(mode="json"))
-            return {"database": str(database), "simulations": results}, 0
+            return {
+                "database": str(database),
+                "simulations": results,
+                "takeover_governor": takeover_governor,
+            }, 0
         if args.action == "acquire":
             if not args.apply or not args.approve:
                 raise ConfigurationError("scheduler acquire requires both --apply and --approve")
@@ -1473,6 +1597,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 "database": str(database),
                 "plan_id": plan.plan_id,
                 "lease_bundle": bundle.model_dump(mode="json"),
+                "takeover_governor": takeover_governor,
             }, 0 if bundle.acquired else 1
         raise ConfigurationError(f"unsupported scheduler action: {args.action}")
 

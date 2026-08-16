@@ -192,3 +192,37 @@ def test_scheduler_simulation_exercises_backpressure_modes(tmp_path: Path, capsy
     assert by_name["halt"]["plan"]["backpressure"]["admit_new_work"] is False
     assert by_name["brownout"]["plan"]["lanes"] == []
     assert by_name["halt"]["plan"]["lanes"] == []
+
+
+def test_scheduler_takeover_governor_scopes_privacy_blocks_to_lane(tmp_path: Path, capsys) -> None:
+    db = tmp_path / "scheduler.db"
+    signals = normal_signals(tmp_path)
+    assert (
+        main(
+            [
+                "scheduler",
+                "plan",
+                "--root",
+                str(ROOT),
+                "--database",
+                str(db),
+                "--max-lanes",
+                "4",
+                "--signals-file",
+                str(signals),
+            ]
+        )
+        == 0
+    )
+    result = json.loads(capsys.readouterr().out)
+    governor = result["takeover_governor"]
+    lane_matrix = governor["lane_matrix"]
+    assert lane_matrix
+    assert any(
+        row["state"] == "ACTIVE" and not row["requires_privacy_attestation"]
+        for row in lane_matrix
+    )
+    for row in lane_matrix:
+        if row["requires_privacy_attestation"]:
+            assert row["state"] in {"HUMAN_REQUIRED", "BLOCKED"}
+    assert governor["global_stop_required"] is False

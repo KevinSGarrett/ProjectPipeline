@@ -109,3 +109,20 @@ def test_ready_apply_transitions_only_currently_ready_backlog(tmp_path: Path, ca
     assert code == 0
     assert result["applied_transition_count"] > 0
     assert all(item["state"] == "READY" for item in result["applied_transitions"])
+
+
+def test_control_takeover_governor_keeps_unrelated_lanes_active(tmp_path: Path, capsys) -> None:
+    db = tmp_path / "control.db"
+    assert main(["control", "sequence", "--root", str(ROOT), "--database", str(db)]) == 0
+    result = json.loads(capsys.readouterr().out)
+    governor = result["takeover_governor"]
+    lane_matrix = governor["lane_matrix"]
+    assert lane_matrix
+    assert any(
+        row["state"] == "ACTIVE" and not row["requires_privacy_attestation"]
+        for row in lane_matrix
+    )
+    for row in lane_matrix:
+        if row["requires_privacy_attestation"]:
+            assert row["state"] in {"HUMAN_REQUIRED", "BLOCKED"}
+    assert governor["global_stop_required"] is False
