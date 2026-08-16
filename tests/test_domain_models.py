@@ -11,6 +11,7 @@ from project_pipeline.domain import (
     TaskLifecycleState,
     ensure_project_transition,
     ensure_task_transition,
+    task_state_from_jira,
 )
 from project_pipeline.io import read_jsonl
 from project_pipeline.services.state import (
@@ -53,6 +54,9 @@ class DomainModelTests(unittest.TestCase):
         self.assertEqual(len({record.task_id for record in records}), expected)
         self.assertTrue(all(isinstance(record.state, TaskLifecycleState) for record in records))
         self.assertTrue(any(record.state is TaskLifecycleState.BACKLOG for record in records))
+
+    def test_jira_validation_state_maps_to_internal_validating_state(self) -> None:
+        self.assertIs(task_state_from_jira("VALIDATION"), TaskLifecycleState.VALIDATING)
 
     def test_invalid_project_and_task_transitions_are_rejected(self) -> None:
         ensure_project_transition(ProjectLifecycleState.REGISTERED, ProjectLifecycleState.COMPILING)

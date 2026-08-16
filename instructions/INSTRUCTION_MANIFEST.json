@@ -591,8 +591,8 @@
       "instruction_id": "PP-ASSET-TESTS-TEST-DOMAIN-MODELS-PY",
       "kind": "TEST",
       "path": "tests/test_domain_models.py",
-      "sha256": "b1b2e0453a0e6969c3a95de74ea3f73fcd9645eb262c0a5a6138a7f8b12f663e",
-      "size_bytes": 2890
+      "sha256": "f9404a0347cf953bcab93203d6a2c909bd2b59fccd5c3a615a65f44ace6be221",
+      "size_bytes": 3090
     },
     {
       "instruction_id": "PP-ASSET-TESTS-TEST-INSTRUCTION-SYSTEM-PY",

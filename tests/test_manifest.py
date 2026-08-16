@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -27,6 +28,30 @@ class ManifestTests(unittest.TestCase):
             first = build_manifest(root)["aggregate_sha256"]
             second = build_manifest(root)["aggregate_sha256"]
             self.assertEqual(first, second)
+
+    def test_manifest_root_name_uses_canonical_project_target(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            parent = Path(directory)
+            names = []
+            for checkout_name in ("Project_X", "pp-task-000327"):
+                root = parent / checkout_name
+                (root / "config").mkdir(parents=True)
+                (root / "config/project.json").write_text(
+                    json.dumps({"target_local_root": r"C:\Project_X"}), encoding="utf-8"
+                )
+                names.append(build_manifest(root)["root_name"])
+            self.assertEqual(names, ["Project_X", "Project_X"])
+
+    def test_manifest_verification_detects_root_name_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "data.txt").write_text("same\n", encoding="utf-8")
+            write_manifest(root)
+            manifest_path = root / "PROJECT_MANIFEST.json"
+            recorded = json.loads(manifest_path.read_text(encoding="utf-8"))
+            recorded["root_name"] = "different-checkout"
+            manifest_path.write_text(json.dumps(recorded), encoding="utf-8")
+            self.assertIn("Manifest root name mismatch", verify_manifest(root))
 
     def test_manifest_text_digests_are_line_ending_neutral(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -62,6 +87,7 @@ class ManifestTests(unittest.TestCase):
                 path = root / relative
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_text("local-only\n", encoding="utf-8")
+            (root / ".git").write_text("gitdir: ../worktrees/example\n", encoding="utf-8")
             (root / ".codex.json").write_text("local-only\n", encoding="utf-8")
             for relative in (".env.example", ".agents/skills/project/SKILL.md", "src/app.py"):
                 path = root / relative
