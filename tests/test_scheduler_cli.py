@@ -219,9 +219,10 @@ def test_scheduler_takeover_governor_scopes_privacy_blocks_to_lane(tmp_path: Pat
     lane_matrix = governor["lane_matrix"]
     assert lane_matrix
     assert any(
-        row["state"] == "ACTIVE" and not row["requires_privacy_attestation"] for row in lane_matrix
+        row["state"] == "ACTIVE" and not row.get("requires_privacy_attestation", False)
+        for row in lane_matrix
     )
     for row in lane_matrix:
-        if row["requires_privacy_attestation"]:
+        if row.get("requires_privacy_attestation", False):
             assert row["state"] in {"HUMAN_REQUIRED", "BLOCKED"}
     assert governor["global_stop_required"] is False

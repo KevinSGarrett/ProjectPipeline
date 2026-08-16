@@ -1,23 +1,11 @@
 from __future__ import annotations
 
-import json
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from enum import StrEnum
 from hashlib import sha256
+import json
 
-CANONICAL_PURSUING_GOAL = (
-    "Deliver and qualify ProjectPipeline as a continuously operating, local-first "
-    "autonomous engineering organization that accepts complete project inputs, "
-    "compiles a verified project model, autonomously selects and executes genuinely "
-    "missing work through conflict-safe parallel lanes and qualified workers, verifies "
-    "results, governs GitHub and Jira, merges accepted changes, reconciles external "
-    "state, recomputes project state, handles HUMAN_REQUIRED incidents without stopping "
-    "unaffected work, exposes truthful live state through the Command Center, and "
-    "continues until the deterministic Completion Gate reports COMPLETE for the "
-    "integrated, released, and operationally verified system."
-)
-
-CANONICAL_SOURCE_REFERENCES = ("SRC-014:L000001-L000087", "SRC-015:L000031-L000150")
 
 PP327_BLOCKED_PATHS = frozenset(
     {
@@ -40,6 +28,22 @@ class LaneState(StrEnum):
     ACTIVE = "ACTIVE"
     BLOCKED = "BLOCKED"
     HUMAN_REQUIRED = "HUMAN_REQUIRED"
+
+
+class AttestationState(StrEnum):
+    MISSING = "MISSING"
+    INVALID = "INVALID"
+    MISMATCHED = "MISMATCHED"
+    STALE = "STALE"
+    VALID = "VALID"
+
+
+class ProviderQualificationState(StrEnum):
+    MISSING = "MISSING"
+    INVALID = "INVALID"
+    MISMATCHED = "MISMATCHED"
+    STALE = "STALE"
+    QUALIFIED = "QUALIFIED"
 
 
 @dataclass(frozen=True)
@@ -76,6 +80,12 @@ class ReadinessEvidence:
 class DurableAttestation:
     fingerprint: str
     approved: bool
+    project_id: str | None = None
+    provider_id: str | None = None
+    scope: str | None = None
+    approved_at_utc: str | None = None
+    evidence_ref: str | None = None
+    evidence_fingerprint: str | None = None
 
     @staticmethod
     def fingerprint_for(value: dict[str, object]) -> str:
@@ -84,12 +94,63 @@ class DurableAttestation:
 
 
 @dataclass(frozen=True)
+class AttestationValidation:
+    valid: bool
+    state: AttestationState
+    reasons: tuple[str, ...]
+    fingerprint_matches: bool
+    identity_matches: bool
+    fresh_within_policy: bool
+
+
+@dataclass(frozen=True)
+class DurableProviderQualificationEvidence:
+    qualified: bool
+    fingerprint: str | None = None
+    project_id: str | None = None
+    provider_id: str | None = None
+    scope: str | None = None
+    verified_at_utc: str | None = None
+    evidence_ref: str | None = None
+    evidence_fingerprint: str | None = None
+
+    @staticmethod
+    def fingerprint_for(
+        *,
+        project_id: str,
+        provider_id: str,
+        scope: str,
+        qualified: bool,
+    ) -> str:
+        payload = {
+            "project_id": project_id,
+            "provider_id": provider_id,
+            "scope": scope,
+            "qualified": qualified,
+        }
+        canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), default=str)
+        return sha256(canonical.encode("utf-8")).hexdigest()
+
+
+@dataclass(frozen=True)
+class ProviderQualificationValidation:
+    satisfied: bool
+    state: ProviderQualificationState
+    reasons: tuple[str, ...]
+    fingerprint_matches: bool
+    identity_matches: bool
+    fresh_within_policy: bool
+
+
+@dataclass(frozen=True)
 class CheckpointDecision:
     no_additional_action_needed: bool
     eligible_unrelated_lanes: tuple[str, ...]
 
     def is_valid(self) -> bool:
-        return not (self.no_additional_action_needed and bool(self.eligible_unrelated_lanes))
+        return not (
+            self.no_additional_action_needed and bool(self.eligible_unrelated_lanes)
+        )
 
 
 def has_path_collision(left_paths: tuple[str, ...], right_paths: tuple[str, ...]) -> bool:
@@ -158,14 +219,222 @@ def global_stop_required(lane_states: tuple[LaneState, ...]) -> bool:
     return all(state in {LaneState.BLOCKED, LaneState.HUMAN_REQUIRED} for state in lane_states)
 
 
+def _parse_utc_timestamp(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    normalized = value.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(normalized)
+    except ValueError:
+        return None
+    return parsed.astimezone(UTC)
+
+
+def validate_durable_attestation(
+    *,
+    prior: DurableAttestation | None,
+    attestation_inputs: dict[str, object],
+    require_identity: bool,
+    max_age_hours: int | None,
+    now: datetime | None = None,
+) -> AttestationValidation:
+    expected_fingerprint = DurableAttestation.fingerprint_for(attestation_inputs)
+    if prior is None:
+        return AttestationValidation(
+            valid=False,
+            state=AttestationState.MISSING,
+            reasons=("missing_durable_attestation",),
+            fingerprint_matches=False,
+            identity_matches=False,
+            fresh_within_policy=False,
+        )
+    if not prior.approved:
+        return AttestationValidation(
+            valid=False,
+            state=AttestationState.INVALID,
+            reasons=("attestation_not_approved",),
+            fingerprint_matches=False,
+            identity_matches=False,
+            fresh_within_policy=False,
+        )
+    fingerprint_matches = prior.fingerprint == expected_fingerprint
+    if not fingerprint_matches:
+        return AttestationValidation(
+            valid=False,
+            state=AttestationState.MISMATCHED,
+            reasons=("fingerprint_mismatch",),
+            fingerprint_matches=False,
+            identity_matches=False,
+            fresh_within_policy=False,
+        )
+    identity_matches = True
+    if require_identity:
+        expected_project_id = str(attestation_inputs.get("project_id", ""))
+        expected_provider_id = str(attestation_inputs.get("provider_id", ""))
+        expected_scope = str(attestation_inputs.get("scope", ""))
+        identity_matches = (
+            prior.project_id == expected_project_id
+            and prior.provider_id == expected_provider_id
+            and prior.scope == expected_scope
+        )
+        if not identity_matches:
+            return AttestationValidation(
+                valid=False,
+                state=AttestationState.MISMATCHED,
+                reasons=("identity_mismatch",),
+                fingerprint_matches=True,
+                identity_matches=False,
+                fresh_within_policy=False,
+            )
+    fresh_within_policy = True
+    if max_age_hours is not None:
+        issued_at = _parse_utc_timestamp(prior.approved_at_utc)
+        if issued_at is None:
+            return AttestationValidation(
+                valid=False,
+                state=AttestationState.STALE,
+                reasons=("missing_or_invalid_timestamp",),
+                fingerprint_matches=True,
+                identity_matches=identity_matches,
+                fresh_within_policy=False,
+            )
+        evaluated_at = (now or datetime.now(UTC)).astimezone(UTC)
+        age_hours = (evaluated_at - issued_at).total_seconds() / 3600
+        fresh_within_policy = 0 <= age_hours <= max_age_hours
+        if not fresh_within_policy:
+            return AttestationValidation(
+                valid=False,
+                state=AttestationState.STALE,
+                reasons=("attestation_stale",),
+                fingerprint_matches=True,
+                identity_matches=identity_matches,
+                fresh_within_policy=False,
+            )
+    return AttestationValidation(
+        valid=True,
+        state=AttestationState.VALID,
+        reasons=(),
+        fingerprint_matches=True,
+        identity_matches=identity_matches,
+        fresh_within_policy=fresh_within_policy,
+    )
+
+
 def should_request_human_attestation(
     *,
     prior: DurableAttestation | None,
     attestation_inputs: dict[str, object],
 ) -> bool:
-    fingerprint = DurableAttestation.fingerprint_for(attestation_inputs)
-    if prior is None:
-        return True
-    if not prior.approved:
-        return True
-    return prior.fingerprint != fingerprint
+    validation = validate_durable_attestation(
+        prior=prior,
+        attestation_inputs=attestation_inputs,
+        require_identity=False,
+        max_age_hours=None,
+    )
+    return not validation.valid
+
+
+def validate_provider_qualification_evidence(
+    *,
+    evidence: DurableProviderQualificationEvidence | None,
+    project_id: str,
+    provider_id: str,
+    scope: str,
+    require_identity: bool,
+    require_fingerprint: bool,
+    max_age_hours: int | None,
+    now: datetime | None = None,
+) -> ProviderQualificationValidation:
+    expected_fingerprint = DurableProviderQualificationEvidence.fingerprint_for(
+        project_id=project_id,
+        provider_id=provider_id,
+        scope=scope,
+        qualified=True,
+    )
+    if evidence is None:
+        return ProviderQualificationValidation(
+            satisfied=False,
+            state=ProviderQualificationState.MISSING,
+            reasons=("missing_provider_qualification_evidence",),
+            fingerprint_matches=False,
+            identity_matches=False,
+            fresh_within_policy=False,
+        )
+    if not evidence.qualified:
+        return ProviderQualificationValidation(
+            satisfied=False,
+            state=ProviderQualificationState.INVALID,
+            reasons=("provider_not_qualified",),
+            fingerprint_matches=False,
+            identity_matches=False,
+            fresh_within_policy=False,
+        )
+    fingerprint_matches = True
+    if require_fingerprint:
+        if not evidence.fingerprint:
+            return ProviderQualificationValidation(
+                satisfied=False,
+                state=ProviderQualificationState.INVALID,
+                reasons=("missing_provider_qualification_fingerprint",),
+                fingerprint_matches=False,
+                identity_matches=False,
+                fresh_within_policy=False,
+            )
+        fingerprint_matches = evidence.fingerprint == expected_fingerprint
+        if not fingerprint_matches:
+            return ProviderQualificationValidation(
+                satisfied=False,
+                state=ProviderQualificationState.MISMATCHED,
+                reasons=("provider_qualification_fingerprint_mismatch",),
+                fingerprint_matches=False,
+                identity_matches=False,
+                fresh_within_policy=False,
+            )
+    identity_matches = True
+    if require_identity:
+        identity_matches = (
+            evidence.project_id == project_id
+            and evidence.provider_id == provider_id
+            and evidence.scope == scope
+        )
+        if not identity_matches:
+            return ProviderQualificationValidation(
+                satisfied=False,
+                state=ProviderQualificationState.MISMATCHED,
+                reasons=("provider_qualification_identity_mismatch",),
+                fingerprint_matches=fingerprint_matches,
+                identity_matches=False,
+                fresh_within_policy=False,
+            )
+    fresh_within_policy = True
+    if max_age_hours is not None:
+        verified_at = _parse_utc_timestamp(evidence.verified_at_utc)
+        if verified_at is None:
+            return ProviderQualificationValidation(
+                satisfied=False,
+                state=ProviderQualificationState.STALE,
+                reasons=("missing_or_invalid_provider_qualification_timestamp",),
+                fingerprint_matches=fingerprint_matches,
+                identity_matches=identity_matches,
+                fresh_within_policy=False,
+            )
+        evaluated_at = (now or datetime.now(UTC)).astimezone(UTC)
+        age_hours = (evaluated_at - verified_at).total_seconds() / 3600
+        fresh_within_policy = 0 <= age_hours <= max_age_hours
+        if not fresh_within_policy:
+            return ProviderQualificationValidation(
+                satisfied=False,
+                state=ProviderQualificationState.STALE,
+                reasons=("provider_qualification_stale",),
+                    fingerprint_matches=fingerprint_matches,
+                identity_matches=identity_matches,
+                fresh_within_policy=False,
+            )
+    return ProviderQualificationValidation(
+        satisfied=True,
+        state=ProviderQualificationState.QUALIFIED,
+        reasons=(),
+        fingerprint_matches=fingerprint_matches,
+        identity_matches=identity_matches,
+        fresh_within_policy=fresh_within_policy,
+    )

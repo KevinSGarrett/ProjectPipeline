@@ -1,0 +1,108 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-08-16T23:06:45.145472+00:00",
+  "instruction_citations": [
+    "instructions/06_JIRA_OPERATING_PROTOCOL.md",
+    "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
+    "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md",
+    "instructions/03_SESSION_BOOTSTRAP_AND_PREFLIGHT.md",
+    "instructions/AUTHORITY_MAP.json",
+    "instructions/policies/CONTEXT_ROUTING.json"
+  ],
+  "local_mirror_status": {
+    "issue_count": 378,
+    "counts_by_state": {
+      "BACKLOG": 371,
+      "MERGE_READY": 7
+    },
+    "counts_by_type": {
+      "BUG": 0,
+      "EPIC": 18,
+      "SPIKE": 0,
+      "STORY": 107,
+      "SUBTASK": 16,
+      "TASK": 237
+    },
+    "remote_board_state": "READBACK_VERIFIED",
+    "remote_write_state": "REQUIRE_APPROVAL"
+  },
+  "remote_snapshot_status": {
+    "source": "MCP:plugin-atlassian-atlassian",
+    "project_key": "PP",
+    "issue_count": 378,
+    "status_counts": {
+      "To Do": 371,
+      "In Progress": 7,
+      "Done": 0
+    },
+    "type_counts": {
+      "Epic": 18,
+      "Story": 107,
+      "Task": 237,
+      "Sub-task": 16
+    },
+    "parent_not_empty_count": 123,
+    "issues_with_links_count": 328,
+    "issues_with_comments_count": 0,
+    "issues_with_labels_count": 378
+  },
+  "diff_classification": {
+    "identity": {
+      "classification": "NO_DIFFERENCE",
+      "basis": "issue count and issue-type counts match"
+    },
+    "status": {
+      "classification": "NO_DIFFERENCE",
+      "basis": "workflow status distribution matches policy projection"
+    },
+    "hierarchy": {
+      "classification": "NO_DIFFERENCE",
+      "basis": "native parent binding count matches prior governed sync baseline (123)"
+    },
+    "links": {
+      "classification": "NO_DIFFERENCE",
+      "basis": "no drift signal detected in issue-level link presence count readback"
+    },
+    "comments": {
+      "classification": "NO_DIFFERENCE",
+      "basis": "remote comment-bearing issue count is zero; no pending governed comment intents applied"
+    },
+    "metadata": {
+      "classification": "NO_DIFFERENCE",
+      "basis": "label-bearing issue count matches total issue count"
+    }
+  },
+  "reconciliation_flow": {
+    "deterministic_plan_id": "JPLAN-30A6C466043D4D29E49E",
+    "apply_receipt_ids": [
+      "JREC-5AA639F91B55D92DB1D9",
+      "JREC-2B895A807D2F7467A1E8",
+      "JREC-790EA40F27197575C8F4"
+    ],
+    "latest_receipt_id": "JREC-790EA40F27197575C8F4",
+    "readback_id": "MCP-READBACK-20260816T230645Z",
+    "readback_verified": true,
+    "human_required": [
+      {
+        "step": "HUMAN_REQUIRED_JIRA_API_TOKEN_FOR_GOVERNED_ADAPTER",
+        "reason": "env://JIRA_API_TOKEN not currently available for project_pipeline Atlassian adapter snapshot/plan/sync path"
+      }
+    ],
+    "zero_difference_followup_plan": ".\\venv\\Scripts\\python.exe -m project_pipeline jira snapshot --root . --provider atlassian --output .local/jira/remote_snapshot.json --json-output evidence/jira_snapshot.json"
+  },
+  "enforcement": {
+    "mechanism": "control completion jira_sync_guard gate",
+    "artifact": "jira/reports/jira_sync_guard.json",
+    "status": "ENABLED"
+  },
+  "files_changed": [
+    "src/project_pipeline/jira_steward/sync_guard.py",
+    "src/project_pipeline/cli.py",
+    "jira/reports/jira_sync_guard.json",
+    "jira/reports/live_jira_sync_report.json",
+    "jira/BOARD_MANIFEST.json",
+    "tests/test_jira_sync_guard.py"
+  ],
+  "deterministic_next_command": ".\\venv\\Scripts\\python.exe -m project_pipeline jira snapshot --root . --provider atlassian --output .local/jira/remote_snapshot.json --json-output evidence/jira_snapshot.json",
+  "digest_sha256": "72eb4d9a7566e5d6787c1ab9bb022470401de909e2c3dce57c8960fcb86943c4"
+}

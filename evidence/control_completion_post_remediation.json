@@ -1,0 +1,156 @@
+{
+  "completion": {
+    "accepted_requirements": 351,
+    "active_work_items": 11,
+    "blocked_work_items": 0,
+    "completed_work_items": 0,
+    "failed_work_items": 0,
+    "final_completion_gate_satisfied": false,
+    "generated_at_utc": "2026-08-16T23:05:41.250412Z",
+    "implemented_or_external_blocked_requirements": 185,
+    "project_id": "PROJECT-PIPELINE",
+    "projection_id": "COMPLETE-BA7425DF75D06DDDF4BD",
+    "ready_work_items": 291,
+    "reasons": [
+      "391 work items are not terminal",
+      "166 accepted requirements are not implemented or externally blocked",
+      "291 independent work items are ready to continue"
+    ],
+    "schema_version": "1.0.0",
+    "state": "INCOMPLETE",
+    "total_work_items": 391,
+    "verification_eligible": false
+  },
+  "control_status": {
+    "completion_state": "INCOMPLETE",
+    "latest_snapshot_at_utc": "2026-08-16T23:05:41.256936+00:00",
+    "latest_snapshot_id": "CTRL-B0D77DA7CA46C5CFF2D6",
+    "project_id": "PROJECT-PIPELINE",
+    "ready_count": 291,
+    "schema_version": "1.0.0",
+    "scope_finding_count": 0,
+    "snapshot_count": 21
+  },
+  "database": "C:\\Project_X\\.local\\state\\project_pipeline.db",
+  "jira_sync_guard": {
+    "artifact_path": "C:\\Project_X\\jira\\reports\\jira_sync_guard.json",
+    "expected_local_fingerprint": "2787ae3331436c8bb53333b3aa68e11671c86f3b50ee73d04b331b51c25cb611",
+    "observed_local_fingerprint": "2787ae3331436c8bb53333b3aa68e11671c86f3b50ee73d04b331b51c25cb611",
+    "passes": true,
+    "reasons": [],
+    "schema_version": "1.0.0",
+    "status": "PASS"
+  },
+  "product_outcome_alignment": {
+    "non_competing_completion": true,
+    "source": "config/product_outcome.json",
+    "stages": [
+      {
+        "order": 1,
+        "ready_story_ids": [
+          "PP-STORY-000018"
+        ],
+        "stage_id": "CANDIDATE_COMPLETION_GATE",
+        "story_ids": [
+          "PP-STORY-000018"
+        ]
+      },
+      {
+        "order": 2,
+        "ready_story_ids": [
+          "PP-STORY-000036"
+        ],
+        "stage_id": "FINAL_CONVERGENCE_AUDIT",
+        "story_ids": [
+          "PP-STORY-000036"
+        ]
+      }
+    ]
+  },
+  "takeover_governor": {
+    "attestation": {
+      "approved": true,
+      "evidence_reference": {
+        "artifact_found": true,
+        "fingerprint_actual": "b47d6d76d6eb7221e1d5d074f22b3793714ca120487314dd3816394f3745c32f",
+        "fingerprint_expected": "b47d6d76d6eb7221e1d5d074f22b3793714ca120487314dd3816394f3745c32f",
+        "fingerprint_matches": true,
+        "fresh_within_policy": true,
+        "identity_matches": true,
+        "reasons": [],
+        "reference": "evidence/pp379_writer_attestation_evidence.json",
+        "resolved_path": "C:\\Project_X\\evidence\\pp379_writer_attestation_evidence.json",
+        "valid": true
+      },
+      "expected_fingerprint": "a21027dbe356826f49b350e6bc9ec6d5c4cd5d00a0e440d6995313dc61942b89",
+      "fingerprint_matches": true,
+      "found": true,
+      "fresh_within_policy": true,
+      "identity_matches": true,
+      "max_age_hours": null,
+      "path": "C:\\Project_X\\.local\\state\\takeover\\privacy_attestation.json",
+      "reasons": [],
+      "request_human_attestation": false,
+      "source": "durable_local_state",
+      "state": "VALID"
+    },
+    "gate_reconciliation": {
+      "attestation_gate": {
+        "eligible": true,
+        "reasons": [],
+        "state": "VALID"
+      },
+      "input_fingerprint": "e03eef3bb5368c88e5e3e2ef7d3c8766979ad53f902de3b74403c526b9386493",
+      "provider_qualification_gate": {
+        "eligible": true,
+        "reasons": [],
+        "state": "QUALIFIED"
+      }
+    },
+    "global_stop_required": false,
+    "lane_matrix": [
+      {
+        "eligible_unrelated_work_count": 291,
+        "lane_id": "lane:local-governed",
+        "state": "ACTIVE"
+      },
+      {
+        "lane_id": "lane:provider:cursor-cli",
+        "requires_privacy_attestation": true,
+        "state": "ACTIVE"
+      }
+    ],
+    "provider_dispatch": {
+      "blocked_by_provider_gate": false,
+      "eligible": true,
+      "provider_id": "provider:cursor-cli",
+      "provider_qualification_satisfied": true,
+      "qualification_evidence": {
+        "evidence_fingerprint": "99b41e93da8c59d111a77ddd02784da1904cbfaa95c99cb95d4b0573cc0ae00a",
+        "evidence_ref": "evidence/pp379_writer_provider_qualification_evidence.json",
+        "fingerprint_matches": true,
+        "found": true,
+        "fresh_within_policy": true,
+        "identity_matches": true,
+        "max_age_hours": null,
+        "path": "C:\\Project_X\\.local\\state\\takeover\\provider_qualification.json",
+        "qualified": true,
+        "reference_validation": {
+          "artifact_found": true,
+          "fingerprint_actual": "99b41e93da8c59d111a77ddd02784da1904cbfaa95c99cb95d4b0573cc0ae00a",
+          "fingerprint_expected": "99b41e93da8c59d111a77ddd02784da1904cbfaa95c99cb95d4b0573cc0ae00a",
+          "fingerprint_matches": true,
+          "fresh_within_policy": true,
+          "identity_matches": true,
+          "reasons": [],
+          "reference": "evidence/pp379_writer_provider_qualification_evidence.json",
+          "resolved_path": "C:\\Project_X\\evidence\\pp379_writer_provider_qualification_evidence.json",
+          "valid": true
+        },
+        "source": "durable_local_state"
+      },
+      "reasons": [],
+      "state": "QUALIFIED"
+    }
+  }
+}

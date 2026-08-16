@@ -7,7 +7,9 @@
   "final_remote_snapshot_id": "JSNAP-FCCC226A19FE2C4AD0CA",
   "final_remote_issue_count": 378,
   "final_status_counts": {
-    "To Do": 378
+    "To Do": 371,
+    "In Progress": 7,
+    "Done": 0
   },
   "final_type_counts": {
     "Epic": 18,
@@ -59,5 +61,19 @@
     "completion-claim rejection",
     "board and issue-type visual verification",
     "final readback and idempotency verification"
+  ],
+  "readback_verified_at_utc": "2026-08-16T23:05:27.382728+00:00",
+  "readback_source": "MCP:plugin-atlassian-atlassian",
+  "readback_remote_counts": {
+    "parent_not_empty": 123,
+    "issueLinkType_not_empty": 328,
+    "comment_not_empty": 0,
+    "labels_not_empty": 378
+  },
+  "human_required": [
+    {
+      "step": "HUMAN_REQUIRED_JIRA_API_TOKEN_FOR_GOVERNED_ADAPTER",
+      "reason": "project_pipeline jira snapshot/plan/sync with --provider atlassian requires env://JIRA_API_TOKEN; currently unavailable for governed write path."
+    }
   ]
 }
