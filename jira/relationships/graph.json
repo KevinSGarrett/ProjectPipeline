@@ -6304,7 +6304,7 @@
     },
     {
       "id": "PP-TASK-000344",
-      "state": "BACKLOG",
+      "state": "READY",
       "title": "Implement scoped Secrets Broker leases and runtime-only materialization",
       "type": "TASK"
     },
