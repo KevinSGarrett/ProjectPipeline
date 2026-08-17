@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "1d0fbba41b60be9f43e6378756ee208cfe68e765166133280ea8b6d3a7866313",
+  "aggregate_sha256": "53b1a55a7718609815ab9435f8bfcba8faa2d7acd2b5280844ea5d7eca352884",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2778,
+  "file_count": 2780,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -10302,8 +10302,8 @@
     },
     {
       "path": "runbooks/autonomy_runtime/unattended_operation.md",
-      "sha256": "0e47374ceeafed7d49a66ab93ccb846e819bf11841684809b7d6f202856ae792",
-      "size_bytes": 1325
+      "sha256": "434c88a8dc9757b0966a6340fb9882a43c2c5a820745387582e50cf53536dc79",
+      "size_bytes": 1990
     },
     {
       "path": "runbooks/autonomy_runtime/windows_service.md",
@@ -11559,6 +11559,11 @@
       "path": "scripts/run_pass24_hardening.py",
       "sha256": "196eb32f65b05c8d8ef2c54138037d0c16770827b1371d35deb097b6dff649db",
       "size_bytes": 2374
+    },
+    {
+      "path": "scripts/start_autonomy_qualification_hidden.ps1",
+      "sha256": "090e55f44289925a46d887cf2ca43a62efc3ba7c4252d074163b7fed7c8d0df0",
+      "size_bytes": 2859
     },
     {
       "path": "scripts/validate_instructions.py",
@@ -13136,6 +13141,11 @@
       "size_bytes": 11329
     },
     {
+      "path": "tests/test_autonomy_qualification_windows.py",
+      "sha256": "72c945f4dc28a6cecf5c10f269bec0edb34603d47dd806c47b822b57c3fc1c05",
+      "size_bytes": 3119
+    },
+    {
       "path": "tests/test_autonomy_windows_service.py",
       "sha256": "953bc713215fc2d3fb47f4497a51e31151b4637f6d920a758ec1aea892a3bdd1",
       "size_bytes": 1400
@@ -13901,7 +13911,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T18:12:01.822271+00:00",
+  "generated_at_utc": "2026-08-17T18:19:15.821302+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13910,5 +13920,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24306256
+  "total_bytes": 24312899
 }

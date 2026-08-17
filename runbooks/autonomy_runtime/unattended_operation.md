@@ -23,7 +23,21 @@ $env:PYTHONPATH = 'src'
 & '.\.venv\Scripts\python.exe' scripts\run_autonomy_qualification.py start --database .local\state\qualification.sqlite3 --state-path .local\state\qualification --stage RECOVERY
 ```
 
-Heartbeat, health, resume, and fail use the printed `run_id`.
+Hidden Windows helper (explicit argument array, working directory, bounded logs, PID readback):
+
+```powershell
+$env:PYTHONPATH = 'src'
+powershell -NoProfile -File scripts\start_autonomy_qualification_hidden.ps1 `
+  -RepositoryRoot (Get-Location).Path `
+  -PythonExe '.\.venv\Scripts\python.exe' `
+  -Database '.local\pm_cycle_009\qualification\qualify.sqlite3' `
+  -StatePath '.local\pm_cycle_009\qualification\state' `
+  -LogDirectory '.local\pm_cycle_009\qualification\logs' `
+  -Stage RECOVERY `
+  -HeartbeatSeconds 30
+```
+
+Use `-DryRun` to print the exact hidden-process plan without starting it. Heartbeat, health, resume, stop, and fail use the printed `run_id`. The helper never shortens 24-hour or 72-hour attestation.
 
 ## Admission
 
