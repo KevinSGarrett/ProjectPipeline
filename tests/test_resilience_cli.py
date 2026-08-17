@@ -1,3 +1,5 @@
+import hashlib
+import json
 import os
 import subprocess
 import sys
@@ -44,6 +46,86 @@ def test_resilience_cli_backup_and_restore_plans(project_root, tmp_path):
     )
     assert denied.returncode != 0
     assert "isolated target" in denied.stdout
+
+
+def test_resilience_cli_restore_apply_requires_approval_and_isolated_root(project_root, tmp_path):
+    allow = tmp_path / "isolate"
+    source = tmp_path / "backup"
+    target = allow / "restored"
+    allow.mkdir()
+    source.mkdir()
+    payload = b"state"
+    (source / "state.db").write_bytes(payload)
+    manifest = tmp_path / "manifest.json"
+    digest = hashlib.sha256(payload).hexdigest()
+    manifest.write_text(
+        json.dumps(
+            {
+                "entries": [{"path": "state.db", "sha256": digest, "size_bytes": len(payload)}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    denied = run(
+        project_root,
+        "restore-apply",
+        "--allow-root",
+        str(allow),
+        "--intent-id",
+        "missing",
+        "--source",
+        str(source),
+        "--database",
+        str(tmp_path / "restore.db"),
+    )
+    assert denied.returncode != 0
+    recorded = run(
+        project_root,
+        "restore-intent",
+        "--allow-root",
+        str(allow),
+        "--target",
+        str(target),
+        "--domain",
+        "canonical_state",
+        "--idempotency-key",
+        "cli-restore-1",
+        "--manifest",
+        str(manifest),
+        "--database",
+        str(tmp_path / "restore.db"),
+    )
+    assert recorded.returncode == 0
+    intent_id = json.loads(recorded.stdout)["restore_intent"]["intent_id"]
+    applied = run(
+        project_root,
+        "restore-apply",
+        "--allow-root",
+        str(allow),
+        "--intent-id",
+        intent_id,
+        "--source",
+        str(source),
+        "--database",
+        str(tmp_path / "restore.db"),
+        "--apply",
+        "--approve",
+    )
+    assert applied.returncode == 0
+    verified = run(
+        project_root,
+        "restore-verify",
+        "--allow-root",
+        str(allow),
+        "--intent-id",
+        intent_id,
+        "--manifest",
+        str(manifest),
+        "--database",
+        str(tmp_path / "restore.db"),
+    )
+    assert verified.returncode == 0
+    assert "VERIFY_PASSED" in verified.stdout
 
 
 def test_resilience_cli_status_applies_migration(project_root, tmp_path):
