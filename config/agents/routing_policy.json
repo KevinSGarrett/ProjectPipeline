@@ -1,5 +1,5 @@
 [
-  {"capability_id":"routine_reasoning","preferred_provider_ids":["provider:mock-local"],"fallback_provider_ids":["provider:openai-api","provider:anthropic-api","provider:gemini-api"],"prefer_local_under_pressure":true},
+  {"capability_id":"routine_reasoning","preferred_provider_ids":["provider:mock-local"],"fallback_provider_ids":["provider:openai-api","provider:anthropic-api","provider:gemini-api","provider:litellm-proxy","provider:pydantic-ai"],"prefer_local_under_pressure":true},
   {"capability_id":"summarization","preferred_provider_ids":["provider:mock-local"],"fallback_provider_ids":["provider:gemini-api","provider:openai-api","provider:anthropic-api"],"prefer_local_under_pressure":true},
   {"capability_id":"code_review","preferred_provider_ids":["provider:mock-local"],"fallback_provider_ids":["provider:anthropic-api","provider:openai-api","provider:gemini-api"],"prefer_local_under_pressure":true},
   {"capability_id":"code_implementation","preferred_provider_ids":[],"fallback_provider_ids":["provider:openai-api","provider:anthropic-api","provider:gemini-api"],"prefer_local_under_pressure":false},
