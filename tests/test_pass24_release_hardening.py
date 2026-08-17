@@ -141,6 +141,8 @@ def test_release_candidate_is_truthful_not_production_ready():
 def test_hardening_report_carries_resolver_and_target_blockers():
     report = build_hardening_report(ROOT)
     assert report.production_ready is False
+    assert report.supply_chain_state == "FAIL"
+    assert "release supply-chain evidence is incomplete" in report.production_blockers
     assert report.resolver_lock_state != "READY"
     assert set(report.environment_profiles) == {
         "development",

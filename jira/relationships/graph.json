@@ -6321,13 +6321,13 @@
     },
     {
       "id": "PP-TASK-000346",
-      "state": "BACKLOG",
+      "state": "BLOCKED",
       "title": "Implement supply-chain scanner and policy-conformance adapters",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000347",
-      "state": "BACKLOG",
+      "state": "IN_PROGRESS",
       "title": "Implement SBOM, integrity, provenance, and license gate",
       "type": "TASK"
     },

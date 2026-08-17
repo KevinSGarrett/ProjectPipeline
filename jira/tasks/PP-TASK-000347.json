@@ -47,13 +47,16 @@
   ],
   "expected_file_locations": [
     "src/project_pipeline/security/supply_chain.py",
-    "provenance/license_policy.json"
+    "provenance/license_policy.json",
+    "tests/test_security_supply_chain.py",
+    "PROJECT_MANIFEST.json",
+    "FILE_MANIFEST.sha256"
   ],
   "expected_implementation_artifacts": [
     "src/project_pipeline/security/supply_chain.py",
     "provenance/license_policy.json"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "security",
@@ -104,7 +107,10 @@
   "schema_version": "1.0.0",
   "scope": [
     "src/project_pipeline/security/supply_chain.py",
-    "provenance/license_policy.json"
+    "provenance/license_policy.json",
+    "tests/test_security_supply_chain.py",
+    "PROJECT_MANIFEST.json",
+    "FILE_MANIFEST.sha256"
   ],
   "security_impact": "Directly changes security authority, credential release, egress, CI, supply-chain, or root-of-trust controls.",
   "source_references": [
@@ -112,7 +118,7 @@
     "SRC-009:L000017-L000017",
     "SRC-017:L001065-L001121"
   ],
-  "state": "BACKLOG",
+  "state": "IN_PROGRESS",
   "title": "Implement SBOM, integrity, provenance, and license gate",
   "upstream_dependencies": []
 }

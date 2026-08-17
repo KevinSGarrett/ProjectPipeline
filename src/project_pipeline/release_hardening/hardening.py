@@ -141,7 +141,7 @@ def qualify_packaging_targets(root: Path) -> tuple[PackagingTargetQualification,
 
 
 def build_hardening_report(root: Path) -> HardeningReport:
-    gate, _ = evaluate_supply_chain(root)
+    gate, _ = evaluate_supply_chain(root, release_mode=True)
     policy = json.loads((root / "config/dependency_policy.json").read_text(encoding="utf-8"))
     resolver = policy.get("resolver_lock", {})
     profiles = tuple(
@@ -154,6 +154,8 @@ def build_hardening_report(root: Path) -> HardeningReport:
     )
     targets = qualify_packaging_targets(root)
     blockers = []
+    if gate.state.value != "PASS":
+        blockers.append("release supply-chain evidence is incomplete")
     if resolver.get("state") != "READY":
         blockers.append("resolver lock is not READY")
     blockers.append("independent Completion Gate has not declared the project complete")

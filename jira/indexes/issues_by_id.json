@@ -42786,7 +42786,9 @@
         }
       }
     ],
-    "blockers": [],
+    "blockers": [
+      "PP-TASK-000323"
+    ],
     "completion_evidence": [
       "EVID-000123",
       "EVID-000124",
@@ -42813,14 +42815,23 @@
       "No live external scanner, vault, or signing claim without executed evidence."
     ],
     "expected_file_locations": [
-      "src/project_pipeline/upstream_integrations/security.py",
-      "src/project_pipeline/security/supply_chain.py"
+      "jira/tasks/PP-TASK-000346.json",
+      "src/project_pipeline/domain/security.py",
+      "src/project_pipeline/security/supply_chain.py",
+      "src/project_pipeline/release_hardening/hardening.py",
+      "tests/test_security_domain.py",
+      "tests/test_security_supply_chain.py",
+      "tests/test_security_upstream_adapters.py",
+      "tests/test_pass24_release_hardening.py",
+      "provenance/license_policy.json",
+      "PROJECT_MANIFEST.json",
+      "FILE_MANIFEST.sha256"
     ],
     "expected_implementation_artifacts": [
       "src/project_pipeline/upstream_integrations/security.py",
       "src/project_pipeline/security/supply_chain.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "security",
@@ -42871,8 +42882,17 @@
     "rollback_recovery_consideration": "Preserve audit/evidence history; revoke affected grants/leases and roll back code/schema without rewriting prior observed security state.",
     "schema_version": "1.0.0",
     "scope": [
-      "src/project_pipeline/upstream_integrations/security.py",
-      "src/project_pipeline/security/supply_chain.py"
+      "jira/tasks/PP-TASK-000346.json",
+      "src/project_pipeline/domain/security.py",
+      "src/project_pipeline/security/supply_chain.py",
+      "src/project_pipeline/release_hardening/hardening.py",
+      "tests/test_security_domain.py",
+      "tests/test_security_supply_chain.py",
+      "tests/test_security_upstream_adapters.py",
+      "tests/test_pass24_release_hardening.py",
+      "provenance/license_policy.json",
+      "PROJECT_MANIFEST.json",
+      "FILE_MANIFEST.sha256"
     ],
     "security_impact": "Directly changes security authority, credential release, egress, CI, supply-chain, or root-of-trust controls.",
     "source_references": [
@@ -42880,7 +42900,7 @@
       "GOV-001:L002200-L002231",
       "SRC-009:L000017-L000018"
     ],
-    "state": "BACKLOG",
+    "state": "BLOCKED",
     "title": "Implement supply-chain scanner and policy-conformance adapters",
     "upstream_dependencies": []
   },
@@ -42933,13 +42953,16 @@
     ],
     "expected_file_locations": [
       "src/project_pipeline/security/supply_chain.py",
-      "provenance/license_policy.json"
+      "provenance/license_policy.json",
+      "tests/test_security_supply_chain.py",
+      "PROJECT_MANIFEST.json",
+      "FILE_MANIFEST.sha256"
     ],
     "expected_implementation_artifacts": [
       "src/project_pipeline/security/supply_chain.py",
       "provenance/license_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "security",
@@ -42990,7 +43013,10 @@
     "schema_version": "1.0.0",
     "scope": [
       "src/project_pipeline/security/supply_chain.py",
-      "provenance/license_policy.json"
+      "provenance/license_policy.json",
+      "tests/test_security_supply_chain.py",
+      "PROJECT_MANIFEST.json",
+      "FILE_MANIFEST.sha256"
     ],
     "security_impact": "Directly changes security authority, credential release, egress, CI, supply-chain, or root-of-trust controls.",
     "source_references": [
@@ -42998,7 +43024,7 @@
       "SRC-009:L000017-L000017",
       "SRC-017:L001065-L001121"
     ],
-    "state": "BACKLOG",
+    "state": "IN_PROGRESS",
     "title": "Implement SBOM, integrity, provenance, and license gate",
     "upstream_dependencies": []
   },

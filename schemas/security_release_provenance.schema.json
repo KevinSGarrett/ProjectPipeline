@@ -1,11 +1,99 @@
 {
+  "$defs": {
+    "ProvenanceEvidenceBinding": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "evidence_kind": {
+          "$ref": "#/$defs/ProvenanceEvidenceKind"
+        },
+        "observed_at_utc": {
+          "format": "date-time",
+          "title": "Observed At Utc",
+          "type": "string"
+        },
+        "result_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Result Sha256",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "source_manifest_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "title": "Source Manifest Sha256",
+          "type": "string"
+        },
+        "tool": {
+          "maxLength": 100,
+          "minLength": 1,
+          "title": "Tool",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "evidence_kind",
+        "source_manifest_sha256",
+        "result_sha256",
+        "tool",
+        "observed_at_utc"
+      ],
+      "title": "ProvenanceEvidenceBinding",
+      "type": "object"
+    },
+    "ProvenanceEvidenceKind": {
+      "enum": [
+        "SCANNER",
+        "INTEGRITY",
+        "SIGNATURE",
+        "LEGAL_REVIEW",
+        "RELEASE_APPROVAL"
+      ],
+      "title": "ProvenanceEvidenceKind",
+      "type": "string"
+    }
+  },
   "$id": "https://project-pipeline.local/schemas/security_release_provenance.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "properties": {
+    "artifact_integrity_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Artifact Integrity Ids",
+      "type": "array"
+    },
     "builder_identity_id": {
       "title": "Builder Identity Id",
       "type": "string"
+    },
+    "declared_artifact_paths": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Declared Artifact Paths",
+      "type": "array"
+    },
+    "evidence_bindings": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ProvenanceEvidenceBinding"
+      },
+      "title": "Evidence Bindings",
+      "type": "array"
     },
     "evidence_ids": {
       "items": {
@@ -25,6 +113,15 @@
     },
     "provenance_id": {
       "title": "Provenance Id",
+      "type": "string"
+    },
+    "required_signature_state": {
+      "default": "NOT_REQUIRED",
+      "enum": [
+        "NOT_REQUIRED",
+        "VERIFIED"
+      ],
+      "title": "Required Signature State",
       "type": "string"
     },
     "sbom_sha256": {

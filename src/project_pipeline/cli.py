@@ -220,6 +220,7 @@ from project_pipeline.security import (
     build_repository_sbom,
     evaluate_supply_chain,
 )
+from project_pipeline.security.artifact_binding import ArtifactBindingStore
 from project_pipeline.security.simulation import simulate_security, supported_security_scenarios
 from project_pipeline.security.supply_chain import assess_self_modification
 from project_pipeline.services import (
@@ -882,6 +883,17 @@ def build_parser() -> argparse.ArgumentParser:
         "action",
         choices=(
             "status",
+            "identities",
+            "grants",
+            "approvals",
+            "policy-decisions",
+            "egress-decisions",
+            "secret-references",
+            "secret-leases",
+            "audit-events",
+            "sboms",
+            "supply-chain-gates",
+            "root-trust-records",
             "tools",
             "root-trust",
             "sbom",
@@ -889,12 +901,28 @@ def build_parser() -> argparse.ArgumentParser:
             "self-modification",
             "record-identity",
             "simulate",
+            "bind-artifact",
+            "artifact-bindings",
+            "revoke-artifact",
         ),
     )
     security.add_argument("--root", type=_root, default=Path.cwd())
     security.add_argument("--database", type=Path)
     security.add_argument("--project-id", default="PROJECT-PIPELINE")
     security.add_argument("--input", type=Path)
+    security.add_argument("--limit", type=int, default=50)
+    security.add_argument("--offset", type=int, default=0)
+    security.add_argument("--identity-id")
+    security.add_argument("--grant-id")
+    security.add_argument("--approval-id")
+    security.add_argument("--decision-id")
+    security.add_argument("--secret-ref-id")
+    security.add_argument("--lease-id")
+    security.add_argument("--audit-id")
+    security.add_argument("--sbom-id")
+    security.add_argument("--gate-id")
+    security.add_argument("--binding-id")
+    security.add_argument("--root-id")
     security.add_argument("--changed-path", action="append", default=[])
     security.add_argument("--scenario", choices=supported_security_scenarios())
     security.add_argument("--apply", action="store_true")
@@ -3248,10 +3276,177 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
     if args.action == "self-modification":
         assessment = assess_self_modification(tuple(args.changed_path))
         return {"self_modification": assessment.model_dump(mode="json")}, 0
+    if args.action in {"bind-artifact", "artifact-bindings", "revoke-artifact"}:
+        binding_db = (
+            Path(args.database).resolve()
+            if args.database is not None
+            else (args.root / ".local/state/artifact_bindings.sqlite3").resolve()
+        )
+        store = ArtifactBindingStore(binding_db)
+        try:
+            if args.action == "bind-artifact":
+                if not args.apply or not args.approve:
+                    raise ConfigurationError("security bind-artifact requires --apply --approve")
+                if args.input is None:
+                    raise ConfigurationError("security bind-artifact requires --input")
+                payload = json.loads(Path(args.input).read_text(encoding="utf-8"))
+                return {"artifact_binding": store.bind(payload)}, 0
+            if args.action == "revoke-artifact":
+                if not args.apply or not args.approve:
+                    raise ConfigurationError("security revoke-artifact requires --apply --approve")
+                if not args.binding_id:
+                    raise ConfigurationError("security revoke-artifact requires --binding-id")
+                return {"artifact_binding": store.revoke(str(args.binding_id))}, 0
+            return {"artifact_bindings": store.query(limit=args.limit, offset=args.offset)}, 0
+        finally:
+            store.close()
     database = _security_database(args)
     if args.action == "status":
         with SecurityStore(database, args.root) as store:
             return {"database": str(database), "security": store.status()}, 0
+    if args.action == "identities":
+        with SecurityStore(database, args.root) as store:
+            if args.identity_id:
+                identity = store.get_identity(str(args.identity_id))
+                identities = () if identity is None else (identity,)
+            else:
+                identities = store.list_identities(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "identities": [item.model_dump(mode="json") for item in identities],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "grants":
+        with SecurityStore(database, args.root) as store:
+            if args.grant_id:
+                grant = store.get_grant(str(args.grant_id))
+                grants = () if grant is None else (grant,)
+            else:
+                grants = store.list_grants(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "grants": [item.model_dump(mode="json") for item in grants],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "approvals":
+        with SecurityStore(database, args.root) as store:
+            if args.approval_id:
+                value = store.get_approval(str(args.approval_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_approvals(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "approvals": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "policy-decisions":
+        with SecurityStore(database, args.root) as store:
+            if args.decision_id:
+                value = store.get_policy_decision(str(args.decision_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_policy_decisions(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "policy_decisions": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "egress-decisions":
+        with SecurityStore(database, args.root) as store:
+            if args.decision_id:
+                value = store.get_egress_decision(str(args.decision_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_egress_decisions(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "egress_decisions": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "secret-references":
+        with SecurityStore(database, args.root) as store:
+            if args.secret_ref_id:
+                ref = store.get_secret_reference(str(args.secret_ref_id))
+                refs = () if ref is None else (ref,)
+            else:
+                refs = store.list_secret_references(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "secret_references": [item.model_dump(mode="json") for item in refs],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "secret-leases":
+        with SecurityStore(database, args.root) as store:
+            if args.lease_id:
+                lease = store.get_secret_lease(str(args.lease_id))
+                leases = () if lease is None else (lease,)
+            else:
+                leases = store.list_secret_leases(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "secret_leases": [item.model_dump(mode="json") for item in leases],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "audit-events":
+        with SecurityStore(database, args.root) as store:
+            if args.audit_id:
+                value = store.get_audit_event(str(args.audit_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_audit_events(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "audit_events": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "sboms":
+        with SecurityStore(database, args.root) as store:
+            if args.sbom_id:
+                value = store.get_sbom(str(args.sbom_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_sboms(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "sboms": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "supply-chain-gates":
+        with SecurityStore(database, args.root) as store:
+            if args.gate_id:
+                value = store.get_supply_chain_gate(str(args.gate_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_supply_chain_gates(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "supply_chain_gates": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "root-trust-records":
+        with SecurityStore(database, args.root) as store:
+            if args.root_id:
+                root_record = store.get_root_of_trust(str(args.root_id))
+                records = () if root_record is None else (root_record,)
+            else:
+                records = store.list_root_of_trust(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "root_of_trust_records": [item.model_dump(mode="json") for item in records],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
     if args.action == "record-identity":
         if not (args.apply and args.approve):
             raise ConfigurationError("security record-identity requires --apply --approve")

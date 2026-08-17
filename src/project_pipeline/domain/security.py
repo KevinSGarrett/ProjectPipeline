@@ -12,7 +12,7 @@ from pydantic import Field, field_validator, model_validator
 from project_pipeline.domain.base import DomainModel, utc_now
 
 SECURITY_ID = re.compile(
-    r"^(IDENT|ROLE|GRANT|APPROVAL|POLICY|EGRESS|SREF|SLEASE|SAUDIT|SBOM|SCOMP|PROV|INTEGRITY|SGATE|SELFCHG|ROOTTRUST)-[A-F0-9]{20}$"
+    r"^(IDENT|ROLE|GRANT|APPROVAL|POLICY|EGRESS|SREF|SLEASE|SAUDIT|SBOM|SCOMP|PROV|INTEGRITY|SCANEVID|SGATE|SELFCHG|ROOTTRUST)-[A-F0-9]{20}$"
 )
 
 
@@ -112,6 +112,14 @@ class SupplyChainFindingKind(StrEnum):
     ACTION_PINNING = "ACTION_PINNING"
     SBOM = "SBOM"
     SIGNATURE = "SIGNATURE"
+
+
+class ProvenanceEvidenceKind(StrEnum):
+    SCANNER = "SCANNER"
+    INTEGRITY = "INTEGRITY"
+    SIGNATURE = "SIGNATURE"
+    LEGAL_REVIEW = "LEGAL_REVIEW"
+    RELEASE_APPROVAL = "RELEASE_APPROVAL"
 
 
 class GateState(StrEnum):
@@ -388,6 +396,7 @@ class SBOMComponent(DomainModel):
     license: str | None = None
     source: str | None = None
     metadata_sha256: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")
+    compliance: SBOMComponentCompliance | None = None
 
     @model_validator(mode="after")
     def validate_component(self) -> SBOMComponent:
@@ -396,6 +405,14 @@ class SBOMComponent(DomainModel):
         ):
             raise ValueError("invalid SBOM component id")
         return self
+
+
+class SBOMComponentCompliance(DomainModel):
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    notice_reference: str = Field(min_length=1, max_length=500)
+    permitted_use_record_id: str = Field(min_length=1, max_length=200)
+    modification_obligation_record_id: str = Field(min_length=1, max_length=200)
+    provenance_reference_id: str = Field(min_length=1, max_length=200)
 
 
 class SoftwareBillOfMaterials(DomainModel):
@@ -432,6 +449,38 @@ class SupplyChainFinding(DomainModel):
     blocking: bool = False
 
 
+class ScannerEvidence(DomainModel):
+    """Normalized, content-bound evidence from one external scanner execution."""
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    scanner_evidence_id: str
+    tool: str = Field(min_length=1, max_length=100)
+    execution_state: Literal["SUCCEEDED", "FAILED"]
+    source_manifest_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    result_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    observed_at_utc: datetime
+    scanned_kinds: tuple[SupplyChainFindingKind, ...]
+    findings: tuple[SupplyChainFinding, ...] = ()
+    evidence_path: str | None = None
+
+    @field_validator("observed_at_utc")
+    @classmethod
+    def validate_time(cls, value: datetime) -> datetime:
+        return _aware(value)
+
+    @model_validator(mode="after")
+    def validate_evidence(self) -> ScannerEvidence:
+        if not SECURITY_ID.fullmatch(
+            self.scanner_evidence_id
+        ) or not self.scanner_evidence_id.startswith("SCANEVID-"):
+            raise ValueError("invalid scanner evidence id")
+        if self.execution_state == "SUCCEEDED" and not self.scanned_kinds:
+            raise ValueError("successful scanner evidence must identify scanned finding kinds")
+        if len(set(self.scanned_kinds)) != len(self.scanned_kinds):
+            raise ValueError("scanner evidence finding kinds must be unique")
+        return self
+
+
 class ArtifactIntegrityRecord(DomainModel):
     schema_version: Literal["1.0.0"] = "1.0.0"
     integrity_id: str
@@ -459,6 +508,10 @@ class ReleaseProvenance(DomainModel):
     sbom_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     verification_state: str
     evidence_ids: tuple[str, ...]
+    declared_artifact_paths: tuple[str, ...] = ()
+    artifact_integrity_ids: tuple[str, ...] = ()
+    evidence_bindings: tuple[ProvenanceEvidenceBinding, ...] = ()
+    required_signature_state: Literal["NOT_REQUIRED", "VERIFIED"] = "NOT_REQUIRED"
     generated_at_utc: datetime = Field(default_factory=utc_now)
 
     @field_validator("generated_at_utc")
@@ -472,7 +525,34 @@ class ReleaseProvenance(DomainModel):
             "PROV-"
         ):
             raise ValueError("invalid provenance id")
+        if len(set(self.evidence_ids)) != len(self.evidence_ids):
+            raise ValueError("provenance evidence ids must be unique")
+        if len(set(self.declared_artifact_paths)) != len(self.declared_artifact_paths):
+            raise ValueError("declared artifact paths must be unique")
+        if len(set(self.artifact_integrity_ids)) != len(self.artifact_integrity_ids):
+            raise ValueError("provenance integrity ids must be unique")
+        if self.verification_state.startswith("VERIFIED") and not self.evidence_ids:
+            raise ValueError("verified provenance requires evidence ids")
+        if self.evidence_bindings:
+            binding_ids = {binding.evidence_id for binding in self.evidence_bindings}
+            if binding_ids != set(self.evidence_ids):
+                raise ValueError("provenance evidence bindings must match evidence ids")
         return self
+
+
+class ProvenanceEvidenceBinding(DomainModel):
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    evidence_id: str = Field(min_length=1, max_length=200)
+    evidence_kind: ProvenanceEvidenceKind
+    source_manifest_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    result_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    tool: str = Field(min_length=1, max_length=100)
+    observed_at_utc: datetime
+
+    @field_validator("observed_at_utc")
+    @classmethod
+    def validate_time(cls, value: datetime) -> datetime:
+        return _aware(value)
 
 
 class SupplyChainGateResult(DomainModel):
