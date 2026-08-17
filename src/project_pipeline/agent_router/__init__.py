@@ -21,7 +21,9 @@ from project_pipeline.agent_router.persistence import AgentRouterStore
 from project_pipeline.agent_router.pydantic_ai_adapter import PydanticAIProviderAdapter
 from project_pipeline.agent_router.qualification import (
     REQUIRED_ADAPTER_CHECKS,
+    accept_qualification_report,
     qualification_report,
+    run_adapter_qualification,
 )
 from project_pipeline.agent_router.registry import (
     build_registry,
@@ -51,6 +53,7 @@ __all__ = [
     "ProviderAdapterError",
     "PydanticAIProviderAdapter",
     "ToolAdapter",
+    "accept_qualification_report",
     "build_registry",
     "execution_targets",
     "load_agent_registry",
@@ -59,6 +62,7 @@ __all__ = [
     "record_failure",
     "record_probe",
     "record_success",
+    "run_adapter_qualification",
     "simulate_provider_failover",
     "validate_agent_router_foundation",
 ]

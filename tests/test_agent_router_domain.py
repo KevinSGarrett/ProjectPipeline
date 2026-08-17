@@ -4,8 +4,11 @@ import pytest
 
 from project_pipeline.agent_router import (
     REQUIRED_ADAPTER_CHECKS,
+    MockProviderAdapter,
+    accept_qualification_report,
     build_registry,
     qualification_report,
+    run_adapter_qualification,
 )
 from project_pipeline.domain import (
     AgentSpec,
@@ -120,3 +123,29 @@ def test_adapter_qualification_requires_every_standard_check_and_rollback():
         qualification_report("adapter:test", "1", checks, rollback_ready=False).state
         is QualificationState.QUARANTINED
     )
+
+
+def test_run_adapter_qualification_invokes_adapter_and_rejects_stale_or_forged_reports():
+    adapter = MockProviderAdapter("provider:test")
+    report = run_adapter_qualification(adapter, rollback_ready=True)
+    assert report.state is QualificationState.QUALIFIED
+    accepted = accept_qualification_report(
+        report,
+        expected_subject_id=adapter.adapter_id,
+        expected_subject_version=adapter.adapter_version,
+    )
+    assert accepted.report_id == report.report_id
+    stale = report.model_copy(update={"evaluated_at_utc": datetime(2020, 1, 1, tzinfo=UTC)})
+    with pytest.raises(ValueError, match="stale"):
+        accept_qualification_report(
+            stale,
+            expected_subject_id=adapter.adapter_id,
+            expected_subject_version=adapter.adapter_version,
+        )
+    forged = report.model_copy(update={"report_id": "QUAL-forged"})
+    with pytest.raises(ValueError, match="forged"):
+        accept_qualification_report(
+            forged,
+            expected_subject_id=adapter.adapter_id,
+            expected_subject_version=adapter.adapter_version,
+        )
