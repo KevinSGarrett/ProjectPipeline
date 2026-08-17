@@ -476,6 +476,131 @@ def _normalize_target_classes(classes: Iterable[str], *, context: str) -> tuple[
     return tuple(normalized)
 
 
+def _sbom_sha256(sbom: SoftwareBillOfMaterials) -> str:
+    payload = json.dumps(
+        {
+            "project_id": sbom.project_id,
+            "source_manifest_sha256": sbom.source_manifest_sha256,
+            "components": [
+                {
+                    "component_id": component.component_id,
+                    "name": component.name,
+                    "version": component.version,
+                    "component_type": component.component_type,
+                    "license": component.license,
+                    "source": component.source,
+                    "metadata_sha256": component.metadata_sha256,
+                }
+                for component in sbom.components
+            ],
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str,
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def _evaluate_license_policy(
+    root: Path, components: tuple[SBOMComponent, ...]
+) -> tuple[SupplyChainFinding, ...]:
+    policy = _mapping(
+        json.loads((root / "provenance/license_policy.json").read_text(encoding="utf-8")),
+        context="license policy",
+    )
+    auto_approved = {
+        str(item).strip()
+        for item in _rows(
+            policy.get("automatic_approval_spdx", []), context="automatic_approval_spdx"
+        )
+    }
+    prohibited = {
+        str(item).strip()
+        for item in _rows(policy.get("prohibited_spdx", []), context="prohibited_spdx")
+    }
+    review_required = {
+        str(item).strip()
+        for item in _rows(policy.get("review_required_spdx", []), context="review_required_spdx")
+    }
+    rules = tuple(
+        str(item).strip() for item in _rows(policy.get("rules", []), context="license rules")
+    )
+    findings: list[SupplyChainFinding] = []
+    for component in components:
+        license_expression = (component.license or "").strip()
+        if not license_expression:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.LICENSE,
+                    subject=component.name,
+                    code="license-missing",
+                    message=(
+                        "third-party component license is missing and requires human legal review; "
+                        "record notice, permitted use, modification obligations, provenance, and "
+                        "bounded source-adaptation requirements"
+                    ),
+                )
+            )
+            continue
+        if license_expression in prohibited:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.LICENSE,
+                    subject=component.name,
+                    code="license-prohibited",
+                    message=f"license '{license_expression}' is prohibited by policy",
+                )
+            )
+            continue
+        if license_expression in review_required:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.LICENSE,
+                    subject=component.name,
+                    code="license-review-required",
+                    message=(
+                        f"license '{license_expression}' requires human legal approval before activation; "
+                        "record notice, permitted use, modification obligations, provenance, and bounded "
+                        "source-adaptation requirements"
+                    ),
+                )
+            )
+            continue
+        if license_expression not in auto_approved:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.LICENSE,
+                    subject=component.name,
+                    code="license-unknown",
+                    message=(
+                        f"license '{license_expression}' is not in automatic approvals and must be "
+                        "treated as review-required with full legal/provenance recording"
+                    ),
+                )
+            )
+            continue
+        if not component.source:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.LICENSE,
+                    subject=component.name,
+                    code="license-provenance-missing",
+                    message="approved license still requires recorded provenance/source reference",
+                )
+            )
+            continue
+        if not rules:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.LICENSE,
+                    subject=component.name,
+                    code="license-policy-rules-missing",
+                    message="license policy rules are missing for compliance obligations",
+                )
+            )
+    return tuple(findings)
+
+
 def _validate_integrity_records(
     root: Path, records: tuple[ArtifactIntegrityRecord, ...]
 ) -> tuple[SupplyChainFinding, ...]:
@@ -630,6 +755,8 @@ def evaluate_supply_chain(
     scanner_target_coverage: Mapping[str, tuple[str, ...]] | None = None,
     required_scan_kinds: tuple[SupplyChainFindingKind, ...] = _DEFAULT_REQUIRED_SCAN_KINDS,
     required_target_classes: tuple[str, ...] = _DEFAULT_REQUIRED_TARGET_CLASSES,
+    sbom_override: SoftwareBillOfMaterials | None = None,
+    enforce_license_gate: bool = False,
 ) -> tuple[SupplyChainGateResult, SoftwareBillOfMaterials | None]:
     root = root.resolve()
     aggregate = _manifest_aggregate(root)
@@ -640,7 +767,11 @@ def evaluate_supply_chain(
     )
     findings = list(evaluate_ci_workflows(root)) + list(external_findings)
     records = tuple(integrity_records)
-    sbom = build_repository_sbom(root) if effective_require_sbom else None
+    sbom = (
+        (sbom_override if sbom_override is not None else build_repository_sbom(root))
+        if effective_require_sbom
+        else None
+    )
     if effective_require_sbom and sbom is None:
         findings.append(
             SupplyChainFinding(
@@ -653,6 +784,41 @@ def evaluate_supply_chain(
                 blocking=True,
             )
         )
+    if sbom is not None and sbom.source_manifest_sha256 != aggregate:
+        findings.append(
+            _release_requirement_finding(
+                kind=SupplyChainFindingKind.SBOM,
+                subject="release candidate",
+                code="sbom-manifest-mismatch",
+                message="SBOM is not bound to the current source manifest",
+            )
+        )
+    if sbom is not None and enforce_license_gate:
+        for component in sbom.components:
+            if (
+                not component.name.strip()
+                or not component.version.strip()
+                or not component.component_type.strip()
+            ):
+                findings.append(
+                    _release_requirement_finding(
+                        kind=SupplyChainFindingKind.SBOM,
+                        subject=component.component_id,
+                        code="sbom-component-malformed",
+                        message="SBOM component metadata is malformed or incomplete",
+                    )
+                )
+            if component.component_type in {"python-package", "upstream-integration"} and (
+                not component.source or not component.source.strip()
+            ):
+                findings.append(
+                    _release_requirement_finding(
+                        kind=SupplyChainFindingKind.SBOM,
+                        subject=component.component_id,
+                        code="sbom-component-unbound",
+                        message="third-party SBOM component lacks required provenance/source binding",
+                    )
+                )
     if release_mode:
         now = now_utc or datetime.now(UTC)
         if now.tzinfo is None or now.utcoffset() is None:
@@ -777,9 +943,11 @@ def evaluate_supply_chain(
                 )
             )
         if bool(supply_policy.get("require_provenance")):
+            expected_sbom_sha = _sbom_sha256(sbom) if sbom is not None else None
             provenance_valid = bool(
                 provenance is not None
                 and provenance.source_aggregate_sha256 == aggregate
+                and (expected_sbom_sha is None or provenance.sbom_sha256 == expected_sbom_sha)
                 and provenance.verification_state.startswith("VERIFIED")
                 and provenance.evidence_ids
             )
@@ -789,7 +957,10 @@ def evaluate_supply_chain(
                         kind=SupplyChainFindingKind.PROVENANCE,
                         subject="release candidate",
                         code="required-provenance-missing",
-                        message="verified release provenance bound to the current source is required",
+                        message=(
+                            "verified release provenance bound to source, SBOM state, and evidence "
+                            "is required"
+                        ),
                     )
                 )
         if bool(supply_policy.get("require_integrity_hashes")):
@@ -831,6 +1002,8 @@ def evaluate_supply_chain(
                     message="the enabled signing profile requires verified artifact signatures",
                 )
             )
+        if enforce_license_gate and sbom is not None:
+            findings.extend(_evaluate_license_policy(root, sbom.components))
     state = GateState.FAIL if any(item.blocking for item in findings) else GateState.PASS
     if state is GateState.FAIL:
         reason = (
@@ -849,6 +1022,8 @@ def evaluate_supply_chain(
             "aggregate": aggregate,
             "release_mode": release_mode,
             "state": state.value,
+            "enforce_license_gate": enforce_license_gate,
+            "sbom_sha256": _sbom_sha256(sbom) if sbom is not None else None,
             "scanner_evidence": [
                 {
                     "scanner_evidence_id": evidence.scanner_evidence_id,
@@ -944,10 +1119,7 @@ def release_provenance(
     project_id: str = "PROJECT-PIPELINE",
 ) -> tuple[ReleaseProvenance, SoftwareBillOfMaterials]:
     sbom = build_repository_sbom(root, project_id=project_id)
-    sbom_payload = json.dumps(
-        sbom.model_dump(mode="json"), sort_keys=True, separators=(",", ":"), default=str
-    ).encode()
-    sbom_sha = hashlib.sha256(sbom_payload).hexdigest()
+    sbom_sha = _sbom_sha256(sbom)
     aggregate = _manifest_aggregate(root)
     record = ReleaseProvenance(
         provenance_id=security_identifier(

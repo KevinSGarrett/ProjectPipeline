@@ -1,6 +1,15 @@
+import hashlib
+import json
 from datetime import UTC, datetime, timedelta
 
-from project_pipeline.domain.security import GateState, SupplyChainFindingKind
+from project_pipeline.domain.security import (
+    GateState,
+    ReleaseProvenance,
+    SBOMComponent,
+    SoftwareBillOfMaterials,
+    SupplyChainFindingKind,
+    security_identifier,
+)
 from project_pipeline.security.supply_chain import (
     artifact_integrity,
     assess_self_modification,
@@ -340,3 +349,152 @@ def test_self_modification_control_plane_requires_review():
     )
     b = assess_self_modification(("docs/README.md",))
     assert not b.touches_control_plane
+
+
+def _license_gate_sbom(project_root, *, license_expression: str | None) -> SoftwareBillOfMaterials:
+    source_manifest_sha256 = build_repository_sbom(project_root).source_manifest_sha256
+    component = SBOMComponent(
+        component_id=security_identifier("SCOMP", "third-party", "example-lib", "1.2.3"),
+        name="example-lib",
+        version="1.2.3",
+        component_type="python-package",
+        license=license_expression,
+        source="https://example.invalid/example-lib",
+    )
+    return SoftwareBillOfMaterials(
+        sbom_id=security_identifier("SBOM", "PROJECT-PIPELINE", source_manifest_sha256, "1"),
+        project_id="PROJECT-PIPELINE",
+        source_manifest_sha256=source_manifest_sha256,
+        components=(component,),
+    )
+
+
+def _license_gate_provenance(sbom: SoftwareBillOfMaterials) -> ReleaseProvenance:
+    return ReleaseProvenance(
+        provenance_id=security_identifier("PROV", "PROJECT-PIPELINE", sbom.sbom_id),
+        project_id="PROJECT-PIPELINE",
+        source_aggregate_sha256=sbom.source_manifest_sha256,
+        builder_identity_id="IDENT-00000000000000000000",
+        sbom_sha256="0" * 64,  # overwritten by callers when needed
+        verification_state="VERIFIED_LOCAL",
+        evidence_ids=("EVID-RELEASE",),
+    )
+
+
+def _sbom_sha(sbom: SoftwareBillOfMaterials) -> str:
+    payload = json.dumps(
+        {
+            "project_id": sbom.project_id,
+            "source_manifest_sha256": sbom.source_manifest_sha256,
+            "components": [
+                {
+                    "component_id": component.component_id,
+                    "name": component.name,
+                    "version": component.version,
+                    "component_type": component.component_type,
+                    "license": component.license,
+                    "source": component.source,
+                    "metadata_sha256": component.metadata_sha256,
+                }
+                for component in sbom.components
+            ],
+        },
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str,
+    )
+    return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+def test_release_license_gate_allows_auto_approved_spdx(project_root):
+    now = datetime(2026, 8, 16, 18, tzinfo=UTC)
+    evidence, integrity, _, artifact_paths, coverage = _release_inputs(
+        project_root, observed_at_utc=now
+    )
+    sbom = _license_gate_sbom(project_root, license_expression="MIT")
+    provenance = _license_gate_provenance(sbom).model_copy(update={"sbom_sha256": _sbom_sha(sbom)})
+    gate, _ = evaluate_supply_chain(
+        project_root,
+        release_mode=True,
+        scanner_evidence=(evidence,),
+        integrity_records=integrity,
+        provenance=provenance,
+        now_utc=now,
+        release_artifact_paths=artifact_paths,
+        scanner_target_coverage=coverage,
+        sbom_override=sbom,
+        enforce_license_gate=True,
+    )
+    assert gate.state is GateState.PASS
+
+
+def test_release_license_gate_blocks_prohibited_spdx(project_root):
+    now = datetime(2026, 8, 16, 18, tzinfo=UTC)
+    evidence, integrity, _, artifact_paths, coverage = _release_inputs(
+        project_root, observed_at_utc=now
+    )
+    sbom = _license_gate_sbom(project_root, license_expression="AGPL-3.0-only")
+    provenance = _license_gate_provenance(sbom).model_copy(update={"sbom_sha256": _sbom_sha(sbom)})
+    gate, _ = evaluate_supply_chain(
+        project_root,
+        release_mode=True,
+        scanner_evidence=(evidence,),
+        integrity_records=integrity,
+        provenance=provenance,
+        now_utc=now,
+        release_artifact_paths=artifact_paths,
+        scanner_target_coverage=coverage,
+        sbom_override=sbom,
+        enforce_license_gate=True,
+    )
+    assert gate.state is GateState.FAIL
+    assert any(finding.kind.value == "LICENSE" for finding in gate.findings)
+
+
+def test_release_license_gate_blocks_review_required_or_missing_spdx(project_root):
+    now = datetime(2026, 8, 16, 18, tzinfo=UTC)
+    evidence, integrity, _, artifact_paths, coverage = _release_inputs(
+        project_root, observed_at_utc=now
+    )
+    for license_expression in ("NOASSERTION", None):
+        sbom = _license_gate_sbom(project_root, license_expression=license_expression)
+        provenance = _license_gate_provenance(sbom).model_copy(
+            update={"sbom_sha256": _sbom_sha(sbom)}
+        )
+        gate, _ = evaluate_supply_chain(
+            project_root,
+            release_mode=True,
+            scanner_evidence=(evidence,),
+            integrity_records=integrity,
+            provenance=provenance,
+            now_utc=now,
+            release_artifact_paths=artifact_paths,
+            scanner_target_coverage=coverage,
+            sbom_override=sbom,
+            enforce_license_gate=True,
+        )
+        assert gate.state is GateState.FAIL
+        assert any(finding.kind.value == "LICENSE" for finding in gate.findings)
+
+
+def test_release_provenance_requires_matching_sbom_binding(project_root):
+    now = datetime(2026, 8, 16, 18, tzinfo=UTC)
+    evidence, integrity, _, artifact_paths, coverage = _release_inputs(
+        project_root, observed_at_utc=now
+    )
+    sbom = _license_gate_sbom(project_root, license_expression="MIT")
+    provenance = _license_gate_provenance(sbom)
+    gate, _ = evaluate_supply_chain(
+        project_root,
+        release_mode=True,
+        scanner_evidence=(evidence,),
+        integrity_records=integrity,
+        provenance=provenance,
+        now_utc=now,
+        release_artifact_paths=artifact_paths,
+        scanner_target_coverage=coverage,
+        sbom_override=sbom,
+        enforce_license_gate=True,
+    )
+    assert gate.state is GateState.FAIL
+    assert any(finding.kind.value == "PROVENANCE" for finding in gate.findings)
