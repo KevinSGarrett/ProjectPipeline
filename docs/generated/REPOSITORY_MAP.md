@@ -1,33 +1,36 @@
 # Generated Repository Map
 
-- Files: `2185`
-- Generated: `2026-08-16T01:08:49.399517+00:00`
+- Files: `2790`
+- Generated: `2026-08-17T20:48:58.622649+00:00`
 
 ## Top-level counts
 
-- `.github`: 5
-- `_root`: 14
+- `.agents`: 8
+- `.github`: 6
+- `_root`: 16
 - `adr`: 29
 - `apps`: 18
 - `architecture`: 19
-- `config`: 39
+- `config`: 40
 - `contracts`: 5
-- `database`: 78
-- `docs`: 62
-- `evidence`: 210
-- `fixtures`: 17
+- `database`: 86
+- `docs`: 65
+- `dummy`: 429
+- `evidence`: 220
+- `fixtures`: 25
 - `infrastructure`: 10
-- `jira`: 774
-- `plans`: 131
+- `instructions`: 46
+- `jira`: 803
+- `plans`: 137
 - `policies`: 1
 - `provenance`: 89
 - `release`: 5
 - `requirements`: 5
-- `runbooks`: 25
-- `schemas`: 202
-- `scripts`: 17
-- `src`: 262
-- `tests`: 167
+- `runbooks`: 27
+- `schemas`: 204
+- `scripts`: 32
+- `src`: 280
+- `tests`: 184
 - `third_party`: 1
 
 ## Semantic indexes
@@ -94,6 +97,7 @@
 - `evidence/assurance_repository_validation.txt`
 - `evidence/assurance_simulation_snapshot.json`
 - `evidence/assurance_upstream_gate_snapshot.json`
+- `evidence/autonomy_runtime/golden_journey/golden_journey_latest.json`
 - `evidence/budget_focused_suite.txt`
 - `evidence/budget_full_regression.txt`
 - `evidence/budget_repository_validation.txt`
@@ -139,6 +143,7 @@
 - `evidence/core_state_snapshot.json`
 - `evidence/core_state_tests.txt`
 - `evidence/decision_resolution_validation.json`
+- `evidence/delivery_progress_governor_v1_1_0.txt`
 - `evidence/dependency_state_validation.json`
 - `evidence/detailed_validator_preflight.json`
 - `evidence/final_convergence_pass25_completion_gate_snapshot.json`
@@ -189,6 +194,14 @@
 - `evidence/pp19_regression_part02.txt`
 - `evidence/pp19_regression_part03.txt`
 - `evidence/pp19_regression_part04.txt`
+- `evidence/pp380_cycle5_execution_dispositions.json`
+- `evidence/pp380_cycle5_execution_dispositions.md`
+- `evidence/pp380_cycle6_corrected_dispositions.json`
+- `evidence/pp380_cycle6_corrected_dispositions.md`
+- `evidence/pp380_main_worktree_dirty_classification_post.json`
+- `evidence/pp380_main_worktree_dirty_classification_pre.json`
+- `evidence/pp380_source_reconciliation_map.json`
+- `evidence/pp380_source_reconciliation_map.provenance.json`
 - `evidence/project_intake_foundation_validation.json`
 - `evidence/project_intake_integrated_suite.txt`
 - `evidence/project_pipeline_intake_snapshot.json`
@@ -308,6 +321,7 @@
 - `jira/epics/PP-EPIC-000031.json`
 - `jira/epics/PP-EPIC-000033.json`
 - `jira/epics/PP-EPIC-000035.json`
+- `jira/epics/PP-EPIC-000036.json`
 - `jira/epics/README.md`
 - `jira/imports/README.md`
 - `jira/indexes/issues.jsonl`
@@ -316,6 +330,9 @@
 - `jira/relationships/issues.jsonl`
 - `jira/reports/backlog_status.json`
 - `jira/reports/foundation_status.json`
+- `jira/reports/live_jira_sync_report.json`
+- `jira/reports/remote_completion_audit.jsonl`
+- `jira/reports/remote_mapping_report.json`
 - `jira/schemas/ISSUE_SCHEMA_REFERENCE.json`
 - `jira/snapshots/README.md`
 - `jira/source_context/PP-EPIC-000001.md`
@@ -336,6 +353,7 @@
 - `jira/source_context/PP-EPIC-000031.md`
 - `jira/source_context/PP-EPIC-000033.md`
 - `jira/source_context/PP-EPIC-000035.md`
+- `jira/source_context/PP-EPIC-000036.md`
 - `jira/source_context/PP-STORY-000002.md`
 - `jira/source_context/PP-STORY-000004.md`
 - `jira/source_context/PP-STORY-000006.md`
@@ -443,6 +461,12 @@
 - `jira/source_context/PP-STORY-000135.md`
 - `jira/source_context/PP-STORY-000136.md`
 - `jira/source_context/PP-STORY-000137.md`
+- `jira/source_context/PP-STORY-000138.md`
+- `jira/source_context/PP-STORY-000139.md`
+- `jira/source_context/PP-STORY-000140.md`
+- `jira/source_context/PP-STORY-000141.md`
+- `jira/source_context/PP-STORY-000142.md`
+- `jira/source_context/PP-STORY-000143.md`
 - `jira/source_context/PP-SUBTASK-000045.md`
 - `jira/source_context/PP-SUBTASK-000046.md`
 - `jira/source_context/PP-SUBTASK-000047.md`
@@ -696,6 +720,12 @@
 - `jira/source_context/PP-TASK-000376.md`
 - `jira/source_context/PP-TASK-000377.md`
 - `jira/source_context/PP-TASK-000378.md`
+- `jira/source_context/PP-TASK-000380.md`
+- `jira/source_context/PP-TASK-000381.md`
+- `jira/source_context/PP-TASK-000382.md`
+- `jira/source_context/PP-TASK-000383.md`
+- `jira/source_context/PP-TASK-000384.md`
+- `jira/source_context/PP-TASK-000385.md`
 - `jira/spikes/README.md`
 - `jira/stories/PP-STORY-000002.json`
 - `jira/stories/PP-STORY-000004.json`
@@ -804,6 +834,12 @@
 - `jira/stories/PP-STORY-000135.json`
 - `jira/stories/PP-STORY-000136.json`
 - `jira/stories/PP-STORY-000137.json`
+- `jira/stories/PP-STORY-000138.json`
+- `jira/stories/PP-STORY-000139.json`
+- `jira/stories/PP-STORY-000140.json`
+- `jira/stories/PP-STORY-000141.json`
+- `jira/stories/PP-STORY-000142.json`
+- `jira/stories/PP-STORY-000143.json`
 - `jira/stories/README.md`
 - `jira/subtasks/PP-SUBTASK-000045.json`
 - `jira/subtasks/PP-SUBTASK-000046.json`
@@ -1059,6 +1095,12 @@
 - `jira/tasks/PP-TASK-000376.json`
 - `jira/tasks/PP-TASK-000377.json`
 - `jira/tasks/PP-TASK-000378.json`
+- `jira/tasks/PP-TASK-000380.json`
+- `jira/tasks/PP-TASK-000381.json`
+- `jira/tasks/PP-TASK-000382.json`
+- `jira/tasks/PP-TASK-000383.json`
+- `jira/tasks/PP-TASK-000384.json`
+- `jira/tasks/PP-TASK-000385.json`
 - `jira/tasks/README.md`
 - `jira/templates/issue_template.json`
 
@@ -1084,6 +1126,7 @@
 - `plans/02_system_architecture/README.md`
 - `plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md`
 - `plans/03_control_and_orchestration/PLAN-CTRL-002_project_control_kernel_build_sequencer.md`
+- `plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md`
 - `plans/03_control_and_orchestration/README.md`
 - `plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md`
 - `plans/04_scheduling_and_parallel_execution/PLAN-SCHED-002_dynamic_lane_scheduler_resource_governance.md`
@@ -1146,6 +1189,7 @@
 - `plans/_line_numbered/PLAN-BUDGET-002_budget_governor_implementation.lines.txt`
 - `plans/_line_numbered/PLAN-CTRL-001_control_plane.lines.txt`
 - `plans/_line_numbered/PLAN-CTRL-002_project_control_kernel_build_sequencer.lines.txt`
+- `plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt`
 - `plans/_line_numbered/PLAN-CTX-001_context_knowledge.lines.txt`
 - `plans/_line_numbered/PLAN-CTX-002_context_delegation_implementation.lines.txt`
 - `plans/_line_numbered/PLAN-GOV-001_jira_repository_governance.lines.txt`
@@ -1195,6 +1239,10 @@
 - `plans/_traceability/source_section_summary.json`
 - `plans/_traceability/source_sections.jsonl`
 - `plans/_traceability/source_to_requirements.jsonl`
+- `plans/reconciliation/BROAD_SOURCE_RANGE_AUDIT.json`
+- `plans/reconciliation/BROAD_SOURCE_RANGE_DECISIONS.json`
+- `plans/reconciliation/BULK_IMPLEMENTATION_RECONCILIATION.json`
+- `plans/reconciliation/IMPLEMENTED_REQUIREMENT_JIRA_AUDIT.json`
 
 ### provenance
 
@@ -1323,9 +1371,11 @@
 - `schemas/assurance_completion_gate_decision.schema.json`
 - `schemas/assurance_completion_gate_facts.schema.json`
 - `schemas/assurance_completion_question_result.schema.json`
+- `schemas/assurance_delivery_gate_decision.schema.json`
 - `schemas/assurance_evidence_assessment.schema.json`
 - `schemas/assurance_independent_review.schema.json`
 - `schemas/assurance_loop_guard_decision.schema.json`
+- `schemas/assurance_progress_delta.schema.json`
 - `schemas/assurance_reviewer_identity.schema.json`
 - `schemas/assurance_scope_change_decision.schema.json`
 - `schemas/assurance_scope_contract.schema.json`
