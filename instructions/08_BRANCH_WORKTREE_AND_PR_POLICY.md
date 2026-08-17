@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-08` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.1.0` |
 | Primary domains | `branches`, `worktrees`, `pull_requests` |
 | Governing entry point | `AGENTS.md` |
 
@@ -54,6 +54,8 @@ Never automatically remove, reset, or overwrite a dirty worktree. Determine owne
 One PR may satisfy multiple tasks when they form one functional slice, share acceptance, must be implemented together, have one rollback unit, and can be reviewed coherently. Split when domains, rollback, risk, or reviewer boundaries are materially independent.
 
 Bad granularity separates a variable rename, its tests, regenerated index, and Jira traceability into different PRs. Good granularity integrates behavior, tests, generated output, documentation, traceability, and evidence in one reviewable change.
+
+A PR that changes only one item's lifecycle or generated lifecycle projections is prohibited. An evidence-backed reconciliation-only PR must contain at least the batch size in `policies/BRANCH_PR_POLICY.json`; otherwise fold it into a real cohesive implementation slice or perform no PR-producing mutation. The delivery-progress gate evaluates the exact base and head and fails closed when this invariant is violated.
 
 ## PR content
 

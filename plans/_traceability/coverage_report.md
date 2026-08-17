@@ -5,9 +5,9 @@
 
 ## Implementation state
 
-- `IMPLEMENTED`: 185
+- `IMPLEMENTED`: 186
 - `PARTIALLY_IMPLEMENTED`: 136
-- `PLANNED_ONLY`: 30
+- `PLANNED_ONLY`: 29
 
 ## Domain coverage
 
@@ -34,9 +34,9 @@
 
 - `plan`: 351 (100.0%)
 - `jira`: 351 (100.0%)
-- `implementation`: 321 (91.45%)
-- `tests`: 321 (91.45%)
-- `evidence`: 321 (91.45%)
+- `implementation`: 322 (91.74%)
+- `tests`: 322 (91.74%)
+- `evidence`: 322 (91.74%)
 
 ## Canonical source-section disposition
 

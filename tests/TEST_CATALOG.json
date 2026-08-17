@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 491,
+  "test_count": 492,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -251,6 +251,11 @@
       "callable": "test_retry_after_failure_requires_explicit_novelty_dimension",
       "path": "tests/test_assurance_loop_scope.py",
       "test_id": "TEST-ASSURE-LOOP-002"
+    },
+    {
+      "callable": "test_single_item_lifecycle_only_delivery_is_blocked",
+      "path": "tests/test_delivery_progress.py",
+      "test_id": "TEST-ASSURE-DELIVERY-001"
     },
     {
       "callable": "test_ppdb_0012_is_reversible_without_damaging_ppdb_0011",

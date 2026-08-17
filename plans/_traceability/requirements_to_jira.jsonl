@@ -43,7 +43,7 @@
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000090", "PP-TASK-000323"], "requirement_id": "REQ-ASSURE-0008"}
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000092", "PP-TASK-000324"], "requirement_id": "REQ-ASSURE-0009"}
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000092", "PP-TASK-000187"], "requirement_id": "REQ-ASSURE-0010"}
-{"jira_ids": ["PP-EPIC-000017", "PP-STORY-000092"], "requirement_id": "REQ-ASSURE-0011"}
+{"jira_ids": ["PP-EPIC-000017", "PP-STORY-000092", "PP-TASK-000323"], "requirement_id": "REQ-ASSURE-0011"}
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000092", "PP-TASK-000324"], "requirement_id": "REQ-ASSURE-0012"}
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000089", "PP-TASK-000326"], "requirement_id": "REQ-ASSURE-0013"}
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000089", "PP-TASK-000172", "PP-TASK-000321", "PP-TASK-000329"], "requirement_id": "REQ-ASSURE-0014"}

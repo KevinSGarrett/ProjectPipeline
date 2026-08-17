@@ -88,6 +88,7 @@ class BuildSequencer:
                     "environment_available": item.environment_available,
                     "human_required": item.human_required,
                     "external_blocked": item.external_blocked,
+                    "reconciliation_required": item.reconciliation_required,
                 }
                 for item in self.facts
             ],
@@ -132,6 +133,15 @@ class BuildSequencer:
                 state=EligibilityState.EXTERNAL_BLOCKED,
                 eligible=False,
                 reasons=("task is blocked by an unavailable external dependency",),
+            )
+        if fact.reconciliation_required:
+            return TaskEligibility(
+                task_id=fact.task_id,
+                state=EligibilityState.RECONCILIATION_REQUIRED,
+                eligible=False,
+                reasons=(
+                    "all linked requirements are already implemented and evidenced; audit and batch-reconcile this item instead of opening a fresh implementation lane",
+                ),
             )
         if not fact.accepted or not fact.policy_eligible:
             if not fact.accepted:

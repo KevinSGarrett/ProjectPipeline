@@ -1,5 +1,5 @@
 {
-  "edge_count": 848,
+  "edge_count": 849,
   "edges": [
     {
       "from": "PP-EPIC-000001",
@@ -3967,6 +3967,11 @@
       "type": "CHILD_OF"
     },
     {
+      "from": "PP-TASK-000323",
+      "to": "PP-STORY-000092",
+      "type": "RELATES_TO"
+    },
+    {
       "from": "PP-TASK-000324",
       "to": "PP-STORY-000092",
       "type": "CHILD_OF"
@@ -6178,8 +6183,8 @@
     },
     {
       "id": "PP-TASK-000323",
-      "state": "BACKLOG",
-      "title": "Implement Loop Guard attempt novelty and progress controls",
+      "state": "MERGE_READY",
+      "title": "Enforce objective delivery progress and lifecycle batching",
       "type": "TASK"
     },
     {

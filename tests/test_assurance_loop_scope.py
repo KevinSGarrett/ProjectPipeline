@@ -34,6 +34,7 @@ def budget(**kw):
         used_attempts=0,
         max_same_failure=2,
         max_unchanged_outputs=2,
+        max_progressless_cycles=3,
     )
     data.update(kw)
     return AttemptBudget(**data)
@@ -77,6 +78,20 @@ def test_repeated_action_without_progress_requires_novelty_before_hard_limit():
         (obs(1, failure="a", output="a"), obs(2, failure="b", output="b")), budget()
     )
     assert decision.disposition is LoopDisposition.REQUIRE_NOVELTY
+
+
+def test_loop_guard_stops_consecutive_progressless_administrative_cycles():
+    observations = tuple(
+        obs(index).model_copy(update={"activity_units": 10, "administrative_units": 10})
+        for index in range(1, 3)
+    )
+
+    decision = evaluate_loop(observations, budget(max_progressless_cycles=2))
+
+    assert decision.disposition is LoopDisposition.STOP_AND_ESCALATE
+    assert decision.progressless_cycle_count == 2
+    assert decision.administrative_ratio_milli == 1000
+    assert any("no objective progress delta" in reason for reason in decision.reasons)
 
 
 def test_recent_progress_allows_continue_when_no_hard_limit_hit():

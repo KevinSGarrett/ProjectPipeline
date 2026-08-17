@@ -791,6 +791,7 @@
 {"from": "PP-TASK-000321", "to": "PP-STORY-000089", "type": "CHILD_OF"}
 {"from": "PP-TASK-000322", "to": "PP-STORY-000094", "type": "CHILD_OF"}
 {"from": "PP-TASK-000323", "to": "PP-STORY-000090", "type": "CHILD_OF"}
+{"from": "PP-TASK-000323", "to": "PP-STORY-000092", "type": "RELATES_TO"}
 {"from": "PP-TASK-000324", "to": "PP-STORY-000092", "type": "CHILD_OF"}
 {"from": "PP-TASK-000325", "to": "PP-STORY-000091", "type": "CHILD_OF"}
 {"from": "PP-TASK-000326", "to": "PP-STORY-000089", "type": "CHILD_OF"}

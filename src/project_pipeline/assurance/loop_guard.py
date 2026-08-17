@@ -27,6 +27,17 @@ def evaluate_loop(
     action_counts = Counter((o.action_fingerprint, o.tool_fingerprint) for o in relevant)
     repeated_action = max(action_counts.values(), default=0)
     progress = any(o.progress_units > 0 for o in relevant[-2:]) if relevant else False
+    progressless_cycles = 0
+    for observation in reversed(relevant):
+        if observation.progress_units > 0:
+            break
+        progressless_cycles += 1
+    recent = relevant[-budget.max_progressless_cycles :]
+    recent_activity = sum(item.activity_units for item in recent)
+    recent_administrative = sum(item.administrative_units for item in recent)
+    administrative_ratio_milli = (
+        (recent_administrative * 1000) // recent_activity if recent_activity else 0
+    )
     latest_has_novelty = (
         bool(relevant[-1].novelty_dimensions)
         if len(relevant) >= 2 and relevant[-2].failure_signature
@@ -49,6 +60,17 @@ def evaluate_loop(
     if repeated_action >= 2 and not progress and disposition is LoopDisposition.CONTINUE:
         disposition = LoopDisposition.REQUIRE_NOVELTY
         reasons.append("same action/tool pattern repeated without measurable progress")
+    if progressless_cycles >= budget.max_progressless_cycles:
+        disposition = LoopDisposition.STOP_AND_ESCALATE
+        reasons.append("consecutive cycles produced no objective progress delta")
+    if (
+        recent_activity
+        and administrative_ratio_milli > budget.max_noncritical_administrative_ratio_milli
+        and not progress
+        and disposition is LoopDisposition.CONTINUE
+    ):
+        disposition = LoopDisposition.REQUIRE_NOVELTY
+        reasons.append("noncritical administrative work exceeded its budget without progress")
     if not reasons:
         reasons.append("attempt remains within budget and no cycling condition is detected")
     fingerprint_parts = [
@@ -67,5 +89,7 @@ def evaluate_loop(
         unchanged_output_count=unchanged_output,
         repeated_action_count=repeated_action,
         progress_detected=progress,
+        progressless_cycle_count=progressless_cycles,
+        administrative_ratio_milli=administrative_ratio_milli,
         reasons=tuple(reasons),
     )

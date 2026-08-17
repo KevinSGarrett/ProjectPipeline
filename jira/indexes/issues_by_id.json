@@ -39765,12 +39765,12 @@
     "acceptance_criteria": [
       {
         "criterion_id": "AC-PP-000323-01",
-        "statement": "Implement Loop Guard attempt novelty and progress controls has executable implementation and behavior-specific automated verification.",
+        "statement": "Objective progress, lifecycle-only PR denial, reconciliation routing, and administration budgets have executable implementation and behavior-specific automated verification.",
         "verification": {
           "command": "PYTHONPATH=src python -m pytest -q tests/test_assurance_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/assurance/loop_guard.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -39780,14 +39780,15 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
       "EVID-000108",
-      "EVID-000110"
+      "EVID-000110",
+      "EVID-000176"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -39796,10 +39797,11 @@
       "Pass 16 verification-harness work remains accurately dispositioned rather than hidden."
     ],
     "dependencies": [],
-    "description": "Implement Loop Guard attempt novelty and progress controls. This Pass 15 task implements and locally verifies the bounded deterministic Execution Assurance scope while preserving the Pass 16 verification-harness and final-project truth boundaries.",
+    "description": "Implement the original-pack Progress Delta and hygiene-budget ideas as fail-closed delivery controls. The cohesive slice calculates objective progress, stops progressless administrative cycling, routes already-implemented work to batch reconciliation, rejects lifecycle-only micro-PRs in CI, and preserves the final-project truth boundary.",
     "evidence_required": [
       "EVID-000108",
-      "EVID-000110"
+      "EVID-000110",
+      "EVID-000176"
     ],
     "exclusions": [
       "No Pass 16 golden-journey/browser/accessibility/performance/fault/mutation harness is claimed complete.",
@@ -39808,17 +39810,25 @@
     ],
     "expected_file_locations": [
       "src/project_pipeline/assurance/loop_guard.py",
-      "src/project_pipeline/domain/assurance.py"
+      "src/project_pipeline/assurance/delivery_progress.py",
+      "src/project_pipeline/domain/assurance.py",
+      "config/assurance_policy.json",
+      ".github/workflows/quality.yml"
     ],
     "expected_implementation_artifacts": [
       "src/project_pipeline/assurance/loop_guard.py",
-      "src/project_pipeline/domain/assurance.py"
+      "src/project_pipeline/assurance/delivery_progress.py",
+      "src/project_pipeline/domain/assurance.py",
+      "config/assurance_policy.json",
+      "docs/assurance/delivery_progress.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "assurance",
       "completion-gate",
+      "delivery-progress",
+      "implemented",
       "pass-15"
     ],
     "last_observed_remote_state": {
@@ -39829,7 +39839,7 @@
       "status_name": "To Do"
     },
     "local_id": "PP-TASK-000323",
-    "objective": "Implement Loop Guard attempt novelty and progress controls",
+    "objective": "Enforce objective delivery progress and prevent lifecycle micro-PR loops",
     "observability_impact": "Criterion, truth, evidence, loop, scope, review, candidate-completion, and final gate decisions are structured and queryable.",
     "owner_required_capability": "execution_assurance_and_completion_authority",
     "parent": "PP-STORY-000090",
@@ -39849,35 +39859,48 @@
       {
         "target": "PP-STORY-000090",
         "type": "CHILD_OF"
+      },
+      {
+        "target": "PP-STORY-000092",
+        "type": "RELATES_TO"
       }
     ],
     "remote_jira_key": "PP-234",
     "required_tests": [
       "TEST-ASSURE-LOOP-001",
-      "TEST-ASSURE-LOOP-002"
+      "TEST-ASSURE-LOOP-002",
+      "TEST-ASSURE-DELIVERY-001"
     ],
     "requirement_ids": [
       "REQ-ASSURE-0005",
       "REQ-ASSURE-0006",
       "REQ-ASSURE-0007",
-      "REQ-ASSURE-0008"
+      "REQ-ASSURE-0008",
+      "REQ-ASSURE-0011"
     ],
     "risk_classification": "HIGH",
     "rollback_recovery_consideration": "Preserve append-only evidence and immutable assurance history; roll back code/schema without rewriting prior truth or gate decisions.",
     "schema_version": "1.0.0",
     "scope": [
       "src/project_pipeline/assurance/loop_guard.py",
-      "src/project_pipeline/domain/assurance.py"
+      "src/project_pipeline/assurance/delivery_progress.py",
+      "src/project_pipeline/domain/assurance.py",
+      "src/project_pipeline/control/kernel.py",
+      "src/project_pipeline/control/graph.py",
+      "config/assurance_policy.json",
+      "instructions/policies/BRANCH_PR_POLICY.json",
+      ".github/workflows/quality.yml"
     ],
     "security_impact": "Assurance authority is fail-closed around stale/unknown evidence, scope expansion, self-review, repeated attempts, and unsupported completion claims.",
     "source_references": [
       "SRC-008:L000038-L000093",
       "SRC-008:L000094-L000130",
       "SRC-008:L000131-L000155",
-      "SRC-008:L000156-L000196"
+      "SRC-008:L000156-L000196",
+      "SRC-008:L000295-L000368"
     ],
-    "state": "BACKLOG",
-    "title": "Implement Loop Guard attempt novelty and progress controls",
+    "state": "MERGE_READY",
+    "title": "Enforce objective delivery progress and lifecycle batching",
     "upstream_dependencies": []
   },
   "PP-TASK-000324": {

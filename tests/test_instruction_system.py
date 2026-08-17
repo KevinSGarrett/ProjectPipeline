@@ -114,6 +114,9 @@ def test_context_and_security_policy_weakening_are_rejected() -> None:
         module.REPOSITORY_POLICY_PATH: json.loads(
             (ROOT / module.REPOSITORY_POLICY_PATH).read_text(encoding="utf-8")
         ),
+        module.ASSURANCE_POLICY_PATH: json.loads(
+            (ROOT / module.ASSURANCE_POLICY_PATH).read_text(encoding="utf-8")
+        ),
     }
     weakened = copy.deepcopy(documents)
     weakened[module.CONTEXT_ROUTING_PATH]["default_bootstrap"] = ["AGENTS.md"]
@@ -121,6 +124,54 @@ def test_context_and_security_policy_weakening_are_rejected() -> None:
     report = module.Report(root=str(ROOT))
     module.check_policies(ROOT, report, weakened)
     assert {item.code for item in report.errors}.issuperset({"POL005", "POL006"})
+
+
+def test_delivery_progress_policy_weakening_is_rejected() -> None:
+    module = load_script(
+        "validate_instructions_delivery_guard", ROOT / "scripts/validate_instructions.py"
+    )
+    documents = {
+        module.BRANCH_POLICY_PATH: json.loads(
+            (ROOT / module.BRANCH_POLICY_PATH).read_text(encoding="utf-8")
+        ),
+        module.MUTATION_POLICY_PATH: json.loads(
+            (ROOT / module.MUTATION_POLICY_PATH).read_text(encoding="utf-8")
+        ),
+        module.CONTEXT_ROUTING_PATH: json.loads(
+            (ROOT / module.CONTEXT_ROUTING_PATH).read_text(encoding="utf-8")
+        ),
+        module.SECURITY_POLICY_PATH: json.loads(
+            (ROOT / module.SECURITY_POLICY_PATH).read_text(encoding="utf-8")
+        ),
+        module.JIRA_SYNC_POLICY_PATH: json.loads(
+            (ROOT / module.JIRA_SYNC_POLICY_PATH).read_text(encoding="utf-8")
+        ),
+        module.REPOSITORY_POLICY_PATH: json.loads(
+            (ROOT / module.REPOSITORY_POLICY_PATH).read_text(encoding="utf-8")
+        ),
+        module.ASSURANCE_POLICY_PATH: json.loads(
+            (ROOT / module.ASSURANCE_POLICY_PATH).read_text(encoding="utf-8")
+        ),
+    }
+    weakened = copy.deepcopy(documents)
+    weakened[module.BRANCH_POLICY_PATH]["delivery_progress_gate"]["lifecycle_only_pr_allowed"] = (
+        True
+    )
+    weakened[module.ASSURANCE_POLICY_PATH]["delivery_progress"][
+        "maximum_noncritical_administrative_ratio_milli"
+    ] = 1000
+    report = module.Report(root=str(ROOT))
+    module.check_policies(ROOT, report, weakened)
+    assert {item.code for item in report.errors}.issuperset({"POL010", "POL011"})
+
+
+def test_quality_workflow_enforces_exact_head_delivery_progress() -> None:
+    workflow = (ROOT / ".github/workflows/quality.yml").read_text(encoding="utf-8")
+    assert "fetch-depth: 0" in workflow
+    assert "assurance delivery-gate" in workflow
+    assert "--base-ref" in workflow
+    assert '--head-ref "${{ github.event.pull_request.head.sha }}"' in workflow
+    assert "ref: ${{ github.event.pull_request.head.sha || github.sha }}" in workflow
 
 
 def test_failed_validation_does_not_replace_manifest() -> None:

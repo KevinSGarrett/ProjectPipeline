@@ -1,7 +1,7 @@
 PYTHON ?= python
 PYTHONPATH := src
 
-.PHONY: bootstrap clean cold-start dependencies doctor format instructions lint manifest map quality quality-strict schemas smoke test typecheck validate
+.PHONY: bootstrap clean cold-start delivery-gate dependencies doctor format instructions lint manifest map quality quality-strict schemas smoke test typecheck validate
 
 doctor:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m project_pipeline doctor --root .
@@ -27,6 +27,10 @@ instructions:
 
 cold-start:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) scripts/instruction_cold_start.py --root .
+
+delivery-gate:
+	@test -n "$(BASE_REF)" || (echo "BASE_REF is required" && exit 2)
+	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m project_pipeline assurance delivery-gate --root . --base-ref $(BASE_REF) --head-ref HEAD
 
 test:
 	PYTHONPATH=$(PYTHONPATH) $(PYTHON) -m pytest -q

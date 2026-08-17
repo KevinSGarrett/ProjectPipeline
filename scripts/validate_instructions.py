@@ -23,6 +23,7 @@ CONTEXT_ROUTING_PATH = Path("instructions/policies/CONTEXT_ROUTING.json")
 SECURITY_POLICY_PATH = Path("config/security_policy.json")
 JIRA_SYNC_POLICY_PATH = Path("config/jira/sync_policy.json")
 REPOSITORY_POLICY_PATH = Path("config/repository_policy.json")
+ASSURANCE_POLICY_PATH = Path("config/assurance_policy.json")
 ENTRY_POINT = Path("AGENTS.md")
 MARKDOWN_LINK = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
 INSTRUCTION_ID = re.compile(r"\|\s*Instruction ID\s*\|\s*`([^`]+)`\s*\|")
@@ -252,7 +253,7 @@ def check_manifest(root: Path, report: Report, manifest: dict[str, Any]) -> None
     report.checks.append("manifest")
     expected_identity = {
         "schema_version": "1.0.0",
-        "instruction_pack_version": "1.0.1",
+        "instruction_pack_version": "1.1.0",
         "project_id": "PROJECT-PIPELINE",
         "project_name": "ProjectPipeline",
         "repository_url": "https://github.com/KevinSGarrett/ProjectPipeline",
@@ -268,6 +269,7 @@ def check_manifest(root: Path, report: Report, manifest: dict[str, Any]) -> None
         ".gitignore",
         "config/jira/sync_policy.json",
         "config/security_policy.json",
+        "config/assurance_policy.json",
     }
     managed_paths = set(manifest.get("managed_support_paths", []))
     for relative in sorted(required_managed_paths - managed_paths):
@@ -671,6 +673,21 @@ def check_policies(root: Path, report: Report, documents: dict[Path, Any]) -> No
                 report.add(
                     "ERROR", "POL002", f"Invalid branch pattern: {error}", BRANCH_POLICY_PATH
                 )
+        delivery_gate = branch.get("delivery_progress_gate", {})
+        if (
+            not isinstance(delivery_gate, dict)
+            or delivery_gate.get("lifecycle_transition_is_deliverable") is not False
+            or delivery_gate.get("lifecycle_only_pr_allowed") is not False
+            or delivery_gate.get("minimum_evidence_backed_reconciliation_batch_items") != 3
+            or delivery_gate.get("single_task_lifecycle_pr_exception") != "NONE"
+            or delivery_gate.get("expensive_gate_boundary") != "COHESIVE_VERTICAL_SLICE"
+        ):
+            report.add(
+                "ERROR",
+                "POL010",
+                "Delivery policy must prohibit lifecycle micro-PRs and gate cohesive slices",
+                BRANCH_POLICY_PATH,
+            )
     mutation = documents.get(MUTATION_POLICY_PATH)
     if isinstance(mutation, dict):
         categories = mutation.get("categories", {})
@@ -756,6 +773,44 @@ def check_policies(root: Path, report: Report, documents: dict[Path, Any]) -> No
             "POL009",
             "Placeholder exclusion must be narrowly scoped to dummy",
             REPOSITORY_POLICY_PATH,
+        )
+    assurance_policy = documents.get(ASSURANCE_POLICY_PATH)
+    delivery = (
+        assurance_policy.get("delivery_progress", {}) if isinstance(assurance_policy, dict) else {}
+    )
+    if (
+        not isinstance(assurance_policy, dict)
+        or assurance_policy.get("loop_max_progressless_cycles") != 2
+        or not isinstance(delivery, dict)
+        or delivery.get("objective_progress_required") is not True
+        or delivery.get("lifecycle_transitions_are_progress") is not False
+        or delivery.get("lifecycle_only_pull_requests") != "DENY"
+        or delivery.get("minimum_reconciliation_batch_items") != 3
+        or delivery.get("maximum_noncritical_administrative_ratio_milli") != 100
+        or delivery.get("already_implemented_selection") != "RECONCILIATION_REQUIRED"
+        or delivery.get("expensive_gate_boundary") != "COHESIVE_VERTICAL_SLICE"
+    ):
+        report.add(
+            "ERROR",
+            "POL011",
+            "Objective progress, reconciliation batching, and administration limits were weakened",
+            ASSURANCE_POLICY_PATH,
+        )
+
+    workflow_path = root / ".github/workflows/quality.yml"
+    workflow = workflow_path.read_text(encoding="utf-8") if workflow_path.is_file() else ""
+    if (
+        "assurance delivery-gate" not in workflow
+        or "--base-ref" not in workflow
+        or '--head-ref "${{ github.event.pull_request.head.sha }}"' not in workflow
+        or "ref: ${{ github.event.pull_request.head.sha || github.sha }}" not in workflow
+        or "fetch-depth: 0" not in workflow
+    ):
+        report.add(
+            "ERROR",
+            "POL012",
+            "Quality CI must checkout and enforce delivery progress against the exact pull-request base and candidate head",
+            workflow_path.relative_to(root),
         )
 
 
@@ -889,6 +944,7 @@ def load_documents(root: Path, report: Report) -> dict[Path, Any]:
         SECURITY_POLICY_PATH,
         JIRA_SYNC_POLICY_PATH,
         REPOSITORY_POLICY_PATH,
+        ASSURANCE_POLICY_PATH,
         Path("instructions/schemas/instruction_manifest.schema.json"),
         Path("instructions/schemas/instruction_coverage_matrix.schema.json"),
         Path("instructions/schemas/authority_map.schema.json"),

@@ -40,10 +40,10 @@
 {"implementation_paths": ["src/project_pipeline/assurance/loop_guard.py"], "requirement_id": "REQ-ASSURE-0005"}
 {"implementation_paths": ["src/project_pipeline/assurance/loop_guard.py", "src/project_pipeline/domain/assurance.py"], "requirement_id": "REQ-ASSURE-0006"}
 {"implementation_paths": ["src/project_pipeline/assurance/loop_guard.py", "src/project_pipeline/domain/assurance.py"], "requirement_id": "REQ-ASSURE-0007"}
-{"implementation_paths": ["src/project_pipeline/assurance/loop_guard.py", "src/project_pipeline/domain/assurance.py"], "requirement_id": "REQ-ASSURE-0008"}
+{"implementation_paths": [".github/workflows/quality.yml", "config/assurance_policy.json", "src/project_pipeline/assurance/delivery_progress.py", "src/project_pipeline/assurance/loop_guard.py", "src/project_pipeline/control/graph.py", "src/project_pipeline/control/kernel.py", "src/project_pipeline/domain/assurance.py"], "requirement_id": "REQ-ASSURE-0008"}
 {"implementation_paths": ["src/project_pipeline/assurance/scope.py", "src/project_pipeline/domain/assurance.py"], "requirement_id": "REQ-ASSURE-0009"}
 {"implementation_paths": ["pyproject.toml", "config/dependency_policy.json", "requirements/environment.lock.json", "requirements/runtime.txt", "requirements/development.txt", "src/project_pipeline/dependencies.py", "docs/development/dependency_management.md"], "requirement_id": "REQ-ASSURE-0010"}
-{"implementation_paths": [], "requirement_id": "REQ-ASSURE-0011"}
+{"implementation_paths": [".github/workflows/quality.yml", "config/assurance_policy.json", "src/project_pipeline/assurance/delivery_progress.py", "src/project_pipeline/assurance/loop_guard.py", "src/project_pipeline/assurance/policy.py"], "requirement_id": "REQ-ASSURE-0011"}
 {"implementation_paths": ["src/project_pipeline/assurance/scope.py", "src/project_pipeline/domain/assurance.py"], "requirement_id": "REQ-ASSURE-0012"}
 {"implementation_paths": ["src/project_pipeline/assurance/completion.py", "src/project_pipeline/domain/assurance.py"], "requirement_id": "REQ-ASSURE-0013"}
 {"implementation_paths": ["src/project_pipeline/assurance/compiler.py", "src/project_pipeline/domain/assurance.py"], "requirement_id": "REQ-ASSURE-0014"}

@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-20` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.1.0` |
 | Primary domains | `instruction_maintenance` |
 | Governing entry point | `AGENTS.md` |
 
@@ -52,6 +52,8 @@ Keep root `AGENTS.md` below the validator limit and focused on durable invariant
 ## Validator scope
 
 The focused validator detects missing files, duplicate IDs, hash drift, invalid JSON/schema, broken links, stale paths, secret patterns, forbidden terminology, coverage conflicts, authority defects, branch/Jira inconsistency, unpinned actions, PPQS boundary defects, missing scenarios, and cold-start omissions.
+
+It also requires the delivery-progress policy and exact-base/head CI enforcement that prohibit lifecycle-only micro-PRs, route already-implemented work to batch reconciliation, and bound noncritical administration. Removing or weakening those controls is an instruction-system failure.
 
 It is not a new workflow engine and does not replace Project Control, Scheduler, Jira/GitHub Steward, Assurance, Verification, Security, or Completion Gate.
 

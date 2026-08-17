@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-02` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.1.0` |
 | Primary domains | `autonomous_cycle`, `definition_of_ready` |
 | Governing entry point | `AGENTS.md` |
 
@@ -79,6 +79,8 @@ Use scheduler-safe lanes and the policy in `policies/BRANCH_PR_POLICY.json`. The
 ## Progress and housekeeping
 
 Housekeeping is bounded. Perform it after merge, when hygiene creates real risk, during a scheduled maintenance window, or before release. Renaming, reorganizing, regenerating, or reporting without accepted progress is not a substitute for implementation.
+
+Measure sustained work using objective before/after repository facts. A positive progress delta requires newly satisfied acceptance, eliminated failure or blocker, newly passing required behavior, integrated implementation, or durable evidence for one of those changes. Jira state movement, branches, PRs, repeated validation, regenerated projections, claims, snapshots, and bookkeeping are activity with zero progress unless they accompany such an objective change. Enforce the administrative-work budget in `config/assurance_policy.json` and stop or change strategy when the zero-progress limit is reached.
 
 ## Autonomous decisions
 
