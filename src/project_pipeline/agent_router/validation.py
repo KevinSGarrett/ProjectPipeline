@@ -2,7 +2,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from project_pipeline.agent_router.adapters import MockToolAdapter
 from project_pipeline.agent_router.registry import load_agent_registry
+from project_pipeline.agent_router.simulation import (
+    simulate_circuit_open_and_recovery,
+    simulate_provider_failover,
+)
+from project_pipeline.agent_router.tools import GovernedToolBoundary
 from project_pipeline.persistence import load_migration_catalog, validate_migration_catalog
 
 _REQUIRED = (
@@ -31,4 +37,25 @@ def validate_agent_router_foundation(root: Path) -> list[str]:
         catalog = load_migration_catalog(root)
         if not any(item.migration_id == "PPDB-0008" for item in catalog.migrations):
             errors.append("agent router migration PPDB-0008 is not registered")
+    try:
+        failover = simulate_provider_failover()
+        circuit = simulate_circuit_open_and_recovery()
+        if not failover.get("succeeded") or not circuit.get("closed"):
+            errors.append("agent router integrated journey failed")
+        registry = load_agent_registry(root)
+        tool = next(iter(registry.tools), None)
+        if tool is not None:
+            boundary = GovernedToolBoundary(
+                {tool.tool_id: tool},
+                {tool.adapter_id: MockToolAdapter({tool.tool_id: {"read"}})},
+                workspace_root=root,
+                allowed_operations={tool.tool_id: {"read"}},
+            )
+            try:
+                boundary.invoke("tool:missing", "read", {})
+                errors.append("governed tool boundary failed to deny an unlisted tool")
+            except Exception:
+                pass
+    except Exception as error:
+        errors.append(f"agent router integrated journey is invalid: {error}")
     return errors
