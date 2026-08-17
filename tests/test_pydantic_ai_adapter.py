@@ -60,7 +60,9 @@ def test_pydantic_ai_adapter_uses_typed_framework_boundary_and_upstream_contract
 def test_pydantic_ai_registry_entry_is_quarantined_and_has_no_routing_authority() -> None:
     root = Path(__file__).resolve().parents[1]
     registry = load_agent_registry(root)
-    provider = next(item for item in registry.providers if item.provider_id == "provider:pydantic-ai")
+    provider = next(
+        item for item in registry.providers if item.provider_id == "provider:pydantic-ai"
+    )
     assert provider.enabled is False
     assert provider.adapter_id == "adapter:pydantic-ai"
     now = datetime.now(UTC)

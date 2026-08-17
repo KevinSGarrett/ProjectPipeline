@@ -134,7 +134,9 @@ def validate_product_outcome(root: Path) -> list[str]:
         if set(selection.get("allowed_issue_ids", [])) != CORE_SLICE_TASKS:
             errors.append("Control selection must be bounded to the six cohesive runtime slices")
         if not str(selection.get("resume_rule", "")).strip():
-            errors.append("Control selection requires an explicit independently audited resume rule")
+            errors.append(
+                "Control selection requires an explicit independently audited resume rule"
+            )
 
     requirements_path = root / "plans/_traceability/requirements.jsonl"
     requirements = {str(item.get("requirement_id")): item for item in read_jsonl(requirements_path)}
@@ -282,9 +284,10 @@ def validate_product_outcome(root: Path) -> list[str]:
     else:
         broad_audit = read_json(broad_audit_path)
         decisions = read_json(decisions_path)
-        if broad_audit.get("status") != "REVIEWED" or broad_audit.get(
-            "pending_independent_review_count"
-        ) != 0:
+        if (
+            broad_audit.get("status") != "REVIEWED"
+            or broad_audit.get("pending_independent_review_count") != 0
+        ):
             errors.append("broad source-range audit must have zero pending semantic reviews")
         if broad_audit.get("independent_review_id") != decisions.get("review_id"):
             errors.append("broad source-range audit is not bound to its independent decisions")
@@ -299,14 +302,10 @@ def validate_product_outcome(root: Path) -> list[str]:
     for requirement_id, requirement in requirements.items():
         if requirement.get("implementation_state") != "IMPLEMENTED":
             continue
-        linked_issues = [
-            issues[item] for item in requirement.get("jira_ids", []) if item in issues
-        ]
+        linked_issues = [issues[item] for item in requirement.get("jira_ids", []) if item in issues]
         if (
             linked_issues
-            and all(
-                item.get("implementation_state") == "PLANNED_ONLY" for item in linked_issues
-            )
+            and all(item.get("implementation_state") == "PLANNED_ONLY" for item in linked_issues)
             and requirement_id not in findings
         ):
             errors.append(

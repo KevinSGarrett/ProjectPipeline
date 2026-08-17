@@ -42,7 +42,9 @@ def test_litellm_proxy_adapter_uses_openai_compatible_gateway_boundary() -> None
 def test_litellm_registry_entry_is_transport_only_and_factory_built() -> None:
     root = Path(__file__).resolve().parents[1]
     registry = load_agent_registry(root)
-    provider = next(item for item in registry.providers if item.provider_id == "provider:litellm-proxy")
+    provider = next(
+        item for item in registry.providers if item.provider_id == "provider:litellm-proxy"
+    )
     assert provider.enabled is False
     assert "routing authority" in " ".join(provider.constraints)
     adapter = build_adapter(provider.adapter_id, api_key="")

@@ -29,7 +29,9 @@ def test_repository_control_evaluation_is_consistent(tmp_path: Path) -> None:
         assert snapshot.scope.requirement_count == 352
         assert not snapshot.scope.findings
         assert snapshot.completion.state.value == "FAILED"
-        assert any("ordinary active lanes remain" in reason for reason in snapshot.completion.reasons)
+        assert any(
+            "ordinary active lanes remain" in reason for reason in snapshot.completion.reasons
+        )
         assert snapshot.completion.final_completion_gate_satisfied is False
         assert snapshot.completion.ready_work_items == snapshot.sequence.ready_count
 
@@ -195,7 +197,9 @@ def test_issue_with_complete_requirements_but_incomplete_issue_proof_is_quaranti
 ) -> None:
     audit = read_json(ROOT / "plans/reconciliation/IMPLEMENTED_REQUIREMENT_JIRA_AUDIT.json")
     issue_id = next(
-        item["issue_id"] for item in audit["issue_findings"] if item["issue_id"].startswith("PP-TASK-")
+        item["issue_id"]
+        for item in audit["issue_findings"]
+        if item["issue_id"].startswith("PP-TASK-")
     )
     with initialized_store(tmp_path / "control.db") as store:
         kernel = ProjectControlKernel(ROOT, store, "PROJECT-PIPELINE")
@@ -225,7 +229,10 @@ def test_existing_delivery_footprints_are_not_ranked_as_fresh_implementation(
             "PP-TASK-000356",
         ):
             assert facts[task_id].reconciliation_required
-            assert sequencer.eligibility(facts[task_id]).state is EligibilityState.RECONCILIATION_REQUIRED
+            assert (
+                sequencer.eligibility(facts[task_id]).state
+                is EligibilityState.RECONCILIATION_REQUIRED
+            )
 
 
 def test_product_repair_pauses_normal_control_selection_but_keeps_runtime_slice(
@@ -271,4 +278,6 @@ def test_completion_projection_flags_ordinary_active_lanes_during_product_audit(
         kernel = ProjectControlKernel(ROOT, store, "PROJECT-PIPELINE")
         snapshot = kernel.evaluate()
         assert snapshot.completion.state.value == "FAILED"
-        assert any("ordinary active lanes remain" in reason for reason in snapshot.completion.reasons)
+        assert any(
+            "ordinary active lanes remain" in reason for reason in snapshot.completion.reasons
+        )
