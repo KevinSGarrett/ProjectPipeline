@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "6a5ff6056b106009a8dde90f23e40a361b494f4710732f165425fc633d1c4ae7",
+  "aggregate_sha256": "794dc14a719e34bc85f42de933ccd2d79aa9ce4363e89d55b91ca3ff69a3636c",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11637,8 +11637,8 @@
     },
     {
       "path": "src/project_pipeline/agent_router/adapters.py",
-      "sha256": "20c5149b00ae8178fa04afc9f463d9e1f9c75cc53896a0e5cc36781e999e4744",
-      "size_bytes": 15712
+      "sha256": "0b0d3ad009d0ba2ce2d90d8adc627e7a5dc9e981dee83a82b9beeb286d9ea0ec",
+      "size_bytes": 16367
     },
     {
       "path": "src/project_pipeline/agent_router/circuit.py",
@@ -13032,8 +13032,8 @@
     },
     {
       "path": "tests/test_agent_router_adapters.py",
-      "sha256": "f5eb471b8be52b1f972a3140189368dd8e4cf8f3107d4d4e6a0a3f45720803fb",
-      "size_bytes": 4168
+      "sha256": "622904324fa4047bf34d02619ed22c3e638614eeec207176d60dba6dd3251625",
+      "size_bytes": 5041
     },
     {
       "path": "tests/test_agent_router_circuit.py",
@@ -13911,7 +13911,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T18:36:46.328140+00:00",
+  "generated_at_utc": "2026-08-17T18:38:02.419730+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13920,5 +13920,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24328463
+  "total_bytes": 24329991
 }

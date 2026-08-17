@@ -83,13 +83,23 @@ class BaseHttpProviderAdapter:
     def _post(
         self, path: str, headers: Mapping[str, str], payload: Mapping[str, Any]
     ) -> tuple[Any, Mapping[str, str]]:
-        status, response_headers, body = self.transport(
-            "POST",
-            self.base_url.rstrip("/") + path,
-            headers,
-            json.dumps(payload).encode(),
-            self.timeout_seconds,
-        )
+        try:
+            status, response_headers, body = self.transport(
+                "POST",
+                self.base_url.rstrip("/") + path,
+                headers,
+                json.dumps(payload).encode(),
+                self.timeout_seconds,
+            )
+        except ProviderAdapterError:
+            raise
+        except Exception as error:
+            raise ProviderAdapterError(
+                f"hosted provider outcome is unknown: {error}",
+                kind="UNKNOWN_OUTCOME",
+                retryable=True,
+                provider_state="UNAVAILABLE",
+            ) from error
         try:
             data = json.loads(body.decode("utf-8")) if body else {}
         except Exception as error:
@@ -355,6 +365,13 @@ class LocalProcessProviderAdapter:
                 retryable=True,
                 provider_state="DEGRADED",
             ) from error
+        if result.returncode < 0:
+            raise ProviderAdapterError(
+                f"local provider process was lost: {result.returncode}",
+                kind="PROCESS_LOSS",
+                retryable=False,
+                provider_state="UNAVAILABLE",
+            )
         if result.returncode != 0:
             raise ProviderAdapterError(
                 f"local provider exited {result.returncode}",
