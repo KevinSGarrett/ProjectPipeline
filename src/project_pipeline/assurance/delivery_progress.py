@@ -421,6 +421,7 @@ def evaluate_delivery_gate(
     material_governance = _material_governance_slice(
         changed, has_lifecycle=bool(lifecycle_task_ids)
     )
+    catalog_backed_implementation = requirement_units > 0 and generic_tested_implementation
     material_implementation_slice = (
         issue_bound_material
         if lifecycle_task_ids
@@ -475,7 +476,12 @@ def evaluate_delivery_gate(
     if not changed:
         state = DeliveryGateState.BLOCKED
         reasons.append("delivery slice has no changed files")
-    elif lifecycle_task_ids and not reconciliation_batch and not material_implementation_slice:
+    elif (
+        lifecycle_task_ids
+        and not reconciliation_batch
+        and not material_implementation_slice
+        and not catalog_backed_implementation
+    ):
         state = DeliveryGateState.BLOCKED
         reasons.append(
             "lifecycle transitions require the issue's own declared implementation artifact and cataloged required test; unrelated churn is not progress, otherwise reconcile at least the evidence-backed batch minimum"
