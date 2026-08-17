@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "5e00b8a435c0d96ffb6239387732580bc8160dabb96e18bc1589103c9722878c",
+  "aggregate_sha256": "b74c650033df8af6be6f0c90074b276e867352487cf32dd36931afeb8bc8ee9e",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2746,
+  "file_count": 2750,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -1219,6 +1219,11 @@
       "path": "docs/development/source_layout.md",
       "sha256": "b3b5c98e51693998694fa2c951656789ba5331205ad00f8cff9b06a7d023a607",
       "size_bytes": 901
+    },
+    {
+      "path": "docs/engineering/pp380_disposition_generation.md",
+      "sha256": "f8e60eefd2abc31616d05c706d7ab7e4736c86e57d61fd01d683f8d3fc335a0f",
+      "size_bytes": 2045
     },
     {
       "path": "docs/engineering/upstream_adoption_gate.md",
@@ -4122,13 +4127,13 @@
     },
     {
       "path": "evidence/pp380_cycle6_corrected_dispositions.json",
-      "sha256": "4b73edd0b654d35b73864a3932342733453ba06aa850c5d834adef8d05b8a994",
-      "size_bytes": 310307
+      "sha256": "09d31f2618e12d4daa363018ebe03e373f88af96378b4578163009c43ab0b937",
+      "size_bytes": 317136
     },
     {
       "path": "evidence/pp380_cycle6_corrected_dispositions.md",
-      "sha256": "de83575bb8fa527a8a33e1ad1f9f0469c5fa5704e46d6bf68178cf525e17c775",
-      "size_bytes": 602
+      "sha256": "42f3c0e45a1f7e79dbfc513d7a037c36502169a12dfaf9f769ba524f5a526b0b",
+      "size_bytes": 1479
     },
     {
       "path": "evidence/pp380_main_worktree_dirty_classification_post.json",
@@ -4139,6 +4144,16 @@
       "path": "evidence/pp380_main_worktree_dirty_classification_pre.json",
       "sha256": "6d27e03771cda9ccdc1930096c167e6f51f11be37c8d0548cef7a3d3be899133",
       "size_bytes": 12416
+    },
+    {
+      "path": "evidence/pp380_source_reconciliation_map.json",
+      "sha256": "f9055cdf3b9aaa30c089f5fb796449692784e314db04b52233d06c682cc9bcbc",
+      "size_bytes": 203337
+    },
+    {
+      "path": "evidence/pp380_source_reconciliation_map.provenance.json",
+      "sha256": "a6bc13082d5f8502e806397be8fd32598b7a4ca4296337633a1f9af69ecdfa3e",
+      "size_bytes": 795
     },
     {
       "path": "evidence/project_intake_foundation_validation.json",
@@ -11391,6 +11406,11 @@
       "size_bytes": 9052
     },
     {
+      "path": "scripts/generate_pp380_corrected_dispositions.py",
+      "sha256": "130573bbf48f0ee6f22f83289a1bd832d1a3b8cdbb1450b8f13bb41a40855631",
+      "size_bytes": 2076
+    },
+    {
       "path": "scripts/generate_product_reconciliation_audit.py",
       "sha256": "6f0437f14896a5c24820c59f80f31eef94325e5b2f37bf7a02a853756b06abab",
       "size_bytes": 4718
@@ -11657,8 +11677,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/lanes.py",
-      "sha256": "dbcae81624c844d1fa25189e8b25af643a5844b39e965129cd7fc5fd4202c85b",
-      "size_bytes": 5727
+      "sha256": "48046581a41daeba17e9a0a44a2743022b5ff3ee3e97c8df861cbd36b96a59b0",
+      "size_bytes": 6640
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/recovery.py",
@@ -11667,13 +11687,13 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/service.py",
-      "sha256": "c561adbfdb86e7c9d13523f1a228ef31cce0f7cf8a052de0331b20e4a37c4f38",
-      "size_bytes": 1916
+      "sha256": "d02a5ca57f7102284dd0a57e0722f1896340cbaf5913d40efb0ab23dc21bcc69",
+      "size_bytes": 6692
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/supervisor.py",
-      "sha256": "e727cd1920ced0e6d61c32654252293a2eb9fd1b39447b45bc5a1f3bbdbae790",
-      "size_bytes": 6641
+      "sha256": "fdd4bfe2873953816f3a58f2e2b199fda643771a55b89d6393910e7e42a0df7b",
+      "size_bytes": 16276
     },
     {
       "path": "src/project_pipeline/budget/__init__.py",
@@ -12752,8 +12772,8 @@
     },
     {
       "path": "src/project_pipeline/validation/pp380_dispositions.py",
-      "sha256": "3265f4e125dd35d36981929e6e9bf08ed23776619fb29a20074e8ff23cefa132",
-      "size_bytes": 3545
+      "sha256": "343e4ee07d2ab13548a49bd051cbbc5c627a9f26982af02f9dc08ba04975af6f",
+      "size_bytes": 30788
     },
     {
       "path": "src/project_pipeline/validation/product_outcome.py",
@@ -12872,18 +12892,18 @@
     },
     {
       "path": "tests/integration/autonomy_runtime/test_golden_journey.py",
-      "sha256": "f880384fa5f6dfdae9366d1f028c3a6836ee305636efaefb35f7bedee9a3eca4",
-      "size_bytes": 4154
+      "sha256": "7ce11f9cfa0b6bc0febbe313a3d6d669ea1332797f5000eb126dcf573f8ceaf6",
+      "size_bytes": 4941
     },
     {
       "path": "tests/integration/autonomy_runtime/test_parallel_recovery.py",
-      "sha256": "852403132351c26c8e16bc555c4211ecb0dbc7e485f6be9a34922095dfacd2ed",
-      "size_bytes": 2941
+      "sha256": "38319552d591aad76bb1770dcd45349e5e303d057fc19100dd6a1b9684efef3b",
+      "size_bytes": 4723
     },
     {
       "path": "tests/integration/autonomy_runtime/test_supervisor.py",
-      "sha256": "066015ecab23231bcfa2e56d731b7c74e8a30999b66dc9b0cbb0da374716163f",
-      "size_bytes": 3126
+      "sha256": "9376cdd74f222a3439b361f1e579e0cda2b6139453605b4f45c4659131cfe7b0",
+      "size_bytes": 5613
     },
     {
       "path": "tests/test_agent_router_adapters.py",
@@ -13412,8 +13432,8 @@
     },
     {
       "path": "tests/test_pp380_corrected_dispositions.py",
-      "sha256": "b338972f5ce2a2e566317c355818dad696021ffdf7ba4c88b7347687ba51bc78",
-      "size_bytes": 469
+      "sha256": "294b7276149e72b1e38a9532efa30613c0a47a6f109e52957435c48406183734",
+      "size_bytes": 15796
     },
     {
       "path": "tests/test_product_outcome_contract.py",
@@ -13741,7 +13761,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T04:52:15.497873+00:00",
+  "generated_at_utc": "2026-08-17T14:40:23.213922+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13750,5 +13770,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 23857405
+  "total_bytes": 24136314
 }
