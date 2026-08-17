@@ -82,6 +82,7 @@ def test_local_real_golden_journey(tmp_path: Path) -> None:
     assert lane_b is not None
     assert registry.record_result(
         lane_id="lane-b",
+        worker_id="worker-b",
         fencing_token=lane_b.fencing_token,
         result_fingerprint="lane-b-complete",
     )
