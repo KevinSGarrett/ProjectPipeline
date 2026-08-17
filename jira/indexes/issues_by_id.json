@@ -42590,7 +42590,17 @@
       "No live external scanner, vault, or signing claim without executed evidence."
     ],
     "expected_file_locations": [
-      "jira/tasks/PP-TASK-000346.json"
+      "jira/tasks/PP-TASK-000346.json",
+      "src/project_pipeline/domain/security.py",
+      "src/project_pipeline/security/supply_chain.py",
+      "src/project_pipeline/release_hardening/hardening.py",
+      "tests/test_security_domain.py",
+      "tests/test_security_supply_chain.py",
+      "tests/test_security_upstream_adapters.py",
+      "tests/test_pass24_release_hardening.py",
+      "provenance/license_policy.json",
+      "PROJECT_MANIFEST.json",
+      "FILE_MANIFEST.sha256"
     ],
     "expected_implementation_artifacts": [
       "src/project_pipeline/upstream_integrations/security.py",
@@ -42647,7 +42657,17 @@
     "rollback_recovery_consideration": "Preserve audit/evidence history; revoke affected grants/leases and roll back code/schema without rewriting prior observed security state.",
     "schema_version": "1.0.0",
     "scope": [
-      "jira/tasks/PP-TASK-000346.json"
+      "jira/tasks/PP-TASK-000346.json",
+      "src/project_pipeline/domain/security.py",
+      "src/project_pipeline/security/supply_chain.py",
+      "src/project_pipeline/release_hardening/hardening.py",
+      "tests/test_security_domain.py",
+      "tests/test_security_supply_chain.py",
+      "tests/test_security_upstream_adapters.py",
+      "tests/test_pass24_release_hardening.py",
+      "provenance/license_policy.json",
+      "PROJECT_MANIFEST.json",
+      "FILE_MANIFEST.sha256"
     ],
     "security_impact": "Directly changes security authority, credential release, egress, CI, supply-chain, or root-of-trust controls.",
     "source_references": [
