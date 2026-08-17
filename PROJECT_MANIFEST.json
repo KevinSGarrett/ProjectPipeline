@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "b74c650033df8af6be6f0c90074b276e867352487cf32dd36931afeb8bc8ee9e",
+  "aggregate_sha256": "87c02e7c49ad66635194990fee9ed3367cc9530f42075a6f578ee0b35c581fd7",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2750,
+  "file_count": 2754,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -677,8 +677,8 @@
     },
     {
       "path": "database/MIGRATION_CATALOG.json",
-      "sha256": "b5f4ddedb971dcf86aa24bf503a47660f6c0819d73d6c1063951b88aa0c0d29e",
-      "size_bytes": 20263
+      "sha256": "a2d7b14bf20f99521fcd352b263f59a79fd8fd3e6ce757c3c7cbebda456b9042",
+      "size_bytes": 21334
     },
     {
       "path": "database/migrations/postgresql/PPDB-0001_core_state.down.sql",
@@ -871,6 +871,16 @@
       "size_bytes": 572
     },
     {
+      "path": "database/migrations/postgresql/PPDB-0020_autonomy_runtime_supervisor.down.sql",
+      "sha256": "94752cee128a8f2e7d2235f6fc59bb0e57552652883e14ef58d567740264092b",
+      "size_bytes": 257
+    },
+    {
+      "path": "database/migrations/postgresql/PPDB-0020_autonomy_runtime_supervisor.up.sql",
+      "sha256": "0498a1e43a785cc6a465310631aa336efbe54400b198a8dbcb2aa1e7e27cdf92",
+      "size_bytes": 1238
+    },
+    {
       "path": "database/migrations/sqlite/PPDB-0001_core_state.down.sql",
       "sha256": "e7e8d5bd0c78f61b24fb869a335bfc0372ffdc9d9798c5ae1b605d4052f6698f",
       "size_bytes": 283
@@ -1059,6 +1069,16 @@
       "path": "database/migrations/sqlite/PPDB-0019_audit_immutability.up.sql",
       "sha256": "e12cf134e4e83a9a7a9006506445dba2e94a735f797ba341639be817c41e56b8",
       "size_bytes": 395
+    },
+    {
+      "path": "database/migrations/sqlite/PPDB-0020_autonomy_runtime_supervisor.down.sql",
+      "sha256": "94752cee128a8f2e7d2235f6fc59bb0e57552652883e14ef58d567740264092b",
+      "size_bytes": 257
+    },
+    {
+      "path": "database/migrations/sqlite/PPDB-0020_autonomy_runtime_supervisor.up.sql",
+      "sha256": "0498a1e43a785cc6a465310631aa336efbe54400b198a8dbcb2aa1e7e27cdf92",
+      "size_bytes": 1238
     },
     {
       "path": "database/README.md",
@@ -4127,12 +4147,12 @@
     },
     {
       "path": "evidence/pp380_cycle6_corrected_dispositions.json",
-      "sha256": "09d31f2618e12d4daa363018ebe03e373f88af96378b4578163009c43ab0b937",
+      "sha256": "3ca0996f823f2702283ae06360a951c130fe31b202c76e1296eaacbeb81e0f93",
       "size_bytes": 317136
     },
     {
       "path": "evidence/pp380_cycle6_corrected_dispositions.md",
-      "sha256": "42f3c0e45a1f7e79dbfc513d7a037c36502169a12dfaf9f769ba524f5a526b0b",
+      "sha256": "29a26c2769a3418c18d7c7d2b0ed9ec4ab04132c680e468e635d2808aea64684",
       "size_bytes": 1479
     },
     {
@@ -4152,8 +4172,8 @@
     },
     {
       "path": "evidence/pp380_source_reconciliation_map.provenance.json",
-      "sha256": "a6bc13082d5f8502e806397be8fd32598b7a4ca4296337633a1f9af69ecdfa3e",
-      "size_bytes": 795
+      "sha256": "c871b694068b5d895f63a432fc3846b139c217d9be3bb033c60dd98d8bfbe807",
+      "size_bytes": 772
     },
     {
       "path": "evidence/project_intake_foundation_validation.json",
@@ -11687,13 +11707,13 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/service.py",
-      "sha256": "d02a5ca57f7102284dd0a57e0722f1896340cbaf5913d40efb0ab23dc21bcc69",
-      "size_bytes": 6692
+      "sha256": "617596e4fa843151508733a7e22e3418badc8a118d6ee1d04c00a6ae5d39d615",
+      "size_bytes": 20856
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/supervisor.py",
-      "sha256": "fdd4bfe2873953816f3a58f2e2b199fda643771a55b89d6393910e7e42a0df7b",
-      "size_bytes": 16276
+      "sha256": "2d5f105980be7ee10595d313ff2b542c8d79dfeb17fd70fc906fe693db24be98",
+      "size_bytes": 19617
     },
     {
       "path": "src/project_pipeline/budget/__init__.py",
@@ -12417,8 +12437,8 @@
     },
     {
       "path": "src/project_pipeline/persistence/migrations.py",
-      "sha256": "69275be0c8d3f09ea4880427076924cc198cac3623b6c348fe6774e39bf786ea",
-      "size_bytes": 18506
+      "sha256": "20a08541f96746829b92f090f2bb62586257e42c789b2e807c88e0357aaf80e8",
+      "size_bytes": 18809
     },
     {
       "path": "src/project_pipeline/persistence/ports.py",
@@ -12902,8 +12922,8 @@
     },
     {
       "path": "tests/integration/autonomy_runtime/test_supervisor.py",
-      "sha256": "9376cdd74f222a3439b361f1e579e0cda2b6139453605b4f45c4659131cfe7b0",
-      "size_bytes": 5613
+      "sha256": "2e05048d0951a4bcb338a58dd61b21da6e0c6ff959c4f80ae47ae9c00c6278d2",
+      "size_bytes": 16151
     },
     {
       "path": "tests/test_agent_router_adapters.py",
@@ -12997,8 +13017,8 @@
     },
     {
       "path": "tests/test_assurance_persistence.py",
-      "sha256": "077551842c918494a349650b4add80bc192af3e004bfbba2637c40df14839240",
-      "size_bytes": 4572
+      "sha256": "40f735f4a5ab0e66ec57196d76c06ee21af2a7c0c175135586bd827c8beb071a",
+      "size_bytes": 4670
     },
     {
       "path": "tests/test_assurance_validation.py",
@@ -13037,8 +13057,8 @@
     },
     {
       "path": "tests/test_budget_migration.py",
-      "sha256": "e3706cc6415a7e67bc49954f99b0f92608eeb63a0227de3b80ed9860df1a249c",
-      "size_bytes": 5106
+      "sha256": "684d2ef86556600a6c16571208fb992aadeba39e576a8fd94405b7838a9923e6",
+      "size_bytes": 5191
     },
     {
       "path": "tests/test_budget_persistence.py",
@@ -13102,13 +13122,13 @@
     },
     {
       "path": "tests/test_command_center_pass21.py",
-      "sha256": "b3e69a22da41ed1b5ef86c4757b7affca1da464e052a969825dea5c69f6f86c6",
-      "size_bytes": 18346
+      "sha256": "9b8cee5f4e8db83e906092cf4923ed46a3b64b3d5f32284a26c6a876fce0da51",
+      "size_bytes": 18736
     },
     {
       "path": "tests/test_command_center_persistence.py",
-      "sha256": "83c6786f0eca81ebf5a2958b7f3d9073a764c0926099dd3bc9bffd383f9a33ea",
-      "size_bytes": 2477
+      "sha256": "d709026ef97fbab8ca3017461ba391cde04c931773525a6c72a1c435286b1958",
+      "size_bytes": 2569
     },
     {
       "path": "tests/test_command_center_realtime.py",
@@ -13152,8 +13172,8 @@
     },
     {
       "path": "tests/test_context_persistence.py",
-      "sha256": "ea64566dc9c8676fe5dbdf6e5e11931f512b50ba42bc31565bcb9ac435a3ace8",
-      "size_bytes": 6177
+      "sha256": "c8e7cb95340869ebeddee92e7f75a8c3fa3955b3c3199341f8c05f128c0ae05b",
+      "size_bytes": 6257
     },
     {
       "path": "tests/test_context_service.py",
@@ -13357,8 +13377,8 @@
     },
     {
       "path": "tests/test_migrations.py",
-      "sha256": "2ed65b1dc88d4b65b7361a43f95280d6a2293a723297e81d81478c9279481a67",
-      "size_bytes": 5552
+      "sha256": "0ea662d2a7b2c772767f0a2d0a8b81a5cf671c640ffdf6bf93ba16d47b9ce3d4",
+      "size_bytes": 5892
     },
     {
       "path": "tests/test_observability.py",
@@ -13387,8 +13407,8 @@
     },
     {
       "path": "tests/test_orchestration_migration.py",
-      "sha256": "9dc7c999fb824cd65a94abb8f588b38a20bb807498ea2ac55fd826faf62aa13a",
-      "size_bytes": 4672
+      "sha256": "2b4c67c9d8ac5b1f15167ac6fc3eb0a96b8a74c0edea38cb925f36d3ba5de418",
+      "size_bytes": 5034
     },
     {
       "path": "tests/test_orchestration_recovery.py",
@@ -13412,8 +13432,8 @@
     },
     {
       "path": "tests/test_pass22_platform_lifecycle.py",
-      "sha256": "24746180549be15da1d7e51a98906ecd212550ede6d8fec8e90c7437cd442b04",
-      "size_bytes": 13045
+      "sha256": "2adb1b930db9887bdb94a0b00be91168819903c0912982716263414852026ca5",
+      "size_bytes": 13226
     },
     {
       "path": "tests/test_pass23_full_e2e.py",
@@ -13427,7 +13447,7 @@
     },
     {
       "path": "tests/test_pass25_final_convergence.py",
-      "sha256": "e0f644b286b781a230abfb86061e1cfabb7b3b15be14f5f0a4e9e276a5833f46",
+      "sha256": "bb68b274e25f7962f8d7325d917c230dc6ad0423567c27ba23df0df77eec49eb",
       "size_bytes": 7592
     },
     {
@@ -13527,8 +13547,8 @@
     },
     {
       "path": "tests/test_resilience_persistence.py",
-      "sha256": "4ceabe51cca57de78d3064224195ab184b57a038c18d40b4241f409bcad0c930",
-      "size_bytes": 2146
+      "sha256": "ef937258bdf1f554637c2dc844d5bd0a1b93755d13b9433bb607e4b2825202ef",
+      "size_bytes": 2327
     },
     {
       "path": "tests/test_resilience_simulation.py",
@@ -13597,8 +13617,8 @@
     },
     {
       "path": "tests/test_security_persistence_cli.py",
-      "sha256": "cc2bf33035f528ece2e62d5f087197f9360ae1b091422354fc9f9eea8d76ec46",
-      "size_bytes": 3979
+      "sha256": "808f96c5ab93eb60f5bca27a80465e080bffc405c6090948cd761ef03bc7141f",
+      "size_bytes": 4205
     },
     {
       "path": "tests/test_security_secrets.py",
@@ -13722,8 +13742,8 @@
     },
     {
       "path": "tests/test_verification_persistence.py",
-      "sha256": "530b9101937ff00bbe53eddafddf96ea668976a4c5ea24be580df9696560d33d",
-      "size_bytes": 4145
+      "sha256": "50836b045f128cc1ce5655f7888844ba6b745fbcb4136020e5f24c9c889a0d2e",
+      "size_bytes": 4229
     },
     {
       "path": "tests/test_verification_policy.py",
@@ -13761,7 +13781,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T14:40:23.213922+00:00",
+  "generated_at_utc": "2026-08-17T15:02:25.553902+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13770,5 +13790,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24136314
+  "total_bytes": 24170817
 }

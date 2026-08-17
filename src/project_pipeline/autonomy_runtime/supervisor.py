@@ -11,6 +11,12 @@ from typing import Any
 from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 
 _TERMINAL_STATES = {"COMPLETED", "FAILED", "HUMAN_REQUIRED"}
+_REQUIRED_TABLES = (
+    "autonomy_runtime_meta",
+    "autonomy_runtime_operations",
+    "autonomy_runtime_receipts",
+    "autonomy_runtime_completed_tasks",
+)
 _TRANSITIONS: dict[str, set[str]] = {
     "PLANNING": {"DISPATCH_INTENT_RECORDED"},
     "DISPATCH_INTENT_RECORDED": {"DISPATCHED", "UNKNOWN_OUTCOME"},
@@ -19,7 +25,7 @@ _TRANSITIONS: dict[str, set[str]] = {
     "RESULT_OBSERVED": {"VERIFICATION_STARTED"},
     "VERIFICATION_STARTED": {"VERIFIED_RESULT", "FAILED"},
     "VERIFIED_RESULT": {"INTEGRATION_INTENT_RECORDED"},
-    "INTEGRATION_INTENT_RECORDED": {"INTEGRATED"},
+    "INTEGRATION_INTENT_RECORDED": {"INTEGRATED", "UNKNOWN_OUTCOME"},
     "INTEGRATED": {"RECONCILED"},
     "RECONCILED": {"COMPLETED", "HUMAN_REQUIRED"},
     "FAILED": {"HUMAN_REQUIRED"},
@@ -55,71 +61,34 @@ class DispatchReceipt:
 
 
 class PersistentSupervisor:
-    """Restart-safe autonomous runtime supervisor with SQLite-backed operation state."""
+    """Restart-safe autonomous runtime supervisor with catalog-migrated SQLite state."""
 
     def __init__(self, state_path: Path, repository_root: Path | None = None) -> None:
         self.state_path = state_path.resolve()
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
         root = repository_root.resolve() if repository_root is not None else Path.cwd().resolve()
+        self.repository_root = root
         self._db = sqlite3.connect(str(self.state_path))
         self._db.row_factory = sqlite3.Row
         self._db.execute("PRAGMA foreign_keys = ON")
         SQLiteMigrationRunner(self._db, root).apply_all()
-        self._initialize_tables()
+        self._assert_canonical_schema()
 
     def close(self) -> None:
         self._db.close()
 
-    def _initialize_tables(self) -> None:
-        with self._db:
-            self._db.execute(
-                """
-                CREATE TABLE IF NOT EXISTS autonomy_runtime_meta (
-                    key TEXT PRIMARY KEY,
-                    value_json TEXT NOT NULL
-                )
-                """
-            )
-            self._db.execute(
-                """
-                CREATE TABLE IF NOT EXISTS autonomy_runtime_operations (
-                    operation_id TEXT PRIMARY KEY,
-                    task_id TEXT NOT NULL,
-                    state TEXT NOT NULL,
-                    input_fingerprint TEXT NOT NULL,
-                    worker_id TEXT,
-                    base_branch TEXT,
-                    worktree_path TEXT,
-                    lease_fence TEXT,
-                    attempt INTEGER NOT NULL,
-                    result_fingerprint TEXT,
-                    verification_fingerprint TEXT,
-                    integrated_ref TEXT,
-                    incident TEXT,
-                    idempotency_key TEXT NOT NULL UNIQUE,
-                    payload_json TEXT NOT NULL,
-                    updated_at_utc TEXT NOT NULL,
-                    created_at_utc TEXT NOT NULL
-                )
-                """
-            )
-            self._db.execute(
-                """
-                CREATE TABLE IF NOT EXISTS autonomy_runtime_receipts (
-                    operation_id TEXT PRIMARY KEY,
-                    receipt_sha256 TEXT NOT NULL,
-                    payload_json TEXT NOT NULL,
-                    observed_at_utc TEXT NOT NULL
-                )
-                """
-            )
-            self._db.execute(
-                """
-                CREATE TABLE IF NOT EXISTS autonomy_runtime_completed_tasks (
-                    task_id TEXT PRIMARY KEY,
-                    completed_at_utc TEXT NOT NULL
-                )
-                """
+    def _assert_canonical_schema(self) -> None:
+        present = {
+            str(row["name"])
+            for row in self._db.execute(
+                "SELECT name FROM sqlite_master WHERE type = 'table'"
+            ).fetchall()
+        }
+        missing = [name for name in _REQUIRED_TABLES if name not in present]
+        if missing:
+            raise RuntimeError(
+                "autonomy runtime schema is missing catalog tables "
+                f"{missing}; apply PPDB-0020 rather than creating tables ad hoc"
             )
 
     @staticmethod
@@ -136,35 +105,59 @@ class PersistentSupervisor:
             return default
         return json.loads(str(row["value_json"]))
 
+    def _meta_put_conn(self, key: str, value: Any) -> None:
+        self._db.execute(
+            """
+            INSERT INTO autonomy_runtime_meta (key, value_json)
+            VALUES (?, ?)
+            ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json
+            """,
+            (key, json.dumps(value, sort_keys=True)),
+        )
+
     def _meta_put(self, key: str, value: Any) -> None:
         with self._db:
-            self._db.execute(
-                """
-                INSERT INTO autonomy_runtime_meta (key, value_json)
-                VALUES (?, ?)
-                ON CONFLICT(key) DO UPDATE SET value_json = excluded.value_json
-                """,
-                (key, json.dumps(value, sort_keys=True)),
-            )
+            self._meta_put_conn(key, value)
 
-    def _transition(
-        self, operation_id: str, next_state: str, *, when: datetime | None = None
-    ) -> None:
+    def _operation(self, operation_id: str) -> sqlite3.Row:
         row = self._db.execute(
-            "SELECT state FROM autonomy_runtime_operations WHERE operation_id = ?",
+            "SELECT * FROM autonomy_runtime_operations WHERE operation_id = ?",
             (operation_id,),
         ).fetchone()
         if row is None:
             raise KeyError(f"unknown operation: {operation_id}")
+        if not isinstance(row, sqlite3.Row):
+            raise TypeError("expected sqlite3.Row operation record")
+        return row
+
+    def _transition_conn(
+        self, operation_id: str, next_state: str, *, when: datetime | None = None
+    ) -> None:
+        row = self._operation(operation_id)
         current = str(row["state"])
         allowed = _TRANSITIONS.get(current, set())
         if next_state not in allowed:
             raise ValueError(f"invalid transition {current} -> {next_state}")
+        observed = _iso(when or _utc_now())
+        self._db.execute(
+            "UPDATE autonomy_runtime_operations SET state = ?, updated_at_utc = ? WHERE operation_id = ?",
+            (next_state, observed, operation_id),
+        )
+        self._meta_put_conn(
+            "last_transition",
+            {
+                "operation_id": operation_id,
+                "from_state": current,
+                "to_state": next_state,
+                "at_utc": observed,
+            },
+        )
+
+    def _transition(
+        self, operation_id: str, next_state: str, *, when: datetime | None = None
+    ) -> None:
         with self._db:
-            self._db.execute(
-                "UPDATE autonomy_runtime_operations SET state = ?, updated_at_utc = ? WHERE operation_id = ?",
-                (next_state, _iso(when or _utc_now()), operation_id),
-            )
+            self._transition_conn(operation_id, next_state, when=when)
 
     def compile_truth(self, *, control_snapshot_id: str, sequence_id: str) -> None:
         self._meta_put(
@@ -183,8 +176,14 @@ class PersistentSupervisor:
                 "SELECT task_id FROM autonomy_runtime_completed_tasks"
             ).fetchall()
         }
+        failed = {
+            str(row["task_id"])
+            for row in self._db.execute(
+                "SELECT task_id FROM autonomy_runtime_operations WHERE state IN ('FAILED', 'HUMAN_REQUIRED')"
+            ).fetchall()
+        }
         for task_id in ready_task_ids:
-            if task_id not in completed:
+            if task_id not in completed and task_id not in failed:
                 return task_id
         return None
 
@@ -200,11 +199,26 @@ class PersistentSupervisor:
         idempotency_key: str,
         payload: dict[str, Any],
     ) -> str:
-        sequence = int(self._meta_get("operation_sequence", 0)) + 1
-        self._meta_put("operation_sequence", sequence)
-        operation_id = f"SUP-OP-{sequence:06d}"
-        now = _iso(_utc_now())
+        payload_json = json.dumps(payload, sort_keys=True)
         with self._db:
+            existing = self._db.execute(
+                "SELECT * FROM autonomy_runtime_operations WHERE idempotency_key = ?",
+                (idempotency_key,),
+            ).fetchone()
+            if existing is not None:
+                same_input = (
+                    str(existing["input_fingerprint"]) == input_fingerprint
+                    and str(existing["payload_json"]) == payload_json
+                    and str(existing["task_id"]) == task_id
+                )
+                if not same_input:
+                    raise ValueError(
+                        "idempotency key conflict: inputs do not match existing operation"
+                    )
+                return str(existing["operation_id"])
+            sequence = int(self._meta_get("operation_sequence", 0)) + 1
+            operation_id = f"SUP-OP-{sequence:06d}"
+            now = _iso(_utc_now())
             self._db.execute(
                 """
                 INSERT INTO autonomy_runtime_operations (
@@ -224,14 +238,15 @@ class PersistentSupervisor:
                     lease_fence,
                     1,
                     idempotency_key,
-                    json.dumps(payload, sort_keys=True),
+                    payload_json,
                     now,
                     now,
                 ),
             )
-        self._meta_put("active_operation_id", operation_id)
-        self._transition(operation_id, "DISPATCH_INTENT_RECORDED")
-        return operation_id
+            self._meta_put_conn("operation_sequence", sequence)
+            self._meta_put_conn("active_operation_id", operation_id)
+            self._transition_conn(operation_id, "DISPATCH_INTENT_RECORDED")
+            return operation_id
 
     def mark_dispatched(self, operation_id: str) -> None:
         self._transition(operation_id, "DISPATCHED")
@@ -245,12 +260,6 @@ class PersistentSupervisor:
         status: str,
         payload: dict[str, Any] | None = None,
     ) -> DispatchReceipt:
-        operation_row = self._db.execute(
-            "SELECT task_id, input_fingerprint, state FROM autonomy_runtime_operations WHERE operation_id = ?",
-            (operation_id,),
-        ).fetchone()
-        if operation_row is None:
-            raise KeyError(f"unknown operation: {operation_id}")
         receipt_payload = {
             "operation_id": operation_id,
             "worker_id": worker_id,
@@ -259,28 +268,28 @@ class PersistentSupervisor:
             "payload": payload or {},
         }
         receipt_sha = self._digest(receipt_payload)
-        previous = self._db.execute(
-            "SELECT receipt_sha256, payload_json, observed_at_utc FROM autonomy_runtime_receipts WHERE operation_id = ?",
-            (operation_id,),
-        ).fetchone()
-        if previous is not None:
-            if str(previous["receipt_sha256"]) != receipt_sha:
-                raise ValueError("duplicate operation receipt conflict")
-            decoded = json.loads(str(previous["payload_json"]))
-            return DispatchReceipt(
-                operation_id=operation_id,
-                task_id=str(operation_row["task_id"]),
-                worker_id=str(decoded["worker_id"]),
-                input_fingerprint=str(operation_row["input_fingerprint"]),
-                output_fingerprint=str(decoded["output_fingerprint"]),
-                status=str(decoded["status"]),
-                observed_at_utc=_from_iso(str(previous["observed_at_utc"])),
-            )
-        current_state = str(operation_row["state"])
-        if current_state != "RESULT_OBSERVED":
-            self._transition(operation_id, "RESULT_OBSERVED")
-        observed = _utc_now()
         with self._db:
+            operation_row = self._operation(operation_id)
+            previous = self._db.execute(
+                "SELECT receipt_sha256, payload_json, observed_at_utc FROM autonomy_runtime_receipts WHERE operation_id = ?",
+                (operation_id,),
+            ).fetchone()
+            if previous is not None:
+                if str(previous["receipt_sha256"]) != receipt_sha:
+                    raise ValueError("duplicate operation receipt conflict")
+                decoded = json.loads(str(previous["payload_json"]))
+                return DispatchReceipt(
+                    operation_id=operation_id,
+                    task_id=str(operation_row["task_id"]),
+                    worker_id=str(decoded["worker_id"]),
+                    input_fingerprint=str(operation_row["input_fingerprint"]),
+                    output_fingerprint=str(decoded["output_fingerprint"]),
+                    status=str(decoded["status"]),
+                    observed_at_utc=_from_iso(str(previous["observed_at_utc"])),
+                )
+            if str(operation_row["state"]) != "RESULT_OBSERVED":
+                self._transition_conn(operation_id, "RESULT_OBSERVED")
+            observed = _utc_now()
             self._db.execute(
                 """
                 UPDATE autonomy_runtime_operations
@@ -313,14 +322,15 @@ class PersistentSupervisor:
 
     def mark_unknown_outcome(self, operation_id: str) -> None:
         self._transition(operation_id, "UNKNOWN_OUTCOME")
+        with self._db:
+            self._db.execute(
+                "UPDATE autonomy_runtime_operations SET incident = ? WHERE operation_id = ?",
+                ("UNKNOWN_OUTCOME", operation_id),
+            )
+            self._meta_put_conn("pending_unknown_outcome", operation_id)
 
     def reconcile_unknown_outcome(self, operation_id: str, *, applied: bool) -> None:
-        current = self._db.execute(
-            "SELECT state FROM autonomy_runtime_operations WHERE operation_id = ?",
-            (operation_id,),
-        ).fetchone()
-        if current is None:
-            raise KeyError(f"unknown operation: {operation_id}")
+        current = self._operation(operation_id)
         if str(current["state"]) == "UNKNOWN_OUTCOME":
             if applied:
                 self._transition(operation_id, "RESULT_OBSERVED")
@@ -331,47 +341,95 @@ class PersistentSupervisor:
                 "UPDATE autonomy_runtime_operations SET incident = ? WHERE operation_id = ?",
                 ("UNKNOWN_OUTCOME_RECONCILED", operation_id),
             )
+            if self._meta_get("pending_unknown_outcome") == operation_id:
+                self._meta_put_conn("pending_unknown_outcome", None)
 
     def mark_verified(self, operation_id: str, verification_fingerprint: str) -> None:
-        self._transition(operation_id, "VERIFICATION_STARTED")
         with self._db:
+            if str(self._operation(operation_id)["state"]) == "RESULT_OBSERVED":
+                self._transition_conn(operation_id, "VERIFICATION_STARTED")
             self._db.execute(
                 "UPDATE autonomy_runtime_operations SET verification_fingerprint = ? WHERE operation_id = ?",
                 (verification_fingerprint, operation_id),
             )
-        self._transition(operation_id, "VERIFIED_RESULT")
+            self._transition_conn(operation_id, "VERIFIED_RESULT")
+
+    def mark_verification_failed(
+        self, operation_id: str, verification_fingerprint: str, reason: str
+    ) -> None:
+        with self._db:
+            if str(self._operation(operation_id)["state"]) == "RESULT_OBSERVED":
+                self._transition_conn(operation_id, "VERIFICATION_STARTED")
+            self._db.execute(
+                """
+                UPDATE autonomy_runtime_operations
+                SET verification_fingerprint = ?, incident = ?
+                WHERE operation_id = ?
+                """,
+                (verification_fingerprint, f"FAILED_VERIFICATION:{reason}", operation_id),
+            )
+            self._transition_conn(operation_id, "FAILED")
+            if self._meta_get("active_operation_id") == operation_id:
+                self._meta_put_conn("active_operation_id", None)
+
+    def mark_integration_intent(self, operation_id: str) -> None:
+        self._transition(operation_id, "INTEGRATION_INTENT_RECORDED")
 
     def mark_integrated(self, operation_id: str, integrated_ref: str) -> None:
-        self._transition(operation_id, "INTEGRATION_INTENT_RECORDED")
         with self._db:
+            if str(self._operation(operation_id)["state"]) == "VERIFIED_RESULT":
+                self._transition_conn(operation_id, "INTEGRATION_INTENT_RECORDED")
             self._db.execute(
                 "UPDATE autonomy_runtime_operations SET integrated_ref = ? WHERE operation_id = ?",
                 (integrated_ref, operation_id),
             )
-        self._transition(operation_id, "INTEGRATED")
-        self._transition(operation_id, "RECONCILED")
+            self._transition_conn(operation_id, "INTEGRATED")
+            self._transition_conn(operation_id, "RECONCILED")
 
     def complete_operation(self, operation_id: str) -> None:
+        row = self._operation(operation_id)
+        if str(row["state"]) == "UNKNOWN_OUTCOME":
+            raise ValueError("cannot complete operation with unknown outcome")
+        with self._db:
+            if str(self._operation(operation_id)["state"]) != "COMPLETED":
+                self._transition_conn(operation_id, "COMPLETED")
+            self._db.execute(
+                """
+                INSERT INTO autonomy_runtime_completed_tasks
+                    (task_id, completed_at_utc, operation_id, verified_sha)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(task_id) DO UPDATE SET
+                    completed_at_utc = excluded.completed_at_utc,
+                    operation_id = excluded.operation_id,
+                    verified_sha = excluded.verified_sha
+                """,
+                (
+                    str(row["task_id"]),
+                    _iso(_utc_now()),
+                    operation_id,
+                    str(row["integrated_ref"]) if row["integrated_ref"] is not None else None,
+                ),
+            )
+            if self._meta_get("active_operation_id") == operation_id:
+                self._meta_put_conn("active_operation_id", None)
+
+    def operation_payload(self, operation_id: str) -> dict[str, Any]:
+        payload = json.loads(str(self._operation(operation_id)["payload_json"]))
+        if not isinstance(payload, dict):
+            raise TypeError("operation payload must be a JSON object")
+        return payload
+
+    def operation_record(self, operation_id: str) -> dict[str, Any]:
+        return dict(self._operation(operation_id))
+
+    def receipt_for(self, operation_id: str) -> dict[str, Any] | None:
         row = self._db.execute(
-            "SELECT task_id, state FROM autonomy_runtime_operations WHERE operation_id = ?",
+            "SELECT * FROM autonomy_runtime_receipts WHERE operation_id = ?",
             (operation_id,),
         ).fetchone()
         if row is None:
-            raise KeyError(f"unknown operation: {operation_id}")
-        if str(row["state"]) == "UNKNOWN_OUTCOME":
-            raise ValueError("cannot complete operation with unknown outcome")
-        self._transition(operation_id, "COMPLETED")
-        with self._db:
-            self._db.execute(
-                """
-                INSERT INTO autonomy_runtime_completed_tasks (task_id, completed_at_utc)
-                VALUES (?, ?)
-                ON CONFLICT(task_id) DO UPDATE SET completed_at_utc = excluded.completed_at_utc
-                """,
-                (str(row["task_id"]), _iso(_utc_now())),
-            )
-        if self._meta_get("active_operation_id") == operation_id:
-            self._meta_put("active_operation_id", None)
+            return None
+        return dict(row)
 
     def status(self) -> dict[str, Any]:
         operations = self._db.execute(
@@ -386,17 +444,18 @@ class PersistentSupervisor:
             if state_row is not None and str(state_row["state"]) in _TERMINAL_STATES:
                 active_operation_id = None
                 self._meta_put("active_operation_id", None)
+        last_verified = self._db.execute(
+            """
+            SELECT task_id, verified_sha FROM autonomy_runtime_completed_tasks
+            ORDER BY completed_at_utc DESC LIMIT 1
+            """
+        ).fetchone()
         return {
             "active_operation_id": active_operation_id,
             "active_operation_state": (
                 None
                 if active_operation_id is None
-                else str(
-                    self._db.execute(
-                        "SELECT state FROM autonomy_runtime_operations WHERE operation_id = ?",
-                        (active_operation_id,),
-                    ).fetchone()["state"]
-                )
+                else str(self._operation(str(active_operation_id))["state"])
             ),
             "completed_tasks": [
                 str(row["task_id"])
@@ -409,6 +468,14 @@ class PersistentSupervisor:
                 self._db.execute("SELECT COUNT(*) FROM autonomy_runtime_receipts").fetchone()[0]
             ),
             "last_truth": dict(self._meta_get("last_truth", {})),
+            "last_transition": dict(self._meta_get("last_transition", {})),
+            "pending_unknown_outcome": self._meta_get("pending_unknown_outcome"),
+            "last_verified_task_id": None
+            if last_verified is None
+            else str(last_verified["task_id"]),
+            "last_verified_sha": None
+            if last_verified is None or last_verified["verified_sha"] is None
+            else str(last_verified["verified_sha"]),
             "operations": [
                 {
                     "operation_id": str(row["operation_id"]),

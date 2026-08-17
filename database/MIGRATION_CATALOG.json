@@ -359,6 +359,25 @@
       "sqlite_down_sha256": "7875b4bb23269d66050a8a3d4af9a5f9e3f049cbc181e085d0cac43933e78dc7",
       "sqlite_up_path": "database/migrations/sqlite/PPDB-0019_audit_immutability.up.sql",
       "sqlite_up_sha256": "e12cf134e4e83a9a7a9006506445dba2e94a735f797ba341639be817c41e56b8"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0019"
+      ],
+      "migration_id": "PPDB-0020",
+      "name": "autonomy_runtime_supervisor",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0020_autonomy_runtime_supervisor.down.sql",
+      "postgresql_down_sha256": "94752cee128a8f2e7d2235f6fc59bb0e57552652883e14ef58d567740264092b",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0020_autonomy_runtime_supervisor.up.sql",
+      "postgresql_up_sha256": "0498a1e43a785cc6a465310631aa336efbe54400b198a8dbcb2aa1e7e27cdf92",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 20,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0020_autonomy_runtime_supervisor.down.sql",
+      "sqlite_down_sha256": "94752cee128a8f2e7d2235f6fc59bb0e57552652883e14ef58d567740264092b",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0020_autonomy_runtime_supervisor.up.sql",
+      "sqlite_up_sha256": "0498a1e43a785cc6a465310631aa336efbe54400b198a8dbcb2aa1e7e27cdf92"
     }
   ],
   "schema_version": "1.0.0"

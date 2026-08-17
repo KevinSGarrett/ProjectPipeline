@@ -54,14 +54,14 @@ def test_ppdb_0019_database_enforces_append_only_audit_history(tmp_path):
         assert row[0] == "TEST"
 
 
-def test_ppdb_0019_is_latest_and_reversible_without_removing_ppdb_0018(tmp_path):
+def test_ppdb_0020_is_latest_and_reversible_without_removing_ppdb_0019(tmp_path):
     db = sqlite3.connect(tmp_path / "m.db")
     runner = SQLiteMigrationRunner(db, ROOT)
     runner.apply_all()
-    assert runner.status().latest_applied == "PPDB-0019"
+    assert runner.status().latest_applied == "PPDB-0020"
     runner.rollback_last()
     ids = {r[0] for r in db.execute("SELECT migration_id FROM schema_migrations")}
-    assert "PPDB-0018" in ids and "PPDB-0019" not in ids
+    assert "PPDB-0019" in ids and "PPDB-0020" not in ids
 
 
 def test_versioned_approved_runbook_dry_run_is_non_mutating_and_recorded():

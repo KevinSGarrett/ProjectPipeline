@@ -32,6 +32,8 @@ def test_ppdb_0013_is_reversible_without_damaging_ppdb_0012(project_root: Path):
     conn = sqlite3.connect(":memory:")
     runner = SQLiteMigrationRunner(conn, project_root)
     runner.apply_all()
+    assert runner.status().latest_applied == "PPDB-0020"
+    runner.rollback_last()
     assert runner.status().latest_applied == "PPDB-0019"
     # Pass 25 audit immutability rolls back first without damaging lifecycle state.
     runner.rollback_last()
