@@ -1,0 +1,291 @@
+{
+  "apply": true,
+  "candidate_count": 139,
+  "candidate_issue_ids": [
+    "PP-EPIC-000003",
+    "PP-STORY-000004",
+    "PP-STORY-000014",
+    "PP-STORY-000022",
+    "PP-STORY-000050",
+    "PP-STORY-000052",
+    "PP-STORY-000053",
+    "PP-STORY-000054",
+    "PP-STORY-000056",
+    "PP-STORY-000057",
+    "PP-STORY-000058",
+    "PP-STORY-000059",
+    "PP-STORY-000061",
+    "PP-STORY-000062",
+    "PP-STORY-000063",
+    "PP-STORY-000064",
+    "PP-STORY-000066",
+    "PP-STORY-000075",
+    "PP-STORY-000080",
+    "PP-STORY-000084",
+    "PP-STORY-000089",
+    "PP-STORY-000090",
+    "PP-STORY-000091",
+    "PP-STORY-000106",
+    "PP-STORY-000108",
+    "PP-STORY-000125",
+    "PP-STORY-000130",
+    "PP-STORY-000131",
+    "PP-STORY-000132",
+    "PP-TASK-000037",
+    "PP-TASK-000038",
+    "PP-TASK-000039",
+    "PP-TASK-000040",
+    "PP-TASK-000041",
+    "PP-TASK-000042",
+    "PP-TASK-000138",
+    "PP-TASK-000140",
+    "PP-TASK-000142",
+    "PP-TASK-000144",
+    "PP-TASK-000146",
+    "PP-TASK-000148",
+    "PP-TASK-000150",
+    "PP-TASK-000152",
+    "PP-TASK-000159",
+    "PP-TASK-000160",
+    "PP-TASK-000166",
+    "PP-TASK-000173",
+    "PP-TASK-000175",
+    "PP-TASK-000177",
+    "PP-TASK-000190",
+    "PP-TASK-000203",
+    "PP-TASK-000204",
+    "PP-TASK-000206",
+    "PP-TASK-000208",
+    "PP-TASK-000218",
+    "PP-TASK-000232",
+    "PP-TASK-000234",
+    "PP-TASK-000241",
+    "PP-TASK-000242",
+    "PP-TASK-000246",
+    "PP-TASK-000248",
+    "PP-TASK-000249",
+    "PP-TASK-000254",
+    "PP-TASK-000255",
+    "PP-TASK-000260",
+    "PP-TASK-000261",
+    "PP-TASK-000262",
+    "PP-TASK-000267",
+    "PP-TASK-000268",
+    "PP-TASK-000269",
+    "PP-TASK-000270",
+    "PP-TASK-000271",
+    "PP-TASK-000272",
+    "PP-TASK-000274",
+    "PP-TASK-000275",
+    "PP-TASK-000276",
+    "PP-TASK-000277",
+    "PP-TASK-000278",
+    "PP-TASK-000279",
+    "PP-TASK-000280",
+    "PP-TASK-000281",
+    "PP-TASK-000282",
+    "PP-TASK-000283",
+    "PP-TASK-000284",
+    "PP-TASK-000285",
+    "PP-TASK-000286",
+    "PP-TASK-000287",
+    "PP-TASK-000288",
+    "PP-TASK-000289",
+    "PP-TASK-000290",
+    "PP-TASK-000292",
+    "PP-TASK-000293",
+    "PP-TASK-000297",
+    "PP-TASK-000298",
+    "PP-TASK-000300",
+    "PP-TASK-000301",
+    "PP-TASK-000304",
+    "PP-TASK-000306",
+    "PP-TASK-000307",
+    "PP-TASK-000310",
+    "PP-TASK-000311",
+    "PP-TASK-000313",
+    "PP-TASK-000314",
+    "PP-TASK-000319",
+    "PP-TASK-000320",
+    "PP-TASK-000321",
+    "PP-TASK-000325",
+    "PP-TASK-000326",
+    "PP-TASK-000328",
+    "PP-TASK-000329",
+    "PP-TASK-000330",
+    "PP-TASK-000331",
+    "PP-TASK-000332",
+    "PP-TASK-000333",
+    "PP-TASK-000334",
+    "PP-TASK-000335",
+    "PP-TASK-000336",
+    "PP-TASK-000337",
+    "PP-TASK-000338",
+    "PP-TASK-000350",
+    "PP-TASK-000351",
+    "PP-TASK-000355",
+    "PP-TASK-000365",
+    "PP-TASK-000366",
+    "PP-TASK-000367",
+    "PP-TASK-000368",
+    "PP-TASK-000374",
+    "PP-TASK-000375",
+    "PP-TASK-000378",
+    "PP-SUBTASK-000045",
+    "PP-SUBTASK-000047",
+    "PP-SUBTASK-000139",
+    "PP-SUBTASK-000141",
+    "PP-SUBTASK-000143",
+    "PP-SUBTASK-000145",
+    "PP-SUBTASK-000147",
+    "PP-SUBTASK-000149",
+    "PP-SUBTASK-000151",
+    "PP-SUBTASK-000153"
+  ],
+  "lifecycle_transition_count": 0,
+  "paused_lane_exclusion_count": 4,
+  "paused_lane_exclusion_issue_ids": [
+    "PP-TASK-000346",
+    "PP-TASK-000347",
+    "PP-TASK-000348",
+    "PP-TASK-000349"
+  ],
+  "quarantined": [
+    {
+      "issue_id": "PP-STORY-000010",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000018",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000034",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000055",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000067",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000069",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000072",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000073",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000074",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000076",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000078",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000093",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000098",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-STORY-000116",
+      "reasons": [
+        "required cataloged tests are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-TASK-000162",
+      "reasons": [
+        "acceptance verification paths are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-TASK-000172",
+      "reasons": [
+        "expected implementation artifacts are missing",
+        "required cataloged tests are missing",
+        "acceptance verification paths are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-TASK-000176",
+      "reasons": [
+        "expected implementation artifacts are missing",
+        "required cataloged tests are missing",
+        "acceptance verification paths are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-TASK-000180",
+      "reasons": [
+        "expected implementation artifacts are missing",
+        "required cataloged tests are missing",
+        "acceptance verification paths are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-TASK-000181",
+      "reasons": [
+        "acceptance verification paths are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-TASK-000259",
+      "reasons": [
+        "expected implementation artifacts are missing"
+      ]
+    },
+    {
+      "issue_id": "PP-SUBTASK-000184",
+      "reasons": [
+        "acceptance verification paths are missing"
+      ]
+    }
+  ],
+  "quarantined_count": 21,
+  "rule": "This batch reconciles evidence-backed implementation projections only. It does not advance Jira lifecycle state, create per-label branches, or claim remote completion.",
+  "schema_version": "1.0.0",
+  "unchanged_count": 227
+}

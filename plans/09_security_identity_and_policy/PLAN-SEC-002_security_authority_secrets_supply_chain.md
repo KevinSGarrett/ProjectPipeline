@@ -1,4 +1,4 @@
-# PLAN-SEC-002 — Security Authority, Secrets, and Supply Chain
+# PLAN-SEC-002 — Security Authority, Secrets, and Supply Chain [Status: ACTIVE]
 
 ## PLAN-SEC-002:SEC-01 Upstream security activation
 Review the mapped security portfolio before implementation. Reuse existing Docker MCP Gateway, Gitleaks, OSV-Scanner, Cosign, and Zizmor boundaries; add bounded Trivy, OPA, Conftest, SOPS, age, OpenBao, Scorecard, and Harden-Runner integration patterns.

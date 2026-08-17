@@ -25,6 +25,7 @@ def _facts(**overrides) -> CompletionGateFacts:
         implementation_traceability_complete=True,
         critical_paths_tested=True,
         golden_journeys_pass=True,
+        autonomous_runtime_qualified=True,
         security_gates_satisfied=True,
         resilience_verified=True,
         deployment_reproducible=True,

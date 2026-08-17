@@ -517,7 +517,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-006:L000130-L000223"
+      "SRC-006:L000130-L000197",
+      "SRC-006:L000001-L000010"
     ],
     "source_sequence": 5,
     "statement": "Each capability shall define an ordered, policy-controlled fallback chain that can substitute local, subscription, API, or cloud execution without changing project semantics.",
@@ -701,7 +702,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-001:L000569-L000680"
+      "SRC-001:L000569-L000656"
     ],
     "source_sequence": 1,
     "statement": "Worker roles shall be specialized by capability and authority, including implementation, review, Jira, repository, recovery, context, and verification responsibilities.",
@@ -771,7 +772,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-013:L000420-L000529"
+      "SRC-013:L000420-L000529",
+      "SRC-013:L000001-L000004"
     ],
     "source_sequence": 13,
     "statement": "Local models may perform triage, summarization, Jira hygiene, review support, routing assistance, and outage fallback but shall not replace deterministic control authority.",
@@ -1574,7 +1576,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-002:L001099-L001314",
+      "SRC-002:L001103-L001157",
+      "SRC-002:L001300-L001314",
       "SRC-009:L000032-L000073"
     ],
     "source_sequence": 2,
@@ -2617,7 +2620,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-008:L000540-L000760"
+      "SRC-008:L000648-L000714"
     ],
     "source_sequence": 8,
     "statement": "Claims, evidence, and verified facts shall remain distinct, and unknown shall remain unknown.",
@@ -2688,7 +2691,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-008:L000540-L000760"
+      "SRC-008:L000595-L000647"
     ],
     "source_sequence": 8,
     "statement": "Evidence shall be recorded in an append-only ledger with stable identity, provenance, result, and freshness.",
@@ -2756,7 +2759,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-008:L000540-L000760"
+      "SRC-008:L000447-L000519"
     ],
     "source_sequence": 8,
     "statement": "Acceptance criteria shall be objectively verifiable and linked to specific verification methods.",
@@ -2825,7 +2828,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-008:L000540-L000760"
+      "SRC-008:L000520-L000594"
     ],
     "source_sequence": 8,
     "statement": "Full completion shall require convergence across source, requirement, plan, work, implementation, tests, evidence, deployment, and operations.",
@@ -3071,7 +3074,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-008:L000156-L000196"
+      "SRC-008:L000156-L000196",
+      "SRC-008:L000001-L000004"
     ],
     "source_sequence": 8,
     "statement": "Execution shall track whether attempts produce new evidence, reduce uncertainty, remove blockers, or advance acceptance criteria rather than merely generate activity.",
@@ -3261,7 +3265,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-008:L000295-L000368"
+      "SRC-008:L000295-L000368",
+      "SRC-008:L000001-L000004"
     ],
     "source_sequence": 8,
     "statement": "Housekeeping, formatting, refactoring, and repository hygiene shall consume a bounded project-profile-specific budget and shall not displace critical delivery.",
@@ -5177,7 +5182,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-004:L000050-L000147"
+      "SRC-004:L000050-L000147",
+      "SRC-004:L000001-L000004"
     ],
     "source_sequence": 4,
     "statement": "The Budget Governor shall record direct monetary spend, quota consumption, subscription allocation, local compute, cloud resources, and verification cost by project, task, provider, and outcome.",
@@ -5238,7 +5244,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-004:L000148-L000251"
+      "SRC-004:L000148-L000191",
+      "SRC-004:L000228-L000251"
     ],
     "source_sequence": 4,
     "statement": "Budget policy shall support global, portfolio, project, phase, task, provider, and resource limits with explicit inheritance and overrides.",
@@ -5297,7 +5304,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-004:L000148-L000251"
+      "SRC-004:L000192-L000251"
     ],
     "source_sequence": 4,
     "statement": "Unused budget may be reallocated only by deterministic policy that protects reserves, deadlines, critical verification, and operator constraints.",
@@ -5603,7 +5610,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-004:L000484-L000606"
+      "SRC-004:L000484-L000563"
     ],
     "source_sequence": 4,
     "statement": "Budget status shall include current spend, committed leases, forecast completion cost, burn rate, remaining reserve, and uncertainty.",
@@ -5663,7 +5670,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-004:L000484-L000606"
+      "SRC-004:L000564-L000606"
     ],
     "source_sequence": 4,
     "statement": "Budget policy shall protect a configurable reserve for critical-path work, required verification, release, and incident recovery near deadlines.",
@@ -6169,7 +6176,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-003:L000040-L000083"
+      "SRC-003:L000040-L000083",
+      "SRC-003:L000001-L000004"
     ],
     "source_sequence": 3,
     "statement": "A deterministic Project Control Kernel shall own canonical project state and admissible transitions.",
@@ -6359,7 +6367,7 @@
     "verification_expectation": "Automated verification plus independent evidence where risk requires it."
   },
   "REQ-CTRL-0004": {
-    "acceptance_summary": "Verified when: The Autonomy Director shall interpret goals, propose plans, resolve ambiguity, and recommend actions without directly bypassing deterministic policy or state transitions",
+    "acceptance_summary": "Verified only when a persistent Autonomy Director observably drives strategic planning and next-work continuation above the deterministic Control Kernel; Director Chat alone is insufficient.",
     "authority_classification": "SOURCE_DERIVED",
     "decision_ids": [
       "ADR-0016"
@@ -6374,10 +6382,12 @@
     "implementation_paths": [
       "src/project_pipeline/command_center/director.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000007",
-      "PP-STORY-000065"
+      "PP-STORY-000065",
+      "PP-EPIC-000036",
+      "PP-TASK-000381"
     ],
     "normative_strength": "SHALL",
     "open_decision_ids": [],
@@ -6391,14 +6401,15 @@
     "rationale": "The cited authoritative range establishes or directly supports this independently dispositionable obligation.",
     "requirement_id": "REQ-CTRL-0004",
     "requirement_type": "functional",
-    "risk": "MEDIUM",
+    "risk": "CRITICAL",
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-003:L000005-L000084"
+      "SRC-003:L000005-L000084",
+      "SRC-014:L000005-L000087"
     ],
     "source_sequence": 3,
-    "statement": "The Autonomy Director shall interpret goals, propose plans, resolve ambiguity, and recommend actions without directly bypassing deterministic policy or state transitions.",
+    "statement": "The Autonomy Director shall continuously interpret the verified project model, propose goals and plans, resolve ambiguity, coordinate strategic decisions, and direct next-work continuation above the deterministic Control Kernel without bypassing its policy or state-transition authority.",
     "superseded_by_requirement_ids": [],
     "supersedes_requirement_ids": [],
     "tags": [
@@ -6410,9 +6421,9 @@
       "TEST-CC-P21-001",
       "TEST-CC-P21-002"
     ],
-    "title": "Autonomy Director advisory role",
+    "title": "Persistent Autonomy Director",
     "verification_class": "AUTOMATED_WITH_REVIEW",
-    "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
+    "verification_expectation": "Verify persistent, restart-safe strategic direction and autonomous next-work continuation in the integrated runtime; an operator chat response is not proof."
   },
   "REQ-CTRL-0005": {
     "acceptance_summary": "Verified when: Only the Project Control Kernel shall commit canonical project-state transitions after validating preconditions, authority, and policy",
@@ -6552,7 +6563,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-003:L000752-L000875"
+      "SRC-003:L000752-L000789"
     ],
     "source_sequence": 3,
     "statement": "A distinct architectural authority shall evaluate material design changes, dependencies, compatibility, and source alignment before acceptance.",
@@ -6664,8 +6675,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-003:L000752-L000875",
-      "SRC-008:L000407-L000589"
+      "SRC-008:L000407-L000446",
+      "SRC-008:L000493-L000589"
     ],
     "source_sequence": 3,
     "statement": "Completion status shall be committed only by a deterministic completion authority after required criteria, tests, evidence, and reconciliation checks succeed.",
@@ -6751,7 +6762,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-003:L000882-L000961",
+      "SRC-003:L000930-L000961",
       "SRC-017:L000281-L000359"
     ],
     "source_sequence": 3,
@@ -6905,7 +6916,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-005:L000604-L000735",
+      "SRC-005:L000649-L000735",
       "SRC-017:L000281-L000359"
     ],
     "source_sequence": 5,
@@ -6970,7 +6981,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "SRC-001:L001480-L001526",
-      "SRC-014:L000210-L000373"
+      "SRC-014:L000242-L000373"
     ],
     "source_sequence": 1,
     "statement": "The control plane shall compare source requirements, plans, Jira, repository state, and discovered work and shall explicitly represent mismatches.",
@@ -7026,7 +7037,8 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "GOV-001:L001394-L001420",
-      "SRC-015:L000031-L000150"
+      "SRC-015:L000031-L000150",
+      "SRC-015:L000001-L000006"
     ],
     "source_sequence": 0,
     "statement": "A dependent workflow shall enter a typed human-required state when a safe decision, credential, approval, or irreversible action cannot be inferred.",
@@ -7086,7 +7098,8 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "GOV-001:L001412-L001420",
-      "SRC-015:L000031-L000150"
+      "SRC-015:L000031-L000150",
+      "SRC-015:L000001-L000006"
     ],
     "source_sequence": 0,
     "statement": "A human-required or externally blocked item shall not stop independent eligible work elsewhere in the project.",
@@ -7201,7 +7214,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-002:L001015-L001156"
+      "SRC-002:L001015-L001046"
     ],
     "source_sequence": 2,
     "statement": "Delegated work shall not begin without an explicit, purpose-specific context envelope.",
@@ -7269,7 +7282,9 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-002:L001015-L001156"
+      "SRC-002:L001015-L001046",
+      "SRC-002:L001099-L001157",
+      "SRC-002:L000001-L000007"
     ],
     "source_sequence": 2,
     "statement": "A Context Broker and Context Compiler shall produce immutable, minimal, source-grounded context packs and receipts.",
@@ -7335,7 +7350,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-002:L001015-L001156"
+      "SRC-002:L001047-L001098",
+      "SRC-017:L000009-L000071"
     ],
     "source_sequence": 2,
     "statement": "Context shall be checked for authority, trust, freshness, and acceptance-criterion coverage.",
@@ -7874,7 +7890,6 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-002:L001015-L001098",
       "SRC-017:L000009-L000071"
     ],
     "source_sequence": 2,
@@ -9103,7 +9118,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-007:L000539-L000624"
+      "SRC-007:L000539-L000624",
+      "SRC-007:L000001-L000008"
     ],
     "source_sequence": 7,
     "statement": "A Jira Steward shall own synchronization, comments, field hygiene, hierarchy, transitions, orphan detection, and remote/local reconciliation.",
@@ -9242,7 +9258,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-007:L000649-L000669"
+      "SRC-007:L000649-L000669",
+      "SRC-007:L000001-L000008"
     ],
     "source_sequence": 7,
     "statement": "A Repository Steward shall own branch policy, worktrees, pull-request state, protection rules, stale work, cleanup, and repository reconciliation.",
@@ -10598,7 +10615,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "GOV-001:L000748-L000764",
-      "SRC-016:L001473-L001690"
+      "SRC-016:L001473-L001509"
     ],
     "source_sequence": 0,
     "statement": "Long-running local control components shall support reliable Windows service or equivalent managed-process operation with startup, shutdown, logging, and recovery.",
@@ -12832,7 +12849,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "GOV-001:L000695-L000710",
-      "SRC-015:L000359-L000488"
+      "SRC-015:L000407-L000457"
     ],
     "source_sequence": 0,
     "statement": "Material approvals, external mutations, policy decisions, instruction changes, merges, deployments, and recovery actions shall have append-only audit records.",
@@ -13742,7 +13759,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-014:L000005-L000209",
+      "SRC-014:L000088-L000209",
       "SRC-017:L001122-L001217"
     ],
     "source_sequence": 14,
@@ -13991,6 +14008,77 @@
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
   },
+  "REQ-PDEF-0011": {
+    "acceptance_summary": "Verified only when a complete local-real project journey and each ordered live, Windows, recovery, 24-hour, 72-hour, release, and post-release qualification stage observably execute the continuous loop and the deterministic Completion Gate passes.",
+    "authority_classification": "SOURCE_DERIVED",
+    "decision_ids": [],
+    "disposition": "ACCEPTED",
+    "disposition_reason": "Accepted because the original source explicitly defines the complete perpetual autonomous engineering loop and scoped human-escalation continuation behavior.",
+    "domain": "PDEF",
+    "evidence_ids": [],
+    "evolution_ids": [
+      "SOURCE-EVOLUTION-0008"
+    ],
+    "implementation_paths": [],
+    "implementation_state": "PLANNED_ONLY",
+    "jira_ids": [
+      "PP-EPIC-000036",
+      "PP-STORY-000138",
+      "PP-STORY-000139",
+      "PP-STORY-000140",
+      "PP-STORY-000141",
+      "PP-STORY-000142",
+      "PP-STORY-000143",
+      "PP-TASK-000380",
+      "PP-TASK-000381",
+      "PP-TASK-000382",
+      "PP-TASK-000383",
+      "PP-TASK-000384",
+      "PP-TASK-000385"
+    ],
+    "normative_strength": "SHALL",
+    "open_decision_ids": [],
+    "plan_ids": [
+      "PLAN-CTRL-003"
+    ],
+    "plan_section_ids": [
+      "PLAN-CTRL-003:SEC-01",
+      "PLAN-CTRL-003:SEC-02",
+      "PLAN-CTRL-003:SEC-03",
+      "PLAN-CTRL-003:SEC-04",
+      "PLAN-CTRL-003:SEC-05",
+      "PLAN-CTRL-003:SEC-06",
+      "PLAN-CTRL-003:SEC-07"
+    ],
+    "priority": "P0",
+    "rationale": "This is the non-negotiable product outcome. Component existence, mocks, deterministic simulation, lifecycle state, or local preview cannot satisfy it.",
+    "requirement_id": "REQ-PDEF-0011",
+    "requirement_type": "functional",
+    "risk": "CRITICAL",
+    "schema_version": "2.0.0",
+    "source_kind": "CANONICAL_SOURCE",
+    "source_references": [
+      "SRC-014:L000001-L000087",
+      "SRC-015:L000001-L000113",
+      "SRC-003:L000001-L000004"
+    ],
+    "source_sequence": 14,
+    "statement": "ProjectPipeline shall continuously take a project from intake through verified modeling, autonomous selection, conflict-safe parallel execution, verification, governed repository integration, Jira reconciliation, project-state recomputation, and next-work selection without requiring a human to drive each development session.",
+    "superseded_by_requirement_ids": [],
+    "supersedes_requirement_ids": [],
+    "tags": [
+      "autonomy-runtime",
+      "continuous-operation",
+      "golden-journey",
+      "pdef",
+      "product-outcome",
+      "unattended-qualification"
+    ],
+    "test_ids": [],
+    "title": "Continuous autonomous engineering organization",
+    "verification_class": "INDEPENDENT_MULTI_EVIDENCE",
+    "verification_expectation": "Verify observable end-to-end behavior at every ordered qualification environment; lower stages and mocks cannot substitute for live, duration, release, or post-release proof."
+  },
   "REQ-REL-0001": {
     "acceptance_summary": "Verified when: Release archives shall be cumulative, rooted correctly, integrity-tested, and generated from the canonical workspace",
     "authority_classification": "SOURCE_DERIVED",
@@ -14145,7 +14233,8 @@
     "schema_version": "2.0.0",
     "source_kind": "GOVERNING_CONTRACT",
     "source_references": [
-      "GOV-001:L001884-L001992"
+      "GOV-001:L001884-L001992",
+      "SRC-017:L000001-L000008"
     ],
     "source_sequence": 0,
     "statement": "Final completion shall audit every requirement disposition, relationship, implementation mapping, test, decision, dependency, security check, journey, deployment artifact, runbook, blocker, and source link.",
@@ -15113,7 +15202,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "GOV-001:L000123-L000175",
-      "SRC-017:L000490-L000596"
+      "SRC-017:L000490-L000572"
     ],
     "source_sequence": 0,
     "statement": "Every source-derived requirement shall cite a syntactically valid source range whose end line does not exceed the registered source line count.",
@@ -15171,7 +15260,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "GOV-001:L000187-L000221",
-      "SRC-017:L000490-L000596"
+      "SRC-017:L000490-L000572"
     ],
     "source_sequence": 0,
     "statement": "Every canonical source section shall be linked to one or more requirements or carry an explicit non-requirement disposition and reason.",
@@ -15511,7 +15600,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "GOV-001:L001998-L002024",
-      "SRC-017:L000490-L000596"
+      "SRC-017:L000490-L000572"
     ],
     "source_sequence": 0,
     "statement": "Project-specific and platform-specific terms shall be maintained in a machine-readable glossary with definitions and aliases.",
@@ -15720,7 +15809,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "GOV-001:L001998-L002024",
-      "SRC-017:L000490-L000596"
+      "SRC-017:L000490-L000572"
     ],
     "source_sequence": 0,
     "statement": "The repository shall expose deterministic queries by identifier, domain, source, priority, disposition, state, and text without loading the full catalog into model context.",
@@ -17639,8 +17728,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-003:L000225-L000371",
-      "SRC-014:L000210-L000373"
+      "SRC-003:L000225-L000278"
     ],
     "source_sequence": 3,
     "statement": "Accepted requirements shall be decomposed into bounded work with explicit outputs, dependencies, acceptance criteria, and ownership needs.",
@@ -17771,8 +17859,8 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-003:L000279-L000371",
-      "SRC-014:L000378-L000748"
+      "SRC-003:L000279-L000335",
+      "SRC-014:L000378-L000525"
     ],
     "source_sequence": 3,
     "statement": "Task readiness shall be computed from dependency completion, required context, approvals, resources, environment, and policy eligibility.",
@@ -17836,7 +17924,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-003:L000225-L000371",
+      "SRC-003:L000225-L000335",
       "SRC-014:L000859-L000946"
     ],
     "source_sequence": 3,
@@ -17978,7 +18066,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "GOV-001:L000437-L000455",
-      "SRC-014:L000378-L000748"
+      "SRC-014:L000417-L000525"
     ],
     "source_sequence": 0,
     "statement": "Potentially parallel work shall be represented in a conflict graph covering files, schemas, branches, environments, ports, GPUs, services, and other shared resources.",
@@ -18044,7 +18132,8 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "SRC-001:L000492-L000568",
-      "SRC-014:L000378-L000748"
+      "SRC-014:L000417-L000602",
+      "SRC-014:L000710-L000748"
     ],
     "source_sequence": 1,
     "statement": "The scheduler shall select only work sets whose declared and discovered conflicts can be isolated or safely leased.",
@@ -18104,7 +18193,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-014:L000378-L000748"
+      "SRC-014:L000526-L000709"
     ],
     "source_sequence": 14,
     "statement": "Execution lanes shall be derived from eligible work and available resources rather than a fixed number of permanent agent slots.",
@@ -18240,7 +18329,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "SRC-001:L000539-L000568",
-      "SRC-014:L000378-L000748"
+      "SRC-014:L000710-L000748"
     ],
     "source_sequence": 1,
     "statement": "Shared resources shall use holder identity, scope, acquisition time, expiry, renewal, release, and fencing token fields.",
@@ -18306,7 +18395,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "SRC-009:L000022-L000022",
-      "SRC-014:L000378-L000748"
+      "SRC-014:L000488-L000525"
     ],
     "source_sequence": 9,
     "statement": "Work shall be admitted only when CPU, memory, GPU memory, disk, network, process, and concurrency requests can be satisfied safely.",
@@ -18425,7 +18514,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-014:L001548-L001747"
+      "SRC-014:L001548-L001580"
     ],
     "source_sequence": 14,
     "statement": "When critical work is blocked, the scheduler may select bounded productive maintenance only when it does not consume protected capacity or create scope drift.",
@@ -18489,7 +18578,6 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-014:L000378-L000748",
       "SRC-016:L000037-L000220"
     ],
     "source_sequence": 14,
@@ -18600,7 +18688,6 @@
       "PP-EPIC-000019",
       "PP-STORY-000020",
       "PP-TASK-000040",
-      "PP-TASK-000168",
       "PP-TASK-000188"
     ],
     "normative_strength": "SHALL",
@@ -18754,6 +18841,7 @@
       "PP-EPIC-000019",
       "PP-STORY-000020",
       "PP-TASK-000043",
+      "PP-TASK-000168",
       "PP-TASK-000187",
       "PP-TASK-000192",
       "PP-TASK-000340",
@@ -19087,6 +19175,7 @@
     "jira_ids": [
       "PP-EPIC-000019",
       "PP-STORY-000097",
+      "PP-TASK-000168",
       "PP-TASK-000169",
       "PP-TASK-000342",
       "PP-TASK-000349"
@@ -19552,7 +19641,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-015:L000359-L000488",
+      "SRC-015:L000407-L000488",
       "SRC-017:L000009-L000071"
     ],
     "source_sequence": 15,
@@ -19598,7 +19687,6 @@
     "jira_ids": [
       "PP-EPIC-000019",
       "PP-STORY-000098",
-      "PP-TASK-000168",
       "PP-TASK-000345"
     ],
     "normative_strength": "SHALL",
@@ -21565,7 +21653,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "SRC-011:L000001-L000046",
-      "SRC-016:L001691-L001832"
+      "SRC-016:L001691-L001747"
     ],
     "source_sequence": 11,
     "statement": "Later upstream research shall supersede or narrow earlier recommendations only through explicit evolution records; earlier findings shall remain discoverable.",
@@ -22068,7 +22156,7 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "GOV-001:L000872-L000876",
-      "SRC-011:L001212-L001345"
+      "SRC-006:L000057-L000129"
     ],
     "source_sequence": 0,
     "statement": "Adopted external capability shall be wrapped in a stable internal adapter whenever replacement, policy, telemetry, or fallback is required.",
@@ -23001,7 +23089,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-006:L001806-L001929"
+      "SRC-006:L001806-L001884"
     ],
     "source_sequence": 6,
     "statement": "The finance view shall allow cost analysis by task, project phase, provider, agent type, resource, and verified outcome.",
@@ -23635,7 +23723,7 @@
     "schema_version": "2.0.0",
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
-      "SRC-015:L000151-L000488",
+      "SRC-015:L000228-L000488",
       "SRC-015:L001456-L001582"
     ],
     "source_sequence": 15,
@@ -23790,7 +23878,8 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "GOV-001:L000574-L000584",
-      "SRC-002:L000516-L000680"
+      "SRC-002:L000577-L000680",
+      "SRC-016:L001232-L001261"
     ],
     "source_sequence": 0,
     "statement": "Core Command Center workflows shall be keyboard accessible, screen-reader compatible, responsive, and visually verified at supported viewport sizes.",

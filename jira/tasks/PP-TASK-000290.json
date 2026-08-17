@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
         "method": "automated_behavior_validation",
         "path": "src/project_pipeline/upstream_integrations/context.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,14 +17,28 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000003",
+    "EVID-000005",
+    "EVID-000006",
+    "EVID-000017",
+    "EVID-000019",
+    "EVID-000020",
+    "EVID-000083",
+    "EVID-000084",
+    "EVID-000085",
+    "EVID-000086",
+    "EVID-000087",
     "EVID-000088",
     "EVID-000089",
+    "EVID-000090",
+    "EVID-000091",
+    "EVID-000092",
     "EVID-000093",
     "EVID-000094"
   ],
@@ -63,11 +77,13 @@
     "provenance/reviews/UPSTREAM-080_context_source_review.md",
     "provenance/reviews/UPSTREAM-052_context_architecture_adoption.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
+    "bulk-reconciled",
     "context",
     "delegation",
+    "implemented",
     "pass-12"
   ],
   "last_observed_remote_state": {

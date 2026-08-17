@@ -39,6 +39,7 @@ class EligibilityState(StrEnum):
     HUMAN_REQUIRED = "HUMAN_REQUIRED"
     EXTERNAL_BLOCKED = "EXTERNAL_BLOCKED"
     RECONCILIATION_REQUIRED = "RECONCILIATION_REQUIRED"
+    PRODUCT_SCOPE_PAUSED = "PRODUCT_SCOPE_PAUSED"
     POLICY_DENIED = "POLICY_DENIED"
 
 
@@ -94,6 +95,7 @@ class TaskControlFact(DomainModel):
     human_required: bool = False
     external_blocked: bool = False
     reconciliation_required: bool = False
+    product_scope_allowed: bool = True
     expected_duration_minutes: int | None = Field(default=None, ge=1, le=525_600)
     deadline_utc: datetime | None = None
 

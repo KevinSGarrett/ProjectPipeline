@@ -89,6 +89,7 @@ class BuildSequencer:
                     "human_required": item.human_required,
                     "external_blocked": item.external_blocked,
                     "reconciliation_required": item.reconciliation_required,
+                    "product_scope_allowed": item.product_scope_allowed,
                 }
                 for item in self.facts
             ],
@@ -140,7 +141,19 @@ class BuildSequencer:
                 state=EligibilityState.RECONCILIATION_REQUIRED,
                 eligible=False,
                 reasons=(
-                    "all linked requirements are already implemented and evidenced; audit and batch-reconcile this item instead of opening a fresh implementation lane",
+                    "issue-specific artifacts, tests, criteria, or evidence indicate existing "
+                    "delivery; audit and batch-reconcile this item instead of opening a fresh "
+                    "implementation lane",
+                ),
+            )
+        if not fact.product_scope_allowed:
+            return TaskEligibility(
+                task_id=fact.task_id,
+                state=EligibilityState.PRODUCT_SCOPE_PAUSED,
+                eligible=False,
+                reasons=(
+                    "ordinary backlog selection is paused by the product-outcome correction; "
+                    "only the bounded autonomous-runtime critical-path slices may be admitted",
                 ),
             )
         if not fact.accepted or not fact.policy_eligible:

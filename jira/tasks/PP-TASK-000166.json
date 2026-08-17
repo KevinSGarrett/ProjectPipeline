@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "behavior_and_traceability_validation",
         "path": "src/project_pipeline/ports.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,16 +17,42 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
     "EVID-000016",
+    "EVID-000017",
     "EVID-000018",
     "EVID-000019",
-    "EVID-000020"
+    "EVID-000020",
+    "EVID-000075",
+    "EVID-000076",
+    "EVID-000077",
+    "EVID-000078",
+    "EVID-000083",
+    "EVID-000084",
+    "EVID-000085",
+    "EVID-000086",
+    "EVID-000087",
+    "EVID-000095",
+    "EVID-000097",
+    "EVID-000100",
+    "EVID-000101",
+    "EVID-000107",
+    "EVID-000112",
+    "EVID-000113",
+    "EVID-000114",
+    "EVID-000116",
+    "EVID-000121",
+    "EVID-000122",
+    "EVID-000127",
+    "EVID-000128",
+    "EVID-000131",
+    "EVID-000137",
+    "EVID-000143"
   ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
@@ -54,10 +80,12 @@
   "expected_implementation_artifacts": [
     "src/project_pipeline/ports.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "architecture",
+    "bulk-reconciled",
+    "implemented",
     "upstream"
   ],
   "last_observed_remote_state": {

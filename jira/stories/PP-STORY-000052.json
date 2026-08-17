@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,13 +17,14 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
     "EVID-000036",
+    "EVID-000039",
     "EVID-000041",
     "EVID-000042"
   ],
@@ -55,12 +56,14 @@
     "schemas/project_profile_detection.schema.json",
     "src/project_pipeline/intake/profiles.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
+    "bulk-reconciled",
     "capability-story",
+    "cluster-profiles",
     "domain-pdef",
-    "cluster-profiles"
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -121,6 +124,6 @@
     "SRC-007:L000213-L000249"
   ],
   "state": "BACKLOG",
-  "title": "Profiles \u2014 Project Definition and Scope",
+  "title": "Profiles — Project Definition and Scope",
   "upstream_dependencies": []
 }

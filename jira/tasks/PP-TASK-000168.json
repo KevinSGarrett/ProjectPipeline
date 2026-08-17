@@ -86,8 +86,8 @@
   "remote_jira_key": "PP-341",
   "required_tests": [],
   "requirement_ids": [
-    "REQ-SEC-0002",
-    "REQ-SEC-0017"
+    "REQ-SEC-0004",
+    "REQ-SEC-0009"
   ],
   "risk_classification": "HIGH",
   "rollback_recovery_consideration": "Preserve prior valid artifacts and provide deterministic regeneration, adapter replacement, or rollback.",

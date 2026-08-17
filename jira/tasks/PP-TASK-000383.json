@@ -1,0 +1,99 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000383-01",
+      "statement": "A fixture project completes all sixteen required local-real journey behaviors with actual implementation, tests, isolated Git worktrees, independent verification, governed integration, Jira reconciliation, restart/worker loss, HUMAN_REQUIRED partial continuation, Command Center truth, and automatic next selection.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_golden_journey.py",
+        "method": "local_real_product_journey",
+        "path": "tests/integration/autonomy_runtime/test_golden_journey.py",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Real source and tests change in isolated Git worktrees.",
+    "Independent verification and governed integration pass.",
+    "Jira and project state reconcile.",
+    "Restart, worker loss, incident, unaffected continuation, UI truth, and next selection are observed."
+  ],
+  "dependencies": [
+    "PP-TASK-000382"
+  ],
+  "description": "Build and run the local-real product-level golden journey. Component calls executed sequentially, mocked remote-only behavior, or generated evidence are insufficient by themselves.",
+  "evidence_required": [],
+  "exclusions": [
+    "No component-composition-only qualification.",
+    "No mock-only or generated-record substitution."
+  ],
+  "expected_file_locations": [
+    "fixtures/autonomy_runtime/golden_project",
+    "tests/integration/autonomy_runtime/test_golden_journey.py",
+    "evidence/autonomy_runtime/golden_journey"
+  ],
+  "expected_implementation_artifacts": [
+    "fixtures/autonomy_runtime/golden_project",
+    "tests/integration/autonomy_runtime/test_golden_journey.py"
+  ],
+  "implementation_state": "PLANNED_ONLY",
+  "issue_type": "TASK",
+  "labels": [
+    "autonomy-runtime",
+    "golden-journey",
+    "local-real",
+    "cohesive-slice"
+  ],
+  "last_observed_remote_state": null,
+  "local_id": "PP-TASK-000383",
+  "objective": "Prove the complete local-real autonomous project journey",
+  "observability_impact": "Preserves evidence for every material operation and exposes truthful live journey state.",
+  "owner_required_capability": "integrated_product_qualification",
+  "parent": "PP-STORY-000141",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
+      "end_line": 29,
+      "line_numbered_path": "plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt",
+      "line_reference": "PLAN-CTRL-003:SEC-04:L000024-L000029",
+      "plan_id": "PLAN-CTRL-003",
+      "section_id": "PLAN-CTRL-003:SEC-04",
+      "start_line": 24
+    }
+  ],
+  "rationale": "This is the first product-level proof rather than another component simulation.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000141",
+      "type": "CHILD_OF"
+    },
+    {
+      "target": "PP-TASK-000382",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "target": "PP-TASK-000384",
+      "type": "BLOCKS"
+    }
+  ],
+  "remote_jira_key": null,
+  "required_tests": [],
+  "requirement_ids": [
+    "REQ-PDEF-0011"
+  ],
+  "risk_classification": "CRITICAL",
+  "rollback_recovery_consideration": "Use disposable fixture targets and preserve failed-run evidence and checkpoints.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Complete local-real golden journey"
+  ],
+  "security_impact": "Runs isolated, capability-scoped fixtures with no production credentials.",
+  "source_references": [
+    "SRC-014:L000001-L000086",
+    "SRC-015:L000001-L000112"
+  ],
+  "state": "BACKLOG",
+  "title": "Prove the complete local-real autonomous project journey",
+  "upstream_dependencies": []
+}

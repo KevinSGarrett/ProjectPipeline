@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -53,13 +53,15 @@
   "expected_implementation_artifacts": [
     "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "architecture-decision",
+    "bulk-reconciled",
     "capability-story",
     "cluster-profiles",
-    "domain-arch"
+    "domain-arch",
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -110,6 +112,6 @@
     "SRC-009:L000075-L000087"
   ],
   "state": "BACKLOG",
-  "title": "Profiles \u2014 System Architecture",
+  "title": "Profiles — System Architecture",
   "upstream_dependencies": []
 }

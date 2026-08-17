@@ -1,18 +1,19 @@
 {
   "counts_by_state": {
-    "BACKLOG": 370,
+    "BACKLOG": 380,
+    "IN_PROGRESS": 3,
     "MERGE_READY": 8
   },
   "counts_by_type": {
     "BUG": 0,
-    "EPIC": 18,
+    "EPIC": 19,
     "SPIKE": 0,
-    "STORY": 107,
+    "STORY": 113,
     "SUBTASK": 16,
-    "TASK": 237
+    "TASK": 243
   },
-  "edge_count": 849,
-  "issue_count": 378,
-  "requirements_referenced": 351,
+  "edge_count": 888,
+  "issue_count": 391,
+  "requirements_referenced": 352,
   "schema_version": "1.0.0"
 }

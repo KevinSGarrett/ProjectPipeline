@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import Any
 
 from project_pipeline.domain.assurance import (
     CandidateCompletionAssessment,
@@ -26,12 +27,25 @@ _COMPLETE = {
     ImplementationState.BLOCKED_EXTERNAL.value,
 }
 
+_AUTONOMOUS_RUNTIME_EVIDENCE_ENVIRONMENTS = {
+    "deterministic_unit_and_contract",
+    "local_real_integrated_journey",
+    "isolated_real_git_worktree_journey",
+    "authorized_github_jira_sandbox_or_live",
+    "qualified_real_worker_provider_dispatch",
+    "windows_service_and_command_center",
+    "recovery_and_restart",
+    "unattended_24_hour",
+    "unattended_72_hour",
+    "released_post_release_completion_gate",
+}
+
 QUESTIONS: tuple[str, ...] = (
     "Are all source-derived requirements dispositioned?",
     "Are all accepted requirements implemented or explicitly externally blocked?",
     "Are all implementation artifacts traceable?",
     "Are all critical paths tested?",
-    "Do the golden journeys pass?",
+    "Does the integrated autonomous operating-loop journey pass every qualification stage?",
     "Are security gates satisfied?",
     "Are resilience/recovery expectations verified?",
     "Is deployment reproducible?",
@@ -120,7 +134,7 @@ def evaluate_completion_gate(facts: CompletionGateFacts) -> CompletionGateDecisi
         facts.accepted_requirements_complete_or_external,
         facts.implementation_traceability_complete,
         facts.critical_paths_tested,
-        facts.golden_journeys_pass,
+        facts.golden_journeys_pass and facts.autonomous_runtime_qualified,
         facts.security_gates_satisfied,
         facts.resilience_verified,
         facts.deployment_reproducible,
@@ -220,6 +234,26 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         )
     )
     golden = bool(golden_evidence)
+    core_requirement = next(
+        (item for item in requirements if item.get("requirement_id") == "REQ-PDEF-0011"),
+        None,
+    )
+    core_evidence_ids = set(core_requirement.get("evidence_ids", [])) if core_requirement else set()
+    runtime_evidence = tuple(
+        item
+        for item in evidence_rows
+        if item.get("evidence_id") in core_evidence_ids
+        and item.get("result") == "PASS"
+        and item.get("verification_status") == "VERIFIED"
+    )
+    runtime_environments = {str(item.get("environment")) for item in runtime_evidence}
+    missing_runtime_environments = sorted(
+        _AUTONOMOUS_RUNTIME_EVIDENCE_ENVIRONMENTS - runtime_environments
+    )
+    autonomous_runtime_qualified = core_requirement is not None and (
+        core_requirement.get("implementation_state") == ImplementationState.LIVE_VERIFIED.value
+        and not missing_runtime_environments
+    )
     sec = [item for item in accepted if item.get("domain") == "SEC"]
     security = bool(sec) and all(
         item.get("implementation_state") in _COMPLETE and item.get("evidence_ids") for item in sec
@@ -258,7 +292,7 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         not (item.get("state") == "DONE" and not item.get("completion_evidence")) for item in issues
     )
     gaps = int(traceability.get("unexplained_gap_count", traceability.get("gap_count", 0)))
-    reasons = {
+    reasons: dict[str, tuple[str, ...]] = {
         "1": (f"{len(requirements)} requirements inspected",),
         "2": (
             f"{sum(item.get('implementation_state') not in _COMPLETE for item in accepted)} accepted requirements remain incomplete",
@@ -271,10 +305,13 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         if not critical_tested
         else ("critical requirement set has test/evidence mappings",),
         "5": (
-            "golden-journey verified evidence is not yet present; execution belongs to the next verification harness phase",
+            "integrated autonomous-runtime qualification is incomplete; missing verified stages: "
+            + ", ".join(missing_runtime_environments),
         )
-        if not golden
-        else ("verified golden-journey evidence is present",),
+        if not autonomous_runtime_qualified
+        else (
+            "the integrated autonomous runtime has verified evidence for every required qualification stage",
+        ),
         "13": ("Command Center requirements are not yet complete",)
         if not command_center
         else ("Command Center requirements are complete",),
@@ -293,6 +330,8 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         "issues": [(i["local_id"], i.get("state"), i.get("implementation_state")) for i in issues],
         "gaps": gaps,
         "golden": golden,
+        "autonomous_runtime_qualified": autonomous_runtime_qualified,
+        "autonomous_runtime_environments": sorted(runtime_environments),
         "rollback": rollback,
     }
     return CompletionGateFacts(
@@ -302,6 +341,7 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         implementation_traceability_complete=traceable,
         critical_paths_tested=critical_tested,
         golden_journeys_pass=golden,
+        autonomous_runtime_qualified=autonomous_runtime_qualified,
         security_gates_satisfied=security,
         resilience_verified=resilience,
         deployment_reproducible=deployment,
@@ -322,7 +362,11 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
                     }
                 )
             ),
-            "5": golden_evidence,
+            "5": tuple(
+                sorted(
+                    set(golden_evidence) | {str(item["evidence_id"]) for item in runtime_evidence}
+                )
+            ),
             "6": tuple(
                 sorted(
                     {evidence_id for item in sec for evidence_id in item.get("evidence_ids", [])}
@@ -344,8 +388,8 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
     )
 
 
-def _evidence_rows(root: Path) -> tuple[dict, ...]:
-    rows = []
+def _evidence_rows(root: Path) -> tuple[dict[str, Any], ...]:
+    rows: list[dict[str, Any]] = []
     path = root / "evidence/EVIDENCE_LEDGER.jsonl"
     if path.exists():
         for line in path.read_text(encoding="utf-8").splitlines():

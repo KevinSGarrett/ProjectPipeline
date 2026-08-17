@@ -1,10 +1,10 @@
 {
   "by_authority": {
     "REQUIRED_IMPLEMENTATION_DETAIL": 4,
-    "SOURCE_DERIVED": 347
+    "SOURCE_DERIVED": 348
   },
   "by_disposition": {
-    "ACCEPTED": 351
+    "ACCEPTED": 352
   },
   "by_domain": {
     "AGENT": 19,
@@ -17,7 +17,7 @@
     "INFRA": 19,
     "LIFE": 18,
     "OPS": 19,
-    "PDEF": 10,
+    "PDEF": 11,
     "REL": 14,
     "REQ": 17,
     "RES": 25,
@@ -27,20 +27,20 @@
     "UX": 26
   },
   "by_priority": {
-    "P0": 237,
+    "P0": 238,
     "P1": 109,
     "P2": 5
   },
   "by_state": {
-    "IMPLEMENTED": 186,
-    "PARTIALLY_IMPLEMENTED": 136,
-    "PLANNED_ONLY": 29
+    "IMPLEMENTED": 185,
+    "PARTIALLY_IMPLEMENTED": 137,
+    "PLANNED_ONLY": 30
   },
   "by_type": {
     "architecture": 5,
     "completion": 2,
     "constraint": 5,
-    "functional": 302,
+    "functional": 303,
     "governance": 8,
     "observability": 2,
     "operational": 6,
@@ -48,6 +48,6 @@
     "security": 13,
     "testing": 3
   },
-  "requirement_count": 351,
+  "requirement_count": 352,
   "schema_version": "1.0.0"
 }

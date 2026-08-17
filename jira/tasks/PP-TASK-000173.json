@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "behavior_and_traceability_validation",
         "path": "provenance/license_policy.json",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,15 +17,27 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000003",
+    "EVID-000005",
+    "EVID-000006",
     "EVID-000017",
     "EVID-000019",
-    "EVID-000020"
+    "EVID-000020",
+    "EVID-000075",
+    "EVID-000076",
+    "EVID-000077",
+    "EVID-000078",
+    "EVID-000083",
+    "EVID-000084",
+    "EVID-000085",
+    "EVID-000086",
+    "EVID-000087"
   ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
@@ -56,9 +68,11 @@
     "provenance/dependency_policy.json",
     "third_party/NOTICES.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
+    "bulk-reconciled",
+    "implemented",
     "platform",
     "upstream"
   ],

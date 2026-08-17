@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 492,
+  "test_count": 506,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -2461,6 +2461,76 @@
       "callable": "test_verification_foundation_is_registered",
       "path": "tests/test_verification_validation.py",
       "test_id": "TEST-VERIFY-VALIDATION-001"
+    },
+    {
+      "callable": "test_repaired_product_outcome_contract_is_fail_closed_and_valid",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-001"
+    },
+    {
+      "callable": "test_previous_missing_outcome_and_broad_intake_coverage_fail",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-002"
+    },
+    {
+      "callable": "test_command_center_director_chat_cannot_qualify_persistent_director",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-003"
+    },
+    {
+      "callable": "test_user_intent_context_cannot_silently_remove_operator_outcome",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-004"
+    },
+    {
+      "callable": "test_outcome_requires_cohesive_epic_and_local_real_journey",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-005"
+    },
+    {
+      "callable": "test_local_or_mock_evidence_cannot_qualify_product_outcome",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-006"
+    },
+    {
+      "callable": "test_implemented_requirement_with_only_planned_jira_requires_finding",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-007"
+    },
+    {
+      "callable": "test_plan_catalog_must_match_authoritative_plan_status",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-008"
+    },
+    {
+      "callable": "test_jira_source_database_views_and_remote_readback_align",
+      "path": "tests/test_jira_operational_alignment.py",
+      "test_id": "TEST-JIRA-ALIGN-001"
+    },
+    {
+      "callable": "test_jira_database_state_drift_fails_closed",
+      "path": "tests/test_jira_operational_alignment.py",
+      "test_id": "TEST-JIRA-ALIGN-002"
+    },
+    {
+      "callable": "test_jira_generated_projection_drift_fails_closed",
+      "path": "tests/test_jira_operational_alignment.py",
+      "test_id": "TEST-JIRA-ALIGN-003"
+    },
+    {
+      "callable": "test_jira_remote_observation_must_match_its_cited_snapshot",
+      "path": "tests/test_jira_operational_alignment.py",
+      "test_id": "TEST-JIRA-ALIGN-004"
+    },
+    {
+      "callable": "test_component_golden_journeys_cannot_replace_autonomous_runtime_qualification",
+      "path": "tests/test_assurance_completion.py",
+      "test_id": "TEST-ASSURE-RUNTIME-GATE-001"
+    },
+    {
+      "callable": "test_issue_with_complete_requirements_but_incomplete_issue_proof_is_quarantined",
+      "path": "tests/test_control_kernel.py",
+      "test_id": "TEST-CONTROL-RECONCILIATION-001"
     }
   ]
 }

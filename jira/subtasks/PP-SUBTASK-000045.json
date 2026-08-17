@@ -7,14 +7,17 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "unit_and_contract_test",
         "path": "src/project_pipeline/manifest.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
     "EVID-000005",
-    "EVID-000006"
+    "EVID-000006",
+    "EVID-000108",
+    "EVID-000112",
+    "EVID-000113"
   ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
@@ -41,10 +44,12 @@
     "src/project_pipeline/manifest.py",
     "src/project_pipeline/repository_map.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "SUBTASK",
   "labels": [
+    "bulk-reconciled",
     "foundation",
+    "implemented",
     "verification"
   ],
   "last_observed_remote_state": {

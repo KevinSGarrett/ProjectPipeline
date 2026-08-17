@@ -21,6 +21,7 @@ def facts(**overrides):
         implementation_traceability_complete=True,
         critical_paths_tested=True,
         golden_journeys_pass=True,
+        autonomous_runtime_qualified=True,
         security_gates_satisfied=True,
         resilience_verified=True,
         deployment_reproducible=True,
@@ -83,6 +84,14 @@ def test_single_failure_prevents_complete_and_localizes_rework():
     assert decision.failures[0].rework_route == "completion.question.5"
 
 
+def test_component_golden_journeys_cannot_replace_autonomous_runtime_qualification():
+    decision = evaluate_completion_gate(facts(autonomous_runtime_qualified=False))
+    assert decision.state is GateState.NOT_COMPLETE
+    assert decision.final_complete is False
+    question = next(item for item in decision.questions if item.question_number == 5)
+    assert question.passed is False
+
+
 def test_only_external_blockers_yield_blocked_external_not_complete():
     decision = evaluate_completion_gate(
         facts(deployment_reproducible=False, externally_blocked_question_numbers=(8,))
@@ -97,7 +106,7 @@ def test_current_repository_cannot_self_certify_complete_before_later_passes():
     assert decision.state is GateState.NOT_COMPLETE
     assert decision.final_complete is False
     failed = {q.question_number for q in decision.questions if not q.passed}
-    assert 5 not in failed  # Pass 16 now supplies verified golden-journey evidence.
+    assert 5 in failed
     golden = next(q for q in decision.questions if q.question_number == 5)
     assert "EVID-000116" in golden.evidence_ids
     assert 13 in failed  # Command Center remains later in the schedule.

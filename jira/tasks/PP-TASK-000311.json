@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_budget_*.py",
         "method": "automated_behavior_validation",
         "path": "src/project_pipeline/domain/budget.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -25,7 +25,6 @@
   "completion_evidence": [
     "EVID-000102",
     "EVID-000103",
-    "EVID-000104",
     "EVID-000105",
     "EVID-000106"
   ],
@@ -57,11 +56,13 @@
     "src/project_pipeline/domain/budget.py",
     "src/project_pipeline/budget/persistence.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "budget",
+    "bulk-reconciled",
     "cost-governance",
+    "implemented",
     "pass-14"
   ],
   "last_observed_remote_state": {
