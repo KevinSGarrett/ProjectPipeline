@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "ad891c2676e7d27162c936b471ad8f15248b8de2c5035a3346721bb21d109f26",
+  "aggregate_sha256": "f54f3768c2965c3bba101514e33efa5f4c608cd797a6643c6caadfd2a6dac080",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11612,8 +11612,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "9ab145a50de0c2d6521fcd8fdcff2aaca88fbb865d7ef6695f25d52314d2f791",
-      "size_bytes": 157401
+      "sha256": "160721264412a7550ed34f052dda49a8c5f62a91e0f86d6fec1058fe6048a52e",
+      "size_bytes": 157359
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12137,8 +12137,8 @@
     },
     {
       "path": "src/project_pipeline/jira_steward/sync_guard.py",
-      "sha256": "f6eefa2d33b5862eeb4f1f7152063656ff3fac56a7048b56e99f26250ea30cf8",
-      "size_bytes": 3406
+      "sha256": "4ac15c997d2ee414b22f7e607453d7f0222ff86be4ec9ef3e42e64ed96122aa9",
+      "size_bytes": 3428
     },
     {
       "path": "src/project_pipeline/jira_steward/validation.py",
@@ -12147,8 +12147,8 @@
     },
     {
       "path": "src/project_pipeline/lifecycle/__init__.py",
-      "sha256": "d4109116ef0d259ac81f58bf66485ce3502a391850d8f23a412a0e62048b9d22",
-      "size_bytes": 2421
+      "sha256": "309179616933100c5142d9f11b840e5117080fbe6042dd49c77c98913c58bc22",
+      "size_bytes": 3352
     },
     {
       "path": "src/project_pipeline/lifecycle/adoption.py",
@@ -12197,8 +12197,8 @@
     },
     {
       "path": "src/project_pipeline/lifecycle/takeover.py",
-      "sha256": "f22bd0a682fbdbf6856168f8552ddf1c2c39120690ae29ece81fdb58cedb1b0e",
-      "size_bytes": 14348
+      "sha256": "05e5349ac1aa1b8fc013854f2936a966d17e5620a3b40a623544de430de3d8a5",
+      "size_bytes": 14321
     },
     {
       "path": "src/project_pipeline/lifecycle/validation.py",
@@ -13616,7 +13616,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T23:11:45.927815+00:00",
+  "generated_at_utc": "2026-08-17T02:01:20.709073+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13625,5 +13625,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 23198216
+  "total_bytes": 23199100
 }
