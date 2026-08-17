@@ -1,3 +1,4 @@
+from project_pipeline.autonomy_runtime.golden import GoldenJourneyHarness, validate_evidence_map
 from project_pipeline.autonomy_runtime.lanes import LaneIncident, LaneLease, LaneRegistry
 from project_pipeline.autonomy_runtime.recovery import (
     DurableRecoveryService,
@@ -11,10 +12,12 @@ __all__ = [
     "AutonomyRuntimeService",
     "DispatchReceipt",
     "DurableRecoveryService",
+    "GoldenJourneyHarness",
     "LaneIncident",
     "LaneLease",
     "LaneRegistry",
     "PersistentSupervisor",
     "RecoveryIncident",
     "recover_lane_loss",
+    "validate_evidence_map",
 ]

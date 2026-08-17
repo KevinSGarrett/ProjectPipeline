@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "project_id": "GOLDEN-FIXTURE",
+  "tasks": [
+    {
+      "task_id": "PP-GOLDEN-001",
+      "title": "Implement greet()",
+      "implemented": false
+    },
+    {
+      "task_id": "PP-GOLDEN-002",
+      "title": "Implement farewell()",
+      "implemented": false
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "fc05686669f975715a5239dbca01f10507d6bbfb500935c9a43e1cc56924484c",
+  "aggregate_sha256": "964939436e4cdd3915f31ee2337a63d2b3193b6e4c9cd33b2279be639ff56f09",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2754,
+  "file_count": 2762,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -4656,14 +4656,44 @@
       "size_bytes": 65
     },
     {
+      "path": "fixtures/autonomy_runtime/golden_project/pytest.ini",
+      "sha256": "07e12af78809b103a9e003b9bf24f9718928fa263046b37bf3ebc9ebbf802ceb",
+      "size_bytes": 24
+    },
+    {
       "path": "fixtures/autonomy_runtime/golden_project/README.md",
-      "sha256": "eaf23ee8925b103efda16b346976d0c25cdfd9bde6a0f53415b24950a56dc28b",
-      "size_bytes": 264
+      "sha256": "2ea76fc5d09466fa107f457953abb6809b690102e49b88bf99f3997dba977333",
+      "size_bytes": 240
+    },
+    {
+      "path": "fixtures/autonomy_runtime/golden_project/src/__init__.py",
+      "sha256": "5f1bcb9c5a222bc411fe8e680f2f48593467f8352bcbc7ec050c08bcaa03fe46",
+      "size_bytes": 42
     },
     {
       "path": "fixtures/autonomy_runtime/golden_project/src/app.py",
       "sha256": "3606f2b1667e02bc5737cdba250b094a46162bcd0364fca6c805f9b106ac7eb3",
       "size_bytes": 62
+    },
+    {
+      "path": "fixtures/autonomy_runtime/golden_project/tasks.json",
+      "sha256": "195d3d0510f3d1bc234eaf1cdc6ec7613550fc790b5c9086cd0c9777269fb816",
+      "size_bytes": 306
+    },
+    {
+      "path": "fixtures/autonomy_runtime/golden_project/tests/test_app.py",
+      "sha256": "452a696c580fa76e712833ec68abdc83cb9d7e6c8268c9336105c28dd91c8936",
+      "size_bytes": 123
+    },
+    {
+      "path": "fixtures/autonomy_runtime/golden_project/verifier.py",
+      "sha256": "d96646eebb3b5df365c5189934e5ad91ca69041039218ef9a015e21353706371",
+      "size_bytes": 1061
+    },
+    {
+      "path": "fixtures/autonomy_runtime/golden_project/worker.py",
+      "sha256": "7f5132727450567f7d0e821a824f26bbd785da9a9b9dc754c8c79c6569cdc713",
+      "size_bytes": 2281
     },
     {
       "path": "fixtures/context/sample_candidates.json",
@@ -11692,8 +11722,13 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/__init__.py",
-      "sha256": "94a1e3da16c833a8b2f6fb87bc7b75ed743d9c875ed1d593f62c8b8a4ebec508",
-      "size_bytes": 626
+      "sha256": "76de11a7b5febf5eb086f7642ec396d3bca12817920019f2b34e007d569f4fb5",
+      "size_bytes": 780
+    },
+    {
+      "path": "src/project_pipeline/autonomy_runtime/golden.py",
+      "sha256": "75db783a4ceb3aa0eafab00fd66946ac80a65f0e820556484f9526153ed340d4",
+      "size_bytes": 20794
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/lanes.py",
@@ -12912,8 +12947,13 @@
     },
     {
       "path": "tests/integration/autonomy_runtime/test_golden_journey.py",
-      "sha256": "39363609be2df0f625a6aee3823feaf4875ca7f59bfcd5b3abaa0e1697a97737",
-      "size_bytes": 4971
+      "sha256": "b364f482de12736a4f674ee347bde2045c450edfd2fd5d3d7f76336b29ead716",
+      "size_bytes": 1536
+    },
+    {
+      "path": "tests/integration/autonomy_runtime/test_golden_journey_failures.py",
+      "sha256": "6b76835a2bd8b702b797fe103fa7b9c6a8d009e0d44bc0861678f2333b16006e",
+      "size_bytes": 6356
     },
     {
       "path": "tests/integration/autonomy_runtime/test_parallel_recovery.py",
@@ -13781,7 +13821,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T15:16:44.004073+00:00",
+  "generated_at_utc": "2026-08-17T15:28:02.673723+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13790,5 +13830,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24201181
+  "total_bytes": 24228863
 }
