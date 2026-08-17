@@ -196,6 +196,8 @@ from project_pipeline.resilience import (
     BackupPlanner,
     LocalModelGateway,
     ResilienceStore,
+    RestoreIntentStore,
+    RestoreTargetPolicy,
     load_local_runtimes,
     load_recovery_objectives,
 )
@@ -206,6 +208,7 @@ from project_pipeline.resilience import (
     supported_scenarios as supported_resilience_scenarios,
 )
 from project_pipeline.resilience.aws import aws_safety_plan
+from project_pipeline.resilience.backup import build_integrity_manifest
 from project_pipeline.runtime import run_bootstrap, run_foundation_smoke
 from project_pipeline.scheduler import (
     DynamicLaneScheduler,
@@ -943,6 +946,11 @@ def build_parser() -> argparse.ArgumentParser:
             "local-runtime",
             "backup-plan",
             "restore-plan",
+            "restore-intent",
+            "restore-dry-run",
+            "restore-apply",
+            "restore-verify",
+            "restore-reconcile",
             "aws-plan",
         ),
     )
@@ -953,8 +961,14 @@ def build_parser() -> argparse.ArgumentParser:
     resilience.add_argument("--source")
     resilience.add_argument("--repository", default=".local/backups")
     resilience.add_argument("--target")
+    resilience.add_argument("--allow-root", type=Path)
+    resilience.add_argument("--intent-id")
+    resilience.add_argument("--idempotency-key")
+    resilience.add_argument("--manifest", type=Path)
     resilience.add_argument("--capability", action="append", default=[])
     resilience.add_argument("--json-output", type=Path)
+    resilience.add_argument("--apply", action="store_true")
+    resilience.add_argument("--approve", action="store_true")
     _add_configuration_arguments(resilience)
 
     upstream = commands.add_parser("upstream", help="Query upstream review and adoption records")
@@ -3458,6 +3472,67 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
     raise ConfigurationError(f"unsupported security action: {args.action}")
 
 
+def _run_restore_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    if args.allow_root is None:
+        raise ConfigurationError("restore mutation commands require --allow-root")
+    allow = Path(args.allow_root).resolve()
+    policy = RestoreTargetPolicy([allow], workspace_roots=[Path(args.root).resolve()])
+    database = (
+        Path(args.database).resolve()
+        if args.database is not None
+        else (allow / "restore-intents.sqlite3")
+    )
+    store = RestoreIntentStore(database)
+    try:
+        if args.action == "restore-intent":
+            target = policy.resolve(str(_require_argument(args, "target")))
+            key = str(args.idempotency_key or "").strip()
+            if not key:
+                raise ConfigurationError("restore-intent requires --idempotency-key")
+            manifest_sha = "0" * 64
+            if args.manifest is not None:
+                payload = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
+                if "aggregate_sha256" in payload:
+                    manifest_sha = str(payload["aggregate_sha256"])
+                else:
+                    manifest_sha = str(
+                        build_integrity_manifest(payload["entries"])["aggregate_sha256"]
+                    )
+            return {
+                "restore_intent": store.record_intent(
+                    idempotency_key=key,
+                    domain=str(_require_argument(args, "domain")),
+                    target=target,
+                    manifest_sha256=manifest_sha,
+                )
+            }, 0
+        intent_id = str(args.intent_id or "").strip()
+        if not intent_id:
+            raise ConfigurationError(f"{args.action} requires --intent-id")
+        if args.action == "restore-dry-run":
+            return {"restore_intent": store.dry_run(intent_id, policy)}, 0
+        if args.action == "restore-apply":
+            if not args.apply or not args.approve:
+                raise ConfigurationError("restore-apply requires --apply --approve")
+            source = Path(str(_require_argument(args, "source")))
+            return {
+                "restore_intent": store.apply(intent_id, source=source, policy=policy, approve=True)
+            }, 0
+        if args.action == "restore-verify":
+            if args.manifest is None:
+                raise ConfigurationError("restore-verify requires --manifest")
+            payload = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
+            manifest = (
+                payload
+                if "entries" in payload and "aggregate_sha256" in payload
+                else build_integrity_manifest(payload["entries"])
+            )
+            return {"restore_intent": store.verify(intent_id, manifest, policy)}, 0
+        return {"restore_intent": store.reconcile(intent_id)}, 0
+    finally:
+        store.close()
+
+
 def _resilience_database(args: argparse.Namespace) -> Path | str:
     if args.database is not None:
         return (
@@ -3507,6 +3582,14 @@ def _run_resilience_command(args: argparse.Namespace) -> tuple[dict[str, Any], i
                 isolated_target=str(_require_argument(args, "target")),
             )
         }, 0
+    if args.action in {
+        "restore-intent",
+        "restore-dry-run",
+        "restore-apply",
+        "restore-verify",
+        "restore-reconcile",
+    }:
+        return _run_restore_command(args)
     if args.action == "aws-plan":
         return {"aws_plan": aws_safety_plan(args.root)}, 0
     if args.action == "status":

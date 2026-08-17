@@ -149,7 +149,8 @@ def test_aws_budget_circuit_breaker_source_is_fail_closed_and_independent():
     assert 'action_type        = "APPLY_IAM_POLICY"' in main
     assert 'approval_model     = "AUTOMATIC"' in main
     assert "action_threshold_value = 100" in main
-    assert "default = false" in variables and "enable_budget_circuit_breaker" in variables
+    assert "enable_budget_circuit_breaker" in variables
+    assert "default     = false" in variables or "default = false" in variables
     assert "precondition {" in main and "budget_guardrail_policy_arn" in main
 
 
