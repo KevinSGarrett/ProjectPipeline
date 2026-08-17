@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
@@ -86,8 +86,8 @@ def run_adapter_qualification(
     contract: ExecutionTaskContract | None = None,
     now: datetime | None = None,
 ) -> AdapterQualificationReport:
-    subject_id = subject_id or getattr(adapter, "adapter_id", "adapter:unknown")
-    subject_version = subject_version or getattr(adapter, "adapter_version", "0")
+    resolved_subject_id = str(subject_id or getattr(adapter, "adapter_id", "adapter:unknown"))
+    resolved_subject_version = str(subject_version or getattr(adapter, "adapter_version", "0"))
     contract = contract or ExecutionTaskContract(
         task_id="QUAL-PROBE",
         task_class="qualification",
@@ -96,12 +96,14 @@ def run_adapter_qualification(
     )
     checks: list[QualificationCheckResult] = []
 
-    def _check(name: str, fn) -> None:
+    def _check(name: str, fn: Callable[[], tuple[object, object]]) -> None:
         try:
             passed, detail = fn()
         except Exception as error:
             passed, detail = False, str(error)
-        checks.append(QualificationCheckResult(check_name=name, passed=bool(passed), detail=detail))
+        checks.append(
+            QualificationCheckResult(check_name=name, passed=bool(passed), detail=str(detail))
+        )
 
     _check("health", lambda: (bool(adapter.health().get("configured", True)), "health"))
     _check(
@@ -122,7 +124,11 @@ def run_adapter_qualification(
     _check("checkpoint", lambda: ("operation_id" in adapter.checkpoint("qual-op"), "checkpoint"))
     _check("context_acknowledgement", lambda: (bool(contract.instructions), "context"))
     return qualification_report(
-        subject_id, subject_version, checks, rollback_ready=rollback_ready, when=now
+        resolved_subject_id,
+        resolved_subject_version,
+        checks,
+        rollback_ready=rollback_ready,
+        when=now,
     )
 
 

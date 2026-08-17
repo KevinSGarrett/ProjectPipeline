@@ -8,7 +8,7 @@ import urllib.error
 import urllib.request
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any, Protocol
+from typing import Any, Protocol, cast
 
 from project_pipeline.domain.agents import (
     ExecutionTaskContract,
@@ -594,7 +594,7 @@ def build_adapter(adapter_id: str, **kwargs: Any) -> ProviderAdapter:
     factory = factories.get(adapter_id)
     if factory is None:
         raise ValueError(f"unknown adapter: {adapter_id}")
-    return factory(**kwargs)
+    return cast(ProviderAdapter, factory(**kwargs))
 
 
 class ToolAdapter(Protocol):

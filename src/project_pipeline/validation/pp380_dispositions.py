@@ -66,6 +66,10 @@ def _sha256_bytes(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
+def _canonical_source_bytes(payload: bytes) -> bytes:
+    return payload.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+
+
 def _sha256_text(payload: str) -> str:
     return _sha256_bytes(payload.encode("utf-8"))
 
@@ -352,8 +356,8 @@ def generate_pp380_corrected_dispositions(
     repo_root = repo_root.resolve()
     source_ledger_path = source_ledger_path.resolve()
     source_map_path = source_map_path.resolve()
-    source_ledger_bytes = source_ledger_path.read_bytes()
-    source_map_bytes = source_map_path.read_bytes()
+    source_ledger_bytes = _canonical_source_bytes(source_ledger_path.read_bytes())
+    source_map_bytes = _canonical_source_bytes(source_map_path.read_bytes())
     ledger = json.loads(source_ledger_bytes.decode("utf-8"))
     source_map = json.loads(source_map_bytes.decode("utf-8"))
     ledger_rows = ledger.get("rows")
@@ -676,8 +680,8 @@ def validate_pp380_corrected_dispositions(
     if not map_path.is_file():
         errors.append(f"source map is absent: {map_rel}")
         return errors
-    source_ledger_bytes = ledger_path.read_bytes()
-    source_map_bytes = map_path.read_bytes()
+    source_ledger_bytes = _canonical_source_bytes(ledger_path.read_bytes())
+    source_map_bytes = _canonical_source_bytes(map_path.read_bytes())
     actual_ledger_hash = _sha256_bytes(source_ledger_bytes)
     actual_map_hash = _sha256_bytes(source_map_bytes)
     if generation_proof.get("source_ledger_sha256") != actual_ledger_hash:

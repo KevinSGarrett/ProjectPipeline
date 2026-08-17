@@ -310,6 +310,54 @@ def test_unrelated_completed_items_do_not_form_a_reconciliation_batch(tmp_path: 
     assert len(decision.lifecycle_only_task_ids) == 3
 
 
+def test_catalog_requirement_progress_with_tests_allows_accompanying_jira_truth(
+    tmp_path: Path,
+) -> None:
+    root, base = _repository(tmp_path)
+    catalog = root / "plans" / "_traceability" / "requirements.jsonl"
+    catalog.parent.mkdir(parents=True, exist_ok=True)
+    catalog.write_text(
+        json.dumps(
+            {
+                "requirement_id": "REQ-ASSURE-0008",
+                "implementation_state": "PLANNED_ONLY",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "establish planned requirement")
+    base = _git(root, "rev-parse", "HEAD")
+    _write_json(
+        root / "jira" / "tasks" / "PP-TASK-000001.json",
+        _issue("PP-TASK-000001", complete=True),
+    )
+    source = root / "src" / "project_pipeline" / "runtime.py"
+    test = root / "tests" / "test_runtime.py"
+    source.parent.mkdir(parents=True, exist_ok=True)
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    test.write_text("def test_runtime():\n    assert 1 == 1\n", encoding="utf-8")
+    catalog.write_text(
+        json.dumps(
+            {
+                "requirement_id": "REQ-ASSURE-0008",
+                "implementation_state": "IMPLEMENTED",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "implement requirement and update Jira truth")
+
+    decision = evaluate_delivery_gate(root, base_ref=base)
+
+    assert decision.state is DeliveryGateState.PASS
+    assert decision.objective_progress_units >= 1
+    assert decision.lifecycle_only_task_ids == ("PP-TASK-000001",)
+
+
 def test_implementation_and_test_change_is_objective_progress(tmp_path: Path) -> None:
     root, base = _repository(tmp_path)
     source = root / "src" / "project_pipeline" / "feature.py"

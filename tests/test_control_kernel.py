@@ -109,21 +109,22 @@ def test_repeated_unchanged_evaluation_has_same_semantic_snapshot_id(tmp_path: P
 
 
 def test_already_implemented_work_requires_reconciliation_not_new_implementation() -> None:
-    fact = TaskControlFact(
-        task_id="PP-TASK-000001",
-        project_id="PROJECT-PIPELINE",
-        state=TaskLifecycleState.BACKLOG,
-        priority="P1",
-        risk="MEDIUM",
-        requirement_ids=("REQ-ASSURE-0008",),
-        reconciliation_required=True,
-    )
+    for lifecycle in (TaskLifecycleState.BACKLOG, TaskLifecycleState.IN_PROGRESS):
+        fact = TaskControlFact(
+            task_id="PP-TASK-000001",
+            project_id="PROJECT-PIPELINE",
+            state=lifecycle,
+            priority="P1",
+            risk="MEDIUM",
+            requirement_ids=("REQ-ASSURE-0008",),
+            reconciliation_required=True,
+        )
 
-    decision = BuildSequencer((fact,)).eligibility(fact)
+        decision = BuildSequencer((fact,)).eligibility(fact)
 
-    assert decision.state is EligibilityState.RECONCILIATION_REQUIRED
-    assert not decision.eligible
-    assert "batch-reconcile" in decision.reasons[0]
+        assert decision.state is EligibilityState.RECONCILIATION_REQUIRED
+        assert not decision.eligible
+        assert "batch-reconcile" in decision.reasons[0]
 
 
 def test_issue_level_proof_is_required_before_reconciliation_routing(tmp_path: Path) -> None:
@@ -285,3 +286,4 @@ def test_completion_projection_flags_ordinary_active_lanes_during_product_audit(
             "work items are not terminal" in reason or "ordinary active lanes remain" in reason
             for reason in snapshot.completion.reasons
         )
+        assert snapshot.completion.final_completion_gate_satisfied is False

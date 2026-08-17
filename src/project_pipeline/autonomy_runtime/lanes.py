@@ -34,8 +34,10 @@ def canonicalize_resource(resource: str) -> str:
         raise ValueError("resource key must be non-empty")
     prefix, separator, remainder = item.partition(":")
     if separator and prefix.upper() == "PATH":
-        normalized = os.path.normcase(os.path.normpath(remainder))
-        if not normalized or normalized in {".", os.sep}:
+        normalized = os.path.normpath(remainder).replace("/", "\\").casefold()
+        while "\\\\" in normalized:
+            normalized = normalized.replace("\\\\", "\\")
+        if not normalized or normalized in {".", "\\"}:
             raise ValueError("PATH resource must not resolve to an empty or root path")
         return f"PATH:{normalized}"
     return item
