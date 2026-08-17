@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "ee1ffa98b32cc1f89515bb65671d80ce20b4fd7f58c3744b95b1ce19f553cd76",
+  "aggregate_sha256": "ed38a2f78dce3c429b2baf352794529eb5d20922806e85a36e87e15d30a0cd0c",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2740,
+  "file_count": 2742,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -4109,6 +4109,16 @@
       "path": "evidence/pp19_regression_part04.txt",
       "sha256": "438a2f1328e6f6099e4765efb44b8131efcf76d8c911e798d67a2a42b6fc05a7",
       "size_bytes": 261
+    },
+    {
+      "path": "evidence/pp380_cycle5_execution_dispositions.json",
+      "sha256": "1031df5316e123497384e5f0516f7620ebeb181746b7ca19137ba9fd9373ad07",
+      "size_bytes": 174546
+    },
+    {
+      "path": "evidence/pp380_cycle5_execution_dispositions.md",
+      "sha256": "c1abc9623a3c2dbd185cefddb54125216202b70ae6cce7789061a014f3360066",
+      "size_bytes": 90143
     },
     {
       "path": "evidence/pp380_main_worktree_dirty_classification_post.json",
@@ -11707,8 +11717,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "19684847d464895e74f303af84bb2604235d42c2655380f61ad4004b3e9a43d8",
-      "size_bytes": 122539
+      "sha256": "f5d5413db13a7dcbfedeb0d28cf9e9cae9eafeaafa33ad7b7b021437872f853e",
+      "size_bytes": 123839
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12517,8 +12527,8 @@
     },
     {
       "path": "src/project_pipeline/scheduler/__init__.py",
-      "sha256": "ecdc0fab70c757ff6b7ec360725311c5cc71fbe8628127f87d48c1a13cc912e5",
-      "size_bytes": 1064
+      "sha256": "5ad83694de30019a3637017304a9977c814dca7b2b145eebd7d1aad60780df1c",
+      "size_bytes": 1104
     },
     {
       "path": "src/project_pipeline/scheduler/backpressure.py",
@@ -12527,8 +12537,8 @@
     },
     {
       "path": "src/project_pipeline/scheduler/bridge.py",
-      "sha256": "712fff2051f20f8ec52127be4cd9bcaf59b5339626028f2e3c456eddb22c0dff",
-      "size_bytes": 3353
+      "sha256": "4fb13cfa5bc11832f2138a2f0416f8a38b37a5fdf495709c21c0290d183994e5",
+      "size_bytes": 5670
     },
     {
       "path": "src/project_pipeline/scheduler/conflicts.py",
@@ -12547,8 +12557,8 @@
     },
     {
       "path": "src/project_pipeline/scheduler/persistence.py",
-      "sha256": "44287d2317c914bd82cdcae2918733cc9db2ebebd1da3a325f3be862181e26df",
-      "size_bytes": 14873
+      "sha256": "da045f1bbbf30a6c1dab9ef9c59f712bfa731ec90a78dcf289f78e0ccaabc9b0",
+      "size_bytes": 16028
     },
     {
       "path": "src/project_pipeline/scheduler/resources.py",
@@ -13507,8 +13517,8 @@
     },
     {
       "path": "tests/test_scheduler_cli.py",
-      "sha256": "a7dbf76c2c820b7d2642e3ee72e3ebbc4d1633f4283a61fb2e7210a047cfdbe2",
-      "size_bytes": 5293
+      "sha256": "9ac7a4aeb2ac821e2e34b327f4ac4b646a6f21c71d16bc9df42511fdae5da332",
+      "size_bytes": 8745
     },
     {
       "path": "tests/test_scheduler_conflicts.py",
@@ -13527,8 +13537,8 @@
     },
     {
       "path": "tests/test_scheduler_persistence.py",
-      "sha256": "393377829d6cd76b946fce951a163c804d06f941eda57b72b3be3886e3451dce",
-      "size_bytes": 4173
+      "sha256": "a534a2b924f07dfed9f35e13a04b24c4a06a98a690bbdc7a500799873a3c002c",
+      "size_bytes": 5662
     },
     {
       "path": "tests/test_scheduler_validation.py",
@@ -13711,7 +13721,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T03:29:36.153832+00:00",
+  "generated_at_utc": "2026-08-17T03:46:46.332221+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13720,5 +13730,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 23262837
+  "total_bytes": 23537279
 }

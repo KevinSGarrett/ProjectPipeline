@@ -109,6 +109,39 @@ class SchedulerStore:
             ResourceLease.model_validate_json(row[0]) for row in self._active_lease_rows(when)
         )
 
+    def recover_claims_for_task(
+        self, task_id: str, *, holder_id: str | None = None
+    ) -> tuple[ResourceClaim, ...]:
+        rows = self.db.execute(
+            """
+            SELECT payload_json FROM scheduler_resource_leases
+            WHERE task_id = ?
+            ORDER BY acquired_at_utc DESC
+            """,
+            (task_id,),
+        ).fetchall()
+        if not rows:
+            return ()
+        leases = tuple(ResourceLease.model_validate_json(row[0]) for row in rows)
+        if holder_id:
+            same_holder = tuple(item for item in leases if item.holder_id == holder_id)
+            if same_holder:
+                leases = same_holder
+        claims: list[ResourceClaim] = []
+        seen: set[tuple[str, str, str, int]] = set()
+        for lease in leases:
+            key = (
+                lease.claim.resource_type.value,
+                lease.claim.resource_key,
+                lease.claim.access_mode.value,
+                lease.claim.quantity,
+            )
+            if key in seen:
+                continue
+            seen.add(key)
+            claims.append(lease.claim)
+        return tuple(claims)
+
     def registry_snapshot(self, when: datetime | None = None) -> ResourceRegistrySnapshot:
         when = (when or datetime.now(UTC)).astimezone(UTC)
         pools = self.list_pools()

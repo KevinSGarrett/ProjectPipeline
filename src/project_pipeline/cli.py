@@ -194,6 +194,7 @@ from project_pipeline.runtime import run_bootstrap, run_foundation_smoke
 from project_pipeline.scheduler import (
     DynamicLaneScheduler,
     SchedulerStore,
+    claims_for_task,
     profiles_from_repository,
 )
 from project_pipeline.scheduler import (
@@ -1465,20 +1466,50 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             if not args.task_id:
                 raise ConfigurationError("scheduler acquire requires --task-id")
             lane = next((item for item in plan.lanes if item.task_id == args.task_id), None)
-            if lane is None:
-                raise ConfigurationError(
-                    "requested task is not admitted by the current scheduler plan"
+            recovered = False
+            if lane is not None:
+                claims = lane.claims
+                task_id = lane.task_id
+            else:
+                active_for_task = tuple(
+                    lease
+                    for lease in scheduler_store.list_active_leases()
+                    if lease.task_id == args.task_id and lease.released_at_utc is None
                 )
+                foreign_holders = sorted(
+                    {
+                        lease.holder_id
+                        for lease in active_for_task
+                        if lease.holder_id != args.holder_id
+                    }
+                )
+                if foreign_holders:
+                    raise ConfigurationError(
+                        "requested task has active lease ownership by other holder(s): "
+                        + ",".join(foreign_holders)
+                    )
+                claims = scheduler_store.recover_claims_for_task(
+                    args.task_id, holder_id=args.holder_id
+                )
+                if not claims:
+                    claims = claims_for_task(args.root, args.task_id)
+                if not claims:
+                    raise ConfigurationError(
+                        "requested task is not admitted by the current scheduler plan"
+                    )
+                task_id = args.task_id
+                recovered = True
             bundle = scheduler_store.acquire_bundle(
-                task_id=lane.task_id,
+                task_id=task_id,
                 holder_id=args.holder_id,
-                claims=lane.claims,
+                claims=claims,
                 ttl_seconds=args.ttl_seconds,
             )
             return {
                 "database": str(database),
                 "plan_id": plan.plan_id,
                 "lease_bundle": bundle.model_dump(mode="json"),
+                "recovered_in_progress_task": recovered,
             }, 0 if bundle.acquired else 1
         raise ConfigurationError(f"unsupported scheduler action: {args.action}")
 

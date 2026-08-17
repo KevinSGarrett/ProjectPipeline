@@ -88,3 +88,67 @@ def profiles_from_repository(root, control: ControlSnapshot) -> tuple[SchedulerT
             )
         )
     return tuple(profiles)
+
+
+def claims_for_task(root, task_id: str) -> tuple[ResourceClaim, ...]:
+    """Recover deterministic claims for one task from Jira issue metadata."""
+    issues = {item["local_id"]: item for item in load_issues(root)}
+    issue = issues.get(task_id)
+    if issue is None:
+        return ()
+    claims: list[ResourceClaim] = [
+        ResourceClaim(
+            resource_key="machine:local/cpu_slots",
+            resource_type=ResourceType.CPU_SLOT,
+            access_mode=AccessMode.SHARED,
+            quantity=1,
+            machine_id="machine:local",
+            purpose="default worker CPU admission",
+        ),
+        ResourceClaim(
+            resource_key="machine:local/process_slots",
+            resource_type=ResourceType.PROCESS_SLOT,
+            access_mode=AccessMode.SHARED,
+            quantity=1,
+            machine_id="machine:local",
+            purpose="worker process admission",
+        ),
+    ]
+    for raw in issue.get("expected_file_locations", []):
+        path = str(PurePosixPath(str(raw).replace("\\", "/")))
+        if path == "." or path.startswith(_EXCLUDED_PREFIXES):
+            continue
+        claims.append(
+            ResourceClaim(
+                resource_key=path,
+                resource_type=ResourceType.PATH,
+                access_mode=AccessMode.EXCLUSIVE,
+                purpose="declared implementation path",
+            )
+        )
+    labels = set(issue.get("labels", []))
+    if "migration" in labels or any("migration" in str(x).lower() for x in issue.get("scope", [])):
+        claims.append(
+            ResourceClaim(resource_key="database:migration-sequence", resource_type=ResourceType.DATABASE)
+        )
+    if "aws" in labels or "infrastructure" in labels:
+        claims.append(
+            ResourceClaim(
+                resource_key="environment:infrastructure",
+                resource_type=ResourceType.INFRASTRUCTURE,
+            )
+        )
+    deduped: list[ResourceClaim] = []
+    seen: set[tuple[str, str, str, int]] = set()
+    for claim in claims:
+        key = (
+            claim.resource_type.value,
+            claim.resource_key,
+            claim.access_mode.value,
+            claim.quantity,
+        )
+        if key in seen:
+            continue
+        seen.add(key)
+        deduped.append(claim)
+    return tuple(deduped)
