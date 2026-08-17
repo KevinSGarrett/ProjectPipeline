@@ -1,11 +1,17 @@
 from __future__ import annotations
 
+import json
+import os
+import subprocess
+import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
 
 from project_pipeline.autonomy_runtime.qualification import QualificationStore
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class AdvanceableClock:
@@ -21,7 +27,7 @@ class AdvanceableClock:
 
 def test_qualification_rejects_simulated_completion_and_72h_before_24h(tmp_path: Path):
     clock = AdvanceableClock()
-    store = QualificationStore(tmp_path / "qualify.sqlite3", clock=clock)
+    store = QualificationStore(tmp_path / "qualify.sqlite3", clock=clock, repository_root=ROOT)
     recovery = store.start("RECOVERY", state_path=tmp_path / "state")
     assert recovery["status"] == "RUNNING"
     store.heartbeat(recovery["run_id"])
@@ -42,7 +48,7 @@ def test_qualification_rejects_simulated_completion_and_72h_before_24h(tmp_path:
 
 def test_qualification_resumes_after_failure_and_reports_health(tmp_path: Path):
     clock = AdvanceableClock()
-    store = QualificationStore(tmp_path / "qualify.sqlite3", clock=clock)
+    store = QualificationStore(tmp_path / "qualify.sqlite3", clock=clock, repository_root=ROOT)
     run = store.start("RECOVERY", state_path=tmp_path / "state", process_id=4242)
     failed = store.fail(run["run_id"], reason="host-restart")
     assert failed["status"] == "FAILED"
@@ -60,15 +66,247 @@ def test_qualification_resumes_after_failure_and_reports_health(tmp_path: Path):
 def test_reconstructed_store_preserves_checkpoint(tmp_path: Path):
     clock = AdvanceableClock()
     path = tmp_path / "qualify.sqlite3"
-    store = QualificationStore(path, clock=clock)
+    store = QualificationStore(path, clock=clock, repository_root=ROOT)
     run = store.start("RECOVERY", state_path=tmp_path / "state")
     run_id = run["run_id"]
     store.heartbeat(run_id)
     store.close()
-    restored = QualificationStore(path, clock=clock)
+    restored = QualificationStore(path, clock=clock, repository_root=ROOT)
     loaded = restored.get(run_id)
     assert loaded["run_id"] == run_id
     assert loaded["status"] == "RUNNING"
     restored.resume(run_id)
     assert restored.get(run_id)["status"] == "RESUMED"
     restored.close()
+
+
+def test_recovery_drill_attests_controlled_process_loss(tmp_path: Path):
+    store = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
+    attested = store.recovery_drill(state_path=tmp_path / "state")
+    assert attested["stage"] == "RECOVERY"
+    assert attested["status"] == "ATTESTED"
+    events = store._db.execute(
+        "SELECT action FROM qualification_events WHERE run_id = ? ORDER BY created_at_utc",
+        (attested["run_id"],),
+    ).fetchall()
+    actions = [str(row["action"]) for row in events]
+    assert "START" in actions
+    assert any(action.startswith("FAIL:") for action in actions)
+    assert "RESUME" in actions
+    assert "ATTEST" in actions
+    store.close()
+
+
+def test_24h_resume_breaks_uninterrupted_window(tmp_path: Path):
+    store = QualificationStore(
+        tmp_path / "qualify.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=0.2,
+    )
+    run = store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
+    store.fail(run["run_id"], reason="process-loss")
+    resumed = store.resume(run["run_id"])
+    assert resumed["window_broken"] == 1
+    with pytest.raises(ValueError, match="uninterrupted window"):
+        store.complete(run["run_id"])
+    store.close()
+
+
+def test_heartbeat_gap_disqualifies_unattended_window(tmp_path: Path):
+    store = QualificationStore(
+        tmp_path / "qualify.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=1.0,
+    )
+    run = store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
+    store._db.execute(
+        "UPDATE qualification_runs SET last_heartbeat_utc = ? WHERE run_id = ?",
+        ((datetime.now(UTC) - timedelta(seconds=10)).isoformat(), run["run_id"]),
+    )
+    store._db.commit()
+    with pytest.raises(ValueError, match="heartbeat gap"):
+        store.heartbeat(run["run_id"])
+    assert store.get(run["run_id"])["status"] == "DISQUALIFIED"
+    store.close()
+
+
+def test_clock_rollback_and_fence_mismatch_disqualify(tmp_path: Path):
+    store = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
+    run = store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
+    store._db.execute(
+        "UPDATE qualification_runs SET last_heartbeat_utc = ? WHERE run_id = ?",
+        ((datetime.now(UTC) + timedelta(hours=2)).isoformat(), run["run_id"]),
+    )
+    store._db.commit()
+    with pytest.raises(ValueError, match="clock rollback"):
+        store.heartbeat(run["run_id"])
+    store.close()
+
+    store = QualificationStore(tmp_path / "qualify2.sqlite3", repository_root=ROOT)
+    run = store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
+    with pytest.raises(ValueError, match="fence mismatch"):
+        store.heartbeat(run["run_id"], fence="QFENCE-forged")
+    assert store.get(run["run_id"])["status"] == "DISQUALIFIED"
+    store.close()
+
+
+def test_event_chain_edit_is_detected(tmp_path: Path):
+    store = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
+    run = store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
+    store._db.execute(
+        "UPDATE qualification_runs SET last_event_sha256 = 'tampered' WHERE run_id = ?",
+        (run["run_id"],),
+    )
+    store._db.commit()
+    with pytest.raises(ValueError, match="event chain"):
+        store.heartbeat(run["run_id"])
+    store.close()
+
+
+def test_concurrent_runner_is_rejected(tmp_path: Path):
+    first = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
+    second = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
+    first.start("RECOVERY", state_path=tmp_path / "state")
+    with pytest.raises(ValueError, match="concurrent"):
+        second.start("RECOVERY", state_path=tmp_path / "other")
+    first.close()
+    second.close()
+
+
+def test_stale_lock_from_dead_process_is_reclaimed(tmp_path: Path):
+    store = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
+    store._db.execute(
+        """
+        INSERT INTO qualification_locks (lock_name, run_id, process_id, fence, acquired_at_utc)
+        VALUES ('active-qualification', 'QRUN-stale', 2147000000, 'QFENCE-stale', ?)
+        """,
+        (datetime.now(UTC).isoformat(),),
+    )
+    store._db.commit()
+    started = store.start("RECOVERY", state_path=tmp_path / "state")
+    assert started["status"] == "RUNNING"
+    store.close()
+
+
+def test_schema_comes_from_catalog_not_ad_hoc_create(tmp_path: Path):
+    path = tmp_path / "qualify.sqlite3"
+    store = QualificationStore(path, repository_root=ROOT)
+    applied = {
+        str(row[0])
+        for row in store._db.execute("SELECT migration_id FROM schema_migrations").fetchall()
+    }
+    assert "PPDB-0021" in applied
+    tables = {
+        str(row[0])
+        for row in store._db.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()
+    }
+    assert {"qualification_runs", "qualification_events", "qualification_locks"} <= tables
+    store.close()
+    source = (ROOT / "src/project_pipeline/autonomy_runtime/qualification.py").read_text(
+        encoding="utf-8"
+    )
+    assert "CREATE TABLE IF NOT EXISTS qualification_runs" not in source
+
+
+def test_run_loop_and_orchestration_receipts(tmp_path: Path):
+    store = QualificationStore(
+        tmp_path / "qualify.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=0.01,
+    )
+    run = store.start("RECOVERY", state_path=tmp_path / "state")
+    looped = store.run_loop(run["run_id"], cycles=2)
+    assert looped["status"] == "RUNNING"
+    stop_file = tmp_path / "stop.flag"
+    stop_file.write_text("stop", encoding="utf-8")
+    stopped = store.run_loop(run["run_id"], cycles=4, stop_path=stop_file)
+    assert stopped["status"] == "STOPPED"
+    store.close()
+
+    store = QualificationStore(tmp_path / "orch.sqlite3", repository_root=ROOT)
+    run = store.start("RECOVERY", state_path=tmp_path / "state")
+    orch = store.orchestrate(
+        run["run_id"],
+        [["python", "-m", "project_pipeline", "control", "completion", "--root", "."]],
+    )
+    assert orch["orchestration_receipts"][0]["executed"] is False
+    assert orch["orchestration_receipts"][0]["command_sha256"]
+    store.close()
+
+
+def test_cli_recovery_status_and_stop(tmp_path: Path):
+    database = tmp_path / "qualify.sqlite3"
+    state = tmp_path / "state"
+    state.mkdir()
+    env = {**os.environ, "PYTHONPATH": str(ROOT / "src")}
+    started = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/run_autonomy_qualification.py"),
+            "start",
+            "--database",
+            str(database),
+            "--state-path",
+            str(state),
+            "--stage",
+            "RECOVERY",
+            "--repository-root",
+            str(ROOT),
+            "--heartbeat-seconds",
+            "0.05",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+        env=env,
+    )
+    payload = json.loads(started.stdout)
+    run_id = payload["run_id"]
+    health = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/run_autonomy_qualification.py"),
+            "health",
+            "--database",
+            str(database),
+            "--run-id",
+            run_id,
+            "--repository-root",
+            str(ROOT),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+        env=env,
+    )
+    assert json.loads(health.stdout)["run_id"] == run_id
+    stopped = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/run_autonomy_qualification.py"),
+            "stop",
+            "--database",
+            str(database),
+            "--run-id",
+            run_id,
+            "--repository-root",
+            str(ROOT),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+        cwd=str(ROOT),
+        env=env,
+    )
+    assert json.loads(stopped.stdout)["status"] == "STOPPED"
+
+
+def test_complete_is_idempotent_for_recovery(tmp_path: Path):
+    store = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
+    run = store.start("RECOVERY", state_path=tmp_path / "state")
+    first = store.complete(run["run_id"])
+    second = store.complete(run["run_id"])
+    assert first["status"] == second["status"] == "ATTESTED"
+    store.close()

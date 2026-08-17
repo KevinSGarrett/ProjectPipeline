@@ -68,8 +68,10 @@ def test_migration_0009_applies_and_rolls_back(tmp_path, project_root):
     r = SQLiteMigrationRunner(db, project_root)
     status = r.apply_all()
     assert "PPDB-0009" in status.applied
-    assert status.latest_applied == "PPDB-0020"
+    assert status.latest_applied == "PPDB-0021"
 
+    status = r.rollback_last()
+    assert status.latest_applied == "PPDB-0020"
     status = r.rollback_last()
     assert status.latest_applied == "PPDB-0019"
 

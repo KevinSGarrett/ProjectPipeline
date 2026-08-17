@@ -26,6 +26,9 @@ def test_ppdb_0014_rollback_preserves_0013(project_root, tmp_path):
         runner = __import__(
             "project_pipeline.persistence.migrations", fromlist=["SQLiteMigrationRunner"]
         ).SQLiteMigrationRunner(store.db, project_root)
+        runner.rollback_last()  # PPDB-0021 unattended qualification
+        ids = {r[0] for r in store.db.execute("SELECT migration_id FROM schema_migrations")}
+        assert "PPDB-0020" in ids and "PPDB-0021" not in ids
         runner.rollback_last()  # PPDB-0020 autonomy runtime supervisor
         ids = {r[0] for r in store.db.execute("SELECT migration_id FROM schema_migrations")}
         assert "PPDB-0019" in ids and "PPDB-0020" not in ids

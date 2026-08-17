@@ -45,6 +45,12 @@ class MigrationTests(unittest.TestCase):
         status = runner.rollback_last()
         self.assertEqual(status.applied, expected[:-1])
         with self.assertRaises(sqlite3.OperationalError):
+            connection.execute("SELECT COUNT(*) FROM qualification_runs").fetchone()
+        connection.execute("SELECT COUNT(*) FROM autonomy_runtime_operations").fetchone()
+
+        status = runner.rollback_last()
+        self.assertEqual(status.applied, expected[:-2])
+        with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM autonomy_runtime_operations").fetchone()
         connection.execute("SELECT COUNT(*) FROM jira_sync_operations").fetchone()
         connection.execute("SELECT COUNT(*) FROM github_operations").fetchone()
@@ -62,11 +68,11 @@ class MigrationTests(unittest.TestCase):
         connection.execute("SELECT COUNT(*) FROM lifecycle_portfolio_projects").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-2])
+        self.assertEqual(status.applied, expected[:-3])
         connection.execute("SELECT COUNT(*) FROM lifecycle_portfolio_projects").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-3])
+        self.assertEqual(status.applied, expected[:-4])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM lifecycle_portfolio_projects").fetchone()
         connection.execute("SELECT COUNT(*) FROM command_center_director_messages").fetchone()
@@ -74,20 +80,20 @@ class MigrationTests(unittest.TestCase):
         connection.execute("SELECT COUNT(*) FROM resilience_machines").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-4])
+        self.assertEqual(status.applied, expected[:-5])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM command_center_director_messages").fetchone()
         connection.execute("SELECT COUNT(*) FROM command_center_events").fetchone()
         connection.execute("SELECT COUNT(*) FROM resilience_machines").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-5])
+        self.assertEqual(status.applied, expected[:-6])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM command_center_events").fetchone()
         connection.execute("SELECT COUNT(*) FROM resilience_machines").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-6])
+        self.assertEqual(status.applied, expected[:-7])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM resilience_machines").fetchone()
         connection.execute("SELECT COUNT(*) FROM security_identities").fetchone()
