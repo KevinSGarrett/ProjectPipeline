@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "79a1d5d224ea15c4c9727dd7fb9b1f8700ba10b1d66b8f4538db18fc55e9e30d",
+  "aggregate_sha256": "f7147c6bc288290441a7fbd174428f4aab912b2c1ed1fd84ec1dc31216201d0a",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2770,
+  "file_count": 2774,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -10281,6 +10281,11 @@
       "size_bytes": 366
     },
     {
+      "path": "runbooks/autonomy_runtime/unattended_operation.md",
+      "sha256": "0e47374ceeafed7d49a66ab93ccb846e819bf11841684809b7d6f202856ae792",
+      "size_bytes": 1325
+    },
+    {
       "path": "runbooks/autonomy_runtime/windows_service.md",
       "sha256": "fddb6080c2ac24c803818d000b4f6aeec72420cb623bd0756800b032c23ce947",
       "size_bytes": 1883
@@ -11506,6 +11511,11 @@
       "size_bytes": 1403
     },
     {
+      "path": "scripts/run_autonomy_qualification.py",
+      "sha256": "7fdfd6f278a14500a706ca2b734cee9b6af7c82ddf43751a39e3abfeac896c26",
+      "size_bytes": 1557
+    },
+    {
       "path": "scripts/run_autonomy_runtime_service.py",
       "sha256": "19875620c007d8ed4c6f52763a8b781a4e16d5fd68d81b953c8d89cf37f4b161",
       "size_bytes": 1517
@@ -11732,8 +11742,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/__init__.py",
-      "sha256": "76de11a7b5febf5eb086f7642ec396d3bca12817920019f2b34e007d569f4fb5",
-      "size_bytes": 780
+      "sha256": "be70061bbaa52b762330f5f538fecd22e6e49afe13aa9e25856469a579cdca49",
+      "size_bytes": 885
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/golden.py",
@@ -11749,6 +11759,11 @@
       "path": "src/project_pipeline/autonomy_runtime/providers.py",
       "sha256": "a64b0b5b26ecae27cbbabe36eb61d77d1460188c7f3ead99537fb7b946dcdf52",
       "size_bytes": 11286
+    },
+    {
+      "path": "src/project_pipeline/autonomy_runtime/qualification.py",
+      "sha256": "d0e93d088f15e91fb5b78d12b9f88e95ea6608d3fd47893b12855a9ed40f407b",
+      "size_bytes": 9614
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/recovery.py",
@@ -13096,6 +13111,11 @@
       "size_bytes": 5183
     },
     {
+      "path": "tests/test_autonomy_qualification.py",
+      "sha256": "5052f1d22414e9533b433628244df078fdac6e2162f86e55331a5267a227e142",
+      "size_bytes": 2783
+    },
+    {
       "path": "tests/test_autonomy_windows_service.py",
       "sha256": "953bc713215fc2d3fb47f4497a51e31151b4637f6d920a758ec1aea892a3bdd1",
       "size_bytes": 1400
@@ -13861,7 +13881,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T15:39:59.955254+00:00",
+  "generated_at_utc": "2026-08-17T16:53:51.305425+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13870,5 +13890,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24264260
+  "total_bytes": 24279644
 }
