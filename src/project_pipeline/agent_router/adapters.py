@@ -436,6 +436,27 @@ class MockProviderAdapter:
         )
 
 
+def build_adapter(adapter_id: str, **kwargs: Any) -> ProviderAdapter:
+    factories: dict[str, type] = {
+        "adapter:openai-responses": OpenAIResponsesAdapter,
+        "adapter:anthropic-messages": AnthropicMessagesAdapter,
+        "adapter:gemini-generate-content": GeminiGenerateContentAdapter,
+        "adapter:litellm-proxy": LiteLLMProxyAdapter,
+        "adapter:local-json-process": LocalProcessProviderAdapter,
+        "adapter:mock-provider": MockProviderAdapter,
+    }
+    try:
+        from project_pipeline.agent_router.pydantic_ai_adapter import PydanticAIProviderAdapter
+
+        factories["adapter:pydantic-ai"] = PydanticAIProviderAdapter
+    except Exception:
+        pass
+    factory = factories.get(adapter_id)
+    if factory is None:
+        raise ValueError(f"unknown adapter: {adapter_id}")
+    return factory(**kwargs)
+
+
 class ToolAdapter(Protocol):
     adapter_id: str
     adapter_version: str

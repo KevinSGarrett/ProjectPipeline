@@ -9,6 +9,7 @@ from project_pipeline.agent_router.adapters import (
     ProviderAdapter,
     ProviderAdapterError,
     ToolAdapter,
+    build_adapter,
 )
 from project_pipeline.agent_router.circuit import (
     normalize_circuit,
@@ -32,7 +33,10 @@ from project_pipeline.agent_router.registry import (
 )
 from project_pipeline.agent_router.router import AgentRouter
 from project_pipeline.agent_router.service import AgentRouterService, AgentRoutingError
-from project_pipeline.agent_router.simulation import simulate_provider_failover
+from project_pipeline.agent_router.simulation import (
+    simulate_circuit_open_and_recovery,
+    simulate_provider_failover,
+)
 from project_pipeline.agent_router.tools import GovernedToolBoundary
 from project_pipeline.agent_router.validation import validate_agent_router_foundation
 
@@ -56,6 +60,7 @@ __all__ = [
     "PydanticAIProviderAdapter",
     "ToolAdapter",
     "accept_qualification_report",
+    "build_adapter",
     "build_registry",
     "execution_targets",
     "load_agent_registry",
@@ -65,6 +70,7 @@ __all__ = [
     "record_probe",
     "record_success",
     "run_adapter_qualification",
+    "simulate_circuit_open_and_recovery",
     "simulate_provider_failover",
     "validate_agent_router_foundation",
 ]

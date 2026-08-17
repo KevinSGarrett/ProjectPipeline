@@ -8,9 +8,11 @@ from project_pipeline.agent_router import (
     AnthropicMessagesAdapter,
     GeminiGenerateContentAdapter,
     LocalProcessProviderAdapter,
+    MockProviderAdapter,
     MockToolAdapter,
     OpenAIResponsesAdapter,
     ProviderAdapterError,
+    build_adapter,
 )
 from project_pipeline.domain import ExecutionTaskContract
 
@@ -118,6 +120,15 @@ def test_local_process_adapter_uses_no_shell_and_parses_json():
         contract(), model_name="local"
     )
     assert result.output["echo"] == "T" and result.usage.input_units == 1
+
+
+def test_build_adapter_is_provider_neutral_and_rejects_unknown_ids():
+    adapter = build_adapter("adapter:mock-provider", provider_id="provider:mock-local")
+    assert isinstance(adapter, MockProviderAdapter)
+    litellm = build_adapter("adapter:litellm-proxy", api_key="", base_url="http://127.0.0.1:4000")
+    assert litellm.adapter_id == "adapter:litellm-proxy"
+    with pytest.raises(ValueError, match="unknown adapter"):
+        build_adapter("adapter:does-not-exist")
 
 
 def test_hosted_connection_loss_is_unknown_outcome():
