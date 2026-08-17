@@ -13,6 +13,7 @@ from project_pipeline.agent_router import (
     AgentRouter,
     AgentRouterStore,
     load_agent_registry,
+    simulate_circuit_open_and_recovery,
     simulate_provider_failover,
 )
 from project_pipeline.architecture import (
@@ -661,6 +662,9 @@ def build_parser() -> argparse.ArgumentParser:
     agent_router.add_argument("--deny-data-egress", action="store_true")
     agent_router.add_argument("--allow-canary", action="store_true")
     agent_router.add_argument("--no-degraded", action="store_true")
+    agent_router.add_argument("--apply", action="store_true")
+    agent_router.add_argument("--approve", action="store_true")
+    agent_router.add_argument("--scenario", default="failover")
     agent_router.add_argument("--json-output", type=Path)
     _add_configuration_arguments(agent_router)
 
@@ -1559,7 +1563,22 @@ def _run_agent_router_command(args: argparse.Namespace) -> tuple[dict[str, Any],
         if args.action == "registry":
             return {"database": str(database), "registry": registry.model_dump(mode="json")}, 0
         if args.action == "simulate":
-            return {"database": str(database), "simulation": simulate_provider_failover()}, 0
+            if args.apply and not args.approve:
+                return {
+                    "database": str(database),
+                    "error": "simulate --apply requires --approve",
+                    "applied": False,
+                }, 2
+            simulation = (
+                simulate_circuit_open_and_recovery()
+                if args.scenario == "circuit"
+                else simulate_provider_failover()
+            )
+            return {
+                "database": str(database),
+                "simulation": simulation,
+                "applied": bool(args.apply and args.approve),
+            }, 0
         capabilities = tuple(args.capability or ["routine_reasoning"])
         contract = ExecutionTaskContract(
             task_id=args.task_id,

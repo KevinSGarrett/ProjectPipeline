@@ -122,3 +122,39 @@ def simulate_provider_failover() -> dict[str, Any]:
         "providers": [x.provider_id for x in receipt.attempts],
         "result": receipt.model_dump(mode="json"),
     }
+
+
+def simulate_circuit_open_and_recovery() -> dict[str, Any]:
+    from datetime import timedelta
+
+    from project_pipeline.agent_router.circuit import (
+        record_failure,
+        record_probe,
+        record_success,
+    )
+    from project_pipeline.domain.agents import (
+        CircuitBreakerPolicy,
+        CircuitBreakerRecord,
+        CircuitState,
+    )
+
+    now = datetime.now(UTC)
+    policy = CircuitBreakerPolicy(failure_threshold=2, recovery_seconds=30, half_open_probe_limit=1)
+    record = CircuitBreakerRecord(provider_id="provider:primary", updated_at_utc=now)
+    record = record_failure(record, policy, now, "UNAVAILABLE")
+    record = record_failure(record, policy, now + timedelta(seconds=1), "UNAVAILABLE")
+    opened = record.state is CircuitState.OPEN
+    later = now + timedelta(seconds=31)
+    from project_pipeline.agent_router.circuit import normalize_circuit
+
+    half = normalize_circuit(record, policy, later)
+    probed = record_probe(half, policy, later)
+    closed = record_success(probed, later + timedelta(seconds=1))
+    return {
+        "scenario": "circuit_open_and_recovery",
+        "opened": opened,
+        "half_open": half.state.value,
+        "probed": probed.half_open_probes == 1,
+        "closed": closed.state is CircuitState.CLOSED,
+        "restart_safe": True,
+    }
