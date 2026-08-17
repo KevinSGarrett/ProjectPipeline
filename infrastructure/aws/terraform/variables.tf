@@ -17,6 +17,22 @@ variable "environment" {
 variable "aws_region" {
   type    = string
   default = "us-east-1"
+
+  validation {
+    condition     = contains(["us-east-1", "us-east-2", "us-west-1", "us-west-2", "eu-west-1", "eu-central-1"], var.aws_region)
+    error_message = "aws_region must be an approved recovery region."
+  }
+}
+
+variable "aws_account_id" {
+  type        = string
+  default     = ""
+  description = "Optional 12-digit account id used only after explicit activation. Empty means no live account is assumed."
+
+  validation {
+    condition     = var.aws_account_id == "" || can(regex("^\\d{12}$", var.aws_account_id))
+    error_message = "aws_account_id must be empty or a 12-digit account id."
+  }
 }
 variable "state_lock_table" {
   type        = string

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "d38cc546a43aa1eb677f2b005fc16752b547eec00842d520d58e402c243a3b37",
+  "aggregate_sha256": "2d126737555bbc2b7e275266d76da86831e757897c2274e1e2b36d278a045f8a",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -4652,8 +4652,8 @@
     },
     {
       "path": "infrastructure/aws/README.md",
-      "sha256": "d06e4927e02d1c6460099f62d2636d3fe977c908fe13d21331eff39285714dad",
-      "size_bytes": 1119
+      "sha256": "ce98ccda963cd45dd448c7fd802889113c53b376ee007db5251fd33aef6b9b32",
+      "size_bytes": 1489
     },
     {
       "path": "infrastructure/aws/terraform/.terraform.lock.hcl",
@@ -4672,8 +4672,8 @@
     },
     {
       "path": "infrastructure/aws/terraform/variables.tf",
-      "sha256": "ede965ca4fd86a4edbd90e060ae62147d781349ccb888acb39b1245294e61376",
-      "size_bytes": 1625
+      "sha256": "31d69c686cfd75505d667b95a5c485d07261cd6e9aaa1260712cd5db34ed9c43",
+      "size_bytes": 2233
     },
     {
       "path": "infrastructure/aws/terraform/versions.tf",
@@ -12187,8 +12187,8 @@
     },
     {
       "path": "src/project_pipeline/resilience/aws.py",
-      "sha256": "9cc8acd9102adafccb915b7cf0f2c6d4c0fbaeb734650b4ff4850f10a52ce017",
-      "size_bytes": 2899
+      "sha256": "40145431feed6975a7e7dc947ce69400875113b9769b705735fcf4dcb18301ec",
+      "size_bytes": 10051
     },
     {
       "path": "src/project_pipeline/resilience/backup.py",
@@ -13082,8 +13082,8 @@
     },
     {
       "path": "tests/test_pass25_final_convergence.py",
-      "sha256": "ac9ac9037fda82a02d0d9e5a888733ad8b2d6c92882e3c55372d09e19e46315c",
-      "size_bytes": 7302
+      "sha256": "bd628a913335b8d626d70ed46d8c757fbbfbc109caede1ccc2f2311f3d14c2e1",
+      "size_bytes": 7347
     },
     {
       "path": "tests/test_project_bootstrap.py",
@@ -13142,8 +13142,8 @@
     },
     {
       "path": "tests/test_resilience_aws.py",
-      "sha256": "c731fee3ac3b4b8e7e9b3e0ffdc0428454aa0a401bc58c955369985548090b6c",
-      "size_bytes": 981
+      "sha256": "b90cc19e0870acc086badf1a14a161d3d2f2dc89afd15f7907fcd25f1e6e1809",
+      "size_bytes": 4189
     },
     {
       "path": "tests/test_resilience_backup.py",
@@ -13411,7 +13411,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T16:13:25.151878+00:00",
+  "generated_at_utc": "2026-08-17T16:23:55.374961+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13420,5 +13420,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22600493
+  "total_bytes": 22611876
 }

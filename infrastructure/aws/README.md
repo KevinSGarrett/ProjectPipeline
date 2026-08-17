@@ -8,6 +8,10 @@ Activation requires explicit operator authorization, least-privilege IAM review,
 
 - `enable_cloud_spine=false` is the default and must remain fail-closed.
 - `terraform apply` and `terraform destroy` require explicit authorization outside normal local development.
-- Plan/apply are separated; a reviewed plan with locking is required before any live apply.
+- Plan/apply/destroy are separated; a reviewed plan with locking is required before any live apply or destroy.
+- Account and region must be validated. Wildcard IAM, nested secret-shaped values, missing encryption, missing locking, and missing budget fail closed.
+- Outputs are non-secret identifiers only.
 - Backend state details are not embedded in source. Provide bucket/key/lock settings via explicit approved `terraform init -backend-config` values.
+- An AWS outage degrades to local-first continuation. Local state remains canonical.
 - Mock/local evidence is not equivalent to live cloud evidence and must be tracked separately.
+- Unknown plan/apply/destroy outcomes must be reconciled before retry.
