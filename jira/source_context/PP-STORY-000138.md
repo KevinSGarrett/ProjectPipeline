@@ -1,11 +1,10 @@
-# Source Context — PP-STORY-000138
+# PP-STORY-000138 — Source Context
 
-## Governed Cursor takeover and product-model repair
+- Title: Source-to-control product outcome realignment
+- Plan: `PLAN-CTRL-003:SEC-01:L000008-L000013`
+- Requirements: `REQ-PDEF-0011`
 
-- Issue type: `STORY`
-- State: `BACKLOG`
-- Requirements: `REQ-PDEF-0011`, `REQ-CTRL-0015`
-- Authoritative source: `SRC-014:L000001-L000087`, `SRC-015:L000031-L000150`
-- Technical plan: `PLAN-PDEF-001:SEC-08:L000044-L000046`
+## Canonical source references
 
-Cursor is a replaceable execution provider. ProjectPipeline retains work selection, durable state, external mutation, evidence, and completion authority.
+- `SRC-014:L000001-L000086`
+- `SRC-015:L000001-L000112`

@@ -320,7 +320,11 @@ def check_jira_registry(
         if not context_path.exists():
             report.add("ERROR", "JIRA021", "Issue source-context file is missing", relative)
     for issue_id, issue in issues.items():
-        if issue.get("issue_type") == "EPIC" and child_counts[issue_id] == 0:
+        if (
+            issue.get("issue_type") == "EPIC"
+            and child_counts[issue_id] == 0
+            and issue.get("state") != "CANCELLED"
+        ):
             report.add(
                 "ERROR", "JIRA022", "Orphan epic has no child", f"jira/epics/{issue_id}.json"
             )

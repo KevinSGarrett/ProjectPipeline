@@ -1,25 +1,4 @@
 {
-  "schema_version": "1.0.0",
-  "blockers": [],
-  "completion_evidence": [],
-  "definition_of_done": [
-    "The complete source-derived autonomous operating loop is represented by enforceable requirements and Completion Gate facts.",
-    "Cursor operates only through the governed provider and bounded supervisor contracts.",
-    "A real fixture golden journey and staged unattended qualification are required before activation or completion.",
-    "Traceability, tests, documentation, security, rollback, and durable handoff state agree."
-  ],
-  "dependencies": [],
-  "evidence_required": [],
-  "exclusions": [
-    "No claim that Cursor authentication, Privacy Mode, cloud execution, Windows behavior, or unattended qualification has passed before durable evidence exists.",
-    "No lifecycle-only PRs, one-transition deliverables, direct secret exposure, direct external writes, or mock-only completion claims."
-  ],
-  "last_observed_remote_state": null,
-  "remote_jira_key": null,
-  "upstream_dependencies": [],
-  "observability_impact": "Persist Cursor run IDs, prompt and context digests, base/head SHAs, files, tests, cost, duration, outcomes, checkpoints, receipts, and readbacks without secret values.",
-  "rollback_recovery_consideration": "Disable provider:cursor-cli, preserve durable checkpoints and branches, restore the verified pre-change backup, and continue through another qualified provider without changing canonical project truth.",
-  "security_impact": "Keep Cursor quarantined until authentication, Privacy Mode, representative qualification, Windows verification, rollback, and external-write isolation are evidenced.",
   "acceptance_criteria": [
     {
       "criterion_id": "AC-PP-000379-04",
@@ -32,7 +11,21 @@
       }
     }
   ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "The complete source-derived autonomous operating loop is represented by enforceable requirements and Completion Gate facts.",
+    "Cursor operates only through the governed provider and bounded supervisor contracts.",
+    "A real fixture golden journey and staged unattended qualification are required before activation or completion.",
+    "Traceability, tests, documentation, security, rollback, and durable handoff state agree."
+  ],
+  "dependencies": [],
   "description": "Integrate and qualify ProjectPipeline as a continuously operating autonomous engineering organization, using Cursor as a replaceable governed execution provider.",
+  "evidence_required": [],
+  "exclusions": [
+    "No claim that Cursor authentication, Privacy Mode, cloud execution, Windows behavior, or unattended qualification has passed before durable evidence exists.",
+    "No lifecycle-only PRs, one-transition deliverables, direct secret exposure, direct external writes, or mock-only completion claims."
+  ],
   "expected_file_locations": [
     "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
     "plans/08_execution_assurance_and_testing/PLAN-VERIFY-001_verification_harness_golden_journeys.md"
@@ -42,15 +35,18 @@
     "src/project_pipeline/assurance/completion.py",
     "docs/operations/cursor_autonomous_takeover.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",
     "autonomous-runtime",
-    "cursor-takeover"
+    "cursor-takeover",
+    "superseded-by-PP-EPIC-000036"
   ],
+  "last_observed_remote_state": null,
   "local_id": "PP-EPIC-000037",
   "objective": "Deliver the complete autonomous runtime integration and unattended qualification outcome.",
+  "observability_impact": "Persist Cursor run IDs, prompt and context digests, base/head SHAs, files, tests, cost, duration, outcomes, checkpoints, receipts, and readbacks without secret values.",
   "owner_required_capability": "systems_architecture_and_implementation",
   "parent": null,
   "plan_references": [
@@ -65,12 +61,8 @@
     }
   ],
   "rationale": "The original source outcome was lost when the full operating loop was treated as context and reduced to disconnected components.",
-  "relationships": [
-    {
-      "target": "PP-STORY-000138",
-      "type": "PARENT_OF"
-    }
-  ],
+  "relationships": [],
+  "remote_jira_key": null,
   "required_tests": [
     "TEST-CURSOR-TAKEOVER-001",
     "TEST-ASSURANCE-COMPLETION-007"
@@ -80,6 +72,8 @@
     "REQ-CTRL-0015"
   ],
   "risk_classification": "CRITICAL",
+  "rollback_recovery_consideration": "Disable provider:cursor-cli, preserve durable checkpoints and branches, restore the verified pre-change backup, and continue through another qualified provider without changing canonical project truth.",
+  "schema_version": "1.0.0",
   "scope": [
     "Product-model repair",
     "Autonomous runtime composition",
@@ -89,10 +83,12 @@
     "Controlled external reconciliation",
     "4/24/72-hour unattended qualification"
   ],
+  "security_impact": "Keep Cursor quarantined until authentication, Privacy Mode, representative qualification, Windows verification, rollback, and external-write isolation are evidenced.",
   "source_references": [
     "SRC-014:L000001-L000087",
     "SRC-015:L000031-L000150"
   ],
-  "state": "BACKLOG",
-  "title": "Autonomous Runtime Integration and Unattended Qualification"
+  "state": "CANCELLED",
+  "title": "Autonomous Runtime Integration and Unattended Qualification",
+  "upstream_dependencies": []
 }

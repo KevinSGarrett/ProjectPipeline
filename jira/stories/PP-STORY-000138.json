@@ -1,104 +1,97 @@
 {
-  "schema_version": "1.0.0",
-  "blockers": [],
-  "completion_evidence": [],
-  "definition_of_done": [
-    "The complete source-derived autonomous operating loop is represented by enforceable requirements and Completion Gate facts.",
-    "Cursor operates only through the governed provider and bounded supervisor contracts.",
-    "A real fixture golden journey and staged unattended qualification are required before activation or completion.",
-    "Traceability, tests, documentation, security, rollback, and durable handoff state agree."
-  ],
-  "dependencies": [],
-  "evidence_required": [],
-  "exclusions": [
-    "No claim that Cursor authentication, Privacy Mode, cloud execution, Windows behavior, or unattended qualification has passed before durable evidence exists.",
-    "No lifecycle-only PRs, one-transition deliverables, direct secret exposure, direct external writes, or mock-only completion claims."
-  ],
-  "last_observed_remote_state": null,
-  "remote_jira_key": null,
-  "upstream_dependencies": [],
-  "observability_impact": "Persist Cursor run IDs, prompt and context digests, base/head SHAs, files, tests, cost, duration, outcomes, checkpoints, receipts, and readbacks without secret values.",
-  "rollback_recovery_consideration": "Disable provider:cursor-cli, preserve durable checkpoints and branches, restore the verified pre-change backup, and continue through another qualified provider without changing canonical project truth.",
-  "security_impact": "Keep Cursor quarantined until authentication, Privacy Mode, representative qualification, Windows verification, rollback, and external-write isolation are evidenced.",
   "acceptance_criteria": [
     {
-      "criterion_id": "AC-PP-000379-05",
-      "statement": "Cursor takeover configuration, bounded planning, provider quarantine, product outcome, and Completion Gate enforcement are deterministic and tested.",
+      "criterion_id": "AC-PP-900138-01",
+      "statement": "Product definition, source coverage, requirements, plans, Jira, Control selection, and Completion Gate semantics preserve the original autonomous outcome and fail under the previous defective model.",
       "verification": {
-        "command": "PYTHONPATH=src python -m pytest -q tests/test_cursor_takeover.py tests/test_agent_router_adapters.py tests/test_assurance_completion.py",
-        "method": "bounded_takeover_validation",
-        "path": "tests/test_cursor_takeover.py",
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_product_outcome_contract.py",
+        "method": "falsifying_contract_validation",
+        "path": "tests/test_product_outcome_contract.py",
         "status": "PLANNED"
       }
     }
   ],
-  "description": "Repair the product model and install the governed Cursor execution boundary before ordinary work selection resumes.",
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "All model layers agree.",
+    "Previous defects are falsified.",
+    "Independent source-to-control audit passes."
+  ],
+  "dependencies": [],
+  "description": "Restore the original source-derived product outcome and align every model and selection/completion authority before normal work selection resumes.",
+  "evidence_required": [],
+  "exclusions": [
+    "Does not claim the Autonomy Runtime is implemented or qualified."
+  ],
   "expected_file_locations": [
-    "config/cursor_takeover.json",
-    ".cursor/rules/00-authority-and-product-goal.mdc",
-    "src/project_pipeline/cursor_takeover.py"
+    "config/product_outcome.json",
+    "plans/_traceability",
+    "jira",
+    "src/project_pipeline/validation"
   ],
   "expected_implementation_artifacts": [
-    "config/cursor_takeover.json",
-    ".cursor/rules/00-authority-and-product-goal.mdc",
-    "src/project_pipeline/cursor_takeover.py",
-    "scripts/cursor_takeover.py",
-    "tests/test_cursor_takeover.py"
+    "config/product_outcome.json",
+    "src/project_pipeline/validation/product_outcome.py"
   ],
   "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
-    "capability-story",
-    "autonomous-runtime",
-    "cursor-takeover"
+    "autonomy-runtime",
+    "in-progress",
+    "model-realignment",
+    "vertical-slice"
   ],
+  "last_observed_remote_state": null,
   "local_id": "PP-STORY-000138",
-  "objective": "Establish the governed Cursor takeover and restore the full autonomous operating-loop product definition.",
-  "owner_required_capability": "systems_architecture_and_implementation",
-  "parent": "PP-EPIC-000037",
+  "objective": "Realign the complete source-to-control product model",
+  "observability_impact": "Expose model drift and reconciliation debt explicitly.",
+  "owner_required_capability": "requirements_traceability_and_control_authority",
+  "parent": "PP-EPIC-000036",
   "plan_references": [
     {
-      "authoritative_path": "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
-      "end_line": 46,
-      "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-001_project_definition.lines.txt",
-      "line_reference": "PLAN-PDEF-001:SEC-08:L000044-L000046",
-      "plan_id": "PLAN-PDEF-001",
-      "section_id": "PLAN-PDEF-001:SEC-08",
-      "start_line": 44
+      "authoritative_path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
+      "end_line": 13,
+      "line_numbered_path": "plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt",
+      "line_reference": "PLAN-CTRL-003:SEC-01:L000008-L000013",
+      "plan_id": "PLAN-CTRL-003",
+      "section_id": "PLAN-CTRL-003:SEC-01",
+      "start_line": 8
     }
   ],
-  "rationale": "A provider handoff is safe only when the product goal, deterministic authority, progress governor, and activation evidence are repository-controlled.",
+  "rationale": "Normal Control selection is unsafe until the central outcome and stale implementation projections are repaired.",
   "relationships": [
     {
-      "target": "PP-EPIC-000037",
+      "target": "PP-EPIC-000036",
       "type": "CHILD_OF"
     },
     {
-      "target": "PP-TASK-000379",
+      "target": "PP-TASK-000380",
       "type": "PARENT_OF"
     }
   ],
-  "required_tests": [
-    "TEST-CURSOR-TAKEOVER-001",
-    "TEST-ASSURANCE-COMPLETION-007"
-  ],
+  "remote_jira_key": null,
+  "required_tests": [],
   "requirement_ids": [
-    "REQ-PDEF-0011",
-    "REQ-CTRL-0015"
+    "REQ-PDEF-0011"
   ],
   "risk_classification": "CRITICAL",
+  "rollback_recovery_consideration": "Restore the verified pre-realignment bundle and database snapshot.",
+  "schema_version": "1.0.0",
   "scope": [
-    "Tracked Cursor control package",
-    "Provider adapter and registry",
-    "Bounded supervisor",
-    "Product-model repair",
-    "Completion Gate extension",
-    "Takeover runbook and prompt"
+    "Source coverage",
+    "requirements",
+    "plans",
+    "Jira",
+    "Control",
+    "Completion Gate"
   ],
+  "security_impact": "Prevents autonomous execution against a false critical path.",
   "source_references": [
-    "SRC-014:L000001-L000087",
-    "SRC-015:L000031-L000150"
+    "SRC-014:L000001-L000086",
+    "SRC-015:L000001-L000112"
   ],
-  "state": "BACKLOG",
-  "title": "Governed Cursor takeover and product-model repair"
+  "state": "IN_PROGRESS",
+  "title": "Source-to-control product outcome realignment",
+  "upstream_dependencies": []
 }

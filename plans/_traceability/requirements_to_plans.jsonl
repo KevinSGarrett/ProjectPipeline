@@ -212,7 +212,7 @@
 {"plan_ids": ["PLAN-PDEF-001"], "requirement_id": "REQ-PDEF-0008"}
 {"plan_ids": ["PLAN-PDEF-001", "PLAN-LIFE-002"], "requirement_id": "REQ-PDEF-0009"}
 {"plan_ids": ["PLAN-PDEF-001"], "requirement_id": "REQ-PDEF-0010"}
-{"plan_ids": ["PLAN-PDEF-001", "PLAN-VERIFY-001"], "requirement_id": "REQ-PDEF-0011"}
+{"plan_ids": ["PLAN-CTRL-003"], "requirement_id": "REQ-PDEF-0011"}
 {"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0001"}
 {"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0002"}
 {"plan_ids": ["PLAN-REL-001"], "requirement_id": "REQ-REL-0003"}

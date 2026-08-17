@@ -8,6 +8,7 @@ from typing import Any
 
 from project_pipeline.domain.jira import (
     JiraIssueType,
+    JiraLifecycleState,
     JiraMirrorBundle,
     JiraRelationshipType,
     LocalJiraIssue,
@@ -197,7 +198,11 @@ def validate_jira_mirror(
         ):
             errors.append(f"{issue.local_id} relationship dependencies are internally inconsistent")
     for issue in issues:
-        if issue.issue_type is JiraIssueType.EPIC and child_counts[issue.local_id] == 0:
+        if (
+            issue.issue_type is JiraIssueType.EPIC
+            and child_counts[issue.local_id] == 0
+            and issue.state is not JiraLifecycleState.CANCELLED
+        ):
             errors.append(f"epic {issue.local_id} is orphaned")
     parent_cycles = _cycle_nodes(parent_edges)
     if parent_cycles:

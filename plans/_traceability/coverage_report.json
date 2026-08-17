@@ -90,9 +90,10 @@
       "DUPLICATE_SOURCE": 35,
       "OPEN_DECISION_CONTEXT": 4,
       "PREFIX_OVERLAP_SOURCE": 55,
-      "REQUIREMENT_LINKED": 636,
+      "REQUIREMENT_LINKED": 627,
       "SUPPORTING_EXAMPLE": 66,
-      "UPSTREAM_RESEARCH_CONTEXT": 146
+      "UPSTREAM_RESEARCH_CONTEXT": 146,
+      "USER_INTENT_CONTEXT": 9
     },
     "by_source": {
       "SRC-001": 89,
@@ -115,7 +116,7 @@
       "SRC-018": 35
     },
     "explicit_disposition_count": 1109,
-    "linked_requirement_section_count": 622,
+    "linked_requirement_section_count": 646,
     "schema_version": "1.0.0",
     "section_count": 1109
   },

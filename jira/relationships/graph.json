@@ -1,5 +1,5 @@
 {
-  "edge_count": 888,
+  "edge_count": 890,
   "edges": [
     {
       "from": "PP-EPIC-000001",
@@ -2293,6 +2293,11 @@
     },
     {
       "from": "PP-STORY-000138",
+      "to": "PP-TASK-000379",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000138",
       "to": "PP-TASK-000380",
       "type": "PARENT_OF"
     },
@@ -4362,6 +4367,11 @@
       "type": "CHILD_OF"
     },
     {
+      "from": "PP-TASK-000379",
+      "to": "PP-STORY-000138",
+      "type": "CHILD_OF"
+    },
+    {
       "from": "PP-TASK-000380",
       "to": "PP-STORY-000138",
       "type": "CHILD_OF"
@@ -4442,7 +4452,7 @@
       "type": "DEPENDS_ON"
     }
   ],
-  "node_count": 391,
+  "node_count": 393,
   "nodes": [
     {
       "id": "PP-EPIC-000001",
@@ -4665,6 +4675,12 @@
       "state": "BACKLOG",
       "title": "Implement and verify Release, Handoff, and Completion Audit",
       "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000037",
+      "state": "CANCELLED",
+      "title": "Autonomous Runtime Integration and Unattended Qualification",
+      "type": "EPIC"
     },
     {
       "id": "PP-TASK-000037",
@@ -6752,6 +6768,12 @@
       "id": "PP-TASK-000378",
       "state": "BACKLOG",
       "title": "Execute exhaustive final convergence and completion audit",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000379",
+      "state": "IN_PROGRESS",
+      "title": "Install governed Cursor takeover and autonomous runtime outcome",
       "type": "TASK"
     },
     {

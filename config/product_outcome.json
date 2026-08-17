@@ -1,8 +1,46 @@
 {
-  "schema_version": "1.0.0",
+  "broad_source_contracts": [
+    {
+      "allowed_supporting_requirement_ids": [
+        "REQ-CTRL-0004"
+      ],
+      "mandatory_requirement_id": "REQ-PDEF-0011",
+      "source_reference": "SRC-014:L000001-L000087"
+    },
+    {
+      "allowed_supporting_requirement_ids": [
+        "REQ-CTRL-0014",
+        "REQ-CTRL-0015"
+      ],
+      "mandatory_requirement_id": "REQ-PDEF-0011",
+      "source_reference": "SRC-015:L000001-L000113"
+    }
+  ],
   "contract_id": "PRODUCT-OUTCOME-001",
-  "pursuing_goal": "Deliver and qualify ProjectPipeline as a continuously operating, local-first autonomous engineering organization that accepts complete project inputs, compiles a verified project model, autonomously selects and executes genuinely missing work through conflict-safe parallel lanes and qualified workers, verifies results, governs GitHub and Jira, merges accepted changes, reconciles external state, recomputes project state, handles HUMAN_REQUIRED incidents without stopping unaffected work, exposes truthful live state through the Command Center, and continues until the project’s deterministic Completion Gate reports COMPLETE for the integrated, released, and operationally verified system.",
-  "terminal_rule": "INCOMPLETE_UNTIL_ALL_QUALIFICATION_STAGES_AND_COMPLETION_GATE_PASS",
+  "control_selection": {
+    "allowed_issue_ids": [
+      "PP-TASK-000380",
+      "PP-TASK-000381",
+      "PP-TASK-000382",
+      "PP-TASK-000383",
+      "PP-TASK-000384",
+      "PP-TASK-000385"
+    ],
+    "mode": "PRODUCT_OUTCOME_CRITICAL_PATH_ONLY",
+    "resume_rule": "Independent product-model audit confirmed that the highest-ranked bounded work is still genuinely missing product-critical behavior. Normal backlog selection remains denied. Selection stays bounded to these integrated-runtime slices until the core outcome is qualified."
+  },
+  "core_requirement_id": "REQ-PDEF-0011",
+  "core_statement": "ProjectPipeline shall continuously take a project from intake through verified modeling, autonomous selection, conflict-safe parallel execution, verification, governed repository integration, Jira reconciliation, project-state recomputation, and next-work selection without requiring a human to drive each development session.",
+  "disallowed_completion_evidence_classes": [
+    "COMPONENT_EXISTENCE",
+    "SCHEMA_EXISTENCE",
+    "PLAN_EXISTENCE",
+    "SEQUENTIAL_COMPONENT_COMPOSITION_ONLY",
+    "MOCKED_REMOTE_ONLY",
+    "DETERMINISTIC_SIMULATION_ONLY",
+    "GENERATED_EVIDENCE_RECORD_ONLY"
+  ],
+  "epic_id": "PP-EPIC-000036",
   "immediate_pursuing_milestones": [
     "Repair product definition, source coverage, requirements, plans, Jira, Control selection, and Completion Gate semantics.",
     "Implement the missing integrated Autonomy Runtime.",
@@ -13,123 +51,9 @@
     "Complete security, resilience, deployment, release, and post-release verification.",
     "Keep the pursuing goal INCOMPLETE until all terminal conditions pass."
   ],
-  "core_requirement_id": "REQ-PDEF-0011",
-  "core_statement": "ProjectPipeline shall continuously take a project from intake through verified modeling, autonomous selection, conflict-safe parallel execution, verification, governed repository integration, Jira reconciliation, project-state recomputation, and next-work selection without requiring a human to drive each development session.",
-  "source_references": [
-    "SRC-014:L000001-L000087",
-    "SRC-015:L000001-L000113"
-  ],
-  "source_outcomes": [
-    {
-      "source_id": "SRC-014",
-      "outcome": "Continuous autonomy and dynamic parallel-lane sequencing are required under deterministic control authority.",
-      "references": [
-        "SRC-014:L000001-L000115",
-        "SRC-014:L000378-L000748"
-      ]
-    },
-    {
-      "source_id": "SRC-015",
-      "outcome": "Human escalation, incident handling, and operator-facing truth surfaces are mandatory for safe completion decisions.",
-      "references": [
-        "SRC-015:L000003-L000112",
-        "SRC-015:L000703-L000955"
-      ]
-    }
-  ],
-  "completion_stage_precedence": {
-    "deduplication_intent": "Differentiate candidate completion authority from final completion authority so completion semantics do not compete.",
-    "non_competition_rule": "Candidate completion readiness is necessary evidence but is never sufficient to grant final project completion.",
-    "stages": [
-      {
-        "stage_id": "CANDIDATE_COMPLETION_GATE",
-        "order": 1,
-        "requirement_ids": [
-          "REQ-ASSURE-0004"
-        ],
-        "jira_epic_ids": [
-          "PP-EPIC-000017"
-        ],
-        "jira_story_ids": [
-          "PP-STORY-000018"
-        ],
-        "rule": "Candidate completion gate authority forms completion evidence but cannot grant final completion."
-      },
-      {
-        "stage_id": "FINAL_CONVERGENCE_AUDIT",
-        "order": 2,
-        "requirement_ids": [
-          "REQ-REL-0003"
-        ],
-        "jira_epic_ids": [
-          "PP-EPIC-000035"
-        ],
-        "jira_story_ids": [
-          "PP-STORY-000036"
-        ],
-        "rule": "Final convergence audit is the only authority that can grant final project completion."
-      }
-    ]
-  },
-  "broad_source_contracts": [
-    {
-      "source_reference": "SRC-014:L000001-L000087",
-      "mandatory_requirement_id": "REQ-PDEF-0011",
-      "allowed_supporting_requirement_ids": ["REQ-CTRL-0004"]
-    },
-    {
-      "source_reference": "SRC-015:L000001-L000113",
-      "mandatory_requirement_id": "REQ-PDEF-0011",
-      "allowed_supporting_requirement_ids": ["REQ-CTRL-0014", "REQ-CTRL-0015"]
-    }
-  ],
   "plan_id": "PLAN-CTRL-003",
-  "epic_id": "PP-EPIC-000036",
+  "pursuing_goal": "Deliver and qualify ProjectPipeline as a continuously operating, local-first autonomous engineering organization that accepts complete project inputs, compiles a verified project model, autonomously selects and executes genuinely missing work through conflict-safe parallel lanes and qualified workers, verifies results, governs GitHub and Jira, merges accepted changes, reconciles external state, recomputes project state, handles HUMAN_REQUIRED incidents without stopping unaffected work, exposes truthful live state through the Command Center, and continues until the project’s deterministic Completion Gate reports COMPLETE for the integrated, released, and operationally verified system.",
   "qualification_journey_task_id": "PP-TASK-000383",
-  "control_selection": {
-    "mode": "PAUSED_PENDING_INDEPENDENT_PRODUCT_MODEL_AUDIT",
-    "allowed_issue_ids": [
-      "PP-TASK-000380",
-      "PP-TASK-000381",
-      "PP-TASK-000382",
-      "PP-TASK-000383",
-      "PP-TASK-000384",
-      "PP-TASK-000385"
-    ],
-    "resume_rule": "Normal backlog selection remains denied until an independent audit confirms that the highest-ranked work is genuinely missing product-critical behavior. After acceptance, selection remains bounded to these integrated-runtime slices until the core outcome is qualified."
-  },
-  "vertical_slices": [
-    {
-      "story_id": "PP-STORY-000138",
-      "task_id": "PP-TASK-000380",
-      "outcome": "Repair product definition, source coverage, requirements, plans, Jira, Control selection, and Completion Gate semantics."
-    },
-    {
-      "story_id": "PP-STORY-000139",
-      "task_id": "PP-TASK-000381",
-      "outcome": "Deliver a persistent autonomy supervisor composing intake, verified modeling, selection, context, routing, dispatch, verification, and next-work continuation."
-    },
-    {
-      "story_id": "PP-STORY-000140",
-      "task_id": "PP-TASK-000382",
-      "outcome": "Deliver conflict-safe parallel lanes, durable leases and fencing, bounded recovery, unknown-outcome reconciliation, and HUMAN_REQUIRED continuation semantics."
-    },
-    {
-      "story_id": "PP-STORY-000141",
-      "task_id": "PP-TASK-000383",
-      "outcome": "Prove a local-real isolated Git/worktree journey with governed PR/merge simulation, Jira reconciliation, project-state recomputation, restart, worker loss, and unaffected-lane continuation."
-    },
-    {
-      "story_id": "PP-STORY-000142",
-      "task_id": "PP-TASK-000384",
-      "outcome": "Qualify authorized live GitHub/Jira and worker/provider dispatch plus truthful Command Center and Windows service operation."
-    },
-    {
-      "story_id": "PP-STORY-000143",
-      "task_id": "PP-TASK-000385",
-      "outcome": "Pass recovery, 24-hour and 72-hour unattended operation, release, post-release verification, and final deterministic Completion Gate."
-    }
-  ],
   "qualification_ladder": [
     "DETERMINISTIC_UNIT_AND_CONTRACT",
     "LOCAL_REAL_INTEGRATED_JOURNEY",
@@ -142,15 +66,12 @@
     "UNATTENDED_72_HOUR",
     "RELEASED_POST_RELEASE_COMPLETION_GATE"
   ],
-  "disallowed_completion_evidence_classes": [
-    "COMPONENT_EXISTENCE",
-    "SCHEMA_EXISTENCE",
-    "PLAN_EXISTENCE",
-    "SEQUENTIAL_COMPONENT_COMPOSITION_ONLY",
-    "MOCKED_REMOTE_ONLY",
-    "DETERMINISTIC_SIMULATION_ONLY",
-    "GENERATED_EVIDENCE_RECORD_ONLY"
+  "schema_version": "1.0.0",
+  "source_references": [
+    "SRC-014:L000001-L000087",
+    "SRC-015:L000001-L000113"
   ],
+  "terminal_rule": "INCOMPLETE_UNTIL_ALL_QUALIFICATION_STAGES_AND_COMPLETION_GATE_PASS",
   "user_intent_contracts": {
     "SRC-002-SEC-001": [
       "REQ-CTX-0002"
@@ -187,5 +108,37 @@
     "SRC-017-SEC-001": [
       "REQ-REL-0003"
     ]
-  }
+  },
+  "vertical_slices": [
+    {
+      "outcome": "Repair product definition, source coverage, requirements, plans, Jira, Control selection, and Completion Gate semantics.",
+      "story_id": "PP-STORY-000138",
+      "task_id": "PP-TASK-000380"
+    },
+    {
+      "outcome": "Deliver a persistent autonomy supervisor composing intake, verified modeling, selection, context, routing, dispatch, verification, and next-work continuation.",
+      "story_id": "PP-STORY-000139",
+      "task_id": "PP-TASK-000381"
+    },
+    {
+      "outcome": "Deliver conflict-safe parallel lanes, durable leases and fencing, bounded recovery, unknown-outcome reconciliation, and HUMAN_REQUIRED continuation semantics.",
+      "story_id": "PP-STORY-000140",
+      "task_id": "PP-TASK-000382"
+    },
+    {
+      "outcome": "Prove a local-real isolated Git/worktree journey with governed PR/merge simulation, Jira reconciliation, project-state recomputation, restart, worker loss, and unaffected-lane continuation.",
+      "story_id": "PP-STORY-000141",
+      "task_id": "PP-TASK-000383"
+    },
+    {
+      "outcome": "Qualify authorized live GitHub/Jira and worker/provider dispatch plus truthful Command Center and Windows service operation.",
+      "story_id": "PP-STORY-000142",
+      "task_id": "PP-TASK-000384"
+    },
+    {
+      "outcome": "Pass recovery, 24-hour and 72-hour unattended operation, release, post-release verification, and final deterministic Completion Gate.",
+      "story_id": "PP-STORY-000143",
+      "task_id": "PP-TASK-000385"
+    }
+  ]
 }

@@ -27,12 +27,25 @@ _COMPLETE = {
     ImplementationState.BLOCKED_EXTERNAL.value,
 }
 
+_AUTONOMOUS_RUNTIME_EVIDENCE_ENVIRONMENTS = {
+    "deterministic_unit_and_contract",
+    "local_real_integrated_journey",
+    "isolated_real_git_worktree_journey",
+    "authorized_github_jira_sandbox_or_live",
+    "qualified_real_worker_provider_dispatch",
+    "windows_service_and_command_center",
+    "recovery_and_restart",
+    "unattended_24_hour",
+    "unattended_72_hour",
+    "released_post_release_completion_gate",
+}
+
 QUESTIONS: tuple[str, ...] = (
     "Are all source-derived requirements dispositioned?",
     "Are all accepted requirements implemented or explicitly externally blocked?",
     "Are all implementation artifacts traceable?",
     "Are all critical paths tested?",
-    "Do the golden journeys pass?",
+    "Does the integrated autonomous operating-loop journey pass every qualification stage?",
     "Are security gates satisfied?",
     "Are resilience/recovery expectations verified?",
     "Is deployment reproducible?",
@@ -43,7 +56,6 @@ QUESTIONS: tuple[str, ...] = (
     "Does the Command Center accurately reflect actual system state?",
     "Does Jira accurately reflect actual implementation state?",
     "Does the final coverage audit show any unexplained gaps?",
-    "Has the unattended end-to-end operating loop passed required qualification?",
 )
 
 _CATEGORY_BY_QUESTION = {
@@ -62,7 +74,6 @@ _CATEGORY_BY_QUESTION = {
     13: FailureCategory.STATE_RECONCILIATION,
     14: FailureCategory.STATE_RECONCILIATION,
     15: FailureCategory.COVERAGE,
-    16: FailureCategory.GOLDEN_JOURNEY,
 }
 
 
@@ -123,7 +134,7 @@ def evaluate_completion_gate(facts: CompletionGateFacts) -> CompletionGateDecisi
         facts.accepted_requirements_complete_or_external,
         facts.implementation_traceability_complete,
         facts.critical_paths_tested,
-        facts.golden_journeys_pass,
+        facts.golden_journeys_pass and facts.autonomous_runtime_qualified,
         facts.security_gates_satisfied,
         facts.resilience_verified,
         facts.deployment_reproducible,
@@ -134,7 +145,6 @@ def evaluate_completion_gate(facts: CompletionGateFacts) -> CompletionGateDecisi
         facts.command_center_truthful,
         facts.jira_truthful,
         facts.unexplained_gap_count == 0,
-        facts.unattended_operating_loop_qualified,
     )
     blocked = set(facts.externally_blocked_question_numbers)
     results: list[CompletionQuestionResult] = []
@@ -224,6 +234,26 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         )
     )
     golden = bool(golden_evidence)
+    core_requirement = next(
+        (item for item in requirements if item.get("requirement_id") == "REQ-PDEF-0011"),
+        None,
+    )
+    core_evidence_ids = set(core_requirement.get("evidence_ids", [])) if core_requirement else set()
+    runtime_evidence = tuple(
+        item
+        for item in evidence_rows
+        if item.get("evidence_id") in core_evidence_ids
+        and item.get("result") == "PASS"
+        and item.get("verification_status") == "VERIFIED"
+    )
+    runtime_environments = {str(item.get("environment")) for item in runtime_evidence}
+    missing_runtime_environments = sorted(
+        _AUTONOMOUS_RUNTIME_EVIDENCE_ENVIRONMENTS - runtime_environments
+    )
+    autonomous_runtime_qualified = core_requirement is not None and (
+        core_requirement.get("implementation_state") == ImplementationState.LIVE_VERIFIED.value
+        and not missing_runtime_environments
+    )
     sec = [item for item in accepted if item.get("domain") == "SEC"]
     security = bool(sec) and all(
         item.get("implementation_state") in _COMPLETE and item.get("evidence_ids") for item in sec
@@ -262,17 +292,6 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         not (item.get("state") == "DONE" and not item.get("completion_evidence")) for item in issues
     )
     gaps = int(traceability.get("unexplained_gap_count", traceability.get("gap_count", 0)))
-    unattended_evidence = tuple(
-        sorted(
-            item["evidence_id"]
-            for item in evidence_rows
-            if item.get("method") == "unattended_operating_loop_qualification"
-            and item.get("result") == "PASS"
-            and item.get("verification_status") == "VERIFIED"
-            and _valid_unattended_qualification(root, item)
-        )
-    )
-    unattended_qualified = bool(unattended_evidence)
     reasons: dict[str, tuple[str, ...]] = {
         "1": (f"{len(requirements)} requirements inspected",),
         "2": (
@@ -286,19 +305,17 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         if not critical_tested
         else ("critical requirement set has test/evidence mappings",),
         "5": (
-            "golden-journey verified evidence is not yet present; execution belongs to the next verification harness phase",
+            "integrated autonomous-runtime qualification is incomplete; missing verified stages: "
+            + ", ".join(missing_runtime_environments),
         )
-        if not golden
-        else ("verified golden-journey evidence is present",),
+        if not autonomous_runtime_qualified
+        else (
+            "the integrated autonomous runtime has verified evidence for every required qualification stage",
+        ),
         "13": ("Command Center requirements are not yet complete",)
         if not command_center
         else ("Command Center requirements are complete",),
         "15": (f"unexplained traceability gaps: {gaps}",),
-        "16": (
-            "no verified 72-hour unattended operating-loop qualification evidence is present"
-            if not unattended_qualified
-            else "verified 72-hour unattended operating-loop qualification evidence is present",
-        ),
     }
     payload = {
         "requirements": [
@@ -313,8 +330,9 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         "issues": [(i["local_id"], i.get("state"), i.get("implementation_state")) for i in issues],
         "gaps": gaps,
         "golden": golden,
+        "autonomous_runtime_qualified": autonomous_runtime_qualified,
+        "autonomous_runtime_environments": sorted(runtime_environments),
         "rollback": rollback,
-        "unattended_evidence": unattended_evidence,
     }
     return CompletionGateFacts(
         project_id=project_id,
@@ -323,6 +341,7 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         implementation_traceability_complete=traceable,
         critical_paths_tested=critical_tested,
         golden_journeys_pass=golden,
+        autonomous_runtime_qualified=autonomous_runtime_qualified,
         security_gates_satisfied=security,
         resilience_verified=resilience,
         deployment_reproducible=deployment,
@@ -332,7 +351,6 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         unresolved_items_truthful=unresolved_truthful,
         command_center_truthful=command_center,
         jira_truthful=jira_truthful,
-        unattended_operating_loop_qualified=unattended_qualified,
         unexplained_gap_count=gaps,
         evidence_by_question={
             "4": tuple(
@@ -344,7 +362,11 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
                     }
                 )
             ),
-            "5": golden_evidence,
+            "5": tuple(
+                sorted(
+                    set(golden_evidence) | {str(item["evidence_id"]) for item in runtime_evidence}
+                )
+            ),
             "6": tuple(
                 sorted(
                     {evidence_id for item in sec for evidence_id in item.get("evidence_ids", [])}
@@ -360,7 +382,6 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
                     {evidence_id for item in infra for evidence_id in item.get("evidence_ids", [])}
                 )
             ),
-            "16": unattended_evidence,
         },
         reasons_by_question=reasons,
         snapshot_fingerprint=assurance_fingerprint(payload),
@@ -375,28 +396,3 @@ def _evidence_rows(root: Path) -> tuple[dict[str, Any], ...]:
             if line.strip():
                 rows.append(json.loads(line))
     return tuple(rows)
-
-
-def _valid_unattended_qualification(root: Path, row: dict[str, Any]) -> bool:
-    artifact_path = row.get("artifact_path")
-    if not isinstance(artifact_path, str):
-        return False
-    path = (root / artifact_path).resolve()
-    try:
-        path.relative_to(root.resolve())
-    except ValueError:
-        return False
-    if not path.is_file() or path.suffix.lower() != ".json":
-        return False
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
-        return False
-    return (
-        float(payload.get("duration_hours", 0)) >= 72
-        and payload.get("end_to_end") is True
-        and payload.get("restart_recovery") is True
-        and payload.get("external_reconciliation") is True
-        and payload.get("windows_native_verified") is True
-        and payload.get("unattended") is True
-    )
