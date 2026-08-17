@@ -7,7 +7,17 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_product_outcome_contract.py",
         "method": "falsifying_model_validation",
         "path": "tests/test_product_outcome_contract.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000380-02",
+      "statement": "An independent product-model auditor, separate from validate_product_outcome, confirms ten user-intent mappings, plan truth, epic/journey cohesion, stale-implementation findings, and that Control's top bounded work is genuinely missing.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_product_outcome_contract.py",
+        "method": "independent_product_model_audit",
+        "path": "src/project_pipeline/validation/product_model_audit.py",
+        "status": "VERIFIED"
       }
     }
   ],
@@ -31,19 +41,21 @@
     "plans/PLAN_CATALOG.json",
     "jira",
     "src/project_pipeline/validation/product_outcome.py",
+    "src/project_pipeline/validation/product_model_audit.py",
     "src/project_pipeline/assurance/completion.py"
   ],
   "expected_implementation_artifacts": [
     "config/product_outcome.json",
     "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
     "src/project_pipeline/validation/product_outcome.py",
+    "src/project_pipeline/validation/product_model_audit.py",
     "tests/test_product_outcome_contract.py"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "cohesive-slice",
-    "in-progress",
+    "implemented",
     "model-realignment",
     "product-outcome"
   ],

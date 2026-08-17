@@ -39,6 +39,9 @@ from project_pipeline.validation.content import (
     check_secrets,
 )
 from project_pipeline.validation.models import ValidationReport
+from project_pipeline.validation.product_model_audit import (
+    validate_independent_product_model_audit,
+)
 from project_pipeline.validation.product_outcome import validate_product_outcome
 from project_pipeline.validation.registries import (
     check_adr_registry,
@@ -80,6 +83,7 @@ class RepositoryValidator:
         self._run("generated_schemas", self._check_generated_schemas)
         self._run("project_domain_manifest", self._check_project_domain_manifest)
         self._run("product_outcome", self._check_product_outcome)
+        self._run("product_model_audit", self._check_product_model_audit)
         self._run("database_migrations", self._check_database_migrations)
         self._run("project_intake_compiler", self._check_project_intake_compiler)
         self._run("jira_steward", self._check_jira_steward)
@@ -181,6 +185,10 @@ class RepositoryValidator:
     def _check_product_outcome(self) -> None:
         for error in validate_product_outcome(self.root):
             self.report.add("ERROR", "PRODUCT001", error, "config/product_outcome.json")
+
+    def _check_product_model_audit(self) -> None:
+        for error in validate_independent_product_model_audit(self.root):
+            self.report.add("ERROR", "PRODUCT002", error, "config/product_outcome.json")
 
     def _check_database_migrations(self) -> None:
         for error in validate_migration_catalog(self.root):

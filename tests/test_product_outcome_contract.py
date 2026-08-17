@@ -8,6 +8,10 @@ import pytest
 
 from project_pipeline.io import read_json, read_jsonl, write_json, write_jsonl
 from project_pipeline.validation.models import ValidationReport
+from project_pipeline.validation.product_model_audit import (
+    audit_product_model,
+    validate_independent_product_model_audit,
+)
 from project_pipeline.validation.product_outcome import (
     CORE_REQUIREMENT_ID,
     validate_product_outcome,
@@ -55,6 +59,11 @@ def _rewrite_requirement(root: Path, requirement_id: str, **updates: object) -> 
 
 def test_repaired_product_outcome_contract_is_fail_closed_and_valid() -> None:
     assert validate_product_outcome(ROOT) == []
+    assert validate_independent_product_model_audit(ROOT) == []
+    report = audit_product_model(ROOT)
+    assert report["independent_of"] == "validate_product_outcome"
+    assert report["resume_authorized"] is True
+    assert "PP-TASK-000385" in report["genuinely_missing"]
 
 
 def test_ordinary_control_selection_cannot_resume_outside_runtime_slices(
@@ -102,6 +111,31 @@ def test_command_center_director_chat_cannot_qualify_persistent_director(
 
     errors = validate_product_outcome(product_root)
     assert any("persistent Autonomy Director must remain incomplete" in error for error in errors)
+
+
+def test_independent_audit_rejects_false_complete_and_dropped_intent(
+    product_root: Path,
+) -> None:
+    _rewrite_requirement(
+        product_root,
+        CORE_REQUIREMENT_ID,
+        implementation_state="IMPLEMENTED",
+        evidence_ids=["EVID-LOCAL-RUNTIME"],
+    )
+    contract_path = product_root / "config/product_outcome.json"
+    contract = read_json(contract_path)
+    del contract["user_intent_contracts"]["SRC-003-SEC-001"]
+    write_json(contract_path, contract)
+    task_path = product_root / "jira/tasks/PP-TASK-000385.json"
+    task = read_json(task_path)
+    task["implementation_state"] = "IMPLEMENTED"
+    write_json(task_path, task)
+
+    errors = validate_independent_product_model_audit(product_root)
+    assert any("ten explicit user-intent mappings" in error for error in errors)
+    assert any("core outcome cannot be implemented" in error for error in errors)
+    assert any("PP-TASK-000385 cannot be complete" in error for error in errors)
+    assert validate_product_outcome is not audit_product_model
 
 
 def test_user_intent_context_cannot_silently_remove_operator_outcome(

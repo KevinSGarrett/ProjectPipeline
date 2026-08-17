@@ -26,8 +26,8 @@
       "PP-TASK-000384",
       "PP-TASK-000385"
     ],
-    "mode": "PAUSED_PENDING_INDEPENDENT_PRODUCT_MODEL_AUDIT",
-    "resume_rule": "Normal backlog selection remains denied until an independent audit confirms that the highest-ranked work is genuinely missing product-critical behavior. After acceptance, selection remains bounded to these integrated-runtime slices until the core outcome is qualified."
+    "mode": "PRODUCT_OUTCOME_CRITICAL_PATH_ONLY",
+    "resume_rule": "Independent product-model audit confirmed that the highest-ranked bounded work is still genuinely missing product-critical behavior. Normal backlog selection remains denied. Selection stays bounded to these integrated-runtime slices until the core outcome is qualified."
   },
   "core_requirement_id": "REQ-PDEF-0011",
   "core_statement": "ProjectPipeline shall continuously take a project from intake through verified modeling, autonomous selection, conflict-safe parallel execution, verification, governed repository integration, Jira reconciliation, project-state recomputation, and next-work selection without requiring a human to drive each development session.",
