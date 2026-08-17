@@ -6316,7 +6316,7 @@
     },
     {
       "id": "PP-TASK-000346",
-      "state": "BACKLOG",
+      "state": "IN_PROGRESS",
       "title": "Implement supply-chain scanner and policy-conformance adapters",
       "type": "TASK"
     },

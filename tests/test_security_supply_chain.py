@@ -31,27 +31,39 @@ def test_supply_chain_gate_passes_local_policy(project_root):
 
 def _release_inputs(project_root, *, observed_at_utc: datetime, payload=None):
     manifest_sha256 = build_repository_sbom(project_root).source_manifest_sha256
+    artifact_paths = (
+        "release/release_candidate_r24.json",
+        "release/hardening_report_r24.json",
+        "release/sbom_r24.json",
+    )
     evidence = build_scanner_evidence(
-        tool="osv-scanner",
-        payload={"results": []} if payload is None else payload,
+        tool="trivy",
+        payload={"Results": []} if payload is None else payload,
         source_manifest_sha256=manifest_sha256,
         observed_at_utc=observed_at_utc,
-        evidence_path="evidence/osv-release.json",
+        scanned_kinds=(
+            SupplyChainFindingKind.VULNERABILITY,
+            SupplyChainFindingKind.MISCONFIGURATION,
+        ),
+        evidence_path="evidence/trivy-release.json",
     )
-    integrity = artifact_integrity(project_root, "README.md")
+    integrity = tuple(artifact_integrity(project_root, path) for path in artifact_paths)
     provenance, _ = release_provenance(
         project_root,
         builder_identity_id="IDENT-00000000000000000000",
         evidence_ids=("EVID-RELEASE",),
     )
-    return evidence, integrity, provenance
+    coverage = {
+        evidence.scanner_evidence_id: ("source", "dependency", "container", "infrastructure"),
+    }
+    return evidence, integrity, provenance, artifact_paths, coverage
 
 
 def test_release_gate_fails_closed_without_required_evidence(project_root):
     gate, _ = evaluate_supply_chain(project_root, release_mode=True)
     assert gate.state is GateState.FAIL
     assert {finding.kind.value for finding in gate.findings if finding.blocking} >= {
-        "VULNERABILITY",
+        "MISCONFIGURATION",
         "PROVENANCE",
         "INTEGRITY",
     }
@@ -59,21 +71,159 @@ def test_release_gate_fails_closed_without_required_evidence(project_root):
 
 def test_release_gate_accepts_fresh_manifest_bound_clean_evidence(project_root):
     now = datetime(2026, 8, 16, 18, tzinfo=UTC)
-    evidence, integrity, provenance = _release_inputs(project_root, observed_at_utc=now)
+    evidence, integrity, provenance, artifact_paths, coverage = _release_inputs(
+        project_root, observed_at_utc=now
+    )
     gate, _ = evaluate_supply_chain(
         project_root,
         release_mode=True,
         scanner_evidence=(evidence,),
-        integrity_records=(integrity,),
+        integrity_records=integrity,
         provenance=provenance,
         now_utc=now,
+        release_artifact_paths=artifact_paths,
+        scanner_target_coverage=coverage,
     )
     assert gate.state is GateState.PASS
 
 
+def test_release_gate_rejects_vulnerability_only_evidence_scope(project_root):
+    now = datetime(2026, 8, 16, 18, tzinfo=UTC)
+    manifest_sha256 = build_repository_sbom(project_root).source_manifest_sha256
+    evidence = build_scanner_evidence(
+        tool="osv-scanner",
+        payload={"results": []},
+        source_manifest_sha256=manifest_sha256,
+        observed_at_utc=now,
+        evidence_path="evidence/osv-release.json",
+    )
+    _, integrity, provenance, artifact_paths, _ = _release_inputs(project_root, observed_at_utc=now)
+    gate, _ = evaluate_supply_chain(
+        project_root,
+        release_mode=True,
+        scanner_evidence=(evidence,),
+        integrity_records=integrity,
+        provenance=provenance,
+        now_utc=now,
+        release_artifact_paths=artifact_paths,
+        scanner_target_coverage={
+            evidence.scanner_evidence_id: ("source", "dependency", "container", "infrastructure")
+        },
+    )
+    assert gate.state is GateState.FAIL
+    assert any("scan kinds" in finding.message.lower() for finding in gate.findings)
+
+
+def test_release_gate_rejects_unrelated_integrity_artifact(project_root):
+    now = datetime(2026, 8, 16, 18, tzinfo=UTC)
+    evidence, _, provenance, artifact_paths, coverage = _release_inputs(
+        project_root, observed_at_utc=now
+    )
+    unrelated_integrity = (artifact_integrity(project_root, "README.md"),)
+    gate, _ = evaluate_supply_chain(
+        project_root,
+        release_mode=True,
+        scanner_evidence=(evidence,),
+        integrity_records=unrelated_integrity,
+        provenance=provenance,
+        now_utc=now,
+        release_artifact_paths=artifact_paths,
+        scanner_target_coverage=coverage,
+    )
+    assert gate.state is GateState.FAIL
+    assert any(
+        finding.kind.value == "INTEGRITY" and "release artifact" in finding.message.lower()
+        for finding in gate.findings
+    )
+
+
+def test_release_gate_rejects_unrelated_verified_signature(project_root):
+    now = datetime(2026, 8, 16, 18, tzinfo=UTC)
+    evidence, _, provenance, artifact_paths, coverage = _release_inputs(
+        project_root, observed_at_utc=now
+    )
+    signed_unrelated = artifact_integrity(project_root, "README.md").model_copy(
+        update={"signature_state": "VERIFIED"}
+    )
+    gate, _ = evaluate_supply_chain(
+        project_root,
+        release_mode=True,
+        scanner_evidence=(evidence,),
+        integrity_records=(signed_unrelated,),
+        provenance=provenance,
+        now_utc=now,
+        signing_profile_enabled=True,
+        release_artifact_paths=artifact_paths,
+        scanner_target_coverage=coverage,
+    )
+    assert gate.state is GateState.FAIL
+    assert any(finding.kind.value == "SIGNATURE" for finding in gate.findings)
+
+
+def test_release_gate_identity_changes_when_findings_change(project_root):
+    now = datetime(2026, 8, 16, 18, tzinfo=UTC)
+    manifest_sha256 = build_repository_sbom(project_root).source_manifest_sha256
+    evidence_a = build_scanner_evidence(
+        tool="trivy",
+        payload={"Results": []},
+        source_manifest_sha256=manifest_sha256,
+        observed_at_utc=now,
+        scanned_kinds=(
+            SupplyChainFindingKind.VULNERABILITY,
+            SupplyChainFindingKind.MISCONFIGURATION,
+        ),
+    )
+    evidence_b = build_scanner_evidence(
+        tool="trivy",
+        payload={"Results": [{"Target": "src/project_pipeline/security/supply_chain.py"}]},
+        source_manifest_sha256=manifest_sha256,
+        observed_at_utc=now,
+        scanned_kinds=(
+            SupplyChainFindingKind.VULNERABILITY,
+            SupplyChainFindingKind.MISCONFIGURATION,
+        ),
+    )
+    artifacts = (
+        "release/release_candidate_r24.json",
+        "release/hardening_report_r24.json",
+        "release/sbom_r24.json",
+    )
+    integrity = tuple(artifact_integrity(project_root, path) for path in artifacts)
+    provenance, _ = release_provenance(
+        project_root,
+        builder_identity_id="IDENT-00000000000000000000",
+        evidence_ids=("EVID-RELEASE",),
+    )
+    coverage = {
+        evidence_a.scanner_evidence_id: ("source", "dependency", "container", "infrastructure"),
+        evidence_b.scanner_evidence_id: ("source", "dependency", "container", "infrastructure"),
+    }
+    gate_a, _ = evaluate_supply_chain(
+        project_root,
+        release_mode=True,
+        scanner_evidence=(evidence_a,),
+        integrity_records=integrity,
+        provenance=provenance,
+        now_utc=now,
+        release_artifact_paths=artifacts,
+        scanner_target_coverage=coverage,
+    )
+    gate_b, _ = evaluate_supply_chain(
+        project_root,
+        release_mode=True,
+        scanner_evidence=(evidence_b,),
+        integrity_records=integrity,
+        provenance=provenance,
+        now_utc=now,
+        release_artifact_paths=artifacts,
+        scanner_target_coverage=coverage,
+    )
+    assert gate_a.gate_id != gate_b.gate_id
+
+
 def test_release_gate_rejects_stale_or_wrong_manifest_scan_evidence(project_root):
     now = datetime(2026, 8, 16, 18, tzinfo=UTC)
-    stale, integrity, provenance = _release_inputs(
+    stale, integrity, provenance, artifact_paths, coverage = _release_inputs(
         project_root, observed_at_utc=now - timedelta(days=2)
     )
     wrong_manifest = stale.model_copy(
@@ -87,12 +237,16 @@ def test_release_gate_rejects_stale_or_wrong_manifest_scan_evidence(project_root
             project_root,
             release_mode=True,
             scanner_evidence=(evidence,),
-            integrity_records=(integrity,),
+            integrity_records=integrity,
             provenance=provenance,
             now_utc=now,
+            release_artifact_paths=artifact_paths,
+            scanner_target_coverage={
+                evidence.scanner_evidence_id: coverage[stale.scanner_evidence_id]
+            },
         )
         assert gate.state is GateState.FAIL
-        assert any(finding.kind.value == "VULNERABILITY" for finding in gate.findings)
+        assert any(finding.kind.value == "PROVENANCE" for finding in gate.findings)
 
 
 def test_trivy_high_vulnerability_is_normalized_and_blocks_release(project_root):
@@ -121,7 +275,12 @@ def test_trivy_high_vulnerability_is_normalized_and_blocks_release(project_root)
         observed_at_utc=now,
         scanned_kinds=(SupplyChainFindingKind.VULNERABILITY,),
     )
-    integrity = artifact_integrity(project_root, "README.md")
+    artifacts = (
+        "release/release_candidate_r24.json",
+        "release/hardening_report_r24.json",
+        "release/sbom_r24.json",
+    )
+    integrity = tuple(artifact_integrity(project_root, path) for path in artifacts)
     provenance, _ = release_provenance(
         project_root,
         builder_identity_id="IDENT-00000000000000000000",
@@ -131,9 +290,13 @@ def test_trivy_high_vulnerability_is_normalized_and_blocks_release(project_root)
         project_root,
         release_mode=True,
         scanner_evidence=(evidence,),
-        integrity_records=(integrity,),
+        integrity_records=integrity,
         provenance=provenance,
         now_utc=now,
+        release_artifact_paths=artifacts,
+        scanner_target_coverage={
+            evidence.scanner_evidence_id: ("source", "dependency", "container", "infrastructure")
+        },
     )
     assert gate.state is GateState.FAIL
     finding = next(item for item in gate.findings if item.subject == "example-package@1.0.0")

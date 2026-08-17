@@ -32,6 +32,17 @@ _OFFICIAL_MAJOR_TAG_ACTIONS = {
     "actions/download-artifact",
 }
 _DEFAULT_SCANNER_MAX_AGE = timedelta(hours=24)
+_DEFAULT_REQUIRED_SCAN_KINDS = (
+    SupplyChainFindingKind.VULNERABILITY,
+    SupplyChainFindingKind.MISCONFIGURATION,
+)
+_DEFAULT_REQUIRED_TARGET_CLASSES = (
+    "source",
+    "dependency",
+    "container",
+    "infrastructure",
+)
+_ALLOWED_RELEASE_TARGET_CLASSES = frozenset(_DEFAULT_REQUIRED_TARGET_CLASSES)
 
 
 def _mapping(value: object, *, context: str) -> Mapping[str, object]:
@@ -434,6 +445,37 @@ def _release_requirement_finding(
     )
 
 
+def _normalize_release_artifact_path(root: Path, artifact_path: str) -> str:
+    normalized = artifact_path.strip().replace("\\", "/")
+    if not normalized:
+        raise ValueError("release artifact path must be non-empty")
+    if normalized.startswith("/"):
+        raise ValueError("release artifact path must be relative to repository root")
+    resolved = (root / normalized).resolve()
+    try:
+        resolved.relative_to(root)
+    except ValueError as error:
+        raise ValueError("release artifact path escapes repository root") from error
+    if not resolved.is_file():
+        raise ValueError("release artifact path does not exist as a file")
+    return resolved.relative_to(root).as_posix()
+
+
+def _normalize_target_classes(classes: Iterable[str], *, context: str) -> tuple[str, ...]:
+    normalized: list[str] = []
+    for value in classes:
+        target = str(value).strip().casefold()
+        if not target:
+            raise ValueError(f"{context} contains an empty target class")
+        if target not in _ALLOWED_RELEASE_TARGET_CLASSES:
+            raise ValueError(f"{context} contains unsupported target class '{target}'")
+        if target not in normalized:
+            normalized.append(target)
+    if not normalized:
+        raise ValueError(f"{context} must contain at least one target class")
+    return tuple(normalized)
+
+
 def _validate_integrity_records(
     root: Path, records: tuple[ArtifactIntegrityRecord, ...]
 ) -> tuple[SupplyChainFinding, ...]:
@@ -463,6 +505,115 @@ def _validate_integrity_records(
     return tuple(findings)
 
 
+def _validate_release_artifact_coverage(
+    root: Path,
+    *,
+    declared_artifact_paths: tuple[str, ...],
+    records: tuple[ArtifactIntegrityRecord, ...],
+    signing_required: bool,
+) -> tuple[SupplyChainFinding, ...]:
+    findings: list[SupplyChainFinding] = []
+    normalized_declared: list[str] = []
+    for artifact_path in declared_artifact_paths:
+        try:
+            normalized_declared.append(_normalize_release_artifact_path(root, artifact_path))
+        except ValueError as error:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.INTEGRITY,
+                    subject=artifact_path,
+                    code="declared-artifact-invalid",
+                    message=f"declared release artifact is invalid: {error}",
+                )
+            )
+    if not normalized_declared:
+        findings.append(
+            _release_requirement_finding(
+                kind=SupplyChainFindingKind.INTEGRITY,
+                subject="release candidate",
+                code="declared-artifact-set-missing",
+                message="release evaluation requires a declared release-artifact set",
+            )
+        )
+        return tuple(findings)
+    declared_set = set(normalized_declared)
+    for artifact in sorted(declared_set):
+        if normalized_declared.count(artifact) > 1:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.INTEGRITY,
+                    subject=artifact,
+                    code="declared-artifact-duplicate",
+                    message="declared release-artifact set contains duplicates",
+                )
+            )
+    records_by_path: dict[str, list[ArtifactIntegrityRecord]] = {}
+    for record in records:
+        try:
+            normalized = _normalize_release_artifact_path(root, record.artifact_path)
+        except ValueError as error:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.INTEGRITY,
+                    subject=record.artifact_path,
+                    code="integrity-record-invalid-path",
+                    message=f"integrity record path is invalid: {error}",
+                )
+            )
+            continue
+        records_by_path.setdefault(normalized, []).append(record)
+    for artifact in sorted(declared_set):
+        bound_records = records_by_path.get(artifact, [])
+        if not bound_records:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.INTEGRITY,
+                    subject=artifact,
+                    code="integrity-record-missing",
+                    message="declared release artifact has no integrity record",
+                )
+            )
+            continue
+        if len(bound_records) > 1:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.INTEGRITY,
+                    subject=artifact,
+                    code="integrity-record-duplicate",
+                    message="declared release artifact has duplicate integrity records",
+                )
+            )
+    for artifact in sorted(records_by_path):
+        if artifact not in declared_set:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.INTEGRITY,
+                    subject=artifact,
+                    code="integrity-record-extra",
+                    message="integrity record references a non-declared release artifact",
+                )
+            )
+    single_records = tuple(
+        records_by_path[artifact][0]
+        for artifact in sorted(declared_set)
+        if len(records_by_path.get(artifact, [])) == 1
+    )
+    findings.extend(_validate_integrity_records(root, single_records))
+    if signing_required:
+        for artifact in sorted(declared_set):
+            bound_records = records_by_path.get(artifact, [])
+            if len(bound_records) != 1 or bound_records[0].signature_state != "VERIFIED":
+                findings.append(
+                    _release_requirement_finding(
+                        kind=SupplyChainFindingKind.SIGNATURE,
+                        subject=artifact,
+                        code="required-signature-missing",
+                        message="declared release artifact lacks a verified signature",
+                    )
+                )
+    return tuple(findings)
+
+
 def evaluate_supply_chain(
     root: Path,
     *,
@@ -475,6 +626,10 @@ def evaluate_supply_chain(
     now_utc: datetime | None = None,
     scanner_max_age: timedelta = _DEFAULT_SCANNER_MAX_AGE,
     signing_profile_enabled: bool = False,
+    release_artifact_paths: tuple[str, ...] = (),
+    scanner_target_coverage: Mapping[str, tuple[str, ...]] | None = None,
+    required_scan_kinds: tuple[SupplyChainFindingKind, ...] = _DEFAULT_REQUIRED_SCAN_KINDS,
+    required_target_classes: tuple[str, ...] = _DEFAULT_REQUIRED_TARGET_CLASSES,
 ) -> tuple[SupplyChainGateResult, SoftwareBillOfMaterials | None]:
     root = root.resolve()
     aggregate = _manifest_aggregate(root)
@@ -505,7 +660,16 @@ def evaluate_supply_chain(
         now = now.astimezone(UTC)
         if scanner_max_age <= timedelta(0):
             raise ValueError("scanner evidence maximum age must be positive")
-        qualifying_vulnerability_scan = False
+        required_kinds = frozenset(required_scan_kinds)
+        if not required_kinds:
+            raise ValueError("required release scan kinds must be non-empty")
+        required_targets = frozenset(
+            _normalize_target_classes(
+                required_target_classes, context="required release target classes"
+            )
+        )
+        scanner_coverage = scanner_target_coverage or {}
+        qualifying_release_scope_scan = False
         for evidence in tuple(scanner_evidence):
             findings.extend(evidence.findings)
             evidence_valid = True
@@ -543,20 +707,72 @@ def evaluate_supply_chain(
                         evidence_path=evidence.evidence_path,
                     )
                 )
-            if evidence_valid and SupplyChainFindingKind.VULNERABILITY in evidence.scanned_kinds:
-                qualifying_vulnerability_scan = True
+            scanned_kinds = frozenset(evidence.scanned_kinds)
+            missing_kinds = sorted(kind.value for kind in required_kinds - scanned_kinds)
+            if missing_kinds:
+                evidence_valid = False
+                findings.append(
+                    _release_requirement_finding(
+                        kind=SupplyChainFindingKind.MISCONFIGURATION,
+                        subject=evidence.tool,
+                        code="missing-scan-kind-coverage",
+                        message=(
+                            "release scan evidence is missing required configured scan kinds: "
+                            + ", ".join(missing_kinds)
+                        ),
+                        evidence_path=evidence.evidence_path,
+                    )
+                )
+            coverage_raw = scanner_coverage.get(evidence.scanner_evidence_id, ())
+            try:
+                covered_targets = frozenset(
+                    _normalize_target_classes(
+                        coverage_raw,
+                        context=f"scanner target coverage for {evidence.scanner_evidence_id}",
+                    )
+                )
+            except ValueError as error:
+                evidence_valid = False
+                findings.append(
+                    _release_requirement_finding(
+                        kind=SupplyChainFindingKind.MISCONFIGURATION,
+                        subject=evidence.tool,
+                        code="invalid-target-coverage",
+                        message=str(error),
+                        evidence_path=evidence.evidence_path,
+                    )
+                )
+                covered_targets = frozenset()
+            missing_targets = sorted(required_targets - covered_targets)
+            if missing_targets:
+                evidence_valid = False
+                findings.append(
+                    _release_requirement_finding(
+                        kind=SupplyChainFindingKind.MISCONFIGURATION,
+                        subject=evidence.tool,
+                        code="missing-target-coverage",
+                        message=(
+                            "release scan evidence does not prove coverage for required target classes: "
+                            + ", ".join(missing_targets)
+                        ),
+                        evidence_path=evidence.evidence_path,
+                    )
+                )
+            if evidence_valid:
+                qualifying_release_scope_scan = True
         if (
             bool(supply_policy.get("require_vulnerability_scan_for_release"))
-            and not qualifying_vulnerability_scan
+            and not qualifying_release_scope_scan
         ):
             findings.append(
                 _release_requirement_finding(
-                    kind=SupplyChainFindingKind.VULNERABILITY,
+                    kind=SupplyChainFindingKind.MISCONFIGURATION,
                     subject="release candidate",
                     code="required-scan-missing",
                     message=(
-                        "release requires fresh successful vulnerability-scan evidence bound "
-                        "to the current source manifest"
+                        "release requires fresh successful scan evidence bound to the current source "
+                        "manifest with required vulnerability/misconfiguration kinds and full target "
+                        "class coverage"
                     ),
                 )
             )
@@ -578,7 +794,21 @@ def evaluate_supply_chain(
                 )
         if bool(supply_policy.get("require_integrity_hashes")):
             if records:
-                findings.extend(_validate_integrity_records(root, records))
+                findings.extend(
+                    _validate_release_artifact_coverage(
+                        root,
+                        declared_artifact_paths=release_artifact_paths,
+                        records=records,
+                        signing_required=(
+                            signing_profile_enabled
+                            and bool(
+                                supply_policy.get(
+                                    "require_signed_release_when_signing_profile_enabled"
+                                )
+                            )
+                        ),
+                    )
+                )
             else:
                 findings.append(
                     _release_requirement_finding(
@@ -591,7 +821,7 @@ def evaluate_supply_chain(
         if (
             signing_profile_enabled
             and bool(supply_policy.get("require_signed_release_when_signing_profile_enabled"))
-            and (not records or any(record.signature_state != "VERIFIED" for record in records))
+            and not records
         ):
             findings.append(
                 _release_requirement_finding(
@@ -614,13 +844,75 @@ def evaluate_supply_chain(
             if release_mode
             else "required supply-chain policy checks passed"
         )
+    decision_fingerprint = security_fingerprint(
+        {
+            "aggregate": aggregate,
+            "release_mode": release_mode,
+            "state": state.value,
+            "scanner_evidence": [
+                {
+                    "scanner_evidence_id": evidence.scanner_evidence_id,
+                    "tool": evidence.tool,
+                    "execution_state": evidence.execution_state,
+                    "source_manifest_sha256": evidence.source_manifest_sha256,
+                    "result_sha256": evidence.result_sha256,
+                    "observed_at_utc": evidence.observed_at_utc.isoformat(),
+                    "scanned_kinds": [item.value for item in evidence.scanned_kinds],
+                    "target_coverage": sorted(
+                        scanner_target_coverage.get(evidence.scanner_evidence_id, ())
+                        if scanner_target_coverage
+                        else ()
+                    ),
+                }
+                for evidence in sorted(
+                    tuple(scanner_evidence), key=lambda item: item.scanner_evidence_id
+                )
+            ],
+            "integrity_records": [
+                {
+                    "integrity_id": record.integrity_id,
+                    "artifact_path": record.artifact_path,
+                    "sha256": record.sha256,
+                    "size_bytes": record.size_bytes,
+                    "signature_state": record.signature_state,
+                }
+                for record in sorted(records, key=lambda item: item.integrity_id)
+            ],
+            "release_artifact_paths": sorted(release_artifact_paths),
+            "provenance": (
+                {
+                    "provenance_id": provenance.provenance_id,
+                    "source_aggregate_sha256": provenance.source_aggregate_sha256,
+                    "builder_identity_id": provenance.builder_identity_id,
+                    "sbom_sha256": provenance.sbom_sha256,
+                    "verification_state": provenance.verification_state,
+                    "evidence_ids": sorted(provenance.evidence_ids),
+                }
+                if provenance is not None
+                else None
+            ),
+            "finding_ids": sorted(item.finding_id for item in findings),
+            "finding_fingerprint": security_fingerprint(
+                [
+                    {
+                        "finding_id": item.finding_id,
+                        "kind": item.kind.value,
+                        "severity": item.severity.value,
+                        "subject": item.subject,
+                        "message": item.message,
+                        "blocking": item.blocking,
+                    }
+                    for item in sorted(findings, key=lambda finding: finding.finding_id)
+                ]
+            ),
+        }
+    )
     gate = SupplyChainGateResult(
         gate_id=security_identifier(
             "SGATE",
             aggregate,
             "release" if release_mode else "internal",
-            str(len(findings)),
-            state.value,
+            decision_fingerprint,
         ),
         state=state,
         findings=tuple(findings),
