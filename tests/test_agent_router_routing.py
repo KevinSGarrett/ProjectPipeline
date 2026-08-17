@@ -144,6 +144,15 @@ def test_data_egress_policy_can_force_local_route():
     assert decision.selected_provider_id == "provider:two"
 
 
+def test_prefer_local_under_pressure_outranks_degraded_preferred():
+    decision = AgentRouter().route(
+        req(), make_registry(), states(ProviderRuntimeState.DEGRADED), []
+    )
+    assert decision.selected_provider_id == "provider:two"
+    healthy = AgentRouter().route(req(), make_registry(), states(), [])
+    assert healthy.selected_provider_id == "provider:one"
+
+
 def test_no_capability_match_fails_closed():
     decision = AgentRouter().route(
         ExecutionTaskContract(

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "0bd6778d211350cc547e2c95eafa9165503a22a1c37a81b5c33dd6f41c101bfe",
+  "aggregate_sha256": "d212d9f0b01035493a819cf533c636a5a140bb804b4f54613c3e657f8ba35f95",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11677,8 +11677,8 @@
     },
     {
       "path": "src/project_pipeline/agent_router/router.py",
-      "sha256": "e1262f13e5fda4a44bf3ae8ee9dc1cd5d0e467fb14b8e4e9123ca7979b0be047",
-      "size_bytes": 8580
+      "sha256": "c08d7430505509e27f78e439b4821b31ee941eb4936a9f656c8255cb3ce0ba69",
+      "size_bytes": 9538
     },
     {
       "path": "src/project_pipeline/agent_router/service.py",
@@ -13062,8 +13062,8 @@
     },
     {
       "path": "tests/test_agent_router_routing.py",
-      "sha256": "5b082abdeb78bb98528397fda00d9846a93814f5e6d21af81f4a69c23462f240",
-      "size_bytes": 5105
+      "sha256": "050985b446a2062b588b7452307e50507507518586e8ab8584e3cab60530962f",
+      "size_bytes": 5480
     },
     {
       "path": "tests/test_agent_router_service.py",
@@ -13911,7 +13911,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T18:32:09.220610+00:00",
+  "generated_at_utc": "2026-08-17T18:33:50.946044+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13920,5 +13920,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24316732
+  "total_bytes": 24318065
 }
