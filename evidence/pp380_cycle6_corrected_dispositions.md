@@ -19,9 +19,9 @@
 - Generator version: `pp380-generator-v2`
 - Receipt kind: `content_addressed_source_bound_not_signed`
 - Source map SHA-256: `f9055cdf3b9aaa30c089f5fb796449692784e314db04b52233d06c682cc9bcbc`
-- Source ledger SHA-256: `64d416f63d2b6fd8bdaf2c6880eeb363342567dfcc8fc8b092ae3a8a3e59ae23`
+- Source ledger SHA-256: `1031df5316e123497384e5f0516f7620ebeb181746b7ca19137ba9fd9373ad07`
 - Rows SHA-256: `4077ef247fc40cab595ae8f42d6227038aa43b7094f753a144d2574693dc5277`
-- Self-consistent hash SHA-256: `ef5f20a8244d1e1ac3b5f9eaf96e5e7480f959abb06871cce2084869442a5560`
-- Content-addressed receipt SHA-256: `592393b9cdbe8646ef660c3866d15727f39ff916a9c08cd4b340557c449ce426`
+- Self-consistent hash SHA-256: `b5b691a0b42eb32f072fedc0c7dfef2b4d325f34dbb37c4ee6c663e5f4872d3e`
+- Content-addressed receipt SHA-256: `68848add7fad0fc053f11732b33ed3c7aa59b19294c8766708f4a4db8bcaf36c`
 
 The content-addressed receipt binds generator version, exact source-map bytes, exact source-ledger bytes, resolved Git object IDs, and the derived rows. It is not a cryptographic signature. A self-consistent hash of values already stored in this document is not an acceptance proof.

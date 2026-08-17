@@ -16,6 +16,40 @@
       "source_reference": "SRC-015:L000001-L000113"
     }
   ],
+  "completion_stage_precedence": {
+    "deduplication_intent": "Differentiate candidate completion authority from final completion authority so completion semantics do not compete.",
+    "non_competition_rule": "Candidate completion readiness is necessary evidence but is never sufficient to grant final project completion.",
+    "stages": [
+      {
+        "jira_epic_ids": [
+          "PP-EPIC-000017"
+        ],
+        "jira_story_ids": [
+          "PP-STORY-000018"
+        ],
+        "order": 1,
+        "requirement_ids": [
+          "REQ-ASSURE-0004"
+        ],
+        "rule": "Candidate completion gate authority forms completion evidence but cannot grant final completion.",
+        "stage_id": "CANDIDATE_COMPLETION_GATE"
+      },
+      {
+        "jira_epic_ids": [
+          "PP-EPIC-000035"
+        ],
+        "jira_story_ids": [
+          "PP-STORY-000036"
+        ],
+        "order": 2,
+        "requirement_ids": [
+          "REQ-REL-0003"
+        ],
+        "rule": "Final convergence audit is the only authority that can grant final project completion.",
+        "stage_id": "FINAL_CONVERGENCE_AUDIT"
+      }
+    ]
+  },
   "contract_id": "PRODUCT-OUTCOME-001",
   "control_selection": {
     "allowed_issue_ids": [
@@ -67,6 +101,24 @@
     "RELEASED_POST_RELEASE_COMPLETION_GATE"
   ],
   "schema_version": "1.0.0",
+  "source_outcomes": [
+    {
+      "outcome": "Continuous autonomy and dynamic parallel-lane sequencing are required under deterministic control authority.",
+      "references": [
+        "SRC-014:L000001-L000115",
+        "SRC-014:L000378-L000748"
+      ],
+      "source_id": "SRC-014"
+    },
+    {
+      "outcome": "Human escalation, incident handling, and operator-facing truth surfaces are mandatory for safe completion decisions.",
+      "references": [
+        "SRC-015:L000003-L000112",
+        "SRC-015:L000703-L000955"
+      ],
+      "source_id": "SRC-015"
+    }
+  ],
   "source_references": [
     "SRC-014:L000001-L000087",
     "SRC-015:L000001-L000113"

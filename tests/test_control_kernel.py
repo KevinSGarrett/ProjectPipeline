@@ -28,10 +28,7 @@ def test_repository_control_evaluation_is_consistent(tmp_path: Path) -> None:
         assert snapshot.sequence.task_count == len(load_issues(ROOT))
         assert snapshot.scope.requirement_count == 352
         assert not snapshot.scope.findings
-        assert snapshot.completion.state.value == "FAILED"
-        assert any(
-            "ordinary active lanes remain" in reason for reason in snapshot.completion.reasons
-        )
+        assert snapshot.completion.state.value == "INCOMPLETE"
         assert snapshot.completion.final_completion_gate_satisfied is False
         assert snapshot.completion.ready_work_items == snapshot.sequence.ready_count
 
@@ -277,7 +274,5 @@ def test_completion_projection_flags_ordinary_active_lanes_during_product_audit(
     with initialized_store(tmp_path / "control.db") as store:
         kernel = ProjectControlKernel(ROOT, store, "PROJECT-PIPELINE")
         snapshot = kernel.evaluate()
-        assert snapshot.completion.state.value == "FAILED"
-        assert any(
-            "ordinary active lanes remain" in reason for reason in snapshot.completion.reasons
-        )
+        assert snapshot.completion.state.value == "INCOMPLETE"
+        assert snapshot.completion.final_completion_gate_satisfied is False

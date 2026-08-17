@@ -207,6 +207,50 @@ def test_coordinated_document_tamper_cannot_recompute_content_addressed_receipt(
     )
 
 
+def test_source_hashes_are_stable_across_crlf_and_lf(tmp_path: Path) -> None:
+    lf_root = tmp_path / "lf"
+    crlf_root = tmp_path / "crlf"
+    lf_root.mkdir()
+    crlf_root.mkdir()
+    lf_ledger, lf_map, git = _minimal_sources(lf_root)
+    lf_ledger_bytes = lf_ledger.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    lf_map_bytes = lf_map.read_bytes().replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    lf_ledger.write_bytes(lf_ledger_bytes)
+    lf_map.write_bytes(lf_map_bytes)
+    crlf_ledger = crlf_root / "ledger.json"
+    crlf_map = crlf_root / "map.json"
+    crlf_ledger.write_bytes(lf_ledger_bytes.replace(b"\n", b"\r\n"))
+    crlf_map.write_bytes(lf_map_bytes.replace(b"\n", b"\r\n"))
+    lf_document = generate_pp380_corrected_dispositions(
+        repo_root=lf_root,
+        source_ledger_path=lf_ledger,
+        source_map_path=lf_map,
+        pr44_ref="pr44",
+        pr46_ref="pr46",
+        pp380_ref="pp380",
+        git=git,
+    )
+    crlf_document = generate_pp380_corrected_dispositions(
+        repo_root=crlf_root,
+        source_ledger_path=crlf_ledger,
+        source_map_path=crlf_map,
+        pr44_ref="pr44",
+        pr46_ref="pr46",
+        pp380_ref="pp380",
+        git=git,
+    )
+    assert (
+        lf_document["generation_proof"]["source_ledger_sha256"]
+        == crlf_document["generation_proof"]["source_ledger_sha256"]
+    )
+    assert (
+        lf_document["generation_proof"]["source_map_sha256"]
+        == crlf_document["generation_proof"]["source_map_sha256"]
+    )
+    write_pp380_outputs(crlf_document, crlf_root / "out.json", crlf_root / "out.md")
+    assert validate_pp380_corrected_dispositions(crlf_root, crlf_root / "out.json", git=git) == []
+
+
 def test_wrong_ref_and_missing_optional_object_fail(tmp_path: Path) -> None:
     ledger_path, map_path, git = _minimal_sources(tmp_path)
     document = generate_pp380_corrected_dispositions(
