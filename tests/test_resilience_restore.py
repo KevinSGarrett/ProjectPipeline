@@ -39,6 +39,20 @@ def test_restore_policy_rejects_unsafe_targets(tmp_path, project_root):
         policy.resolve(tmp_path / "outside")
     with pytest.raises(ValueError):
         RestoreTargetPolicy([Path("C:/")])
+    with pytest.raises(ValueError):
+        RestoreTargetPolicy([Path("/")])
+    with pytest.raises(ValueError):
+        policy.resolve("/")
+    link = allow / "final-link"
+    try:
+        link.symlink_to(safe, target_is_directory=True)
+    except OSError:
+        link = None
+    if link is not None:
+        with pytest.raises(ValueError, match=r"reparse|escape"):
+            policy.resolve(link)
+        with pytest.raises(ValueError, match=r"reparse|escape"):
+            policy.resolve(link / "ghost")
 
 
 def test_restore_policy_rejects_workspace_and_protected_paths(tmp_path, project_root):
@@ -48,6 +62,25 @@ def test_restore_policy_rejects_workspace_and_protected_paths(tmp_path, project_
     if os.name == "nt":
         with pytest.raises(ValueError):
             policy.resolve(Path("C:/Windows/System32"))
+
+
+def test_restore_policy_rejects_final_link_even_if_destination_is_inside_allowlist(
+    tmp_path, project_root, monkeypatch
+):
+    allow = tmp_path / "isolate"
+    allow.mkdir()
+    inside = allow / "inside"
+    inside.mkdir()
+    link = allow / "final-link"
+    monkeypatch.setattr(
+        "project_pipeline.resilience.restore._is_reparse",
+        lambda path: Path(path) == link or Path(path).name == "final-link",
+    )
+    policy = RestoreTargetPolicy([allow], workspace_roots=[project_root])
+    with pytest.raises(ValueError, match=r"reparse|escape"):
+        policy.resolve(link)
+    with pytest.raises(ValueError, match=r"reparse|escape"):
+        policy.resolve(link / "ghost")
 
 
 def test_restore_policy_rejects_reparse_escape_when_supported(tmp_path, project_root):

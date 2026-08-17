@@ -3,12 +3,15 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import sqlite3
 import stat
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
+
+_WINDOWS_DRIVE_ROOT = re.compile(r"^[A-Za-z]:[\\/]*$")
 
 WINDOWS = os.name == "nt"
 PROTECTED_WINDOWS_PREFIXES = (
@@ -40,15 +43,37 @@ def _casefold(path: Path) -> str:
     return text.casefold() if WINDOWS else text
 
 
-def is_drive_or_share_root(path: Path) -> bool:
-    resolved = path.resolve()
+def is_windows_drive_root_text(raw: str) -> bool:
+    return bool(_WINDOWS_DRIVE_ROOT.fullmatch(raw.strip()))
+
+
+def is_posix_filesystem_root_text(raw: str) -> bool:
+    return raw.strip() in {"/", "\\"}
+
+
+def is_drive_or_share_root(path: Path | str) -> bool:
+    raw = str(path).strip()
+    if is_windows_drive_root_text(raw) or is_posix_filesystem_root_text(raw):
+        return True
+    candidate = path if isinstance(path, Path) else Path(path)
+    try:
+        resolved = candidate.resolve()
+    except OSError:
+        resolved = candidate
     if resolved.parent == resolved:
         return True
     text = str(resolved)
     if text.startswith("\\\\") or text.startswith("//"):
         parts = text.replace("/", "\\").strip("\\").split("\\")
         return len(parts) <= 2
-    return WINDOWS and len(text) <= 3 and text[1:2] == ":"
+    return is_windows_drive_root_text(text)
+
+
+def _contained(path: Path, root: Path) -> bool:
+    try:
+        return path.resolve() == root.resolve() or path.resolve().is_relative_to(root.resolve())
+    except (OSError, ValueError):
+        return False
 
 
 def is_unc(path: Path | str) -> bool:
@@ -89,10 +114,14 @@ class RestoreTargetPolicy:
     ) -> None:
         if not allowlist_roots:
             raise ValueError("restore allowlist must contain at least one isolated root")
-        self.allowlist_roots = [root.resolve() for root in allowlist_roots]
-        for root in self.allowlist_roots:
-            if is_drive_or_share_root(root) or is_unc(root) or _is_protected(root):
+        self.allowlist_roots: list[Path] = []
+        for root in allowlist_roots:
+            if is_drive_or_share_root(root) or is_unc(root):
                 raise ValueError(f"allowlist root is not an isolated restore target: {root}")
+            resolved = root.resolve()
+            if is_drive_or_share_root(resolved) or is_unc(resolved) or _is_protected(resolved):
+                raise ValueError(f"allowlist root is not an isolated restore target: {root}")
+            self.allowlist_roots.append(resolved)
         self.workspace_roots = [root.resolve() for root in (workspace_roots or [])]
 
     def resolve(self, target: str | Path) -> Path:
@@ -101,51 +130,39 @@ class RestoreTargetPolicy:
             raise ValueError("restore target must be a non-empty absolute path")
         if is_unc(raw):
             raise ValueError("restore target must not be a UNC or share root")
+        if is_drive_or_share_root(raw):
+            raise ValueError("restore target must not be a drive or share root")
         if has_traversal(raw):
             raise ValueError("restore target must not contain path traversal")
         candidate = Path(raw)
         if not candidate.is_absolute():
             raise ValueError("restore target must be an absolute isolated path")
+        self._reject_reparse_or_link(candidate)
         resolved = candidate.resolve()
         if is_drive_or_share_root(resolved):
             raise ValueError("restore target must not be a drive or share root")
         if _is_protected(resolved):
             raise ValueError("restore target must not be a protected or system path")
         for workspace in self.workspace_roots:
-            if _casefold(resolved) == _casefold(workspace):
-                raise ValueError("restore target must not be a repository or workspace root")
-            if _casefold(resolved).startswith(_casefold(workspace) + os.sep):
+            if _contained(resolved, workspace):
                 raise ValueError("restore target must not resolve inside the workspace")
-        if not any(
-            _casefold(resolved) == _casefold(root)
-            or _casefold(resolved).startswith(_casefold(root) + os.sep)
-            for root in self.allowlist_roots
-        ):
+        if not any(_contained(resolved, root) for root in self.allowlist_roots):
             raise ValueError("restore target is outside the configured isolation allowlist")
-        self._reject_reparse_escape(candidate, resolved)
         return resolved
 
-    def _reject_reparse_escape(self, candidate: Path, resolved: Path) -> None:
+    def _reject_reparse_or_link(self, candidate: Path) -> None:
         current = candidate
         seen: set[str] = set()
         while True:
             key = _casefold(current)
             if key in seen:
-                break
+                raise ValueError("restore target escapes isolation through a reparse point")
             seen.add(key)
             if _is_reparse(current):
-                real = current.resolve()
-                if not any(
-                    _casefold(real) == _casefold(root)
-                    or _casefold(real).startswith(_casefold(root) + os.sep)
-                    for root in self.allowlist_roots
-                ):
-                    raise ValueError("restore target escapes isolation through a reparse point")
+                raise ValueError("restore target escapes isolation through a reparse point")
             if current.parent == current:
                 break
             current = current.parent
-        if _casefold(resolved) != _casefold(candidate.resolve()):
-            raise ValueError("restore target resolution is inconsistent")
 
 
 def verify_restored_tree(target: Path, manifest: dict[str, Any]) -> dict[str, Any]:

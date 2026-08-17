@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "2d126737555bbc2b7e275266d76da86831e757897c2274e1e2b36d278a045f8a",
+  "aggregate_sha256": "750fa8fd2e02d6709f663711edbe4c42ecc48b99320fca6680bf9f70bc253b40",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12212,8 +12212,8 @@
     },
     {
       "path": "src/project_pipeline/resilience/restore.py",
-      "sha256": "f71e8a225567a86008ebb64773842f472b642c2084c95200f819e025e8d7671d",
-      "size_bytes": 14199
+      "sha256": "4d5c61e69199b52da73c0871b80b519d2b4197f1a9b49ccbc597b0a51c4b78e8",
+      "size_bytes": 14598
     },
     {
       "path": "src/project_pipeline/resilience/runbook.py",
@@ -13177,8 +13177,8 @@
     },
     {
       "path": "tests/test_resilience_restore.py",
-      "sha256": "389c92686ce43dd33893bc11c3d542450dabf0f6113025455f447a72047a76ca",
-      "size_bytes": 6468
+      "sha256": "39fe1330cefff6cc026d38ea0690f0459f7cc8e7e5371101760d7de252f7eb5e",
+      "size_bytes": 7668
     },
     {
       "path": "tests/test_resilience_simulation.py",
@@ -13411,7 +13411,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T16:23:55.374961+00:00",
+  "generated_at_utc": "2026-08-17T17:58:27.729229+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13420,5 +13420,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22611876
+  "total_bytes": 22613475
 }
