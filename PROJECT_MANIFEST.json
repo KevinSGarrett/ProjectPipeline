@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "f7147c6bc288290441a7fbd174428f4aab912b2c1ed1fd84ec1dc31216201d0a",
+  "aggregate_sha256": "c256408507aec85c44d9b2a7132786b0af23d145084e69a2982bbeeda7cba0f8",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11752,8 +11752,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/lanes.py",
-      "sha256": "0bad7b3a29440a59a6054d39567ebb9da7fc9e38813bcf482afc1da4ed78ce29",
-      "size_bytes": 25207
+      "sha256": "1b1e1be7b630e5279833b516508e7e9f5e543045964ace1510b5ad3fa6d59ef6",
+      "size_bytes": 26259
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/providers.py",
@@ -13881,7 +13881,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T16:53:51.305425+00:00",
+  "generated_at_utc": "2026-08-17T16:59:43.803759+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13890,5 +13890,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24279644
+  "total_bytes": 24280696
 }

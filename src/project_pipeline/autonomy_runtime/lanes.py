@@ -4,6 +4,7 @@ import hashlib
 import json
 import os
 import sqlite3
+import time
 import uuid
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -95,9 +96,24 @@ class LaneRegistry:
         self.max_attempts = max_attempts
         self._conn = sqlite3.connect(str(db_path), timeout=30)
         self._conn.row_factory = sqlite3.Row
-        self._conn.execute("PRAGMA journal_mode = WAL")
-        self._conn.execute("PRAGMA foreign_keys = ON")
+        self._configure_connection()
         self._init()
+
+    def _configure_connection(self) -> None:
+        last_error: sqlite3.OperationalError | None = None
+        for _ in range(10):
+            try:
+                self._conn.execute("PRAGMA busy_timeout = 30000")
+                self._conn.execute("PRAGMA journal_mode = WAL")
+                self._conn.execute("PRAGMA foreign_keys = ON")
+                return
+            except sqlite3.OperationalError as exc:
+                if "locked" not in str(exc).lower() and "busy" not in str(exc).lower():
+                    raise
+                last_error = exc
+                time.sleep(0.05)
+        if last_error is not None:
+            raise last_error
 
     def close(self) -> None:
         self._conn.close()
@@ -126,7 +142,19 @@ class LaneRegistry:
 
     def _init(self) -> None:
         self._conn.isolation_level = None
-        self._conn.execute("BEGIN IMMEDIATE")
+        last_error: sqlite3.OperationalError | None = None
+        for _ in range(10):
+            try:
+                self._conn.execute("BEGIN IMMEDIATE")
+                break
+            except sqlite3.OperationalError as exc:
+                if "locked" not in str(exc).lower() and "busy" not in str(exc).lower():
+                    raise
+                last_error = exc
+                time.sleep(0.05)
+        else:
+            if last_error is not None:
+                raise last_error
         try:
             self._conn.execute(
                 """
