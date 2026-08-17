@@ -11,6 +11,7 @@ from typing import Literal
 from project_pipeline.domain.security import (
     ArtifactIntegrityRecord,
     GateState,
+    ProvenanceEvidenceKind,
     ReleaseProvenance,
     SBOMComponent,
     ScannerEvidence,
@@ -25,6 +26,7 @@ from project_pipeline.domain.security import (
 )
 
 _SHA_ACTION = re.compile(r"^[0-9a-f]{40}$")
+_PROVENANCE_EVIDENCE_ID = re.compile(r"^(SCANEVID|INTEGRITY|SIG|EVID)-[A-Z0-9-]{8,}$")
 _OFFICIAL_MAJOR_TAG_ACTIONS = {
     "actions/checkout",
     "actions/setup-python",
@@ -490,6 +492,16 @@ def _sbom_sha256(sbom: SoftwareBillOfMaterials) -> str:
                     "license": component.license,
                     "source": component.source,
                     "metadata_sha256": component.metadata_sha256,
+                    "compliance": (
+                        {
+                            "notice_reference": component.compliance.notice_reference,
+                            "permitted_use_record_id": component.compliance.permitted_use_record_id,
+                            "modification_obligation_record_id": component.compliance.modification_obligation_record_id,
+                            "provenance_reference_id": component.compliance.provenance_reference_id,
+                        }
+                        if component.compliance is not None
+                        else None
+                    ),
                 }
                 for component in sbom.components
             ],
@@ -586,6 +598,19 @@ def _evaluate_license_policy(
                     subject=component.name,
                     code="license-provenance-missing",
                     message="approved license still requires recorded provenance/source reference",
+                )
+            )
+            continue
+        if component.compliance is None:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.LICENSE,
+                    subject=component.name,
+                    code="license-compliance-missing",
+                    message=(
+                        "approved license still requires compliance records (notice, permitted use, "
+                        "modification obligations, and provenance binding)"
+                    ),
                 )
             )
             continue
@@ -739,6 +764,122 @@ def _validate_release_artifact_coverage(
     return tuple(findings)
 
 
+def _validate_provenance_evidence_bindings(
+    *,
+    aggregate: str,
+    provenance: ReleaseProvenance,
+    scanner_evidence: tuple[ScannerEvidence, ...],
+    integrity_records: tuple[ArtifactIntegrityRecord, ...],
+    now: datetime,
+    scanner_max_age: timedelta,
+) -> tuple[SupplyChainFinding, ...]:
+    findings: list[SupplyChainFinding] = []
+    binding_by_id = {binding.evidence_id: binding for binding in provenance.evidence_bindings}
+    for evidence_id in provenance.evidence_ids:
+        if not _PROVENANCE_EVIDENCE_ID.fullmatch(evidence_id):
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.PROVENANCE,
+                    subject=evidence_id,
+                    code="provenance-evidence-id-invalid",
+                    message="provenance evidence id is not a governed typed identity",
+                )
+            )
+    if not provenance.evidence_bindings:
+        findings.append(
+            _release_requirement_finding(
+                kind=SupplyChainFindingKind.PROVENANCE,
+                subject=provenance.provenance_id,
+                code="provenance-evidence-bindings-missing",
+                message="verified provenance must include typed evidence bindings",
+            )
+        )
+        return tuple(findings)
+    for evidence in scanner_evidence:
+        binding = binding_by_id.get(evidence.scanner_evidence_id)
+        if binding is None:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.PROVENANCE,
+                    subject=evidence.tool,
+                    code="scanner-evidence-unbound",
+                    message="scanner evidence is not bound by release provenance",
+                    evidence_path=evidence.evidence_path,
+                )
+            )
+            continue
+        if binding.evidence_kind is not ProvenanceEvidenceKind.SCANNER:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.PROVENANCE,
+                    subject=evidence.tool,
+                    code="scanner-evidence-kind-mismatch",
+                    message="scanner evidence binding kind is invalid",
+                    evidence_path=evidence.evidence_path,
+                )
+            )
+        if (
+            binding.source_manifest_sha256 != aggregate
+            or binding.result_sha256 != evidence.result_sha256
+            or binding.tool.casefold() != evidence.tool.casefold()
+        ):
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.PROVENANCE,
+                    subject=evidence.tool,
+                    code="scanner-evidence-binding-mismatch",
+                    message="scanner evidence binding does not match evaluated scanner evidence",
+                    evidence_path=evidence.evidence_path,
+                )
+            )
+        age = now - binding.observed_at_utc
+        if age < -timedelta(minutes=5) or age > scanner_max_age:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.PROVENANCE,
+                    subject=evidence.tool,
+                    code="scanner-evidence-binding-stale",
+                    message="scanner evidence binding timestamp is stale or in the future",
+                    evidence_path=evidence.evidence_path,
+                )
+            )
+    for record in integrity_records:
+        binding = binding_by_id.get(record.integrity_id)
+        if binding is None:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.PROVENANCE,
+                    subject=record.artifact_path,
+                    code="integrity-evidence-unbound",
+                    message="integrity evidence is not bound by release provenance",
+                )
+            )
+            continue
+        if binding.evidence_kind is not ProvenanceEvidenceKind.INTEGRITY:
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.PROVENANCE,
+                    subject=record.artifact_path,
+                    code="integrity-evidence-kind-mismatch",
+                    message="integrity evidence binding kind is invalid",
+                )
+            )
+        if (
+            binding.source_manifest_sha256 != aggregate
+            or binding.result_sha256 != record.sha256
+            or binding.tool.casefold() != "integrity"
+        ):
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.PROVENANCE,
+                    subject=record.artifact_path,
+                    code="integrity-evidence-binding-mismatch",
+                    message="integrity evidence binding does not match evaluated artifact integrity",
+                )
+            )
+    return tuple(findings)
+
+
 def evaluate_supply_chain(
     root: Path,
     *,
@@ -793,7 +934,8 @@ def evaluate_supply_chain(
                 message="SBOM is not bound to the current source manifest",
             )
         )
-    if sbom is not None and enforce_license_gate:
+    effective_license_gate = enforce_license_gate or release_mode
+    if sbom is not None and effective_license_gate:
         for component in sbom.components:
             if (
                 not component.name.strip()
@@ -963,6 +1105,55 @@ def evaluate_supply_chain(
                         ),
                     )
                 )
+            else:
+                assert provenance is not None
+                normalized_declared = tuple(
+                    sorted(
+                        _normalize_release_artifact_path(root, item)
+                        for item in release_artifact_paths
+                    )
+                )
+                provenance_declared = tuple(
+                    sorted(
+                        _normalize_release_artifact_path(root, item)
+                        for item in provenance.declared_artifact_paths
+                    )
+                )
+                if normalized_declared != provenance_declared:
+                    findings.append(
+                        _release_requirement_finding(
+                            kind=SupplyChainFindingKind.PROVENANCE,
+                            subject="release candidate",
+                            code="provenance-artifact-set-mismatch",
+                            message=(
+                                "provenance artifact binding does not match the declared release "
+                                "artifact set"
+                            ),
+                        )
+                    )
+                integrity_ids = tuple(sorted(record.integrity_id for record in records))
+                if tuple(sorted(provenance.artifact_integrity_ids)) != integrity_ids:
+                    findings.append(
+                        _release_requirement_finding(
+                            kind=SupplyChainFindingKind.PROVENANCE,
+                            subject="release candidate",
+                            code="provenance-integrity-set-mismatch",
+                            message=(
+                                "provenance integrity binding does not match evaluated integrity "
+                                "records"
+                            ),
+                        )
+                    )
+                findings.extend(
+                    _validate_provenance_evidence_bindings(
+                        aggregate=aggregate,
+                        provenance=provenance,
+                        scanner_evidence=tuple(scanner_evidence),
+                        integrity_records=records,
+                        now=now,
+                        scanner_max_age=scanner_max_age,
+                    )
+                )
         if bool(supply_policy.get("require_integrity_hashes")):
             if records:
                 findings.extend(
@@ -980,6 +1171,24 @@ def evaluate_supply_chain(
                         ),
                     )
                 )
+                if provenance is not None:
+                    mismatched = [
+                        record.artifact_path
+                        for record in records
+                        if record.provenance_id != provenance.provenance_id
+                    ]
+                    if mismatched:
+                        findings.append(
+                            _release_requirement_finding(
+                                kind=SupplyChainFindingKind.PROVENANCE,
+                                subject=", ".join(sorted(mismatched)),
+                                code="integrity-provenance-id-mismatch",
+                                message=(
+                                    "artifact integrity records must bind the evaluated release "
+                                    "provenance id"
+                                ),
+                            )
+                        )
             else:
                 findings.append(
                     _release_requirement_finding(
@@ -1002,7 +1211,7 @@ def evaluate_supply_chain(
                     message="the enabled signing profile requires verified artifact signatures",
                 )
             )
-        if enforce_license_gate and sbom is not None:
+        if effective_license_gate and sbom is not None:
             findings.extend(_evaluate_license_policy(root, sbom.components))
     state = GateState.FAIL if any(item.blocking for item in findings) else GateState.PASS
     if state is GateState.FAIL:
@@ -1022,7 +1231,7 @@ def evaluate_supply_chain(
             "aggregate": aggregate,
             "release_mode": release_mode,
             "state": state.value,
-            "enforce_license_gate": enforce_license_gate,
+            "enforce_license_gate": effective_license_gate,
             "sbom_sha256": _sbom_sha256(sbom) if sbom is not None else None,
             "scanner_evidence": [
                 {

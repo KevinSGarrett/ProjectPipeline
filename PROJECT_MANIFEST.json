@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "addcf3121b7e604de991e9f0184c7dd063d11156f4182e18ea702e6c85269e54",
+  "aggregate_sha256": "57d3979c6fec79ad281cc26f65320189e57a09bead73040ca0c43016b5ce72cb",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -5042,13 +5042,13 @@
     },
     {
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "1ecc2207dd2fbb25c36d1ae9930d3789108e72c82be380b561de85cce2b875c7",
-      "size_bytes": 1590746
+      "sha256": "b0b9d49e552638b9ca575a37dd12f565ff97e6b87fd9cc31a4bf50b5026ddb9b",
+      "size_bytes": 1591522
     },
     {
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "a0ee7b55e4427af2ef20722c80873bd1f88c25ecefa6462a1511a48db59667cf",
-      "size_bytes": 1879702
+      "sha256": "b369405811342d2e0e244017b8edb8c5ab61f8649c9244e0792b71c030164ca0",
+      "size_bytes": 1880598
     },
     {
       "path": "jira/README.md",
@@ -8642,8 +8642,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000346.json",
-      "sha256": "94c48ede989b942bbe3f2de2fb1abcc04598e2a3bc8acf1e4cd5e996184e22a1",
-      "size_bytes": 4520
+      "sha256": "465527c98f03dab2e6cdf339eb2a9bdc948c2b5c4ed05f239ed77b674a8b46db",
+      "size_bytes": 5376
     },
     {
       "path": "jira/tasks/PP-TASK-000347.json",
@@ -10962,8 +10962,8 @@
     },
     {
       "path": "schemas/security_release_provenance.schema.json",
-      "sha256": "7e796081af7542a5297366a6a62de66a03703acee668c49a25d686aa5ab63858",
-      "size_bytes": 1446
+      "sha256": "e1f0c7117052cddfa38489445b047b0eda04f941d4226e1272b396625bd317e8",
+      "size_bytes": 3780
     },
     {
       "path": "schemas/security_role.schema.json",
@@ -10977,13 +10977,13 @@
     },
     {
       "path": "schemas/security_sbom.schema.json",
-      "sha256": "81fee0427de6c6a386265376f0e62bc75d39bbc4e7228fdb31bee2e56ab68a0b",
-      "size_bytes": 2637
+      "sha256": "d693f6bad856cc0dfdf857fa16f9cc388032beafb177d5030c34fd9371f4b889",
+      "size_bytes": 4084
     },
     {
       "path": "schemas/security_sbom_component.schema.json",
-      "sha256": "85dc2b2b70a3168f52fcbe8b2eaaeb6364b9b1731ce84ed9f5005f0f8e6aafbf",
-      "size_bytes": 1416
+      "sha256": "43a9f62ca1f7b6fea7babdcdc1ab87a22d9dc5c925c42e6b3ad4b7c7b11c3c63",
+      "size_bytes": 2836
     },
     {
       "path": "schemas/security_secret_lease.schema.json",
@@ -11767,8 +11767,8 @@
     },
     {
       "path": "src/project_pipeline/domain/security.py",
-      "sha256": "43f2a9f09daf25e955076727faf39177db6cd99255ec9ba34dadfb62d9bb39ca",
-      "size_bytes": 19674
+      "sha256": "dcf198033f5d43ece69ab8df8e46e09b3c2649d869dbd3b7c4ae2dc72e77c5b9",
+      "size_bytes": 21977
     },
     {
       "path": "src/project_pipeline/domain/state.py",
@@ -12327,8 +12327,8 @@
     },
     {
       "path": "src/project_pipeline/security/supply_chain.py",
-      "sha256": "0316037995631e6ae5fae434fdaa99d55c6c00957c041b57eec08bfb7d6acac9",
-      "size_bytes": 47672
+      "sha256": "87197d4ea79027cda74b8d790ee9ebc9fc1b95e283038aa01437c62c1ce60bf5",
+      "size_bytes": 57293
     },
     {
       "path": "src/project_pipeline/security/validation.py",
@@ -13242,8 +13242,8 @@
     },
     {
       "path": "tests/test_security_supply_chain.py",
-      "sha256": "beadc5b0e60fda5bf305604f39133651d2c2df44bf3b8c0112bd4dee958409f0",
-      "size_bytes": 18409
+      "sha256": "76978811052927335e7183d99bfefce39127693ea1bab09b12162ee58191ff6a",
+      "size_bytes": 28573
     },
     {
       "path": "tests/test_security_upstream_adapters.py",
@@ -13396,7 +13396,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T01:12:37.943718+00:00",
+  "generated_at_utc": "2026-08-17T01:48:05.833738+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13405,5 +13405,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22615922
+  "total_bytes": 22645739
 }
