@@ -449,8 +449,9 @@ def build_adapter(adapter_id: str, **kwargs: Any) -> ProviderAdapter:
         from project_pipeline.agent_router.pydantic_ai_adapter import PydanticAIProviderAdapter
 
         factories["adapter:pydantic-ai"] = PydanticAIProviderAdapter
-    except Exception:
-        pass
+    except Exception as error:
+        _optional_adapter_error = str(error)
+        del _optional_adapter_error
     factory = factories.get(adapter_id)
     if factory is None:
         raise ValueError(f"unknown adapter: {adapter_id}")

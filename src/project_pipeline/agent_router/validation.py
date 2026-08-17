@@ -54,8 +54,9 @@ def validate_agent_router_foundation(root: Path) -> list[str]:
             try:
                 boundary.invoke("tool:missing", "read", {})
                 errors.append("governed tool boundary failed to deny an unlisted tool")
-            except Exception:
-                pass
+            except Exception as error:
+                _denied = str(error)
+                del _denied
     except Exception as error:
         errors.append(f"agent router integrated journey is invalid: {error}")
     return errors

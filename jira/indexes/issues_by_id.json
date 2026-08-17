@@ -19335,7 +19335,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "behavior_and_traceability_validation",
           "path": "architecture/component_catalog.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -19345,7 +19345,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -19386,7 +19386,7 @@
       "architecture/trust_boundaries.json",
       "architecture/requirement_component_map.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -19474,7 +19474,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "behavior_and_traceability_validation",
           "path": "architecture/state_ownership.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -19484,7 +19484,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -19523,7 +19523,7 @@
       "architecture/state_ownership.json",
       "architecture/data_flows.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -19599,7 +19599,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "behavior_and_traceability_validation",
           "path": "adr/ADR_CATALOG.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -19609,7 +19609,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -19650,7 +19650,7 @@
       "architecture/technology_stack.json",
       "architecture/decision_map.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -19730,7 +19730,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "behavior_and_traceability_validation",
           "path": "src/project_pipeline/ports.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -19740,7 +19740,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -19779,7 +19779,7 @@
       "src/project_pipeline/ports.py",
       "architecture/component_catalog.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -22900,7 +22900,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_dependencies.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "tests/test_dependencies.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -22910,7 +22910,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline dependencies validate --root . --verify-installed",
           "method": "automated_behavior_and_evidence_validation",
           "path": "evidence/dependency_state_validation.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -22953,7 +22953,7 @@
       "requirements/development.txt",
       "src/project_pipeline/dependencies.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "dependencies",
@@ -23163,7 +23163,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_contracts.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "tests/test_contracts.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -23173,7 +23173,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline schemas check --root .",
           "method": "automated_behavior_and_evidence_validation",
           "path": "evidence/repository_foundation_validation.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -23220,7 +23220,7 @@
       "schemas/adapter_error.schema.json",
       "schemas/diagnostic_snapshot.schema.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "contracts",
@@ -23423,7 +23423,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_command_processor.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "tests/test_command_processor.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -23433,7 +23433,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline smoke --root .",
           "method": "automated_behavior_and_evidence_validation",
           "path": "evidence/repository_foundation_smoke.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -23472,7 +23472,7 @@
       "src/project_pipeline/runtime/",
       "src/project_pipeline/artifacts.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "cli",
@@ -23824,7 +23824,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_domain_identifiers.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "tests/test_domain_identifiers.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -23834,7 +23834,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_domain_models.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "tests/test_domain_models.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -23869,7 +23869,7 @@
       "src/project_pipeline/domain/requirements.py",
       "schemas/requirement_record.schema.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "domain-model",
@@ -23958,7 +23958,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_domain_models.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "config/project_manifest.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -23968,7 +23968,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/validation/repository.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -24009,7 +24009,7 @@
       "config/project_manifest.json",
       "schemas/domain_project_manifest.schema.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "project-manifest",
@@ -24094,7 +24094,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_core_state_store.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "tests/test_core_state_store.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -24104,7 +24104,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_core_state_store.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/persistence/sqlite.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -24146,7 +24146,7 @@
       "schemas/task_state.schema.json",
       "schemas/domain_state_transition.schema.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "control-state",
@@ -24243,7 +24243,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_core_state_store.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/persistence/sqlite.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -24253,7 +24253,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_behavior_and_evidence_validation",
           "path": "database/migrations/postgresql/PPDB-0001_core_state.up.sql",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -24296,7 +24296,7 @@
       "database/migrations/postgresql/PPDB-0001_core_state.up.sql",
       "config/runtime/base.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "persistence",
@@ -24396,7 +24396,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_migrations.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "database/MIGRATION_CATALOG.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -24406,7 +24406,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_migrations.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "tests/test_migrations.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -24449,7 +24449,7 @@
       "schemas/migration_catalog.schema.json",
       "schemas/migration_record.schema.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "migrations",
@@ -24550,7 +24550,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_traceability_store.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "tests/test_traceability_store.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -24560,7 +24560,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_traceability_store.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/services/traceability.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -24605,7 +24605,7 @@
       "schemas/traceability_link.schema.json",
       "schemas/traceability_mutation.schema.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "traceability",
@@ -24706,7 +24706,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_state_cli.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "tests/test_state_cli.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -24716,7 +24716,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_state_cli.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/cli.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -24755,7 +24755,7 @@
       "src/project_pipeline/services/state.py",
       "src/project_pipeline/services/traceability.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "cli",
@@ -24851,7 +24851,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline schemas check --root . && PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/validation/repository.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -24861,7 +24861,7 @@
           "command": "PYTHONPATH=src python -m pytest -q",
           "method": "automated_behavior_and_evidence_validation",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -24918,7 +24918,7 @@
       "config/repository_policy.json",
       "schemas"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "validation",
@@ -25033,7 +25033,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_intake_models.py tests/test_project_discovery.py tests/test_project_compiler.py tests/test_project_bootstrap.py tests/test_intake_persistence.py tests/test_intake_cli.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/domain/intake.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -25043,7 +25043,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -25081,7 +25081,7 @@
       "schemas/project_intake_request.schema.json",
       "schemas/compiled_project_manifest.schema.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "project-intake",
@@ -25677,7 +25677,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_intake_models.py tests/test_project_discovery.py tests/test_project_compiler.py tests/test_project_bootstrap.py tests/test_intake_persistence.py tests/test_intake_cli.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/intake/compiler.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -25687,7 +25687,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -25728,7 +25728,7 @@
       "schemas/project_gap_report.schema.json",
       "schemas/compiled_project_manifest.schema.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "project-intake",
@@ -25963,7 +25963,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_intake_models.py tests/test_project_discovery.py tests/test_project_compiler.py tests/test_project_bootstrap.py tests/test_intake_persistence.py tests/test_intake_cli.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/persistence/sqlite.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -25973,7 +25973,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -26015,7 +26015,7 @@
       "database/migrations/sqlite/PPDB-0003_project_intake_compilation.up.sql",
       "database/migrations/postgresql/PPDB-0003_project_intake_compilation.up.sql"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "project-intake",
@@ -26094,7 +26094,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_intake_models.py tests/test_project_discovery.py tests/test_project_compiler.py tests/test_project_bootstrap.py tests/test_intake_persistence.py tests/test_intake_cli.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/cli.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -26104,7 +26104,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -26161,7 +26161,7 @@
       "tests/TEST_CATALOG.json",
       "docs/intake"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "project-intake",
@@ -29101,7 +29101,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_control_domain.py tests/test_build_sequencer.py tests/test_control_kernel.py tests/test_control_persistence.py tests/test_control_cli.py tests/test_control_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/control/kernel.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -29111,7 +29111,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -29146,7 +29146,7 @@
       "src/project_pipeline/control/kernel.py",
       "src/project_pipeline/domain/control.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "control-kernel",
@@ -29951,7 +29951,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_control_domain.py tests/test_build_sequencer.py tests/test_control_kernel.py tests/test_control_persistence.py tests/test_control_cli.py tests/test_control_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/control/persistence.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -29961,7 +29961,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -30000,7 +30000,7 @@
       "database/migrations/sqlite/PPDB-0006_project_control_sequencing.up.sql",
       "database/migrations/postgresql/PPDB-0006_project_control_sequencing.up.sql"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "control-kernel",
@@ -30213,7 +30213,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_control_domain.py tests/test_build_sequencer.py tests/test_control_kernel.py tests/test_control_persistence.py tests/test_control_cli.py tests/test_control_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/control/validation.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -30223,7 +30223,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -30278,7 +30278,7 @@
       "tests/test_control_validation.py",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "control-kernel",
@@ -30891,7 +30891,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_scheduler_domain.py tests/test_scheduler_conflicts.py tests/test_scheduler_engine.py tests/test_scheduler_persistence.py tests/test_scheduler_backpressure.py tests/test_scheduler_cli.py tests/test_scheduler_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/scheduler/bridge.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -30901,7 +30901,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -30938,7 +30938,7 @@
       "src/project_pipeline/scheduler/bridge.py",
       "src/project_pipeline/scheduler/resources.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "dynamic-scheduler",
@@ -31512,7 +31512,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_scheduler_domain.py tests/test_scheduler_conflicts.py tests/test_scheduler_engine.py tests/test_scheduler_persistence.py tests/test_scheduler_backpressure.py tests/test_scheduler_cli.py tests/test_scheduler_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/scheduler/validation.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -31522,7 +31522,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -31571,7 +31571,7 @@
       "tests/test_scheduler_validation.py",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "dynamic-scheduler",
@@ -31694,7 +31694,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_agent_router_domain.py tests/test_agent_router_circuit.py tests/test_agent_router_routing.py tests/test_agent_router_adapters.py tests/test_agent_router_service.py tests/test_agent_router_performance.py tests/test_agent_router_persistence.py tests/test_agent_router_cli.py tests/test_agent_router_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/agent_router/registry.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -31704,7 +31704,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -31747,7 +31747,7 @@
       "config/agents/agents.json",
       "config/agents/tools.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "agent-router",
@@ -31821,7 +31821,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_agent_router_domain.py tests/test_agent_router_circuit.py tests/test_agent_router_routing.py tests/test_agent_router_adapters.py tests/test_agent_router_service.py tests/test_agent_router_performance.py tests/test_agent_router_persistence.py tests/test_agent_router_cli.py tests/test_agent_router_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/domain/agents.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -31831,7 +31831,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -31868,7 +31868,7 @@
       "src/project_pipeline/domain/agents.py",
       "src/project_pipeline/agent_router/adapters.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "agent-router",
@@ -31947,7 +31947,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_agent_router_domain.py tests/test_agent_router_circuit.py tests/test_agent_router_routing.py tests/test_agent_router_adapters.py tests/test_agent_router_service.py tests/test_agent_router_performance.py tests/test_agent_router_persistence.py tests/test_agent_router_cli.py tests/test_agent_router_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/agent_router/qualification.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -31957,7 +31957,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -31994,7 +31994,7 @@
       "src/project_pipeline/agent_router/qualification.py",
       "src/project_pipeline/domain/agents.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "agent-router",
@@ -32324,7 +32324,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_agent_router_domain.py tests/test_agent_router_circuit.py tests/test_agent_router_routing.py tests/test_agent_router_adapters.py tests/test_agent_router_service.py tests/test_agent_router_performance.py tests/test_agent_router_persistence.py tests/test_agent_router_cli.py tests/test_agent_router_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/agent_router/performance.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -32334,7 +32334,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -32371,7 +32371,7 @@
       "src/project_pipeline/agent_router/performance.py",
       "src/project_pipeline/agent_router/persistence.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "agent-router",
@@ -32447,7 +32447,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_agent_router_domain.py tests/test_agent_router_circuit.py tests/test_agent_router_routing.py tests/test_agent_router_adapters.py tests/test_agent_router_service.py tests/test_agent_router_performance.py tests/test_agent_router_persistence.py tests/test_agent_router_cli.py tests/test_agent_router_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/agent_router/adapters.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -32457,7 +32457,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -32494,7 +32494,7 @@
       "src/project_pipeline/agent_router/adapters.py",
       "src/project_pipeline/agent_router/router.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "agent-router",
@@ -32569,7 +32569,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_agent_router_domain.py tests/test_agent_router_circuit.py tests/test_agent_router_routing.py tests/test_agent_router_adapters.py tests/test_agent_router_service.py tests/test_agent_router_performance.py tests/test_agent_router_persistence.py tests/test_agent_router_cli.py tests/test_agent_router_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/agent_router/adapters.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -32579,7 +32579,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -32614,7 +32614,7 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/agent_router/adapters.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "agent-router",
@@ -33375,7 +33375,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_upstream_reviews.py tests/test_upstream_contract_assets.py tests/test_ortools_optimizer.py tests/test_worktrunk_adapter.py tests/test_pydantic_ai_adapter.py tests/test_litellm_adapter.py tests/test_docker_mcp_gateway.py tests/test_openlit_bridge.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/agent_router/pydantic_ai_adapter.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -33385,7 +33385,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "provenance/upstream_usage.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -33419,7 +33419,7 @@
       "src/project_pipeline/upstream_data/pydantic_ai_provider_compatibility.json",
       "tests/test_pydantic_ai_adapter.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "upstream-reuse",
@@ -33494,7 +33494,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_upstream_reviews.py tests/test_upstream_contract_assets.py tests/test_ortools_optimizer.py tests/test_worktrunk_adapter.py tests/test_pydantic_ai_adapter.py tests/test_litellm_adapter.py tests/test_docker_mcp_gateway.py tests/test_openlit_bridge.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/agent_router/adapters.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -33504,7 +33504,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "provenance/upstream_usage.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -33536,7 +33536,7 @@
       "src/project_pipeline/agent_router/adapters.py",
       "tests/test_litellm_adapter.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "upstream-reuse",
@@ -33610,7 +33610,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_upstream_reviews.py tests/test_upstream_contract_assets.py tests/test_ortools_optimizer.py tests/test_worktrunk_adapter.py tests/test_pydantic_ai_adapter.py tests/test_litellm_adapter.py tests/test_docker_mcp_gateway.py tests/test_openlit_bridge.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/agent_router/docker_mcp_gateway.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -33620,7 +33620,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "provenance/upstream_usage.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -33654,7 +33654,7 @@
       "src/project_pipeline/upstream_data/docker_mcp_gateway_security_defaults.json",
       "tests/test_docker_mcp_gateway.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "upstream-reuse",
@@ -40281,7 +40281,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_budget_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/budget/policy.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -40291,7 +40291,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -40331,7 +40331,7 @@
       "src/project_pipeline/budget/policy.py",
       "src/project_pipeline/budget/persistence.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "budget",
@@ -40659,7 +40659,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_budget_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/budget/forecast.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -40669,7 +40669,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -40709,7 +40709,7 @@
       "src/project_pipeline/budget/forecast.py",
       "src/project_pipeline/budget/service.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "budget",
@@ -40785,7 +40785,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_budget_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/budget/anomaly.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -40795,7 +40795,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -40835,7 +40835,7 @@
       "src/project_pipeline/budget/anomaly.py",
       "src/project_pipeline/budget/policy.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "budget",
@@ -40909,7 +40909,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_budget_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/budget/integration.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -40919,7 +40919,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -40959,7 +40959,7 @@
       "src/project_pipeline/budget/integration.py",
       "src/project_pipeline/agent_router/router.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "budget",
@@ -41035,7 +41035,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_budget_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/budget/infracost.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -41045,7 +41045,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -41085,7 +41085,7 @@
       "src/project_pipeline/budget/infracost.py",
       "src/project_pipeline/observability/openlit.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "budget",
@@ -41590,7 +41590,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_assurance_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/assurance/evidence.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -41600,7 +41600,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -41634,7 +41634,7 @@
       "src/project_pipeline/domain/assurance.py",
       "evidence/EVIDENCE_LEDGER.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "assurance",
@@ -41857,7 +41857,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_assurance_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/assurance/scope.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -41867,7 +41867,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -41901,7 +41901,7 @@
       "src/project_pipeline/assurance/scope.py",
       "src/project_pipeline/domain/assurance.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "assurance",
@@ -43855,7 +43855,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_verification_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/verification/harness.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -43865,7 +43865,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -43904,7 +43904,7 @@
       "src/project_pipeline/assurance/completion.py",
       "evidence/verification/pass16_verification_report.html"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "assurance",
@@ -48362,7 +48362,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass25_final_convergence.py",
           "method": "automated_behavior_validation",
           "path": "evidence/pass25_focused_suite.txt",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -48396,7 +48396,7 @@
       "infrastructure/aws/terraform/variables.tf",
       "src/project_pipeline/resilience/aws.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "pass-25",
@@ -48669,7 +48669,17 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_product_outcome_contract.py",
           "method": "falsifying_model_validation",
           "path": "tests/test_product_outcome_contract.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
+        }
+      },
+      {
+        "criterion_id": "AC-PP-000380-02",
+        "statement": "An independent product-model auditor, separate from validate_product_outcome, confirms ten user-intent mappings, plan truth, epic/journey cohesion, stale-implementation findings, and that Control's top bounded work is genuinely missing.",
+        "verification": {
+          "command": "PYTHONPATH=src python -m pytest -q tests/test_product_outcome_contract.py",
+          "method": "independent_product_model_audit",
+          "path": "src/project_pipeline/validation/product_model_audit.py",
+          "status": "VERIFIED"
         }
       }
     ],
@@ -48693,19 +48703,21 @@
       "plans/PLAN_CATALOG.json",
       "jira",
       "src/project_pipeline/validation/product_outcome.py",
+      "src/project_pipeline/validation/product_model_audit.py",
       "src/project_pipeline/assurance/completion.py"
     ],
     "expected_implementation_artifacts": [
       "config/product_outcome.json",
       "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
       "src/project_pipeline/validation/product_outcome.py",
+      "src/project_pipeline/validation/product_model_audit.py",
       "tests/test_product_outcome_contract.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "cohesive-slice",
-      "in-progress",
+      "implemented",
       "model-realignment",
       "product-outcome"
     ],
@@ -48771,7 +48783,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_supervisor.py",
           "method": "persistent_supervisor_integration",
           "path": "tests/integration/autonomy_runtime/test_supervisor.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -48799,12 +48811,13 @@
       "src/project_pipeline/autonomy_runtime/supervisor.py",
       "src/project_pipeline/autonomy_runtime/service.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "autonomy-runtime",
       "persistent-supervisor",
-      "cohesive-slice"
+      "cohesive-slice",
+      "implemented"
     ],
     "last_observed_remote_state": null,
     "local_id": "PP-TASK-000381",
@@ -48869,7 +48882,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_parallel_recovery.py",
           "method": "parallel_recovery_incident_integration",
           "path": "tests/integration/autonomy_runtime/test_parallel_recovery.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -48898,12 +48911,13 @@
       "src/project_pipeline/autonomy_runtime/lanes.py",
       "src/project_pipeline/autonomy_runtime/recovery.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "autonomy-runtime",
       "parallel-recovery",
-      "cohesive-slice"
+      "cohesive-slice",
+      "implemented"
     ],
     "last_observed_remote_state": null,
     "local_id": "PP-TASK-000382",
@@ -48971,7 +48985,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_golden_journey.py",
           "method": "local_real_product_journey",
           "path": "tests/integration/autonomy_runtime/test_golden_journey.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -49001,13 +49015,14 @@
       "fixtures/autonomy_runtime/golden_project",
       "tests/integration/autonomy_runtime/test_golden_journey.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "autonomy-runtime",
       "golden-journey",
       "local-real",
-      "cohesive-slice"
+      "cohesive-slice",
+      "implemented"
     ],
     "last_observed_remote_state": null,
     "local_id": "PP-TASK-000383",
@@ -49097,7 +49112,7 @@
       "src/project_pipeline/autonomy_runtime/providers.py",
       "runbooks/autonomy_runtime/windows_service.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "autonomy-runtime",
@@ -49200,7 +49215,7 @@
       "scripts/run_autonomy_qualification.py",
       "runbooks/autonomy_runtime/unattended_operation.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "autonomy-runtime",

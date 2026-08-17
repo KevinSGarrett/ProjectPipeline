@@ -38,7 +38,7 @@
     "scripts/run_autonomy_qualification.py",
     "runbooks/autonomy_runtime/unattended_operation.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "autonomy-runtime",

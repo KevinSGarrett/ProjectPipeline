@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline schemas check --root . && PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "automated_behavior_and_evidence_validation",
         "path": "src/project_pipeline/validation/repository.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m pytest -q",
         "method": "automated_behavior_and_evidence_validation",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -74,7 +74,7 @@
     "config/repository_policy.json",
     "schemas"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "validation",

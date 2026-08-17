@@ -215,7 +215,7 @@
       "config/agents/agents.json",
       "config/agents/tools.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000013",
       "PP-STORY-000083",
@@ -413,7 +413,7 @@
       "tests/test_litellm_adapter.py",
       "tests/test_pydantic_ai_adapter.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000013",
       "PP-STORY-000079",
@@ -678,7 +678,7 @@
       "src/project_pipeline/domain/agents.py",
       "config/agents/agents.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000013",
       "PP-STORY-000083",
@@ -864,7 +864,7 @@
       "src/project_pipeline/agent_router/qualification.py",
       "src/project_pipeline/agent_router/performance.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000013",
       "PP-STORY-000082",
@@ -1054,7 +1054,7 @@
       "src/project_pipeline/agent_router/qualification.py",
       "src/project_pipeline/domain/agents.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000013",
       "PP-STORY-000082",
@@ -1115,7 +1115,7 @@
       "src/project_pipeline/scheduler/persistence.py",
       "src/project_pipeline/scheduler/resources.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000013",
       "PP-STORY-000081",
@@ -1322,7 +1322,7 @@
       "src/project_pipeline/core/journal.py",
       "src/project_pipeline/runtime/foundation.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000005",
       "PP-STORY-000006",
@@ -1714,7 +1714,7 @@
       "src/project_pipeline/domain/intake.py",
       "schemas/compiled_project_manifest.schema.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000005",
       "PP-STORY-000060",
@@ -1837,7 +1837,7 @@
       "database/migrations/postgresql/PPDB-0003_project_intake_compilation.up.sql",
       "src/project_pipeline/services/intake.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000005",
       "PP-STORY-000060",
@@ -1963,7 +1963,7 @@
       "schemas/repository_discovery.schema.json",
       "schemas/compiled_project_manifest.schema.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000005",
       "PP-STORY-000060",
@@ -3111,7 +3111,7 @@
       "src/project_pipeline/assurance/scope.py",
       "src/project_pipeline/domain/assurance.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000017",
       "PP-STORY-000092",
@@ -3176,7 +3176,7 @@
       "src/project_pipeline/dependencies.py",
       "docs/development/dependency_management.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000017",
       "PP-STORY-000092",
@@ -3302,7 +3302,7 @@
       "src/project_pipeline/assurance/scope.py",
       "src/project_pipeline/domain/assurance.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000017",
       "PP-STORY-000092",
@@ -4455,7 +4455,7 @@
       "src/project_pipeline/domain/verification.py",
       "src/project_pipeline/verification/harness.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000017",
       "PP-STORY-000094",
@@ -5218,7 +5218,7 @@
       "src/project_pipeline/budget/persistence.py",
       "src/project_pipeline/domain/budget.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000021",
       "PP-STORY-000102",
@@ -5279,7 +5279,7 @@
     "implementation_paths": [
       "src/project_pipeline/budget/policy.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000021",
       "PP-STORY-000102",
@@ -5464,7 +5464,7 @@
       "src/project_pipeline/agent_router/router.py",
       "src/project_pipeline/budget/integration.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000021",
       "PP-STORY-000100",
@@ -5645,7 +5645,7 @@
       "src/project_pipeline/budget/forecast.py",
       "src/project_pipeline/budget/policy.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000021",
       "PP-STORY-000100",
@@ -5705,7 +5705,7 @@
       "src/project_pipeline/budget/policy.py",
       "src/project_pipeline/domain/budget.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000021",
       "PP-STORY-000102",
@@ -5764,7 +5764,7 @@
       "src/project_pipeline/budget/forecast.py",
       "src/project_pipeline/domain/budget.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000021",
       "PP-STORY-000100",
@@ -5881,7 +5881,7 @@
     "implementation_paths": [
       "src/project_pipeline/budget/anomaly.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000021",
       "PP-STORY-000103",
@@ -5941,7 +5941,7 @@
       "infrastructure/aws/terraform/variables.tf",
       "src/project_pipeline/resilience/aws.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000021",
       "PP-STORY-000103",
@@ -6063,7 +6063,7 @@
       "src/project_pipeline/scheduler/engine.py",
       "src/project_pipeline/scheduler/resources.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000021",
       "PP-STORY-000101",
@@ -6139,7 +6139,7 @@
       "src/project_pipeline/control/kernel.py",
       "src/project_pipeline/control/persistence.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000007",
       "PP-STORY-000008",

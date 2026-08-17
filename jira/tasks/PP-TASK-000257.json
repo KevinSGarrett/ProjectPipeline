@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_agent_router_domain.py tests/test_agent_router_circuit.py tests/test_agent_router_routing.py tests/test_agent_router_adapters.py tests/test_agent_router_service.py tests/test_agent_router_performance.py tests/test_agent_router_persistence.py tests/test_agent_router_cli.py tests/test_agent_router_validation.py",
         "method": "automated_behavior_and_contract_validation",
         "path": "src/project_pipeline/agent_router/adapters.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -54,7 +54,7 @@
     "src/project_pipeline/agent_router/adapters.py",
     "src/project_pipeline/agent_router/router.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "agent-router",

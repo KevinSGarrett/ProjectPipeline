@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_supervisor.py",
         "method": "persistent_supervisor_integration",
         "path": "tests/integration/autonomy_runtime/test_supervisor.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -35,12 +35,13 @@
     "src/project_pipeline/autonomy_runtime/supervisor.py",
     "src/project_pipeline/autonomy_runtime/service.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "autonomy-runtime",
     "persistent-supervisor",
-    "cohesive-slice"
+    "cohesive-slice",
+    "implemented"
   ],
   "last_observed_remote_state": null,
   "local_id": "PP-TASK-000381",

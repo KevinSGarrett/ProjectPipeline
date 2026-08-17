@@ -5,8 +5,8 @@
 
 ## Implementation state
 
-- `IMPLEMENTED`: 185
-- `PARTIALLY_IMPLEMENTED`: 137
+- `IMPLEMENTED`: 209
+- `PARTIALLY_IMPLEMENTED`: 113
 - `PLANNED_ONLY`: 30
 
 ## Domain coverage
@@ -41,7 +41,7 @@
 ## Canonical source-section disposition
 
 - Sections: `1109`
-- Sections linked to requirements: `656`
+- Sections linked to requirements: `622`
 - Sections with explicit disposition: `1109`
 
 ## Unexplained gaps

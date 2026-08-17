@@ -239,7 +239,7 @@ def test_implemented_requirement_with_only_planned_jira_requires_finding(
     fabricated.update(
         requirement_id="REQ-PDEF-9999",
         implementation_state="IMPLEMENTED",
-        jira_ids=["PP-TASK-000381"],
+        jira_ids=["PP-TASK-000168"],
     )
     rows.append(fabricated)
     write_jsonl(requirements_path, rows)

@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_parallel_recovery.py",
         "method": "parallel_recovery_incident_integration",
         "path": "tests/integration/autonomy_runtime/test_parallel_recovery.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -36,12 +36,13 @@
     "src/project_pipeline/autonomy_runtime/lanes.py",
     "src/project_pipeline/autonomy_runtime/recovery.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "autonomy-runtime",
     "parallel-recovery",
-    "cohesive-slice"
+    "cohesive-slice",
+    "implemented"
   ],
   "last_observed_remote_state": null,
   "local_id": "PP-TASK-000382",

@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_scheduler_domain.py tests/test_scheduler_conflicts.py tests/test_scheduler_engine.py tests/test_scheduler_persistence.py tests/test_scheduler_backpressure.py tests/test_scheduler_cli.py tests/test_scheduler_validation.py",
         "method": "automated_behavior_and_contract_validation",
         "path": "src/project_pipeline/scheduler/validation.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -66,7 +66,7 @@
     "tests/test_scheduler_validation.py",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "dynamic-scheduler",

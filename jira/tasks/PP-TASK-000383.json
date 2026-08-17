@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_golden_journey.py",
         "method": "local_real_product_journey",
         "path": "tests/integration/autonomy_runtime/test_golden_journey.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -37,13 +37,14 @@
     "fixtures/autonomy_runtime/golden_project",
     "tests/integration/autonomy_runtime/test_golden_journey.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "autonomy-runtime",
     "golden-journey",
     "local-real",
-    "cohesive-slice"
+    "cohesive-slice",
+    "implemented"
   ],
   "last_observed_remote_state": null,
   "local_id": "PP-TASK-000383",

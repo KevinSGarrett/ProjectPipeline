@@ -34,7 +34,7 @@
     "src/project_pipeline/autonomy_runtime/providers.py",
     "runbooks/autonomy_runtime/windows_service.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "autonomy-runtime",

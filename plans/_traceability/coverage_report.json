@@ -27,8 +27,8 @@
     "UX": 26
   },
   "by_implementation_state": {
-    "IMPLEMENTED": 185,
-    "PARTIALLY_IMPLEMENTED": 137,
+    "IMPLEMENTED": 209,
+    "PARTIALLY_IMPLEMENTED": 113,
     "PLANNED_ONLY": 30
   },
   "by_priority": {
@@ -115,7 +115,7 @@
       "SRC-018": 35
     },
     "explicit_disposition_count": 1109,
-    "linked_requirement_section_count": 656,
+    "linked_requirement_section_count": 622,
     "schema_version": "1.0.0",
     "section_count": 1109
   },
