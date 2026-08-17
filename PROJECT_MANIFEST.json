@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "577363b2772ee11ea86b29ca9bd4d139efdfe54449620dbc5bb05e7283e513ab",
+  "aggregate_sha256": "a4647a105c41cdea92a70b5c4685f2ed0bd971cf13125a131abde571780ea26c",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11857,8 +11857,8 @@
     },
     {
       "path": "src/project_pipeline/agent_router/service.py",
-      "sha256": "6728021d37c400f764373356ae8bb85d5ae4863286f759a20a3d9e3af75468f4",
-      "size_bytes": 6750
+      "sha256": "9e5dee6b8a65895378372b045a173270c6fc428f923b65342e56736235a04bd2",
+      "size_bytes": 6771
     },
     {
       "path": "src/project_pipeline/agent_router/simulation.py",
@@ -12897,8 +12897,8 @@
     },
     {
       "path": "src/project_pipeline/scheduler/bridge.py",
-      "sha256": "4fb13cfa5bc11832f2138a2f0416f8a38b37a5fdf495709c21c0290d183994e5",
-      "size_bytes": 5670
+      "sha256": "7c576524d0a4d55c2d097d1b358575cc229fb26e4005f567d73610afc1ccae6d",
+      "size_bytes": 5700
     },
     {
       "path": "src/project_pipeline/scheduler/conflicts.py",
@@ -13117,8 +13117,8 @@
     },
     {
       "path": "src/project_pipeline/validation/product_outcome.py",
-      "sha256": "049a79655896efad1c7e288154d4bbfb8ad40c4c05cd0d08158190e384e1acfc",
-      "size_bytes": 16478
+      "sha256": "01bb6b47a90dd0f9e1016f1170e5bba1efce90eed97d54ac80ffa1daa4bcd13e",
+      "size_bytes": 16470
     },
     {
       "path": "src/project_pipeline/validation/registries.py",
@@ -13362,8 +13362,8 @@
     },
     {
       "path": "tests/test_autonomy_qualification.py",
-      "sha256": "c33e87233952d5d907da42bf8822f8c0e550afeada75fe6adf85883d8faee686",
-      "size_bytes": 11329
+      "sha256": "bcd3d94c894b924ee1ab3bd8447bcc17ca0dac3d9d41c624257609d28490d1c9",
+      "size_bytes": 11947
     },
     {
       "path": "tests/test_autonomy_qualification_windows.py",
@@ -13567,8 +13567,8 @@
     },
     {
       "path": "tests/test_control_kernel.py",
-      "sha256": "a8f11e12d1a98d05917c05b62279e4c1a576cb14ab903c2072bcc77fde4dbc6f",
-      "size_bytes": 11409
+      "sha256": "45ba4c2299ad938d00f096e52ab94680d2da09d501daa4f3d6eb0d637dd56566",
+      "size_bytes": 11517
     },
     {
       "path": "tests/test_control_persistence.py",
@@ -13727,8 +13727,8 @@
     },
     {
       "path": "tests/test_litellm_adapter.py",
-      "sha256": "e7a92acb14e263053ae87cef598a7f1ffc28b8b37a5817781b8a3bbab0377d8e",
-      "size_bytes": 2081
+      "sha256": "68bda12954f6b8c1af248e6ae72ca9203ff16f7bc4a906981be29534bff078e2",
+      "size_bytes": 2095
     },
     {
       "path": "tests/test_local_git_repository.py",
@@ -13852,8 +13852,8 @@
     },
     {
       "path": "tests/test_pydantic_ai_adapter.py",
-      "sha256": "b3ce281c259ba3501ddb3b0fe103d6bc40851ce4dca4d042608d1b9ea589781b",
-      "size_bytes": 2490
+      "sha256": "138bdec95362952aa76bbbb2904c35ffd350d85b9c8d33d5f40c3f67c5a400db",
+      "size_bytes": 2504
     },
     {
       "path": "tests/test_repository_contract.py",
@@ -14181,7 +14181,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T20:08:43.062653+00:00",
+  "generated_at_utc": "2026-08-17T20:09:02.988776+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14190,5 +14190,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25126605
+  "total_bytes": 25127402
 }
