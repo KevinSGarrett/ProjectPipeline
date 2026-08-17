@@ -114,6 +114,17 @@ class BuildSequencer:
                 eligible=False,
                 reasons=(f"task is terminal: {fact.state.value}",),
             )
+        if fact.reconciliation_required:
+            return TaskEligibility(
+                task_id=fact.task_id,
+                state=EligibilityState.RECONCILIATION_REQUIRED,
+                eligible=False,
+                reasons=(
+                    "issue-specific artifacts, tests, criteria, or evidence indicate existing "
+                    "delivery; audit and batch-reconcile this item instead of opening a fresh "
+                    "implementation lane",
+                ),
+            )
         if fact.state in _ACTIVE:
             return TaskEligibility(
                 task_id=fact.task_id,
@@ -134,17 +145,6 @@ class BuildSequencer:
                 state=EligibilityState.EXTERNAL_BLOCKED,
                 eligible=False,
                 reasons=("task is blocked by an unavailable external dependency",),
-            )
-        if fact.reconciliation_required:
-            return TaskEligibility(
-                task_id=fact.task_id,
-                state=EligibilityState.RECONCILIATION_REQUIRED,
-                eligible=False,
-                reasons=(
-                    "issue-specific artifacts, tests, criteria, or evidence indicate existing "
-                    "delivery; audit and batch-reconcile this item instead of opening a fresh "
-                    "implementation lane",
-                ),
             )
         if not fact.product_scope_allowed:
             return TaskEligibility(

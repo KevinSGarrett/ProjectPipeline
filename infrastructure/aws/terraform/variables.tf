@@ -1,6 +1,6 @@
 variable "enable_cloud_spine" {
   type        = bool
-  default     = false
+  default = false
   description = "Fail-closed activation flag. False creates no Project Pipeline cloud-spine resources."
 }
 
@@ -63,7 +63,7 @@ variable "monthly_budget_usd" {
 
 variable "enable_budget_circuit_breaker" {
   type        = bool
-  default     = false
+  default = false
   description = "Fail-closed. Enables an AWS Budgets action only after the operator provides a reviewed execution role, restrictive IAM policy, target roles, and subscriber email."
 }
 

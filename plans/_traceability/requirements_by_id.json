@@ -14059,11 +14059,10 @@
     "source_kind": "CANONICAL_SOURCE",
     "source_references": [
       "SRC-014:L000001-L000087",
-      "SRC-015:L000001-L000113",
-      "SRC-003:L000001-L000004"
+      "SRC-015:L000031-L000150"
     ],
     "source_sequence": 14,
-    "statement": "ProjectPipeline shall continuously take a project from intake through verified modeling, autonomous selection, conflict-safe parallel execution, verification, governed repository integration, Jira reconciliation, project-state recomputation, and next-work selection without requiring a human to drive each development session.",
+    "statement": "ProjectPipeline shall continuously take a project from intake through verified model compilation, autonomous conflict-safe parallel execution of genuinely missing work, verification, merge, Jira reconciliation, next-work recomputation, HUMAN_REQUIRED isolation, truthful Command Center reporting, and repetition until the deterministic Completion Gate reports COMPLETE for the integrated, released, and operationally verified system.",
     "superseded_by_requirement_ids": [],
     "supersedes_requirement_ids": [],
     "tags": [

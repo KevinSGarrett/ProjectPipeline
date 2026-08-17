@@ -27,7 +27,7 @@ class JiraGraphTests(unittest.TestCase):
             self.assertIn(edge["to"], ids)
         child_count = Counter(item["parent"] for item in issues if item["parent"])
         for item in issues:
-            if item["issue_type"] == "EPIC":
+            if item["issue_type"] == "EPIC" and item.get("state") != "CANCELLED":
                 self.assertGreater(child_count[item["local_id"]], 0)
 
     def test_board_counts_match_issue_index(self) -> None:
