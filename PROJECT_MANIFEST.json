@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "1bde459fe01365e161d07ecfd1edc45ae4f181fc00781ed7be19026ee9bd43af",
+  "aggregate_sha256": "5d519c080070174172aa17ae422a5192c510a28ff38516d7080457f22f7c5707",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11632,13 +11632,13 @@
     },
     {
       "path": "src/project_pipeline/agent_router/__init__.py",
-      "sha256": "ef84fd1ad1a173b1558f3860d61475318cce182b4a7c0a37bb58321c3214c086",
-      "size_bytes": 2225
+      "sha256": "bd7b4392117cdfe1ec9ed45727b3e8ce075e86950047755db30da8a2c977794b",
+      "size_bytes": 2356
     },
     {
       "path": "src/project_pipeline/agent_router/adapters.py",
-      "sha256": "0b0d3ad009d0ba2ce2d90d8adc627e7a5dc9e981dee83a82b9beeb286d9ea0ec",
-      "size_bytes": 16367
+      "sha256": "3e988963d63df9a795cb51e1737d5e8154ec17f9288be8b423643854216fc377",
+      "size_bytes": 17214
     },
     {
       "path": "src/project_pipeline/agent_router/circuit.py",
@@ -11687,8 +11687,8 @@
     },
     {
       "path": "src/project_pipeline/agent_router/simulation.py",
-      "sha256": "c2c847e6f1ee4754799a1f003b8d0fd60cc76317e62daf2ec172de809b3e5989",
-      "size_bytes": 4015
+      "sha256": "37cba524c893a4db7a5861f73bb42b0578f05348232ad2ad0fa5a0fc6b72e715",
+      "size_bytes": 5340
     },
     {
       "path": "src/project_pipeline/agent_router/tools.py",
@@ -11697,8 +11697,8 @@
     },
     {
       "path": "src/project_pipeline/agent_router/validation.py",
-      "sha256": "6e26c50cc864547ed7a2661e2b420443aab47f5f925aea7b3a398b9749fb7d1d",
-      "size_bytes": 1289
+      "sha256": "c941402e745600fe956dfb3d1b100529fff28b1f4c3e9170a107c1e9a2dbe007",
+      "size_bytes": 2525
     },
     {
       "path": "src/project_pipeline/architecture.py",
@@ -11867,8 +11867,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "f5d5413db13a7dcbfedeb0d28cf9e9cae9eafeaafa33ad7b7b021437872f853e",
-      "size_bytes": 123839
+      "sha256": "d5d6e3c902de2752602bfb37ee0907bb8a3baa8088f0905effd0c6bffdac03f9",
+      "size_bytes": 124597
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12277,8 +12277,8 @@
     },
     {
       "path": "src/project_pipeline/github_steward/service.py",
-      "sha256": "47ec4bf8889ff2fe557ff7cbc909f5da9b47702dfcf3edce0a3ba1110517ce0d",
-      "size_bytes": 10234
+      "sha256": "a061a0eddbd4a75d1c2f7385b9e71c9cd45b1e3211247f19710622035dde6489",
+      "size_bytes": 10915
     },
     {
       "path": "src/project_pipeline/github_steward/validation.py",
@@ -13037,8 +13037,8 @@
     },
     {
       "path": "tests/test_agent_router_adapters.py",
-      "sha256": "622904324fa4047bf34d02619ed22c3e638614eeec207176d60dba6dd3251625",
-      "size_bytes": 5041
+      "sha256": "d4bd689dba6f929226ad5a82af4445701bbf214c767468cf8954eb1571bb7cdf",
+      "size_bytes": 5562
     },
     {
       "path": "tests/test_agent_router_circuit.py",
@@ -13047,8 +13047,8 @@
     },
     {
       "path": "tests/test_agent_router_cli.py",
-      "sha256": "b9a6bcd314c66a6c0dc2f9170270d988da00b0b48a8dad1ba08ae18c352c5e78",
-      "size_bytes": 2036
+      "sha256": "2003d7c464cd266a23fdc2a29bf390a3b14238639d419aa83dbdb724a70391c4",
+      "size_bytes": 3073
     },
     {
       "path": "tests/test_agent_router_domain.py",
@@ -13062,8 +13062,8 @@
     },
     {
       "path": "tests/test_agent_router_persistence.py",
-      "sha256": "cdbbd9a5dbc3a74fb97497763f2c6cb246b4ee3bd335842bdb0a47ad0b7b30e4",
-      "size_bytes": 2748
+      "sha256": "0ec72d539cd565497ddf034037d2a77c446efef84d982a404ca1976ff03ec39c",
+      "size_bytes": 2956
     },
     {
       "path": "tests/test_agent_router_routing.py",
@@ -13912,8 +13912,8 @@
     },
     {
       "path": "tests/test_worktrunk_adapter.py",
-      "sha256": "64c0076181db2b78191ef6094c2e3538999907c6878978b96d98d5414d24d2bd",
-      "size_bytes": 1476
+      "sha256": "3ac733d47b91006772920c830005dd3b76e88628358cafd8a556ff1f962e11e3",
+      "size_bytes": 2444
     },
     {
       "path": "third_party/NOTICES.md",
@@ -13921,7 +13921,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T18:38:59.974672+00:00",
+  "generated_at_utc": "2026-08-17T18:44:54.873396+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13930,5 +13930,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24336224
+  "total_bytes": 24343936
 }
