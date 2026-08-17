@@ -2,15 +2,30 @@ from __future__ import annotations
 
 from collections import defaultdict
 from collections.abc import Iterable
+from datetime import UTC, datetime, timedelta
 
 from project_pipeline.domain.agents import PerformanceObservation, PerformanceSummary
+
+DEFAULT_MAX_AGE = timedelta(days=7)
 
 
 def summarize_performance(
     observations: Iterable[PerformanceObservation],
+    *,
+    now: datetime | None = None,
+    max_age: timedelta = DEFAULT_MAX_AGE,
+    allow_synthetic: bool = False,
 ) -> dict[tuple[str, str], PerformanceSummary]:
+    now = (now or datetime.now(UTC)).astimezone(UTC)
     grouped: dict[tuple[str, str], list[PerformanceObservation]] = defaultdict(list)
     for item in observations:
+        if item.synthetic and not allow_synthetic:
+            raise ValueError("synthetic performance observations cannot enter production routing")
+        observed = item.observed_at_utc
+        if observed.tzinfo is None:
+            observed = observed.replace(tzinfo=UTC)
+        if now - observed > max_age:
+            continue
         grouped[(item.target_id, item.capability_id)].append(item)
     result: dict[tuple[str, str], PerformanceSummary] = {}
     for key, items in grouped.items():

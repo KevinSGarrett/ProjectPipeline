@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,12 +17,15 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000004",
+    "EVID-000005",
+    "EVID-000006",
     "EVID-000011"
   ],
   "definition_of_done": [
@@ -51,10 +54,12 @@
     "jira/indexes/issues.jsonl",
     "jira/relationships/graph.json"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "SUBTASK",
   "labels": [
+    "bulk-reconciled",
     "catalog-foundation",
+    "implemented",
     "verification"
   ],
   "last_observed_remote_state": {

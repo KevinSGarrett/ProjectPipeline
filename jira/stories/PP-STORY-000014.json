@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline coverage --root .",
         "method": "traceability_check",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,14 +17,17 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "completion_gate_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
     "EVID-000069",
-    "EVID-000072"
+    "EVID-000070",
+    "EVID-000072",
+    "EVID-000075",
+    "EVID-000076"
   ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
@@ -49,10 +52,12 @@
     "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
+    "bulk-reconciled",
     "domain-story",
+    "implemented",
     "plan-agent-001"
   ],
   "last_observed_remote_state": {

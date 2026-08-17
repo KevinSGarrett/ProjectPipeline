@@ -1,5 +1,5 @@
 from project_pipeline.scheduler.backpressure import evaluate_backpressure
-from project_pipeline.scheduler.bridge import profiles_from_repository
+from project_pipeline.scheduler.bridge import claims_for_task, profiles_from_repository
 from project_pipeline.scheduler.conflicts import (
     SchedulerConflictError,
     build_conflict_graph,
@@ -26,6 +26,7 @@ __all__ = [
     "build_conflict_graph",
     "capacity_usage",
     "claims_conflict",
+    "claims_for_task",
     "evaluate_backpressure",
     "profiles_from_repository",
     "simulate_scenario",

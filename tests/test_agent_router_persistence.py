@@ -68,6 +68,9 @@ def test_agent_router_store_roundtrip(tmp_path):
             and status["provider_states"] == 1
             and status["performance_observations"] == 1
         )
+        assert store.performance()[0].observation_id.startswith("PERF-")
+        assert store.circuits()[0].provider_id == p.provider_id
+        assert store.provider_states()[0].provider_id == p.provider_id
 
 
 def test_ppdb_0008_is_reversible(tmp_path):

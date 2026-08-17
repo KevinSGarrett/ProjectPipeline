@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_pass23_full_e2e.py",
         "method": "automated_behavior_validation",
         "path": "evidence/verification/pass23_full_e2e_report.json",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,12 +17,29 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "provenance/pass_23_upstream_e2e_gate.json",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000025",
+    "EVID-000027",
+    "EVID-000109",
+    "EVID-000110",
+    "EVID-000112",
+    "EVID-000113",
+    "EVID-000115",
+    "EVID-000116",
+    "EVID-000117",
+    "EVID-000118",
+    "EVID-000119",
+    "EVID-000121",
+    "EVID-000122",
+    "EVID-000138",
+    "EVID-000139",
+    "EVID-000158",
+    "EVID-000159",
     "EVID-000160",
     "EVID-000161",
     "EVID-000162"
@@ -54,10 +71,12 @@
     "evidence/EVIDENCE_LEDGER.jsonl",
     "PROJECT_MANIFEST.json"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
+    "bulk-reconciled",
     "full-e2e",
+    "implemented",
     "pass-23"
   ],
   "last_observed_remote_state": {

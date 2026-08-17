@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_pass25_final_convergence.py",
         "method": "automated_behavior_validation",
         "path": "evidence/pass25_focused_suite.txt",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -37,11 +37,13 @@
     "src/project_pipeline/resilience/runbook.py",
     "config/runbooks/recovery_control_machine.json"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "pass-25",
-    "convergence"
+    "bulk-reconciled",
+    "convergence",
+    "implemented",
+    "pass-25"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

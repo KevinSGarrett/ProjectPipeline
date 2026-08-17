@@ -1,0 +1,112 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-900036-01",
+      "statement": "The complete autonomous operating loop is implemented and passes every ordered qualification stage through released post-release Completion Gate.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "method": "product_outcome_and_completion_validation",
+        "path": "config/product_outcome.json",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "All six vertical slices are integrated and behaviorally verified.",
+    "The golden journey is local-real and uses isolated real Git worktrees.",
+    "Authorized live integrations and real worker dispatch are qualified or remain explicit blockers.",
+    "Windows, recovery, 24-hour, 72-hour, release, and post-release gates pass.",
+    "The deterministic Completion Gate reports COMPLETE without mocks or lower-environment substitution."
+  ],
+  "dependencies": [],
+  "description": "Deliver and qualify the continuously operating local-first Autonomy Runtime from intake through next-work continuation, including HUMAN_REQUIRED partial continuation and truthful Command Center operation.",
+  "evidence_required": [],
+  "exclusions": [
+    "No lifecycle-label tickets or PRs.",
+    "No completion from class, schema, plan, mock, deterministic simulation, generated evidence, or local preview existence.",
+    "Unavailable credentials and environments remain blockers."
+  ],
+  "expected_file_locations": [
+    "config/product_outcome.json",
+    "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md"
+  ],
+  "expected_implementation_artifacts": [
+    "src/project_pipeline/autonomy_runtime",
+    "tests/integration/autonomy_runtime",
+    "evidence/autonomy_runtime"
+  ],
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "issue_type": "EPIC",
+  "labels": [
+    "autonomy-runtime",
+    "in-progress",
+    "product-outcome",
+    "vertical-slices-only"
+  ],
+  "last_observed_remote_state": null,
+  "local_id": "PP-EPIC-000036",
+  "objective": "Autonomous Runtime Integration and Unattended Qualification",
+  "observability_impact": "Expose durable loop, lane, incident, integration, budget, qualification, and Completion Gate state.",
+  "owner_required_capability": "autonomous_runtime_architecture_and_qualification",
+  "parent": null,
+  "plan_references": [
+    {
+      "authoritative_path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
+      "end_line": 13,
+      "line_numbered_path": "plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt",
+      "line_reference": "PLAN-CTRL-003:SEC-01:L000008-L000013",
+      "plan_id": "PLAN-CTRL-003",
+      "section_id": "PLAN-CTRL-003:SEC-01",
+      "start_line": 8
+    }
+  ],
+  "rationale": "The original source defines the perpetual autonomous engineering loop as the central product outcome, which the previous compiled model omitted.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000138",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000139",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000140",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000141",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000142",
+      "type": "PARENT_OF"
+    },
+    {
+      "target": "PP-STORY-000143",
+      "type": "PARENT_OF"
+    }
+  ],
+  "remote_jira_key": null,
+  "required_tests": [],
+  "requirement_ids": [
+    "REQ-PDEF-0011",
+    "REQ-CTRL-0004"
+  ],
+  "risk_classification": "CRITICAL",
+  "rollback_recovery_consideration": "Preserve the last verified product model and runtime checkpoint; roll back one cohesive slice without rewriting historical evidence.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Deliver and qualify the complete continuous autonomous product outcome."
+  ],
+  "security_impact": "Controls autonomous authority, credentials, external mutations, worker isolation, and completion claims.",
+  "source_references": [
+    "SRC-014:L000001-L000086",
+    "SRC-015:L000001-L000112"
+  ],
+  "state": "IN_PROGRESS",
+  "title": "Autonomous Runtime Integration and Unattended Qualification",
+  "upstream_dependencies": []
+}

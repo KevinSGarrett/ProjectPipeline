@@ -99,3 +99,18 @@ class DockerMCPGatewayAdapter:
                 retryable=True,
             )
         return {"state": "STARTED", "stdout": result.stdout}
+
+    def invoke(
+        self, tool_id: str, operation: str, arguments: Mapping[str, object]
+    ) -> Mapping[str, object]:
+        if operation != "invoke":
+            raise ProviderAdapterError("unlisted Docker MCP operation", kind="POLICY_DENIED")
+        cwd = Path(str(arguments.get("cwd") or "."))
+        approved = bool(arguments.get("approved"))
+        plan = self.build_plan(
+            cwd,
+            servers=tuple(arguments.get("servers") or ()),
+            tools=tuple(arguments.get("tools") or ()),
+            dry_run=not approved,
+        )
+        return self.invoke_plan(plan, approved=approved)

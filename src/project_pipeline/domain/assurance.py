@@ -542,13 +542,14 @@ class CompletionFailure(DomainModel):
 
 
 class CompletionGateFacts(DomainModel):
-    schema_version: Literal["1.0.0"] = "1.0.0"
+    schema_version: Literal["1.1.0"] = "1.1.0"
     project_id: str
     source_requirements_dispositioned: bool
     accepted_requirements_complete_or_external: bool
     implementation_traceability_complete: bool
     critical_paths_tested: bool
     golden_journeys_pass: bool
+    autonomous_runtime_qualified: bool
     security_gates_satisfied: bool
     resilience_verified: bool
     deployment_reproducible: bool

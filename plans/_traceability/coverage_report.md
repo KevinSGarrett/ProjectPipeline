@@ -1,13 +1,13 @@
 # Requirement Coverage
 
-- Requirements: `351`
+- Requirements: `352`
 - Unexplained gaps: `0`
 
 ## Implementation state
 
-- `IMPLEMENTED`: 186
-- `PARTIALLY_IMPLEMENTED`: 136
-- `PLANNED_ONLY`: 29
+- `IMPLEMENTED`: 209
+- `PARTIALLY_IMPLEMENTED`: 113
+- `PLANNED_ONLY`: 30
 
 ## Domain coverage
 
@@ -21,7 +21,7 @@
 - `INFRA`: 19
 - `LIFE`: 18
 - `OPS`: 19
-- `PDEF`: 10
+- `PDEF`: 11
 - `REL`: 14
 - `REQ`: 17
 - `RES`: 25
@@ -32,16 +32,16 @@
 
 ## Mapping coverage
 
-- `plan`: 351 (100.0%)
-- `jira`: 351 (100.0%)
-- `implementation`: 322 (91.74%)
-- `tests`: 322 (91.74%)
-- `evidence`: 322 (91.74%)
+- `plan`: 352 (100.0%)
+- `jira`: 352 (100.0%)
+- `implementation`: 322 (91.48%)
+- `tests`: 322 (91.48%)
+- `evidence`: 322 (91.48%)
 
 ## Canonical source-section disposition
 
 - Sections: `1109`
-- Sections linked to requirements: `645`
+- Sections linked to requirements: `622`
 - Sections with explicit disposition: `1109`
 
 ## Unexplained gaps

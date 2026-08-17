@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,16 +17,14 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
     "EVID-000129",
-    "EVID-000130",
-    "EVID-000133",
-    "EVID-000134"
+    "EVID-000130"
   ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
@@ -51,12 +49,14 @@
   "expected_implementation_artifacts": [
     "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
+    "bulk-reconciled",
     "capability-story",
+    "cluster-human-recovery",
     "domain-res",
-    "cluster-human-recovery"
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -109,6 +109,6 @@
     "SRC-015:L000589-L000661"
   ],
   "state": "BACKLOG",
-  "title": "Human Recovery \u2014 Resilience, Recovery, and Disaster Readiness",
+  "title": "Human Recovery — Resilience, Recovery, and Disaster Readiness",
   "upstream_dependencies": []
 }

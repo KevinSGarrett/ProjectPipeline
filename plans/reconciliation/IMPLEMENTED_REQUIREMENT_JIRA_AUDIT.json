@@ -1,0 +1,1379 @@
+{
+  "audit_id": "IMPLEMENTED-REQUIREMENT-JIRA-AUDIT-001",
+  "closure_rule": "A finding closes only after issue-specific implementation, tests, criteria, and evidence are checked and canonical Jira source, Control database, generated views, and observed remote state are deliberately reconciled in a compatible batch.",
+  "findings": [
+    {
+      "issue_ids": [
+        "PP-EPIC-000013",
+        "PP-STORY-000079",
+        "PP-TASK-000252",
+        "PP-TASK-000258"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-AGENT-0006",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000013",
+        "PP-STORY-000081",
+        "PP-TASK-000257",
+        "PP-TASK-000353",
+        "PP-TASK-000357"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-AGENT-0012",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000005",
+        "PP-STORY-000006",
+        "PP-SUBTASK-000183",
+        "PP-SUBTASK-000185",
+        "PP-TASK-000156"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-ARCH-0003",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000017",
+        "PP-STORY-000094",
+        "PP-TASK-000322"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-ASSURE-0017",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000017",
+        "PP-STORY-000094",
+        "PP-TASK-000322"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-ASSURE-0018",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000017",
+        "PP-STORY-000094",
+        "PP-TASK-000322"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-ASSURE-0019",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000017",
+        "PP-STORY-000094",
+        "PP-TASK-000322"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-ASSURE-0020",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000017",
+        "PP-STORY-000092",
+        "PP-TASK-000324"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-ASSURE-0034",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000021",
+        "PP-STORY-000100",
+        "PP-TASK-000315"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-BUDGET-0011",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000021",
+        "PP-STORY-000100",
+        "PP-TASK-000315"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-BUDGET-0015",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000007",
+        "PP-STORY-000065",
+        "PP-TASK-000233",
+        "PP-TASK-000240"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-CTRL-0015",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000007",
+        "PP-STORY-000067"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-CTRL-0016",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000011",
+        "PP-STORY-000076",
+        "PP-TASK-000291"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-CTX-0004",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000011",
+        "PP-STORY-000078",
+        "PP-TASK-000294"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-CTX-0011",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000011",
+        "PP-STORY-000078",
+        "PP-TASK-000294"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-CTX-0012",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000011",
+        "PP-STORY-000078",
+        "PP-TASK-000294"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-CTX-0013",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000011",
+        "PP-STORY-000077",
+        "PP-TASK-000295"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-CTX-0014",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000011",
+        "PP-STORY-000076",
+        "PP-TASK-000296"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-CTX-0016",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000015",
+        "PP-STORY-000088"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-GOV-0007",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000029",
+        "PP-STORY-000123",
+        "PP-TASK-000352"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-INFRA-0004",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000027",
+        "PP-STORY-000118"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-OPS-0012",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000027",
+        "PP-STORY-000119"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-OPS-0017",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000035",
+        "PP-STORY-000136",
+        "PP-TASK-000373"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-REL-0014",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000023",
+        "PP-STORY-000107",
+        "PP-TASK-000352"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-RES-0007",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000023",
+        "PP-STORY-000104",
+        "PP-TASK-000305",
+        "PP-TASK-000309",
+        "PP-TASK-000352"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-RES-0009",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000023",
+        "PP-STORY-000105",
+        "PP-TASK-000356"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-RES-0015",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000023",
+        "PP-STORY-000110",
+        "PP-TASK-000354",
+        "PP-TASK-000358"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-RES-0020",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000009",
+        "PP-STORY-000073",
+        "PP-TASK-000165"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-SCHED-0004",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000019",
+        "PP-STORY-000020",
+        "PP-TASK-000191"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-SEC-0003",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000019",
+        "PP-STORY-000099",
+        "PP-TASK-000347"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-SEC-0019",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000019",
+        "PP-STORY-000099",
+        "PP-SUBTASK-000184",
+        "PP-TASK-000347"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-SEC-0021",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000019",
+        "PP-STORY-000097",
+        "PP-TASK-000189",
+        "PP-TASK-000191"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-SEC-0023",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000025",
+        "PP-STORY-000026"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-UX-0002",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000025",
+        "PP-STORY-000026"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-UX-0003",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000025",
+        "PP-STORY-000112"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-UX-0010",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000025",
+        "PP-STORY-000112"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-UX-0024",
+      "status": "RECONCILIATION_REQUIRED"
+    },
+    {
+      "issue_ids": [
+        "PP-EPIC-000025",
+        "PP-STORY-000113"
+      ],
+      "reason": "Requirement implementation is evidenced, but every linked source Jira item still projects PLANNED_ONLY. Bulk source/database/generated/remote reconciliation is required before Control may treat the work as fresh implementation or the finding may close.",
+      "requirement_id": "REQ-UX-0025",
+      "status": "RECONCILIATION_REQUIRED"
+    }
+  ],
+  "implemented_requirement_count": 185,
+  "issue_findings": [
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-EPIC-000011",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-EPIC-000031",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000010",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000018",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000034",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000055",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000067",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000069",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000072",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000073",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000074",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000076",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000078",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-STORY-000086",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000093",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000098",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-STORY-000100",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-STORY-000101",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-STORY-000102",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-STORY-000103",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-STORY-000104",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-STORY-000116",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000043",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000154",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000155",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000156",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000157",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000158",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-TASK-000162",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000164",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000171",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-TASK-000172",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000174",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-TASK-000176",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-TASK-000180",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-TASK-000181",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000186",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000187",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000188",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000189",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000191",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000192",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000193",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000194",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000195",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000196",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000197",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000198",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000199",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000200",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000201",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000202",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000205",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000207",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000209",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000210",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000211",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000212",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000213",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000214",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000215",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000216",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000217",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000219",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000220",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000221",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000222",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000223",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000224",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000225",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000226",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000227",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000228",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000229",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000230",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000231",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000233",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000235",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000236",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000237",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000238",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000240",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000243",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000244",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000245",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000247",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000250",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000251",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000252",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000253",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000256",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000257",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000258",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-TASK-000259",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000263",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000264",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000265",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000266",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000273",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000291",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000294",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000295",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000296",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000299",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000302",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000303",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000305",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000308",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000309",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000312",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000315",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000316",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000317",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000318",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000322",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000324",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000339",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000346",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000347",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000348",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000349",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000352",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000353",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000354",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000356",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000357",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000358",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000359",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000360",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000361",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000362",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000363",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000364",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000369",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000370",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000371",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000372",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000373",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000376",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-TASK-000377",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": false,
+      "existing_delivery_footprint": true,
+      "issue_id": "PP-SUBTASK-000046",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    },
+    {
+      "all_linked_requirements_complete": true,
+      "existing_delivery_footprint": false,
+      "issue_id": "PP-SUBTASK-000184",
+      "reason": "Requirement state or the issue's own artifacts, tests, criteria, and evidence indicate existing delivery. Control must quarantine it from fresh implementation selection until an issue-specific missing delta is established or the canonical Jira projection is reconciled.",
+      "status": "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    }
+  ],
+  "issue_specific_audit_count": 142,
+  "reconciliation_required_count": 37,
+  "schema_version": "1.0.0",
+  "status": "OPEN"
+}

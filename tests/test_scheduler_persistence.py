@@ -112,3 +112,42 @@ def test_lease_fencing_renew_release_and_expiry(tmp_path: Path) -> None:
         )
         assert next_bundle.acquired
         assert next_bundle.leases[0].fencing_token > lease.fencing_token
+
+
+def test_recover_claims_for_in_progress_task(tmp_path: Path) -> None:
+    with SchedulerStore(tmp_path / "scheduler.db", ROOT) as store:
+        claims = (
+            ResourceClaim(
+                resource_key="src/project_pipeline/cli.py",
+                resource_type=ResourceType.PATH,
+                access_mode=AccessMode.EXCLUSIVE,
+            ),
+            ResourceClaim(
+                resource_key="machine:local/cpu_slots",
+                resource_type=ResourceType.CPU_SLOT,
+                access_mode=AccessMode.SHARED,
+                quantity=1,
+            ),
+        )
+        first = store.acquire_bundle(
+            task_id="PP-TASK-000380",
+            holder_id="cursor-combined-agent",
+            claims=claims,
+            ttl_seconds=60,
+            now=NOW,
+        )
+        assert first.acquired
+        for lease in first.leases:
+            store.release_lease(
+                lease.lease_id,
+                holder_id="cursor-combined-agent",
+                fencing_token=lease.fencing_token,
+                now=NOW + timedelta(seconds=1),
+            )
+        recovered = store.recover_claims_for_task(
+            "PP-TASK-000380", holder_id="cursor-combined-agent"
+        )
+        assert recovered
+        recovered_keys = {(item.resource_type.value, item.resource_key) for item in recovered}
+        assert ("PATH", "src/project_pipeline/cli.py") in recovered_keys
+        assert ("CPU_SLOT", "machine:local/cpu_slots") in recovered_keys

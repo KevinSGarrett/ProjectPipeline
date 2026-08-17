@@ -51,7 +51,7 @@ def test_assurance_cli_completion_gate_truthfully_reports_not_complete(
         for item in payload["completion_gate"]["questions"]
         if not item["passed"]
     }
-    assert 5 not in failed
+    assert 5 in failed
     golden = next(
         item for item in payload["completion_gate"]["questions"] if item["question_number"] == 5
     )

@@ -127,6 +127,11 @@
       "title": "Priority",
       "type": "string"
     },
+    "product_scope_allowed": {
+      "default": true,
+      "title": "Product Scope Allowed",
+      "type": "boolean"
+    },
     "project_id": {
       "title": "Project Id",
       "type": "string"

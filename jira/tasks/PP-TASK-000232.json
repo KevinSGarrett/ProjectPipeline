@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_control_domain.py tests/test_build_sequencer.py tests/test_control_kernel.py tests/test_control_persistence.py tests/test_control_cli.py tests/test_control_validation.py",
         "method": "automated_behavior_and_contract_validation",
         "path": "src/project_pipeline/control/graph.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -50,12 +50,14 @@
   "expected_implementation_artifacts": [
     "src/project_pipeline/control/graph.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "control-kernel",
     "build-sequencer",
+    "bulk-reconciled",
+    "control-kernel",
     "deterministic",
+    "implemented",
     "project-control"
   ],
   "last_observed_remote_state": {

@@ -95,6 +95,40 @@ def test_service_falls_back_after_provider_failure():
     ]
 
 
+class _MemoryStore:
+    def __init__(self) -> None:
+        self.performance = []
+        self.receipts = []
+        self.decisions = []
+        self.circuits = []
+
+    def save_routing_decision(self, item):
+        self.decisions.append(item)
+
+    def save_execution_receipt(self, item):
+        self.receipts.append(item)
+
+    def save_circuit(self, item):
+        self.circuits.append(item)
+
+    def save_performance(self, item):
+        self.performance.append(item)
+
+
+def test_service_persists_measured_performance_bound_to_receipt():
+    reg, states, contract = setup()
+    adapter = MockProviderAdapter("provider:one")
+    adapter.adapter_id = "adapter:one"
+    store = _MemoryStore()
+    receipt = AgentRouterService(reg, {"adapter:one": adapter}, store=store).execute(
+        contract, states, []
+    )
+    assert receipt.succeeded
+    assert store.performance
+    assert all(item.synthetic is False for item in store.performance)
+    assert all(item.evidence_id == receipt.receipt_id for item in store.performance)
+
+
 def test_service_reports_failed_receipt_when_all_candidates_fail():
     reg, states, contract = setup()
     adapters = {}

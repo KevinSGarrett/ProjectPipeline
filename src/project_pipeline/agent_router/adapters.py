@@ -85,13 +85,23 @@ class BaseHttpProviderAdapter:
     def _post(
         self, path: str, headers: Mapping[str, str], payload: Mapping[str, Any]
     ) -> tuple[Any, Mapping[str, str]]:
-        status, response_headers, body = self.transport(
-            "POST",
-            self.base_url.rstrip("/") + path,
-            headers,
-            json.dumps(payload).encode(),
-            self.timeout_seconds,
-        )
+        try:
+            status, response_headers, body = self.transport(
+                "POST",
+                self.base_url.rstrip("/") + path,
+                headers,
+                json.dumps(payload).encode(),
+                self.timeout_seconds,
+            )
+        except ProviderAdapterError:
+            raise
+        except Exception as error:
+            raise ProviderAdapterError(
+                f"hosted provider outcome is unknown: {error}",
+                kind="UNKNOWN_OUTCOME",
+                retryable=True,
+                provider_state="UNAVAILABLE",
+            ) from error
         try:
             data = json.loads(body.decode("utf-8")) if body else {}
         except Exception as error:
@@ -357,6 +367,13 @@ class LocalProcessProviderAdapter:
                 retryable=True,
                 provider_state="DEGRADED",
             ) from error
+        if result.returncode < 0:
+            raise ProviderAdapterError(
+                f"local provider process was lost: {result.returncode}",
+                kind="PROCESS_LOSS",
+                retryable=False,
+                provider_state="UNAVAILABLE",
+            )
         if result.returncode != 0:
             raise ProviderAdapterError(
                 f"local provider exited {result.returncode}",
@@ -555,6 +572,28 @@ class MockProviderAdapter:
             output={"text": f"mock:{contract.task_id}"},
             usage=NormalizedUsage(),
         )
+
+
+def build_adapter(adapter_id: str, **kwargs: Any) -> ProviderAdapter:
+    factories: dict[str, type] = {
+        "adapter:openai-responses": OpenAIResponsesAdapter,
+        "adapter:anthropic-messages": AnthropicMessagesAdapter,
+        "adapter:gemini-generate-content": GeminiGenerateContentAdapter,
+        "adapter:litellm-proxy": LiteLLMProxyAdapter,
+        "adapter:local-json-process": LocalProcessProviderAdapter,
+        "adapter:mock-provider": MockProviderAdapter,
+    }
+    try:
+        from project_pipeline.agent_router.pydantic_ai_adapter import PydanticAIProviderAdapter
+
+        factories["adapter:pydantic-ai"] = PydanticAIProviderAdapter
+    except Exception as error:
+        _optional_adapter_error = str(error)
+        del _optional_adapter_error
+    factory = factories.get(adapter_id)
+    if factory is None:
+        raise ValueError(f"unknown adapter: {adapter_id}")
+    return factory(**kwargs)
 
 
 class ToolAdapter(Protocol):

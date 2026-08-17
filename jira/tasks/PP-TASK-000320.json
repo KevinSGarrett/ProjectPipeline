@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_assurance_*.py",
         "method": "automated_behavior_validation",
         "path": "provenance/pass_15_verification_gate.json",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,13 +17,44 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000107"
+    "EVID-000016",
+    "EVID-000017",
+    "EVID-000019",
+    "EVID-000020",
+    "EVID-000075",
+    "EVID-000076",
+    "EVID-000077",
+    "EVID-000078",
+    "EVID-000083",
+    "EVID-000084",
+    "EVID-000085",
+    "EVID-000086",
+    "EVID-000087",
+    "EVID-000095",
+    "EVID-000097",
+    "EVID-000100",
+    "EVID-000101",
+    "EVID-000107",
+    "EVID-000112",
+    "EVID-000113",
+    "EVID-000114",
+    "EVID-000115",
+    "EVID-000116",
+    "EVID-000118",
+    "EVID-000119",
+    "EVID-000121",
+    "EVID-000122",
+    "EVID-000127",
+    "EVID-000128",
+    "EVID-000131",
+    "EVID-000137",
+    "EVID-000143"
   ],
   "definition_of_done": [
     "Implementation is present and locally behaviorally verified.",
@@ -49,11 +80,13 @@
     "provenance/pass_15_verification_gate.json",
     "provenance/reviews/PASS-15_verification_evaluation_upstream_review.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "assurance",
+    "bulk-reconciled",
     "completion-gate",
+    "implemented",
     "pass-15"
   ],
   "last_observed_remote_state": {

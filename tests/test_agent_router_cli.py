@@ -70,3 +70,42 @@ def test_agent_router_simulation_demonstrates_fallback(capsys, tmp_path):
         "provider:primary",
         "provider:fallback",
     ]
+
+
+def test_agent_router_simulate_apply_requires_approve(capsys, tmp_path):
+    root = __import__("pathlib").Path(__file__).parents[1]
+    code = main(
+        [
+            "agent-router",
+            "simulate",
+            "--root",
+            str(root),
+            "--database",
+            str(tmp_path / "router.db"),
+            "--scenario",
+            "circuit",
+            "--apply",
+        ]
+    )
+    data = json.loads(capsys.readouterr().out)
+    assert code == 2 and data["applied"] is False
+    assert (
+        main(
+            [
+                "agent-router",
+                "simulate",
+                "--root",
+                str(root),
+                "--database",
+                str(tmp_path / "router.db"),
+                "--scenario",
+                "circuit",
+                "--apply",
+                "--approve",
+            ]
+        )
+        == 0
+    )
+    approved = json.loads(capsys.readouterr().out)
+    assert approved["applied"] is True
+    assert approved["simulation"]["closed"] is True

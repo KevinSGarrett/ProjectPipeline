@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "behavior_and_traceability_validation",
         "path": "adr/ADR_CATALOG.json",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -58,7 +58,7 @@
     "architecture/technology_stack.json",
     "architecture/decision_map.json"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "architecture",

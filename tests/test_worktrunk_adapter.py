@@ -4,6 +4,10 @@ import json
 import subprocess
 from pathlib import Path
 
+import pytest
+
+from project_pipeline.github_steward.errors import GitHubStewardError
+from project_pipeline.github_steward.service import RepositorySteward
 from project_pipeline.github_steward.worktrunk import WorktrunkAdapter
 
 
@@ -37,3 +41,25 @@ def test_worktrunk_json_list_and_approved_mutation_use_fixed_argv(tmp_path: Path
     applied = adapter.execute(adapter.create_plan(tmp_path, "feature-safe"), approved=True)
     assert applied["state"] == "APPLIED"
     assert calls[0] == ("wt", "list", "--format=json")
+
+
+def test_repository_steward_worktrunk_is_dry_run_and_refuses_protected_main(tmp_path: Path) -> None:
+    class Local:
+        def __init__(self) -> None:
+            self.root = tmp_path
+
+        def snapshot(self):
+            return type(
+                "Snap",
+                (),
+                {"current_branch": "main", "default_branch": "main"},
+            )()
+
+    steward = RepositorySteward(local=Local(), remote=object(), store=object())
+    adapter = WorktrunkAdapter(
+        runner=lambda argv, cwd, timeout: subprocess.CompletedProcess(argv, 0, "", "")
+    )
+    dry = steward.plan_worktrunk(adapter, "feature-safe")
+    assert dry["state"] == "DRY_RUN"
+    with pytest.raises(GitHubStewardError, match="protected main"):
+        steward.plan_worktrunk(adapter, "feature-safe", approved=True)
