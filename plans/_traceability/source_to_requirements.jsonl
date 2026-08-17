@@ -90,7 +90,7 @@
 {"requirement_ids": ["REQ-ARCH-0005"], "source_reference": "SRC-002:L001103-L001157"}
 {"requirement_ids": ["REQ-CTX-0015", "REQ-OPS-0008"], "source_reference": "SRC-002:L001158-L001234"}
 {"requirement_ids": ["REQ-ARCH-0005"], "source_reference": "SRC-002:L001300-L001314"}
-{"requirement_ids": ["REQ-CTRL-0001", "REQ-PDEF-0011"], "source_reference": "SRC-003:L000001-L000004"}
+{"requirement_ids": ["REQ-CTRL-0001"], "source_reference": "SRC-003:L000001-L000004"}
 {"requirement_ids": ["REQ-ARCH-0004", "REQ-CTRL-0004"], "source_reference": "SRC-003:L000005-L000084"}
 {"requirement_ids": ["REQ-CTRL-0001", "REQ-CTRL-0002", "REQ-CTRL-0003"], "source_reference": "SRC-003:L000040-L000083"}
 {"requirement_ids": ["REQ-CTRL-0005"], "source_reference": "SRC-003:L000044-L000084"}

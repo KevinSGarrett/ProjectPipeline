@@ -70,11 +70,10 @@ def evaluate_jira_sync_guard(root: Path) -> JiraSyncGuardResult:
         for step in payload.get("human_required_steps", [])
         if isinstance(step, dict)
     )
-    if parity_status == "LOCAL_ONLY_TOKEN_PARKED" and token_parked:
-        pass
-    elif parity_status != "PARITY_CONFIRMED":
+    local_only_parked = parity_status == "LOCAL_ONLY_TOKEN_PARKED" and token_parked
+    if not local_only_parked and parity_status != "PARITY_CONFIRMED":
         reasons.append("jira sync guard artifact does not confirm remote/local parity")
-    if parity_status == "LOCAL_ONLY_TOKEN_PARKED":
+    if local_only_parked:
         readback_verified = True
     if not readback_verified:
         reasons.append("jira sync guard artifact does not confirm readback verification")

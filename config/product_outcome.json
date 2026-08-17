@@ -129,8 +129,7 @@
       "REQ-CTX-0002"
     ],
     "SRC-003-SEC-001": [
-      "REQ-CTRL-0001",
-      "REQ-PDEF-0011"
+      "REQ-CTRL-0001"
     ],
     "SRC-004-SEC-001": [
       "REQ-BUDGET-0004"

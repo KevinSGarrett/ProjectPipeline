@@ -41,7 +41,7 @@
 ## Canonical source-section disposition
 
 - Sections: `1109`
-- Sections linked to requirements: `646`
+- Sections linked to requirements: `622`
 - Sections with explicit disposition: `1109`
 
 ## Unexplained gaps

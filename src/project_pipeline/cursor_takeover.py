@@ -17,6 +17,7 @@ from project_pipeline.jira import load_issues
 from project_pipeline.lifecycle import CANONICAL_PURSUING_GOAL, CANONICAL_SOURCE_REFERENCES
 from project_pipeline.persistence import SQLiteStateStore
 from project_pipeline.requirements import load_requirement_catalog
+from project_pipeline.validation.product_outcome import CORE_SOURCES, CORE_STATEMENT
 
 CURSOR_GOAL = CANONICAL_PURSUING_GOAL
 
@@ -141,16 +142,9 @@ def validate_cursor_takeover(root: Path) -> CursorSetupReport:
     if outcome is None:
         errors.append("REQ-PDEF-0011 autonomous operating-loop outcome is missing")
     else:
-        if outcome.get("statement") != (
-            "ProjectPipeline shall continuously take a project from intake through verified "
-            "model compilation, autonomous conflict-safe parallel execution of genuinely "
-            "missing work, verification, merge, Jira reconciliation, next-work recomputation, "
-            "HUMAN_REQUIRED isolation, truthful Command Center reporting, and repetition until "
-            "the deterministic Completion Gate reports COMPLETE for the integrated, released, "
-            "and operationally verified system."
-        ):
+        if outcome.get("statement") != CORE_STATEMENT:
             errors.append("REQ-PDEF-0011 no longer preserves the complete operating loop")
-        if tuple(outcome.get("source_references", ())) != CANONICAL_SOURCE_REFERENCES:
+        if set(outcome.get("source_references", ())) != CORE_SOURCES:
             errors.append("REQ-PDEF-0011 source binding has drifted")
 
     source_sections = root / "plans/_traceability/source_sections.jsonl"

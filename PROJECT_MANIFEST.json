@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "278a395282fd9e7352e1e01a09ca6813b4491317134ba059f02072c86813e231",
+  "aggregate_sha256": "02cbe227cd005fd07742b51b21c8d88abd66550d7b927ddf3ec8a6ddfcbc1065",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -607,8 +607,8 @@
     },
     {
       "path": "config/product_outcome.json",
-      "sha256": "2a411282de4952ea6b458bb3a9a8a06dff9c60ff3c29724ae541c66ff9ff1088",
-      "size_bytes": 7774
+      "sha256": "f6dfc639d22d511af0006e99d491e2e04b772567f1b9b1b6bde7d3dda7c58ae3",
+      "size_bytes": 7751
     },
     {
       "path": "config/project.json",
@@ -9822,12 +9822,12 @@
     },
     {
       "path": "plans/_traceability/coverage_report.json",
-      "sha256": "7b84266a3aa657fcefb567671c7a538c9c4bf6e3e270dd475f6a0ebca9a29685",
-      "size_bytes": 2505
+      "sha256": "4a4683b1c52f283f2a897375dc885c0fe6d37a92b579d082614ddc34eab660d1",
+      "size_bytes": 2473
     },
     {
       "path": "plans/_traceability/coverage_report.md",
-      "sha256": "d6ae8c6252775f9f45d4815c24f48f5ef23d4c777271279aa73d1c7d24d90824",
+      "sha256": "93d1ffb70db6a0e787d70ae7fdeb6e6ae46e23ff981ababc098d6fdebd9bc20c",
       "size_bytes": 753
     },
     {
@@ -9842,8 +9842,8 @@
     },
     {
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "fbe49a75d25c9b87e1a239002adfcb5b7d5af15229016555ce9f87323975e93b",
-      "size_bytes": 711320
+      "sha256": "08ac5463487d610b643286916110809aa805cf016514424054c93505b6beb16a",
+      "size_bytes": 711213
     },
     {
       "path": "plans/_traceability/requirements_by_domain.json",
@@ -9852,13 +9852,13 @@
     },
     {
       "path": "plans/_traceability/requirements_by_id.json",
-      "sha256": "5c0ee3ddab5b8b425f81afb45c90259032272fb212af1730129609e3859f04c7",
-      "size_bytes": 864606
+      "sha256": "9b981b335dbfb07ed76b4907d5ae200481c081dc70f12a2aa89cfeb56984912a",
+      "size_bytes": 864499
     },
     {
       "path": "plans/_traceability/requirements_by_source.json",
-      "sha256": "405a4c713bc26e31a195af2d15c4b6f620eb7d9afd50fba40089ed146b7e2015",
-      "size_bytes": 9292
+      "sha256": "9470ee0d1774b463edd858adc363ad9391b8496e953e20ce998e1904da8171c9",
+      "size_bytes": 9271
     },
     {
       "path": "plans/_traceability/requirements_to_decisions.jsonl",
@@ -9912,13 +9912,13 @@
     },
     {
       "path": "plans/_traceability/source_sections.jsonl",
-      "sha256": "b9bd1d112f70d42c447b71d95fcb7d27381fd7e8d45d06df00f19be0f3ffb3a9",
-      "size_bytes": 715117
+      "sha256": "2943a1b817bf9758b123a02b96044e3c8d3b9071b2a869bece4acd93db61dee6",
+      "size_bytes": 682033
     },
     {
       "path": "plans/_traceability/source_to_requirements.jsonl",
-      "sha256": "a490d961d2fdd8741f8ce5bdb00b99882ab7f230c8a56968382d0bd5e213ba23",
-      "size_bytes": 30213
+      "sha256": "72e3edd2dedb4290dfb1d4d07465d185638902173fa204ae32c77fae657b7883",
+      "size_bytes": 30196
     },
     {
       "path": "plans/PLAN_CATALOG.json",
@@ -12302,8 +12302,8 @@
     },
     {
       "path": "src/project_pipeline/cursor_takeover.py",
-      "sha256": "04c10aa022a1d88425b7156c07521db0ce01a4dfa7431a22b0b906fbe8eaaaed",
-      "size_bytes": 18211
+      "sha256": "d177ac27181141f21cb57b18467227fb200b461302e786dcbb30e1c5445a4db5",
+      "size_bytes": 17759
     },
     {
       "path": "src/project_pipeline/dependencies.py",
@@ -12587,8 +12587,8 @@
     },
     {
       "path": "src/project_pipeline/jira_steward/sync_guard.py",
-      "sha256": "36e7178a188025e63546fcb353bf8826d67ce88d3c382ec23150121931e7f264",
-      "size_bytes": 3773
+      "sha256": "6ffaca7de033a66934540c6c8dc8865745e564a847dc859853d27a891638d83a",
+      "size_bytes": 3775
     },
     {
       "path": "src/project_pipeline/jira_steward/validation.py",
@@ -12597,7 +12597,7 @@
     },
     {
       "path": "src/project_pipeline/lifecycle/__init__.py",
-      "sha256": "309179616933100c5142d9f11b840e5117080fbe6042dd49c77c98913c58bc22",
+      "sha256": "405dc7cce245c0acc9bef4d6f0a59ff00c94696f5647e4ee38a9633da1266ff1",
       "size_bytes": 3352
     },
     {
@@ -14181,7 +14181,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T20:30:23.548225+00:00",
+  "generated_at_utc": "2026-08-17T20:32:22.513127+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14190,5 +14190,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25114623
+  "total_bytes": 25080782
 }
