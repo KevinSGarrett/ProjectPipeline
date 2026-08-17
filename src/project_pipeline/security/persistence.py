@@ -187,6 +187,14 @@ class SecurityStore:
             offset=offset,
         )
 
+    def get_approval(self, approval_id: str) -> ApprovalRecord | None:
+        return self._get_model(
+            "security_approvals",
+            "approval_id",
+            approval_id,
+            ApprovalRecord.model_validate_json,
+        )
+
     def save_policy_decision(self, value: PolicyDecision) -> None:
         self._save(
             "security_policy_decisions",
@@ -207,6 +215,14 @@ class SecurityStore:
             offset=offset,
         )
 
+    def get_policy_decision(self, decision_id: str) -> PolicyDecision | None:
+        return self._get_model(
+            "security_policy_decisions",
+            "decision_id",
+            decision_id,
+            PolicyDecision.model_validate_json,
+        )
+
     def save_egress_decision(self, value: EgressDecision) -> None:
         self._save(
             "security_egress_decisions",
@@ -225,6 +241,14 @@ class SecurityStore:
             order_col="decision_id",
             limit=limit,
             offset=offset,
+        )
+
+    def get_egress_decision(self, decision_id: str) -> EgressDecision | None:
+        return self._get_model(
+            "security_egress_decisions",
+            "decision_id",
+            decision_id,
+            EgressDecision.model_validate_json,
         )
 
     def save_secret_reference(self, value: SecretCapabilityReference) -> None:
@@ -278,6 +302,14 @@ class SecurityStore:
             offset=offset,
         )
 
+    def get_secret_lease(self, lease_id: str) -> SecretLease | None:
+        return self._get_model(
+            "security_secret_leases",
+            "lease_id",
+            lease_id,
+            SecretLease.model_validate_json,
+        )
+
     def save_audit_event(self, value: SecurityAuditEvent) -> None:
         # Audit history is insert-only. PPDB-0019 also blocks direct UPDATE/DELETE at the
         # database boundary so application bugs cannot silently rewrite historical events.
@@ -303,6 +335,14 @@ class SecurityStore:
             offset=offset,
         )
 
+    def get_audit_event(self, audit_id: str) -> SecurityAuditEvent | None:
+        return self._get_model(
+            "security_audit_events",
+            "audit_id",
+            audit_id,
+            SecurityAuditEvent.model_validate_json,
+        )
+
     def save_sbom(self, value: SoftwareBillOfMaterials) -> None:
         self._save(
             "security_sboms",
@@ -323,6 +363,14 @@ class SecurityStore:
             offset=offset,
         )
 
+    def get_sbom(self, sbom_id: str) -> SoftwareBillOfMaterials | None:
+        return self._get_model(
+            "security_sboms",
+            "sbom_id",
+            sbom_id,
+            SoftwareBillOfMaterials.model_validate_json,
+        )
+
     def save_supply_chain_gate(self, project_id: str, value: SupplyChainGateResult) -> None:
         self._save(
             "security_supply_chain_gates",
@@ -341,6 +389,14 @@ class SecurityStore:
             order_col="gate_id",
             limit=limit,
             offset=offset,
+        )
+
+    def get_supply_chain_gate(self, gate_id: str) -> SupplyChainGateResult | None:
+        return self._get_model(
+            "security_supply_chain_gates",
+            "gate_id",
+            gate_id,
+            SupplyChainGateResult.model_validate_json,
         )
 
     def save_root_of_trust(self, value: RootOfTrust) -> None:

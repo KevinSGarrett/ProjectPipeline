@@ -846,8 +846,14 @@ def build_parser() -> argparse.ArgumentParser:
             "status",
             "identities",
             "grants",
+            "approvals",
+            "policy-decisions",
+            "egress-decisions",
             "secret-references",
             "secret-leases",
+            "audit-events",
+            "sboms",
+            "supply-chain-gates",
             "root-trust-records",
             "tools",
             "root-trust",
@@ -866,7 +872,13 @@ def build_parser() -> argparse.ArgumentParser:
     security.add_argument("--offset", type=int, default=0)
     security.add_argument("--identity-id")
     security.add_argument("--grant-id")
+    security.add_argument("--approval-id")
+    security.add_argument("--decision-id")
     security.add_argument("--secret-ref-id")
+    security.add_argument("--lease-id")
+    security.add_argument("--audit-id")
+    security.add_argument("--sbom-id")
+    security.add_argument("--gate-id")
     security.add_argument("--root-id")
     security.add_argument("--changed-path", action="append", default=[])
     security.add_argument("--scenario", choices=supported_security_scenarios())
@@ -2349,6 +2361,45 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
+    if args.action == "approvals":
+        with SecurityStore(database, args.root) as store:
+            if args.approval_id:
+                value = store.get_approval(str(args.approval_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_approvals(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "approvals": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "policy-decisions":
+        with SecurityStore(database, args.root) as store:
+            if args.decision_id:
+                value = store.get_policy_decision(str(args.decision_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_policy_decisions(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "policy_decisions": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "egress-decisions":
+        with SecurityStore(database, args.root) as store:
+            if args.decision_id:
+                value = store.get_egress_decision(str(args.decision_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_egress_decisions(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "egress_decisions": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
     if args.action == "secret-references":
         with SecurityStore(database, args.root) as store:
             if args.secret_ref_id:
@@ -2364,10 +2415,53 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
         }, 0
     if args.action == "secret-leases":
         with SecurityStore(database, args.root) as store:
-            leases = store.list_secret_leases(limit=args.limit, offset=args.offset)
+            if args.lease_id:
+                lease = store.get_secret_lease(str(args.lease_id))
+                leases = () if lease is None else (lease,)
+            else:
+                leases = store.list_secret_leases(limit=args.limit, offset=args.offset)
         return {
             "database": str(database),
             "secret_leases": [item.model_dump(mode="json") for item in leases],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "audit-events":
+        with SecurityStore(database, args.root) as store:
+            if args.audit_id:
+                value = store.get_audit_event(str(args.audit_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_audit_events(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "audit_events": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "sboms":
+        with SecurityStore(database, args.root) as store:
+            if args.sbom_id:
+                value = store.get_sbom(str(args.sbom_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_sboms(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "sboms": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "supply-chain-gates":
+        with SecurityStore(database, args.root) as store:
+            if args.gate_id:
+                value = store.get_supply_chain_gate(str(args.gate_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_supply_chain_gates(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "supply_chain_gates": [item.model_dump(mode="json") for item in values],
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0

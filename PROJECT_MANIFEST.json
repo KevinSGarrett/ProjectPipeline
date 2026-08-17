@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "77d3120345eee294e882e80a6b3ae78fd9b49601bbae8907eebe094355890c15",
+  "aggregate_sha256": "49c556e8c9fcc758af011c066245e7dd4b7db4ab5a02ce5b4d99dec1a0ae0c2a",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11432,8 +11432,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "88de5b0c30432e8425eede174159928a45e9e06c5892f0c2d94880f1b9f6b975",
-      "size_bytes": 124177
+      "sha256": "2666a96eaf3f58a8ea1085ec08f9e03c2a105ee30e8fd0dc050d46a1d3f29a17",
+      "size_bytes": 128419
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12307,8 +12307,8 @@
     },
     {
       "path": "src/project_pipeline/security/persistence.py",
-      "sha256": "4450dc231888b501aad5d63abb06818b307efbbc7f1d1c13d4a02997c8dd2fe4",
-      "size_bytes": 12837
+      "sha256": "1dfdc8923891c4d65655fd4f06d65a9cf101e7681adb5c5fac0b1331dfb3693e",
+      "size_bytes": 14617
     },
     {
       "path": "src/project_pipeline/security/policy.py",
@@ -13232,8 +13232,8 @@
     },
     {
       "path": "tests/test_security_persistence_cli.py",
-      "sha256": "fe855b30bbbee0c38668c0bce3b6d4d125a22b9330ec754bd36bea9ba89cf96f",
-      "size_bytes": 9811
+      "sha256": "7fcac111bd6b422bb662937bf3a218e2f2c6fecc358d0cdf7d3ccaa9e8f66f86",
+      "size_bytes": 14511
     },
     {
       "path": "tests/test_security_secrets.py",
@@ -13396,7 +13396,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T02:42:36.475361+00:00",
+  "generated_at_utc": "2026-08-17T03:33:41.586745+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13405,5 +13405,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22660860
+  "total_bytes": 22671582
 }

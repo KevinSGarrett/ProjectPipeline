@@ -3,13 +3,27 @@ import sys
 from datetime import UTC, datetime, timedelta
 
 from project_pipeline.domain.security import (
+    ApprovalDecision,
+    ApprovalRecord,
     AuthorityCapability,
     CapabilityGrant,
+    EgressDecision,
+    GateState,
     IdentityKind,
+    PolicyDecision,
+    PolicyDisposition,
     RootOfTrust,
+    SBOMComponent,
     SecretBackendKind,
     SecretCapabilityReference,
+    SecretLease,
+    SecurityAuditEvent,
     SecurityIdentity,
+    SoftwareBillOfMaterials,
+    SupplyChainFinding,
+    SupplyChainFindingKind,
+    SupplyChainGateResult,
+    SupplyChainSeverity,
     security_identifier,
 )
 from project_pipeline.security.persistence import SecurityStore
@@ -249,3 +263,118 @@ def test_security_cli_simulations(project_root):
     for scenario in ("least-privilege", "egress-secret-block", "independent-approval"):
         r = run(project_root, "simulate", "--scenario", scenario)
         assert r.returncode == 0
+
+
+def test_security_cli_query_actions_cover_persisted_models(project_root, tmp_path):
+    db = tmp_path / "query-all.db"
+    now = datetime.now(UTC)
+    actor = SecurityIdentity(
+        identity_id=security_identifier("IDENT", "query-all-actor"),
+        kind=IdentityKind.AGENT,
+        display_name="Query Actor",
+        principal="agent:query-all-actor",
+    )
+    approver = SecurityIdentity(
+        identity_id=security_identifier("IDENT", "query-all-approver"),
+        kind=IdentityKind.AGENT,
+        display_name="Query Approver",
+        principal="agent:query-all-approver",
+    )
+    approval = ApprovalRecord(
+        approval_id=security_identifier("APPROVAL", "query-all"),
+        action_id="ACTION-QUERY-ALL",
+        proposer_identity_id=actor.identity_id,
+        approver_identity_id=approver.identity_id,
+        capability=AuthorityCapability.MUTATE,
+        decision=ApprovalDecision.APPROVED,
+        reason="approved for deterministic query coverage",
+        correlation_id="corr:query-all",
+    )
+    policy = PolicyDecision(
+        decision_id=security_identifier("POLICY", "query-all"),
+        policy_version="1.0.0",
+        action_id="ACTION-QUERY-ALL",
+        actor_identity_id=actor.identity_id,
+        capability=AuthorityCapability.MUTATE,
+        disposition=PolicyDisposition.ALLOW,
+        reasons=("bounded local security query",),
+        input_fingerprint="a" * 64,
+    )
+    egress = EgressDecision(
+        decision_id=security_identifier("POLICY", "query-egress"),
+        request_id=security_identifier("EGRESS", "query-egress"),
+        disposition=PolicyDisposition.DENY,
+        reasons=("egress not allowed in local-only test",),
+    )
+    lease = SecretLease(
+        lease_id=security_identifier("SLEASE", "query-all"),
+        secret_ref_id=security_identifier("SREF", "query-all"),
+        identity_id=actor.identity_id,
+        project_id="PROJECT-PIPELINE",
+        target="jira/",
+        operation="jira_snapshot",
+        issued_by=approver.identity_id,
+        issued_at_utc=now,
+        expires_at_utc=now + timedelta(minutes=15),
+    )
+    audit = SecurityAuditEvent(
+        audit_id=security_identifier("SAUDIT", "query-all"),
+        event_type="QUERY_COVERAGE",
+        actor_identity_id=actor.identity_id,
+        target="security-cli",
+        correlation_id="corr:query-all",
+        outcome="PASS",
+    )
+    component = SBOMComponent(
+        component_id=security_identifier("SCOMP", "query-all"),
+        name="example-lib",
+        version="1.0.0",
+        component_type="library",
+    )
+    sbom = SoftwareBillOfMaterials(
+        sbom_id=security_identifier("SBOM", "query-all"),
+        project_id="PROJECT-PIPELINE",
+        source_manifest_sha256="b" * 64,
+        components=(component,),
+    )
+    finding = SupplyChainFinding(
+        finding_id=security_identifier("SFIND", "query-all"),
+        kind=SupplyChainFindingKind.VULNERABILITY,
+        severity=SupplyChainSeverity.MEDIUM,
+        subject="example-lib",
+        message="example finding",
+        source_tool="unit-test",
+        blocking=False,
+    )
+    gate = SupplyChainGateResult(
+        gate_id=security_identifier("SGATE", "query-all"),
+        state=GateState.PASS,
+        findings=(finding,),
+        sbom_id=sbom.sbom_id,
+        reasons=("no blocking findings",),
+    )
+
+    with SecurityStore(db, project_root) as store:
+        store.save_identity(actor)
+        store.save_identity(approver)
+        store.save_approval(approval)
+        store.save_policy_decision(policy)
+        store.save_egress_decision(egress)
+        store.save_secret_lease(lease)
+        store.save_audit_event(audit)
+        store.save_sbom(sbom)
+        store.save_supply_chain_gate("PROJECT-PIPELINE", gate)
+
+    checks = (
+        ("approvals", "--approval-id", approval.approval_id),
+        ("policy-decisions", "--decision-id", policy.decision_id),
+        ("egress-decisions", "--decision-id", egress.decision_id),
+        ("secret-leases", "--lease-id", lease.lease_id),
+        ("audit-events", "--audit-id", audit.audit_id),
+        ("sboms", "--sbom-id", sbom.sbom_id),
+        ("supply-chain-gates", "--gate-id", gate.gate_id),
+    )
+    for action, option, value in checks:
+        result = run(project_root, action, "--database", str(db), option, value)
+        assert result.returncode == 0
+        assert value in result.stdout
