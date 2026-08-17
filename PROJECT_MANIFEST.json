@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "2a57d6d7ffc69ddfb0915b918f03da01a34014d70642e5c8cd44bbdb698cc78d",
+  "aggregate_sha256": "ff036cf8bce6c0c181b300d111575204ee4954f764f8be61e3063b9bfaf1cc21",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2729,
+  "file_count": 2733,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -11616,6 +11616,21 @@
       "size_bytes": 3222
     },
     {
+      "path": "src/project_pipeline/autonomy_runtime/__init__.py",
+      "sha256": "10899e80709d6730760c3743e054991f41f8bb3328280d8db2dbcefab0aa22dd",
+      "size_bytes": 268
+    },
+    {
+      "path": "src/project_pipeline/autonomy_runtime/service.py",
+      "sha256": "c561adbfdb86e7c9d13523f1a228ef31cce0f7cf8a052de0331b20e4a37c4f38",
+      "size_bytes": 1916
+    },
+    {
+      "path": "src/project_pipeline/autonomy_runtime/supervisor.py",
+      "sha256": "e727cd1920ced0e6d61c32654252293a2eb9fd1b39447b45bc5a1f3bbdbae790",
+      "size_bytes": 6641
+    },
+    {
       "path": "src/project_pipeline/budget/__init__.py",
       "sha256": "b92756379df63dd9470076a48e9cebbdb483f45a011edee44b4233919fd7083d",
       "size_bytes": 1403
@@ -12806,6 +12821,11 @@
       "size_bytes": 133
     },
     {
+      "path": "tests/integration/autonomy_runtime/test_supervisor.py",
+      "sha256": "066015ecab23231bcfa2e56d731b7c74e8a30999b66dc9b0cbb0da374716163f",
+      "size_bytes": 3126
+    },
+    {
       "path": "tests/test_agent_router_adapters.py",
       "sha256": "f5eb471b8be52b1f972a3140189368dd8e4cf8f3107d4d4e6a0a3f45720803fb",
       "size_bytes": 4168
@@ -13656,7 +13676,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T03:21:53.252092+00:00",
+  "generated_at_utc": "2026-08-17T03:25:42.258000+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13665,5 +13685,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 23236254
+  "total_bytes": 23248205
 }
