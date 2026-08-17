@@ -158,8 +158,8 @@
       "instruction_id": "PP-ASSET-GITIGNORE",
       "kind": "INTEGRATION_SUPPORT",
       "path": ".gitignore",
-      "sha256": "4efee7ebe62afd27d128ebd7ec049d24ba9b8ee7d072b67547aa128f04e286b4",
-      "size_bytes": 1894
+      "sha256": "6abc65037c1db46be08d8ecfc4625c7ca9899a58ca94c3b9048cfef91f2350ea",
+      "size_bytes": 2185
     },
     {
       "instruction_id": "PP-ENTRY-ROOT",
@@ -186,8 +186,8 @@
       "instruction_id": "PP-ASSET-CONFIG-PROJECT-JSON",
       "kind": "CONFIGURATION",
       "path": "config/project.json",
-      "sha256": "0dbf3d8adb28959fdb98d21d652f0fe66bb9ff933c79e527c2d7c40293f420f7",
-      "size_bytes": 569
+      "sha256": "6963f3a054f569ee43881ce3e2a00a3c3b773540c858fd23ab2abf73674bbae3",
+      "size_bytes": 1338
     },
     {
       "instruction_id": "PP-ASSET-CONFIG-PROJECT-MANIFEST-JSON",
@@ -606,7 +606,7 @@
       "instruction_id": "PP-ASSET-TESTS-TEST-DOMAIN-MODELS-PY",
       "kind": "TEST",
       "path": "tests/test_domain_models.py",
-      "sha256": "f9404a0347cf953bcab93203d6a2c909bd2b59fccd5c3a615a65f44ace6be221",
+      "sha256": "5e27bee92216429fc0d7d1520ae3eb9b421d2bbcdec4746f442665b40678282a",
       "size_bytes": 3090
     },
     {

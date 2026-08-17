@@ -212,6 +212,7 @@
 {"decision_ids": [], "requirement_id": "REQ-PDEF-0008"}
 {"decision_ids": [], "requirement_id": "REQ-PDEF-0009"}
 {"decision_ids": [], "requirement_id": "REQ-PDEF-0010"}
+{"decision_ids": [], "requirement_id": "REQ-PDEF-0011"}
 {"decision_ids": [], "requirement_id": "REQ-REL-0001"}
 {"decision_ids": ["ADR-0003"], "requirement_id": "REQ-REL-0002"}
 {"decision_ids": [], "requirement_id": "REQ-REL-0003"}

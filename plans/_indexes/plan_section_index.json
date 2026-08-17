@@ -1425,11 +1425,19 @@
   },
   "PLAN-PDEF-001:SEC-07": {
     "authoritative_path": "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
-    "end_line": 42,
+    "end_line": 43,
     "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-001_project_definition.lines.txt",
-    "line_reference": "PLAN-PDEF-001:SEC-07:L000040-L000042",
+    "line_reference": "PLAN-PDEF-001:SEC-07:L000040-L000043",
     "plan_id": "PLAN-PDEF-001",
     "start_line": 40
+  },
+  "PLAN-PDEF-001:SEC-08": {
+    "authoritative_path": "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
+    "end_line": 46,
+    "line_numbered_path": "plans/_line_numbered/PLAN-PDEF-001_project_definition.lines.txt",
+    "line_reference": "PLAN-PDEF-001:SEC-08:L000044-L000046",
+    "plan_id": "PLAN-PDEF-001",
+    "start_line": 44
   },
   "PLAN-PDEF-002:SEC-01": {
     "authoritative_path": "plans/00_project_definition/PLAN-PDEF-002_project_intake_and_compilation.md",
@@ -2481,10 +2489,18 @@
   },
   "PLAN-VERIFY-001:SEC-10": {
     "authoritative_path": "plans/08_execution_assurance_and_testing/PLAN-VERIFY-001_verification_harness_golden_journeys.md",
-    "end_line": 46,
+    "end_line": 47,
     "line_numbered_path": "plans/_line_numbered/PLAN-VERIFY-001_verification_harness_golden_journeys.lines.txt",
-    "line_reference": "PLAN-VERIFY-001:SEC-10:L000044-L000046",
+    "line_reference": "PLAN-VERIFY-001:SEC-10:L000044-L000047",
     "plan_id": "PLAN-VERIFY-001",
     "start_line": 44
+  },
+  "PLAN-VERIFY-001:SEC-11": {
+    "authoritative_path": "plans/08_execution_assurance_and_testing/PLAN-VERIFY-001_verification_harness_golden_journeys.md",
+    "end_line": 50,
+    "line_numbered_path": "plans/_line_numbered/PLAN-VERIFY-001_verification_harness_golden_journeys.lines.txt",
+    "line_reference": "PLAN-VERIFY-001:SEC-11:L000048-L000050",
+    "plan_id": "PLAN-VERIFY-001",
+    "start_line": 48
   }
 }

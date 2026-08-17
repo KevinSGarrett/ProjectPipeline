@@ -1,23 +1,27 @@
 # Generated Repository Map
 
-- Files: `2185`
-- Generated: `2026-08-16T01:08:49.399517+00:00`
+- Files: `2705`
+- Generated: `2026-08-16T19:32:23.905729+00:00`
 
 ## Top-level counts
 
-- `.github`: 5
-- `_root`: 14
+- `.agents`: 8
+- `.cursor`: 12
+- `.github`: 6
+- `_root`: 17
 - `adr`: 29
 - `apps`: 18
 - `architecture`: 19
-- `config`: 39
+- `config`: 40
 - `contracts`: 5
 - `database`: 78
-- `docs`: 62
+- `docs`: 64
+- `dummy`: 429
 - `evidence`: 210
 - `fixtures`: 17
 - `infrastructure`: 10
-- `jira`: 774
+- `instructions`: 46
+- `jira`: 783
 - `plans`: 131
 - `policies`: 1
 - `provenance`: 89
@@ -25,9 +29,9 @@
 - `requirements`: 5
 - `runbooks`: 25
 - `schemas`: 202
-- `scripts`: 17
-- `src`: 262
-- `tests`: 167
+- `scripts`: 23
+- `src`: 263
+- `tests`: 169
 - `third_party`: 1
 
 ## Semantic indexes
@@ -308,6 +312,7 @@
 - `jira/epics/PP-EPIC-000031.json`
 - `jira/epics/PP-EPIC-000033.json`
 - `jira/epics/PP-EPIC-000035.json`
+- `jira/epics/PP-EPIC-000037.json`
 - `jira/epics/README.md`
 - `jira/imports/README.md`
 - `jira/indexes/issues.jsonl`
@@ -316,6 +321,9 @@
 - `jira/relationships/issues.jsonl`
 - `jira/reports/backlog_status.json`
 - `jira/reports/foundation_status.json`
+- `jira/reports/live_jira_sync_report.json`
+- `jira/reports/remote_completion_audit.jsonl`
+- `jira/reports/remote_mapping_report.json`
 - `jira/schemas/ISSUE_SCHEMA_REFERENCE.json`
 - `jira/snapshots/README.md`
 - `jira/source_context/PP-EPIC-000001.md`
@@ -336,6 +344,7 @@
 - `jira/source_context/PP-EPIC-000031.md`
 - `jira/source_context/PP-EPIC-000033.md`
 - `jira/source_context/PP-EPIC-000035.md`
+- `jira/source_context/PP-EPIC-000037.md`
 - `jira/source_context/PP-STORY-000002.md`
 - `jira/source_context/PP-STORY-000004.md`
 - `jira/source_context/PP-STORY-000006.md`
@@ -443,6 +452,7 @@
 - `jira/source_context/PP-STORY-000135.md`
 - `jira/source_context/PP-STORY-000136.md`
 - `jira/source_context/PP-STORY-000137.md`
+- `jira/source_context/PP-STORY-000138.md`
 - `jira/source_context/PP-SUBTASK-000045.md`
 - `jira/source_context/PP-SUBTASK-000046.md`
 - `jira/source_context/PP-SUBTASK-000047.md`
@@ -696,6 +706,7 @@
 - `jira/source_context/PP-TASK-000376.md`
 - `jira/source_context/PP-TASK-000377.md`
 - `jira/source_context/PP-TASK-000378.md`
+- `jira/source_context/PP-TASK-000379.md`
 - `jira/spikes/README.md`
 - `jira/stories/PP-STORY-000002.json`
 - `jira/stories/PP-STORY-000004.json`
@@ -804,6 +815,7 @@
 - `jira/stories/PP-STORY-000135.json`
 - `jira/stories/PP-STORY-000136.json`
 - `jira/stories/PP-STORY-000137.json`
+- `jira/stories/PP-STORY-000138.json`
 - `jira/stories/README.md`
 - `jira/subtasks/PP-SUBTASK-000045.json`
 - `jira/subtasks/PP-SUBTASK-000046.json`
@@ -1059,6 +1071,7 @@
 - `jira/tasks/PP-TASK-000376.json`
 - `jira/tasks/PP-TASK-000377.json`
 - `jira/tasks/PP-TASK-000378.json`
+- `jira/tasks/PP-TASK-000379.json`
 - `jira/tasks/README.md`
 - `jira/templates/issue_template.json`
 

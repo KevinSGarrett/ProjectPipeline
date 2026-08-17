@@ -14,7 +14,7 @@ def _gate_property(seed: int, cases: int) -> PropertyProbeResult:
     rng = random.Random(seed)
     failures: list[str] = []
     for index in range(cases):
-        values = [bool(rng.getrandbits(1)) for _ in range(14)]
+        values = [bool(rng.getrandbits(1)) for _ in range(15)]
         gaps = 0 if bool(rng.getrandbits(1)) else rng.randint(1, 5)
         payload = {
             "source_requirements_dispositioned": values[0],
@@ -31,6 +31,7 @@ def _gate_property(seed: int, cases: int) -> PropertyProbeResult:
             "unresolved_items_truthful": values[11],
             "command_center_truthful": values[12],
             "jira_truthful": values[13],
+            "unattended_operating_loop_qualified": values[14],
             "unexplained_gap_count": gaps,
         }
         facts = CompletionGateFacts(

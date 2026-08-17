@@ -13991,6 +13991,66 @@
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
   },
+  "REQ-PDEF-0011": {
+    "acceptance_summary": "Verified only by a genuine end-to-end fixture journey plus Windows-native restart/recovery, controlled external reconciliation, and 4-hour, 24-hour, and 72-hour unattended qualifications.",
+    "authority_classification": "SOURCE_DERIVED",
+    "decision_ids": [],
+    "disposition": "ACCEPTED",
+    "disposition_reason": "Accepted because SRC-014 defines the complete autonomous operating loop and SRC-015 requires human-only blockers not to stop unaffected lanes.",
+    "domain": "PDEF",
+    "evidence_ids": [],
+    "evolution_ids": [],
+    "implementation_paths": [
+      "config/cursor_takeover.json",
+      "src/project_pipeline/cursor_takeover.py",
+      "src/project_pipeline/control/kernel.py",
+      "src/project_pipeline/assurance/completion.py"
+    ],
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "jira_ids": [
+      "PP-EPIC-000037",
+      "PP-STORY-000138",
+      "PP-TASK-000379"
+    ],
+    "normative_strength": "SHALL",
+    "open_decision_ids": [],
+    "plan_ids": [
+      "PLAN-PDEF-001",
+      "PLAN-VERIFY-001"
+    ],
+    "plan_section_ids": [
+      "PLAN-PDEF-001:SEC-08",
+      "PLAN-VERIFY-001:SEC-11"
+    ],
+    "priority": "P0",
+    "rationale": "The original product outcome must remain an enforceable integration and qualification obligation rather than advisory context or a collection of disconnected component requirements.",
+    "requirement_id": "REQ-PDEF-0011",
+    "requirement_type": "functional",
+    "risk": "CRITICAL",
+    "schema_version": "2.0.0",
+    "source_kind": "CANONICAL_SOURCE",
+    "source_references": [
+      "SRC-014:L000001-L000087",
+      "SRC-015:L000031-L000150"
+    ],
+    "source_sequence": 14,
+    "statement": "ProjectPipeline shall continuously take a project from intake through verified model compilation, autonomous conflict-safe parallel execution of genuinely missing work, verification, merge, Jira reconciliation, next-work recomputation, HUMAN_REQUIRED isolation, truthful Command Center reporting, and repetition until the deterministic Completion Gate reports COMPLETE for the integrated, released, and operationally verified system.",
+    "superseded_by_requirement_ids": [],
+    "supersedes_requirement_ids": [],
+    "tags": [
+      "autonomous-runtime",
+      "continuous-operation",
+      "critical-path",
+      "pdef"
+    ],
+    "test_ids": [
+      "TEST-CURSOR-TAKEOVER-001",
+      "TEST-ASSURANCE-COMPLETION-007"
+    ],
+    "title": "Continuous autonomous engineering operating loop",
+    "verification_class": "INDEPENDENT_MULTI_EVIDENCE",
+    "verification_expectation": "Require the integrated operating loop, not component presence or mock-only stages; final satisfaction requires verified 72-hour unattended operation on the governed released system."
+  },
   "REQ-REL-0001": {
     "acceptance_summary": "Verified when: Release archives shall be cumulative, rooted correctly, integrity-tested, and generated from the canonical workspace",
     "authority_classification": "SOURCE_DERIVED",

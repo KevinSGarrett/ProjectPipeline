@@ -1,5 +1,6 @@
 from project_pipeline.agent_router.adapters import (
     AnthropicMessagesAdapter,
+    CursorCliProviderAdapter,
     GeminiGenerateContentAdapter,
     LiteLLMProxyAdapter,
     LocalProcessProviderAdapter,
@@ -36,6 +37,7 @@ __all__ = [
     "AgentRouterStore",
     "AgentRoutingError",
     "AnthropicMessagesAdapter",
+    "CursorCliProviderAdapter",
     "DockerMCPGatewayAdapter",
     "GeminiGenerateContentAdapter",
     "LiteLLMProxyAdapter",

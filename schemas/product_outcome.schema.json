@@ -1,0 +1,319 @@
+{
+  "$id": "https://project-pipeline.local/schemas/product_outcome.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProductOutcome",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_id",
+    "pursuing_goal",
+    "terminal_rule",
+    "immediate_pursuing_milestones",
+    "core_requirement_id",
+    "core_statement",
+    "source_references",
+    "source_outcomes",
+    "completion_stage_precedence",
+    "broad_source_contracts",
+    "plan_id",
+    "epic_id",
+    "qualification_journey_task_id",
+    "control_selection",
+    "vertical_slices",
+    "qualification_ladder",
+    "disallowed_completion_evidence_classes",
+    "user_intent_contracts"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0",
+      "type": "string"
+    },
+    "contract_id": {
+      "const": "PRODUCT-OUTCOME-001",
+      "type": "string"
+    },
+    "pursuing_goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "terminal_rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "immediate_pursuing_milestones": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "core_requirement_id": {
+      "type": "string",
+      "pattern": "^REQ-[A-Z]+-\\d{4}$"
+    },
+    "core_statement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_references": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^SRC-\\d{3}:L\\d{6}-L\\d{6}$"
+      }
+    },
+    "source_outcomes": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "$ref": "#/$defs/sourceOutcome"
+      }
+    },
+    "completion_stage_precedence": {
+      "$ref": "#/$defs/completionStagePrecedence"
+    },
+    "broad_source_contracts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/broadSourceContract"
+      }
+    },
+    "plan_id": {
+      "type": "string",
+      "pattern": "^PLAN-[A-Z]+-\\d{3}$"
+    },
+    "epic_id": {
+      "type": "string",
+      "pattern": "^PP-EPIC-\\d{6}$"
+    },
+    "qualification_journey_task_id": {
+      "type": "string",
+      "pattern": "^PP-TASK-\\d{6}$"
+    },
+    "control_selection": {
+      "$ref": "#/$defs/controlSelection"
+    },
+    "vertical_slices": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/verticalSlice"
+      }
+    },
+    "qualification_ladder": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "disallowed_completion_evidence_classes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "user_intent_contracts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "array",
+        "minItems": 1,
+        "items": {
+          "type": "string",
+          "pattern": "^REQ-[A-Z]+-\\d{4}$"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sourceOutcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "outcome",
+        "references"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "pattern": "^SRC-\\d{3}$"
+        },
+        "outcome": {
+          "type": "string",
+          "minLength": 1
+        },
+        "references": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^SRC-\\d{3}:L\\d{6}-L\\d{6}$"
+          }
+        }
+      }
+    },
+    "completionStagePrecedence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deduplication_intent",
+        "non_competition_rule",
+        "stages"
+      ],
+      "properties": {
+        "deduplication_intent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "non_competition_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stages": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/completionStage"
+          }
+        }
+      }
+    },
+    "completionStage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_id",
+        "order",
+        "requirement_ids",
+        "jira_epic_ids",
+        "jira_story_ids",
+        "rule"
+      ],
+      "properties": {
+        "stage_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "requirement_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^REQ-[A-Z]+-\\d{4}$"
+          }
+        },
+        "jira_epic_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^PP-EPIC-\\d{6}$"
+          }
+        },
+        "jira_story_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^PP-STORY-\\d{6}$"
+          }
+        },
+        "rule": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "broadSourceContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_reference",
+        "mandatory_requirement_id",
+        "allowed_supporting_requirement_ids"
+      ],
+      "properties": {
+        "source_reference": {
+          "type": "string",
+          "pattern": "^SRC-\\d{3}:L\\d{6}-L\\d{6}$"
+        },
+        "mandatory_requirement_id": {
+          "type": "string",
+          "pattern": "^REQ-[A-Z]+-\\d{4}$"
+        },
+        "allowed_supporting_requirement_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^REQ-[A-Z]+-\\d{4}$"
+          }
+        }
+      }
+    },
+    "controlSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "allowed_issue_ids",
+        "resume_rule"
+      ],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowed_issue_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "pattern": "^PP-TASK-\\d{6}$"
+          }
+        },
+        "resume_rule": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "verticalSlice": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "story_id",
+        "task_id",
+        "outcome"
+      ],
+      "properties": {
+        "story_id": {
+          "type": "string",
+          "pattern": "^PP-STORY-\\d{6}$"
+        },
+        "task_id": {
+          "type": "string",
+          "pattern": "^PP-TASK-\\d{6}$"
+        },
+        "outcome": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

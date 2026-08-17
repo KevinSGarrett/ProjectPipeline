@@ -6,3 +6,14 @@ def test_agent_router_foundation_is_registered_and_valid():
     registry = load_agent_registry(root)
     assert registry.providers and registry.capabilities
     assert validate_agent_router_foundation(root) == []
+
+
+def test_cursor_provider_is_registered_but_fail_closed_until_qualified():
+    root = __import__("pathlib").Path(__file__).parents[1]
+    registry = load_agent_registry(root)
+    provider = next(
+        item for item in registry.providers if item.provider_id == "provider:cursor-cli"
+    )
+    assert provider.enabled is False
+    models = [item for item in registry.models if item.provider_id == provider.provider_id]
+    assert models and all(item.qualification.value == "QUARANTINED" for item in models)

@@ -30,6 +30,7 @@ def facts(**overrides):
         unresolved_items_truthful=True,
         command_center_truthful=True,
         jira_truthful=True,
+        unattended_operating_loop_qualified=True,
         unexplained_gap_count=0,
         snapshot_fingerprint="a" * 64,
     )
@@ -67,11 +68,11 @@ def test_candidate_ready_still_requires_final_completion_gate():
     assert any("final Completion Gate" in r for r in result.reasons)
 
 
-def test_all_fifteen_questions_are_required_for_complete():
+def test_all_sixteen_questions_are_required_for_complete():
     decision = evaluate_completion_gate(facts())
     assert decision.state is GateState.COMPLETE
     assert decision.final_complete is True
-    assert len(decision.questions) == 15
+    assert len(decision.questions) == 16
     assert not decision.failures
 
 
@@ -101,3 +102,12 @@ def test_current_repository_cannot_self_certify_complete_before_later_passes():
     golden = next(q for q in decision.questions if q.question_number == 5)
     assert "EVID-000116" in golden.evidence_ids
     assert 13 in failed  # Command Center remains later in the schedule.
+    assert 16 in failed  # A real 72-hour unattended qualification has not run yet.
+
+
+def test_unattended_operating_loop_is_a_non_optional_completion_fact():
+    decision = evaluate_completion_gate(facts(unattended_operating_loop_qualified=False))
+    assert decision.state is GateState.NOT_COMPLETE
+    assert decision.final_complete is False
+    assert decision.failures[0].category is FailureCategory.GOLDEN_JOURNEY
+    assert decision.failures[0].rework_route == "completion.question.16"

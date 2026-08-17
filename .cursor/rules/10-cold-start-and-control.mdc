@@ -1,0 +1,22 @@
+---
+description: Mandatory cold start, bounded context, and deterministic work selection
+alwaysApply: true
+---
+
+# Cold start and control
+
+Before any write:
+
+1. Confirm the canonical root with `config/project.json`, `plans/PLAN_CATALOG.json`,
+   and `jira/BOARD_MANIFEST.json`.
+2. Perform the complete cold start in `AGENTS.md`.
+3. Route the work through `instructions/INSTRUCTION_COVERAGE_MATRIX.json` and
+   `instructions/policies/CONTEXT_ROUTING.json`.
+4. Use Project Control and Build Sequencer. Never select by Jira display order.
+5. Audit the candidate's own expected artifacts, required tests, acceptance status,
+   implementation state, and completion evidence before admitting it.
+6. Treat an already-built candidate as reconciliation work and batch it; do not
+   manufacture implementation work or a lifecycle-only PR.
+7. Retrieve only bounded sufficient context for the acceptance boundary.
+
+State required after restart belongs in repository/project state, not Cursor memory.

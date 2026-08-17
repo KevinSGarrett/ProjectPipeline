@@ -98,7 +98,20 @@ terraform.rc
 # skills are intentionally tracked and must not be covered by these rules.
 /.codex*
 /.claude/
-/.cursor/
+/.cursor/*
+!/.cursor/rules/
+!/.cursor/rules/**
+!/.cursor/hooks/
+!/.cursor/hooks/**
+!/.cursor/cli.json
+!/.cursor/hooks.json
+!/.cursor/environment.json
+!/.cursor/mcp.example.json
+/.cursor/mcp.json
+/.cursor/scratchpad.md
+/.cursor/**/*.log
+/.cursor/**/*secret*
+!/.cursor/rules/40-security-and-secrets.mdc
 /.aider.chat.history.md
 /.aider.input.history
 

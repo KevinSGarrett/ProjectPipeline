@@ -264,13 +264,14 @@
 {"requirement_ids": ["REQ-AGENT-0015"], "source_reference": "SRC-013:L000899-L000949"}
 {"requirement_ids": ["REQ-AGENT-0018"], "source_reference": "SRC-013:L000984-L001028"}
 {"requirement_ids": ["REQ-AGENT-0019"], "source_reference": "SRC-013:L001029-L001054"}
+{"requirement_ids": ["REQ-PDEF-0011"], "source_reference": "SRC-014:L000001-L000087"}
 {"requirement_ids": ["REQ-PDEF-0006"], "source_reference": "SRC-014:L000005-L000209"}
 {"requirement_ids": ["REQ-CTRL-0013", "REQ-SCHED-0004"], "source_reference": "SRC-014:L000210-L000373"}
 {"requirement_ids": ["REQ-SCHED-0006", "REQ-SCHED-0009", "REQ-SCHED-0010", "REQ-SCHED-0011", "REQ-SCHED-0013", "REQ-SCHED-0014", "REQ-SCHED-0017"], "source_reference": "SRC-014:L000378-L000748"}
 {"requirement_ids": ["REQ-SCHED-0007"], "source_reference": "SRC-014:L000859-L000946"}
 {"requirement_ids": ["REQ-SCHED-0016"], "source_reference": "SRC-014:L001548-L001747"}
 {"requirement_ids": ["REQ-CTRL-0016"], "source_reference": "SRC-014:L001748-L001810"}
-{"requirement_ids": ["REQ-CTRL-0014", "REQ-CTRL-0015", "REQ-UX-0025"], "source_reference": "SRC-015:L000031-L000150"}
+{"requirement_ids": ["REQ-CTRL-0014", "REQ-CTRL-0015", "REQ-PDEF-0011", "REQ-UX-0025"], "source_reference": "SRC-015:L000031-L000150"}
 {"requirement_ids": ["REQ-UX-0024"], "source_reference": "SRC-015:L000151-L000488"}
 {"requirement_ids": ["REQ-OPS-0010", "REQ-SEC-0016"], "source_reference": "SRC-015:L000359-L000488"}
 {"requirement_ids": ["REQ-RES-0023"], "source_reference": "SRC-015:L000589-L000661"}

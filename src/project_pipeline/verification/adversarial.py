@@ -47,6 +47,7 @@ def run_adversarial_checks(root: Path) -> tuple[str, ...]:
         "unresolved_items_truthful": True,
         "command_center_truthful": False,
         "jira_truthful": True,
+        "unattended_operating_loop_qualified": True,
         "unexplained_gap_count": 0,
     }
     decision = evaluate_completion_gate(

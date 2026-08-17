@@ -1,10 +1,13 @@
 import json
+import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 
 from project_pipeline.agent_router import (
     AnthropicMessagesAdapter,
+    CursorCliProviderAdapter,
     GeminiGenerateContentAdapter,
     LocalProcessProviderAdapter,
     MockToolAdapter,
@@ -124,3 +127,45 @@ def test_mock_tool_adapter_enforces_operation_allowlist():
     assert tool.invoke("tool:test", "read", {"x": 1})["outcome"] == "MOCK_VERIFIED"
     with pytest.raises(ProviderAdapterError):
         tool.invoke("tool:test", "write", {})
+
+
+def test_cursor_cli_adapter_is_shell_free_and_read_only_by_default(tmp_path: Path):
+    observed = {}
+
+    def runner(argv, **kwargs):
+        observed.update(argv=argv, kwargs=kwargs)
+        return subprocess.CompletedProcess(
+            argv,
+            0,
+            json.dumps(
+                {
+                    "type": "result",
+                    "result": "bounded audit complete",
+                    "session_id": "cursor-session-1",
+                    "usage": {"input_tokens": 7, "output_tokens": 3},
+                }
+            ).encode(),
+            b"",
+        )
+
+    result = CursorCliProviderAdapter(str(tmp_path), runner=runner).execute(
+        contract(), model_name="auto"
+    )
+    assert observed["kwargs"]["shell"] is False
+    assert "--force" not in observed["argv"]
+    assert observed["kwargs"]["cwd"] == str(tmp_path)
+    assert result.provider_request_id == "cursor-session-1"
+    assert result.usage.input_units == 7
+
+
+def test_cursor_cli_adapter_requires_explicit_mutation_admission(tmp_path: Path):
+    observed = {}
+
+    def runner(argv, **kwargs):
+        observed["argv"] = argv
+        return subprocess.CompletedProcess(argv, 0, b'{"type":"result","result":"ok"}', b"")
+
+    CursorCliProviderAdapter(str(tmp_path), allow_write=True, runner=runner).execute(
+        contract(), model_name="auto"
+    )
+    assert "--force" in observed["argv"]

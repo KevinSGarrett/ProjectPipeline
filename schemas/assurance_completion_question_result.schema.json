@@ -25,7 +25,7 @@
       "type": "string"
     },
     "question_number": {
-      "maximum": 15,
+      "maximum": 16,
       "minimum": 1,
       "title": "Question Number",
       "type": "integer"

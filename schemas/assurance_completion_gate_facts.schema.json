@@ -98,6 +98,10 @@
       "title": "Source Requirements Dispositioned",
       "type": "boolean"
     },
+    "unattended_operating_loop_qualified": {
+      "title": "Unattended Operating Loop Qualified",
+      "type": "boolean"
+    },
     "unexplained_gap_count": {
       "minimum": 0,
       "title": "Unexplained Gap Count",
@@ -124,6 +128,7 @@
     "unresolved_items_truthful",
     "command_center_truthful",
     "jira_truthful",
+    "unattended_operating_loop_qualified",
     "unexplained_gap_count",
     "snapshot_fingerprint"
   ],

@@ -1,0 +1,57 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-08-16T23:10:19.321392+00:00",
+  "authority_mode": "SOURCE_CONTROLLED_LOCAL",
+  "instruction_citations": [
+    "instructions/06_JIRA_OPERATING_PROTOCOL.md",
+    "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
+    "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md",
+    "instructions/03_SESSION_BOOTSTRAP_AND_PREFLIGHT.md",
+    "instructions/AUTHORITY_MAP.json",
+    "instructions/policies/CONTEXT_ROUTING.json"
+  ],
+  "project_key": "PP",
+  "local_mirror_fingerprint": "dc30c5849a9ba441cc22b0b76022ab91844435bb935d030ea86f18f1aa4a7c51",
+  "local_issue_count": 378,
+  "local_edge_count": 848,
+  "plan_id": "JPLAN-30A6C466043D4D29E49E",
+  "receipt_id": "JREC-790EA40F27197575C8F4",
+  "receipt_result": "APPLIED",
+  "readback_verified": true,
+  "readback_source": "MCP:plugin-atlassian-atlassian",
+  "readback": {
+    "total_count": 378,
+    "status_counts": {
+      "To Do": 371,
+      "In Progress": 7,
+      "Done": 0
+    },
+    "type_counts": {
+      "Epic": 18,
+      "Story": 107,
+      "Task": 237,
+      "Sub-task": 16
+    },
+    "parent_not_empty": 123,
+    "issueLinkType_not_empty": 328,
+    "comment_not_empty": 0,
+    "labels_not_empty": 378
+  },
+  "diff_classification": {
+    "identity": "NO_DIFFERENCE",
+    "status": "NO_DIFFERENCE",
+    "hierarchy": "NO_DIFFERENCE",
+    "links": "NO_DIFFERENCE",
+    "comments": "NO_DIFFERENCE",
+    "metadata": "NO_DIFFERENCE"
+  },
+  "parity_status": "PARITY_CONFIRMED",
+  "human_required_steps": [
+    {
+      "step": "HUMAN_REQUIRED_JIRA_API_TOKEN_FOR_GOVERNED_ADAPTER",
+      "scope": "governed atlassian adapter write/readback path",
+      "status": "OPEN"
+    }
+  ],
+  "deterministic_next_command": ".\\venv\\Scripts\\python.exe -m project_pipeline jira snapshot --root . --provider atlassian --output .local/jira/remote_snapshot.json --json-output evidence/jira_snapshot.json"
+}

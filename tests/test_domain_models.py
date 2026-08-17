@@ -27,8 +27,8 @@ class DomainModelTests(unittest.TestCase):
     def test_all_authoritative_requirements_parse_as_strict_entities(self) -> None:
         rows = read_jsonl(ROOT / "plans" / "_traceability" / "requirements.jsonl")
         records = [RequirementRecord.model_validate(row) for row in rows]
-        self.assertEqual(len(records), 351)
-        self.assertEqual(len({record.requirement_id for record in records}), 351)
+        self.assertEqual(len(records), 352)
+        self.assertEqual(len({record.requirement_id for record in records}), 352)
 
     def test_requirement_unknown_fields_are_rejected(self) -> None:
         row = read_jsonl(ROOT / "plans" / "_traceability" / "requirements.jsonl")[0]
