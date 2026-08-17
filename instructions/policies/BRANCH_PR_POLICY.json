@@ -10,6 +10,11 @@
     "no uncommitted or unpublished work",
     "post-merge verification complete"
   ],
+  "cleanup_authority": {
+    "human_confirmation_required": false,
+    "mode": "AUTONOMOUS_WHEN_PRECONDITIONS_PASS",
+    "remote_readback_required": true
+  },
   "default_branch": "main",
   "dirty_worktree_policy": "PRESERVE_INSPECT_RECONCILE",
   "epics_are_directly_executable": false,
@@ -35,6 +40,11 @@
     "materially different risk or reviewer boundary"
   ],
   "pr_unit": "coherent_mergeable_engineering_change",
+  "review_authority": {
+    "github_human_approval_required": false,
+    "independent_receipt_required_by_risk": true,
+    "independent_verifier_may_be_automated": true
+  },
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "wip": {

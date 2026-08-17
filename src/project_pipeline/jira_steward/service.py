@@ -417,13 +417,9 @@ class JiraSteward:
         self._validate_write_intent(action_intent, target=plan.project_key, operation="jira.sync")
         if action_intent.approval_state is not ApprovalState.APPROVED:
             raise JiraStewardError("remote Jira synchronization requires explicit approval")
-        if (
-            plan.conflicts
-            and any(item.requires_human_approval for item in plan.operations)
-            and "jira:resolve-conflicts" not in action_intent.scope
-        ):
+        if plan.conflicts and "jira:resolve-conflicts" not in action_intent.scope:
             raise JiraStewardError(
-                "plan contains human-decision operations; jira:resolve-conflicts scope is required"
+                "plan contains reconciliation conflicts; jira:resolve-conflicts scope is required"
             )
 
     @staticmethod

@@ -10,7 +10,7 @@
     "env://PROJECT_PIPELINE_POLICY_ROOT_KEY",
     "env://PROJECT_PIPELINE_AGE_IDENTITY"
   ],
-  "recovery_procedure": "Re-establish an authorized human bootstrap identity, verify repository/evidence manifests, rotate root references, and record independent security approval.",
+  "recovery_procedure": "Re-establish an authorized bootstrap identity through approved key references, verify repository/evidence manifests, rotate root references, and record policy-qualified independent security verification. If the identity reference is unavailable, remain BLOCKED_EXTERNAL without assigning operator work.",
   "rotation_procedure": "Create replacement key reference, verify dependent encrypted material, switch trusted reference, revoke old key, and retain evidence.",
   "revocation_procedure": "Suspend affected identity or key reference immediately, revoke active grants/secret leases, rotate material, and reconcile audit evidence."
 }

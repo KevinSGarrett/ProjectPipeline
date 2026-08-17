@@ -43,17 +43,18 @@
   ],
   "project_id": "PROJECT-PIPELINE",
   "required_fields": [
-    "escalation_id",
+    "precondition_id",
     "class",
     "owning_work_item",
     "failed_operation",
     "why_automation_cannot_resolve",
     "impact",
-    "exact_human_action",
-    "verification_after_action",
+    "missing_external_condition",
+    "autonomous_verification_probe",
     "resume_point",
     "preserved_state",
-    "unaffected_work_continuation"
+    "unaffected_work_continuation",
+    "operator_work_assigned"
   ],
   "schema_version": "1.0.0"
 }

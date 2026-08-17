@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-04` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `context_retrieval` |
 | Governing entry point | `AGENTS.md` |
 

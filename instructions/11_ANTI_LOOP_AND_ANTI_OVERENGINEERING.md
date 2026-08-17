@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-11` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `anti_loop`, `anti_overengineering` |
 | Governing entry point | `AGENTS.md` |
 
@@ -43,7 +43,7 @@ Calculate progress from objective before/after facts through Assurance. Lifecycl
 
 ## Stuck-work escape hatch
 
-Capture owning item, exact error, fingerprint, attempts, current hypothesis, preserved changes, blocker class, dependency/critical-path impact, and next safe experiment or human action. Mark the lane blocked, release only safe resources, and continue independent work.
+Capture owning item, exact error, fingerprint, attempts, current hypothesis, preserved changes, blocker class, dependency/critical-path impact, and next safe autonomous experiment or external-precondition recheck. Mark only the lane blocked, release safe resources, and continue independent work. Do not convert repeated failure into an operator work assignment.
 
 ## Smallest production-quality implementation
 

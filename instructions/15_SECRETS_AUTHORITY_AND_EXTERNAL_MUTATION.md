@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-15` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `external_mutation`, `secrets` |
 | Governing entry point | `AGENTS.md` |
 
@@ -24,13 +24,13 @@ External mutation is denied by default. `policies/EXTERNAL_MUTATION_AUTHORITY.js
 - audit record and expected effect;
 - reconciliation method for uncertain outcomes.
 
-Do not broaden a grant by inference. High-impact merge, deploy, spend, external model, secret access, instruction/policy modification, project completion, or emergency action requires independent approval under security policy.
+Do not broaden a grant by inference. High-impact merge, deploy, spend, external model, secret access, instruction/policy modification, project completion, or emergency action requires policy-qualified independent verification under security policy. The verifier may be automated and independent by identity, context, evidence, and mutation authority; routine project work does not require a human approver.
 
 ## Authority classes
 
-- Autonomously authorized within policy: bounded local edits/tests/generation, registered branches/worktrees/commits, dry runs, and normal project remote operations only when a standing grant plus all write preconditions exist.
-- Policy-gated: remote deletion, protection/rules changes, CI permissions, cloud creation, major upgrades, releases, production-like deployment, secrets, policy/instruction changes, and material spend.
-- Human required: legal/license ambiguity, MFA/CAPTCHA, owner secret action, material over-budget cost, irreconcilable requirements, account intervention, or physical hardware action.
+- Autonomously authorized within policy: bounded local edits/tests/generation, registered branches/worktrees/commits, policy-compatible dependency installation, dry runs, PR creation/update/merge, Jira lifecycle updates including eligible `Done`, and branch/worktree cleanup when the standing grant plus all write preconditions exist.
+- Autonomously policy-gated: remote deletion, protection/rules changes, CI permissions, cloud creation, major upgrades, releases, production-like deployment, secrets, policy/instruction changes, and material spend. These require stronger deterministic checks and independent receipts, not a human actor.
+- External precondition: unavailable credentials, MFA/CAPTCHA, unresolved legal/license authority, budget capacity, account capability, physical hardware access, or an irreconcilable higher-authority decision. Record `BLOCKED_EXTERNAL`, assign no work to the operator, continue unaffected lanes, and schedule autonomous recheck. Never fabricate the missing capability.
 - Prohibited: secret exposure, hidden benchmark access, evidence fabrication, gate bypass, deletion of unpreserved work, credential invention, blind uncertain-outcome retry, or unreviewed upstream execution.
 
 ## Secret handling
@@ -61,4 +61,4 @@ This applies to Jira, GitHub, cloud, release, provider, spend, and remote-worker
 
 ## Degraded mode
 
-When an external service is unavailable, record outage, preserve pending intents, enter an appropriate degraded/local-first mode, continue unrelated local work, and reconcile before later replay. Do not hammer the provider.
+When an external service or credential reference is unavailable, record the typed external precondition, preserve pending intents, enter an appropriate degraded/local-first mode, continue unrelated local work, and reconcile before later replay. Do not ask the operator to perform the work and do not hammer the provider.

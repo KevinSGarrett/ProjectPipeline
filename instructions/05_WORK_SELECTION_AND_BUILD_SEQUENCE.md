@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-05` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `work_selection`, `budgeting` |
 | Governing entry point | `AGENTS.md` |
 

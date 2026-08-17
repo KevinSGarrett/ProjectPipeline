@@ -253,7 +253,7 @@ def check_manifest(root: Path, report: Report, manifest: dict[str, Any]) -> None
     report.checks.append("manifest")
     expected_identity = {
         "schema_version": "1.0.0",
-        "instruction_pack_version": "1.1.0",
+        "instruction_pack_version": "1.2.0",
         "project_id": "PROJECT-PIPELINE",
         "project_name": "ProjectPipeline",
         "repository_url": "https://github.com/KevinSGarrett/ProjectPipeline",
@@ -693,8 +693,8 @@ def check_policies(root: Path, report: Report, documents: dict[Path, Any]) -> No
         categories = mutation.get("categories", {})
         required = {
             "AUTONOMOUSLY_AUTHORIZED_WITHIN_PROJECT_POLICY",
-            "POLICY_GATED",
-            "HUMAN_REQUIRED",
+            "AUTONOMOUSLY_POLICY_GATED",
+            "EXTERNAL_PRECONDITION",
             "PROHIBITED",
         }
         if not isinstance(categories, dict) or set(categories) != required:
@@ -702,6 +702,21 @@ def check_policies(root: Path, report: Report, documents: dict[Path, Any]) -> No
                 "ERROR",
                 "POL003",
                 "External mutation categories are incomplete or unexpected",
+                MUTATION_POLICY_PATH,
+            )
+        external_precondition = mutation.get("external_precondition_behavior", {})
+        if (
+            not isinstance(external_precondition, dict)
+            or external_precondition.get("assign_operator_work") is not False
+            or external_precondition.get("continue_unaffected_work") is not True
+            or external_precondition.get("fabricate_capability") is not False
+            or external_precondition.get("schedule_autonomous_recheck") is not True
+            or external_precondition.get("state") != "BLOCKED_EXTERNAL"
+        ):
+            report.add(
+                "ERROR",
+                "POL011",
+                "External preconditions must not assign operator work and must continue autonomous execution",
                 MUTATION_POLICY_PATH,
             )
         sequence = mutation.get("unknown_outcome_sequence", [])
@@ -733,6 +748,9 @@ def check_policies(root: Path, report: Report, documents: dict[Path, Any]) -> No
     external_egress = security_policy.get("external_egress", {})
     if (
         security_policy.get("high_impact_requires_independent_approval") is not True
+        or security_policy.get("human_approval_required_for_routine_development") is not False
+        or security_policy.get("independent_approval_actor")
+        != "POLICY_QUALIFIED_AUTOMATED_VERIFIER_OR_DISTINCT_AUTHORIZED_IDENTITY"
         or not required_capabilities.issubset(high_impact)
         or not isinstance(self_modification, dict)
         or self_modification.get("independent_review_for_control_plane") is not True
@@ -758,9 +776,15 @@ def check_policies(root: Path, report: Report, documents: dict[Path, Any]) -> No
             "Jira authority mode must remain source-controlled local",
             JIRA_SYNC_POLICY_PATH,
         )
-    if jira_policy.get("require_human_for_remote_done") is not True:
+    if (
+        jira_policy.get("require_completion_evidence_for_remote_done") is not True
+        or jira_policy.get("remote_done_human_approval_required") is not False
+    ):
         report.add(
-            "ERROR", "POL008", "Remote Done must retain human requirement", JIRA_SYNC_POLICY_PATH
+            "ERROR",
+            "POL008",
+            "Remote Done must require evidence reconciliation without human approval",
+            JIRA_SYNC_POLICY_PATH,
         )
     repo_policy = documents.get(REPOSITORY_POLICY_PATH)
     if not isinstance(repo_policy, dict):

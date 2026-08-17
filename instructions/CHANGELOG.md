@@ -1,5 +1,12 @@
 # Instruction System Changelog
 
+## 1.2.0 — 2026-08-17
+
+- Removed mandatory human approval from routine ProjectPipeline development actions, including evidence-backed Jira `Done`, eligible PR merge, release publication, and branch/worktree cleanup.
+- Replaced the human-work terminal with typed `BLOCKED_EXTERNAL` preconditions, autonomous recheck, and continuation of unaffected lanes.
+- Preserved risk-based independent verification through policy-qualified automated receipts while explicitly removing GitHub human-review requirements from the normal protection target.
+- Renamed the Jira completion control from a human gate to deterministic completion-evidence reconciliation and added validator/test coverage against regression.
+
 ## 1.1.0 — 2026-08-16
 
 - Made objective before/after progress delta a governed Assurance capability derived from the original knowledge pack rather than caller-reported activity.
@@ -9,7 +16,7 @@
 
 ## 1.0.1 — 2026-08-16
 
-- Bound Jira preferred statuses to the live PP project's three-state collaboration workflow while preserving rich local lifecycle authority and the human gate for remote Done.
+- Bound Jira preferred statuses to the live PP project's three-state collaboration workflow while preserving rich local lifecycle authority. The then-current human gate for remote Done was superseded in 1.2.0 by evidence-backed autonomous reconciliation.
 
 ## 1.0.0 — 2026-08-16
 

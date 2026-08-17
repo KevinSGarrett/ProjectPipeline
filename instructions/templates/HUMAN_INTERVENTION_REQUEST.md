@@ -1,6 +1,8 @@
-# Human Intervention Request
+# External Precondition Record
 
-- Escalation ID: `[ESC-UNIQUE-ID]`
+> Stable compatibility path. This record never assigns work to the operator.
+
+- Precondition ID: `[EXT-UNIQUE-ID]`
 - Classification: `[class from policies/ESCALATION_CLASSIFICATIONS.json]`
 - Owning Jira item: `[PP-...]`
 - Correlation ID: `[correlation]`
@@ -28,14 +30,13 @@
 - Pending external intents: `[IDs or none]`
 - Safety actions already taken: `[actions]`
 
-## Exact human action
+## Missing external condition
 
-1. `[bounded action]`
-2. `[bounded action]`
+`[smallest exact capability or state that is objectively unavailable]`
 
 Do not include secret values in this record.
 
-## Verification after action
+## Autonomous verification probe
 
 `[safe read-only command or observable state]`
 
@@ -50,3 +51,7 @@ Expected result: `[specific result]`
 ## Unaffected work continuation
 
 `[eligible work that continues, or exact reason for global pause]`
+
+## Operator work assignment
+
+`NONE` — ProjectPipeline continues autonomously and rechecks the condition through the scheduler.

@@ -9,9 +9,9 @@
         "restore/open canonical state",
         "reconcile uncertain outcomes and external outboxes",
         "resume eligible work",
-        "notify operator"
+        "record autonomous recovery notification"
       ],
-      "escalation": "HUMAN_REQUIRED if prerequisites or verification cannot be satisfied autonomously",
+      "escalation": "BLOCKED_EXTERNAL with autonomous recheck if prerequisites or verification cannot be satisfied autonomously; assign no operator work",
       "incident": "control_machine_loss",
       "prerequisites": [
         "canonical state readable or restorable",
@@ -41,7 +41,7 @@
         "probe dependency with backoff",
         "reconcile on recovery"
       ],
-      "escalation": "HUMAN_REQUIRED only for unresolved scoped dependency or global safety impact",
+      "escalation": "BLOCKED_EXTERNAL only for the unresolved scoped dependency or global safety impact; assign no operator work",
       "incident": "external_system_outage",
       "prerequisites": [
         "canonical local state healthy"
@@ -65,7 +65,7 @@
         "record restore verification separately",
         "promote only under explicit recovery authority"
       ],
-      "escalation": "HUMAN_REQUIRED if restore fails or recovery objectives are exceeded",
+      "escalation": "BLOCKED_EXTERNAL with preserved restore evidence and autonomous recheck if recovery objectives cannot be satisfied",
       "incident": "persistent_state_recovery",
       "prerequisites": [
         "selected backup identity exists",

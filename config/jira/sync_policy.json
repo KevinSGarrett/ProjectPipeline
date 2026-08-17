@@ -16,5 +16,6 @@
     "REVIEW": "In Progress",
     "VALIDATION": "In Progress"
   },
-  "require_human_for_remote_done": true
+  "require_completion_evidence_for_remote_done": true,
+  "remote_done_human_approval_required": false
 }

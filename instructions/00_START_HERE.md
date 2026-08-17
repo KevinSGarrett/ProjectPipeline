@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-00` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `startup`, `project_identity` |
 | Governing entry point | `AGENTS.md` |
 
@@ -73,7 +73,7 @@ Use source control, `/jira`, the project-state database, evidence ledger, contro
 - secrets or external mutation: `15`
 - parallel/remote worker: `10`, `16`
 - repeated failure or restart: `11`, `17`
-- human action: `18`
+- external precondition and autonomous continuation: `18`
 - release/handoff: `19`
 - instruction change: `20`
 

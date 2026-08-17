@@ -126,6 +126,26 @@ def test_context_and_security_policy_weakening_are_rejected() -> None:
     assert {item.code for item in report.errors}.issuperset({"POL005", "POL006"})
 
 
+def test_routine_development_policy_has_no_human_approval_terminal() -> None:
+    mutation = json.loads(
+        (ROOT / "instructions/policies/EXTERNAL_MUTATION_AUTHORITY.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    categories = mutation["categories"]
+    assert "HUMAN_REQUIRED" not in categories
+    assert mutation["external_precondition_behavior"] == {
+        "assign_operator_work": False,
+        "continue_unaffected_work": True,
+        "fabricate_capability": False,
+        "schedule_autonomous_recheck": True,
+        "state": "BLOCKED_EXTERNAL",
+    }
+    jira_policy = json.loads((ROOT / "config/jira/sync_policy.json").read_text(encoding="utf-8"))
+    assert jira_policy["require_completion_evidence_for_remote_done"] is True
+    assert jira_policy["remote_done_human_approval_required"] is False
+
+
 def test_delivery_progress_policy_weakening_is_rejected() -> None:
     module = load_script(
         "validate_instructions_delivery_guard", ROOT / "scripts/validate_instructions.py"

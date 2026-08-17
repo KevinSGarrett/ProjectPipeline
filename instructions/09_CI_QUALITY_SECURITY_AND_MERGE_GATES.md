@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-09` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `ci`, `merge_gate`, `security` |
 | Governing entry point | `AGENTS.md` |
 
@@ -43,7 +43,7 @@ Do not delete, weaken, skip, or alter a test solely to make it green. Trace an a
 
 ## AI review
 
-AI review is advisory or independently required according to risk. It focuses on authority, traceability, mutation safety, idempotency, recovery, concurrency, evidence, secrets, and state semantics. It never replaces tests, analysis, protection, security scanning, evidence, or Completion Gate.
+AI review is advisory or independently required according to risk. A required independent review is performed by an isolated policy-qualified automated verifier or a distinct authorized identity that did not implement the change and has no mutation authority for that decision unit. It focuses on authority, traceability, mutation safety, idempotency, recovery, concurrency, evidence, secrets, and state semantics. It never replaces tests, analysis, protection, security scanning, evidence, or Completion Gate, and it never creates a human-work dependency.
 
 Limit review loops: validate each finding, correct material findings, dismiss invalid findings with rationale, and rerun applicable checks. Do not chase inconsistent cosmetic preferences.
 
@@ -56,8 +56,10 @@ Once `main` exists, configure the strongest sensible low-cost rules:
 - selected current-head status checks required;
 - force pushes and branch deletion blocked;
 - material conversations resolved;
-- required independent approval for high-risk areas;
+- content-addressed independent verification receipts for high-risk areas, enforced by ProjectPipeline rather than human GitHub approvals;
 - merge queue only if actual concurrency justifies it and merge-group CI is configured.
+
+For the normal autonomous lifecycle, hosted protection must require the PR and strict current-head checks while setting required approving-review count to zero, code-owner review to false, and last-push approval to false. Conversation resolution, linear history, force-push prevention, and deletion prevention remain enabled. A policy-qualified independent receipt is still mandatory where the risk matrix requires it, but it is evaluated as project evidence rather than a human GitHub review.
 
 Source-controlled workflow files do not prove live settings. Verify through GitHub state and record activation evidence.
 

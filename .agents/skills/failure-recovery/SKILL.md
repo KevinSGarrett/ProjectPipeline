@@ -12,4 +12,4 @@ description: Recover a blocked, repeated-failure, restarted, or uncertain-outcom
 5. For dirty Git, preserve and attribute work before cleanup.
 6. For worker loss or split brain, fence stale authority before reassignment.
 7. Persist a resume checkpoint; block only the affected lane unless the failure is global.
-8. Produce an exact human intervention request only when automation cannot cross the boundary.
+8. When an external capability is objectively unavailable, record a typed external precondition with no operator work assignment, continue unaffected work, and schedule autonomous recheck.

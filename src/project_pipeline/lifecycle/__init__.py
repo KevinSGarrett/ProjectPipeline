@@ -38,9 +38,10 @@ CANONICAL_PURSUING_GOAL = (
     "engineering organization that accepts complete project inputs, compiles a verified project "
     "model, autonomously selects and executes genuinely missing work through conflict-safe "
     "parallel lanes and qualified workers, verifies results, governs GitHub and Jira, merges "
-    "accepted changes, reconciles external state, recomputes project state, handles "
-    "HUMAN_REQUIRED incidents without stopping unaffected work, exposes truthful live state "
-    "through the Command Center, and continues until the deterministic Completion Gate reports "
+    "accepted changes, reconciles external state, recomputes project state, records unavailable "
+    "external preconditions without assigning operator work or stopping unaffected lanes, "
+    "exposes truthful live state through the Command Center, and continues until the "
+    "deterministic Completion Gate reports "
     "COMPLETE for the integrated, released, and operationally verified system."
 )
 CANONICAL_SOURCE_REFERENCES = (

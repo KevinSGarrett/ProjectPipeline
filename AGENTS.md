@@ -60,7 +60,7 @@ Primary routes:
 - secrets and external mutation: `instructions/15_SECRETS_AUTHORITY_AND_EXTERNAL_MUTATION.md`
 - workers and remote machines: `instructions/10_PARALLEL_AGENT_COORDINATION.md`, `instructions/16_REMOTE_MACHINE_AND_RESOURCE_PROTOCOL.md`
 - failure/recovery: `instructions/11_ANTI_LOOP_AND_ANTI_OVERENGINEERING.md`, `instructions/17_FAILURE_RECOVERY_AND_RESUMPTION.md`
-- human escalation: `instructions/18_HUMAN_ESCALATION_PROTOCOL.md`
+- external preconditions and autonomous continuation: `instructions/18_HUMAN_ESCALATION_PROTOCOL.md` (stable compatibility path)
 - release/handoff: `instructions/19_RELEASE_HANDOFF_AND_CLEANUP.md`
 - instruction changes: `instructions/20_INSTRUCTION_MAINTENANCE.md`
 
@@ -76,7 +76,7 @@ For an uncertain external write: stop writes, read external state, reconcile the
 
 ## Code review rules
 
-Review against accepted requirements and risk. Verify authority, data integrity, secrets/egress, idempotency, concurrency/fencing, recovery, traceability, evidence freshness, and Windows behavior. Do not weaken tests or policy to obtain green output. High-impact security, policy, instruction, merge, release, spend, or completion actions require the independent approval defined by policy.
+Review against accepted requirements and risk. Verify authority, data integrity, secrets/egress, idempotency, concurrency/fencing, recovery, traceability, evidence freshness, and Windows behavior. Do not weaken tests or policy to obtain green output. High-impact security, policy, instruction, merge, release, spend, or completion actions require a policy-qualified independent verification receipt. That verifier may be an isolated automated worker or distinct authorized identity; routine development never requires a human or a GitHub review approval.
 
 ## PPQS boundary
 

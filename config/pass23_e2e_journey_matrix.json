@@ -29,8 +29,8 @@
       "name": "partial_failure_retry_and_recovery",
       "environment": "local deterministic integration environment",
       "setup": "Force the first provider unavailable and exercise durable unknown-outcome/worker-loss scenarios.",
-      "actions": ["provider failure", "fallback", "unknown outcome", "worker loss", "human repair", "reconciliation"],
-      "observable_result": "Safe fallback succeeds; uncertain effects are not blindly retried; human repair must verify before resolution.",
+      "actions": ["provider failure", "fallback", "unknown outcome", "worker loss", "autonomous recovery probe", "reconciliation"],
+      "observable_result": "Safe fallback succeeds; uncertain effects are not blindly retried; autonomous recovery must verify the external condition before resolution.",
       "cleanup": "All temporary state is in-memory or temporary-directory scoped.",
       "preserved_evidence": "evidence/verification/pass23_full_e2e_report.json"
     }

@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-02` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `autonomous_cycle`, `definition_of_ready` |
 | Governing entry point | `AGENTS.md` |
 
@@ -31,7 +31,7 @@ REHYDRATE
 → SELECT NEXT WORK
 ```
 
-A cycle may end at a documented blocker or actionable escalation, but it must preserve work and a deterministic resume point.
+A cycle does not voluntarily stop at a review request, PR gate, Jira transition, branch cleanup, formatting/test task, or other automatable routine action. A bounded lane may become `BLOCKED_EXTERNAL` only when a required external capability is objectively unavailable; preserve it, schedule autonomous recheck, and continue every other eligible lane. A cycle handoff is an autonomous checkpoint, not an assignment of work to the operator.
 
 ## Operating invariants
 
@@ -40,7 +40,7 @@ A cycle may end at a documented blocker or actionable escalation, but it must pr
 - State required after restart lives outside chat.
 - Every active implementation lane has one owner, work identity, branch, worktree, base SHA, resource claim set, and merge target.
 - The same remote mutation has one idempotency identity and reconciliation path.
-- Every sustained work period produces accepted progress, blocker reduction, valid evidence, corrected diagnosis, or scoped escalation.
+- Every sustained work period produces accepted progress, blocker reduction, valid evidence, corrected diagnosis, or a typed external-precondition record while unaffected work continues.
 - Process is proportional to risk. Low-risk work is fast; high-risk work receives stronger independence and recovery proof.
 
 ## Definition of Ready
@@ -82,9 +82,11 @@ Housekeeping is bounded. Perform it after merge, when hygiene creates real risk,
 
 Measure sustained work using objective before/after repository facts. A positive progress delta requires newly satisfied acceptance, eliminated failure or blocker, newly passing required behavior, integrated implementation, or durable evidence for one of those changes. Jira state movement, branches, PRs, repeated validation, regenerated projections, claims, snapshots, and bookkeeping are activity with zero progress unless they accompany such an objective change. Enforce the administrative-work budget in `config/assurance_policy.json` and stop or change strategy when the zero-progress limit is reached.
 
-## Autonomous decisions
+## Autonomous decisions and routine-action grant
 
-Do not interrupt the operator for routine naming, internal structure, ordinary testing, or straightforward compatible fixes. Use plans, ADRs, policy, source, and professional judgment. Escalate only material decisions or actions that automation genuinely cannot perform.
+Do not interrupt the operator for routine development work. Use plans, ADRs, policy, source, and professional judgment. Routine actions are autonomously authorized when the exact target is identified, ownership and scope are bounded, applicable implementation and evidence are complete, the scope gate and integrated-main verification pass when relevant, credentials are already provisioned through approved references, the mutation is deterministic and idempotent, and its result can be read back.
+
+This standing grant covers local edits and commits, generated artifacts, policy-compatible dependency installation, tests, linting, formatting, PR creation/update/merge, Jira lifecycle and `Done` reconciliation, eligible branch/worktree cleanup, and other ordinary development mechanics. Risk-tier checks and independent verification still apply, but neither requires a human actor. If an external capability is absent, record a typed external precondition without asking the operator to perform work, continue independent work, and re-evaluate through the autonomous scheduler.
 
 ## Completion boundary
 

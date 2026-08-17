@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-01` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `authority`, `plans`, `requirements` |
 | Governing entry point | `AGENTS.md` |
 
@@ -62,7 +62,7 @@ Never relabel an inference as source-derived to simplify implementation.
 3. Apply the relevant authority order rather than a general preference.
 4. Search source-evolution records and accepted decisions for an explicit revision.
 5. Preserve the losing artifact until the accepted change and traceability update are clear.
-6. Record an open decision or human escalation only if higher authority cannot resolve the material behavior.
+6. Record an open decision or typed external precondition only if higher authority and deterministic project policy cannot resolve the material behavior; do not assign routine project work to a human.
 7. Update requirement, plan, Jira, implementation, tests, evidence, and generated views as applicable.
 
 ## Identity reconciliation adopted by this pack

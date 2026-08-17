@@ -36,12 +36,14 @@
     "split_brain_policy": "FAIL_CLOSED",
     "witness_required": true
   },
-  "human_required": {
+  "external_precondition": {
     "continue_unaffected_work": true,
-    "exact_action_required": true,
+    "assign_operator_work": false,
+    "exact_condition_required": true,
     "global_stop_only_for_global_failure": true,
     "invalidate_stale_assumptions": true,
-    "repair_verification_required": true
+    "recovery_verification_required": true,
+    "schedule_autonomous_recheck": true
   },
   "local_model_runtimes": [
     {

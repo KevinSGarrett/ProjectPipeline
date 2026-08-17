@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "6b9240a2f6ebf6d152bea7290f28e060b393defea20328bc63151be0b1a865ae",
+  "aggregate_sha256": "fe51dddd16541cf27b0cc338544cfb60294bb2010ec43f1a6812afe55b6f0606",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12,18 +12,18 @@
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
-      "sha256": "60d18b050896ccf7858b0d7e86b5225564030bcccf654a13a6efa688cf520748",
-      "size_bytes": 833
+      "sha256": "b6d309ea6288c1f022fc63f31466d20bbf5aec4a746f66266766520310ea9ebb",
+      "size_bytes": 927
     },
     {
       "path": ".agents/skills/github-branch-pr/SKILL.md",
-      "sha256": "56384850bc32eaac475dd72dcd2b4f5d398b746360bd5c144f52e118b4b2e0d1",
-      "size_bytes": 776
+      "sha256": "4b9add31a41bdc42263170819e24784296ce0660d3fba1cfc65b566ffd4aba45",
+      "size_bytes": 926
     },
     {
       "path": ".agents/skills/jira-work-item/SKILL.md",
-      "sha256": "ae9fa827d0eada7dcd6386460ea81ff37611325f266c2bfef8c78eb3fa6a991b",
-      "size_bytes": 904
+      "sha256": "994a7410219413e8054bb3b9b8ba3ea4786a31fc5f5e233b0331f3cc4543a14a",
+      "size_bytes": 1104
     },
     {
       "path": ".agents/skills/ppqs-benchmark/SKILL.md",
@@ -37,8 +37,8 @@
     },
     {
       "path": ".agents/skills/release-handoff/SKILL.md",
-      "sha256": "b6f3ffd5bea8a2fd5ded99604a816c65f1938fcc27915d1e32e99ba3312dbbbd",
-      "size_bytes": 821
+      "sha256": "d2af40d0bed79120d21b5cdf3ca8ab7c30ab435a1a7472bb4d7609a8d4ab9ae0",
+      "size_bytes": 908
     },
     {
       "path": ".agents/skills/remote-cpu-worker/SKILL.md",
@@ -322,8 +322,8 @@
     },
     {
       "path": "AGENTS.md",
-      "sha256": "e9a0f24a86f63f46c53ddc832ee194da5c922aa255b7cf12b02aa2d5206608e7",
-      "size_bytes": 6812
+      "sha256": "0f50c7128dd622535b2aadc55f81f3fa2adc4e1f27d123c8e048a9bb97ceddfc",
+      "size_bytes": 7038
     },
     {
       "path": "apps/command_center/index.html",
@@ -562,8 +562,8 @@
     },
     {
       "path": "config/cursor_takeover.json",
-      "sha256": "7af194f05a30b7b331973bbed7e90bcd76dbc966f137bfc82a7c1497d718f0cf",
-      "size_bytes": 2175
+      "sha256": "ce641f37714f9b19e0efb26457d0be0965ab6e7e57be0edb4d551d67683388e7",
+      "size_bytes": 2213
     },
     {
       "path": "config/dependency_policy.json",
@@ -582,8 +582,8 @@
     },
     {
       "path": "config/jira/sync_policy.json",
-      "sha256": "488bc4c9462961a3b43362ec84e7f157f1e63733cc2ef727307549ceab64d0f4",
-      "size_bytes": 526
+      "sha256": "9d5c1573d7f3df791fefbbabad7d8f016782b6db7a83ccb378414a971a52edef",
+      "size_bytes": 588
     },
     {
       "path": "config/orchestration_policy.json",
@@ -592,8 +592,8 @@
     },
     {
       "path": "config/pass23_e2e_journey_matrix.json",
-      "sha256": "5e7e2bac3f01af15fe32c2a7a39f5b818b2c4280547cbfba2f85d02cb12820e2",
-      "size_bytes": 2387
+      "sha256": "84401020ac37402702b499840167c03617ca62de63b74daa7cd2ef415de0a712",
+      "size_bytes": 2430
     },
     {
       "path": "config/pass24_hardening_matrix.json",
@@ -607,13 +607,13 @@
     },
     {
       "path": "config/product_outcome.json",
-      "sha256": "f6dfc639d22d511af0006e99d491e2e04b772567f1b9b1b6bde7d3dda7c58ae3",
-      "size_bytes": 7751
+      "sha256": "71458139a67269aa435e4c3c11b80dda959381bff4b7802cab89bf4cda3fc61b",
+      "size_bytes": 7829
     },
     {
       "path": "config/project.json",
-      "sha256": "6963f3a054f569ee43881ce3e2a00a3c3b773540c858fd23ab2abf73674bbae3",
-      "size_bytes": 1338
+      "sha256": "11c62a6f56ae2d47f298c49d49795bc4a3e677248ab1f447d1f774ed6bd087f5",
+      "size_bytes": 1376
     },
     {
       "path": "config/project_manifest.json",
@@ -622,13 +622,13 @@
     },
     {
       "path": "config/recovery_runbooks.json",
-      "sha256": "97eee86a8c0077c71de7846decd07e671652881c936e0827f5c7dd45d4c7c37b",
-      "size_bytes": 3045
+      "sha256": "e597695578ab07da27c1708ced1eea357f18e6c408355b89e3a1b1a7de158435",
+      "size_bytes": 3198
     },
     {
       "path": "config/release_policy.json",
-      "sha256": "dde171ff67eae07aff9cbe8fbea3722f169aff241c2af1ca16d341522b77131e",
-      "size_bytes": 1276
+      "sha256": "50cdd0d72dab76f99793d136663f43379e4f2e3c0411f64646efc1f5c0d7bcd1",
+      "size_bytes": 1285
     },
     {
       "path": "config/repository_policy.json",
@@ -637,13 +637,13 @@
     },
     {
       "path": "config/resilience_policy.json",
-      "sha256": "3be87bf7d45c3b0d9edef81f72fff6c9ad4ec55343c24166ab64f6f658127bf3",
-      "size_bytes": 5396
+      "sha256": "367deb23f5c074161d6309fae556a1e0dbb2717901a477a2f6ce9a1a1f459eca",
+      "size_bytes": 5484
     },
     {
       "path": "config/root_of_trust.json",
-      "sha256": "4bcca9567fd310603dbe6bea37c9f9b0c95b1a594a4bd2057e8cfa7c9b969aae",
-      "size_bytes": 885
+      "sha256": "9281242c1bcc3ce832bb4828947f2050c2571847347996de6d2731ed57eeb750",
+      "size_bytes": 1031
     },
     {
       "path": "config/runbooks/recovery_control_machine.json",
@@ -702,8 +702,8 @@
     },
     {
       "path": "config/security_policy.json",
-      "sha256": "d508acae7ac240f6275567ff62266f45ef0f60fefe5aa53a9581df84d643f242",
-      "size_bytes": 1078
+      "sha256": "6eb725ca32387b330851cfad0bef569807c4187696e4f0f36a97a080686055b0",
+      "size_bytes": 1241
     },
     {
       "path": "config/verification_policy.json",
@@ -4987,108 +4987,108 @@
     },
     {
       "path": "instructions/00_START_HERE.md",
-      "sha256": "db42672e5f1c901e3ec78e52489708f8056e9a0eefd6214e6024f8781c672eb9",
-      "size_bytes": 4042
+      "sha256": "6a7d3640984979e8e17d5db86919744b66592aeea9751c41fe6254dd083410e1",
+      "size_bytes": 4079
     },
     {
       "path": "instructions/01_AUTHORITY_AND_SOURCE_OF_TRUTH.md",
-      "sha256": "b25493479680fd86d1ccfe153a35581f7951158f54b5664f4b77e53fe1d9847d",
-      "size_bytes": 4510
+      "sha256": "39c6b4dd70c7d5877ce16464bab9df332649bbd15fc53cf02ec826645f0c96e4",
+      "size_bytes": 4601
     },
     {
       "path": "instructions/02_AUTONOMOUS_OPERATING_CONTRACT.md",
-      "sha256": "9b00d60a02c2e8dacaf41bdbe1f88978018d3eb30f1aef56554eb3f4a77b5118",
-      "size_bytes": 4672
+      "sha256": "1d47cf675cd695da5fca9c37158174c6b227ab2918fa70723a8188db38d794be",
+      "size_bytes": 5870
     },
     {
       "path": "instructions/03_SESSION_BOOTSTRAP_AND_PREFLIGHT.md",
-      "sha256": "1fb7b5f8516a83dcf8143a877cbc6654f9e8c1fc4d471b67ca2d06d5f0611db9",
+      "sha256": "e1d4378345e880fc060ead8600b0995b3c94c5c9dad85e23e68f1cfce37cca3e",
       "size_bytes": 4448
     },
     {
       "path": "instructions/04_CONTEXT_RETRIEVAL_AND_NAVIGATION.md",
-      "sha256": "00de85912319ad17c3d0672f542e71b018ef2a65b3a2f992ee666b44430b9f06",
+      "sha256": "20324a00d7d21940797ac8012969ac565d4a6986e15564f60f56fb97226f9c5b",
       "size_bytes": 3407
     },
     {
       "path": "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
-      "sha256": "6db12d634bdd0730a5930409b5e714f8567dd4bd561736509a3cc1366a73d02b",
+      "sha256": "63b418d8236effff4cf1c9d6603e7f3a518d1db561ad062668c4f45ed77f3987",
       "size_bytes": 4710
     },
     {
       "path": "instructions/06_JIRA_OPERATING_PROTOCOL.md",
-      "sha256": "ab90206037696f491531c4c9b0fb8c293f2263e5c1fa34a08c86ce23830bafdc",
-      "size_bytes": 4362
+      "sha256": "b1143ea92544b6844a37369d4cf55582695eede0eb8a2c084d84147f7437226a",
+      "size_bytes": 5020
     },
     {
       "path": "instructions/07_GIT_AND_GITHUB_OPERATING_PROTOCOL.md",
-      "sha256": "7126cbec2216a6164acd76fb8d0afd53bb8c9f2d6d85845f96439e6bd77c27ca",
-      "size_bytes": 3975
+      "sha256": "5a933845bc76943980e835f59a4725cddbc1690424e174f68dfb8cc1cc725d00",
+      "size_bytes": 4477
     },
     {
       "path": "instructions/08_BRANCH_WORKTREE_AND_PR_POLICY.md",
-      "sha256": "970b26254d721a22526a508f90d2a66135906dbb5f7b9f8def85c7bce259b968",
-      "size_bytes": 3908
+      "sha256": "acef279ddcd0c97c9826a732f5c9e3288ec1da6d9e96ec7be146ecbde9ebfbef",
+      "size_bytes": 4201
     },
     {
       "path": "instructions/09_CI_QUALITY_SECURITY_AND_MERGE_GATES.md",
-      "sha256": "ceef22f0e4b637a2901229106e7a88d2ef843054091d03226f30db56a94348ca",
-      "size_bytes": 4714
+      "sha256": "731624416e6e428c36881f999d458de70a7f1de3147c2cd9b2c07c8070d0c788",
+      "size_bytes": 5557
     },
     {
       "path": "instructions/10_PARALLEL_AGENT_COORDINATION.md",
-      "sha256": "aff2e696da43c4631bd9e1c53c2c098a03c768340ac74a68eaa6a948ee01b6c0",
+      "sha256": "e0c45b421c682557957124fb25498ac04f2218783f3d9493750ed49eed02dfc2",
       "size_bytes": 3525
     },
     {
       "path": "instructions/11_ANTI_LOOP_AND_ANTI_OVERENGINEERING.md",
-      "sha256": "71410fc130f4750f1123e9beba678cd4bda4181dace5ba9718b2f7ea66a83954",
-      "size_bytes": 4194
+      "sha256": "43f9ad2a632b9b639a1a701647351ff4afef6289a31b5cf12c37b675dad4b3d5",
+      "size_bytes": 4288
     },
     {
       "path": "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md",
-      "sha256": "8dbf3e733b0d2b50595d067889f962cfda73a0775881572593e32868b183f203",
-      "size_bytes": 4026
+      "sha256": "9d54b96c1545d303732568c925e18502c07728077d4524e30645a1b93ade0efc",
+      "size_bytes": 4097
     },
     {
       "path": "instructions/13_PPQS_BENCHMARK_PROTOCOL.md",
-      "sha256": "9f26ceddbcbc34928193cbeec9e4f24e8f8693d49473ff203ddb292eccf8e484",
+      "sha256": "bc3f2394cb144ead2cc5a63fc5ea1a94ea3c9d396d0189bb0b4cd0d0c6068f2e",
       "size_bytes": 3612
     },
     {
       "path": "instructions/14_UPSTREAM_REPOSITORY_PROTOCOL.md",
-      "sha256": "07b7502fa2900820b0277d45210b6a759759d6f94b519c036bbdcf6420f12b90",
+      "sha256": "b72e06de244a81e50736245b3b839356c022241e5d17a4d363d85e59320d1cdd",
       "size_bytes": 3124
     },
     {
       "path": "instructions/15_SECRETS_AUTHORITY_AND_EXTERNAL_MUTATION.md",
-      "sha256": "d0d24072ad98ff16501be0f0a0298ac8b099c6efc7386684ef2f74e1f4798c32",
-      "size_bytes": 3561
+      "sha256": "b33a726c6745c79f2f8634f3c43872858f65ffa4eb8dc302305b27637b20d5cc",
+      "size_bytes": 4231
     },
     {
       "path": "instructions/16_REMOTE_MACHINE_AND_RESOURCE_PROTOCOL.md",
-      "sha256": "564ad43a6a58d59bef6c746d1799b06a579e60f3d0c9475d1be84fc02040664d",
+      "sha256": "ee938dc8038bd4fb80dbc5b42926c0c97427b81e5a6f8097df3e948fff9e4e40",
       "size_bytes": 3103
     },
     {
       "path": "instructions/17_FAILURE_RECOVERY_AND_RESUMPTION.md",
-      "sha256": "5b0708d15d6a2fb4773babb3de950600040f0bbffa95284a06080e8d8177caee",
-      "size_bytes": 3354
+      "sha256": "c5f5c4e197d14d314dea4354bd6b817141d72000e9385a02c8330d36f6e65d77",
+      "size_bytes": 3529
     },
     {
       "path": "instructions/18_HUMAN_ESCALATION_PROTOCOL.md",
-      "sha256": "a0d4dea22162a65516e797b73b44e84e095f6c80422276beceaf14458b74bcfe",
-      "size_bytes": 2657
+      "sha256": "6c3f995a01c57d361564e78fd4d6a8f0749c91a8cea217b892105c07a75d06c8",
+      "size_bytes": 3835
     },
     {
       "path": "instructions/19_RELEASE_HANDOFF_AND_CLEANUP.md",
-      "sha256": "98c9c1e8eb68e92ac89a655880481f568a43798601f8b43e7ccb3107ba3760d2",
-      "size_bytes": 3123
+      "sha256": "5e1e5e20972015eba375b474b5cd0a8772469099eb1635805f6136007c9231b2",
+      "size_bytes": 3364
     },
     {
       "path": "instructions/20_INSTRUCTION_MAINTENANCE.md",
-      "sha256": "59bd73601aca5f88a8c16f91ead35a447e37c91e0d0f423f4b6d1528634fc7b1",
-      "size_bytes": 4056
+      "sha256": "00136f3af50beb6f10ddcdbdbc6aa2070cf3ca37e2a79479482312a5eb6823d4",
+      "size_bytes": 4410
     },
     {
       "path": "instructions/AUTHORITY_MAP.json",
@@ -5097,8 +5097,8 @@
     },
     {
       "path": "instructions/CHANGELOG.md",
-      "sha256": "f804dc392e1e5972bdca4438ee30f37da4c8d00c18ed0728f37837a41ad471b0",
-      "size_bytes": 2072
+      "sha256": "b8cbb9fa2f27179b69b7f6ba7facef83395decb1043a8b6583147d5a23f1c300",
+      "size_bytes": 2856
     },
     {
       "path": "instructions/CREATION_REPORT.md",
@@ -5122,13 +5122,13 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "107a2c0052f31b4acb96c149339d2654b7224d117685a5d509daddc4e4944ddd",
-      "size_bytes": 25490
+      "sha256": "57f307e8f976a06e687bf5a289bdb3bea4fb50f5f61ee53ec176cfbce2a5e858",
+      "size_bytes": 25491
     },
     {
       "path": "instructions/policies/BRANCH_PR_POLICY.json",
-      "sha256": "2b3835cc3e55ffbcb407bade4d46c845bdf8bba43aed028a5e3ed4b1aec75d09",
-      "size_bytes": 1834
+      "sha256": "0d280cfa076f384b141fc7e086a4db02526505ff0960d9f7a7fd442629694b50",
+      "size_bytes": 2167
     },
     {
       "path": "instructions/policies/CI_RISK_MATRIX.json",
@@ -5142,13 +5142,13 @@
     },
     {
       "path": "instructions/policies/ESCALATION_CLASSIFICATIONS.json",
-      "sha256": "bbfaaeb0743dc7269a03f3304db70568bb329aef77950e8ec46dd26ba1682aa7",
-      "size_bytes": 1793
+      "sha256": "a2790cd7b98a2d4b702c8e8e28981c3e85070a122edbad0cef6f2d9a9b9afadc",
+      "size_bytes": 1837
     },
     {
       "path": "instructions/policies/EXTERNAL_MUTATION_AUTHORITY.json",
-      "sha256": "4874783dd2802106e2e1bb21a2ae052a90d8129411140df0127fde235c97aca2",
-      "size_bytes": 2511
+      "sha256": "8c7ad360e51b1d97e6254a2138713d95e0cb0ae83f3be0d28116896ffa369233",
+      "size_bytes": 3039
     },
     {
       "path": "instructions/policies/MACHINE_REGISTRY.json",
@@ -5162,8 +5162,8 @@
     },
     {
       "path": "instructions/policies/VALIDATION_SCENARIOS.json",
-      "sha256": "6f3012e339431fb22a19b665a2e1b17b134e4a4cd97fa713b2e49cd1b3d2bf41",
-      "size_bytes": 3464
+      "sha256": "43631d0fcefd8a844b0983191cc180290eabaf7ee6a9352caa4ca6f534386b9f",
+      "size_bytes": 3553
     },
     {
       "path": "instructions/README.md",
@@ -5187,13 +5187,13 @@
     },
     {
       "path": "instructions/SECOND_PASS_REQUIRED.md",
-      "sha256": "c0fe98e88bc84157a46acc2aed5f7c7f3bc0111560d45d37ae0017a822706f33",
-      "size_bytes": 8262
+      "sha256": "3373fad11fae89dbc6a5f01cfb48e8a565f742db36f547540b3264b05c526119",
+      "size_bytes": 8398
     },
     {
       "path": "instructions/templates/HUMAN_INTERVENTION_REQUEST.md",
-      "sha256": "baf32af11e823e6e1d363af9bc37c884d0c170358ac769c24dd2f50939e1b611",
-      "size_bytes": 1295
+      "sha256": "b19b6c544958c3dd35fe396e79d0c79ac56aca61086bc8b873d6a8559c624541",
+      "size_bytes": 1546
     },
     {
       "path": "instructions/templates/PULL_REQUEST_BODY.md",
@@ -11147,8 +11147,8 @@
     },
     {
       "path": "schemas/jira_reconciliation_plan.schema.json",
-      "sha256": "51217d0b5979d3cf8b3c8837aab34155104aca0edae488ff1d890c09435f2ffd",
-      "size_bytes": 6612
+      "sha256": "78e86a3afcd0737f4fc59fef410fc89462324bae0226493b039998f7c4b1104b",
+      "size_bytes": 6656
     },
     {
       "path": "schemas/jira_remote_issue.schema.json",
@@ -11167,8 +11167,8 @@
     },
     {
       "path": "schemas/jira_sync_conflict.schema.json",
-      "sha256": "0dd4c2363886dbbeef76505ae4c2a703c7d6c0ef631b53fbdfb9dd3f53d96320",
-      "size_bytes": 1726
+      "sha256": "febf6273ec756e1f7e2547097e62d6e043670f96a93eba8a4863603680f17c24",
+      "size_bytes": 1770
     },
     {
       "path": "schemas/jira_sync_operation.schema.json",
@@ -11742,8 +11742,8 @@
     },
     {
       "path": "scripts/validate_instructions.py",
-      "sha256": "a335bb8e1632e4d823dc822a2415377db18476e2b8c56fb41c73944d16da3507",
-      "size_bytes": 39437
+      "sha256": "0ba2c754085c0a36635f01f42cc44f49a86a40321f0db7decca0dfad12ee17c8",
+      "size_bytes": 40664
     },
     {
       "path": "scripts/validate_jira_operational_alignment.py",
@@ -12362,8 +12362,8 @@
     },
     {
       "path": "src/project_pipeline/domain/jira.py",
-      "sha256": "b8f93f441d0de0e51b1db0c62d9021bef5bd684699fabb83db5119be0650dd61",
-      "size_bytes": 35289
+      "sha256": "de7b92a47932633fdbc6c8c533be4624a433a3c5b3ce647bd39245346b041853",
+      "size_bytes": 35363
     },
     {
       "path": "src/project_pipeline/domain/lifecycle.py",
@@ -12572,8 +12572,8 @@
     },
     {
       "path": "src/project_pipeline/jira_steward/reconciliation.py",
-      "sha256": "0f25a2c907cef293bfa23999ed709713190d83c2022c2429bfc0708f3c9238b6",
-      "size_bytes": 25553
+      "sha256": "140b3596628fd83e1ab4b3bf4921232735d21221f390f4a14d1d4183aafd3464",
+      "size_bytes": 25623
     },
     {
       "path": "src/project_pipeline/jira_steward/repository.py",
@@ -12582,8 +12582,8 @@
     },
     {
       "path": "src/project_pipeline/jira_steward/service.py",
-      "sha256": "fb1d756ccafa03e9cbe09d6796c51b6767893845ca9d0e3362b0a58f371d6e39",
-      "size_bytes": 20440
+      "sha256": "c848f6d821e9c7d59327d72feab92d9dcd75d2f797f8d0d02b71579551a83212",
+      "size_bytes": 20325
     },
     {
       "path": "src/project_pipeline/jira_steward/sync_guard.py",
@@ -12597,8 +12597,8 @@
     },
     {
       "path": "src/project_pipeline/lifecycle/__init__.py",
-      "sha256": "405dc7cce245c0acc9bef4d6f0a59ff00c94696f5647e4ee38a9633da1266ff1",
-      "size_bytes": 3352
+      "sha256": "3780c159bdf472c4f1e8d1a38c34c453f84091f062d946162150567ee17a738e",
+      "size_bytes": 3397
     },
     {
       "path": "src/project_pipeline/lifecycle/adoption.py",
@@ -13652,8 +13652,8 @@
     },
     {
       "path": "tests/test_instruction_system.py",
-      "sha256": "6d8fdb93b6ff15e956f69de87d29a4542348df02b7738691738a93753d5795c6",
-      "size_bytes": 7924
+      "sha256": "6c076256eb1b70f351d6fa98bb28755fcb5cc6a085949fbb34b6219ef9a90a13",
+      "size_bytes": 8761
     },
     {
       "path": "tests/test_intake_cli.py",
@@ -13697,8 +13697,8 @@
     },
     {
       "path": "tests/test_jira_steward_domain.py",
-      "sha256": "368e12471995ba2c722c290b4fcf9dfe6acde3b4d03d63f9fbdcf8f9c6ee13e2",
-      "size_bytes": 22601
+      "sha256": "6339e821364b4451ba35e800ea14bb92efff03b5eaca091933dc7c5f2572c466",
+      "size_bytes": 22963
     },
     {
       "path": "tests/test_jira_steward_mock_and_service.py",
@@ -14181,7 +14181,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T20:53:52.305391+00:00",
+  "generated_at_utc": "2026-08-17T21:47:35.407579+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14190,5 +14190,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25085252
+  "total_bytes": 25097986
 }

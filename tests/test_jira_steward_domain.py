@@ -397,7 +397,9 @@ class JiraStewardDomainTests(unittest.TestCase):
         self.assertIn(JiraConflictKind.DUPLICATE_REMOTE_MAPPING, kinds)
         self.assertIn(JiraConflictKind.REMOTE_ONLY_ISSUE, kinds)
 
-    def test_human_review_can_be_required_for_collaborative_remote_done(self) -> None:
+    def test_collaborative_remote_done_requires_evidence_reconciliation_not_human_review(
+        self,
+    ) -> None:
         issue = next(item for item in self.issues if item.state is not JiraLifecycleState.DONE)
         local = _bundle(issue)
         remote = JiraRemoteSnapshot.create(
@@ -406,18 +408,25 @@ class JiraStewardDomainTests(unittest.TestCase):
         )
         policy = JiraReconciliationPolicy(
             authority_mode=JiraAuthorityMode.REMOTE_COLLABORATIVE,
-            require_human_for_remote_done=True,
+            require_completion_evidence_for_remote_done=True,
         )
         plan = JiraReconciler(policy).plan(local, remote)
-        self.assertTrue(any(item.requires_human_approval for item in plan.operations))
+        self.assertFalse(any(item.requires_human_approval for item in plan.operations))
         self.assertTrue(
-            any(item.kind is JiraConflictKind.HUMAN_DECISION_REQUIRED for item in plan.conflicts)
+            any(
+                item.kind is JiraConflictKind.EVIDENCE_RECONCILIATION_REQUIRED
+                for item in plan.conflicts
+            )
         )
 
-    def test_project_policy_preserves_human_gate_for_remote_done(self) -> None:
-        self.assertTrue(JiraReconciliationPolicy().require_human_for_remote_done)
+    def test_project_policy_requires_evidence_but_no_human_gate_for_remote_done(self) -> None:
+        self.assertTrue(JiraReconciliationPolicy().require_completion_evidence_for_remote_done)
         policy = load_jira_reconciliation_policy(ROOT)
-        self.assertTrue(policy.require_human_for_remote_done)
+        self.assertTrue(policy.require_completion_evidence_for_remote_done)
+        policy_document = json.loads(
+            (ROOT / "config" / "jira" / "sync_policy.json").read_text(encoding="utf-8")
+        )
+        self.assertFalse(policy_document["remote_done_human_approval_required"])
 
     def test_project_policy_projects_rich_lifecycle_to_live_three_state_workflow(self) -> None:
         policies = (JiraReconciliationPolicy(), load_jira_reconciliation_policy(ROOT))

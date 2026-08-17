@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-13` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `ppqs_benchmarks` |
 | Governing entry point | `AGENTS.md` |
 

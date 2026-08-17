@@ -12,7 +12,7 @@
   "operating_model": "local-first_optional_cloud_assistance",
   "project_id": "PROJECT-PIPELINE",
   "pursuing_goal_id": "PROJECT-PIPELINE-AUTONOMOUS-END-TO-END",
-  "pursuing_goal": "Deliver and qualify ProjectPipeline as a continuously operating, local-first autonomous engineering organization that accepts complete project inputs, compiles a verified project model, autonomously selects and executes genuinely missing work through conflict-safe parallel lanes and qualified workers, verifies results, governs GitHub and Jira, merges accepted changes, reconciles external state, recomputes project state, handles HUMAN_REQUIRED incidents without stopping unaffected work, exposes truthful live state through the Command Center, and continues until the deterministic Completion Gate reports COMPLETE for the integrated, released, and operationally verified system.",
+  "pursuing_goal": "Deliver and qualify ProjectPipeline as a continuously operating, local-first autonomous engineering organization that accepts complete project inputs, compiles a verified project model, autonomously selects and executes genuinely missing work through conflict-safe parallel lanes and qualified workers, verifies results, governs GitHub and Jira, merges accepted changes, reconciles external state, recomputes project state, records unavailable external preconditions without assigning operator work or stopping unaffected lanes, exposes truthful live state through the Command Center, and continues until the deterministic Completion Gate reports COMPLETE for the integrated, released, and operationally verified system.",
   "repository": "https://github.com/KevinSGarrett/ProjectPipeline",
   "schema_version": "1.0.0",
   "source_reference_formats": [

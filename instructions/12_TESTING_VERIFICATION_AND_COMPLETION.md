@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-12` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `testing`, `evidence`, `completion` |
 | Governing entry point | `AGENTS.md` |
 
@@ -48,7 +48,7 @@ Applicable completion requires:
 - security/supply-chain checks;
 - evidence with valid freshness;
 - source-to-evidence traceability;
-- required self and independent review;
+- required self-review and policy-qualified independent verification receipt, with no human-review dependency;
 - merge to the integrated branch;
 - post-merge verification;
 - Jira reconciliation;

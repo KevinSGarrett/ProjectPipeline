@@ -2,6 +2,8 @@
   "schema_version": "1.0.0",
   "policy_version": "SECURITY-POLICY-1.0.0",
   "high_impact_requires_independent_approval": true,
+  "human_approval_required_for_routine_development": false,
+  "independent_approval_actor": "POLICY_QUALIFIED_AUTOMATED_VERIFIER_OR_DISTINCT_AUTHORIZED_IDENTITY",
   "high_impact_capabilities": [
     "MERGE",
     "DEPLOY",

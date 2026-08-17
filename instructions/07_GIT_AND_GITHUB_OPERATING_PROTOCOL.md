@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-07` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `git`, `github` |
 | Governing entry point | `AGENTS.md` |
 
@@ -50,9 +50,9 @@ Jira remains the internal engineering backlog. GitHub Issues are suitable for pu
 
 ## Merge Gate
 
-A merge requires the current evaluated head SHA, applicable status checks, required reviews and independent approval, resolved material conversations, accepted risk, rollback path, and no unresolved blocking defect. Never integrate around a failed required check.
+A merge requires the current evaluated head SHA, applicable status checks, a policy-qualified independent verification receipt when required by risk, resolved material conversations, accepted risk, rollback path, and no unresolved blocking defect. The receipt may be produced by an isolated automated verifier with no mutation authority; it does not require a human, a second GitHub account, or a GitHub approval review. Never integrate around a failed required check.
 
-Self-merge may be permitted by standing project authority only when all deterministic and independent gates are satisfied. AI authorship neither blocks nor relaxes the gate.
+The authorized integration worker merges autonomously when all deterministic and independent gates are satisfied and verifies the exact integrated `main` SHA. AI authorship neither blocks nor relaxes the gate. Repository protection must not impose a human-review requirement that makes the autonomous lifecycle structurally impossible.
 
 ## Unknown GitHub outcome
 
@@ -64,7 +64,7 @@ stop writes → read GitHub state → reconcile intended effect → retry only i
 
 ## Cleanup
 
-After successful merge and integrated-main verification, confirm no worktree owns the branch, no unpublished work remains, and the branch is merged. Remove eligible local worktrees and branches; delete remote branches only under policy. Local absence is not proof of remote deletion.
+After successful merge and integrated-main verification, confirm no worktree owns the branch, no unpublished work remains, and the branch is merged. Eligible local worktree removal, local branch deletion, and remote branch deletion are autonomously authorized cleanup operations under the proof in `08`; execute them in the same lifecycle rather than leaving branch debt. Local absence is not proof of remote deletion.
 
 ## Current remote activation state
 

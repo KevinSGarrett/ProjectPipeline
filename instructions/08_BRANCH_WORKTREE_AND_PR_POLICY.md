@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-08` |
 | Status | `ACTIVE` |
-| Pack version | `1.1.0` |
+| Pack version | `1.2.0` |
 | Primary domains | `branches`, `worktrees`, `pull_requests` |
 | Governing entry point | `AGENTS.md` |
 
@@ -78,3 +78,5 @@ Cleanup requires all of:
 - no uncommitted or unpublished changes;
 - Jira/evidence reconciliation complete;
 - remote deletion authorized when requested.
+
+When every condition is true, cleanup is autonomously authorized and mandatory in the same integration lifecycle. No human confirmation is required. If a condition is false, preserve the branch/worktree and record the exact failed condition; do not create a new lane merely to avoid cleanup.
