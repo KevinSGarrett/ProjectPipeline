@@ -87,6 +87,13 @@ class LaneRegistry:
                 (_iso(now),),
             )
 
+    @staticmethod
+    def _normalize_resources(resources: tuple[str, ...]) -> tuple[str, ...]:
+        normalized = tuple(sorted({item.strip() for item in resources if item.strip()}))
+        if not normalized:
+            raise ValueError("lane claim requires at least one non-empty resource key")
+        return normalized
+
     def claim(
         self,
         *,
@@ -101,7 +108,7 @@ class LaneRegistry:
         self._purge_expired(now)
         token = str(uuid.uuid4())
         expires_at = now + timedelta(seconds=lease_seconds)
-        resources = tuple(sorted(set(resources)))
+        resources = self._normalize_resources(resources)
         try:
             with self._conn:
                 self._conn.execute(
@@ -150,24 +157,38 @@ class LaneRegistry:
 
     def record_result(self, *, lane_id: str, fencing_token: str, result_fingerprint: str) -> bool:
         now = _utc_now()
-        row = self._conn.execute(
-            """
-            SELECT fencing_token, expires_at_utc FROM lane_leases
-            WHERE lane_id = ?
-            """,
-            (lane_id,),
-        ).fetchone()
-        if row is None:
-            return False
-        if row["fencing_token"] != fencing_token or _from_iso(row["expires_at_utc"]) <= now:
-            return False
-        with self._conn:
+        try:
+            self._conn.execute("BEGIN IMMEDIATE")
+            lease_row = self._conn.execute(
+                """
+                SELECT lane_id FROM lane_leases
+                WHERE lane_id = ? AND fencing_token = ? AND expires_at_utc > ?
+                """,
+                (lane_id, fencing_token, _iso(now)),
+            ).fetchone()
+            if lease_row is None:
+                self._conn.rollback()
+                return False
+            existing = self._conn.execute(
+                """
+                SELECT result_fingerprint FROM lane_results
+                WHERE lane_id = ? AND fencing_token = ?
+                """,
+                (lane_id, fencing_token),
+            ).fetchone()
+            if existing is not None:
+                self._conn.rollback()
+                return str(existing["result_fingerprint"]) == result_fingerprint
             self._conn.execute(
                 """
-                INSERT OR REPLACE INTO lane_results
+                INSERT INTO lane_results
                 (lane_id, fencing_token, result_fingerprint, created_at_utc)
                 VALUES (?, ?, ?, ?)
                 """,
                 (lane_id, fencing_token, result_fingerprint, _iso(now)),
             )
-        return True
+            self._conn.commit()
+            return True
+        except Exception:
+            self._conn.rollback()
+            raise

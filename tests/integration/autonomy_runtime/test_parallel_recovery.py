@@ -4,6 +4,8 @@ from multiprocessing import Process, Queue
 from pathlib import Path
 from time import sleep
 
+import pytest
+
 from project_pipeline.autonomy_runtime.lanes import LaneRegistry
 from project_pipeline.autonomy_runtime.recovery import recover_lane_loss
 
@@ -34,6 +36,18 @@ def test_overlapping_exclusive_claims_never_execute_concurrently(tmp_path: Path)
     denied = [item for item in results if item[1] is None]
     assert len(acquired) == 1
     assert len(denied) == 1
+
+
+def test_claim_requires_non_empty_normalized_resources(tmp_path: Path) -> None:
+    registry = LaneRegistry(tmp_path / "lanes.sqlite3")
+    with pytest.raises(ValueError):
+        registry.claim(
+            lane_id="lane-empty",
+            worker_id="worker-empty",
+            resources=("", "   "),
+            lease_seconds=5,
+        )
+    registry.close()
 
 
 def test_unaffected_lane_continues_and_stale_fencing_is_rejected(tmp_path: Path) -> None:
@@ -82,7 +96,13 @@ def test_worker_loss_recovery_and_reclaim(tmp_path: Path) -> None:
         lane_id="lane-a",
         stale_fencing_token=lease.fencing_token,
     )
-    assert incident.state in {"RECOVERED", "HUMAN_REQUIRED"}
+    assert incident.state == "RECOVERED"
+    assert incident.reason == "LEASE_RELEASED"
+    assert not registry.record_result(
+        lane_id="lane-a",
+        fencing_token=lease.fencing_token,
+        result_fingerprint="stale-result",
+    )
     reacquired = registry.claim(
         lane_id="lane-a-retry",
         worker_id="worker-a2",
@@ -90,4 +110,42 @@ def test_worker_loss_recovery_and_reclaim(tmp_path: Path) -> None:
         lease_seconds=5,
     )
     assert reacquired is not None
+    assert registry.record_result(
+        lane_id="lane-a-retry",
+        fencing_token=reacquired.fencing_token,
+        result_fingerprint="replacement-result",
+    )
+    assert not registry.record_result(
+        lane_id="lane-a-retry",
+        fencing_token=reacquired.fencing_token,
+        result_fingerprint="conflicting-replacement-result",
+    )
+    registry.close()
+
+
+def test_result_receipt_immutability_and_idempotent_replay(tmp_path: Path) -> None:
+    db_path = tmp_path / "lanes.sqlite3"
+    registry = LaneRegistry(db_path)
+    lease = registry.claim(
+        lane_id="lane-receipt",
+        worker_id="worker-r",
+        resources=("PATH:immutable",),
+        lease_seconds=5,
+    )
+    assert lease is not None
+    assert registry.record_result(
+        lane_id="lane-receipt",
+        fencing_token=lease.fencing_token,
+        result_fingerprint="stable-receipt",
+    )
+    assert registry.record_result(
+        lane_id="lane-receipt",
+        fencing_token=lease.fencing_token,
+        result_fingerprint="stable-receipt",
+    )
+    assert not registry.record_result(
+        lane_id="lane-receipt",
+        fencing_token=lease.fencing_token,
+        result_fingerprint="mutated-receipt",
+    )
     registry.close()
