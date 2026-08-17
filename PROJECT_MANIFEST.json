@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "0705fb33fa8eff300df208a2b507c15633120c1a257834383a6660aab3a47df6",
+  "aggregate_sha256": "dea3b88a392005fdbcaed6150d4d01116d50b83affdba3f71f8e864caa09b929",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11797,7 +11797,7 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/providers.py",
-      "sha256": "a64b0b5b26ecae27cbbabe36eb61d77d1460188c7f3ead99537fb7b946dcdf52",
+      "sha256": "a2f2e68f3b79141136b0a3f5f9fa380995a57d6e7ad7bcccec1e2828a69a7d72",
       "size_bytes": 11286
     },
     {
@@ -13946,7 +13946,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T19:47:11.956025+00:00",
+  "generated_at_utc": "2026-08-17T19:57:05.548322+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",

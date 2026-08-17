@@ -4,10 +4,10 @@ import hashlib
 import json
 import re
 import sqlite3
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from collections.abc import Callable
 from typing import Any
 
 from project_pipeline.autonomy_runtime.service import (
