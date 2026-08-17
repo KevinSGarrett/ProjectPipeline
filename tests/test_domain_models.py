@@ -13,7 +13,7 @@ from project_pipeline.domain import (
     ensure_task_transition,
     task_state_from_jira,
 )
-from project_pipeline.io import read_jsonl
+from project_pipeline.io import read_json, read_jsonl
 from project_pipeline.services.state import (
     task_records_from_jira,
     validate_project_domain_manifest,
@@ -26,14 +26,45 @@ ROOT = Path(__file__).resolve().parents[1]
 class DomainModelTests(unittest.TestCase):
     def test_all_authoritative_requirements_parse_as_strict_entities(self) -> None:
         rows = read_jsonl(ROOT / "plans" / "_traceability" / "requirements.jsonl")
+        expected_count = len(rows)
+        self.assertEqual(expected_count, 352)
         records = [RequirementRecord.model_validate(row) for row in rows]
-        self.assertEqual(len(records), 351)
-        self.assertEqual(len({record.requirement_id for record in records}), 351)
+        self.assertEqual(len(records), expected_count)
+        self.assertEqual(len({record.requirement_id for record in records}), expected_count)
 
     def test_requirement_unknown_fields_are_rejected(self) -> None:
         row = read_jsonl(ROOT / "plans" / "_traceability" / "requirements.jsonl")[0]
         with self.assertRaises(ValidationError):
             RequirementRecord.model_validate({**row, "unexpected": True})
+
+    def test_added_product_outcome_requirement_is_unique_and_fully_mapped(self) -> None:
+        requirements = read_jsonl(ROOT / "plans" / "_traceability" / "requirements.jsonl")
+        contract = read_json(ROOT / "config" / "product_outcome.json")
+        required_id = contract["core_requirement_id"]
+        matching = [row for row in requirements if row.get("requirement_id") == required_id]
+        self.assertEqual(len(matching), 1)
+        record = matching[0]
+        self.assertEqual(record.get("disposition"), "ACCEPTED")
+        self.assertTrue(record.get("plan_ids"))
+        self.assertTrue(record.get("jira_ids"))
+        self.assertTrue(
+            set(contract.get("source_references", [])) <= set(record.get("source_references", []))
+        )
+
+        known_jira_ids = set()
+        for folder in ("epics", "stories", "tasks", "subtasks", "bugs", "spikes"):
+            for path in (ROOT / "jira" / folder).glob("PP-*.json"):
+                known_jira_ids.add(read_json(path)["local_id"])
+        self.assertFalse(set(record["jira_ids"]) - known_jira_ids)
+
+        source_sections = read_jsonl(ROOT / "plans" / "_traceability" / "source_sections.jsonl")
+        linked_sections = {
+            section.get("section_id")
+            for section in source_sections
+            if required_id in section.get("requirement_ids", [])
+        }
+        self.assertIn("SRC-014-SEC-001", linked_sections)
+        self.assertIn("SRC-015-SEC-001", linked_sections)
 
     def test_domain_project_manifest_is_idempotent_and_valid(self) -> None:
         first = write_project_domain_manifest(ROOT)

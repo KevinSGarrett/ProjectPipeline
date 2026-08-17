@@ -24,7 +24,9 @@ class TraceabilityStoreTests(unittest.TestCase):
         ):
             service = RequirementTraceabilityService(store, ROOT)
             result = service.import_authoritative_catalog()
-            self.assertEqual(result["requirement_count"], 351)
+            expected_count = len(load_typed_requirement_catalog(ROOT))
+            self.assertEqual(expected_count, 352)
+            self.assertEqual(result["requirement_count"], expected_count)
             expected_links = sum(
                 len(links_from_requirement(item)) for item in load_typed_requirement_catalog(ROOT)
             )
@@ -115,6 +117,6 @@ class TraceabilityStoreTests(unittest.TestCase):
             output = Path(directory) / "projection.jsonl"
             result = service.write_projection(output)
             self.assertEqual(result["authority"], "PROPOSED_CHANGE")
-            self.assertEqual(result["requirement_count"], 351)
+            self.assertEqual(result["requirement_count"], len(load_typed_requirement_catalog(ROOT)))
             self.assertTrue(output.exists())
             self.assertEqual(service.verify_authoritative_equivalence(), [])

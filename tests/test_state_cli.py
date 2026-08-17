@@ -8,6 +8,7 @@ from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 
 from project_pipeline.cli import main
+from project_pipeline.io import read_jsonl
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -30,8 +31,11 @@ class StateCliTests(unittest.TestCase):
         expected = __import__("json").loads(
             (ROOT / "jira/BOARD_MANIFEST.json").read_text(encoding="utf-8")
         )["issue_count"]
+        expected_requirements = len(
+            read_jsonl(ROOT / "plans" / "_traceability" / "requirements.jsonl")
+        )
         self.assertEqual(state["task_count"], expected)
-        self.assertEqual(state["requirement_count"], 351)
+        self.assertEqual(state["requirement_count"], expected_requirements)
         self.assertEqual(payload["equivalence_errors"], [])
 
     def test_state_and_trace_queries_are_machine_readable(self) -> None:
