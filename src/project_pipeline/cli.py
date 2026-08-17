@@ -844,6 +844,7 @@ def build_parser() -> argparse.ArgumentParser:
         "action",
         choices=(
             "status",
+            "identities",
             "tools",
             "root-trust",
             "sbom",
@@ -857,6 +858,7 @@ def build_parser() -> argparse.ArgumentParser:
     security.add_argument("--database", type=Path)
     security.add_argument("--project-id", default="PROJECT-PIPELINE")
     security.add_argument("--input", type=Path)
+    security.add_argument("--limit", type=int, default=50)
     security.add_argument("--changed-path", action="append", default=[])
     security.add_argument("--scenario", choices=supported_security_scenarios())
     security.add_argument("--apply", action="store_true")
@@ -2312,6 +2314,14 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
     if args.action == "status":
         with SecurityStore(database, args.root) as store:
             return {"database": str(database), "security": store.status()}, 0
+    if args.action == "identities":
+        with SecurityStore(database, args.root) as store:
+            identities = store.list_identities(limit=args.limit)
+        return {
+            "database": str(database),
+            "identities": [item.model_dump(mode="json") for item in identities],
+            "limit": max(1, min(args.limit, 500)),
+        }, 0
     if args.action == "record-identity":
         if not (args.apply and args.approve):
             raise ConfigurationError("security record-identity requires --apply --approve")

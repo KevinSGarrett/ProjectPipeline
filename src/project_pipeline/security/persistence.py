@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sqlite3
 from pathlib import Path
+from types import TracebackType
 from typing import TypeVar
 
 from project_pipeline.domain.security import (
@@ -39,7 +40,12 @@ class SecurityStore:
         self.initialize()
         return self
 
-    def __exit__(self, exc_type, exc, tb) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None:
         if self.connection is not None:
             self.connection.close()
             self.connection = None
@@ -80,6 +86,23 @@ class SecurityStore:
             value.model_dump_json(),
             extras=(("kind", value.kind.value), ("state", value.state.value)),
         )
+
+    def get_identity(self, identity_id: str) -> SecurityIdentity | None:
+        row = self.db.execute(
+            "SELECT payload_json FROM security_identities WHERE identity_id = ?",
+            (identity_id,),
+        ).fetchone()
+        if row is None:
+            return None
+        return SecurityIdentity.model_validate_json(str(row["payload_json"]))
+
+    def list_identities(self, *, limit: int = 50) -> tuple[SecurityIdentity, ...]:
+        bounded = max(1, min(limit, 500))
+        rows = self.db.execute(
+            "SELECT payload_json FROM security_identities ORDER BY identity_id LIMIT ?",
+            (bounded,),
+        ).fetchall()
+        return tuple(SecurityIdentity.model_validate_json(str(row["payload_json"])) for row in rows)
 
     def save_grant(self, value: CapabilityGrant) -> None:
         self._save(

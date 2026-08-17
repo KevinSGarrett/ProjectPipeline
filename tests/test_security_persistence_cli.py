@@ -16,6 +16,8 @@ def test_ppdb_0014_and_store_roundtrip(project_root, tmp_path):
     with SecurityStore(db, project_root) as store:
         store.save_identity(value)
         assert store.status()["security_identities"] == 1
+        assert store.get_identity(value.identity_id) == value
+        assert store.list_identities(limit=10) == (value,)
         ids = {r[0] for r in store.db.execute("SELECT migration_id FROM schema_migrations")}
         assert "PPDB-0014" in ids
 
@@ -87,6 +89,16 @@ def test_security_cli_record_identity_requires_approval(project_root, tmp_path):
         "--approve",
     )
     assert ok.returncode == 0 and value.identity_id in ok.stdout
+    listed = run(
+        project_root,
+        "identities",
+        "--database",
+        str(tmp_path / "x.db"),
+        "--limit",
+        "1",
+    )
+    assert listed.returncode == 0
+    assert value.identity_id in listed.stdout
 
 
 def test_security_cli_simulations(project_root):
