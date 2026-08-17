@@ -225,7 +225,16 @@ class AgentRegistrySnapshot(DomainModel):
 
     @model_validator(mode="after")
     def validate_links(self) -> AgentRegistrySnapshot:
-        providers = {item.provider_id for item in self.providers}
+        def _unique(values: tuple[str, ...], kind: str) -> None:
+            if len(values) != len(set(values)):
+                raise ValueError(f"duplicate {kind} identifiers are not allowed")
+
+        _unique(tuple(item.capability_id for item in self.capabilities), "capability")
+        _unique(tuple(item.provider_id for item in self.providers), "provider")
+        _unique(tuple(item.model_id for item in self.models), "model")
+        _unique(tuple(item.agent_id for item in self.agents), "agent")
+        _unique(tuple(item.tool_id for item in self.tools), "tool")
+        providers = {item.provider_id: item for item in self.providers}
         models = {item.model_id: item for item in self.models}
         tools = {item.tool_id for item in self.tools}
         capabilities = {item.capability_id for item in self.capabilities}
@@ -234,6 +243,11 @@ class AgentRegistrySnapshot(DomainModel):
                 raise ValueError(f"model references unknown provider: {model.provider_id}")
             if not set(model.capabilities) <= capabilities:
                 raise ValueError(f"model references unknown capabilities: {model.model_id}")
+            provider_caps = set(providers[model.provider_id].capabilities)
+            if not set(model.capabilities) <= provider_caps:
+                raise ValueError(
+                    f"model capabilities are incompatible with provider: {model.model_id}"
+                )
         for agent in self.agents:
             if agent.model_id not in models:
                 raise ValueError(f"agent references unknown model: {agent.model_id}")
@@ -241,6 +255,11 @@ class AgentRegistrySnapshot(DomainModel):
                 raise ValueError(f"agent references unknown capabilities: {agent.agent_id}")
             if not set(agent.tool_ids) <= tools:
                 raise ValueError(f"agent references unknown tools: {agent.agent_id}")
+            model = models[agent.model_id]
+            provider = providers[model.provider_id]
+            compatible = set(model.capabilities) & set(provider.capabilities)
+            if not set(agent.capabilities) <= compatible:
+                raise ValueError(f"agent capabilities are incompatible: {agent.agent_id}")
         for provider in self.providers:
             if not set(provider.capabilities) <= capabilities:
                 raise ValueError(

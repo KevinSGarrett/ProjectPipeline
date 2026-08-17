@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "53b1a55a7718609815ab9435f8bfcba8faa2d7acd2b5280844ea5d7eca352884",
+  "aggregate_sha256": "0bd6778d211350cc547e2c95eafa9165503a22a1c37a81b5c33dd6f41c101bfe",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11632,8 +11632,8 @@
     },
     {
       "path": "src/project_pipeline/agent_router/__init__.py",
-      "sha256": "dee8f4214d4f99a28a16162b115eacfa19cc320f486a0ed5849f24aab2accbe0",
-      "size_bytes": 1935
+      "sha256": "13392f84bbe213e30646c594c7a78c435338dc406db82cbeb04b59bf145a0572",
+      "size_bytes": 1996
     },
     {
       "path": "src/project_pipeline/agent_router/adapters.py",
@@ -11672,8 +11672,8 @@
     },
     {
       "path": "src/project_pipeline/agent_router/registry.py",
-      "sha256": "fff540b04cf67a0690bafa34f221d0776e8443446a684f067e7074bb6fb3287c",
-      "size_bytes": 2467
+      "sha256": "8c94fde25294b2ac2f11292967df3516a75ccc8ef99ee58934bdb7720fbdfa3c",
+      "size_bytes": 3407
     },
     {
       "path": "src/project_pipeline/agent_router/router.py",
@@ -12122,8 +12122,8 @@
     },
     {
       "path": "src/project_pipeline/domain/agents.py",
-      "sha256": "559724727c91ee96a7552126bd9563f22f7329c9a2e2ca6d629b33a2463565c4",
-      "size_bytes": 15049
+      "sha256": "92a9e806522503a05addadbf3115e9f1a3ae0308ab6dc9e96aab3225da932af7",
+      "size_bytes": 16229
     },
     {
       "path": "src/project_pipeline/domain/assurance.py",
@@ -13047,8 +13047,8 @@
     },
     {
       "path": "tests/test_agent_router_domain.py",
-      "sha256": "9fb12a6fe5619ad5e3827c5965cd2096a1deaf7e4a9254349bb0bf59d1283a0e",
-      "size_bytes": 2666
+      "sha256": "8cf630b4a9ae32a9852115d3ce29b1438cbfa47a1740f7dc77b93a4cc6535ac7",
+      "size_bytes": 4318
     },
     {
       "path": "tests/test_agent_router_performance.py",
@@ -13911,7 +13911,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T18:19:15.821302+00:00",
+  "generated_at_utc": "2026-08-17T18:32:09.220610+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13920,5 +13920,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24312899
+  "total_bytes": 24316732
 }

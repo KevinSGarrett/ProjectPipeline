@@ -23,7 +23,11 @@ from project_pipeline.agent_router.qualification import (
     REQUIRED_ADAPTER_CHECKS,
     qualification_report,
 )
-from project_pipeline.agent_router.registry import build_registry, load_agent_registry
+from project_pipeline.agent_router.registry import (
+    build_registry,
+    execution_targets,
+    load_agent_registry,
+)
 from project_pipeline.agent_router.router import AgentRouter
 from project_pipeline.agent_router.service import AgentRouterService, AgentRoutingError
 from project_pipeline.agent_router.simulation import simulate_provider_failover
@@ -48,6 +52,7 @@ __all__ = [
     "PydanticAIProviderAdapter",
     "ToolAdapter",
     "build_registry",
+    "execution_targets",
     "load_agent_registry",
     "normalize_circuit",
     "qualification_report",

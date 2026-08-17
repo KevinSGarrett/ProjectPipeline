@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import cast
+from typing import Any, cast
 
 from project_pipeline.domain.agents import (
     AgentRegistrySnapshot,
@@ -16,6 +17,10 @@ from project_pipeline.domain.agents import (
     ToolSpec,
     agent_fingerprint,
     router_identifier,
+)
+
+_SECRET_VALUE = re.compile(
+    r"(?i)(sk-[a-z0-9]{16,}|ghp_[a-z0-9]{20,}|xoxb-[a-z0-9-]{20,}|api[_-]?key\s*[:=]\s*\S+)"
 )
 
 
@@ -38,6 +43,9 @@ def build_registry(
         "tools": [item.model_dump(mode="json") for item in tools],
         "routing_policies": [item.model_dump(mode="json") for item in routing_policies],
     }
+    encoded = json.dumps(payload, sort_keys=True)
+    if _SECRET_VALUE.search(encoded):
+        raise ValueError("registry payload must reference secrets, not secret values")
     return AgentRegistrySnapshot(
         registry_id=router_identifier("REG", agent_fingerprint(payload)),
         capabilities=tuple(capabilities),
@@ -47,6 +55,22 @@ def build_registry(
         tools=tuple(tools),
         routing_policies=tuple(routing_policies),
         generated_at_utc=when,
+    )
+
+
+def execution_targets(registry: AgentRegistrySnapshot) -> tuple[dict[str, Any], ...]:
+    providers = {item.provider_id: item for item in registry.providers}
+    return tuple(
+        {
+            "target_id": model.model_id,
+            "provider_id": model.provider_id,
+            "adapter_id": providers[model.provider_id].adapter_id,
+            "enabled": providers[model.provider_id].enabled,
+            "qualification": model.qualification.value,
+            "local": model.local or providers[model.provider_id].local,
+        }
+        for model in registry.models
+        if model.provider_id in providers
     )
 
 

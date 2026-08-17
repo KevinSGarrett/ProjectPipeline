@@ -67,6 +67,45 @@ def test_task_contract_requires_capability_identifiers():
         )
 
 
+def test_registry_rejects_duplicate_ids_and_incompatible_capabilities():
+    cap, provider, model, agent = _base()
+    duplicate = provider.model_copy()
+    with pytest.raises(ValueError, match="duplicate provider"):
+        build_registry(
+            capabilities=(cap,),
+            providers=(provider, duplicate),
+            models=(model,),
+            agents=(agent,),
+        )
+    extra = CapabilitySpec(capability_id="visual_review", description="vision")
+    incompatible = agent.model_copy(update={"capabilities": (extra.capability_id,)})
+    with pytest.raises(ValueError, match="incompatible"):
+        build_registry(
+            capabilities=(cap, extra),
+            providers=(provider,),
+            models=(model,),
+            agents=(incompatible,),
+        )
+
+
+def test_registry_rejects_secret_values_and_exposes_execution_targets():
+    from project_pipeline.agent_router.registry import execution_targets
+
+    cap, provider, model, agent = _base()
+    leaked = provider.model_copy(update={"constraints": ("sk-abcdefghijklmnopqrstuvwxyz",)})
+    with pytest.raises(ValueError, match="secret"):
+        build_registry(capabilities=(cap,), providers=(leaked,), models=(model,), agents=(agent,))
+    registry = build_registry(
+        capabilities=(cap,), providers=(provider,), models=(model,), agents=(agent,)
+    )
+    targets = execution_targets(registry)
+    assert targets[0]["target_id"] == model.model_id
+    assert targets[0]["adapter_id"] == provider.adapter_id
+    encoded = registry.model_dump_json()
+    restored = type(registry).model_validate_json(encoded)
+    assert restored.registry_id == registry.registry_id
+
+
 def test_adapter_qualification_requires_every_standard_check_and_rollback():
     checks = [QualificationCheckResult(check_name=n, passed=True) for n in REQUIRED_ADAPTER_CHECKS]
     assert (
