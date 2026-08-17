@@ -845,6 +845,10 @@ def build_parser() -> argparse.ArgumentParser:
         choices=(
             "status",
             "identities",
+            "grants",
+            "secret-references",
+            "secret-leases",
+            "root-trust-records",
             "tools",
             "root-trust",
             "sbom",
@@ -859,6 +863,11 @@ def build_parser() -> argparse.ArgumentParser:
     security.add_argument("--project-id", default="PROJECT-PIPELINE")
     security.add_argument("--input", type=Path)
     security.add_argument("--limit", type=int, default=50)
+    security.add_argument("--offset", type=int, default=0)
+    security.add_argument("--identity-id")
+    security.add_argument("--grant-id")
+    security.add_argument("--secret-ref-id")
+    security.add_argument("--root-id")
     security.add_argument("--changed-path", action="append", default=[])
     security.add_argument("--scenario", choices=supported_security_scenarios())
     security.add_argument("--apply", action="store_true")
@@ -2316,11 +2325,64 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
             return {"database": str(database), "security": store.status()}, 0
     if args.action == "identities":
         with SecurityStore(database, args.root) as store:
-            identities = store.list_identities(limit=args.limit)
+            if args.identity_id:
+                identity = store.get_identity(str(args.identity_id))
+                identities = () if identity is None else (identity,)
+            else:
+                identities = store.list_identities(limit=args.limit, offset=args.offset)
         return {
             "database": str(database),
             "identities": [item.model_dump(mode="json") for item in identities],
             "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "grants":
+        with SecurityStore(database, args.root) as store:
+            if args.grant_id:
+                grant = store.get_grant(str(args.grant_id))
+                grants = () if grant is None else (grant,)
+            else:
+                grants = store.list_grants(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "grants": [item.model_dump(mode="json") for item in grants],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "secret-references":
+        with SecurityStore(database, args.root) as store:
+            if args.secret_ref_id:
+                ref = store.get_secret_reference(str(args.secret_ref_id))
+                refs = () if ref is None else (ref,)
+            else:
+                refs = store.list_secret_references(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "secret_references": [item.model_dump(mode="json") for item in refs],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "secret-leases":
+        with SecurityStore(database, args.root) as store:
+            leases = store.list_secret_leases(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "secret_leases": [item.model_dump(mode="json") for item in leases],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "root-trust-records":
+        with SecurityStore(database, args.root) as store:
+            if args.root_id:
+                root_record = store.get_root_of_trust(str(args.root_id))
+                records = () if root_record is None else (root_record,)
+            else:
+                records = store.list_root_of_trust(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "root_of_trust_records": [item.model_dump(mode="json") for item in records],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
         }, 0
     if args.action == "record-identity":
         if not (args.apply and args.approve):
