@@ -129,7 +129,9 @@ def claims_for_task(root, task_id: str) -> tuple[ResourceClaim, ...]:
     labels = set(issue.get("labels", []))
     if "migration" in labels or any("migration" in str(x).lower() for x in issue.get("scope", [])):
         claims.append(
-            ResourceClaim(resource_key="database:migration-sequence", resource_type=ResourceType.DATABASE)
+            ResourceClaim(
+                resource_key="database:migration-sequence", resource_type=ResourceType.DATABASE
+            )
         )
     if "aws" in labels or "infrastructure" in labels:
         claims.append(

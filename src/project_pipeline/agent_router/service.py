@@ -137,7 +137,8 @@ class AgentRouterService:
             self.store.save_execution_receipt(receipt)
             for attempt in attempts:
                 latency = max(
-                    0, int((attempt.finished_at_utc - attempt.started_at_utc).total_seconds() * 1000)
+                    0,
+                    int((attempt.finished_at_utc - attempt.started_at_utc).total_seconds() * 1000),
                 )
                 for capability_id in contract.required_capabilities:
                     self.store.save_performance(
