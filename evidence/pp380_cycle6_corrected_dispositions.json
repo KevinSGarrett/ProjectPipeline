@@ -1,20 +1,27 @@
 {
   "summary": {
-    "schema_version": "1.0.0",
-    "source_cycle5_disposition": "C:\\Project_X_worktrees\\pp-task-000380-product-outcome-realignment\\evidence\\pp380_cycle5_execution_dispositions.json",
-    "source_reconciliation_map": "C:\\Project_X\\.local\\pm_cycle_002\\pp380_main_reconciliation_map.json",
+    "schema_version": "1.1.0",
+    "source_cycle5_disposition": "C:/Project_X_worktrees/pp-task-000380-product-outcome-realignment/evidence/pp380_cycle5_execution_dispositions.json",
+    "source_reconciliation_map": "C:/Project_X/.local/pm_cycle_002/pp380_main_reconciliation_map.json",
     "row_count": 325,
-    "equivalence_claim_rows": 64,
+    "equivalence_claim_rows": 252,
     "equivalence_true": 8,
-    "equivalence_false": 56,
+    "equivalence_false": 244,
     "action_counts": {
-      "COMMIT_UNIQUE_PP380_DELTA": 188,
-      "PRESERVE_DIRTY_OWNER_PENDING": 10,
-      "REGENERATE_AFTER_INTEGRATION": 63,
       "SUPERSEDED_BY_EXACT_PR_HEAD_AND_EQUIVALENCE": 8,
       "THREE_WAY_RECONCILE_AFTER_PR44": 29,
-      "THREE_WAY_RECONCILE_AFTER_PR46": 27
+      "THREE_WAY_RECONCILE_AFTER_PR46": 27,
+      "PRESERVE_OWNER_ATTESTATION_PENDING": 15,
+      "PRESERVE_OBSERVED_RUNTIME_EVIDENCE": 58,
+      "COMMIT_UNIQUE_PP380_DELTA": 188
     }
+  },
+  "generation_proof": {
+    "generator_version": "pp380-generator-v1",
+    "source_map_sha256": "f9055cdf3b9aaa30c089f5fb796449692784e314db04b52233d06c682cc9bcbc",
+    "source_ledger_sha256": "1031df5316e123497384e5f0516f7620ebeb181746b7ca19137ba9fd9373ad07",
+    "rows_sha256": "e9bdd76458226db8fb4dfcec102cefa2d255d9c4c0fd8a155165888c9e2568d6",
+    "verification_receipt_sha256": "26677b2858f3c7a8bedda8fdd52e32784361dffffaa9a5deef758da81ceaaeea"
   },
   "rows": [
     {
@@ -152,14 +159,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::plans/00_project_definition/README.md",
       "authority_classification": "GENERATED_OR_DERIVED",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve plans/00_project_definition/README.md pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 9,
@@ -170,14 +177,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::plans/01_requirements/PLAN-REQ-002_requirement_catalog_and_coverage.md",
       "authority_classification": "GENERATED_OR_DERIVED",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve plans/01_requirements/PLAN-REQ-002_requirement_catalog_and_coverage.md pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 10,
@@ -188,14 +195,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::plans/01_requirements/README.md",
       "authority_classification": "GENERATED_OR_DERIVED",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve plans/01_requirements/README.md pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 11,
@@ -242,14 +249,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::plans/_line_numbered/PLAN-REQ-002_requirement_catalog_and_coverage.lines.txt",
       "authority_classification": "GENERATED_OR_DERIVED",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve plans/_line_numbered/PLAN-REQ-002_requirement_catalog_and_coverage.lines.txt pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 14,
@@ -260,14 +267,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::plans/_traceability/README.md",
       "authority_classification": "GENERATED_OR_DERIVED",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve plans/_traceability/README.md pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 15,
@@ -314,14 +321,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::tests/test_control_cli.py",
       "authority_classification": "AUXILIARY",
-      "proposed_final_action": "PRESERVE_DIRTY_OWNER_PENDING",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "No authoritative ownership transfer or safe overwrite proof was established",
-      "integration_condition": "Preserve dirty owner state pending explicit ownership and reconciliation"
+      "semantic_reason": "Preserve tests/test_control_cli.py pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 18,
@@ -332,14 +339,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::tests/test_scheduler_cli.py",
       "authority_classification": "AUXILIARY",
-      "proposed_final_action": "PRESERVE_DIRTY_OWNER_PENDING",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "No authoritative ownership transfer or safe overwrite proof was established",
-      "integration_condition": "Preserve dirty owner state pending explicit ownership and reconciliation"
+      "semantic_reason": "Preserve tests/test_scheduler_cli.py pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 19,
@@ -386,14 +393,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/dependency_pr_queue.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 22,
@@ -404,14 +411,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/jira_export_20260816T180113.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 23,
@@ -422,14 +429,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/jira_plan_20260816T180113.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 24,
@@ -440,14 +447,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/jira_snapshot_20260816T180113.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 25,
@@ -458,14 +465,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/jira_status_mock_20260816T1809.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 26,
@@ -494,14 +501,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/jira_validate_20260816T180113.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 28,
@@ -548,14 +555,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/post_ci_followup_pr44_pr46_20260816T1746-0500.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 31,
@@ -566,14 +573,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/post_update_gate_checkpoint_pr44_pr46_20260816T2317Z.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 32,
@@ -584,14 +591,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/post_update_gate_checkpoint_pr44_pr46_20260816T2320Z.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 33,
@@ -602,14 +609,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_attestation_lifecycle_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 34,
@@ -620,14 +627,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_claim_conflict_reconciliation.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 35,
@@ -638,14 +645,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_claim_human_required_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 36,
@@ -656,14 +663,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_closure_checkpoint_post_stabilization.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 37,
@@ -674,14 +681,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_completion_human_required.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 38,
@@ -692,14 +699,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_completion_post_alignment.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 39,
@@ -710,14 +717,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_evaluate_human_required.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 40,
@@ -728,14 +735,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_evaluate_post_alignment.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 41,
@@ -746,14 +753,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_ready_plan_human_required.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 42,
@@ -764,14 +771,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_ready_plan_post_alignment.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 43,
@@ -782,14 +789,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_scope_human_required.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 44,
@@ -800,14 +807,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_scope_post_alignment.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 45,
@@ -818,14 +825,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_sequence_closure_pass.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 46,
@@ -836,14 +843,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_sequence_human_required.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 47,
@@ -854,14 +861,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_sequence_merge_candidate.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 48,
@@ -872,14 +879,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_sequence_missing_attestation.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 49,
@@ -890,14 +897,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_sequence_missing_provider_qualification.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 50,
@@ -908,14 +915,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_sequence_post_alignment.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 51,
@@ -926,14 +933,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_sequence_post_convergence_stabilization.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 52,
@@ -944,14 +951,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_sequence_reconciliation_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 53,
@@ -962,14 +969,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_sequence_valid_attestation.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 54,
@@ -980,14 +987,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_sequence_valid_provider_qualification.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 55,
@@ -998,14 +1005,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_control_sequence_writer_bound_records.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 56,
@@ -1016,14 +1023,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_human_required_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 57,
@@ -1034,14 +1041,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_mixed_lane_admission_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 58,
@@ -1052,14 +1059,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_post_audit_convergence_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 59,
@@ -1070,14 +1077,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_post_convergence_stabilization_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 60,
@@ -1088,14 +1095,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_pr_next_commands.txt; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 61,
@@ -1106,14 +1113,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_pr_ready_packet_local.md; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 62,
@@ -1124,14 +1131,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_product_outcome_control_alignment_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 63,
@@ -1142,14 +1149,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_provider_qualification_lifecycle_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 64,
@@ -1160,14 +1167,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_scheduler_plan_closure_pass.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 65,
@@ -1178,14 +1185,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_scheduler_plan_merge_candidate.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 66,
@@ -1196,14 +1203,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_scheduler_plan_missing_attestation.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 67,
@@ -1214,14 +1221,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_scheduler_plan_missing_provider_qualification.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 68,
@@ -1232,14 +1239,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_scheduler_plan_post_convergence_stabilization.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 69,
@@ -1250,14 +1257,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_scheduler_plan_reconciliation_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 70,
@@ -1268,14 +1275,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_scheduler_plan_valid_attestation.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 71,
@@ -1286,14 +1293,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_scheduler_plan_valid_provider_qualification.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 72,
@@ -1304,14 +1311,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_scheduler_plan_writer_bound_records.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 73,
@@ -1322,14 +1329,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_takeover_reconciliation_lifecycle_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 74,
@@ -1340,14 +1347,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_takeover_write_attestation_result.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 75,
@@ -1358,14 +1365,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_takeover_write_provider_qualification_result.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 76,
@@ -1376,14 +1383,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_writer_attestation_evidence.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 77,
@@ -1394,14 +1401,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_writer_flow_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 78,
@@ -1412,14 +1419,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp379_writer_provider_qualification_evidence.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 79,
@@ -1430,14 +1437,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pr_hygiene_cleanup_checkpoint.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 80,
@@ -1538,14 +1545,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::tests/test_jira_sync_guard.py",
       "authority_classification": "AUXILIARY",
-      "proposed_final_action": "PRESERVE_DIRTY_OWNER_PENDING",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "No authoritative ownership transfer or safe overwrite proof was established",
-      "integration_condition": "Preserve dirty owner state pending explicit ownership and reconciliation"
+      "semantic_reason": "Preserve tests/test_jira_sync_guard.py pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 86,
@@ -1556,14 +1563,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::tests/test_product_outcome_reconciliation.py",
       "authority_classification": "AUXILIARY",
-      "proposed_final_action": "PRESERVE_DIRTY_OWNER_PENDING",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "No authoritative ownership transfer or safe overwrite proof was established",
-      "integration_condition": "Preserve dirty owner state pending explicit ownership and reconciliation"
+      "semantic_reason": "Preserve tests/test_product_outcome_reconciliation.py pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 87,
@@ -1574,14 +1581,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::tests/test_takeover_governor.py",
       "authority_classification": "AUXILIARY",
-      "proposed_final_action": "PRESERVE_DIRTY_OWNER_PENDING",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "No authoritative ownership transfer or safe overwrite proof was established",
-      "integration_condition": "Preserve dirty owner state pending explicit ownership and reconciliation"
+      "semantic_reason": "Preserve tests/test_takeover_governor.py pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 88,
@@ -1592,14 +1599,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::tests/test_takeover_lane_invariants_meta.py",
       "authority_classification": "AUXILIARY",
-      "proposed_final_action": "PRESERVE_DIRTY_OWNER_PENDING",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "No authoritative ownership transfer or safe overwrite proof was established",
-      "integration_condition": "Preserve dirty owner state pending explicit ownership and reconciliation"
+      "semantic_reason": "Preserve tests/test_takeover_lane_invariants_meta.py pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 89,
@@ -1610,14 +1617,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::tests/test_takeover_reconciliation_parity.py",
       "authority_classification": "AUXILIARY",
-      "proposed_final_action": "PRESERVE_DIRTY_OWNER_PENDING",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "No authoritative ownership transfer or safe overwrite proof was established",
-      "integration_condition": "Preserve dirty owner state pending explicit ownership and reconciliation"
+      "semantic_reason": "Preserve tests/test_takeover_reconciliation_parity.py pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 90,
@@ -1628,14 +1635,14 @@
       "original_category": "UNKNOWN_OWNER",
       "owner_task": "UNKNOWN_MAIN_OWNER::tests/test_takeover_writer_flow.py",
       "authority_classification": "AUXILIARY",
-      "proposed_final_action": "PRESERVE_DIRTY_OWNER_PENDING",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "No authoritative ownership transfer or safe overwrite proof was established",
-      "integration_condition": "Preserve dirty owner state pending explicit ownership and reconciliation"
+      "semantic_reason": "Preserve tests/test_takeover_writer_flow.py pending explicit ownership attestation.",
+      "integration_condition": "Retain unchanged until owner attestation and authoritative reconciliation are completed"
     },
     {
       "row_id": 91,
@@ -4324,18 +4331,18 @@
       "workspace": "pp380",
       "status_code": " M",
       "path": "plans/09_security_identity_and_policy/PLAN-SEC-002_security_authority_secrets_supply_chain.md",
-      "original_source_sha256": "UNKNOWN",
+      "original_source_sha256": "NOT_APPLICABLE_PROHIBITED_SENSITIVE",
       "original_category": "PROHIBITED_SENSITIVE_STOP",
       "owner_task": "PP-TASK-000380-SECURITY-BOUNDARY",
       "authority_classification": "GENERATED_OR_DERIVED",
-      "proposed_final_action": "PRESERVE_DIRTY_OWNER_PENDING",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Filename-sensitive security planning artifact excluded from bulk convergence mutation",
-      "integration_condition": "Do not mutate without explicit authority and owner-confirmed reconciliation"
+      "semantic_reason": "Not applicable to record content hash for prohibited-sensitive planning artifact; preserve without mutation.",
+      "integration_condition": "No mutation permitted without explicit security authority and owner-confirmed reconciliation"
     },
     {
       "row_id": 241,
@@ -4378,18 +4385,18 @@
       "workspace": "pp380",
       "status_code": " M",
       "path": "plans/_line_numbered/PLAN-SEC-002_security_authority_secrets_supply_chain.lines.txt",
-      "original_source_sha256": "UNKNOWN",
+      "original_source_sha256": "NOT_APPLICABLE_PROHIBITED_SENSITIVE",
       "original_category": "PROHIBITED_SENSITIVE_STOP",
       "owner_task": "PP-TASK-000380-SECURITY-BOUNDARY",
       "authority_classification": "GENERATED_OR_DERIVED",
-      "proposed_final_action": "PRESERVE_DIRTY_OWNER_PENDING",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OWNER_ATTESTATION_PENDING",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Filename-sensitive security planning artifact excluded from bulk convergence mutation",
-      "integration_condition": "Do not mutate without explicit authority and owner-confirmed reconciliation"
+      "semantic_reason": "Not applicable to record content hash for prohibited-sensitive planning artifact; preserve without mutation.",
+      "integration_condition": "No mutation permitted without explicit security authority and owner-confirmed reconciliation"
     },
     {
       "row_id": 244,
@@ -5116,7 +5123,7 @@
       "workspace": "pp380",
       "status_code": "??",
       "path": "docs/product/",
-      "original_source_sha256": "UNKNOWN",
+      "original_source_sha256": "TREE_SHA256:d062bb90b61a9883f9faf63f866738b5d51b0727c6201632341d345aa93d6ff1",
       "original_category": "UNIQUE_ACCEPTANCE_WORK",
       "owner_task": "PP-TASK-000380",
       "authority_classification": "AUXILIARY",
@@ -5138,14 +5145,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp380_main_worktree_dirty_classification_post.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 286,
@@ -5156,14 +5163,14 @@
       "original_category": "LOCAL_RUNTIME_EVIDENCE",
       "owner_task": "PP-TASK-000380-EVIDENCE",
       "authority_classification": "OBSERVED_EVIDENCE",
-      "proposed_final_action": "REGENERATE_AFTER_INTEGRATION",
-      "cited_branch_or_ref": "main",
+      "proposed_final_action": "PRESERVE_OBSERVED_RUNTIME_EVIDENCE",
+      "cited_branch_or_ref": "N/A",
       "cited_commit": "N/A",
       "cited_path": "N/A",
       "cited_blob_sha256": "N/A",
       "content_equal": false,
-      "semantic_reason": "Derived/generated artifact should be regenerated from integrated authoritative sources",
-      "integration_condition": "Regenerate after integrating governing normative inputs"
+      "semantic_reason": "Preserve observed runtime evidence artifact for evidence/pp380_main_worktree_dirty_classification_pre.json; do not regenerate or overwrite.",
+      "integration_condition": "Archive-only preservation until explicit post-integration reconciliation authorizes replacement"
     },
     {
       "row_id": 287,
@@ -5674,7 +5681,7 @@
       "workspace": "pp380",
       "status_code": "??",
       "path": "plans/reconciliation/",
-      "original_source_sha256": "UNKNOWN",
+      "original_source_sha256": "TREE_SHA256:44ba224532e974a592a30cca68d14a848c55643bd8a168fe4e9207a311290922",
       "original_category": "UNIQUE_ACCEPTANCE_WORK",
       "owner_task": "PP-TASK-000380",
       "authority_classification": "GENERATED_OR_DERIVED",
