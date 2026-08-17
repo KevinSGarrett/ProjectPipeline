@@ -14181,7 +14181,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T20:43:25.669280+00:00",
+  "generated_at_utc": "2026-08-17T20:53:52.305391+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
