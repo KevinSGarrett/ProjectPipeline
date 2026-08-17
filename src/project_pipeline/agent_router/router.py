@@ -60,7 +60,7 @@ class AgentRouter:
             item.provider_id: normalize_circuit(item, self.circuit_policy, now)
             for item in circuit_records
         }
-        perf = summarize_performance(performance)
+        perf = summarize_performance(performance, now=now)
         providers = {item.provider_id: item for item in registry.providers}
         models = {item.model_id: item for item in registry.models}
         policies = {item.capability_id: item for item in registry.routing_policies}

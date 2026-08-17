@@ -123,6 +123,7 @@ class AgentRouterService:
                 if self.store:
                     self.store.save_circuit(record)
                 continue
+        finished = datetime.now(UTC)
         receipt = ExecutionReceipt(
             receipt_id=router_identifier("ATTEMPT", decision.decision_id, "receipt"),
             task_id=contract.task_id,
@@ -130,8 +131,31 @@ class AgentRouterService:
             attempts=tuple(attempts),
             succeeded=result is not None,
             result=result,
-            generated_at_utc=datetime.now(UTC),
+            generated_at_utc=finished,
         )
         if self.store:
             self.store.save_execution_receipt(receipt)
+            for attempt in attempts:
+                latency = max(
+                    0, int((attempt.finished_at_utc - attempt.started_at_utc).total_seconds() * 1000)
+                )
+                for capability_id in contract.required_capabilities:
+                    self.store.save_performance(
+                        PerformanceObservation(
+                            observation_id=router_identifier(
+                                "PERF", attempt.attempt_id, capability_id
+                            ),
+                            target_id=attempt.agent_id,
+                            capability_id=capability_id,
+                            task_class=contract.task_class,
+                            success=attempt.succeeded,
+                            latency_ms=latency,
+                            cost_microunits=(
+                                attempt.result.usage.cost_microunits if attempt.result else None
+                            ),
+                            observed_at_utc=attempt.finished_at_utc,
+                            synthetic=False,
+                            evidence_id=receipt.receipt_id,
+                        )
+                    )
         return receipt

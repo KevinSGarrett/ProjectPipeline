@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "d212d9f0b01035493a819cf533c636a5a140bb804b4f54613c3e657f8ba35f95",
+  "aggregate_sha256": "0619624e9e38bc1abfb06e915f4fe7290d4104e6e6db35dab26a4c72af409f90",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -10497,8 +10497,8 @@
     },
     {
       "path": "schemas/agent_performance_observation.schema.json",
-      "sha256": "90d7c55b2adad66cc0fdba347bdaaa5bfdaaee815baa2148b804e847b0be62ee",
-      "size_bytes": 1939
+      "sha256": "aead2aca515250971843cbdb7a4ddf3a15897eacd2e7f19795c94f05244aaa55",
+      "size_bytes": 2240
     },
     {
       "path": "schemas/agent_performance_summary.schema.json",
@@ -11652,8 +11652,8 @@
     },
     {
       "path": "src/project_pipeline/agent_router/performance.py",
-      "sha256": "d4fdcff20665b931f785f7947f9cc4529d39948a555ade649cad47565104dd29",
-      "size_bytes": 1216
+      "sha256": "eb1564a443ea27251af8b4f7ae6bd2f8e17b8306e449a281f4188daa022f4aa8",
+      "size_bytes": 1805
     },
     {
       "path": "src/project_pipeline/agent_router/persistence.py",
@@ -11677,13 +11677,13 @@
     },
     {
       "path": "src/project_pipeline/agent_router/router.py",
-      "sha256": "c08d7430505509e27f78e439b4821b31ee941eb4936a9f656c8255cb3ce0ba69",
-      "size_bytes": 9538
+      "sha256": "064c722b7537d4f51955442e6642682b1fe5efb40153c8a3d342777e01e9ed37",
+      "size_bytes": 9547
     },
     {
       "path": "src/project_pipeline/agent_router/service.py",
-      "sha256": "98dc75d933c41ab61a94b9f436e0744b8528a317b91da9e18a5110dacc75a8cf",
-      "size_bytes": 5529
+      "sha256": "6728021d37c400f764373356ae8bb85d5ae4863286f759a20a3d9e3af75468f4",
+      "size_bytes": 6750
     },
     {
       "path": "src/project_pipeline/agent_router/simulation.py",
@@ -12122,8 +12122,8 @@
     },
     {
       "path": "src/project_pipeline/domain/agents.py",
-      "sha256": "92a9e806522503a05addadbf3115e9f1a3ae0308ab6dc9e96aab3225da932af7",
-      "size_bytes": 16229
+      "sha256": "e7f47bdafc90ebcc0fc6e92f78884923674efdbad216638571f162388057e58c",
+      "size_bytes": 16292
     },
     {
       "path": "src/project_pipeline/domain/assurance.py",
@@ -13052,8 +13052,8 @@
     },
     {
       "path": "tests/test_agent_router_performance.py",
-      "sha256": "5b4467d785ff476e4cff923085e694815c399917086c4a07de1ce41e48f1aa63",
-      "size_bytes": 1566
+      "sha256": "2f846af78722e7405bf5594b2ea09ea9df9c80c7f51419bd377ce88420a88f8b",
+      "size_bytes": 2789
     },
     {
       "path": "tests/test_agent_router_persistence.py",
@@ -13067,8 +13067,8 @@
     },
     {
       "path": "tests/test_agent_router_service.py",
-      "sha256": "49750b5153c43ea4647bff75610f71e5d05c41c809db87c6937ee5a94e0877a9",
-      "size_bytes": 3260
+      "sha256": "729bbd79519b3ac71b1272ee7cbb93083792627ae0b78891bc7210128f3498f9",
+      "size_bytes": 4288
     },
     {
       "path": "tests/test_agent_router_validation.py",
@@ -13911,7 +13911,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T18:33:50.946044+00:00",
+  "generated_at_utc": "2026-08-17T18:35:47.565352+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13920,5 +13920,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24318065
+  "total_bytes": 24322499
 }

@@ -367,6 +367,8 @@ class PerformanceObservation(DomainModel):
     review_findings: int = Field(default=0, ge=0)
     quality_milli: int = Field(default=500, ge=0, le=1000)
     observed_at_utc: datetime
+    synthetic: bool = False
+    evidence_id: str | None = None
 
 
 class PerformanceSummary(DomainModel):
