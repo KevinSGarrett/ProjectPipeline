@@ -35,6 +35,10 @@ from project_pipeline.assurance import (
     evaluate_scope_change,
     load_delivery_policy,
 )
+from project_pipeline.assurance.requirement_reconciliation import (
+    apply_evidence_bound_requirement_states,
+    propose_evidence_bound_requirement_states,
+)
 from project_pipeline.assurance.requirement_truth_ledger import (
     validate_requirement_truth_ledger,
     write_requirement_truth_ledger,
@@ -397,6 +401,15 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Ledger JSON output path",
     )
+
+    requirement_reconcile = commands.add_parser(
+        "requirement-reconcile",
+        help="Propose or apply evidence-bound requirement implementation states",
+    )
+    requirement_reconcile.add_argument("--root", type=_root, default=Path.cwd())
+    requirement_reconcile.add_argument("--limit", type=int, default=None)
+    requirement_reconcile.add_argument("--apply", action="store_true")
+    requirement_reconcile.add_argument("--approve", action="store_true")
 
     architecture = commands.add_parser(
         "architecture", help="Query the target architecture and technology stack"
@@ -2728,6 +2741,29 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0
         if args.command == "requirement-views":
             _write_json_output(write_requirement_views(args.root), None)
+            return 0
+        if args.command == "requirement-reconcile":
+            if args.apply and not args.approve:
+                _write_json_output(
+                    {
+                        "error": "configuration_invalid",
+                        "message": "requirement-reconcile --apply requires --approve",
+                    },
+                    None,
+                )
+                return 2
+            if args.apply:
+                applied = apply_evidence_bound_requirement_states(args.root, limit=args.limit)
+                _write_json_output(
+                    {"mode": "APPLIED", "applied_count": len(applied), "applied": applied},
+                    None,
+                )
+                return 0
+            proposals = propose_evidence_bound_requirement_states(args.root, limit=args.limit)
+            _write_json_output(
+                {"mode": "DRY_RUN", "proposal_count": len(proposals), "proposals": proposals},
+                None,
+            )
             return 0
         if args.command == "requirement-truth-ledger":
             output = args.output or (

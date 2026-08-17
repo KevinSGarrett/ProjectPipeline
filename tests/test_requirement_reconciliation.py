@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from project_pipeline.assurance.requirement_reconciliation import (
     apply_evidence_bound_requirement_states,
     propose_evidence_bound_requirement_states,
 )
+from project_pipeline.cli import main
 from project_pipeline.io import read_jsonl, write_jsonl
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -39,3 +41,18 @@ def test_evidence_bound_reconciliation_requires_artifacts_tests_and_evidence(
     applied = apply_evidence_bound_requirement_states(tmp_path, limit=1)
     assert applied[0]["next_state"] == "IMPLEMENTED"
     assert read_jsonl(target)[0]["implementation_state"] == "IMPLEMENTED"
+
+
+def test_requirement_reconcile_cli_requires_approve_and_dry_runs(tmp_path, capsys) -> None:
+    source = ROOT / "plans/_traceability/requirements.jsonl"
+    target = tmp_path / "plans/_traceability/requirements.jsonl"
+    target.parent.mkdir(parents=True)
+    rows = read_jsonl(source)[:3]
+    write_jsonl(target, rows)
+    code = main(["requirement-reconcile", "--root", str(tmp_path), "--apply"])
+    assert code == 2
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["error"] == "configuration_invalid"
+    assert main(["requirement-reconcile", "--root", str(tmp_path), "--limit", "1"]) == 0
+    dry = json.loads(capsys.readouterr().out)
+    assert dry["mode"] == "DRY_RUN"
