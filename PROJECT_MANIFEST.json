@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "45a704ed758e4e66246df9d10e3e4f77be33bdc72efe4e38d90956468c68ff21",
+  "aggregate_sha256": "48e9b88d3972d3c7892cbafbb237344410c4686232c3a583fde8663ab1e25789",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11802,8 +11802,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/qualification.py",
-      "sha256": "58c016f8f8b9e1db00c5f0c76f1a046c187baa8a53408cb90a92d21b864509b4",
-      "size_bytes": 18499
+      "sha256": "f8c08d0c714132111cca5a0aa52c2586a0e19ac5efd30dc6707b529708c9f4a6",
+      "size_bytes": 19165
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/recovery.py",
@@ -13162,8 +13162,8 @@
     },
     {
       "path": "tests/test_autonomy_qualification.py",
-      "sha256": "c33e87233952d5d907da42bf8822f8c0e550afeada75fe6adf85883d8faee686",
-      "size_bytes": 11329
+      "sha256": "bcd3d94c894b924ee1ab3bd8447bcc17ca0dac3d9d41c624257609d28490d1c9",
+      "size_bytes": 11947
     },
     {
       "path": "tests/test_autonomy_qualification_windows.py",
@@ -13946,7 +13946,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T20:02:31.397218+00:00",
+  "generated_at_utc": "2026-08-17T20:08:20.499292+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13955,5 +13955,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24385323
+  "total_bytes": 24386607
 }

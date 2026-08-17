@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from project_pipeline.autonomy_runtime.qualification import QualificationStore
+from project_pipeline.autonomy_runtime.qualification import QualificationStore, _pid_alive
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -78,6 +78,21 @@ def test_reconstructed_store_preserves_checkpoint(tmp_path: Path):
     restored.resume(run_id)
     assert restored.get(run_id)["status"] == "RESUMED"
     restored.close()
+
+
+def test_pid_alive_does_not_signal_the_current_process():
+    assert _pid_alive(os.getpid()) is True
+    assert _pid_alive(0) is False
+    assert _pid_alive(-1) is False
+
+
+def test_concurrent_runner_is_rejected_without_interrupting_pytest(tmp_path: Path):
+    store = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
+    first = store.start("RECOVERY", state_path=tmp_path / "state")
+    assert first["status"] == "RUNNING"
+    with pytest.raises(ValueError, match="concurrent qualification runner"):
+        store.start("RECOVERY", state_path=tmp_path / "state")
+    store.close()
 
 
 def test_recovery_drill_attests_controlled_process_loss(tmp_path: Path):
