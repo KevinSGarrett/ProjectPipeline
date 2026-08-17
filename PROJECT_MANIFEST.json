@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "6a3d28c123dd636ede51a717108780a82c4ddc809365ea91cf17b614aa1a24ac",
+  "aggregate_sha256": "2d6ddecebd4e159cf6feaf252a2f426eabd20333ae4fc5b18205d7d261ee6ab1",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2677,
+  "file_count": 2680,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -4652,13 +4652,18 @@
     },
     {
       "path": "infrastructure/aws/README.md",
-      "sha256": "c20c6f529ca495323a7e12be1569359e482ed2a4ffdedbf712d3a94a27f1c469",
-      "size_bytes": 581
+      "sha256": "d06e4927e02d1c6460099f62d2636d3fe977c908fe13d21331eff39285714dad",
+      "size_bytes": 1119
+    },
+    {
+      "path": "infrastructure/aws/terraform/.terraform.lock.hcl",
+      "sha256": "e5ab6cc951ec87916deb44e58c638567193a149cd6bbf8271b233115fed24205",
+      "size_bytes": 1492
     },
     {
       "path": "infrastructure/aws/terraform/main.tf",
-      "sha256": "195e2ced3671ce53513edd7837fef175eb020bcad7eb17c792c1bd1fe103784c",
-      "size_bytes": 3295
+      "sha256": "09950e2f04baf8a9e3ab17ce51f78c8ff2955eee097bf119e8035aa9ed8ddc73",
+      "size_bytes": 3792
     },
     {
       "path": "infrastructure/aws/terraform/outputs.tf",
@@ -4667,8 +4672,8 @@
     },
     {
       "path": "infrastructure/aws/terraform/variables.tf",
-      "sha256": "d185ab6c93b8624f0d431c0343d841eb3dacf56f4e289c8c9155713348d14aa1",
-      "size_bytes": 1049
+      "sha256": "ede965ca4fd86a4edbd90e060ae62147d781349ccb888acb39b1245294e61376",
+      "size_bytes": 1625
     },
     {
       "path": "infrastructure/aws/terraform/versions.tf",
@@ -9992,8 +9997,8 @@
     },
     {
       "path": "runbooks/backup_restore_verification.md",
-      "sha256": "4e157b197e752e085d8f807619b16b4dcb1b3b2c55af25857b5092acf7cb47e7",
-      "size_bytes": 1153
+      "sha256": "0909e14115c826c9f9b2485f649e93e63636ce04a037d81a827bf73fa0a6b180",
+      "size_bytes": 3106
     },
     {
       "path": "runbooks/budget_reconciliation.md",
@@ -12177,18 +12182,18 @@
     },
     {
       "path": "src/project_pipeline/resilience/__init__.py",
-      "sha256": "403968a38bb1eba425580055b1b9a17ad2f88df2236668b00457af4e5206539b",
-      "size_bytes": 1136
+      "sha256": "542aa28004b004ee90046cb58128387d5247c6b40daae87282753ab6b13cbcc8",
+      "size_bytes": 1344
     },
     {
       "path": "src/project_pipeline/resilience/aws.py",
-      "sha256": "6538139d564249be431a9db2c4694a699a787793e3f092912464d95285ba018d",
-      "size_bytes": 1108
+      "sha256": "9cc8acd9102adafccb915b7cf0f2c6d4c0fbaeb734650b4ff4850f10a52ce017",
+      "size_bytes": 2899
     },
     {
       "path": "src/project_pipeline/resilience/backup.py",
-      "sha256": "c44d6c61fc1d8ad4e12816e6fc9708ec7e953e91221508e07071c1a54f54b828",
-      "size_bytes": 3238
+      "sha256": "fadfb56bffb448a8c9a4a9cf93f3314aa5bceddfe6f4528a7d93d4319a4d2db9",
+      "size_bytes": 7710
     },
     {
       "path": "src/project_pipeline/resilience/failover.py",
@@ -12206,14 +12211,19 @@
       "size_bytes": 4811
     },
     {
+      "path": "src/project_pipeline/resilience/restore.py",
+      "sha256": "f71e8a225567a86008ebb64773842f472b642c2084c95200f819e025e8d7671d",
+      "size_bytes": 14199
+    },
+    {
       "path": "src/project_pipeline/resilience/runbook.py",
       "sha256": "d80d8e8c17680a68dc0cfe2eaf3c657b31a78bf85a9e5de8968c3b2c2c1c0b71",
       "size_bytes": 5799
     },
     {
       "path": "src/project_pipeline/resilience/simulation.py",
-      "sha256": "8dcbd962e4380903c595f4162193b846a681702eb99d55934b88d8f3f1228b7f",
-      "size_bytes": 4605
+      "sha256": "eb49361e396cad52c5fb9f74f7822bb6a007418b56de651f2108d8ea972c741d",
+      "size_bytes": 4750
     },
     {
       "path": "src/project_pipeline/resilience/validation.py",
@@ -13132,18 +13142,18 @@
     },
     {
       "path": "tests/test_resilience_aws.py",
-      "sha256": "39b1fdc2c09bbd93810afc6d8143c44aa2cdafb7a1d8bf59708d133f3bf51f61",
-      "size_bytes": 544
+      "sha256": "c731fee3ac3b4b8e7e9b3e0ffdc0428454aa0a401bc58c955369985548090b6c",
+      "size_bytes": 981
     },
     {
       "path": "tests/test_resilience_backup.py",
-      "sha256": "8745503d4cecae6eec987f2fa95e7d31c05aff86c9c87838ba16891a74a595c7",
-      "size_bytes": 1087
+      "sha256": "7ce49f219266495c0a37ef65a3e62bcb9d6c50b4df3082bc1fc3bbbacf52a688",
+      "size_bytes": 3076
     },
     {
       "path": "tests/test_resilience_cli.py",
-      "sha256": "d2ed691ca47cde3133687de6f3c53a4ec22c4c3784539ca436b40a9bbbf40eca",
-      "size_bytes": 1362
+      "sha256": "0e58f7a0a0afab686a09dfecbeb7169606ffea243f4bfcc58238e7e7bb23cd40",
+      "size_bytes": 1694
     },
     {
       "path": "tests/test_resilience_domain.py",
@@ -13164,6 +13174,11 @@
       "path": "tests/test_resilience_persistence.py",
       "sha256": "4ceabe51cca57de78d3064224195ab184b57a038c18d40b4241f409bcad0c930",
       "size_bytes": 2146
+    },
+    {
+      "path": "tests/test_resilience_restore.py",
+      "sha256": "389c92686ce43dd33893bc11c3d542450dabf0f6113025455f447a72047a76ca",
+      "size_bytes": 6468
     },
     {
       "path": "tests/test_resilience_simulation.py",
@@ -13396,7 +13411,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-16T17:05:18.105128+00:00",
+  "generated_at_utc": "2026-08-17T16:06:52.830309+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13405,5 +13420,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 22559644
+  "total_bytes": 22594741
 }

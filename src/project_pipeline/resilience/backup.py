@@ -6,6 +6,12 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.domain.resilience import BackupTool, RecoveryObjective, resilience_identifier
+from project_pipeline.resilience.restore import (
+    RestoreTargetPolicy,
+    has_traversal,
+    is_drive_or_share_root,
+    is_unc,
+)
 
 
 def load_recovery_objectives(root: Path) -> tuple[RecoveryObjective, ...]:
@@ -30,14 +36,19 @@ def load_recovery_objectives(root: Path) -> tuple[RecoveryObjective, ...]:
     return objectives
 
 
-def _normalize_target(target: str) -> str:
-    return Path(target).as_posix().rstrip("/").lower()
-
-
 def _is_forbidden_restore_target(target: str) -> bool:
-    normalized = _normalize_target(target)
-    forbidden = {"", ".", "..", "c:", "c:/", "/", "root"}
-    return normalized in forbidden
+    raw = target.strip()
+    if not raw or raw in {".", "..", "root"}:
+        return True
+    if has_traversal(raw) or is_unc(raw):
+        return True
+    candidate = Path(raw)
+    if not candidate.is_absolute():
+        return True
+    try:
+        return is_drive_or_share_root(candidate)
+    except OSError:
+        return True
 
 
 def build_integrity_manifest(entries: list[dict[str, Any]]) -> dict[str, Any]:
@@ -77,8 +88,14 @@ def build_integrity_manifest(entries: list[dict[str, Any]]) -> dict[str, Any]:
 class BackupPlanner:
     """Builds safe backup/restore command plans. It does not execute destructive or external operations."""
 
-    def __init__(self, objectives: tuple[RecoveryObjective, ...]) -> None:
+    def __init__(
+        self,
+        objectives: tuple[RecoveryObjective, ...],
+        *,
+        restore_policy: RestoreTargetPolicy | None = None,
+    ) -> None:
         self.objectives = {o.domain: o for o in objectives}
+        self.restore_policy = restore_policy
 
     def objective(self, domain: str) -> RecoveryObjective:
         try:
@@ -117,6 +134,8 @@ class BackupPlanner:
             raise ValueError("restore repository must be non-empty")
         if _is_forbidden_restore_target(isolated_target):
             raise ValueError("restore target must be an explicit isolated target")
+        if self.restore_policy is not None:
+            isolated_target = str(self.restore_policy.resolve(isolated_target))
         if domain == "canonical_state":
             tool = BackupTool.PGBACKREST
             argv = (
@@ -151,6 +170,8 @@ class BackupPlanner:
             raise ValueError("backup_id must be non-empty")
         if _is_forbidden_restore_target(isolated_target):
             raise ValueError("verification target must be an explicit isolated target")
+        if self.restore_policy is not None:
+            isolated_target = str(self.restore_policy.resolve(isolated_target))
         return {
             "domain": domain,
             "backup_id": backup_id,

@@ -20,10 +20,21 @@ def test_resilience_cli_simulation_and_aws_plan(project_root):
     assert b.returncode == 0 and "LOCAL" in b.stdout and "live_cloud_mutation_performed" in b.stdout
 
 
-def test_resilience_cli_backup_and_restore_plans(project_root):
+def test_resilience_cli_backup_and_restore_plans(project_root, tmp_path):
     a = run(project_root, "backup-plan", "--domain", "canonical_state", "--source", "postgres")
     assert a.returncode == 0 and "PGBACKREST" in a.stdout
+    isolated = tmp_path / "recovery" / "test-db"
+    isolated.mkdir(parents=True)
     b = run(
+        project_root,
+        "restore-plan",
+        "--domain",
+        "canonical_state",
+        "--target",
+        str(isolated),
+    )
+    assert b.returncode == 0 and "verification_required" in b.stdout
+    denied = run(
         project_root,
         "restore-plan",
         "--domain",
@@ -31,7 +42,8 @@ def test_resilience_cli_backup_and_restore_plans(project_root):
         "--target",
         ".local/recovery/test-db",
     )
-    assert b.returncode == 0 and "verification_required" in b.stdout
+    assert denied.returncode != 0
+    assert "isolated target" in denied.stdout
 
 
 def test_resilience_cli_status_applies_migration(project_root, tmp_path):

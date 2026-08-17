@@ -29,6 +29,20 @@
 - Locked-file collision on target
 - Unknown restore outcome requiring reconcile-before-retry
 
+## Isolation and target safety
+1. Configure an explicit absolute restore-root allowlist that is not a drive root, UNC/share, repository, workspace, or protected system path.
+2. Resolve the candidate target, including Windows case normalization, then reject traversal, relative paths, and any symlink/junction/reparse escape.
+3. Record a durable restore intent and idempotency identity before any copy.
+4. Run plan/dry-run first. Destructive apply requires explicit approval and never targets project paths.
+5. Verify the restored tree against the executable integrity manifest (path, size, SHA-256). Missing, extra, and corrupt members fail closed and are distinct from backup status.
+
+## Rollback and interrupted recovery
+1. Treat backup, restore, and verify as distinct durable states.
+2. If apply is interrupted or the outcome is unknown, stop, read the intent and target, and reconcile before retry.
+3. Identical idempotent replay returns the existing intent; conflicting input under the same key fails closed.
+4. Keep the last valid recovery point. Do not promote a failed or unverified restore.
+5. Destroy only disposable isolated targets after evidence capture.
+
 ## Stop conditions
 - Restore target resolves to an active/production path.
 - Credentials are not scoped to the backup/restore operation.

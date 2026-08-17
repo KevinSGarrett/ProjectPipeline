@@ -5,6 +5,7 @@ from project_pipeline.resilience.backup import (
     build_integrity_manifest,
     load_recovery_objectives,
 )
+from project_pipeline.resilience.restore import RestoreTargetPolicy
 
 
 def test_canonical_state_uses_pgbackrest(project_root):
@@ -19,24 +20,34 @@ def test_general_backup_uses_restic(project_root):
     assert x["tool"] == "RESTIC"
 
 
-def test_restore_requires_isolated_target_and_separate_verification(project_root):
-    p = BackupPlanner(load_recovery_objectives(project_root))
-    x = p.plan_restore(
-        domain="canonical_state", repository="repo", isolated_target=".local/recovery/db"
-    )
+def test_restore_requires_isolated_target_and_separate_verification(project_root, tmp_path):
+    isolated = tmp_path / "recovery" / "db"
+    isolated.mkdir(parents=True)
+    policy = RestoreTargetPolicy([tmp_path], workspace_roots=[project_root])
+    p = BackupPlanner(load_recovery_objectives(project_root), restore_policy=policy)
+    x = p.plan_restore(domain="canonical_state", repository="repo", isolated_target=str(isolated))
     assert x["verification_required"] and x["backup_status_is_not_restore_status"]
     with pytest.raises(ValueError):
         p.plan_restore(domain="canonical_state", repository="repo", isolated_target="/")
     with pytest.raises(ValueError):
         p.plan_restore(domain="canonical_state", repository="repo", isolated_target="C:/")
+    with pytest.raises(ValueError):
+        p.plan_restore(
+            domain="canonical_state",
+            repository="repo",
+            isolated_target=".local/recovery/db",
+        )
 
 
-def test_restore_verification_plan_covers_failure_matrix(project_root):
-    p = BackupPlanner(load_recovery_objectives(project_root))
+def test_restore_verification_plan_covers_failure_matrix(project_root, tmp_path):
+    isolated = tmp_path / "recovery" / "verify"
+    isolated.mkdir(parents=True)
+    policy = RestoreTargetPolicy([tmp_path], workspace_roots=[project_root])
+    p = BackupPlanner(load_recovery_objectives(project_root), restore_policy=policy)
     plan = p.plan_restore_verification(
         domain="canonical_state",
         backup_id="BACKUP-TEST-001",
-        isolated_target=".local/recovery/verify",
+        isolated_target=str(isolated),
     )
     assert plan["idempotent_retry_required"]
     assert plan["restore_result_distinct_from_backup_result"]
