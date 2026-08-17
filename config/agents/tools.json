@@ -1,3 +1,4 @@
 [
-  {"tool_id":"tool:mock-safe","adapter_id":"adapter:mock-tool","version":"1.0.0","capabilities":["routine_reasoning"],"qualification":"QUALIFIED","mutating":false,"required_authority_scope":[]}
+  {"tool_id":"tool:mock-safe","adapter_id":"adapter:mock-tool","version":"1.0.0","capabilities":["routine_reasoning"],"qualification":"QUALIFIED","mutating":false,"required_authority_scope":[]},
+  {"tool_id":"tool:docker-mcp-gateway","adapter_id":"adapter:docker-mcp-gateway","version":"1.0.0","capabilities":["routine_reasoning"],"qualification":"QUARANTINED","mutating":true,"required_authority_scope":["invoke"]}
 ]

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "5d519c080070174172aa17ae422a5192c510a28ff38516d7080457f22f7c5707",
+  "aggregate_sha256": "634915069e600adbcb52e801945a35ff0d0ed44aac23d892c8f52c208d5564d2",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -447,8 +447,8 @@
     },
     {
       "path": "config/agents/agents.json",
-      "sha256": "67e9d93a6d5d22aa2817fb2ea201b5275198f7a0272b176ecf1929dea9179ff8",
-      "size_bytes": 247
+      "sha256": "52ce56fd20a2c0780b68190fac21ccd11a59f746f41f5777a479868324000bf7",
+      "size_bytes": 694
     },
     {
       "path": "config/agents/capabilities.json",
@@ -457,23 +457,23 @@
     },
     {
       "path": "config/agents/models.json",
-      "sha256": "fb1a73b94499670842f0d673d26e3722aa4d3cb9a584c391a5d08223cd1f9d58",
-      "size_bytes": 271
+      "sha256": "798be576d55767996f74f1efea198fba38e320c8077e46a9d2ddc0ace1d4635a",
+      "size_bytes": 812
     },
     {
       "path": "config/agents/providers.json",
-      "sha256": "4a4e12cd39202d18ebfc0890964e2a120e2c3922b8f868949d8999e1da48fe71",
-      "size_bytes": 1698
+      "sha256": "2d9795d044def22b609b18b22dc51867aacb6071fd6be1a029e3c9e17ccec605",
+      "size_bytes": 2456
     },
     {
       "path": "config/agents/routing_policy.json",
-      "sha256": "3a21ceb014b9f752fdc78b57cb2d1a6d5dc75e6cd6522a5ec290e5c49c46ae90",
-      "size_bytes": 1254
+      "sha256": "e54c80423f818f2a65bc7fc870561c3996df80fa375dc2319b7e7ec4aa3019e2",
+      "size_bytes": 1302
     },
     {
       "path": "config/agents/tools.json",
-      "sha256": "ddd020af3c23e5c724d13382c647f9cfd5194c706752ba64e5db58c4e1047f17",
-      "size_bytes": 198
+      "sha256": "2bc74bb1e4234be5c66593dbca67c2602171ca406cc7de1a6a6ce3437372710f",
+      "size_bytes": 420
     },
     {
       "path": "config/assurance_policy.json",
@@ -11647,8 +11647,8 @@
     },
     {
       "path": "src/project_pipeline/agent_router/docker_mcp_gateway.py",
-      "sha256": "1f5319aa03c8f1d9f2343239fe82347d3465d392732f443139b4247990d6bb8b",
-      "size_bytes": 3597
+      "sha256": "6aeb23f9077c5c6b0a7b6355b4ee0d0168850bbae9efe86d24c6c705dfaa930a",
+      "size_bytes": 4217
     },
     {
       "path": "src/project_pipeline/agent_router/performance.py",
@@ -13387,8 +13387,8 @@
     },
     {
       "path": "tests/test_docker_mcp_gateway.py",
-      "sha256": "a102c0518d4f38eb14d921ec053bd21ef32130bf4eabe00e3fdb1513fc66957d",
-      "size_bytes": 1227
+      "sha256": "e1597857c0eb50f0fca0ca99c60fa86d4839b0bd13223c963ca65745e19fb50f",
+      "size_bytes": 2258
     },
     {
       "path": "tests/test_domain_identifiers.py",
@@ -13502,8 +13502,8 @@
     },
     {
       "path": "tests/test_litellm_adapter.py",
-      "sha256": "307f1293431b3b1a099ea76ab2dbb5dc55e06a1d151947d67b0de3ed5ac245be",
-      "size_bytes": 1358
+      "sha256": "0227815170c9b57f7ab32399296a5c5fd6fc9a68ad3ed56b9281282ee83e0d53",
+      "size_bytes": 1963
     },
     {
       "path": "tests/test_local_git_repository.py",
@@ -13622,8 +13622,8 @@
     },
     {
       "path": "tests/test_pydantic_ai_adapter.py",
-      "sha256": "6caea86196fcb62e2c0f683aff85bd8b73f4dafac0873035a0bafccd191dfff5",
-      "size_bytes": 1267
+      "sha256": "b3ce281c259ba3501ddb3b0fe103d6bc40851ce4dca4d042608d1b9ea589781b",
+      "size_bytes": 2490
     },
     {
       "path": "tests/test_repository_contract.py",
@@ -13921,7 +13921,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T18:44:54.873396+00:00",
+  "generated_at_utc": "2026-08-17T18:48:28.640484+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13930,5 +13930,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24343936
+  "total_bytes": 24349431
 }
