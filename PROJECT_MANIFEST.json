@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "02cbe227cd005fd07742b51b21c8d88abd66550d7b927ddf3ec8a6ddfcbc1065",
+  "aggregate_sha256": "7643dc14ea6756828d485a97ca9d8cd767ad84097c9e861eea29c3419c6ab91e",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -562,7 +562,7 @@
     },
     {
       "path": "config/cursor_takeover.json",
-      "sha256": "212d7b790b200a1b2e81fd58bffcd3ef6e002a5b5d9e895027b5cd947a95185a",
+      "sha256": "7af194f05a30b7b331973bbed7e90bcd76dbc966f137bfc82a7c1497d718f0cf",
       "size_bytes": 2175
     },
     {
@@ -14181,7 +14181,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T20:32:22.513127+00:00",
+  "generated_at_utc": "2026-08-17T20:34:13.981790+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",

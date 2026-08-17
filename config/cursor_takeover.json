@@ -4,7 +4,7 @@
   "pursuing_goal": "Deliver and qualify ProjectPipeline as a continuously operating, local-first autonomous engineering organization that accepts complete project inputs, compiles a verified project model, autonomously selects and executes genuinely missing work through conflict-safe parallel lanes and qualified workers, verifies results, governs GitHub and Jira, merges accepted changes, reconciles external state, recomputes project state, handles HUMAN_REQUIRED incidents without stopping unaffected work, exposes truthful live state through the Command Center, and continues until the deterministic Completion Gate reports COMPLETE for the integrated, released, and operationally verified system.",
   "source_references": [
     "SRC-014:L000001-L000087",
-    "SRC-015:L000031-L000150"
+    "SRC-015:L000001-L000113"
   ],
   "original_knowledge_pack": {
     "artifact_id": "INPUT-KNOWLEDGE-001",
