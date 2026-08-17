@@ -35,6 +35,10 @@ from project_pipeline.assurance import (
     evaluate_scope_change,
     load_delivery_policy,
 )
+from project_pipeline.assurance.requirement_truth_ledger import (
+    validate_requirement_truth_ledger,
+    write_requirement_truth_ledger,
+)
 from project_pipeline.assurance.simulation import (
     simulate_scenario as simulate_assurance_scenario,
 )
@@ -381,6 +385,18 @@ def build_parser() -> argparse.ArgumentParser:
         "requirement-views", help="Regenerate human-readable requirement registry views"
     )
     requirement_views.add_argument("--root", type=_root, default=Path.cwd())
+
+    requirement_truth_ledger = commands.add_parser(
+        "requirement-truth-ledger",
+        help="Generate and validate the 352-row requirement truth ledger",
+    )
+    requirement_truth_ledger.add_argument("--root", type=_root, default=Path.cwd())
+    requirement_truth_ledger.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Ledger JSON output path",
+    )
 
     architecture = commands.add_parser(
         "architecture", help="Query the target architecture and technology stack"
@@ -2713,6 +2729,22 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "requirement-views":
             _write_json_output(write_requirement_views(args.root), None)
             return 0
+        if args.command == "requirement-truth-ledger":
+            output = args.output or (
+                args.root / ".local" / "pm_cycle_009" / "requirement_truth_ledger.json"
+            )
+            document = write_requirement_truth_ledger(args.root, output)
+            errors = validate_requirement_truth_ledger(document, args.root)
+            _write_json_output(
+                {
+                    "output": str(output),
+                    "row_count": document["row_count"],
+                    "head": document["head"],
+                    "errors": errors,
+                },
+                None,
+            )
+            return 0 if not errors else 1
         if args.command == "architecture":
             if args.write_views:
                 _write_json_output(write_architecture_views(args.root), None)
