@@ -33,6 +33,7 @@ from project_pipeline.agent_router.registry import (
 from project_pipeline.agent_router.router import AgentRouter
 from project_pipeline.agent_router.service import AgentRouterService, AgentRoutingError
 from project_pipeline.agent_router.simulation import simulate_provider_failover
+from project_pipeline.agent_router.tools import GovernedToolBoundary
 from project_pipeline.agent_router.validation import validate_agent_router_foundation
 
 __all__ = [
@@ -44,6 +45,7 @@ __all__ = [
     "AnthropicMessagesAdapter",
     "DockerMCPGatewayAdapter",
     "GeminiGenerateContentAdapter",
+    "GovernedToolBoundary",
     "LiteLLMProxyAdapter",
     "LocalProcessProviderAdapter",
     "MockProviderAdapter",

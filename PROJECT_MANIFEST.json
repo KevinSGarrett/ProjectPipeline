@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "794dc14a719e34bc85f42de933ccd2d79aa9ce4363e89d55b91ca3ff69a3636c",
+  "aggregate_sha256": "1bde459fe01365e161d07ecfd1edc45ae4f181fc00781ed7be19026ee9bd43af",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2780,
+  "file_count": 2782,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -11632,8 +11632,8 @@
     },
     {
       "path": "src/project_pipeline/agent_router/__init__.py",
-      "sha256": "f515141f2dd1e7729a5613b828ff7dae714b01226fb1baab49cdcb3b716fbb4e",
-      "size_bytes": 2128
+      "sha256": "ef84fd1ad1a173b1558f3860d61475318cce182b4a7c0a37bb58321c3214c086",
+      "size_bytes": 2225
     },
     {
       "path": "src/project_pipeline/agent_router/adapters.py",
@@ -11689,6 +11689,11 @@
       "path": "src/project_pipeline/agent_router/simulation.py",
       "sha256": "c2c847e6f1ee4754799a1f003b8d0fd60cc76317e62daf2ec172de809b3e5989",
       "size_bytes": 4015
+    },
+    {
+      "path": "src/project_pipeline/agent_router/tools.py",
+      "sha256": "a47e9101f92231a0b01e29c27e2e8f1f3503127e78f3688439f842e58bb34b3e",
+      "size_bytes": 3978
     },
     {
       "path": "src/project_pipeline/agent_router/validation.py",
@@ -13071,6 +13076,11 @@
       "size_bytes": 4288
     },
     {
+      "path": "tests/test_agent_router_tools.py",
+      "sha256": "f1281226cc423610c07cdff7d48d9217ff36e791c6bc86570f3d22546cc50c73",
+      "size_bytes": 2158
+    },
+    {
       "path": "tests/test_agent_router_validation.py",
       "sha256": "220430c846aa3d60487c51ae831e7ce6c5faee66458f438047fc47d67962d630",
       "size_bytes": 370
@@ -13911,7 +13921,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T18:38:02.419730+00:00",
+  "generated_at_utc": "2026-08-17T18:38:59.974672+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13920,5 +13930,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24329991
+  "total_bytes": 24336224
 }
