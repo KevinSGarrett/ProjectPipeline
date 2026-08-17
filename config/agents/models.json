@@ -1,5 +1,6 @@
 [
   {"model_id":"model:mock-local-general","provider_id":"provider:mock-local","provider_model_name":"mock-general","version":"1.0.0","capabilities":["routine_reasoning","summarization","code_review"],"quality_tier":"standard","qualification":"QUALIFIED","local":true},
+  {"model_id":"model:cursor-auto","provider_id":"provider:cursor-cli","provider_model_name":"auto","version":"unqualified","capabilities":["routine_reasoning","summarization","code_review","code_implementation","repository_reasoning","visual_review"],"quality_tier":"strong","qualification":"QUARANTINED","local":false},
   {"model_id":"model:pydantic-ai-advisory","provider_id":"provider:pydantic-ai","provider_model_name":"pydantic-ai","version":"1.0.0","capabilities":["routine_reasoning","summarization"],"quality_tier":"standard","qualification":"QUARANTINED","local":false},
   {"model_id":"model:litellm-proxy-general","provider_id":"provider:litellm-proxy","provider_model_name":"openai/gpt-4o-mini","version":"1.0.0","capabilities":["routine_reasoning","summarization","code_review"],"quality_tier":"standard","qualification":"QUARANTINED","local":true}
 ]

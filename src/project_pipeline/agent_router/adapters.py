@@ -581,6 +581,7 @@ def build_adapter(adapter_id: str, **kwargs: Any) -> ProviderAdapter:
         "adapter:gemini-generate-content": GeminiGenerateContentAdapter,
         "adapter:litellm-proxy": LiteLLMProxyAdapter,
         "adapter:local-json-process": LocalProcessProviderAdapter,
+        "adapter:cursor-cli": CursorCliProviderAdapter,
         "adapter:mock-provider": MockProviderAdapter,
     }
     try:

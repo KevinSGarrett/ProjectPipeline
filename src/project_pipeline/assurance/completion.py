@@ -56,6 +56,7 @@ QUESTIONS: tuple[str, ...] = (
     "Does the Command Center accurately reflect actual system state?",
     "Does Jira accurately reflect actual implementation state?",
     "Does the final coverage audit show any unexplained gaps?",
+    "Has the unattended end-to-end operating loop passed required qualification?",
 )
 
 _CATEGORY_BY_QUESTION = {
@@ -74,6 +75,7 @@ _CATEGORY_BY_QUESTION = {
     13: FailureCategory.STATE_RECONCILIATION,
     14: FailureCategory.STATE_RECONCILIATION,
     15: FailureCategory.COVERAGE,
+    16: FailureCategory.GOLDEN_JOURNEY,
 }
 
 
@@ -145,6 +147,7 @@ def evaluate_completion_gate(facts: CompletionGateFacts) -> CompletionGateDecisi
         facts.command_center_truthful,
         facts.jira_truthful,
         facts.unexplained_gap_count == 0,
+        facts.unattended_operating_loop_qualified,
     )
     blocked = set(facts.externally_blocked_question_numbers)
     results: list[CompletionQuestionResult] = []
@@ -292,6 +295,17 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         not (item.get("state") == "DONE" and not item.get("completion_evidence")) for item in issues
     )
     gaps = int(traceability.get("unexplained_gap_count", traceability.get("gap_count", 0)))
+    unattended_evidence = tuple(
+        sorted(
+            item["evidence_id"]
+            for item in evidence_rows
+            if item.get("method") == "unattended_operating_loop_qualification"
+            and item.get("result") == "PASS"
+            and item.get("verification_status") == "VERIFIED"
+            and _valid_unattended_qualification(root, item)
+        )
+    )
+    unattended_qualified = bool(unattended_evidence)
     reasons: dict[str, tuple[str, ...]] = {
         "1": (f"{len(requirements)} requirements inspected",),
         "2": (
@@ -316,6 +330,11 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         if not command_center
         else ("Command Center requirements are complete",),
         "15": (f"unexplained traceability gaps: {gaps}",),
+        "16": (
+            "no verified 72-hour unattended operating-loop qualification evidence is present"
+            if not unattended_qualified
+            else "verified 72-hour unattended operating-loop qualification evidence is present",
+        ),
     }
     payload = {
         "requirements": [
@@ -333,6 +352,7 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         "autonomous_runtime_qualified": autonomous_runtime_qualified,
         "autonomous_runtime_environments": sorted(runtime_environments),
         "rollback": rollback,
+        "unattended_evidence": unattended_evidence,
     }
     return CompletionGateFacts(
         project_id=project_id,
@@ -351,6 +371,7 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         unresolved_items_truthful=unresolved_truthful,
         command_center_truthful=command_center,
         jira_truthful=jira_truthful,
+        unattended_operating_loop_qualified=unattended_qualified,
         unexplained_gap_count=gaps,
         evidence_by_question={
             "4": tuple(
@@ -382,6 +403,7 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
                     {evidence_id for item in infra for evidence_id in item.get("evidence_ids", [])}
                 )
             ),
+            "16": unattended_evidence,
         },
         reasons_by_question=reasons,
         snapshot_fingerprint=assurance_fingerprint(payload),
@@ -396,3 +418,28 @@ def _evidence_rows(root: Path) -> tuple[dict[str, Any], ...]:
             if line.strip():
                 rows.append(json.loads(line))
     return tuple(rows)
+
+
+def _valid_unattended_qualification(root: Path, row: dict[str, Any]) -> bool:
+    artifact_path = row.get("artifact_path")
+    if not isinstance(artifact_path, str):
+        return False
+    path = (root / artifact_path).resolve()
+    try:
+        path.relative_to(root.resolve())
+    except ValueError:
+        return False
+    if not path.is_file() or path.suffix.lower() != ".json":
+        return False
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    return (
+        float(payload.get("duration_hours", 0)) >= 72
+        and payload.get("end_to_end") is True
+        and payload.get("restart_recovery") is True
+        and payload.get("external_reconciliation") is True
+        and payload.get("windows_native_verified") is True
+        and payload.get("unattended") is True
+    )
