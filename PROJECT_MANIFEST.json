@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "731f05cfd449d722860c0fdcb10302500b585fc6d9db2f38932843de3b8d34f7",
+  "aggregate_sha256": "ee1ffa98b32cc1f89515bb65671d80ce20b4fd7f58c3744b95b1ce19f553cd76",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2736,
+  "file_count": 2740,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -3616,6 +3616,11 @@
       "size_bytes": 1081
     },
     {
+      "path": "evidence/autonomy_runtime/golden_journey/golden_journey_latest.json",
+      "sha256": "9c971a5e4e6dafe1c29d67a5dfb9cfb900820fd0636580f31f3895d624a12f95",
+      "size_bytes": 284
+    },
+    {
       "path": "evidence/budget_focused_suite.txt",
       "sha256": "6d530fd948eb6f8d883233fc6ed08ee5d0277e239b73984a8551a92645cb9f5c",
       "size_bytes": 99
@@ -4594,6 +4599,16 @@
       "path": "evidence/verification_repository_validation.txt",
       "sha256": "8a1f7650d9a8388703ea04404e47a92539eb3d9b992b413c7a75e260f0833ea2",
       "size_bytes": 65
+    },
+    {
+      "path": "fixtures/autonomy_runtime/golden_project/README.md",
+      "sha256": "eaf23ee8925b103efda16b346976d0c25cdfd9bde6a0f53415b24950a56dc28b",
+      "size_bytes": 264
+    },
+    {
+      "path": "fixtures/autonomy_runtime/golden_project/src/app.py",
+      "sha256": "3606f2b1667e02bc5737cdba250b094a46162bcd0364fca6c805f9b106ac7eb3",
+      "size_bytes": 62
     },
     {
       "path": "fixtures/context/sample_candidates.json",
@@ -12831,6 +12846,11 @@
       "size_bytes": 133
     },
     {
+      "path": "tests/integration/autonomy_runtime/test_golden_journey.py",
+      "sha256": "f880384fa5f6dfdae9366d1f028c3a6836ee305636efaefb35f7bedee9a3eca4",
+      "size_bytes": 4154
+    },
+    {
       "path": "tests/integration/autonomy_runtime/test_parallel_recovery.py",
       "sha256": "852403132351c26c8e16bc555c4211ecb0dbc7e485f6be9a34922095dfacd2ed",
       "size_bytes": 2941
@@ -13691,7 +13711,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T03:27:47.379287+00:00",
+  "generated_at_utc": "2026-08-17T03:29:36.153832+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13700,5 +13720,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 23258073
+  "total_bytes": 23262837
 }
