@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "964939436e4cdd3915f31ee2337a63d2b3193b6e4c9cd33b2279be639ff56f09",
+  "aggregate_sha256": "79a1d5d224ea15c4c9727dd7fb9b1f8700ba10b1d66b8f4538db18fc55e9e30d",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2762,
+  "file_count": 2770,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -10281,6 +10281,11 @@
       "size_bytes": 366
     },
     {
+      "path": "runbooks/autonomy_runtime/windows_service.md",
+      "sha256": "fddb6080c2ac24c803818d000b4f6aeec72420cb623bd0756800b032c23ce947",
+      "size_bytes": 1883
+    },
+    {
       "path": "runbooks/backup_restore_verification.md",
       "sha256": "4e157b197e752e085d8f807619b16b4dcb1b3b2c55af25857b5092acf7cb47e7",
       "size_bytes": 1153
@@ -11501,6 +11506,11 @@
       "size_bytes": 1403
     },
     {
+      "path": "scripts/run_autonomy_runtime_service.py",
+      "sha256": "19875620c007d8ed4c6f52763a8b781a4e16d5fd68d81b953c8d89cf37f4b161",
+      "size_bytes": 1517
+    },
+    {
       "path": "scripts/run_command_center_service.py",
       "sha256": "eb42b9245becc6d2e25f0c4ef156b7efe9537a9ec51c93bf3d45b90cbb4d9cc5",
       "size_bytes": 2663
@@ -11736,6 +11746,11 @@
       "size_bytes": 25207
     },
     {
+      "path": "src/project_pipeline/autonomy_runtime/providers.py",
+      "sha256": "a64b0b5b26ecae27cbbabe36eb61d77d1460188c7f3ead99537fb7b946dcdf52",
+      "size_bytes": 11286
+    },
+    {
       "path": "src/project_pipeline/autonomy_runtime/recovery.py",
       "sha256": "4deb58becd434c9bca44f80a78fb8f03d6b19f29c822d9d149465f9061e4214e",
       "size_bytes": 2489
@@ -11749,6 +11764,11 @@
       "path": "src/project_pipeline/autonomy_runtime/supervisor.py",
       "sha256": "2d5f105980be7ee10595d313ff2b542c8d79dfeb17fd70fc906fe693db24be98",
       "size_bytes": 19617
+    },
+    {
+      "path": "src/project_pipeline/autonomy_runtime/windows_service.py",
+      "sha256": "7acc71ff2c562dd429e5b61d3d59bb9905f2acb1bd8c306e6c4c48d3180ab13d",
+      "size_bytes": 7195
     },
     {
       "path": "src/project_pipeline/budget/__init__.py",
@@ -11834,6 +11854,11 @@
       "path": "src/project_pipeline/command_center/application_verification.py",
       "sha256": "8a668524ab90ce6aaedbdf8136b1bf5278522b0cb38aefb41823a2f99f42835e",
       "size_bytes": 9559
+    },
+    {
+      "path": "src/project_pipeline/command_center/autonomy.py",
+      "sha256": "88dc27ec6416981126d960682e2e8a9462cf7ab1e5ba88f564751c6c9db05886",
+      "size_bytes": 3789
     },
     {
       "path": "src/project_pipeline/command_center/director.py",
@@ -13066,6 +13091,16 @@
       "size_bytes": 198
     },
     {
+      "path": "tests/test_autonomy_providers.py",
+      "sha256": "7d7abaa5673a9122beabe432b698923e83950ae3fba2b99113870913f67f3c6c",
+      "size_bytes": 5183
+    },
+    {
+      "path": "tests/test_autonomy_windows_service.py",
+      "sha256": "953bc713215fc2d3fb47f4497a51e31151b4637f6d920a758ec1aea892a3bdd1",
+      "size_bytes": 1400
+    },
+    {
       "path": "tests/test_budget_advanced.py",
       "sha256": "cc9fa7b42f2e59deeda1d3f0e50e0a913b1ce789e679758fb63e6c78c6580837",
       "size_bytes": 5842
@@ -13144,6 +13179,11 @@
       "path": "tests/test_command_center_application.py",
       "sha256": "378a1ce52b5a52004be918f7ff845a282e44d5e2d149da24aaf160992451f88c",
       "size_bytes": 4920
+    },
+    {
+      "path": "tests/test_command_center_autonomy.py",
+      "sha256": "76c3bd156f40eeecb4b38bc3365d096d72ebfe30d7819a6b66153277cd0b7c4e",
+      "size_bytes": 3144
     },
     {
       "path": "tests/test_command_center_director.py",
@@ -13821,7 +13861,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T15:28:02.673723+00:00",
+  "generated_at_utc": "2026-08-17T15:39:59.955254+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -13830,5 +13870,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 24228863
+  "total_bytes": 24264260
 }
