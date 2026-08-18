@@ -36,7 +36,8 @@
   ],
   "expected_implementation_artifacts": [
     "src/project_pipeline/autonomy_runtime/lanes.py",
-    "src/project_pipeline/autonomy_runtime/recovery.py"
+    "src/project_pipeline/autonomy_runtime/recovery.py",
+    "tests/test_cycle11_pp380_384_bound.py"
   ],
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
@@ -85,7 +86,9 @@
     }
   ],
   "remote_jira_key": "PP-389",
-  "required_tests": [],
+  "required_tests": [
+    "TEST-C11-PP382-001"
+  ],
   "requirement_ids": [
     "REQ-PDEF-0011",
     "REQ-CTRL-0014",

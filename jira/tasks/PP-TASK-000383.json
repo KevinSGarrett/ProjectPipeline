@@ -37,7 +37,8 @@
   ],
   "expected_implementation_artifacts": [
     "fixtures/autonomy_runtime/golden_project",
-    "tests/integration/autonomy_runtime/test_golden_journey.py"
+    "tests/integration/autonomy_runtime/test_golden_journey.py",
+    "tests/test_cycle11_pp380_384_bound.py"
   ],
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
@@ -87,7 +88,9 @@
     }
   ],
   "remote_jira_key": "PP-387",
-  "required_tests": [],
+  "required_tests": [
+    "TEST-C11-PP383-001"
+  ],
   "requirement_ids": [
     "REQ-PDEF-0011"
   ],

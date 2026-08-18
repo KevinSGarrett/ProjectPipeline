@@ -35,7 +35,8 @@
   ],
   "expected_implementation_artifacts": [
     "src/project_pipeline/autonomy_runtime/supervisor.py",
-    "src/project_pipeline/autonomy_runtime/service.py"
+    "src/project_pipeline/autonomy_runtime/service.py",
+    "tests/test_cycle11_pp380_384_bound.py"
   ],
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
@@ -84,7 +85,9 @@
     }
   ],
   "remote_jira_key": "PP-390",
-  "required_tests": [],
+  "required_tests": [
+    "TEST-C11-PP381-001"
+  ],
   "requirement_ids": [
     "REQ-PDEF-0011",
     "REQ-CTRL-0004"

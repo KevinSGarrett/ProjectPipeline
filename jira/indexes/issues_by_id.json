@@ -49024,7 +49024,8 @@
       "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
       "src/project_pipeline/validation/product_outcome.py",
       "src/project_pipeline/validation/product_model_audit.py",
-      "tests/test_product_outcome_contract.py"
+      "tests/test_product_outcome_contract.py",
+      "tests/test_cycle11_pp380_384_bound.py"
     ],
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
@@ -49069,7 +49070,9 @@
       }
     ],
     "remote_jira_key": "PP-392",
-    "required_tests": [],
+    "required_tests": [
+      "TEST-C11-PP380-001"
+    ],
     "requirement_ids": [
       "REQ-PDEF-0011"
     ],
@@ -49130,7 +49133,8 @@
     ],
     "expected_implementation_artifacts": [
       "src/project_pipeline/autonomy_runtime/supervisor.py",
-      "src/project_pipeline/autonomy_runtime/service.py"
+      "src/project_pipeline/autonomy_runtime/service.py",
+      "tests/test_cycle11_pp380_384_bound.py"
     ],
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
@@ -49179,7 +49183,9 @@
       }
     ],
     "remote_jira_key": "PP-390",
-    "required_tests": [],
+    "required_tests": [
+      "TEST-C11-PP381-001"
+    ],
     "requirement_ids": [
       "REQ-PDEF-0011",
       "REQ-CTRL-0004"
@@ -49238,7 +49244,8 @@
     ],
     "expected_implementation_artifacts": [
       "src/project_pipeline/autonomy_runtime/lanes.py",
-      "src/project_pipeline/autonomy_runtime/recovery.py"
+      "src/project_pipeline/autonomy_runtime/recovery.py",
+      "tests/test_cycle11_pp380_384_bound.py"
     ],
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
@@ -49287,7 +49294,9 @@
       }
     ],
     "remote_jira_key": "PP-389",
-    "required_tests": [],
+    "required_tests": [
+      "TEST-C11-PP382-001"
+    ],
     "requirement_ids": [
       "REQ-PDEF-0011",
       "REQ-CTRL-0014",
@@ -49350,7 +49359,8 @@
     ],
     "expected_implementation_artifacts": [
       "fixtures/autonomy_runtime/golden_project",
-      "tests/integration/autonomy_runtime/test_golden_journey.py"
+      "tests/integration/autonomy_runtime/test_golden_journey.py",
+      "tests/test_cycle11_pp380_384_bound.py"
     ],
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
@@ -49400,7 +49410,9 @@
       }
     ],
     "remote_jira_key": "PP-387",
-    "required_tests": [],
+    "required_tests": [
+      "TEST-C11-PP383-001"
+    ],
     "requirement_ids": [
       "REQ-PDEF-0011"
     ],
@@ -49453,7 +49465,11 @@
     ],
     "expected_implementation_artifacts": [
       "src/project_pipeline/autonomy_runtime/providers.py",
-      "runbooks/autonomy_runtime/windows_service.md"
+      "runbooks/autonomy_runtime/windows_service.md",
+      "src/project_pipeline/autonomy_runtime/cursor_cli_qualification.py",
+      "src/project_pipeline/autonomy_runtime/live_qualification.py",
+      "src/project_pipeline/lifecycle/attestation_recovery.py",
+      "tests/test_cycle11_pp380_384_bound.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
@@ -49463,7 +49479,13 @@
       "windows",
       "cohesive-slice"
     ],
-    "last_observed_remote_state": null,
+    "last_observed_remote_state": {
+      "observed_at_utc": "2026-08-18T18:21:45.619044+00:00",
+      "remote_id": "25367",
+      "remote_key": "PP-393",
+      "snapshot_id": "C11-LIVE-PP393",
+      "status_name": "To Do"
+    },
     "local_id": "PP-TASK-000384",
     "objective": "Qualify live governance, real workers, Command Center, and Windows runtime",
     "observability_impact": "Captures exact remote readback, worker receipts, Windows health, restart, and UI projections.",
@@ -49495,8 +49517,12 @@
         "type": "BLOCKS"
       }
     ],
-    "remote_jira_key": null,
-    "required_tests": [],
+    "remote_jira_key": "PP-393",
+    "required_tests": [
+      "TEST-C11-PP384-001",
+      "TEST-C11-ATTEST-001",
+      "TEST-C11-QUAL-001"
+    ],
     "requirement_ids": [
       "REQ-PDEF-0011"
     ],

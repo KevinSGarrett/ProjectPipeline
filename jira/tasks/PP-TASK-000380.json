@@ -51,7 +51,8 @@
     "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
     "src/project_pipeline/validation/product_outcome.py",
     "src/project_pipeline/validation/product_model_audit.py",
-    "tests/test_product_outcome_contract.py"
+    "tests/test_product_outcome_contract.py",
+    "tests/test_cycle11_pp380_384_bound.py"
   ],
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
@@ -96,7 +97,9 @@
     }
   ],
   "remote_jira_key": "PP-392",
-  "required_tests": [],
+  "required_tests": [
+    "TEST-C11-PP380-001"
+  ],
   "requirement_ids": [
     "REQ-PDEF-0011"
   ],

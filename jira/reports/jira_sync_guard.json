@@ -8,7 +8,7 @@
     "metadata": "NO_DIFFERENCE",
     "status": "NO_DIFFERENCE"
   },
-  "generated_at_utc": "2026-08-18T18:04:00.730250+00:00",
+  "generated_at_utc": "2026-08-18T18:25:36.881733+00:00",
   "human_required_steps": [],
   "instruction_citations": [
     "instructions/06_JIRA_OPERATING_PROTOCOL.md",
@@ -20,7 +20,7 @@
   ],
   "local_edge_count": 848,
   "local_issue_count": 393,
-  "local_mirror_fingerprint": "9d4d499630660ad3906b2671859f052ed597660f47d7d8d356d46c66964072be",
+  "local_mirror_fingerprint": "4c143c8368733db8632f638e0dae9b867fdbec16d9516261ed7dcba94acf5afc",
   "parity_status": "PARITY_CONFIRMED",
   "plan_id": "JPLAN-30A6C466043D4D29E49E",
   "project_key": "PP",
