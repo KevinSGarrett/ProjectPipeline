@@ -16,7 +16,8 @@ alwaysApply: true
   project model, selects genuinely missing work, executes conflict-safe parallel
   lanes through qualified workers, verifies results, governs GitHub and Jira,
   merges accepted changes, reconciles external state, recomputes next work, handles
-  HUMAN_REQUIRED incidents without stopping unaffected work, exposes truthful live
+  BLOCKED_EXTERNAL incidents without assigning operator work and without stopping
+  unaffected work, exposes truthful live
   state through the Command Center, and repeats until the deterministic Completion
   Gate reports COMPLETE for the integrated, released, operationally verified system.
 

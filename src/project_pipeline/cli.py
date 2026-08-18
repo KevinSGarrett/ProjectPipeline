@@ -624,7 +624,12 @@ def build_parser() -> argparse.ArgumentParser:
     github.add_argument("--expected-tree-sha")
     github.add_argument("--review-receipt", type=Path)
     github.add_argument("--component-head", action="append", default=[])
-    github.add_argument("--assert-protection", action="store_true")
+    github.add_argument(
+        "--assert-protection",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Evaluate protection-drift on merge-gate, plan, and lifecycle (default: on).",
+    )
     github.add_argument("--merge-method", choices=("merge", "squash", "rebase"), default="squash")
     github.add_argument("--apply", action="store_true")
     github.add_argument("--approve", action="store_true")
@@ -1359,7 +1364,9 @@ def _run_github_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                 expected_head_sha=args.expected_head_sha,
                 autonomous_review=review,
                 expected_tree_sha=args.expected_tree_sha,
-                assert_protection_policy=args.assert_protection,
+                assert_protection_policy=(
+                    True if args.action == "merge-gate" else bool(args.assert_protection)
+                ),
             )
             lifecycle = ClosedLoopLifecycle(
                 remote=adapter, store=store, repository_slug=repository_slug

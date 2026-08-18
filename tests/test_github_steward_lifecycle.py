@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from project_pipeline.cli import main
+from project_pipeline.cli import build_parser, main
 from project_pipeline.contracts import ActionIntent, AdapterErrorCategory, ApprovalState, RiskLevel
 from project_pipeline.domain.github import (
     AutonomousReviewReceipt,
@@ -337,6 +337,15 @@ def test_cli_plan_and_protection_drift_are_read_only(tmp_path, capsys):
     assert code in {0, 1}
     assert "drifts" in payload
     assert "aligned" in payload
+
+
+def test_cli_merge_gate_defaults_protection_drift_assert_on():
+    args = build_parser().parse_args(["github", "merge-gate", "--pull-number", "1"])
+    assert args.assert_protection is True
+    off = build_parser().parse_args(
+        ["github", "merge-gate", "--pull-number", "1", "--no-assert-protection"]
+    )
+    assert off.assert_protection is False
 
 
 def test_unknown_outcome_is_reconciled_not_retried(tmp_path):
