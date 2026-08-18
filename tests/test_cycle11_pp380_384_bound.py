@@ -59,6 +59,7 @@ def test_pp384_provider_state_machine_is_bound_and_not_human_stop() -> None:
     assert (
         ROOT / "src" / "project_pipeline" / "autonomy_runtime" / "cursor_cli_qualification.py"
     ).is_file()
+    assert (ROOT / "src" / "project_pipeline" / "autonomy_runtime" / "projection.py").is_file()
     assert (ROOT / "src" / "project_pipeline" / "lifecycle" / "attestation_recovery.py").is_file()
     assert StageOutcome.HUMAN_REQUIRED.value == "HUMAN_REQUIRED"
     encoded = json.dumps(StageOutcome.HUMAN_REQUIRED.name)

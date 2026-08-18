@@ -135,7 +135,7 @@ def test_incident_lifecycle_requires_verified_repair_before_resolution():
     case = manager.open(incident(), project_id="PROJ-TEST", evidence_ids=("EVID-TEST-INC",))
     assert case.state is IncidentState.OPEN
     inbox = broker.list_open()[0]
-    assert inbox.exact_action == incident().exact_human_action
+    assert inbox.exact_action == f"Autonomous recheck: {incident().exact_human_action}"
     assert "credential validates" in inbox.post_action_verification
     assert inbox.blocked_tasks == 2
 

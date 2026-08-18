@@ -11,6 +11,10 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.autonomy_runtime.lanes import LaneRegistry
+from project_pipeline.autonomy_runtime.projection import (
+    is_compatibility_human_required,
+    project_runtime_state,
+)
 from project_pipeline.autonomy_runtime.recovery import DurableRecoveryService
 from project_pipeline.autonomy_runtime.service import AutonomyRuntimeService
 from project_pipeline.autonomy_runtime.supervisor import PersistentSupervisor
@@ -128,9 +132,9 @@ def project_command_center(
             LiveWorkItem(
                 work_id=str(item["operation_id"]),
                 title=str(item["task_id"]),
-                state=str(item["state"]),
+                state=project_runtime_state(str(item["state"])),
                 owner="autonomy-runtime",
-                current_stage=str(item["state"]),
+                current_stage=project_runtime_state(str(item["state"])),
             )
         )
     for incident in incidents:
@@ -138,17 +142,17 @@ def project_command_center(
             LiveWorkItem(
                 work_id=incident.incident_id,
                 title=incident.logical_lane_id,
-                state=incident.disposition,
+                state=project_runtime_state(incident.disposition),
                 owner="lane-registry",
                 current_stage=incident.reason,
                 blocked_by=(incident.logical_lane_id,)
-                if incident.disposition == "HUMAN_REQUIRED"
+                if is_compatibility_human_required(incident.disposition)
                 else (),
             )
         )
     health_state = (
         HealthState.DEGRADED
-        if any(item.disposition == "HUMAN_REQUIRED" for item in incidents)
+        if any(is_compatibility_human_required(item.disposition) for item in incidents)
         else HealthState.HEALTHY
     )
     snapshot = CommandCenterProjectionService().build_snapshot(
@@ -164,7 +168,9 @@ def project_command_center(
         ),
         live_work=tuple(live_work),
         active_incident_ids=tuple(
-            item.incident_id for item in incidents if item.disposition == "HUMAN_REQUIRED"
+            item.incident_id
+            for item in incidents
+            if is_compatibility_human_required(item.disposition)
         ),
         context_summary={
             "next_eligible_task_id": next_task_id,

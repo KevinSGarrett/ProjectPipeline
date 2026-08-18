@@ -72,8 +72,11 @@ def test_autonomy_projection_shows_human_required_and_completed(tmp_path: Path) 
     assert snapshot["context_summary"]["next_eligible_task_id"] == "PP-TASK-000385"
     assert snapshot["active_incident_ids"]
     states = {item["state"] for item in snapshot["live_work"]}
-    assert "HUMAN_REQUIRED" in states
+    assert "BLOCKED_EXTERNAL" in states
+    assert "HUMAN_REQUIRED" not in states
     assert "COMPLETED" in states
+    assert snapshot["context_summary"]["unavailable_capabilities"]
+    assert "lane-healthy" in snapshot["context_summary"]["continuing_lane_ids"]
     assert snapshot["provider_summary"]["label"] == "local"
     restarted = project_autonomy_runtime(
         supervisor_state=tmp_path / "sup.db",

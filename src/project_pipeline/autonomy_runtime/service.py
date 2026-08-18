@@ -237,7 +237,9 @@ class AutonomyRuntimeService:
     def health(self, ready_task_ids: list[str] | None = None) -> dict[str, Any]:
         status = self.supervisor.status()
         failed = [
-            item for item in status["operations"] if item["state"] in {"FAILED", "HUMAN_REQUIRED"}
+            item
+            for item in status["operations"]
+            if item["state"] in {"FAILED", "HUMAN_REQUIRED", "BLOCKED_EXTERNAL"}
         ]
         return {
             "state": "failed" if failed else "healthy",
@@ -284,9 +286,10 @@ class AutonomyRuntimeService:
         payload = task_payloads.get(next_task)
         if payload is None:
             return {
-                "state": "HUMAN_REQUIRED",
+                "state": "BLOCKED_EXTERNAL",
                 "reason": "MISSING_TASK_PAYLOAD",
                 "task_id": next_task,
+                "unavailable_capability": "task_payload",
             }
         idempotency_key = f"{control_snapshot_id}:{sequence_id}:{next_task}"
         operation_id = self.supervisor.start_operation(
