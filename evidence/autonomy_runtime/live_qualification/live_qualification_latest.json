@@ -1,0 +1,144 @@
+{
+  "disposable_root": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime",
+  "generated_at_utc": "2026-08-18T10:51:11.085483+00:00",
+  "report_sha256": "1c4bc2af6f0b111fa857813a87ee979b9199b1f3db5b9f704e8290f69bdcdfd9",
+  "schema_version": "1.0.0",
+  "stages": [
+    {
+      "observations": {
+        "checkpoint_status": "STOPPED",
+        "first_exit_code": 0,
+        "first_health": {
+          "checkpoint_exists": true,
+          "log_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\autonomy-service.log",
+          "pid": null,
+          "service_name": "ProjectPipelineAutonomy",
+          "stale_pid": false,
+          "state_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\autonomy-supervisor.db",
+          "stop_requested": false
+        },
+        "plan_keys": [
+          "install",
+          "restart",
+          "start",
+          "status",
+          "stop",
+          "uninstall"
+        ],
+        "plan_valid": true,
+        "recovery_exit_code": 0,
+        "recovery_health": {
+          "checkpoint_exists": true,
+          "log_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\autonomy-service.log",
+          "pid": null,
+          "service_name": "ProjectPipelineAutonomy",
+          "stale_pid": false,
+          "state_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\autonomy-supervisor.db",
+          "stop_requested": false
+        },
+        "stale_pid_detected": true
+      },
+      "outcome": "PASSED",
+      "reasons": [],
+      "stage_id": "windows_service_foreground"
+    },
+    {
+      "observations": {
+        "context_summary": {
+          "active_operation_id": null,
+          "active_operation_state": null,
+          "last_verified_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "next_eligible_task_id": "PP-TASK-000385",
+          "pending_unknown_outcome": null,
+          "source": "durable_state",
+          "windows_service": {
+            "checkpoint_exists": true,
+            "log_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\live-qualification-service\\state\\autonomy-service.log",
+            "pid": null,
+            "service_name": "ProjectPipelineAutonomy",
+            "stale_pid": false,
+            "state_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\live-qualification-service\\state\\autonomy-supervisor.db",
+            "stop_requested": false
+          }
+        },
+        "restart_last_verified_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "snapshot_id": "cc-autonomy-runtime"
+      },
+      "outcome": "PASSED",
+      "reasons": [],
+      "stage_id": "command_center_truth"
+    },
+    {
+      "observations": {
+        "live_qualification": true,
+        "receipt_status": "SUCCEEDED"
+      },
+      "outcome": "PASSED",
+      "reasons": [],
+      "stage_id": "local_provider_dispatch"
+    },
+    {
+      "observations": {
+        "adapters_present": true,
+        "github_probe": {
+          "authenticated_login": "KevinSGarrett",
+          "credential_available": true,
+          "read_ok": true,
+          "repository_name": "ProjectPipeline",
+          "repository_url": "https://github.com/KevinSGarrett/ProjectPipeline"
+        },
+        "github_write_probe": {
+          "base_branch": "main",
+          "branch": "qual/pp384-live-probe",
+          "created_sha_prefix": "6df17715096f",
+          "observed_after_create": true,
+          "observed_after_delete": true,
+          "provider_id": "github-rest",
+          "token_source": "gh-auth",
+          "write_attempted": true,
+          "write_readback_ok": true
+        },
+        "jira_probe": {
+          "credential_available": true,
+          "project_key": "PP",
+          "project_name": "Project Pipeline",
+          "read_ok": true,
+          "remote_key": "PP-393"
+        },
+        "jira_write_probe": {
+          "comment_id": "14372",
+          "credential_available": true,
+          "provider_id": "atlassian-jira-cloud",
+          "remote_key": "PP-393",
+          "write_attempted": true,
+          "write_readback_ok": true
+        },
+        "live_mutation_required": true,
+        "qualification_class": "authorized_sandbox_or_live",
+        "read_probe_ok": true,
+        "write_readback_ok": true
+      },
+      "outcome": "PASSED",
+      "reasons": [],
+      "stage_id": "github_jira_governance"
+    },
+    {
+      "observations": {
+        "attestation_reference": "evidence/pp379_writer_attestation_evidence.json",
+        "missing_evidence": [
+          "evidence/pp379_writer_attestation_evidence.json",
+          "evidence/pp379_writer_provider_qualification_evidence.json"
+        ],
+        "provider_id": "provider:cursor-cli",
+        "qualification_reference": "evidence/pp379_writer_provider_qualification_evidence.json"
+      },
+      "outcome": "HUMAN_REQUIRED",
+      "reasons": [
+        "missing evidence artifact: evidence/pp379_writer_attestation_evidence.json",
+        "missing evidence artifact: evidence/pp379_writer_provider_qualification_evidence.json"
+      ],
+      "stage_id": "cursor_cli_provider_dispatch"
+    }
+  ],
+  "task_id": "PP-TASK-000384"
+}

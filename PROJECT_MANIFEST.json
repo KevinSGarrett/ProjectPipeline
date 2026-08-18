@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "20c02c3666e87ef1e33b00e2b2dbc2b097abb68050dd955f08670e79bc7200dd",
+  "aggregate_sha256": "050742e9a49d3051f6c27888e39dfd790743fbca35cafb59d9ffe2acdd713369",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2845,
+  "file_count": 2851,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -3749,6 +3749,11 @@
       "path": "evidence/autonomy_runtime/golden_journey/golden_journey_latest.json",
       "sha256": "9c971a5e4e6dafe1c29d67a5dfb9cfb900820fd0636580f31f3895d624a12f95",
       "size_bytes": 284
+    },
+    {
+      "path": "evidence/autonomy_runtime/live_qualification/live_qualification_latest.json",
+      "sha256": "8a7d3f9d17e4edb7e7f5374679e24680a44748508d1a885e3fd04d4139941f52",
+      "size_bytes": 5486
     },
     {
       "path": "evidence/budget_focused_suite.txt",
@@ -10466,6 +10471,11 @@
       "size_bytes": 366
     },
     {
+      "path": "runbooks/autonomy_runtime/live_qualification.md",
+      "sha256": "723475963c4a32ec915634fa9ff871c9e49035e98efaaf7135a56651c9a94f88",
+      "size_bytes": 1422
+    },
+    {
       "path": "runbooks/autonomy_runtime/unattended_operation.md",
       "sha256": "434c88a8dc9757b0966a6340fb9882a43c2c5a820745387582e50cf53536dc79",
       "size_bytes": 1990
@@ -11746,6 +11756,11 @@
       "size_bytes": 8040
     },
     {
+      "path": "scripts/run_live_qualification.py",
+      "sha256": "87bfdd94c6a51ed7a213f2e4c23955decce36d196f7ad65729590cb92814bf39",
+      "size_bytes": 1290
+    },
+    {
       "path": "scripts/run_pass23_e2e.py",
       "sha256": "4e72a1c2e4d1d2550e5222ec66a8f57d974423dd670918adeda9b8c3cd4d2edf",
       "size_bytes": 237
@@ -11764,6 +11779,11 @@
       "path": "scripts/start_autonomy_qualification_hidden.ps1",
       "sha256": "090e55f44289925a46d887cf2ca43a62efc3ba7c4252d074163b7fed7c8d0df0",
       "size_bytes": 2859
+    },
+    {
+      "path": "scripts/steward_create_pull.py",
+      "sha256": "0d1370c94d8c0faee7479d8c0e9d59b400cfd20c8789c20a9f65326eec614495",
+      "size_bytes": 6528
     },
     {
       "path": "scripts/validate_instructions.py",
@@ -11994,6 +12014,11 @@
       "path": "src/project_pipeline/autonomy_runtime/lanes.py",
       "sha256": "aaf70f921ea54bc663796aceff631fe967ad11a210f56be5035b09f1ed66e9be",
       "size_bytes": 26363
+    },
+    {
+      "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
+      "sha256": "9167daaa226027defb163dc1758fd9fcf3627c8429cc14158c3a47502b42b71a",
+      "size_bytes": 28170
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/providers.py",
@@ -13401,6 +13426,11 @@
       "size_bytes": 198
     },
     {
+      "path": "tests/test_autonomy_live_qualification.py",
+      "sha256": "b64b04544dc220df59caec481456062a5eb82620a08484dc0e01985474f8f532",
+      "size_bytes": 2970
+    },
+    {
       "path": "tests/test_autonomy_providers.py",
       "sha256": "7d7abaa5673a9122beabe432b698923e83950ae3fba2b99113870913f67f3c6c",
       "size_bytes": 5183
@@ -14236,7 +14266,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T07:07:47.605417+00:00",
+  "generated_at_utc": "2026-08-18T11:14:52.055293+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14245,5 +14275,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25204336
+  "total_bytes": 25250202
 }
