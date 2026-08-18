@@ -26,6 +26,23 @@
       "title": "Approvals Required",
       "type": "integer"
     },
+    "autonomous_review_accepted": {
+      "default": false,
+      "title": "Autonomous Review Accepted",
+      "type": "boolean"
+    },
+    "autonomous_review_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Autonomous Review Id"
+    },
     "blockers": {
       "default": [],
       "items": {
@@ -53,6 +70,14 @@
         "type": "string"
       },
       "title": "Observed Checks",
+      "type": "array"
+    },
+    "protection_drift": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Protection Drift",
       "type": "array"
     },
     "pull_number": {

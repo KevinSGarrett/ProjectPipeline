@@ -1,0 +1,143 @@
+{
+  "$defs": {
+    "GitOperationState": {
+      "enum": [
+        "PLANNED",
+        "PENDING",
+        "APPLIED",
+        "FAILED",
+        "UNKNOWN_OUTCOME",
+        "RECONCILED",
+        "REJECTED"
+      ],
+      "title": "GitOperationState",
+      "type": "string"
+    },
+    "GitOperationType": {
+      "enum": [
+        "CREATE_BRANCH",
+        "CREATE_PULL_REQUEST",
+        "UPDATE_PULL_REQUEST",
+        "MERGE_PULL_REQUEST",
+        "DELETE_BRANCH",
+        "CREATE_WORKTREE",
+        "REMOVE_WORKTREE",
+        "RELEASE_OWNERSHIP",
+        "CLOSE_PULL_REQUEST",
+        "SUPERSEDE_PULL_REQUEST",
+        "RECORD_REVIEW",
+        "VERIFY_INTEGRATED_TREE"
+      ],
+      "title": "GitOperationType",
+      "type": "string"
+    },
+    "LifecycleStep": {
+      "additionalProperties": false,
+      "properties": {
+        "expected_head_sha": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Expected Head Sha"
+        },
+        "intent_fingerprint": {
+          "pattern": "^[0-9a-f]{64}$",
+          "title": "Intent Fingerprint",
+          "type": "string"
+        },
+        "operation_type": {
+          "$ref": "#/$defs/GitOperationType"
+        },
+        "readback": {
+          "additionalProperties": true,
+          "title": "Readback",
+          "type": "object"
+        },
+        "state": {
+          "$ref": "#/$defs/GitOperationState"
+        },
+        "step_id": {
+          "title": "Step Id",
+          "type": "string"
+        },
+        "unknown_outcome": {
+          "default": false,
+          "title": "Unknown Outcome",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "step_id",
+        "operation_type",
+        "state",
+        "intent_fingerprint"
+      ],
+      "title": "LifecycleStep",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_lifecycle_record.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "cleanup_completed": {
+      "default": false,
+      "title": "Cleanup Completed",
+      "type": "boolean"
+    },
+    "created_at_utc": {
+      "format": "date-time",
+      "title": "Created At Utc",
+      "type": "string"
+    },
+    "head_sha": {
+      "title": "Head Sha",
+      "type": "string"
+    },
+    "integrated_tree_verified": {
+      "default": false,
+      "title": "Integrated Tree Verified",
+      "type": "boolean"
+    },
+    "jira_reconciled": {
+      "default": false,
+      "title": "Jira Reconciled",
+      "type": "boolean"
+    },
+    "lifecycle_id": {
+      "title": "Lifecycle Id",
+      "type": "string"
+    },
+    "pull_number": {
+      "minimum": 1,
+      "title": "Pull Number",
+      "type": "integer"
+    },
+    "repository_slug": {
+      "title": "Repository Slug",
+      "type": "string"
+    },
+    "steps": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/LifecycleStep"
+      },
+      "title": "Steps",
+      "type": "array"
+    }
+  },
+  "required": [
+    "lifecycle_id",
+    "repository_slug",
+    "pull_number",
+    "head_sha"
+  ],
+  "title": "LifecycleRecord",
+  "type": "object"
+}

@@ -3,17 +3,27 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "properties": {
+    "allow_deletions": {
+      "default": false,
+      "title": "Allow Deletions",
+      "type": "boolean"
+    },
+    "allow_force_pushes": {
+      "default": false,
+      "title": "Allow Force Pushes",
+      "type": "boolean"
+    },
     "branch": {
       "title": "Branch",
       "type": "string"
     },
     "dismiss_stale_reviews": {
-      "default": false,
+      "default": true,
       "title": "Dismiss Stale Reviews",
       "type": "boolean"
     },
     "enforce_admins": {
-      "default": false,
+      "default": true,
       "title": "Enforce Admins",
       "type": "boolean"
     },
@@ -30,6 +40,21 @@
       "title": "Require Code Owner Reviews",
       "type": "boolean"
     },
+    "require_conversation_resolution": {
+      "default": true,
+      "title": "Require Conversation Resolution",
+      "type": "boolean"
+    },
+    "require_last_push_approval": {
+      "default": false,
+      "title": "Require Last Push Approval",
+      "type": "boolean"
+    },
+    "require_linear_history": {
+      "default": true,
+      "title": "Require Linear History",
+      "type": "boolean"
+    },
     "required_approving_review_count": {
       "default": 0,
       "minimum": 0,
@@ -43,6 +68,16 @@
       },
       "title": "Required Status Checks",
       "type": "array"
+    },
+    "required_status_checks_strict": {
+      "default": true,
+      "title": "Required Status Checks Strict",
+      "type": "boolean"
+    },
+    "reviews_object_present": {
+      "default": true,
+      "title": "Reviews Object Present",
+      "type": "boolean"
     }
   },
   "required": [

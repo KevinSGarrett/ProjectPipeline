@@ -22,7 +22,11 @@
         "DELETE_BRANCH",
         "CREATE_WORKTREE",
         "REMOVE_WORKTREE",
-        "RELEASE_OWNERSHIP"
+        "RELEASE_OWNERSHIP",
+        "CLOSE_PULL_REQUEST",
+        "SUPERSEDE_PULL_REQUEST",
+        "RECORD_REVIEW",
+        "VERIFY_INTEGRATED_TREE"
       ],
       "title": "GitOperationType",
       "type": "string"
