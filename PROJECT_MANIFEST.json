@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "ef4bd669706c5024cf0cb8aabc08581f3b9adf49da69f153b270b0bc5ad862cf",
+  "aggregate_sha256": "20c02c3666e87ef1e33b00e2b2dbc2b097abb68050dd955f08670e79bc7200dd",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -13602,8 +13602,8 @@
     },
     {
       "path": "tests/test_control_cli.py",
-      "sha256": "a13e880906a8bc4c27d0fcd90c106c561a5253b55a8d427779b307d882bfb22a",
-      "size_bytes": 3096
+      "sha256": "38659fb26deedb7a8d8de2c0b6c0bbab88821f3de284b7ed6f18872e2eba7a63",
+      "size_bytes": 3786
     },
     {
       "path": "tests/test_control_domain.py",
@@ -14017,8 +14017,8 @@
     },
     {
       "path": "tests/test_scheduler_cli.py",
-      "sha256": "9ac7a4aeb2ac821e2e34b327f4ac4b646a6f21c71d16bc9df42511fdae5da332",
-      "size_bytes": 8745
+      "sha256": "7fea206bd62962c5fbae4ac9f5f18bafbf5cdc710de69b649ba67437b74ffa4c",
+      "size_bytes": 9357
     },
     {
       "path": "tests/test_scheduler_conflicts.py",
@@ -14236,7 +14236,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T07:02:38.409628+00:00",
+  "generated_at_utc": "2026-08-18T07:07:47.605417+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14245,5 +14245,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25203034
+  "total_bytes": 25204336
 }

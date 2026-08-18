@@ -298,3 +298,27 @@ def test_scheduler_acquire_recovers_claims_from_task_metadata(tmp_path: Path, ca
     assert result["recovered_in_progress_task"] is True
     assert result["lease_bundle"]["acquired"] is True
     assert result["lease_bundle"]["leases"]
+
+
+def test_scheduler_plan_omits_takeover_governor(tmp_path: Path, capsys) -> None:
+    db = tmp_path / "scheduler.db"
+    signals = normal_signals(tmp_path)
+    assert (
+        main(
+            [
+                "scheduler",
+                "plan",
+                "--root",
+                str(ROOT),
+                "--database",
+                str(db),
+                "--max-lanes",
+                "1",
+                "--signals-file",
+                str(signals),
+            ]
+        )
+        == 0
+    )
+    result = json.loads(capsys.readouterr().out)
+    assert "takeover_governor" not in result
