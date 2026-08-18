@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import shutil
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -52,6 +53,9 @@ CURSOR_CLI_ATTESTATION_REF = "evidence/pp379_writer_attestation_evidence.json"
 CURSOR_CLI_QUALIFICATION_REF = "evidence/pp379_writer_provider_qualification_evidence.json"
 _SERVICE_PLAN_KEYS = ("install", "start", "stop", "restart", "uninstall", "status")
 _DEFAULT_REPOSITORY_SLUG = "KevinSGarrett/ProjectPipeline"
+_LIVE_QUAL_JIRA_LOCAL_ID = "PP-TASK-000384"
+_LIVE_QUAL_PROBE_MARKER = "PP384-LIVE-QUAL-PROBE"
+_GITHUB_PROBE_BRANCH = "qual/pp384-live-probe"
 
 
 def _utc_now() -> str:
@@ -100,6 +104,99 @@ def _gh_auth_available() -> bool:
     return completed.returncode == 0
 
 
+def _credential_environment(repository_root: Path) -> dict[str, str]:
+    import os
+
+    from project_pipeline.configuration.loader import parse_env_file
+
+    merged = dict(os.environ)
+    merged.update(parse_env_file(repository_root / ".env"))
+    project_json = repository_root / "config" / "project.json"
+    if project_json.is_file():
+        target_root = json.loads(project_json.read_text(encoding="utf-8")).get("target_local_root")
+        if isinstance(target_root, str) and target_root.strip():
+            canonical_env = Path(target_root).expanduser().resolve() / ".env"
+            if canonical_env.is_file():
+                merged.update(parse_env_file(canonical_env))
+    return merged
+
+
+def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
+    try:
+        completed = subprocess.run(
+            ["gh", "auth", "token"],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        completed = None
+    if completed is not None and completed.returncode == 0:
+        token = completed.stdout.strip()
+        if token:
+            return token, "gh-auth"
+    try:
+        from project_pipeline.configuration.loader import load_runtime_configuration
+        from project_pipeline.configuration.secrets import SecretResolver
+
+        configuration = load_runtime_configuration(
+            repository_root, environment=_credential_environment(repository_root)
+        )
+        token_ref = configuration.settings.integrations.github_token
+        if token_ref is not None:
+            token = SecretResolver(repository_root, _credential_environment(repository_root)).resolve(
+                token_ref
+            )
+            if token.strip():
+                return token, "config"
+    except Exception:
+        pass
+    return None, "none"
+
+
+def _build_jira_adapter(repository_root: Path):
+    from project_pipeline.configuration.loader import load_runtime_configuration
+    from project_pipeline.configuration.secrets import SecretResolver
+    from project_pipeline.jira_steward.adapter import AtlassianJiraCloudAdapter
+
+    configuration = load_runtime_configuration(
+        repository_root, environment=_credential_environment(repository_root)
+    )
+    integrations = configuration.settings.integrations
+    if not integrations.jira_base_url or not integrations.jira_user_email:
+        raise RuntimeError("jira_integration_not_configured")
+    if integrations.jira_api_token is None:
+        raise RuntimeError("jira_api_token_unconfigured")
+    token = SecretResolver(repository_root, _credential_environment(repository_root)).resolve(
+        integrations.jira_api_token
+    )
+    return AtlassianJiraCloudAdapter(
+        base_url=integrations.jira_base_url,
+        user_email=integrations.jira_user_email,
+        api_token=token,
+    )
+
+
+def _resolve_jira_remote_key(adapter: Any, repository_root: Path) -> str | None:
+    task_path = repository_root / "jira" / "tasks" / f"{_LIVE_QUAL_JIRA_LOCAL_ID}.json"
+    if task_path.is_file():
+        payload = json.loads(task_path.read_text(encoding="utf-8"))
+        remote_key = payload.get("remote_jira_key")
+        if isinstance(remote_key, str) and remote_key.strip():
+            return remote_key.strip()
+        observed = payload.get("last_observed_remote_state")
+        if isinstance(observed, dict):
+            observed_key = observed.get("remote_key")
+            if isinstance(observed_key, str) and observed_key.strip():
+                return observed_key.strip()
+    for issue in adapter.iter_issues("PP", page_size=100, fields=("summary", "description")):
+        description = issue.description_text or ""
+        if f"Local ID: {_LIVE_QUAL_JIRA_LOCAL_ID}" in description:
+            return issue.remote_key
+    return None
+
+
 def _probe_github_read(repository_slug: str) -> dict[str, Any]:
     if not _gh_auth_available():
         return {"credential_available": False}
@@ -118,36 +215,155 @@ def _probe_github_read(repository_slug: str) -> dict[str, Any]:
 
 def _probe_jira_read(repository_root: Path) -> dict[str, Any]:
     try:
-        from project_pipeline.configuration.loader import load_runtime_configuration
-        from project_pipeline.configuration.secrets import SecretResolver
-        from project_pipeline.jira_steward.adapter import AtlassianJiraCloudAdapter
+        adapter = _build_jira_adapter(repository_root)
     except ImportError as error:
+        return {"credential_available": False, "reason": error.__class__.__name__}
+    except Exception as error:
         return {"credential_available": False, "reason": error.__class__.__name__}
 
     try:
-        configuration = load_runtime_configuration(repository_root)
-        integrations = configuration.settings.integrations
-        if not integrations.jira_base_url or not integrations.jira_user_email:
-            return {"credential_available": False, "reason": "jira_integration_not_configured"}
-        if integrations.jira_api_token is None:
-            return {"credential_available": False, "reason": "jira_api_token_unconfigured"}
-        token = SecretResolver(repository_root).resolve(integrations.jira_api_token)
-        adapter = AtlassianJiraCloudAdapter(
-            base_url=integrations.jira_base_url,
-            user_email=integrations.jira_user_email,
-            api_token=token,
-        )
         adapter.discover_capabilities()
         project = adapter.get_project_metadata("PP")
+        remote_key = _resolve_jira_remote_key(adapter, repository_root)
         return {
             "credential_available": True,
             "read_ok": True,
             "project_key": project.project_key,
             "project_name": project.name,
+            "remote_key": remote_key,
         }
     except Exception as error:
         return {
             "credential_available": False,
+            "reason": error.__class__.__name__,
+        }
+
+
+def _probe_github_write_readback(repository_slug: str, token: str) -> dict[str, Any]:
+    from project_pipeline.github_steward.adapter import GitHubRestAdapter
+    from project_pipeline.github_steward.ports import GitHubWriteContext
+
+    adapter = GitHubRestAdapter(token=token)
+    context = GitHubWriteContext(
+        actor_id="actor:pp384-live-qual",
+        correlation_id="corr:pp384-github-write-readback",
+        idempotency_key="pp384-live-qual-github-branch-probe",
+        authorization_id="auth:pp384-live-qual-github",
+    )
+    branch_name = _GITHUB_PROBE_BRANCH
+    try:
+        metadata = adapter.get_repository(repository_slug)
+        base_sha = next(
+            (
+                branch.sha
+                for branch in adapter.iter_branches(repository_slug)
+                if branch.name == metadata.default_branch
+            ),
+            None,
+        )
+        if not base_sha:
+            return {"write_attempted": False, "write_readback_ok": False, "reason": "default_branch_sha_unavailable"}
+        existing = {branch.name for branch in adapter.iter_branches(repository_slug)}
+        if branch_name in existing:
+            adapter.delete_branch(repository_slug, branch=branch_name, context=context)
+        created = adapter.create_branch(
+            repository_slug, branch=branch_name, sha=base_sha, context=context
+        )
+        observed_after_create = branch_name in {
+            branch.name for branch in adapter.iter_branches(repository_slug)
+        }
+        adapter.delete_branch(repository_slug, branch=branch_name, context=context)
+        observed_after_delete = branch_name not in {
+            branch.name for branch in adapter.iter_branches(repository_slug)
+        }
+        readback_ok = (
+            observed_after_create
+            and observed_after_delete
+            and created.name == branch_name
+            and bool(created.sha)
+        )
+        return {
+            "write_attempted": True,
+            "write_readback_ok": readback_ok,
+            "branch": branch_name,
+            "base_branch": metadata.default_branch,
+            "created_sha_prefix": created.sha[:12],
+            "observed_after_create": observed_after_create,
+            "observed_after_delete": observed_after_delete,
+            "provider_id": adapter.provider_id,
+        }
+    except Exception as error:
+        return {
+            "write_attempted": True,
+            "write_readback_ok": False,
+            "reason": error.__class__.__name__,
+        }
+
+
+def _probe_jira_write_readback(repository_root: Path) -> dict[str, Any]:
+    from project_pipeline.jira_steward.ports import JiraWriteContext
+
+    try:
+        adapter = _build_jira_adapter(repository_root)
+    except Exception as error:
+        return {"credential_available": False, "write_readback_ok": False, "reason": error.__class__.__name__}
+
+    remote_key = _resolve_jira_remote_key(adapter, repository_root)
+    if not remote_key:
+        return {
+            "credential_available": True,
+            "write_attempted": False,
+            "write_readback_ok": False,
+            "reason": "remote_key_unresolved",
+        }
+
+    context = JiraWriteContext(
+        actor_id="actor:pp384-live-qual",
+        correlation_id="corr:pp384-jira-write-readback",
+        idempotency_key="pp384-live-qual-jira-comment-probe",
+        authorization_id="auth:pp384-live-qual-jira",
+    )
+    probe_body = f"{_LIVE_QUAL_PROBE_MARKER}: governed live qualification probe"
+    try:
+        before = adapter.get_issue(remote_key)
+        if before is None:
+            return {
+                "credential_available": True,
+                "write_attempted": False,
+                "write_readback_ok": False,
+                "remote_key": remote_key,
+                "reason": "issue_not_found",
+            }
+        if any(_LIVE_QUAL_PROBE_MARKER in (comment.body_text or "") for comment in before.comments):
+            return {
+                "credential_available": True,
+                "write_attempted": False,
+                "write_readback_ok": True,
+                "remote_key": remote_key,
+                "idempotent_reuse": True,
+                "provider_id": adapter.provider_id,
+            }
+        comment = adapter.add_comment(remote_key=remote_key, body=probe_body, context=context)
+        after = adapter.get_issue(remote_key)
+        readback_ok = after is not None and any(
+            comment.comment_id == observed.comment_id
+            or _LIVE_QUAL_PROBE_MARKER in (observed.body_text or "")
+            for observed in after.comments
+        )
+        return {
+            "credential_available": True,
+            "write_attempted": True,
+            "write_readback_ok": readback_ok,
+            "remote_key": remote_key,
+            "comment_id": comment.comment_id,
+            "provider_id": adapter.provider_id,
+        }
+    except Exception as error:
+        return {
+            "credential_available": True,
+            "write_attempted": True,
+            "write_readback_ok": False,
+            "remote_key": remote_key,
             "reason": error.__class__.__name__,
         }
 
@@ -334,26 +550,57 @@ def _qualify_github_jira_governance(repository_root: Path) -> StageResult:
     github_probe = _probe_github_read(repository_slug)
     jira_probe = _probe_jira_read(repository_root)
     read_ok = bool(github_probe.get("read_ok")) or bool(jira_probe.get("read_ok"))
-    reasons = [
-        "governed write/readback qualification is out of scope for attestation-free stage-C; read probes are honest",
-    ]
-    if not read_ok:
-        reasons.insert(
-            0,
-            "authorized GitHub/Jira live read requires scoped credentials; write/readback not attempted",
-        )
+
+    github_write_probe: dict[str, Any] = {
+        "write_attempted": False,
+        "write_readback_ok": False,
+        "reason": "github_token_unavailable",
+    }
+    token, token_source = _resolve_github_token(repository_root)
+    if token:
+        github_write_probe = _probe_github_write_readback(repository_slug, token)
+        github_write_probe["token_source"] = token_source
+
+    jira_write_probe = _probe_jira_write_readback(repository_root)
+    github_ok = bool(github_write_probe.get("write_readback_ok"))
+    jira_ok = bool(jira_write_probe.get("write_readback_ok"))
+    write_readback_ok = github_ok and jira_ok
+
+    if write_readback_ok:
+        outcome = StageOutcome.PASSED
+        reasons: tuple[str, ...] = ()
+    else:
+        outcome = StageOutcome.BLOCKED_EXTERNAL
+        blocked_reasons: list[str] = []
+        if not read_ok:
+            blocked_reasons.append(
+                "authorized GitHub/Jira live read requires scoped credentials before write/readback"
+            )
+        if not github_ok:
+            blocked_reasons.append(
+                "GitHub governed write/readback did not complete with receipt-bound readback"
+            )
+        if not jira_ok:
+            blocked_reasons.append(
+                "Jira governed write/readback did not complete with receipt-bound readback"
+            )
+        reasons = tuple(blocked_reasons)
+
     return StageResult(
         stage_id="github_jira_governance",
-        outcome=StageOutcome.BLOCKED_EXTERNAL,
+        outcome=outcome,
         observations={
             "adapters_present": True,
             "live_mutation_required": True,
             "qualification_class": "authorized_sandbox_or_live",
             "github_probe": github_probe,
             "jira_probe": jira_probe,
+            "github_write_probe": github_write_probe,
+            "jira_write_probe": jira_write_probe,
             "read_probe_ok": read_ok,
+            "write_readback_ok": write_readback_ok,
         },
-        reasons=tuple(reasons),
+        reasons=reasons,
     )
 
 
@@ -391,7 +638,10 @@ def run_live_qualification(
     disposable_root: Path | None = None,
 ) -> dict[str, Any]:
     repository_root = repository_root.resolve()
-    root = (disposable_root or (repository_root / ".local" / "live_qualification_runtime")).resolve()
+    default_root = repository_root / ".local" / "live_qualification_runtime"
+    root = (disposable_root or default_root).resolve()
+    if disposable_root is None and root.exists():
+        shutil.rmtree(root)
     root.mkdir(parents=True, exist_ok=True)
     stages = (
         _qualify_windows_service(repository_root=repository_root, disposable_root=root),

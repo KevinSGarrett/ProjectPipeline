@@ -1,7 +1,7 @@
 {
   "disposable_root": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime",
-  "generated_at_utc": "2026-08-18T10:44:05.731081+00:00",
-  "report_sha256": "f68a3b604965b36294c235a6948d6949e0986566e9f735afe66c41550f398eb6",
+  "generated_at_utc": "2026-08-18T10:51:11.085483+00:00",
+  "report_sha256": "1c4bc2af6f0b111fa857813a87ee979b9199b1f3db5b9f704e8290f69bdcdfd9",
   "schema_version": "1.0.0",
   "stages": [
     {
@@ -87,18 +87,39 @@
           "repository_name": "ProjectPipeline",
           "repository_url": "https://github.com/KevinSGarrett/ProjectPipeline"
         },
+        "github_write_probe": {
+          "base_branch": "main",
+          "branch": "qual/pp384-live-probe",
+          "created_sha_prefix": "6df17715096f",
+          "observed_after_create": true,
+          "observed_after_delete": true,
+          "provider_id": "github-rest",
+          "token_source": "gh-auth",
+          "write_attempted": true,
+          "write_readback_ok": true
+        },
         "jira_probe": {
-          "credential_available": false,
-          "reason": "jira_integration_not_configured"
+          "credential_available": true,
+          "project_key": "PP",
+          "project_name": "Project Pipeline",
+          "read_ok": true,
+          "remote_key": "PP-393"
+        },
+        "jira_write_probe": {
+          "comment_id": "14372",
+          "credential_available": true,
+          "provider_id": "atlassian-jira-cloud",
+          "remote_key": "PP-393",
+          "write_attempted": true,
+          "write_readback_ok": true
         },
         "live_mutation_required": true,
         "qualification_class": "authorized_sandbox_or_live",
-        "read_probe_ok": true
+        "read_probe_ok": true,
+        "write_readback_ok": true
       },
-      "outcome": "BLOCKED_EXTERNAL",
-      "reasons": [
-        "governed write/readback qualification is out of scope for attestation-free stage-C; read probes are honest"
-      ],
+      "outcome": "PASSED",
+      "reasons": [],
       "stage_id": "github_jira_governance"
     },
     {

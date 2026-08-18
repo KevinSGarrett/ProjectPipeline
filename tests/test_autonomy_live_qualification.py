@@ -45,6 +45,9 @@ def test_live_qualification_passes_local_stages_and_blocks_cursor_cli(tmp_path: 
     assert governance["observations"]["adapters_present"] is True
     assert "github_probe" in governance["observations"]
     assert "jira_probe" in governance["observations"]
+    assert "github_write_probe" in governance["observations"]
+    assert "jira_write_probe" in governance["observations"]
+    assert governance["observations"]["write_readback_ok"] is False
 
     cursor_cli = by_id["cursor_cli_provider_dispatch"]
     assert cursor_cli["outcome"] == StageOutcome.HUMAN_REQUIRED.value
