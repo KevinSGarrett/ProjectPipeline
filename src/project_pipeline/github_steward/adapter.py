@@ -115,18 +115,34 @@ class GitHubRestAdapter(GitHubRemotePort):
                 if str(item).strip()
             )
         )
-        reviews = payload.get("required_pull_request_reviews") or {}
+        reviews_raw = payload.get("required_pull_request_reviews")
+        reviews = reviews_raw or {}
         return GitHubBranchProtection(
             repository_slug=repository_slug,
             branch=branch,
             protected=True,
             required_status_checks=contexts,
+            required_status_checks_strict=bool(
+                (payload.get("required_status_checks") or {}).get("strict", False)
+            ),
+            reviews_object_present=reviews_raw is not None,
             required_approving_review_count=int(
                 reviews.get("required_approving_review_count") or 0
             ),
             dismiss_stale_reviews=bool(reviews.get("dismiss_stale_reviews", False)),
             require_code_owner_reviews=bool(reviews.get("require_code_owner_reviews", False)),
+            require_last_push_approval=bool(reviews.get("require_last_push_approval", False)),
             enforce_admins=bool((payload.get("enforce_admins") or {}).get("enabled", False)),
+            require_linear_history=bool(
+                (payload.get("required_linear_history") or {}).get("enabled", False)
+            ),
+            require_conversation_resolution=bool(
+                (payload.get("required_conversation_resolution") or {}).get("enabled", False)
+            ),
+            allow_force_pushes=bool(
+                (payload.get("allow_force_pushes") or {}).get("enabled", False)
+            ),
+            allow_deletions=bool((payload.get("allow_deletions") or {}).get("enabled", False)),
         )
 
     def get_pull_request(self, repository_slug: str, number: int) -> PullRequestSnapshot | None:
