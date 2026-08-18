@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "fe51dddd16541cf27b0cc338544cfb60294bb2010ec43f1a6812afe55b6f0606",
+  "aggregate_sha256": "66d49f7eebc23b62b8bca952381b3ba4edaed8a4a0b32aca1bb5ae8a9bc206d4",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2834,
+  "file_count": 2837,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -42,8 +42,8 @@
     },
     {
       "path": ".agents/skills/remote-cpu-worker/SKILL.md",
-      "sha256": "17a89bcc31833c9f6a98b1a9957f4dc2b5abde55b2ffe44154b46448edf1684e",
-      "size_bytes": 914
+      "sha256": "2cb341baa2240a15ffbe6702a534611a8b152667c987ff04b5c0c60360d35fb6",
+      "size_bytes": 953
     },
     {
       "path": ".agents/skills/upstream-qualification/SKILL.md",
@@ -5067,8 +5067,8 @@
     },
     {
       "path": "instructions/16_REMOTE_MACHINE_AND_RESOURCE_PROTOCOL.md",
-      "sha256": "ee938dc8038bd4fb80dbc5b42926c0c97427b81e5a6f8097df3e948fff9e4e40",
-      "size_bytes": 3103
+      "sha256": "6828cec633df4d4ee816f5be0cb08a4f7d0150a3ed3475ef8dbc34acef2f1168",
+      "size_bytes": 3193
     },
     {
       "path": "instructions/17_FAILURE_RECOVERY_AND_RESUMPTION.md",
@@ -5092,8 +5092,8 @@
     },
     {
       "path": "instructions/AUTHORITY_MAP.json",
-      "sha256": "6ad284c928cd72270a373c0de8eea9ba486af5f40513c83aaa1510ae6f41eb3b",
-      "size_bytes": 4120
+      "sha256": "4a2eda50b414b290e5ec4659d72a76bcb03c627ecd9b5b29da767f4a497e6d81",
+      "size_bytes": 4159
     },
     {
       "path": "instructions/CHANGELOG.md",
@@ -5122,7 +5122,7 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "57f307e8f976a06e687bf5a289bdb3bea4fb50f5f61ee53ec176cfbce2a5e858",
+      "sha256": "e725dc52f2e75f11c22a57889a7c848aefd3641c92be53459bcaf036926f6f56",
       "size_bytes": 25491
     },
     {
@@ -12052,8 +12052,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "e53ba7da975fcf2ea6b950a771dae606e1de4bb4e2b567a07d612e11b7ca9288",
-      "size_bytes": 140431
+      "sha256": "ded70a2231675ddb9da99d673578109c35e2d0e3aec4e9041507772207b76bb5",
+      "size_bytes": 142406
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12649,6 +12649,11 @@
       "path": "src/project_pipeline/lifecycle/takeover.py",
       "sha256": "05e5349ac1aa1b8fc013854f2936a966d17e5620a3b40a623544de430de3d8a5",
       "size_bytes": 14321
+    },
+    {
+      "path": "src/project_pipeline/lifecycle/takeover_cli.py",
+      "sha256": "8d5fa0aad09f45a356d530d0bfc6902883659a7cfd38569aa7f6165107f72edf",
+      "size_bytes": 29600
     },
     {
       "path": "src/project_pipeline/lifecycle/validation.py",
@@ -13652,8 +13657,8 @@
     },
     {
       "path": "tests/test_instruction_system.py",
-      "sha256": "6c076256eb1b70f351d6fa98bb28755fcb5cc6a085949fbb34b6219ef9a90a13",
-      "size_bytes": 8761
+      "sha256": "87fdebea25094ee889ec2742f985f4eec919bf9df1a5210ed4eb65543471edd8",
+      "size_bytes": 9403
     },
     {
       "path": "tests/test_intake_cli.py",
@@ -14056,6 +14061,16 @@
       "size_bytes": 2674
     },
     {
+      "path": "tests/test_takeover_reconciliation_parity.py",
+      "sha256": "336dd21fdd0d411dcb37b890783a0efad2800ab4df4bbd77a6677272a4ab2b17",
+      "size_bytes": 4526
+    },
+    {
+      "path": "tests/test_takeover_writer_flow.py",
+      "sha256": "9da85e8e9c1e58b239d068cb736839024adbbe513d31dd7493ffd5b3ac364613",
+      "size_bytes": 5295
+    },
+    {
       "path": "tests/test_traceability.py",
       "sha256": "eaee850a498be5c25995ed768b4e21d932606f1f2a83fba9c6c52a568f6967ec",
       "size_bytes": 2708
@@ -14181,7 +14196,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-17T21:47:35.407579+00:00",
+  "generated_at_utc": "2026-08-18T03:13:42.651735+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14190,5 +14205,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25097986
+  "total_bytes": 25140192
 }
