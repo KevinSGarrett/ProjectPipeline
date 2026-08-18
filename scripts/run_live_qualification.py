@@ -19,6 +19,8 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--disposable-root", type=Path)
     parser.add_argument("--evidence-dir", type=Path)
+    parser.add_argument("--attestation-source-root", type=Path)
+    parser.add_argument("--durable-dir", type=Path)
     parser.add_argument("--write-evidence", action="store_true")
     args = parser.parse_args()
     if args.write_evidence:
@@ -26,12 +28,16 @@ def main() -> int:
             repository_root=args.root.resolve(),
             evidence_dir=args.evidence_dir,
             disposable_root=args.disposable_root,
+            attestation_source_root=args.attestation_source_root,
+            durable_dir=args.durable_dir,
         )
         print(json.dumps({"written": str(output)}, indent=2, sort_keys=True))
         return 0
     report = run_live_qualification(
         repository_root=args.root.resolve(),
         disposable_root=args.disposable_root,
+        attestation_source_root=args.attestation_source_root,
+        durable_dir=args.durable_dir,
     )
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0

@@ -1,7 +1,15 @@
 {
-  "schema_version": "1.0.0",
-  "generated_at_utc": "2026-08-18T05:20:58.426435+00:00",
-  "authority_mode": "SOURCE_CONTROLLED_LOCAL",
+  "authority_mode": "SOURCE_CONTROLLED_LOCAL_PLUS_LIVE_READBACK",
+  "diff_classification": {
+    "comments": "NO_DIFFERENCE",
+    "hierarchy": "NO_DIFFERENCE",
+    "identity": "NO_DIFFERENCE",
+    "links": "NO_DIFFERENCE",
+    "metadata": "NO_DIFFERENCE",
+    "status": "NO_DIFFERENCE"
+  },
+  "generated_at_utc": "2026-08-18T18:25:36.881733+00:00",
+  "human_required_steps": [],
   "instruction_citations": [
     "instructions/06_JIRA_OPERATING_PROTOCOL.md",
     "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
@@ -10,48 +18,55 @@
     "instructions/AUTHORITY_MAP.json",
     "instructions/policies/CONTEXT_ROUTING.json"
   ],
-  "project_key": "PP",
-  "local_mirror_fingerprint": "24e371909d02b1944aae08437dbc8cadffbf9d9db6df676e2f549ea7b3459b4f",
-  "local_issue_count": 393,
   "local_edge_count": 848,
+  "local_issue_count": 393,
+  "local_mirror_fingerprint": "4c143c8368733db8632f638e0dae9b867fdbec16d9516261ed7dcba94acf5afc",
+  "parity_status": "PARITY_CONFIRMED",
   "plan_id": "JPLAN-30A6C466043D4D29E49E",
-  "receipt_id": "JREC-790EA40F27197575C8F4",
-  "receipt_result": "APPLIED",
-  "readback_verified": false,
-  "readback_source": "MCP:plugin-atlassian-atlassian",
+  "project_key": "PP",
   "readback": {
-    "total_count": 378,
+    "comment_not_empty": 0,
+    "issueLinkType_not_empty": 328,
+    "labels_not_empty": 378,
+    "parent_not_empty": 123,
     "status_counts": {
-      "To Do": 371,
+      "Done": 0,
       "In Progress": 7,
-      "Done": 0
+      "To Do": 371
     },
+    "total_count": 378,
     "type_counts": {
       "Epic": 18,
       "Story": 107,
-      "Task": 237,
-      "Sub-task": 16
-    },
-    "parent_not_empty": 123,
-    "issueLinkType_not_empty": 328,
-    "comment_not_empty": 0,
-    "labels_not_empty": 378
-  },
-  "diff_classification": {
-    "identity": "NO_DIFFERENCE",
-    "status": "NO_DIFFERENCE",
-    "hierarchy": "NO_DIFFERENCE",
-    "links": "NO_DIFFERENCE",
-    "comments": "NO_DIFFERENCE",
-    "metadata": "NO_DIFFERENCE"
-  },
-  "parity_status": "LOCAL_ONLY_TOKEN_PARKED",
-  "human_required_steps": [
-    {
-      "step": "HUMAN_REQUIRED_JIRA_API_TOKEN_FOR_GOVERNED_ADAPTER",
-      "scope": "governed atlassian adapter write/readback path",
-      "status": "OPEN"
+      "Sub-task": 16,
+      "Task": 237
     }
-  ],
-  "deterministic_next_command": ".\\venv\\Scripts\\python.exe -m project_pipeline jira snapshot --root . --provider atlassian --output .local/jira/remote_snapshot.json --json-output evidence/jira_snapshot.json"
+  },
+  "readback_source": "MCP:plugin-atlassian-atlassian",
+  "readback_verified": true,
+  "receipt_id": "JREC-790EA40F27197575C8F4",
+  "receipt_result": "APPLIED",
+  "reconciled_remote_keys": {
+    "PP-TASK-000380": {
+      "live_state": "Done",
+      "remote_key": "PP-392"
+    },
+    "PP-TASK-000381": {
+      "live_state": "Done",
+      "remote_key": "PP-390"
+    },
+    "PP-TASK-000382": {
+      "live_state": "Done",
+      "remote_key": "PP-389"
+    },
+    "PP-TASK-000383": {
+      "live_state": "Done",
+      "remote_key": "PP-387"
+    },
+    "PP-TASK-000384": {
+      "live_state": "To Do",
+      "remote_key": "PP-393"
+    }
+  },
+  "schema_version": "1.0.0"
 }

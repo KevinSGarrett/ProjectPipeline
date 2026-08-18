@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 511,
+  "test_count": 518,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -406,6 +406,41 @@
       "callable": "test_all_budget_simulations_execute_deterministically",
       "path": "tests/test_budget_simulation.py",
       "test_id": "TEST-BUDGET-SIM-001"
+    },
+    {
+      "callable": "test_current_policy_accepts_exact_preserved_bytes",
+      "path": "tests/test_attestation_recovery.py",
+      "test_id": "TEST-C11-ATTEST-001"
+    },
+    {
+      "callable": "test_pp380_done_with_live_readback_and_audit",
+      "path": "tests/test_cycle11_pp380_384_bound.py",
+      "test_id": "TEST-C11-PP380-001"
+    },
+    {
+      "callable": "test_pp381_done_with_live_readback_and_audit",
+      "path": "tests/test_cycle11_pp380_384_bound.py",
+      "test_id": "TEST-C11-PP381-001"
+    },
+    {
+      "callable": "test_pp382_done_with_live_readback_and_audit",
+      "path": "tests/test_cycle11_pp380_384_bound.py",
+      "test_id": "TEST-C11-PP382-001"
+    },
+    {
+      "callable": "test_pp383_done_with_live_readback_and_audit",
+      "path": "tests/test_cycle11_pp380_384_bound.py",
+      "test_id": "TEST-C11-PP383-001"
+    },
+    {
+      "callable": "test_pp384_provider_state_machine_is_bound_and_not_human_stop",
+      "path": "tests/test_cycle11_pp380_384_bound.py",
+      "test_id": "TEST-C11-PP384-001"
+    },
+    {
+      "callable": "test_copying_arbitrary_json_cannot_pass_pp384",
+      "path": "tests/test_cursor_cli_qualification.py",
+      "test_id": "TEST-C11-QUAL-001"
     },
     {
       "callable": "test_agui_run_requires_lifecycle_bookends",
@@ -1198,6 +1233,11 @@
       "test_id": "TEST-GITHUB-DOMAIN-001"
     },
     {
+      "callable": "test_lifecycle_end_to_end_mock_merge_and_delete",
+      "path": "tests/test_github_steward_lifecycle.py",
+      "test_id": "TEST-GITHUB-LIFECYCLE-001"
+    },
+    {
       "callable": "test_worktree_creation_and_dirty_removal_protection",
       "path": "tests/test_local_git_repository.py",
       "test_id": "TEST-GITHUB-LOCAL-GIT-001"
@@ -1216,11 +1256,6 @@
       "callable": "test_unknown_merge_outcome_is_not_retried",
       "path": "tests/test_github_mock_and_service.py",
       "test_id": "TEST-GITHUB-STEWARDSHIP-002"
-    },
-    {
-      "callable": "test_lifecycle_end_to_end_mock_merge_and_delete",
-      "path": "tests/test_github_steward_lifecycle.py",
-      "test_id": "TEST-GITHUB-LIFECYCLE-001"
     },
     {
       "callable": "IdentifierTests.test_valid_identifiers_match",

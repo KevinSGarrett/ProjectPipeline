@@ -1,0 +1,10 @@
+{
+  "approved": true,
+  "approved_at_utc": "2026-08-16T22:00:00+00:00",
+  "evidence_fingerprint": "b47d6d76d6eb7221e1d5d074f22b3793714ca120487314dd3816394f3745c32f",
+  "evidence_ref": "evidence/pp379_writer_attestation_evidence.json",
+  "fingerprint": "a21027dbe356826f49b350e6bc9ec6d5c4cd5d00a0e440d6995313dc61942b89",
+  "project_id": "PROJECT-PIPELINE",
+  "provider_id": "provider:cursor-cli",
+  "scope": "local-governed-phase1"
+}

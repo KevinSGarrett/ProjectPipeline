@@ -1009,6 +1009,18 @@ def build_parser() -> argparse.ArgumentParser:
     upstream.add_argument("--convergence", action="store_true")
     upstream.add_argument("--write-views", action="store_true")
 
+    attestation = commands.add_parser(
+        "attestation",
+        help="Recover and validate exact-byte PP-379 attestation artifacts",
+    )
+    attestation.add_argument("action", choices=("recover",))
+    attestation.add_argument("--root", type=_root, default=Path.cwd())
+    attestation.add_argument("--source-root", type=Path)
+    attestation.add_argument("--durable-dir", type=Path)
+    attestation.add_argument("--verification-dir", type=Path)
+    attestation.add_argument("--apply", action="store_true")
+    attestation.add_argument("--json-output", type=Path)
+
     archive = commands.add_parser("archive", help="Create a deterministic project ZIP")
     archive.add_argument("--root", type=_root, default=Path.cwd())
     archive.add_argument("--output", type=Path, required=True)
@@ -3233,6 +3245,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             _write_json_output(rows, None)
             return 0 if rows or not (args.id or args.repository) else 1
+        if args.command == "attestation":
+            from project_pipeline.lifecycle.attestation_recovery import recover_and_restore
+
+            result = recover_and_restore(
+                repository_root=args.root,
+                source_root=args.source_root,
+                durable_dir=args.durable_dir,
+                verification_dir=args.verification_dir,
+                apply=args.apply,
+            )
+            _write_json_output(result, args.json_output)
+            return 0 if result["evaluation"]["accepted_for_restore"] else 1
         if args.command == "archive":
             output = create_archive(args.root, args.output)
             report = verify_archive(output, args.root.name)

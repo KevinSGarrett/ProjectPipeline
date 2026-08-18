@@ -22,7 +22,9 @@
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "EVID-000177"
+  ],
   "definition_of_done": [
     "Previous defective state fails the new validators.",
     "All canonical model layers agree.",
@@ -49,7 +51,8 @@
     "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
     "src/project_pipeline/validation/product_outcome.py",
     "src/project_pipeline/validation/product_model_audit.py",
-    "tests/test_product_outcome_contract.py"
+    "tests/test_product_outcome_contract.py",
+    "tests/test_cycle11_pp380_384_bound.py"
   ],
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
@@ -59,7 +62,13 @@
     "model-realignment",
     "product-outcome"
   ],
-  "last_observed_remote_state": null,
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+    "remote_id": "25366",
+    "remote_key": "PP-392",
+    "snapshot_id": "C11-LIVE-PP392",
+    "status_name": "Done"
+  },
   "local_id": "PP-TASK-000380",
   "objective": "Repair product definition and source-to-control traceability",
   "observability_impact": "Adds explicit product-outcome drift and reconciliation findings.",
@@ -87,8 +96,10 @@
       "type": "BLOCKS"
     }
   ],
-  "remote_jira_key": null,
-  "required_tests": [],
+  "remote_jira_key": "PP-392",
+  "required_tests": [
+    "TEST-C11-PP380-001"
+  ],
   "requirement_ids": [
     "REQ-PDEF-0011"
   ],
@@ -108,7 +119,7 @@
     "SRC-014:L000001-L000086",
     "SRC-015:L000001-L000112"
   ],
-  "state": "IN_PROGRESS",
+  "state": "DONE",
   "title": "Repair product definition and source-to-control traceability",
   "upstream_dependencies": []
 }

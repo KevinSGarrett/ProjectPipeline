@@ -12,7 +12,9 @@
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "EVID-000177"
+  ],
   "definition_of_done": [
     "Persistent service entry point exists and runs.",
     "Operations are idempotent and restart-safe.",
@@ -33,7 +35,8 @@
   ],
   "expected_implementation_artifacts": [
     "src/project_pipeline/autonomy_runtime/supervisor.py",
-    "src/project_pipeline/autonomy_runtime/service.py"
+    "src/project_pipeline/autonomy_runtime/service.py",
+    "tests/test_cycle11_pp380_384_bound.py"
   ],
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
@@ -43,7 +46,13 @@
     "cohesive-slice",
     "implemented"
   ],
-  "last_observed_remote_state": null,
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+    "remote_id": "25364",
+    "remote_key": "PP-390",
+    "snapshot_id": "C11-LIVE-PP390",
+    "status_name": "Done"
+  },
   "local_id": "PP-TASK-000381",
   "objective": "Implement the persistent Autonomy Runtime supervisor",
   "observability_impact": "Records durable cycles, operations, dispatches, results, state recomputation, and continuation.",
@@ -75,8 +84,10 @@
       "type": "BLOCKS"
     }
   ],
-  "remote_jira_key": null,
-  "required_tests": [],
+  "remote_jira_key": "PP-390",
+  "required_tests": [
+    "TEST-C11-PP381-001"
+  ],
   "requirement_ids": [
     "REQ-PDEF-0011",
     "REQ-CTRL-0004"
@@ -93,7 +104,7 @@
   "source_references": [
     "SRC-014:L000005-L000086"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement the persistent Autonomy Runtime supervisor",
   "upstream_dependencies": []
 }

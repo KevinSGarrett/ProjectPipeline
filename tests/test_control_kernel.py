@@ -43,7 +43,7 @@ def test_ready_plan_is_read_only_and_versioned(tmp_path: Path) -> None:
         before = {item.task_id: item.version for item in store.list_task_states("PROJECT-PIPELINE")}
         plan = kernel.readiness_transition_plan()
         after = {item.task_id: item.version for item in store.list_task_states("PROJECT-PIPELINE")}
-        assert plan == ()
+        assert {item["task_id"] for item in plan} == {"PP-TASK-000384"}
         assert before == after
 
 
@@ -62,12 +62,15 @@ def test_apply_readiness_transitions_uses_optimistic_state_api(tmp_path: Path) -
 def test_targeted_readiness_apply_preserves_other_ready_backlog_items(tmp_path: Path) -> None:
     with initialized_store(tmp_path / "control.db") as store:
         kernel = ProjectControlKernel(ROOT, store, "PROJECT-PIPELINE")
-        assert kernel.readiness_transition_plan() == ()
+        plan = kernel.readiness_transition_plan()
+        assert {item["task_id"] for item in plan} == {"PP-TASK-000384"}
         results = kernel.apply_readiness_transitions(
             actor_id="actor:test-control",
             correlation_id="corr:test-control-targeted",
+            task_ids=frozenset({"PP-TASK-000384"}),
         )
-        assert results == ()
+        assert {item["task_id"] for item in results} == {"PP-TASK-000384"}
+        assert kernel.readiness_transition_plan() == ()
 
 
 def test_targeted_readiness_plan_rejects_unknown_task(tmp_path: Path) -> None:

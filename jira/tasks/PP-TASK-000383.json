@@ -12,7 +12,9 @@
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "EVID-000177"
+  ],
   "definition_of_done": [
     "Real source and tests change in isolated Git worktrees.",
     "Independent verification and governed integration pass.",
@@ -35,7 +37,8 @@
   ],
   "expected_implementation_artifacts": [
     "fixtures/autonomy_runtime/golden_project",
-    "tests/integration/autonomy_runtime/test_golden_journey.py"
+    "tests/integration/autonomy_runtime/test_golden_journey.py",
+    "tests/test_cycle11_pp380_384_bound.py"
   ],
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
@@ -46,7 +49,13 @@
     "cohesive-slice",
     "implemented"
   ],
-  "last_observed_remote_state": null,
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+    "remote_id": "25361",
+    "remote_key": "PP-387",
+    "snapshot_id": "C11-LIVE-PP387",
+    "status_name": "Done"
+  },
   "local_id": "PP-TASK-000383",
   "objective": "Prove the complete local-real autonomous project journey",
   "observability_impact": "Preserves evidence for every material operation and exposes truthful live journey state.",
@@ -78,8 +87,10 @@
       "type": "BLOCKS"
     }
   ],
-  "remote_jira_key": null,
-  "required_tests": [],
+  "remote_jira_key": "PP-387",
+  "required_tests": [
+    "TEST-C11-PP383-001"
+  ],
   "requirement_ids": [
     "REQ-PDEF-0011"
   ],
@@ -94,7 +105,7 @@
     "SRC-014:L000001-L000086",
     "SRC-015:L000001-L000112"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Prove the complete local-real autonomous project journey",
   "upstream_dependencies": []
 }

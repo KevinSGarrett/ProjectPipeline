@@ -6778,25 +6778,25 @@
     },
     {
       "id": "PP-TASK-000380",
-      "state": "IN_PROGRESS",
+      "state": "DONE",
       "title": "Repair product definition and source-to-control traceability",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000381",
-      "state": "BACKLOG",
+      "state": "DONE",
       "title": "Implement the persistent Autonomy Runtime supervisor",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000382",
-      "state": "BACKLOG",
+      "state": "DONE",
       "title": "Integrate conflict-safe lanes, recovery, and partial continuation",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000383",
-      "state": "BACKLOG",
+      "state": "DONE",
       "title": "Prove the complete local-real autonomous project journey",
       "type": "TASK"
     },
