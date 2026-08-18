@@ -1,7 +1,7 @@
 # Generated Repository Map
 
-- Files: `2837`
-- Generated: `2026-08-17T20:53:50.696824+00:00`
+- Files: `2865`
+- Generated: `2026-08-18T18:04:57.808167+00:00`
 
 ## Top-level counts
 
@@ -15,9 +15,9 @@
 - `config`: 41
 - `contracts`: 5
 - `database`: 86
-- `docs`: 67
+- `docs`: 68
 - `dummy`: 429
-- `evidence`: 230
+- `evidence`: 235
 - `fixtures`: 25
 - `infrastructure`: 11
 - `instructions`: 46
@@ -27,11 +27,11 @@
 - `provenance`: 89
 - `release`: 5
 - `requirements`: 5
-- `runbooks`: 27
-- `schemas`: 205
-- `scripts`: 34
-- `src`: 285
-- `tests`: 191
+- `runbooks`: 28
+- `schemas`: 209
+- `scripts`: 36
+- `src`: 292
+- `tests`: 199
 - `third_party`: 1
 
 ## Semantic indexes
@@ -99,6 +99,7 @@
 - `evidence/assurance_simulation_snapshot.json`
 - `evidence/assurance_upstream_gate_snapshot.json`
 - `evidence/autonomy_runtime/golden_journey/golden_journey_latest.json`
+- `evidence/autonomy_runtime/live_qualification/live_qualification_latest.json`
 - `evidence/budget_focused_suite.txt`
 - `evidence/budget_full_regression.txt`
 - `evidence/budget_repository_validation.txt`
@@ -199,11 +200,15 @@
 - `evidence/pp19_regression_part02.txt`
 - `evidence/pp19_regression_part03.txt`
 - `evidence/pp19_regression_part04.txt`
+- `evidence/pp379_attestation_recovery_provenance.json`
 - `evidence/pp379_phase1_boundary_handoff_checkpoint_2026-08-16.md`
 - `evidence/pp379_phase1_control_sequence_snapshot.json`
 - `evidence/pp379_phase1_scheduler_plan_snapshot.json`
 - `evidence/pp379_product_outcome_contract_alignment_checkpoint_2026-08-16.md`
 - `evidence/pp379_takeover_lane_scope_merge_ready_packet_2026-08-16.md`
+- `evidence/pp379_writer_attestation_evidence.json`
+- `evidence/pp379_writer_provider_qualification_evidence.json`
+- `evidence/pp380_383_cycle11_integrated_main_audit.json`
 - `evidence/pp380_cycle5_execution_dispositions.json`
 - `evidence/pp380_cycle5_execution_dispositions.md`
 - `evidence/pp380_cycle6_corrected_dispositions.json`
@@ -1446,12 +1451,16 @@
 - `schemas/event_envelope.schema.json`
 - `schemas/evidence.schema.json`
 - `schemas/github_adapter_capabilities.schema.json`
+- `schemas/github_autonomous_review_receipt.schema.json`
 - `schemas/github_branch.schema.json`
 - `schemas/github_branch_guardian_decision.schema.json`
 - `schemas/github_branch_protection.schema.json`
+- `schemas/github_consolidation_proof.schema.json`
+- `schemas/github_lifecycle_record.schema.json`
 - `schemas/github_merge_gate_decision.schema.json`
 - `schemas/github_operation.schema.json`
 - `schemas/github_operation_receipt.schema.json`
+- `schemas/github_protection_drift_decision.schema.json`
 - `schemas/github_pull_request.schema.json`
 - `schemas/github_pull_request_check.schema.json`
 - `schemas/github_pull_request_review.schema.json`

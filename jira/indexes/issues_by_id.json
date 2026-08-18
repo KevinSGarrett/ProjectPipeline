@@ -48996,8 +48996,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "evidence/pp380_383_cycle11_integrated_main_audit.json",
-      "tests/test_product_outcome_contract.py"
+      "EVID-000177"
     ],
     "definition_of_done": [
       "Previous defective state fails the new validators.",
@@ -49109,8 +49108,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "evidence/pp380_383_cycle11_integrated_main_audit.json",
-      "tests/integration/autonomy_runtime/test_supervisor.py"
+      "EVID-000177"
     ],
     "definition_of_done": [
       "Persistent service entry point exists and runs.",
@@ -49217,8 +49215,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "evidence/pp380_383_cycle11_integrated_main_audit.json",
-      "tests/integration/autonomy_runtime/test_parallel_recovery.py"
+      "EVID-000177"
     ],
     "definition_of_done": [
       "Claims and fencing prevent collision.",
@@ -49329,8 +49326,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "evidence/pp380_383_cycle11_integrated_main_audit.json",
-      "tests/integration/autonomy_runtime/test_golden_journey.py"
+      "EVID-000177"
     ],
     "definition_of_done": [
       "Real source and tests change in isolated Git worktrees.",

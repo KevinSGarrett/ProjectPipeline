@@ -13,8 +13,7 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "evidence/pp380_383_cycle11_integrated_main_audit.json",
-    "tests/integration/autonomy_runtime/test_golden_journey.py"
+    "EVID-000177"
   ],
   "definition_of_done": [
     "Real source and tests change in isolated Git worktrees.",

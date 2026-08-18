@@ -23,8 +23,7 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "evidence/pp380_383_cycle11_integrated_main_audit.json",
-    "tests/test_product_outcome_contract.py"
+    "EVID-000177"
   ],
   "definition_of_done": [
     "Previous defective state fails the new validators.",
