@@ -21,6 +21,7 @@ from project_pipeline.autonomy_runtime.providers import (
     BudgetDecision,
     local_test_provider,
 )
+from project_pipeline.autonomy_runtime.recheck import AutonomousRecheckStore
 from project_pipeline.autonomy_runtime.supervisor import PersistentSupervisor
 from project_pipeline.autonomy_runtime.windows_service import (
     AutonomyRuntimeWindowsService,
@@ -721,6 +722,19 @@ def run_live_qualification(
         "disposable_root": str(root),
         "stages": [stage.as_dict() for stage in stages],
     }
+    recheck_path = root / "external_rechecks.json"
+    store = AutonomousRecheckStore(recheck_path)
+    cursor_stage = next(
+        stage for stage in stages if stage.stage_id == "cursor_cli_provider_dispatch"
+    )
+    if cursor_stage.projected_outcome() is StageOutcome.BLOCKED_EXTERNAL:
+        store.schedule(
+            capability="cursor-cli",
+            reason=" ".join(cursor_stage.reasons) or "cursor-cli executable unavailable",
+            affected_lane_ids=("cursor-cli",),
+            continuing_lane_ids=("windows-service", "command-center", "local-provider"),
+        )
+    body["autonomous_rechecks"] = store.snapshot()
     body["report_sha256"] = _digest(body)
     return body
 

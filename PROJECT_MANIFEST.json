@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "8a3d7916492870e8686031cf65c5bf608d8dbeab7cf50e09dfd584f4b524d972",
+  "aggregate_sha256": "4c297e3f9a6a86eca48bc7d60b127fa7c7a6e64db0e3014a6c8c4c926050ce25",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2867,
+  "file_count": 2869,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -12042,8 +12042,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
-      "sha256": "7a3aded4258fa2c9c416bcff486ba4657cb611a07b0bdeba03cbe5516c6f4865",
-      "size_bytes": 28478
+      "sha256": "a6b4b021da24a4f1064ab578dd3c703cfbcbb43a915e58cfec78852bff2d3d73",
+      "size_bytes": 29194
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/projection.py",
@@ -12059,6 +12059,11 @@
       "path": "src/project_pipeline/autonomy_runtime/qualification.py",
       "sha256": "f8c08d0c714132111cca5a0aa52c2586a0e19ac5efd30dc6707b529708c9f4a6",
       "size_bytes": 19165
+    },
+    {
+      "path": "src/project_pipeline/autonomy_runtime/recheck.py",
+      "sha256": "5f60eaf4ed9e43046eccb4a2a583fe92fb92b584541f445316ce016d953f985c",
+      "size_bytes": 3894
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/recovery.py",
@@ -12167,8 +12172,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/autonomy.py",
-      "sha256": "3e943410f5e13b2b7e3f7619263ac8baf560519a81514c74cc0d59abf480df69",
-      "size_bytes": 4709
+      "sha256": "8ecf2a42f6b65925159223d8b7c7c090cb15003e2a12e19cdb2c0da2ced77e56",
+      "size_bytes": 5045
     },
     {
       "path": "src/project_pipeline/command_center/director.py",
@@ -13486,6 +13491,11 @@
       "size_bytes": 9061
     },
     {
+      "path": "tests/test_autonomous_recheck.py",
+      "sha256": "88a849d12b261d02c63c299a413cefac92c8a6dcb409c534339c19609eb0dba6",
+      "size_bytes": 2393
+    },
+    {
       "path": "tests/test_autonomy_live_qualification.py",
       "sha256": "45c9b7eec42d9ec78c1006bfd25b92b39e3ae4445c00de14735a9cbb4f1aee06",
       "size_bytes": 3072
@@ -14346,7 +14356,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T19:54:17.466216+00:00",
+  "generated_at_utc": "2026-08-18T20:24:35.442823+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14355,5 +14365,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25346816
+  "total_bytes": 25354155
 }
