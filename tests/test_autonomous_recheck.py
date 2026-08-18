@@ -56,3 +56,32 @@ def test_command_center_projects_durable_recheck_without_human_assignment(
     assert rechecks["items"][0]["capability"] == "cursor-cli"
     assert "HUMAN_REQUIRED" not in str(snapshot)
     assert "operator session" not in str(snapshot)
+
+
+def test_execute_due_reschedules_blocked_and_clears_passed(tmp_path: Path) -> None:
+    store = AutonomousRecheckStore(tmp_path / "rechecks.json")
+    now = datetime(2026, 8, 18, 21, 0, tzinfo=UTC)
+    store.schedule(
+        capability="cursor-cli",
+        reason="cursor-cli executable unavailable",
+        interval_seconds=60,
+        now=now - timedelta(seconds=120),
+        continuing_lane_ids=("command-center",),
+    )
+    blocked = store.execute_due(
+        now=now,
+        probes={
+            "cursor-cli": lambda: {"outcome": "BLOCKED_EXTERNAL", "reason": "still unavailable"}
+        },
+    )
+    assert blocked[0]["outcome"] == "BLOCKED_EXTERNAL"
+    assert blocked[0]["global_stop"] is False
+    assert store.snapshot()["count"] == 1
+    passed = store.execute_due(
+        now=now + timedelta(seconds=61),
+        probes={"cursor-cli": lambda: {"outcome": "PASSED", "reason": "executable located"}},
+    )
+    assert passed[0]["outcome"] == "PASSED"
+    assert passed[0]["scheduled"]["cleared"] is True
+    assert store.snapshot()["count"] == 0
+    assert "HUMAN_REQUIRED" not in (tmp_path / "rechecks.json").read_text(encoding="utf-8")
