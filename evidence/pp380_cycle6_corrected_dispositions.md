@@ -20,8 +20,8 @@
 - Receipt kind: `content_addressed_source_bound_not_signed`
 - Source map SHA-256: `f9055cdf3b9aaa30c089f5fb796449692784e314db04b52233d06c682cc9bcbc`
 - Source ledger SHA-256: `1031df5316e123497384e5f0516f7620ebeb181746b7ca19137ba9fd9373ad07`
-- Rows SHA-256: `4077ef247fc40cab595ae8f42d6227038aa43b7094f753a144d2574693dc5277`
-- Self-consistent hash SHA-256: `b5b691a0b42eb32f072fedc0c7dfef2b4d325f34dbb37c4ee6c663e5f4872d3e`
-- Content-addressed receipt SHA-256: `68848add7fad0fc053f11732b33ed3c7aa59b19294c8766708f4a4db8bcaf36c`
+- Rows SHA-256: `2b5bd6219699e9e7dff65ee21aa99bf71b75f9138cadffa870cfda35ed899f6e`
+- Self-consistent hash SHA-256: `c93e622fd459c81f32be2ad38ffc34f6ab827eacc52b68bf90b43bfa8b47a48d`
+- Content-addressed receipt SHA-256: `949d0180a7b47641bdc2b82d14c4f2458996e91df7d852c0da7024b8ce3c8aca`
 
 The content-addressed receipt binds generator version, exact source-map bytes, exact source-ledger bytes, resolved Git object IDs, and the derived rows. It is not a cryptographic signature. A self-consistent hash of values already stored in this document is not an acceptance proof.

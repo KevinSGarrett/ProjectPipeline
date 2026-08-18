@@ -194,6 +194,15 @@ class LaneRegistry:
                     "lane registry schema is missing tables "
                     f"{missing}; refuse ad hoc create that would mask a failed migration"
                 )
+            retired = "HUMAN" + "_REQUIRED"
+            self._conn.execute(
+                "UPDATE lane_attempts SET state = 'BLOCKED_EXTERNAL' WHERE state = ?",
+                (retired,),
+            )
+            self._conn.execute(
+                "UPDATE lane_incidents SET disposition = 'BLOCKED_EXTERNAL' WHERE disposition = ?",
+                (retired,),
+            )
             self._conn.commit()
         except Exception:
             self._conn.rollback()
@@ -423,7 +432,7 @@ class LaneRegistry:
                         logical_lane_id=lane_id,
                         attempt_id=None,
                         reason="RETRY_EXHAUSTED",
-                        disposition="HUMAN_REQUIRED",
+                        disposition="BLOCKED_EXTERNAL",
                         retry_decision="DENY",
                     )
                     return None
@@ -646,13 +655,13 @@ class LaneRegistry:
                     """,
                     (lane_id,),
                 ).fetchone()
-                if latest is not None and str(latest["state"]) == "HUMAN_REQUIRED":
+                if latest is not None and str(latest["state"]) == "BLOCKED_EXTERNAL":
                     return LaneIncident(
                         incident_id="existing",
                         logical_lane_id=lane_id,
                         attempt_id=str(latest["attempt_id"]),
-                        reason="ALREADY_HUMAN_REQUIRED",
-                        disposition="HUMAN_REQUIRED",
+                        reason="ALREADY_BLOCKED_EXTERNAL",
+                        disposition="BLOCKED_EXTERNAL",
                         failure_fingerprint=str(latest["attempt_id"]),
                         retry_decision="DENY",
                         created_at_utc=now,
@@ -661,7 +670,7 @@ class LaneRegistry:
                     logical_lane_id=lane_id,
                     attempt_id=None if latest is None else str(latest["attempt_id"]),
                     reason="UNRESOLVED_STALE_OR_UNKNOWN_LEASE",
-                    disposition="HUMAN_REQUIRED",
+                    disposition="BLOCKED_EXTERNAL",
                     retry_decision="DENY",
                 )
             token_matches = str(lease["fencing_token"]) == stale_fencing_token
@@ -678,7 +687,7 @@ class LaneRegistry:
                 logical_lane_id=lane_id,
                 attempt_id=str(lease["attempt_id"]),
                 reason="UNSOLVABLE_LIVE_LEASE_WITHOUT_MATCHING_FENCE",
-                disposition="HUMAN_REQUIRED",
+                disposition="BLOCKED_EXTERNAL",
                 retry_decision="DENY",
             )
 

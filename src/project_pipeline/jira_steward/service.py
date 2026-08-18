@@ -133,7 +133,7 @@ class JiraSteward:
                 unknown.append(operation.operation_id)
                 break
             if (
-                operation.requires_human_approval
+                operation.requires_independent_verification
                 and action_intent.approval_state is not ApprovalState.APPROVED
             ):
                 self.store.set_operation_state(operation.operation_id, JiraOperationState.REJECTED)

@@ -32,6 +32,9 @@ from project_pipeline.scheduler import validate_scheduler_foundation
 from project_pipeline.security import validate_security_foundation
 from project_pipeline.services.state import validate_project_domain_manifest
 from project_pipeline.upstream import validate_upstream_reviews
+from project_pipeline.validation.autonomy_language import (
+    validate_autonomous_external_preconditions,
+)
 from project_pipeline.validation.content import (
     check_forbidden_terminology,
     check_markdown_links,
@@ -104,6 +107,9 @@ class RepositoryValidator:
         self._run("release_hardening", self._check_release_hardening)
         self._run("final_convergence", self._check_final_convergence)
         self._run(
+            "autonomous_external_preconditions", self._check_autonomous_external_preconditions
+        )
+        self._run(
             "forbidden_terminology",
             lambda: check_forbidden_terminology(self.root, self.policy, self.report),
         )
@@ -169,6 +175,12 @@ class RepositoryValidator:
     def _check_runtime_configuration(self) -> None:
         for error in validate_runtime_configuration_files(self.root):
             self.report.add("ERROR", "CONFIG001", error, "config/runtime")
+
+    def _check_autonomous_external_preconditions(self) -> None:
+        for error in validate_autonomous_external_preconditions(self.root):
+            self.report.add(
+                "ERROR", "AUTONOMY001", error, "instructions/18_HUMAN_ESCALATION_PROTOCOL.md"
+            )
 
     def _check_dependency_lock(self) -> None:
         for error in validate_dependency_lock(self.root):

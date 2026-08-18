@@ -3,10 +3,13 @@ from __future__ import annotations
 import json
 import tempfile
 import unittest
+from argparse import Namespace
 from pathlib import Path
+from unittest.mock import patch
 
 from pydantic import ValidationError
 
+from project_pipeline.cli import _secret_resolver
 from project_pipeline.configuration import (
     ConfigurationError,
     SecretReference,
@@ -21,6 +24,18 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class ConfigurationTests(unittest.TestCase):
+    def test_cli_secret_resolver_uses_explicit_env_file(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            env_file = root / "credentials.env"
+            env_file.write_text("PP_TEST_CLI_SECRET=resolved-from-file\n", encoding="utf-8")
+            args = Namespace(root=root, env_file=env_file)
+            with patch.dict("os.environ", {}, clear=True):
+                value = _secret_resolver(args).resolve(
+                    SecretReference(reference="env://PP_TEST_CLI_SECRET")
+                )
+            self.assertEqual(value, "resolved-from-file")
+
     def test_layer_precedence_is_deterministic(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             override = Path(directory) / "override.json"

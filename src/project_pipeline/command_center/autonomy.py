@@ -5,7 +5,7 @@ from typing import Any
 
 from project_pipeline.autonomy_runtime.lanes import LaneRegistry
 from project_pipeline.autonomy_runtime.projection import (
-    is_compatibility_human_required,
+    is_external_precondition,
     project_runtime_state,
 )
 from project_pipeline.autonomy_runtime.recheck import AutonomousRecheckStore
@@ -44,9 +44,7 @@ def project_autonomy_runtime(
         known_lane_ids = registry.list_known_lane_ids()
         registry.close()
     blocked_lane_ids = {
-        item.logical_lane_id
-        for item in incidents
-        if is_compatibility_human_required(item.disposition)
+        item.logical_lane_id for item in incidents if is_external_precondition(item.disposition)
     }
     service_health = None
     if service_root is not None:
@@ -70,12 +68,12 @@ def project_autonomy_runtime(
                 owner="lane-registry",
                 current_stage=incident.reason,
                 blocked_by=(incident.logical_lane_id,)
-                if is_compatibility_human_required(incident.disposition)
+                if is_external_precondition(incident.disposition)
                 else (),
             )
         )
-    human = [item for item in incidents if is_compatibility_human_required(item.disposition)]
-    health = HealthState.DEGRADED if human else HealthState.HEALTHY
+    external_blocks = [item for item in incidents if is_external_precondition(item.disposition)]
+    health = HealthState.DEGRADED if external_blocks else HealthState.HEALTHY
     if status.get("pending_unknown_outcome"):
         health = HealthState.UNHEALTHY
     snapshot = CommandCenterProjectionService().build_snapshot(
@@ -90,7 +88,7 @@ def project_autonomy_runtime(
             ),
         ),
         live_work=tuple(live_work),
-        active_incident_ids=tuple(item.incident_id for item in human),
+        active_incident_ids=tuple(item.incident_id for item in external_blocks),
         provider_summary=provider_status
         or {"label": "unknown", "live_qualification": False, "source": "durable_state"},
         context_summary={
@@ -105,7 +103,7 @@ def project_autonomy_runtime(
             "next_eligible_task_id": next_task,
             "windows_service": service_health or {"label": "absent"},
             "unavailable_capabilities": tuple(
-                f"{item.logical_lane_id}:{item.reason}" for item in human
+                f"{item.logical_lane_id}:{item.reason}" for item in external_blocks
             ),
             "continuing_lane_ids": tuple(
                 lane_id for lane_id in known_lane_ids if lane_id not in blocked_lane_ids

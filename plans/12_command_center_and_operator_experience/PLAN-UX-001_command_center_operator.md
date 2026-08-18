@@ -14,13 +14,13 @@ The Command Center is a Windows-capable application with a network-accessible in
 
 Director Chat is grounded in current project state and scoped to global, project, or incident context. It may explain, propose, and request typed actions. Actions pass through normal authorization, policy, idempotency, and audit controls.
 
-## PLAN-UX-001:SEC-03 Operator Inbox
+## PLAN-UX-001:SEC-03 Autonomous incident inbox
 
-The inbox consolidates human-required work, approvals, incidents, expiring leases, failed verification, security events, and unresolved decisions. Every item includes severity, impact, exact requested action, affected work, and post-action verification.
+The inbox consolidates autonomous external-precondition rechecks, policy approvals, incidents, expiring leases, failed verification, security events, and unresolved decisions. Every item includes severity, impact, owning automated capability, affected work, next autonomous probe, and post-recovery verification. It never assigns routine project work to a person.
 
 ## PLAN-UX-001:SEC-04 Notifications
 
-A broker applies severity, deduplication, escalation, quiet hours, actionable payloads, and delivery adapters such as Windows tray or remote channels. Return summaries explain what occurred during operator absence.
+A broker applies severity, deduplication, escalation, quiet hours, machine-actionable payloads, and delivery adapters such as Windows tray or remote channels. Status summaries explain what occurred while the system continued unattended.
 
 ## PLAN-UX-001:SEC-05 Accessibility and visual quality
 

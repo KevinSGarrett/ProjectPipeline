@@ -164,9 +164,9 @@
           "title": "Request Fingerprint",
           "type": "string"
         },
-        "requires_human_approval": {
+        "requires_independent_verification": {
           "default": false,
-          "title": "Requires Human Approval",
+          "title": "Requires Independent Verification",
           "type": "boolean"
         },
         "requires_remote_write": {

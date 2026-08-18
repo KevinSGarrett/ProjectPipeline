@@ -8,8 +8,8 @@
     "metadata": "NO_DIFFERENCE",
     "status": "NO_DIFFERENCE"
   },
-  "generated_at_utc": "2026-08-18T18:25:36.881733+00:00",
-  "human_required_steps": [],
+  "generated_at_utc": "2026-08-18T22:05:46.656283Z",
+  "autonomous_rechecks": [],
   "instruction_citations": [
     "instructions/06_JIRA_OPERATING_PROTOCOL.md",
     "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
@@ -18,33 +18,33 @@
     "instructions/AUTHORITY_MAP.json",
     "instructions/policies/CONTEXT_ROUTING.json"
   ],
-  "local_edge_count": 848,
+  "local_edge_count": 890,
   "local_issue_count": 393,
-  "local_mirror_fingerprint": "4c143c8368733db8632f638e0dae9b867fdbec16d9516261ed7dcba94acf5afc",
+  "local_mirror_fingerprint": "e8dea3c05e2fd11c6ff7ea065ff1092dcf5040b3bffe7955b2352bdcd940ffe7",
   "parity_status": "PARITY_CONFIRMED",
-  "plan_id": "JPLAN-30A6C466043D4D29E49E",
+  "plan_id": "JPLAN-3618FC1CD42B00FA927F",
   "project_key": "PP",
   "readback": {
-    "comment_not_empty": 0,
-    "issueLinkType_not_empty": 328,
-    "labels_not_empty": 378,
-    "parent_not_empty": 123,
+    "comment_not_empty": 7,
+    "issueLinkType_not_empty": 341,
+    "labels_not_empty": 393,
+    "parent_not_empty": 129,
     "status_counts": {
-      "Done": 0,
-      "In Progress": 7,
-      "To Do": 371
+      "Done": 20,
+      "In Progress": 13,
+      "To Do": 360
     },
-    "total_count": 378,
+    "total_count": 393,
     "type_counts": {
-      "Epic": 18,
-      "Story": 107,
+      "Epic": 20,
+      "Story": 113,
       "Sub-task": 16,
-      "Task": 237
+      "Task": 244
     }
   },
   "readback_source": "MCP:plugin-atlassian-atlassian",
   "readback_verified": true,
-  "receipt_id": "JREC-790EA40F27197575C8F4",
+  "receipt_id": "JREC-54CE8D5BF4557A09F0B2",
   "receipt_result": "APPLIED",
   "reconciled_remote_keys": {
     "PP-TASK-000380": {
@@ -64,7 +64,7 @@
       "remote_key": "PP-387"
     },
     "PP-TASK-000384": {
-      "live_state": "To Do",
+      "live_state": "Done",
       "remote_key": "PP-393"
     }
   },

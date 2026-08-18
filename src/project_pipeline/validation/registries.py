@@ -15,7 +15,12 @@ from project_pipeline.ids import (
     REQUIREMENT_ID,
     SOURCE_REFERENCE,
 )
-from project_pipeline.io import iter_repository_files, read_json, read_jsonl, sha256_file
+from project_pipeline.io import (
+    iter_repository_files,
+    read_json,
+    read_jsonl,
+    sha256_canonical_file,
+)
 from project_pipeline.jira import build_relationship_edges
 from project_pipeline.validation.models import ValidationReport
 
@@ -849,7 +854,7 @@ def check_evidence_ledger(root: Path, report: ValidationReport) -> None:
                 f"Evidence artifact is missing: {artifact_path}",
                 path.relative_to(root).as_posix(),
             )
-        elif row.get("sha256") != sha256_file(artifact):
+        elif row.get("sha256") != sha256_canonical_file(artifact):
             report.add(
                 "ERROR",
                 "EVID003",
@@ -882,11 +887,14 @@ def check_evidence_ledger(root: Path, report: ValidationReport) -> None:
                 for row in rows
             ),
             "live_external_verification_count": sum(
-                row.get("environment") == "live_external_environment"
+                (
+                    row.get("environment") == "live_external_environment"
+                    or str(row.get("environment", "")).endswith("live_qualification")
+                )
                 and row.get("verification_status") == "VERIFIED"
                 for row in rows
             ),
-            "note": "Live external integrations remain unverified. Archive integrity and extracted-copy verification are recorded in the separate continuation package.",
+            "note": "Verified live external qualifications are counted only when their evidence artifact and digest are current; unavailable capabilities remain explicit.",
         }
         if observed != expected:
             report.add(

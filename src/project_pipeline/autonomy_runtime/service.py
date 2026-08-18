@@ -237,9 +237,7 @@ class AutonomyRuntimeService:
     def health(self, ready_task_ids: list[str] | None = None) -> dict[str, Any]:
         status = self.supervisor.status()
         failed = [
-            item
-            for item in status["operations"]
-            if item["state"] in {"FAILED", "HUMAN_REQUIRED", "BLOCKED_EXTERNAL"}
+            item for item in status["operations"] if item["state"] in {"FAILED", "BLOCKED_EXTERNAL"}
         ]
         return {
             "state": "failed" if failed else "healthy",

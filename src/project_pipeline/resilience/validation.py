@@ -18,7 +18,7 @@ _REQUIRED = (
     "docs/operations/resilience_and_recovery.md",
     "runbooks/backup_restore_verification.md",
     "runbooks/control_machine_failover.md",
-    "runbooks/human_required_recovery.md",
+    "runbooks/external_precondition_recovery.md",
     "config/runbooks/recovery_control_machine.json",
     "infrastructure/aws/terraform/main.tf",
     "infrastructure/aws/terraform/variables.tf",

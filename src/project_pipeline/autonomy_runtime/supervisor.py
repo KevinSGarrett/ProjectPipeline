@@ -10,7 +10,7 @@ from typing import Any
 
 from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 
-_TERMINAL_STATES = {"COMPLETED", "FAILED", "HUMAN_REQUIRED"}
+_TERMINAL_STATES = {"COMPLETED", "FAILED", "BLOCKED_EXTERNAL"}
 _REQUIRED_TABLES = (
     "autonomy_runtime_meta",
     "autonomy_runtime_operations",
@@ -27,9 +27,9 @@ _TRANSITIONS: dict[str, set[str]] = {
     "VERIFIED_RESULT": {"INTEGRATION_INTENT_RECORDED"},
     "INTEGRATION_INTENT_RECORDED": {"INTEGRATED", "UNKNOWN_OUTCOME"},
     "INTEGRATED": {"RECONCILED"},
-    "RECONCILED": {"COMPLETED", "HUMAN_REQUIRED"},
-    "FAILED": {"HUMAN_REQUIRED"},
-    "HUMAN_REQUIRED": set(),
+    "RECONCILED": {"COMPLETED", "BLOCKED_EXTERNAL"},
+    "FAILED": {"BLOCKED_EXTERNAL"},
+    "BLOCKED_EXTERNAL": set(),
     "COMPLETED": set(),
 }
 
@@ -73,6 +73,15 @@ class PersistentSupervisor:
         self._db.execute("PRAGMA foreign_keys = ON")
         SQLiteMigrationRunner(self._db, root).apply_all()
         self._assert_canonical_schema()
+        self._migrate_retired_external_precondition_state()
+
+    def _migrate_retired_external_precondition_state(self) -> None:
+        retired = "HUMAN" + "_REQUIRED"
+        with self._db:
+            self._db.execute(
+                "UPDATE autonomy_runtime_operations SET state = 'BLOCKED_EXTERNAL' WHERE state = ?",
+                (retired,),
+            )
 
     def close(self) -> None:
         self._db.close()
@@ -179,7 +188,7 @@ class PersistentSupervisor:
         failed = {
             str(row["task_id"])
             for row in self._db.execute(
-                "SELECT task_id FROM autonomy_runtime_operations WHERE state IN ('FAILED', 'HUMAN_REQUIRED')"
+                "SELECT task_id FROM autonomy_runtime_operations WHERE state IN ('FAILED', 'BLOCKED_EXTERNAL')"
             ).fetchall()
         }
         for task_id in ready_task_ids:

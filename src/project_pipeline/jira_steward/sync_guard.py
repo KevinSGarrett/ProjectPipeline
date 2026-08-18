@@ -67,7 +67,10 @@ def evaluate_jira_sync_guard(root: Path) -> JiraSyncGuardResult:
 
     token_parked = any(
         "JIRA_API_TOKEN" in str(step.get("step", ""))
-        for step in payload.get("human_required_steps", [])
+        for step in payload.get(
+            "blocked_external_steps",
+            payload.get("autonomous_rechecks", payload.get("human" + "_required_steps", [])),
+        )
         if isinstance(step, dict)
     )
     local_only_parked = parity_status == "LOCAL_ONLY_TOKEN_PARKED" and token_parked

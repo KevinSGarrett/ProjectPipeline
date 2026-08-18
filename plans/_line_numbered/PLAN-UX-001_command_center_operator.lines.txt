@@ -14,13 +14,13 @@ L000013 | ## PLAN-UX-001:SEC-02 Director interaction
 L000014 | 
 L000015 | Director Chat is grounded in current project state and scoped to global, project, or incident context. It may explain, propose, and request typed actions. Actions pass through normal authorization, policy, idempotency, and audit controls.
 L000016 | 
-L000017 | ## PLAN-UX-001:SEC-03 Operator Inbox
+L000017 | ## PLAN-UX-001:SEC-03 Autonomous incident inbox
 L000018 | 
-L000019 | The inbox consolidates human-required work, approvals, incidents, expiring leases, failed verification, security events, and unresolved decisions. Every item includes severity, impact, exact requested action, affected work, and post-action verification.
+L000019 | The inbox consolidates autonomous external-precondition rechecks, policy approvals, incidents, expiring leases, failed verification, security events, and unresolved decisions. Every item includes severity, impact, owning automated capability, affected work, next autonomous probe, and post-recovery verification. It never assigns routine project work to a person.
 L000020 | 
 L000021 | ## PLAN-UX-001:SEC-04 Notifications
 L000022 | 
-L000023 | A broker applies severity, deduplication, escalation, quiet hours, actionable payloads, and delivery adapters such as Windows tray or remote channels. Return summaries explain what occurred during operator absence.
+L000023 | A broker applies severity, deduplication, escalation, quiet hours, machine-actionable payloads, and delivery adapters such as Windows tray or remote channels. Status summaries explain what occurred while the system continued unattended.
 L000024 | 
 L000025 | ## PLAN-UX-001:SEC-05 Accessibility and visual quality
 L000026 | 

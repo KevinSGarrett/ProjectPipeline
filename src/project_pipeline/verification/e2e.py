@@ -90,7 +90,7 @@ from project_pipeline.domain.github import (
     github_identifier,
 )
 from project_pipeline.domain.jira import JiraRemoteSnapshot
-from project_pipeline.domain.resilience import FailureDomain, HumanRequiredIncident
+from project_pipeline.domain.resilience import ExternalPreconditionIncident, FailureDomain
 from project_pipeline.domain.scheduler import (
     ResourcePool,
     ResourceRegistrySnapshot,
@@ -417,11 +417,11 @@ def _github_mock_flow(root: Path, temp_root: Path) -> tuple[bool, str]:
 def _incident_idempotency() -> bool:
     broker = AttentionNotificationBroker()
     manager = IncidentManager(broker)
-    incident = HumanRequiredIncident(
+    incident = ExternalPreconditionIncident(
         incident_id="INCIDENT-CCCCCCCCCCCCCCCCCCCC",
         failure_domain=FailureDomain.API,
         summary="Duplicate delivery",
-        exact_human_action="Perform one repair.",
+        autonomous_resolution_action="Perform one repair.",
         unaffected_work=("local work",),
         blocked_work=("remote work",),
         verification_steps=("verify once",),
@@ -435,11 +435,11 @@ def _incident_idempotency() -> bool:
 def _incident_recovery() -> tuple[bool, str]:
     broker = AttentionNotificationBroker()
     manager = IncidentManager(broker)
-    incident = HumanRequiredIncident(
+    incident = ExternalPreconditionIncident(
         incident_id="INCIDENT-BBBBBBBBBBBBBBBBBBBB",
         failure_domain=FailureDomain.API,
         summary="Pass 23 human repair",
-        exact_human_action="Repair the external credential and confirm the provider health check.",
+        autonomous_resolution_action="Repair the external credential and confirm the provider health check.",
         unaffected_work=("local verification",),
         blocked_work=("remote provider execution",),
         verification_steps=("credential validates", "health check passes"),
@@ -606,7 +606,7 @@ def run_full_e2e(root: Path) -> dict[str, Any]:
         state=TaskLifecycleState.BACKLOG,
         priority="P0",
         risk="HIGH",
-        human_required=True,
+        external_blocked=True,
     )
     seq = BuildSequencer((done, ready, human))
     stages.append(
@@ -615,8 +615,8 @@ def run_full_e2e(root: Path) -> dict[str, Any]:
             "CONTROL",
             E2EExecutionMode.LOCAL_REAL,
             seq.readiness(ready).state is ReadinessState.READY
-            and seq.eligibility(human).state is EligibilityState.HUMAN_REQUIRED,
-            "dependency-ready work separated from typed HUMAN_REQUIRED work",
+            and seq.eligibility(human).state is EligibilityState.BLOCKED_EXTERNAL,
+            "dependency-ready work separated from autonomous external-precondition work",
         )
     )
 

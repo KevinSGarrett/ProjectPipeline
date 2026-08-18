@@ -5,8 +5,8 @@ from pathlib import Path
 
 from project_pipeline.domain.resilience import (
     BackupRecord,
+    ExternalPreconditionIncident,
     FailoverDecision,
-    HumanRequiredIncident,
     MachineHealth,
     OperatingModeDecision,
     RecoveryObjective,
@@ -90,7 +90,7 @@ class ResilienceStore:
             (("mode", v.mode.value), ("decided_at_utc", v.decided_at_utc.isoformat())),
         )
 
-    def save_incident(self, v: HumanRequiredIncident) -> None:
+    def save_incident(self, v: ExternalPreconditionIncident) -> None:
         self._save(
             "resilience_incidents",
             "incident_id",

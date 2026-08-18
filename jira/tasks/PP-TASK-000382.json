@@ -2,7 +2,7 @@
   "acceptance_criteria": [
     {
       "criterion_id": "AC-PP-000382-01",
-      "statement": "Two compatible real lanes run concurrently without resource conflict; worker loss recovers; an unsolvable scoped incident becomes HUMAN_REQUIRED while the unaffected lane completes.",
+      "statement": "Two compatible real lanes run concurrently without resource conflict; worker loss recovers; an unsolvable scoped incident becomes BLOCKED_EXTERNAL under autonomous recheck while the unaffected lane completes.",
       "verification": {
         "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_parallel_recovery.py",
         "method": "parallel_recovery_incident_integration",
@@ -19,7 +19,7 @@
     "Claims and fencing prevent collision.",
     "Worker loss is durably recovered.",
     "Retries are bounded.",
-    "HUMAN_REQUIRED preserves evidence and unaffected work continues."
+    "BLOCKED_EXTERNAL preserves evidence, schedules autonomous recheck, and unaffected work continues."
   ],
   "dependencies": [
     "PP-TASK-000381"
@@ -48,14 +48,14 @@
     "implemented"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+    "observed_at_utc": "2026-08-18T12:48:28.022032-05:00",
     "remote_id": "25363",
     "remote_key": "PP-389",
     "snapshot_id": "C11-LIVE-PP389",
     "status_name": "Done"
   },
   "local_id": "PP-TASK-000382",
-  "objective": "Integrate conflict-safe lanes, recovery, and HUMAN_REQUIRED continuation",
+  "objective": "Integrate conflict-safe lanes, recovery, and autonomous external-precondition continuation",
   "observability_impact": "Records lane admission, leases, fencing, retries, incidents, recovery, and independent continuation.",
   "owner_required_capability": "concurrency_recovery_and_incident_control",
   "parent": "PP-STORY-000140",

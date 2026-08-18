@@ -547,9 +547,9 @@ def _evaluate_license_policy(
                     subject=component.name,
                     code="license-missing",
                     message=(
-                        "third-party component license is missing and requires human legal review; "
-                        "record notice, permitted use, modification obligations, provenance, and "
-                        "bounded source-adaptation requirements"
+                        "third-party component license is missing and cannot be policy-qualified; "
+                        "record machine-verifiable notice, permitted use, modification obligations, "
+                        "provenance, and bounded source-adaptation requirements"
                     ),
                 )
             )
@@ -571,9 +571,9 @@ def _evaluate_license_policy(
                     subject=component.name,
                     code="license-review-required",
                     message=(
-                        f"license '{license_expression}' requires human legal approval before activation; "
-                        "record notice, permitted use, modification obligations, provenance, and bounded "
-                        "source-adaptation requirements"
+                        f"license '{license_expression}' is not autonomously policy-qualified for activation; "
+                        "record machine-verifiable notice, permitted use, modification obligations, "
+                        "provenance, and bounded source-adaptation requirements"
                     ),
                 )
             )

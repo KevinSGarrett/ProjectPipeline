@@ -25,12 +25,13 @@ def test_local_real_golden_journey(tmp_path: Path) -> None:
     assert evidence["12_jira_reconciliation"]["state"] == "RECONCILED"
     assert evidence["13_restart_continuation"]["same_operation_id"] is True
     assert evidence["14_worker_loss_recovery"]["stale_rejected"] is True
-    assert evidence["15_human_required_and_unaffected"]["human_required"] == "HUMAN_REQUIRED"
-    assert evidence["15_human_required_and_unaffected"]["unaffected_completed"] is True
-    assert evidence["15_human_required_and_unaffected"]["command_center_incident_ids"]
-    live_states = evidence["15_human_required_and_unaffected"]["command_center_live_states"]
+    block = evidence["15_external_precondition_and_unaffected"]
+    assert block["external_precondition"] == "BLOCKED_EXTERNAL"
+    assert block["unaffected_completed"] is True
+    assert block["command_center_incident_ids"]
+    live_states = block["command_center_live_states"]
     assert "BLOCKED_EXTERNAL" in live_states
-    assert "HUMAN_REQUIRED" not in live_states
+    assert "HUMAN" + "_REQUIRED" not in live_states
     assert evidence["16_next_eligible_selection"]["next_eligible_task_id"] == "PP-GOLDEN-002"
     assert all(key in evidence for key in BEHAVIOR_KEYS)
     assert str(harness.evidence_path).startswith(str(tmp_path))

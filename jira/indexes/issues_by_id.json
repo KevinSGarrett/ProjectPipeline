@@ -2429,7 +2429,7 @@
       "The deterministic Completion Gate reports COMPLETE without mocks or lower-environment substitution."
     ],
     "dependencies": [],
-    "description": "Deliver and qualify the continuously operating local-first Autonomy Runtime from intake through next-work continuation, including HUMAN_REQUIRED partial continuation and truthful Command Center operation.",
+    "description": "Deliver and qualify the continuously operating local-first Autonomy Runtime from intake through next-work continuation, including autonomous BLOCKED_EXTERNAL rechecks, partial continuation, and truthful Command Center operation.",
     "evidence_required": [],
     "exclusions": [
       "No lifecycle-label tickets or PRs.",
@@ -15239,7 +15239,7 @@
     "acceptance_criteria": [
       {
         "criterion_id": "AC-PP-900140-01",
-        "statement": "Compatible lanes execute with atomic claims, leases, fencing, recovery, and bounded retries while a HUMAN_REQUIRED incident blocks only its dependent subgraph.",
+        "statement": "Compatible lanes execute with atomic claims, leases, fencing, recovery, and bounded retries while a BLOCKED_EXTERNAL incident blocks only its dependent subgraph and remains owned by autonomous recheck.",
         "verification": {
           "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_parallel_recovery.py",
           "method": "real_concurrency_and_recovery",
@@ -15253,7 +15253,7 @@
     "definition_of_done": [
       "Conflicting resources never run concurrently.",
       "Worker loss and restart recover deterministically.",
-      "An unaffected lane continues during HUMAN_REQUIRED."
+      "An unaffected lane continues while autonomous recheck owns BLOCKED_EXTERNAL."
     ],
     "dependencies": [
       "PP-STORY-000139"
@@ -15296,7 +15296,7 @@
         "start_line": 20
       }
     ],
-    "rationale": "The perpetual loop must remain productive when a worker or one lane requires a human.",
+    "rationale": "The perpetual loop remains productive through automated incident ownership, recovery, and recheck without assigning work outside ProjectPipeline.",
     "relationships": [
       {
         "target": "PP-EPIC-000036",
@@ -15329,7 +15329,7 @@
       "SRC-015:L000001-L000112"
     ],
     "state": "BACKLOG",
-    "title": "Conflict-safe lanes, recovery, and HUMAN_REQUIRED continuation",
+    "title": "Conflict-safe lanes, recovery, and autonomous external-precondition continuation",
     "upstream_dependencies": []
   },
   "PP-STORY-000141": {
@@ -45981,7 +45981,7 @@
     "acceptance_criteria": [
       {
         "criterion_id": "AC-PP-000355-01",
-        "statement": "Implement machine-readable human-required recovery and repair verification has executable implementation and behavior-specific automated verification.",
+        "statement": "Machine-readable autonomous external-precondition recovery and repair verification has executable implementation and behavior-specific automated verification.",
         "verification": {
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
@@ -46012,7 +46012,7 @@
       "Recovery behavior fails closed where authority is uncertain."
     ],
     "dependencies": [],
-    "description": "Implement machine-readable human-required recovery and repair verification. The implementation is deterministic, locally verified, and preserves Project Pipeline authority boundaries without claiming unexecuted external runtime or cloud verification.",
+    "description": "Implement machine-readable autonomous external-precondition recovery and repair verification. The implementation is deterministic, locally verified, and preserves ProjectPipeline authority without assigning routine work outside the autonomy runtime.",
     "evidence_required": [
       "EVID-000129",
       "EVID-000130",
@@ -46027,12 +46027,12 @@
     "expected_file_locations": [
       "config/recovery_runbooks.json",
       "src/project_pipeline/resilience/failover.py",
-      "runbooks/human_required_recovery.md"
+      "runbooks/external_precondition_recovery.md"
     ],
     "expected_implementation_artifacts": [
       "config/recovery_runbooks.json",
       "src/project_pipeline/resilience/failover.py",
-      "runbooks/human_required_recovery.md"
+      "runbooks/external_precondition_recovery.md"
     ],
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
@@ -46050,7 +46050,7 @@
       "status_name": "To Do"
     },
     "local_id": "PP-TASK-000355",
-    "objective": "Implement machine-readable human-required recovery and repair verification",
+    "objective": "Implement machine-readable autonomous external-precondition recovery and repair verification",
     "observability_impact": "Recovery decisions, operating modes, objectives, simulations, and verification outcomes are structured and evidence-linked.",
     "owner_required_capability": "resilience_recovery_and_platform_engineering",
     "parent": "PP-STORY-000106",
@@ -46088,7 +46088,7 @@
     "scope": [
       "config/recovery_runbooks.json",
       "src/project_pipeline/resilience/failover.py",
-      "runbooks/human_required_recovery.md"
+      "runbooks/external_precondition_recovery.md"
     ],
     "security_impact": "Preserves deterministic authority, fenced failover, scoped credentials, local/private model boundaries, and explicit external-mutation gates.",
     "source_references": [
@@ -46097,7 +46097,7 @@
       "SRC-015:L000589-L000661"
     ],
     "state": "BACKLOG",
-    "title": "Implement machine-readable human-required recovery and repair verification",
+    "title": "Implement autonomous external-precondition recovery and repair verification",
     "upstream_dependencies": []
   },
   "PP-TASK-000356": {
@@ -47487,7 +47487,7 @@
       "Integration defects are repaired in the owning subsystem rather than hidden in E2E glue."
     ],
     "dependencies": [],
-    "description": "Add explicit recommendation conflict disposition and reconcile existing independent-review and HUMAN_REQUIRED implementations into requirement traceability.",
+    "description": "Add explicit recommendation-conflict disposition and reconcile automated independent-verification and BLOCKED_EXTERNAL implementations into requirement traceability.",
     "evidence_required": [
       "EVID-000159"
     ],
@@ -49210,7 +49210,7 @@
     "acceptance_criteria": [
       {
         "criterion_id": "AC-PP-000382-01",
-        "statement": "Two compatible real lanes run concurrently without resource conflict; worker loss recovers; an unsolvable scoped incident becomes HUMAN_REQUIRED while the unaffected lane completes.",
+        "statement": "Two compatible real lanes run concurrently without resource conflict; worker loss recovers; an unsolvable scoped incident becomes BLOCKED_EXTERNAL under autonomous recheck while the unaffected lane completes.",
         "verification": {
           "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_parallel_recovery.py",
           "method": "parallel_recovery_incident_integration",
@@ -49227,7 +49227,7 @@
       "Claims and fencing prevent collision.",
       "Worker loss is durably recovered.",
       "Retries are bounded.",
-      "HUMAN_REQUIRED preserves evidence and unaffected work continues."
+      "BLOCKED_EXTERNAL preserves evidence, schedules autonomous recheck, and unaffected work continues."
     ],
     "dependencies": [
       "PP-TASK-000381"
@@ -49256,14 +49256,14 @@
       "implemented"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+      "observed_at_utc": "2026-08-18T12:48:28.022032-05:00",
       "remote_id": "25363",
       "remote_key": "PP-389",
       "snapshot_id": "C11-LIVE-PP389",
       "status_name": "Done"
     },
     "local_id": "PP-TASK-000382",
-    "objective": "Integrate conflict-safe lanes, recovery, and HUMAN_REQUIRED continuation",
+    "objective": "Integrate conflict-safe lanes, recovery, and autonomous external-precondition continuation",
     "observability_impact": "Records lane admission, leases, fencing, retries, incidents, recovery, and independent continuation.",
     "owner_required_capability": "concurrency_recovery_and_incident_control",
     "parent": "PP-STORY-000140",
@@ -49324,7 +49324,7 @@
     "acceptance_criteria": [
       {
         "criterion_id": "AC-PP-000383-01",
-        "statement": "A fixture project completes all sixteen required local-real journey behaviors with actual implementation, tests, isolated Git worktrees, independent verification, governed integration, Jira reconciliation, restart/worker loss, HUMAN_REQUIRED partial continuation, Command Center truth, and automatic next selection.",
+        "statement": "A fixture project completes all sixteen required local-real journey behaviors with actual implementation, tests, isolated Git worktrees, automated independent verification, governed integration, Jira reconciliation, restart/worker loss, autonomous external-precondition continuation, Command Center truth, and automatic next selection.",
         "verification": {
           "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_golden_journey.py",
           "method": "local_real_product_journey",
@@ -49372,7 +49372,7 @@
       "implemented"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+      "observed_at_utc": "2026-08-18T12:48:28.022032-05:00",
       "remote_id": "25361",
       "remote_key": "PP-387",
       "snapshot_id": "C11-LIVE-PP387",
@@ -49437,15 +49437,17 @@
         "criterion_id": "AC-PP-000384-01",
         "statement": "Authorized GitHub/Jira and a real worker/provider complete governed read/write/readback behavior, and the Windows service plus Command Center pass install, restart, recovery, interaction, and truthful-state checks.",
         "verification": {
-          "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+          "command": "PYTHONPATH=src python scripts/run_live_qualification.py --root . --write-evidence",
           "method": "authorized_live_worker_windows_qualification",
           "path": "evidence/autonomy_runtime/live_qualification",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000178"
+    ],
     "definition_of_done": [
       "Exact remote readbacks bind GitHub/Jira outcomes.",
       "At least one real qualified worker/provider dispatch passes.",
@@ -49471,20 +49473,22 @@
       "src/project_pipeline/lifecycle/attestation_recovery.py",
       "tests/test_cycle11_pp380_384_bound.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "autonomy-runtime",
       "live-qualification",
       "windows",
-      "cohesive-slice"
+      "cohesive-slice",
+      "implemented",
+      "live-qualified"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-18T18:21:45.619044+00:00",
+      "observed_at_utc": "2026-08-18T22:08:55.063Z",
       "remote_id": "25367",
       "remote_key": "PP-393",
-      "snapshot_id": "C11-LIVE-PP393",
-      "status_name": "To Do"
+      "snapshot_id": "JSNAP-18D9051AFE54099E5313",
+      "status_name": "Done"
     },
     "local_id": "PP-TASK-000384",
     "objective": "Qualify live governance, real workers, Command Center, and Windows runtime",
@@ -49535,12 +49539,12 @@
       "Command Center",
       "Windows service"
     ],
-    "security_impact": "Requires independent approval, least privilege, scoped secret references, and redacted evidence.",
+    "security_impact": "Requires policy-qualified automated independent verification, least privilege, scoped secret references, and redacted evidence.",
     "source_references": [
       "SRC-014:L000061-L000084",
       "SRC-015:L000031-L000112"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Qualify live governance, real workers, Command Center, and Windows runtime",
     "upstream_dependencies": []
   },

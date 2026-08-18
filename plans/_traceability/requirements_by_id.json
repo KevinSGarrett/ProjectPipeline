@@ -7000,11 +7000,11 @@
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
   },
   "REQ-CTRL-0014": {
-    "acceptance_summary": "Verified when: A dependent workflow shall enter a typed human-required state when a safe decision, credential, approval, or irreversible action cannot be inferred",
+    "acceptance_summary": "Verified when: A dependent workflow shall enter BLOCKED_EXTERNAL only after safe autonomous resolution paths are exhausted; the autonomy runtime shall own deterministic rechecks and continue unaffected lanes.",
     "authority_classification": "SOURCE_DERIVED",
     "decision_ids": [],
     "disposition": "ACCEPTED",
-    "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
+    "disposition_reason": "Accepted safety and recovery obligation, refined by later explicit operator direction to require zero routine human work and autonomous external-precondition ownership.",
     "domain": "CTRL",
     "evidence_ids": [
       "EVID-000159"
@@ -7029,7 +7029,7 @@
       "PLAN-CTRL-001:SEC-03"
     ],
     "priority": "P0",
-    "rationale": "Pass 23 reconciled an existing implementation/traceability gap: BuildSequencer already emits the typed HUMAN_REQUIRED eligibility state for work requiring human action; the E2E journey proves that state blocks automatic scheduling.",
+    "rationale": "The source-derived safety boundary is preserved without assigning project work to a person. Current runtime state uses BLOCKED_EXTERNAL, autonomous repair/recheck ownership, and partial continuation.",
     "requirement_id": "REQ-CTRL-0014",
     "requirement_type": "functional",
     "risk": "HIGH",
@@ -7041,28 +7041,29 @@
       "SRC-015:L000001-L000006"
     ],
     "source_sequence": 0,
-    "statement": "A dependent workflow shall enter a typed human-required state when a safe decision, credential, approval, or irreversible action cannot be inferred.",
+    "statement": "A dependent workflow shall enter BLOCKED_EXTERNAL only after safe autonomous resolution paths are exhausted; the autonomy runtime shall own deterministic rechecks and continue unaffected lanes.",
     "superseded_by_requirement_ids": [],
     "supersedes_requirement_ids": [],
     "tags": [
       "authority",
+      "autonomy",
       "ctrl",
-      "human-required"
+      "external-precondition"
     ],
     "test_ids": [
       "TEST-CONTROL-HUMAN-001",
       "TEST-E2E-P23-004"
     ],
-    "title": "Human-required transition",
+    "title": "Autonomous external-precondition transition",
     "verification_class": "INDEPENDENT_MULTI_EVIDENCE",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
   },
   "REQ-CTRL-0015": {
-    "acceptance_summary": "Verified when: A human-required or externally blocked item shall not stop independent eligible work elsewhere in the project",
+    "acceptance_summary": "Verified when: A BLOCKED_EXTERNAL item shall remain owned by autonomous recheck and shall not stop independent eligible work elsewhere in the project.",
     "authority_classification": "SOURCE_DERIVED",
     "decision_ids": [],
     "disposition": "ACCEPTED",
-    "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
+    "disposition_reason": "Accepted safety and recovery obligation, refined by later explicit operator direction to require zero routine human work and autonomous external-precondition ownership.",
     "domain": "CTRL",
     "evidence_ids": [
       "EVID-000055",
@@ -7090,7 +7091,7 @@
       "PLAN-CTRL-002:SEC-03"
     ],
     "priority": "P0",
-    "rationale": "The cited authoritative range establishes or directly supports this independently dispositionable obligation.",
+    "rationale": "The safety and partial-continuation obligation is retained while eliminating human-work assignment from normal development.",
     "requirement_id": "REQ-CTRL-0015",
     "requirement_type": "functional",
     "risk": "MEDIUM",
@@ -7102,18 +7103,19 @@
       "SRC-015:L000001-L000006"
     ],
     "source_sequence": 0,
-    "statement": "A human-required or externally blocked item shall not stop independent eligible work elsewhere in the project.",
+    "statement": "A BLOCKED_EXTERNAL item shall remain owned by autonomous recheck and shall not stop independent eligible work elsewhere in the project.",
     "superseded_by_requirement_ids": [],
     "supersedes_requirement_ids": [],
     "tags": [
       "authority",
+      "autonomy",
       "ctrl",
       "partial-continuation"
     ],
     "test_ids": [
       "TEST-CONTROL-READINESS-001"
     ],
-    "title": "Continue unaffected work",
+    "title": "Continue unaffected work during external preconditions",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
   },
@@ -16040,11 +16042,11 @@
     "verification_expectation": "Automated verification plus independent evidence where risk requires it."
   },
   "REQ-RES-0002": {
-    "acceptance_summary": "Verified when: Human-required incidents shall explain the exact action, continue unaffected work, and verify recovery after intervention",
+    "acceptance_summary": "Verified when: BLOCKED_EXTERNAL incidents shall identify the exact unavailable capability, continue unaffected work, run deterministic rechecks, and verify recovery before resumption.",
     "authority_classification": "SOURCE_DERIVED",
     "decision_ids": [],
     "disposition": "ACCEPTED",
-    "disposition_reason": "Accepted because the cited authoritative source establishes this obligation.",
+    "disposition_reason": "Accepted safety and recovery obligation, refined by later explicit operator direction to require zero routine human work and autonomous external-precondition ownership.",
     "domain": "RES",
     "evidence_ids": [
       "EVID-000129",
@@ -16053,7 +16055,7 @@
     "evolution_ids": [],
     "implementation_paths": [
       "config/recovery_runbooks.json",
-      "runbooks/human_required_recovery.md",
+      "runbooks/external_precondition_recovery.md",
       "src/project_pipeline/domain/resilience.py",
       "src/project_pipeline/resilience/failover.py"
     ],
@@ -16072,7 +16074,7 @@
       "PLAN-RES-001:SEC-01"
     ],
     "priority": "P0",
-    "rationale": "Retained from the accepted foundation registry and required by the cited authoritative source.",
+    "rationale": "The governing recovery obligation is implemented by automated incident ownership and verification without operator work.",
     "requirement_id": "REQ-RES-0002",
     "requirement_type": "operational",
     "risk": "MEDIUM",
@@ -16082,16 +16084,18 @@
       "GOV-001:L000621-L000641"
     ],
     "source_sequence": 0,
-    "statement": "Human-required incidents shall explain the exact action, continue unaffected work, and verify recovery after intervention.",
+    "statement": "BLOCKED_EXTERNAL incidents shall identify the exact unavailable capability, continue unaffected work, run deterministic rechecks, and verify recovery before resumption.",
     "superseded_by_requirement_ids": [],
     "supersedes_requirement_ids": [],
     "tags": [
+      "autonomy",
+      "external-precondition",
       "res"
     ],
     "test_ids": [
       "TEST-RES-FAILOVER-005"
     ],
-    "title": "Human-required incidents shall explain the exact action, continue unaffected work, and verify recovery after intervention",
+    "title": "Autonomous external-precondition incidents",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Automated verification plus independent evidence where risk requires it."
   },
@@ -17285,7 +17289,7 @@
       "config/recovery_runbooks.json",
       "runbooks/backup_restore_verification.md",
       "runbooks/control_machine_failover.md",
-      "runbooks/human_required_recovery.md"
+      "runbooks/external_precondition_recovery.md"
     ],
     "implementation_state": "IMPLEMENTED",
     "jira_ids": [
@@ -17328,11 +17332,11 @@
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
   },
   "REQ-RES-0023": {
-    "acceptance_summary": "Verified when: After a human intervention, the platform shall verify the claimed repair, invalidate stale assumptions, reconcile state, and resume only eligible work",
+    "acceptance_summary": "Verified when: After an autonomous repair or observed external-condition change, the platform shall verify the repair, invalidate stale assumptions, reconcile state, and resume only eligible work.",
     "authority_classification": "SOURCE_DERIVED",
     "decision_ids": [],
     "disposition": "ACCEPTED",
-    "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
+    "disposition_reason": "Accepted safety and recovery obligation, refined by later explicit operator direction to require zero routine human work and autonomous external-precondition ownership.",
     "domain": "RES",
     "evidence_ids": [
       "EVID-000129",
@@ -17340,7 +17344,7 @@
     ],
     "evolution_ids": [],
     "implementation_paths": [
-      "runbooks/human_required_recovery.md",
+      "runbooks/external_precondition_recovery.md",
       "src/project_pipeline/resilience/failover.py"
     ],
     "implementation_state": "IMPLEMENTED",
@@ -17358,7 +17362,7 @@
       "PLAN-RES-001:SEC-04"
     ],
     "priority": "P0",
-    "rationale": "The cited authoritative range establishes or directly supports this independently dispositionable obligation.",
+    "rationale": "Recovery verification remains mandatory while the autonomy runtime owns repair, observation, reconciliation, and resumption.",
     "requirement_id": "REQ-RES-0023",
     "requirement_type": "functional",
     "risk": "HIGH",
@@ -17368,18 +17372,18 @@
       "SRC-015:L000589-L000661"
     ],
     "source_sequence": 15,
-    "statement": "After a human intervention, the platform shall verify the claimed repair, invalidate stale assumptions, reconcile state, and resume only eligible work.",
+    "statement": "After an autonomous repair or observed external-condition change, the platform shall verify the repair, invalidate stale assumptions, reconcile state, and resume only eligible work.",
     "superseded_by_requirement_ids": [],
     "supersedes_requirement_ids": [],
     "tags": [
-      "human-recovery",
-      "human-verification",
+      "autonomous-recovery",
+      "recovery-verification",
       "res"
     ],
     "test_ids": [
       "TEST-RES-FAILOVER-005"
     ],
-    "title": "Human action verification",
+    "title": "Autonomous repair verification",
     "verification_class": "INDEPENDENT_MULTI_EVIDENCE",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
   },
@@ -22350,11 +22354,11 @@
     "verification_expectation": "Automated verification plus independent evidence where risk requires it."
   },
   "REQ-UX-0003": {
-    "acceptance_summary": "Verified when: The operator inbox and notifications shall present actionable, deduplicated, severity-aware human-required work",
+    "acceptance_summary": "Verified when: The incident inbox and notifications shall present actionable, deduplicated, severity-aware external-precondition rechecks owned by automated capabilities.",
     "authority_classification": "SOURCE_DERIVED",
     "decision_ids": [],
     "disposition": "ACCEPTED",
-    "disposition_reason": "Accepted because the cited authoritative source establishes this obligation.",
+    "disposition_reason": "Accepted safety and recovery obligation, refined by later explicit operator direction to require zero routine human work and autonomous external-precondition ownership.",
     "domain": "UX",
     "evidence_ids": [
       "EVID-000136",
@@ -22390,7 +22394,7 @@
       "PLAN-UX-001:SEC-01"
     ],
     "priority": "P1",
-    "rationale": "Retained from the accepted foundation registry and required by the cited authoritative source.",
+    "rationale": "The collaboration surface reports autonomous incident ownership and status; it does not assign normal development work to a person.",
     "requirement_id": "REQ-UX-0003",
     "requirement_type": "operational",
     "risk": "MEDIUM",
@@ -22400,10 +22404,12 @@
       "GOV-001:L000643-L000693"
     ],
     "source_sequence": 0,
-    "statement": "The operator inbox and notifications shall present actionable, deduplicated, severity-aware human-required work.",
+    "statement": "The incident inbox and notifications shall present actionable, deduplicated, severity-aware external-precondition rechecks owned by automated capabilities.",
     "superseded_by_requirement_ids": [],
     "supersedes_requirement_ids": [],
     "tags": [
+      "autonomy",
+      "external-precondition",
       "ux"
     ],
     "test_ids": [
@@ -22420,7 +22426,7 @@
       "TEST-CC-P21-010",
       "TEST-CC-P21-014"
     ],
-    "title": "The operator inbox and notifications shall present actionable, deduplicated, severity-aware human-required work",
+    "title": "Autonomous incident inbox",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Automated verification plus independent evidence where risk requires it."
   },
@@ -23755,11 +23761,11 @@
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
   },
   "REQ-UX-0025": {
-    "acceptance_summary": "Verified when: Human-required decisions and actions shall be presented in a prioritized operator inbox with exact requested action, impact, deadline, and post-action verification",
+    "acceptance_summary": "Verified when: Unavailable capabilities and recovery actions shall be presented in a prioritized incident queue with automated owner, impact, deadline, next probe, and post-recovery verification.",
     "authority_classification": "SOURCE_DERIVED",
     "decision_ids": [],
     "disposition": "ACCEPTED",
-    "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
+    "disposition_reason": "Accepted safety and recovery obligation, refined by later explicit operator direction to require zero routine human work and autonomous external-precondition ownership.",
     "domain": "UX",
     "evidence_ids": [
       "EVID-000136",
@@ -23796,7 +23802,7 @@
       "PLAN-UX-001:SEC-03"
     ],
     "priority": "P0",
-    "rationale": "The cited authoritative range establishes or directly supports this independently dispositionable obligation.",
+    "rationale": "The queue exposes truthful autonomous work and deterministic recovery rather than requesting human action.",
     "requirement_id": "REQ-UX-0025",
     "requirement_type": "functional",
     "risk": "MEDIUM",
@@ -23806,11 +23812,12 @@
       "SRC-015:L000031-L000150"
     ],
     "source_sequence": 15,
-    "statement": "Human-required decisions and actions shall be presented in a prioritized operator inbox with exact requested action, impact, deadline, and post-action verification.",
+    "statement": "Unavailable capabilities and recovery actions shall be presented in a prioritized incident queue with automated owner, impact, deadline, next probe, and post-recovery verification.",
     "superseded_by_requirement_ids": [],
     "supersedes_requirement_ids": [],
     "tags": [
-      "operator-inbox",
+      "autonomy",
+      "incident-inbox",
       "ux"
     ],
     "test_ids": [
@@ -23826,7 +23833,7 @@
       "TEST-CC-P21-008",
       "TEST-CC-P21-014"
     ],
-    "title": "Operator Inbox",
+    "title": "Autonomous incident and recheck queue",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
   },

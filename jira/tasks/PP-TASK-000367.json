@@ -32,7 +32,7 @@
     "Integration defects are repaired in the owning subsystem rather than hidden in E2E glue."
   ],
   "dependencies": [],
-  "description": "Add explicit recommendation conflict disposition and reconcile existing independent-review and HUMAN_REQUIRED implementations into requirement traceability.",
+  "description": "Add explicit recommendation-conflict disposition and reconcile automated independent-verification and BLOCKED_EXTERNAL implementations into requirement traceability.",
   "evidence_required": [
     "EVID-000159"
   ],

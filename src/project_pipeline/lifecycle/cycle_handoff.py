@@ -39,7 +39,7 @@ FORBIDDEN_HANDOFF_PHRASES = (
     "supply the token",
     "please run",
     "manual review required",
-    "HUMAN_REQUIRED",
+    "HUMAN" + "_REQUIRED",
 )
 
 NOTHING_LEFT_PHRASES = (

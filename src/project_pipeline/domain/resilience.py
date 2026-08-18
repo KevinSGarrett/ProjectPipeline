@@ -184,12 +184,12 @@ class OperatingModeDecision(DomainModel):
         return self
 
 
-class HumanRequiredIncident(DomainModel):
+class ExternalPreconditionIncident(DomainModel):
     schema_version: Literal["1.0.0"] = "1.0.0"
     incident_id: str
     failure_domain: FailureDomain
     summary: str = Field(min_length=3, max_length=1000)
-    exact_human_action: str = Field(min_length=3, max_length=2000)
+    autonomous_resolution_action: str = Field(min_length=3, max_length=2000)
     unaffected_work: tuple[str, ...] = ()
     blocked_work: tuple[str, ...] = ()
     verification_steps: tuple[str, ...]
@@ -202,13 +202,13 @@ class HumanRequiredIncident(DomainModel):
         return _aware(value)
 
     @model_validator(mode="after")
-    def validate_incident(self) -> HumanRequiredIncident:
+    def validate_incident(self) -> ExternalPreconditionIncident:
         if not RESILIENCE_ID.fullmatch(self.incident_id) or not self.incident_id.startswith(
             "INCIDENT-"
         ):
             raise ValueError("invalid incident id")
         if not self.verification_steps:
-            raise ValueError("human-required incident requires repair verification steps")
+            raise ValueError("external-precondition incident requires repair verification steps")
         return self
 
 

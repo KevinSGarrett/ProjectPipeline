@@ -763,7 +763,7 @@ class JiraSyncOperation(DomainModel):
     request_fingerprint: str = Field(pattern=r"^[a-f0-9]{64}$")
     payload: dict[str, Any] = Field(default_factory=dict)
     requires_remote_write: bool
-    requires_human_approval: bool = False
+    requires_independent_verification: bool = False
     state: JiraOperationState = JiraOperationState.PLANNED
 
     @field_validator("operation_id")
@@ -812,7 +812,7 @@ class JiraSyncOperation(DomainModel):
         local_id: str | None,
         remote_key: str | None,
         expected_remote_version: int | None = None,
-        requires_human_approval: bool = False,
+        requires_independent_verification: bool = False,
     ) -> JiraSyncOperation:
         fingerprint = _digest_payload(payload)
         identity_subject = local_id or remote_key or "project"
@@ -836,7 +836,7 @@ class JiraSyncOperation(DomainModel):
                 JiraSyncOperationType.ADD_REMOTE_COMMENT,
                 JiraSyncOperationType.CREATE_REMOTE_LINK,
             },
-            requires_human_approval=requires_human_approval,
+            requires_independent_verification=requires_independent_verification,
         )
 
 

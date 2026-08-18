@@ -138,9 +138,9 @@ def test_hook_uses_canonical_interpreter_wrapper():
         (Path(__file__).resolve().parents[1] / ".cursor" / "hooks.json").read_text(encoding="utf-8")
     )
     command = hooks["hooks"]["beforeShellExecution"][0]["command"]
-    assert command.startswith(".cursor\\hooks\\invoke_python.cmd")
+    assert command.startswith("powershell.exe -NoProfile -ExecutionPolicy Bypass")
     assert (
-        Path(__file__).resolve().parents[1] / ".cursor" / "hooks" / "invoke_python.cmd"
+        Path(__file__).resolve().parents[1] / ".cursor" / "hooks" / "invoke_python.ps1"
     ).is_file()
 
 

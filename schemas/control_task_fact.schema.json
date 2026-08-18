@@ -99,11 +99,6 @@
       "title": "External Blocked",
       "type": "boolean"
     },
-    "human_required": {
-      "default": false,
-      "title": "Human Required",
-      "type": "boolean"
-    },
     "issue_type": {
       "default": "TASK",
       "enum": [

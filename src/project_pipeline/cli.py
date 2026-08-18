@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sqlite3
 from collections.abc import Sequence
 from datetime import UTC, datetime
@@ -63,6 +64,7 @@ from project_pipeline.configuration import (
     SecretResolutionError,
     SecretResolver,
     load_runtime_configuration,
+    parse_env_file,
 )
 from project_pipeline.context_engine import ContextCompiler, ContextService, ContextStore
 from project_pipeline.contracts import (
@@ -1060,6 +1062,13 @@ def _load_configuration(args: argparse.Namespace):
     )
 
 
+def _secret_resolver(args: argparse.Namespace) -> SecretResolver:
+    """Resolve secrets from the same environment sources used by configuration loading."""
+    env_path = args.env_file or args.root / ".env"
+    environment = {**parse_env_file(env_path), **os.environ}
+    return SecretResolver(args.root, environment)
+
+
 def _state_database_path(args: argparse.Namespace, configuration: Any) -> Path | str:
     if configuration.settings.persistence.backend is not PersistenceBackend.SQLITE_LOCAL:
         raise ConfigurationError(
@@ -1239,7 +1248,7 @@ def _jira_adapter(args: argparse.Namespace, configuration: Any):
         raise ConfigurationError(
             "Atlassian provider requires jira_base_url, jira_user_email, and jira_api_token references"
         )
-    token = SecretResolver(args.root).resolve(settings.jira_api_token)
+    token = _secret_resolver(args).resolve(settings.jira_api_token)
     return AtlassianJiraCloudAdapter(
         base_url=settings.jira_base_url,
         user_email=settings.jira_user_email,
@@ -1267,7 +1276,7 @@ def _github_adapter(args: argparse.Namespace, configuration: Any):
         raise ConfigurationError(
             "GitHub provider requires integrations.github_token as a secret reference"
         )
-    token = SecretResolver(args.root).resolve(token_ref)
+    token = _secret_resolver(args).resolve(token_ref)
     return GitHubRestAdapter(token=token)
 
 

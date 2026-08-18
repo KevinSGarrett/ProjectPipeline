@@ -4,15 +4,17 @@
       "criterion_id": "AC-PP-000384-01",
       "statement": "Authorized GitHub/Jira and a real worker/provider complete governed read/write/readback behavior, and the Windows service plus Command Center pass install, restart, recovery, interaction, and truthful-state checks.",
       "verification": {
-        "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
+        "command": "PYTHONPATH=src python scripts/run_live_qualification.py --root . --write-evidence",
         "method": "authorized_live_worker_windows_qualification",
         "path": "evidence/autonomy_runtime/live_qualification",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "EVID-000178"
+  ],
   "definition_of_done": [
     "Exact remote readbacks bind GitHub/Jira outcomes.",
     "At least one real qualified worker/provider dispatch passes.",
@@ -38,20 +40,22 @@
     "src/project_pipeline/lifecycle/attestation_recovery.py",
     "tests/test_cycle11_pp380_384_bound.py"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "autonomy-runtime",
     "live-qualification",
     "windows",
-    "cohesive-slice"
+    "cohesive-slice",
+    "implemented",
+    "live-qualified"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-18T18:21:45.619044+00:00",
+    "observed_at_utc": "2026-08-18T22:08:55.063Z",
     "remote_id": "25367",
     "remote_key": "PP-393",
-    "snapshot_id": "C11-LIVE-PP393",
-    "status_name": "To Do"
+    "snapshot_id": "JSNAP-18D9051AFE54099E5313",
+    "status_name": "Done"
   },
   "local_id": "PP-TASK-000384",
   "objective": "Qualify live governance, real workers, Command Center, and Windows runtime",
@@ -102,12 +106,12 @@
     "Command Center",
     "Windows service"
   ],
-  "security_impact": "Requires independent approval, least privilege, scoped secret references, and redacted evidence.",
+  "security_impact": "Requires policy-qualified automated independent verification, least privilege, scoped secret references, and redacted evidence.",
   "source_references": [
     "SRC-014:L000061-L000084",
     "SRC-015:L000031-L000112"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Qualify live governance, real workers, Command Center, and Windows runtime",
   "upstream_dependencies": []
 }

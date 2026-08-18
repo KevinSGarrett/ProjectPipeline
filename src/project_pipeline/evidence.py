@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from project_pipeline.io import sha256_file
+from project_pipeline.io import sha256_canonical_file
 
 
 def evidence_record(
@@ -31,7 +31,7 @@ def evidence_record(
         "criterion_ids": criterion_ids or [],
         "method": method,
         "artifact_path": artifact_path,
-        "sha256": sha256_file(artifact),
+        "sha256": sha256_canonical_file(artifact),
         "observed_at_utc": datetime.now(UTC).isoformat(),
         "environment": environment,
         "result": result,

@@ -4,6 +4,7 @@ from project_pipeline.lifecycle.takeover import (
     DurableAttestation,
     LaneState,
     SessionIdentity,
+    attestation_recheck_required,
     claim_is_admissible,
     global_stop_required,
     has_path_collision,
@@ -11,7 +12,6 @@ from project_pipeline.lifecycle.takeover import (
     pp327_collision,
     provider_dispatch_blocked,
     scoped_lane_state,
-    should_request_human_attestation,
 )
 
 
@@ -41,26 +41,26 @@ def test_continuation_enforcement_reuses_attestation_fingerprint() -> None:
         fingerprint=DurableAttestation.fingerprint_for(baseline),
         approved=True,
     )
-    assert not should_request_human_attestation(prior=prior, attestation_inputs=baseline)
-    assert should_request_human_attestation(
+    assert not attestation_recheck_required(prior=prior, attestation_inputs=baseline)
+    assert attestation_recheck_required(
         prior=prior,
         attestation_inputs={**baseline, "lane_scope": "provider:cursor-cli"},
     )
 
 
-def test_provider_lane_isolation_blocks_only_programmatic_cursor_cli() -> None:
+def test_provider_lane_isolation_requires_qualification_for_every_identity() -> None:
     assert provider_dispatch_blocked(
         session_identity=SessionIdentity.PROGRAMMATIC_CURSOR_CLI_WORKER,
         provider_id="provider:cursor-cli",
         provider_qualified=False,
     )
-    assert not provider_dispatch_blocked(
-        session_identity=SessionIdentity.OPERATOR_LAUNCHED_COORDINATOR,
+    assert provider_dispatch_blocked(
+        session_identity=SessionIdentity.AUTONOMY_COORDINATOR,
         provider_id="provider:cursor-cli",
         provider_qualified=False,
     )
     assert local_integration_allowed(
-        session_identity=SessionIdentity.OPERATOR_LAUNCHED_COORDINATOR,
+        session_identity=SessionIdentity.AUTONOMY_COORDINATOR,
         provider_id="provider:local",
         provider_qualified=True,
     )

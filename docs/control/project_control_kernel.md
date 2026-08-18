@@ -8,7 +8,7 @@ The current implementation consumes the source-controlled Jira mirror, accepted 
 
 ## Eligibility and readiness
 
-Eligibility excludes terminal, already-active, blocked/failed, human-required, externally blocked, unaccepted, and policy-ineligible work. Readiness then evaluates dependency completion, explicit blockers, approval, context, resources, and environment. One blocked item does not prevent unrelated ready work from continuing.
+Eligibility excludes terminal, already-active, blocked/failed, `BLOCKED_EXTERNAL`, unaccepted, and policy-ineligible work. Readiness then evaluates dependency completion, explicit blockers, policy approval, context, resources, and environment. Autonomous recheck owns unavailable external capabilities, and one blocked item does not prevent unrelated ready work from continuing.
 
 ## Sequencing
 

@@ -6,38 +6,38 @@ from project_pipeline.lifecycle import (
     LaneState,
     ReadinessEvidence,
     SessionIdentity,
+    attestation_recheck_required,
     claim_is_admissible,
     global_stop_required,
     local_integration_allowed,
     pp327_collision,
     provider_dispatch_blocked,
     scoped_lane_state,
-    should_request_human_attestation,
 )
 
 
-def test_operator_coordinator_can_locally_integrate_while_cursor_cli_is_quarantined() -> None:
+def test_autonomy_coordinator_can_integrate_a_qualified_provider() -> None:
     assert local_integration_allowed(
-        session_identity=SessionIdentity.OPERATOR_LAUNCHED_COORDINATOR,
+        session_identity=SessionIdentity.AUTONOMY_COORDINATOR,
         provider_id="provider:local",
         provider_qualified=True,
     )
 
 
-def test_missing_cursor_cli_qualification_blocks_programmatic_dispatch_only() -> None:
+def test_missing_provider_qualification_blocks_every_dispatch_identity() -> None:
     assert provider_dispatch_blocked(
         session_identity=SessionIdentity.PROGRAMMATIC_CURSOR_CLI_WORKER,
         provider_id="provider:cursor-cli",
         provider_qualified=False,
     )
-    assert not provider_dispatch_blocked(
-        session_identity=SessionIdentity.OPERATOR_LAUNCHED_COORDINATOR,
+    assert provider_dispatch_blocked(
+        session_identity=SessionIdentity.AUTONOMY_COORDINATOR,
         provider_id="provider:cursor-cli",
         provider_qualified=False,
     )
 
 
-def test_missing_privacy_attestation_creates_scoped_human_required_lane_only() -> None:
+def test_missing_privacy_attestation_creates_scoped_external_block_only() -> None:
     assert (
         scoped_lane_state(
             has_privacy_attestation=False,
@@ -46,7 +46,7 @@ def test_missing_privacy_attestation_creates_scoped_human_required_lane_only() -
             depends_on_external_credentials=False,
             resource_collision=False,
         )
-        is LaneState.HUMAN_REQUIRED
+        is LaneState.BLOCKED_EXTERNAL
     )
     assert (
         scoped_lane_state(
@@ -64,8 +64,8 @@ def test_valid_durable_attestation_is_reused_until_fingerprint_changes() -> None
     inputs = {"privacy_mode": "strict", "policy_version": "v1"}
     fingerprint = DurableAttestation.fingerprint_for(inputs)
     prior = DurableAttestation(fingerprint=fingerprint, approved=True)
-    assert not should_request_human_attestation(prior=prior, attestation_inputs=inputs)
-    assert should_request_human_attestation(
+    assert not attestation_recheck_required(prior=prior, attestation_inputs=inputs)
+    assert attestation_recheck_required(
         prior=prior, attestation_inputs={"privacy_mode": "strict", "policy_version": "v2"}
     )
 
@@ -122,15 +122,15 @@ def test_unattended_ready_is_evidence_derived() -> None:
     assert promoted.unattended_ready
 
 
-def test_repeated_sessions_do_not_recreate_unchanged_human_request() -> None:
+def test_repeated_sessions_reuse_unchanged_attestation() -> None:
     inputs = {"privacy_mode": "strict", "scope": "local-governed-phase1"}
     prior = DurableAttestation(
         fingerprint=DurableAttestation.fingerprint_for(inputs),
         approved=True,
     )
-    assert not should_request_human_attestation(prior=prior, attestation_inputs=inputs)
+    assert not attestation_recheck_required(prior=prior, attestation_inputs=inputs)
 
 
 def test_global_stop_only_when_all_safe_lanes_blocked() -> None:
-    assert not global_stop_required((LaneState.ACTIVE, LaneState.HUMAN_REQUIRED))
-    assert global_stop_required((LaneState.BLOCKED, LaneState.HUMAN_REQUIRED))
+    assert not global_stop_required((LaneState.ACTIVE, LaneState.BLOCKED_EXTERNAL))
+    assert global_stop_required((LaneState.BLOCKED, LaneState.BLOCKED_EXTERNAL))

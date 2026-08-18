@@ -9,7 +9,7 @@ from typing import Any, Literal
 from pydantic import Field, field_validator, model_validator
 
 from project_pipeline.contracts.envelopes import ContractModel, EventEnvelope
-from project_pipeline.domain.resilience import HumanRequiredIncident
+from project_pipeline.domain.resilience import ExternalPreconditionIncident
 
 
 def utc_now() -> datetime:
@@ -239,7 +239,7 @@ class IncidentVerificationRequest(ContractModel):
 
 class IncidentCase(ContractModel):
     schema_version: Literal["1.0.0"] = "1.0.0"
-    incident: HumanRequiredIncident
+    incident: ExternalPreconditionIncident
     project_id: str = Field(min_length=3, max_length=191)
     state: IncidentState = IncidentState.OPEN
     severity: NotificationLevel = NotificationLevel.URGENT

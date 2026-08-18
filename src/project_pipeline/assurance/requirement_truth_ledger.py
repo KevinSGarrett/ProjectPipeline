@@ -10,7 +10,7 @@ from project_pipeline.io import read_json, read_jsonl, write_json
 
 ALLOWED = {
     "IMPLEMENTED_VERIFIED",
-    "EXTERNAL_BLOCKED",
+    "BLOCKED_EXTERNAL",
     "MISSING_IMPLEMENTATION",
     "SUPERSEDED_WITH_PROOF",
     "CONTRADICTORY",
@@ -94,7 +94,7 @@ def _disposition(
     if item.get("superseded_by_requirement_ids"):
         return "SUPERSEDED_WITH_PROOF", "superseded by a later accepted requirement"
     if state == "BLOCKED_EXTERNAL":
-        return "EXTERNAL_BLOCKED", "canonical state is an actual external dependency"
+        return "BLOCKED_EXTERNAL", "canonical state is an actual external dependency"
     if state in {"IMPLEMENTED", "MOCK_VERIFIED", "LIVE_VERIFIED"} and paths and not existing:
         return "CONTRADICTORY", "implementation state lacks existing implementation paths"
     if state in {"IMPLEMENTED", "MOCK_VERIFIED", "LIVE_VERIFIED"} and planned_only:
@@ -111,7 +111,7 @@ def _disposition(
         "IMPLEMENTED",
         "LIVE_VERIFIED",
     }:
-        return "EXTERNAL_BLOCKED", "requires an external live, hosted, or timed qualification"
+        return "BLOCKED_EXTERNAL", "requires an external live, hosted, or timed qualification"
     if (
         state in {"IMPLEMENTED", "PARTIALLY_IMPLEMENTED", "LIVE_VERIFIED"}
         and paths
@@ -223,10 +223,10 @@ def validate_requirement_truth_ledger(document: dict[str, Any], root: Path) -> l
             errors.append(f"invalid disposition: {requirement_id}")
         if row.get("disposition") == "IMPLEMENTED_VERIFIED" and not row.get("evidence"):
             errors.append(f"implemented requirement lacks evidence: {requirement_id}")
-        if row.get("disposition") == "EXTERNAL_BLOCKED":
+        if row.get("disposition") == "BLOCKED_EXTERNAL":
             reason = str(row.get("reason", "")).lower()
             if not any(token in reason for token in ("external", "live", "hosted", "timed")):
-                errors.append(f"EXTERNAL_BLOCKED without external dependency: {requirement_id}")
+                errors.append(f"BLOCKED_EXTERNAL without external dependency: {requirement_id}")
         task_states = {
             str(item.get("state"))
             for item in row.get("mapped_jira") or []

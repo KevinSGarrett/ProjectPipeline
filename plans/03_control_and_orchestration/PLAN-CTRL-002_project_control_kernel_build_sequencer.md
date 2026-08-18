@@ -15,7 +15,7 @@ The Build Sequencer constructs a directed graph from source-controlled work iden
 
 ## PLAN-CTRL-002:SEC-03 Eligibility and readiness
 
-Eligibility first excludes terminal, already-active, failed, blocked, unaccepted, policy-denied, human-required, and externally blocked work. Readiness is then computed from dependency completion, explicit blockers, approvals, required context, resources, and environment availability. A blocked or human-required item does not prevent independent work elsewhere from becoming ready.
+Eligibility first excludes terminal, already-active, failed, blocked, unaccepted, policy-denied, and `BLOCKED_EXTERNAL` work. Readiness is then computed from dependency completion, explicit blockers, policy-qualified approvals, required context, resources, and environment availability. An externally blocked item is owned by autonomous recheck and does not prevent independent work elsewhere from becoming ready.
 
 ## PLAN-CTRL-002:SEC-04 Critical-path analysis
 

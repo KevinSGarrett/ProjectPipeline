@@ -17,9 +17,9 @@ Control-machine takeover fails closed unless the active lease is expired or fenc
 
 Optional provider/cloud/GPU failures preserve deterministic control and unrelated work. Network/cloud loss selects `LOCAL_FIRST`; canonical-state failure selects `RECOVERY`. Capability substitution preserves task semantics and never weakens acceptance, policy, or evidence requirements.
 
-## PLAN-RES-001:SEC-04 Human-required recovery
+## PLAN-RES-001:SEC-04 Autonomous external-precondition recovery
 
-A scoped human-required incident records the exact action, affected domain, blocked work, unaffected work, repair checks, and stale assumptions. After intervention the system verifies the repair, invalidates stale assumptions, reconciles state, and resumes only eligible work. Machine-readable runbooks define prerequisites, approved actions, stop conditions, verification, and escalation.
+A scoped `BLOCKED_EXTERNAL` incident records the unavailable capability, affected domain, blocked work, unaffected work, autonomous repair/recheck probes, and stale assumptions. After the condition changes, the system verifies the repair, invalidates stale assumptions, reconciles state, and resumes only eligible work. Machine-readable runbooks define prerequisites, policy-authorized actions, stop conditions, verification, and autonomous escalation without assigning work outside ProjectPipeline.
 
 ## PLAN-RES-001:SEC-05 Recovery objectives and backup
 

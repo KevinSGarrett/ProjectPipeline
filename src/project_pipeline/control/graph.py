@@ -86,7 +86,6 @@ class BuildSequencer:
                     "context_satisfied": item.context_satisfied,
                     "resources_available": item.resources_available,
                     "environment_available": item.environment_available,
-                    "human_required": item.human_required,
                     "external_blocked": item.external_blocked,
                     "reconciliation_required": item.reconciliation_required,
                     "product_scope_allowed": item.product_scope_allowed,
@@ -132,22 +131,15 @@ class BuildSequencer:
                 eligible=False,
                 reasons=(f"task already has active execution state: {fact.state.value}",),
             )
-        if fact.human_required:
-            return TaskEligibility(
-                task_id=fact.task_id,
-                state=EligibilityState.HUMAN_REQUIRED,
-                eligible=False,
-                reasons=(
-                    "task is blocked by an external precondition that autonomous admission "
-                    "cannot satisfy yet",
-                ),
-            )
         if fact.external_blocked:
             return TaskEligibility(
                 task_id=fact.task_id,
-                state=EligibilityState.EXTERNAL_BLOCKED,
+                state=EligibilityState.BLOCKED_EXTERNAL,
                 eligible=False,
-                reasons=("task is blocked by an unavailable external dependency",),
+                reasons=(
+                    "task has an unavailable external precondition; autonomous "
+                    "recovery owns the recheck and unaffected lanes continue",
+                ),
             )
         if not fact.product_scope_allowed:
             return TaskEligibility(
