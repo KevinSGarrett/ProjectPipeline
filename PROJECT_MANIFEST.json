@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "4c9ae9d0fca6a128f52cdc039ba903e6ff451a06c5e05bf6167ee3cf8a7ed58f",
+  "aggregate_sha256": "75fc88931a2131f248bcb5a2315b880abe1c133a57d4a7b538b457b13b0b54ab",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -72,8 +72,8 @@
     },
     {
       "path": ".cursor/hooks/guard_shell.py",
-      "sha256": "421a3481d0c030e54e43c03211b55d9e3ae83c88d68a98851fee26dcd525adfd",
-      "size_bytes": 2652
+      "sha256": "128816dd71db407061ea69c18027995acb40232fe998568d6a9eec25b47c6886",
+      "size_bytes": 3269
     },
     {
       "path": ".cursor/mcp.example.json",
@@ -1437,8 +1437,8 @@
     },
     {
       "path": "docs/operations/github_steward_lifecycle.md",
-      "sha256": "b36e79da4da6f3fd6523b4c6faa2ea68ea2a558863d96e5229ce7ffc1a40f1d3",
-      "size_bytes": 1473
+      "sha256": "e8420f232d7b3ebbd54712cdef6919a53b90f675955e759ed75c8066dfd733ea",
+      "size_bytes": 1721
     },
     {
       "path": "docs/operations/INSTALLATION_AND_OPERATIONS.md",
@@ -13637,8 +13637,8 @@
     },
     {
       "path": "tests/test_cursor_shell_hook.py",
-      "sha256": "664d2ddb94528026978433148a9e48a554f85b8f415a69ef290ef40c4c3a1f52",
-      "size_bytes": 4119
+      "sha256": "099818263e473618a7ba3344faa658013ab2eb12668166ef11e5d01ce970a339",
+      "size_bytes": 5462
     },
     {
       "path": "tests/test_cursor_takeover.py",
@@ -14251,7 +14251,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T05:35:55.507112+00:00",
+  "generated_at_utc": "2026-08-18T05:50:15.049018+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14260,5 +14260,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25240323
+  "total_bytes": 25242531
 }

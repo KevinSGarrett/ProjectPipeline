@@ -11,20 +11,40 @@ _GIT = (
     r"|(?:[A-Za-z]:[^\s\"';&|]*[\\/])?(?:git\.exe|git)"
     r")"
 )
-_MAIN_DEST = r"(?:\+?(?:HEAD|[A-Za-z0-9._/-]+)?:)?(?:refs/heads/)?(?:main|master)(?:\s|$|[\"'])"
+_GIT_GLOBALS = (
+    r"(?:\s+(?:"
+    r"-C\s+(?:\"[^\"]+\"|'[^']+'|\S+)"
+    r"|--git-dir(?:=|\s+)(?:\"[^\"]+\"|'[^']+'|\S+)"
+    r"|--work-tree(?:=|\s+)(?:\"[^\"]+\"|'[^']+'|\S+)"
+    r"|-c\s+\S+"
+    r"|--no-pager"
+    r"))*"
+)
+_GIT_CMD = rf"(?:^|[\s\"';&|]){_GIT}{_GIT_GLOBALS}\s+"
+_MAIN_DEST = (
+    r"(?:\+?(?:HEAD|[A-Za-z0-9._/-]+)?:)?"
+    r"(?:[\"']?(?:refs/heads/)?(?:main|master)[\"']?)"
+    r"(?:\s|$|[\"'])"
+)
+_GH = (
+    r"(?:"
+    r"\"[^\"]*[\\/](?:gh\.exe|hub\.exe|gh|hub)\""
+    r"|'[^\']*[\\/](?:gh\.exe|hub\.exe|gh|hub)'"
+    r"|(?:[A-Za-z]:[^\s\"';&|]*[\\/])?(?:gh\.exe|hub\.exe|gh|hub)"
+    r")"
+)
 
 DENIED_PATTERNS = (
-    re.compile(
-        rf"(?i)(?:^|[\s\"';&|]){_GIT}\s+push\s+[^\r\n]*(?:--force-with-lease|--force|-f)(?:\s|$)"
-    ),
-    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GIT}\s+push\s+[^\r\n]*\s\+[A-Za-z0-9:/\._-]+"),
-    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GIT}\s+push\b[^\r\n]*[\s]{_MAIN_DEST}"),
-    re.compile(r"(?i)(?:^|[\s\"';&|])(?:gh|hub)\s+[^\r\n]*\s--admin(?:\s|$)"),
-    re.compile(
-        r"(?i)(?:^|[\s\"';&|])(?:gh|hub)\s+[^\r\n]*\bpr\s+merge\b(?![^\r\n]*--match-head-commit)"
-    ),
-    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GIT}\s+reset\s+--hard(?:\s|$)"),
-    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GIT}\s+clean\s+-\S*f"),
+    re.compile(rf"(?i){_GIT_CMD}push\s+[^\r\n]*(?:--force-with-lease|--force|-f)(?:\s|=|$)"),
+    re.compile(rf"(?i){_GIT_CMD}push\s+[^\r\n]*\s\+[A-Za-z0-9:/\._-]+"),
+    re.compile(rf"(?i){_GIT_CMD}push\b[^\r\n]*[\s]{_MAIN_DEST}"),
+    re.compile(rf"(?i){_GIT_CMD}push\s+[^\r\n]*(?:--mirror|--all)(?:\s|$)"),
+    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GH}\s+[^\r\n]*\s--admin(?:\s|=|$)"),
+    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GH}\s+[^\r\n]*\bpr\s+merge\b"),
+    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GH}\s+[^\r\n]*\bapi\b[^\r\n]*(?:/merge|mergePullRequest)"),
+    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GH}\s+merge\b"),
+    re.compile(rf"(?i){_GIT_CMD}reset\s+--hard(?:\s|$)"),
+    re.compile(rf"(?i){_GIT_CMD}clean\s+-\S*f"),
     re.compile(
         r"(?i)(?:^|[\s\"';&|])(?:rm|del|rmdir|remove-item)\s+[^\r\n]*(?:-r|-recurse).*?(?:-force|-f)"
     ),

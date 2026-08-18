@@ -32,7 +32,10 @@ python -m project_pipeline github protection-drift --root .
 python -m project_pipeline github consolidate --root . --expected-head-sha SHA --component-head SHA
 ```
 
-Guarded mutation:
+Guarded mutation — this is the only allowed merge path. The Cursor shell hook
+denies `gh`/`hub`/`gh.exe` pull-request merge, `gh api` REST/GraphQL merge,
+and `hub merge`, including forms that only pin `--match-head-commit`. A SHA
+pin is not an autonomous receipt.
 
 ```
 python -m project_pipeline github merge --root . --pull-number N --apply --approve --authorization-id AUTH --expected-head-sha SHA --review-receipt receipt.json
