@@ -1,0 +1,123 @@
+{
+  "disposable_root": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime",
+  "generated_at_utc": "2026-08-18T10:44:05.731081+00:00",
+  "report_sha256": "f68a3b604965b36294c235a6948d6949e0986566e9f735afe66c41550f398eb6",
+  "schema_version": "1.0.0",
+  "stages": [
+    {
+      "observations": {
+        "checkpoint_status": "STOPPED",
+        "first_exit_code": 0,
+        "first_health": {
+          "checkpoint_exists": true,
+          "log_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\autonomy-service.log",
+          "pid": null,
+          "service_name": "ProjectPipelineAutonomy",
+          "stale_pid": false,
+          "state_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\autonomy-supervisor.db",
+          "stop_requested": false
+        },
+        "plan_keys": [
+          "install",
+          "restart",
+          "start",
+          "status",
+          "stop",
+          "uninstall"
+        ],
+        "plan_valid": true,
+        "recovery_exit_code": 0,
+        "recovery_health": {
+          "checkpoint_exists": true,
+          "log_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\autonomy-service.log",
+          "pid": null,
+          "service_name": "ProjectPipelineAutonomy",
+          "stale_pid": false,
+          "state_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\autonomy-supervisor.db",
+          "stop_requested": false
+        },
+        "stale_pid_detected": true
+      },
+      "outcome": "PASSED",
+      "reasons": [],
+      "stage_id": "windows_service_foreground"
+    },
+    {
+      "observations": {
+        "context_summary": {
+          "active_operation_id": null,
+          "active_operation_state": null,
+          "last_verified_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+          "next_eligible_task_id": "PP-TASK-000385",
+          "pending_unknown_outcome": null,
+          "source": "durable_state",
+          "windows_service": {
+            "checkpoint_exists": true,
+            "log_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\live-qualification-service\\state\\autonomy-service.log",
+            "pid": null,
+            "service_name": "ProjectPipelineAutonomy",
+            "stale_pid": false,
+            "state_path": "C:\\Project_X_worktrees\\pp-task-000384-live-qualification\\.local\\live_qualification_runtime\\state\\live-qualification-service\\state\\autonomy-supervisor.db",
+            "stop_requested": false
+          }
+        },
+        "restart_last_verified_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "snapshot_id": "cc-autonomy-runtime"
+      },
+      "outcome": "PASSED",
+      "reasons": [],
+      "stage_id": "command_center_truth"
+    },
+    {
+      "observations": {
+        "live_qualification": true,
+        "receipt_status": "SUCCEEDED"
+      },
+      "outcome": "PASSED",
+      "reasons": [],
+      "stage_id": "local_provider_dispatch"
+    },
+    {
+      "observations": {
+        "adapters_present": true,
+        "github_probe": {
+          "authenticated_login": "KevinSGarrett",
+          "credential_available": true,
+          "read_ok": true,
+          "repository_name": "ProjectPipeline",
+          "repository_url": "https://github.com/KevinSGarrett/ProjectPipeline"
+        },
+        "jira_probe": {
+          "credential_available": false,
+          "reason": "jira_integration_not_configured"
+        },
+        "live_mutation_required": true,
+        "qualification_class": "authorized_sandbox_or_live",
+        "read_probe_ok": true
+      },
+      "outcome": "BLOCKED_EXTERNAL",
+      "reasons": [
+        "governed write/readback qualification is out of scope for attestation-free stage-C; read probes are honest"
+      ],
+      "stage_id": "github_jira_governance"
+    },
+    {
+      "observations": {
+        "attestation_reference": "evidence/pp379_writer_attestation_evidence.json",
+        "missing_evidence": [
+          "evidence/pp379_writer_attestation_evidence.json",
+          "evidence/pp379_writer_provider_qualification_evidence.json"
+        ],
+        "provider_id": "provider:cursor-cli",
+        "qualification_reference": "evidence/pp379_writer_provider_qualification_evidence.json"
+      },
+      "outcome": "HUMAN_REQUIRED",
+      "reasons": [
+        "missing evidence artifact: evidence/pp379_writer_attestation_evidence.json",
+        "missing evidence artifact: evidence/pp379_writer_provider_qualification_evidence.json"
+      ],
+      "stage_id": "cursor_cli_provider_dispatch"
+    }
+  ],
+  "task_id": "PP-TASK-000384"
+}

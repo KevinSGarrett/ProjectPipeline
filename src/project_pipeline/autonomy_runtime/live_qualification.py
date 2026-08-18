@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import subprocess
 import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -19,6 +20,7 @@ from project_pipeline.autonomy_runtime.supervisor import PersistentSupervisor
 from project_pipeline.autonomy_runtime.windows_service import (
     AutonomyRuntimeWindowsService,
     build_paths,
+    plan_service_commands,
 )
 from project_pipeline.command_center.autonomy import project_autonomy_runtime
 
@@ -48,6 +50,8 @@ class StageResult:
 
 CURSOR_CLI_ATTESTATION_REF = "evidence/pp379_writer_attestation_evidence.json"
 CURSOR_CLI_QUALIFICATION_REF = "evidence/pp379_writer_provider_qualification_evidence.json"
+_SERVICE_PLAN_KEYS = ("install", "start", "stop", "restart", "uninstall", "status")
+_DEFAULT_REPOSITORY_SLUG = "KevinSGarrett/ProjectPipeline"
 
 
 def _utc_now() -> str:
@@ -59,31 +63,166 @@ def _digest(payload: dict[str, Any]) -> str:
     return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
 
 
-def _qualify_windows_service(root: Path) -> StageResult:
-    paths = build_paths(root=root)
+def _run_gh_json(args: list[str]) -> dict[str, Any]:
+    try:
+        completed = subprocess.run(
+            ["gh", *args],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return {"ok": False, "exit_code": None}
+    if completed.returncode != 0:
+        return {"ok": False, "exit_code": completed.returncode}
+    raw = completed.stdout.strip()
+    if not raw:
+        return {"ok": False, "exit_code": completed.returncode, "parse_error": True}
+    try:
+        payload = json.loads(raw)
+    except json.JSONDecodeError:
+        return {"ok": True, "payload": raw.strip('"')}
+    return {"ok": True, "payload": payload}
+
+
+def _gh_auth_available() -> bool:
+    try:
+        completed = subprocess.run(
+            ["gh", "auth", "status"],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return completed.returncode == 0
+
+
+def _probe_github_read(repository_slug: str) -> dict[str, Any]:
+    if not _gh_auth_available():
+        return {"credential_available": False}
+    user_probe = _run_gh_json(["api", "user", "-q", ".login"])
+    repo_probe = _run_gh_json(["repo", "view", repository_slug, "--json", "name,url"])
+    read_ok = user_probe.get("ok") and repo_probe.get("ok")
+    observations: dict[str, Any] = {"credential_available": True, "read_ok": read_ok}
+    if user_probe.get("ok"):
+        login = user_probe["payload"]
+        observations["authenticated_login"] = login if isinstance(login, str) else str(login)
+    if repo_probe.get("ok") and isinstance(repo_probe.get("payload"), dict):
+        observations["repository_name"] = repo_probe["payload"].get("name")
+        observations["repository_url"] = repo_probe["payload"].get("url")
+    return observations
+
+
+def _probe_jira_read(repository_root: Path) -> dict[str, Any]:
+    try:
+        from project_pipeline.configuration.loader import load_runtime_configuration
+        from project_pipeline.configuration.secrets import SecretResolver
+        from project_pipeline.jira_steward.adapter import AtlassianJiraCloudAdapter
+    except ImportError as error:
+        return {"credential_available": False, "reason": error.__class__.__name__}
+
+    try:
+        configuration = load_runtime_configuration(repository_root)
+        integrations = configuration.settings.integrations
+        if not integrations.jira_base_url or not integrations.jira_user_email:
+            return {"credential_available": False, "reason": "jira_integration_not_configured"}
+        if integrations.jira_api_token is None:
+            return {"credential_available": False, "reason": "jira_api_token_unconfigured"}
+        token = SecretResolver(repository_root).resolve(integrations.jira_api_token)
+        adapter = AtlassianJiraCloudAdapter(
+            base_url=integrations.jira_base_url,
+            user_email=integrations.jira_user_email,
+            api_token=token,
+        )
+        adapter.discover_capabilities()
+        project = adapter.get_project_metadata("PP")
+        return {
+            "credential_available": True,
+            "read_ok": True,
+            "project_key": project.project_key,
+            "project_name": project.name,
+        }
+    except Exception as error:
+        return {
+            "credential_available": False,
+            "reason": error.__class__.__name__,
+        }
+
+
+def _qualify_windows_service(*, repository_root: Path, disposable_root: Path) -> StageResult:
+    paths = build_paths(root=disposable_root)
+    script = repository_root / "scripts" / "run_autonomy_runtime_service.py"
     service = AutonomyRuntimeWindowsService(paths)
-    exit_code = service.run_foreground(max_seconds=0.1)
-    health = service.health()
-    restart_exit = service.run_foreground(max_seconds=0.1)
-    restart_health = service.health()
-    passed = exit_code == 0 and restart_exit == 0 and health["pid"] is None and restart_health["pid"] is None
+    reasons: list[str] = []
+    plan_valid = False
+    plan_keys: list[str] = []
+    if script.is_file():
+        plan = plan_service_commands(paths, script)
+        plan_keys = sorted(plan)
+        plan_valid = all(key in plan for key in _SERVICE_PLAN_KEYS)
+        if not plan_valid:
+            reasons.append("service command plan incomplete")
+    else:
+        reasons.append("service launcher script missing")
+
+    first_exit = service.run_foreground(max_seconds=0.1)
+    first_health = service.health()
+    checkpoint_path = paths.state_path.with_suffix(".checkpoint.json")
+    checkpoint_status = None
+    if checkpoint_path.is_file():
+        checkpoint_status = json.loads(checkpoint_path.read_text(encoding="utf-8")).get("status")
+
+    paths.pid_path.write_text("999999", encoding="utf-8")
+    stale_health = service.health()
+    recovery_exit = service.run_foreground(max_seconds=0.1)
+    recovery_health = service.health()
+
+    passed = (
+        plan_valid
+        and first_exit == 0
+        and recovery_exit == 0
+        and first_health["pid"] is None
+        and recovery_health["pid"] is None
+        and stale_health.get("stale_pid") is True
+        and checkpoint_status == "STOPPED"
+    )
+    if first_exit != 0:
+        reasons.append("initial foreground run failed")
+    if recovery_exit != 0:
+        reasons.append("recovery foreground run failed")
+    if stale_health.get("stale_pid") is not True:
+        reasons.append("stale pid was not detected before recovery")
+    if checkpoint_status != "STOPPED":
+        reasons.append("checkpoint did not record STOPPED status")
+
     return StageResult(
         stage_id="windows_service_foreground",
         outcome=StageOutcome.PASSED if passed else StageOutcome.FAILED,
         observations={
-            "first_exit_code": exit_code,
-            "restart_exit_code": restart_exit,
-            "first_health": health,
-            "restart_health": restart_health,
+            "plan_valid": plan_valid,
+            "plan_keys": plan_keys,
+            "first_exit_code": first_exit,
+            "recovery_exit_code": recovery_exit,
+            "first_health": first_health,
+            "recovery_health": recovery_health,
+            "stale_pid_detected": stale_health.get("stale_pid"),
+            "checkpoint_status": checkpoint_status,
         },
-        reasons=() if passed else ("windows foreground lifecycle did not pass",),
+        reasons=tuple(reasons),
     )
 
 
-def _qualify_command_center(root: Path) -> StageResult:
-    supervisor_path = root / "state" / "live-qualification-sup.db"
-    lane_path = root / "state" / "live-qualification-lanes.db"
-    service_root = root / "state" / "live-qualification-service"
+def _qualify_command_center(*, disposable_root: Path) -> StageResult:
+    supervisor_path = disposable_root / "state" / "live-qualification-sup.db"
+    lane_path = disposable_root / "state" / "live-qualification-lanes.db"
+    service_root = disposable_root / "state" / "live-qualification-service"
+    service_root.mkdir(parents=True, exist_ok=True)
+    service = AutonomyRuntimeWindowsService(build_paths(root=service_root))
+    service.run_foreground(max_seconds=0.1)
+
     supervisor_path.parent.mkdir(parents=True, exist_ok=True)
     supervisor = PersistentSupervisor(supervisor_path)
     operation_id = supervisor.start_operation(
@@ -91,7 +230,7 @@ def _qualify_command_center(root: Path) -> StageResult:
         input_fingerprint="live-qualification",
         worker_id="local-qualifier",
         base_branch="main",
-        worktree_path=str(root),
+        worktree_path=str(disposable_root),
         lease_fence="live-qual-fence",
         idempotency_key="live-qual-cc",
         payload={"stage": "command_center_truth"},
@@ -117,26 +256,43 @@ def _qualify_command_center(root: Path) -> StageResult:
         ready_task_ids=["PP-TASK-000384", "PP-TASK-000385"],
         provider_status={"label": "local", "live_qualification": False, "source": "durable_state"},
     )
+    restarted = project_autonomy_runtime(
+        supervisor_state=supervisor_path,
+        lane_state=lane_path,
+        service_root=service_root,
+        ready_task_ids=["PP-TASK-000384", "PP-TASK-000385"],
+        provider_status={"label": "local", "live_qualification": False, "source": "durable_state"},
+    )
+    windows_service = snapshot["context_summary"].get("windows_service") or {}
     truth_ok = (
         snapshot["context_summary"]["source"] == "durable_state"
         and snapshot["context_summary"]["last_verified_sha"] == "b" * 40
+        and snapshot["context_summary"]["next_eligible_task_id"] == "PP-TASK-000385"
         and snapshot["provider_summary"]["source"] == "durable_state"
+        and windows_service.get("pid") is None
+        and windows_service.get("checkpoint_exists") is True
+        and restarted["context_summary"]["last_verified_sha"]
+        == snapshot["context_summary"]["last_verified_sha"]
     )
     return StageResult(
         stage_id="command_center_truth",
         outcome=StageOutcome.PASSED if truth_ok else StageOutcome.FAILED,
-        observations={"snapshot_id": snapshot.get("snapshot_id"), "context_summary": snapshot["context_summary"]},
+        observations={
+            "snapshot_id": snapshot.get("snapshot_id"),
+            "context_summary": snapshot["context_summary"],
+            "restart_last_verified_sha": restarted["context_summary"]["last_verified_sha"],
+        },
         reasons=() if truth_ok else ("command center projection was not derived from durable state",),
     )
 
 
-def _qualify_local_provider(root: Path) -> StageResult:
-    runtime = AutonomyProviderRuntime(root / "state" / "live-qualification-provider.db")
+def _qualify_local_provider(disposable_root: Path) -> StageResult:
+    runtime = AutonomyProviderRuntime(disposable_root / "state" / "live-qualification-provider.db")
     try:
         receipt = runtime.dispatch(
             provider=local_test_provider(),
             command=[sys.executable, "-c", "print('live-qual-local-provider')"],
-            working_directory=root,
+            working_directory=disposable_root,
             task_id="PP-TASK-000384",
             worker_id="local-qualifier",
             model_or_tool="local-subprocess",
@@ -167,6 +323,25 @@ def _qualify_github_jira_governance(repository_root: Path) -> StageResult:
             observations={"github_steward": github_steward.exists(), "jira_steward": jira_module.exists()},
             reasons=("governed adapter modules are missing",),
         )
+
+    repository_slug = _DEFAULT_REPOSITORY_SLUG
+    project_json = repository_root / "config" / "project.json"
+    if project_json.is_file():
+        repository_url = json.loads(project_json.read_text(encoding="utf-8")).get("repository", "")
+        if isinstance(repository_url, str) and "github.com/" in repository_url:
+            repository_slug = repository_url.rstrip("/").split("github.com/", 1)[-1]
+
+    github_probe = _probe_github_read(repository_slug)
+    jira_probe = _probe_jira_read(repository_root)
+    read_ok = bool(github_probe.get("read_ok")) or bool(jira_probe.get("read_ok"))
+    reasons = [
+        "governed write/readback qualification is out of scope for attestation-free stage-C; read probes are honest",
+    ]
+    if not read_ok:
+        reasons.insert(
+            0,
+            "authorized GitHub/Jira live read requires scoped credentials; write/readback not attempted",
+        )
     return StageResult(
         stage_id="github_jira_governance",
         outcome=StageOutcome.BLOCKED_EXTERNAL,
@@ -174,10 +349,11 @@ def _qualify_github_jira_governance(repository_root: Path) -> StageResult:
             "adapters_present": True,
             "live_mutation_required": True,
             "qualification_class": "authorized_sandbox_or_live",
+            "github_probe": github_probe,
+            "jira_probe": jira_probe,
+            "read_probe_ok": read_ok,
         },
-        reasons=(
-            "authorized GitHub/Jira live read/write/readback requires scoped credentials and governed apply/readback; not attestation-blocked",
-        ),
+        reasons=tuple(reasons),
     )
 
 
@@ -214,11 +390,12 @@ def run_live_qualification(
     repository_root: Path,
     disposable_root: Path | None = None,
 ) -> dict[str, Any]:
+    repository_root = repository_root.resolve()
     root = (disposable_root or (repository_root / ".local" / "live_qualification_runtime")).resolve()
     root.mkdir(parents=True, exist_ok=True)
     stages = (
-        _qualify_windows_service(root),
-        _qualify_command_center(root),
+        _qualify_windows_service(repository_root=repository_root, disposable_root=root),
+        _qualify_command_center(disposable_root=root),
         _qualify_local_provider(root),
         _qualify_github_jira_governance(repository_root),
         _qualify_cursor_cli_provider(repository_root),
