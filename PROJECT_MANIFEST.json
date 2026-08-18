@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "db18181fca421aba53e4791877af267107967c4d63956f2f94961abde1384460",
+  "aggregate_sha256": "8a3d7916492870e8686031cf65c5bf608d8dbeab7cf50e09dfd584f4b524d972",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2865,
+  "file_count": 2867,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -12132,8 +12132,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "7850e2d7509e2275526f8fa0cd83b066d77037e4006e82459e071402dd91ddb1",
-      "size_bytes": 144389
+      "sha256": "c21c13d9fc5e0cf5cad01c82f30b5d2dca0a7928c16ae28678371db71bbaaf5c",
+      "size_bytes": 145740
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12167,8 +12167,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/autonomy.py",
-      "sha256": "a7478552da75ec45edb78534d898a3cacbadd82502cf08e21691762af33d251e",
-      "size_bytes": 4737
+      "sha256": "3e943410f5e13b2b7e3f7619263ac8baf560519a81514c74cc0d59abf480df69",
+      "size_bytes": 4709
     },
     {
       "path": "src/project_pipeline/command_center/director.py",
@@ -12714,6 +12714,11 @@
       "path": "src/project_pipeline/lifecycle/contracts.py",
       "sha256": "e3e41da56f82602e35c969beee4f614ca9383ef6f0c1a942c241a3ea1b4cca41",
       "size_bytes": 1334
+    },
+    {
+      "path": "src/project_pipeline/lifecycle/cycle_handoff.py",
+      "sha256": "0840c8ec12de06fdb69352a8c54bbda75bfc147f239b3eb6a0e0e0bdcd6d617e",
+      "size_bytes": 5107
     },
     {
       "path": "src/project_pipeline/lifecycle/environments.py",
@@ -13736,6 +13741,11 @@
       "size_bytes": 2618
     },
     {
+      "path": "tests/test_cycle_handoff.py",
+      "sha256": "a94bb98a86e7b4cf3980ac20ff02a35aef3b6eb3f4efaa0d53d4de5b20119919",
+      "size_bytes": 4948
+    },
+    {
       "path": "tests/test_decision_resolution.py",
       "sha256": "ec5fd872558c8e3d51250433f4a8afd3857c28451903e473d531c9682e71e5f4",
       "size_bytes": 2232
@@ -14336,7 +14346,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T19:52:24.167586+00:00",
+  "generated_at_utc": "2026-08-18T19:54:17.466216+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14345,5 +14355,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25335438
+  "total_bytes": 25346816
 }

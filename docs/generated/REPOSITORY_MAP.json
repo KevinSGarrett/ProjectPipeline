@@ -17,7 +17,7 @@
     ".mod": 1,
     ".png": 15,
     ".ps1": 8,
-    ".py": 544,
+    ".py": 546,
     ".rego": 1,
     ".rs": 2,
     ".sha256": 1,
@@ -60,11 +60,11 @@
     "runbooks": 28,
     "schemas": 209,
     "scripts": 36,
-    "src": 293,
-    "tests": 201,
+    "src": 294,
+    "tests": 202,
     "third_party": 1
   },
-  "file_count": 2868,
+  "file_count": 2870,
   "files": [
     {
       "extension": ".md",
@@ -6831,8 +6831,8 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "a6be432682c964229bdf767152e0d7c6bef4a04e2ab4f7fcd9cff3677caf76ce",
-      "size_bytes": 327649,
+      "sha256": "ff1ee40ec7044612482e1d84d5fef6ca78e7a819dfc67e00d6afd07c8be31a3e",
+      "size_bytes": 327866,
       "top_level": "_root"
     },
     {
@@ -14048,8 +14048,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "e207cdd4ca00fe489add25cbf2c323d411ad3ec490e26035531992ff57b58f30",
-      "size_bytes": 536530,
+      "sha256": "80bf2163fcdd2498e51b97ae463149539e6dddf2036b15fdddeafea01f2d1fc5",
+      "size_bytes": 536893,
       "top_level": "_root"
     },
     {
@@ -17058,8 +17058,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/cli.py",
-      "sha256": "7850e2d7509e2275526f8fa0cd83b066d77037e4006e82459e071402dd91ddb1",
-      "size_bytes": 144389,
+      "sha256": "c21c13d9fc5e0cf5cad01c82f30b5d2dca0a7928c16ae28678371db71bbaaf5c",
+      "size_bytes": 145740,
       "top_level": "src"
     },
     {
@@ -17107,8 +17107,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/autonomy.py",
-      "sha256": "a7478552da75ec45edb78534d898a3cacbadd82502cf08e21691762af33d251e",
-      "size_bytes": 4737,
+      "sha256": "3e943410f5e13b2b7e3f7619263ac8baf560519a81514c74cc0d59abf480df69",
+      "size_bytes": 4709,
       "top_level": "src"
     },
     {
@@ -17872,6 +17872,13 @@
       "path": "src/project_pipeline/lifecycle/contracts.py",
       "sha256": "e3e41da56f82602e35c969beee4f614ca9383ef6f0c1a942c241a3ea1b4cca41",
       "size_bytes": 1334,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/lifecycle/cycle_handoff.py",
+      "sha256": "0840c8ec12de06fdb69352a8c54bbda75bfc147f239b3eb6a0e0e0bdcd6d617e",
+      "size_bytes": 5107,
       "top_level": "src"
     },
     {
@@ -19304,6 +19311,13 @@
     },
     {
       "extension": ".py",
+      "path": "tests/test_cycle_handoff.py",
+      "sha256": "a94bb98a86e7b4cf3980ac20ff02a35aef3b6eb3f4efaa0d53d4de5b20119919",
+      "size_bytes": 4948,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
       "path": "tests/test_decision_resolution.py",
       "sha256": "ec5fd872558c8e3d51250433f4a8afd3857c28451903e473d531c9682e71e5f4",
       "size_bytes": 2232,
@@ -20143,7 +20157,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-18T19:52:23.610756+00:00",
+  "generated_at_utc": "2026-08-18T19:54:17.060915+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

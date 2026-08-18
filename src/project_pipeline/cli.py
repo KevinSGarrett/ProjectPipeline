@@ -1021,6 +1021,20 @@ def build_parser() -> argparse.ArgumentParser:
     attestation.add_argument("--apply", action="store_true")
     attestation.add_argument("--json-output", type=Path)
 
+    cycle_handoff = commands.add_parser(
+        "cycle-handoff",
+        help="Validate compact cycle handoffs against meter, proof, and packet invariants",
+    )
+    cycle_handoff.add_argument("action", choices=("validate",))
+    cycle_handoff.add_argument("--root", type=_root, default=Path.cwd())
+    cycle_handoff.add_argument("--handoff", type=Path, required=True)
+    cycle_handoff.add_argument("--meter", type=Path, required=True)
+    cycle_handoff.add_argument("--proof", type=Path, required=True)
+    cycle_handoff.add_argument("--packet", type=Path, required=True)
+    cycle_handoff.add_argument("--floor-exit-code", type=int)
+    cycle_handoff.add_argument("--floor-ran", action="store_true")
+    cycle_handoff.add_argument("--json-output", type=Path)
+
     archive = commands.add_parser("archive", help="Create a deterministic project ZIP")
     archive.add_argument("--root", type=_root, default=Path.cwd())
     archive.add_argument("--output", type=Path, required=True)
@@ -3257,6 +3271,19 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             _write_json_output(result, args.json_output)
             return 0 if result["evaluation"]["accepted_for_restore"] else 1
+        if args.command == "cycle-handoff":
+            from project_pipeline.lifecycle.cycle_handoff import load_and_validate_cycle_handoff
+
+            result = load_and_validate_cycle_handoff(
+                handoff_path=args.handoff,
+                meter_path=args.meter,
+                proof_path=args.proof,
+                packet_path=args.packet,
+                floor_script_exit_code=args.floor_exit_code,
+                floor_script_ran=args.floor_ran,
+            )
+            _write_json_output(result, args.json_output)
+            return 0 if result["valid"] else 1
         if args.command == "archive":
             output = create_archive(args.root, args.output)
             report = verify_archive(output, args.root.name)
