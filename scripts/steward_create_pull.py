@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from project_pipeline.autonomy_runtime.live_qualification import (  # noqa: E402
     _DEFAULT_REPOSITORY_SLUG,
+    _github_repository_slug_from_url,
     _resolve_github_token,
 )
 from project_pipeline.github_steward.adapter import GitHubRestAdapter  # noqa: E402
@@ -21,8 +22,10 @@ def _repository_slug(root: Path) -> str:
     project_json = root / "config" / "project.json"
     if project_json.is_file():
         repository_url = json.loads(project_json.read_text(encoding="utf-8")).get("repository", "")
-        if isinstance(repository_url, str) and "github.com/" in repository_url:
-            return repository_url.rstrip("/").split("github.com/", 1)[-1]
+        if isinstance(repository_url, str):
+            slug = _github_repository_slug_from_url(repository_url)
+            if slug is not None:
+                return slug
     return _DEFAULT_REPOSITORY_SLUG
 
 

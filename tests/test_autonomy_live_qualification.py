@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import json
 from pathlib import Path
@@ -36,7 +36,10 @@ def test_live_qualification_passes_local_stages_and_blocks_cursor_cli(tmp_path: 
     command_center = by_id["command_center_truth"]
     assert command_center["outcome"] == StageOutcome.PASSED.value
     assert command_center["observations"]["context_summary"]["source"] == "durable_state"
-    assert command_center["observations"]["context_summary"]["windows_service"]["checkpoint_exists"] is True
+    assert (
+        command_center["observations"]["context_summary"]["windows_service"]["checkpoint_exists"]
+        is True
+    )
 
     assert by_id["local_provider_dispatch"]["outcome"] == StageOutcome.PASSED.value
 
@@ -51,13 +54,18 @@ def test_live_qualification_passes_local_stages_and_blocks_cursor_cli(tmp_path: 
 
     cursor_cli = by_id["cursor_cli_provider_dispatch"]
     assert cursor_cli["outcome"] == StageOutcome.HUMAN_REQUIRED.value
-    assert "pp379_writer_attestation_evidence.json" in cursor_cli["observations"]["missing_evidence"][0]
+    assert (
+        "pp379_writer_attestation_evidence.json"
+        in cursor_cli["observations"]["missing_evidence"][0]
+    )
 
 
 def test_write_live_qualification_evidence(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     _scaffold_repo(repo)
-    output = write_live_qualification_evidence(repository_root=repo, disposable_root=tmp_path / "runtime")
+    output = write_live_qualification_evidence(
+        repository_root=repo, disposable_root=tmp_path / "runtime"
+    )
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload["task_id"] == "PP-TASK-000384"
     assert output.name == "live_qualification_latest.json"

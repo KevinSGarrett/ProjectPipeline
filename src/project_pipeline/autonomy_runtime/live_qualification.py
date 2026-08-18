@@ -1,4 +1,4 @@
-﻿from __future__ import annotations
+from __future__ import annotations
 
 import hashlib
 import json
@@ -7,9 +7,10 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from project_pipeline.autonomy_runtime.lanes import LaneRegistry
 from project_pipeline.autonomy_runtime.providers import (
@@ -26,7 +27,7 @@ from project_pipeline.autonomy_runtime.windows_service import (
 from project_pipeline.command_center.autonomy import project_autonomy_runtime
 
 
-class StageOutcome(str, Enum):
+class StageOutcome(StrEnum):
     PASSED = "PASSED"
     BLOCKED_EXTERNAL = "BLOCKED_EXTERNAL"
     HUMAN_REQUIRED = "HUMAN_REQUIRED"
@@ -56,6 +57,36 @@ _DEFAULT_REPOSITORY_SLUG = "KevinSGarrett/ProjectPipeline"
 _LIVE_QUAL_JIRA_LOCAL_ID = "PP-TASK-000384"
 _LIVE_QUAL_PROBE_MARKER = "PP384-LIVE-QUAL-PROBE"
 _GITHUB_PROBE_BRANCH = "qual/pp384-live-probe"
+_ALLOWED_GITHUB_HOSTS = frozenset({"github.com", "www.github.com"})
+
+
+def _github_repository_slug_from_url(url: str) -> str | None:
+    value = url.strip()
+    if not value:
+        return None
+    if value.startswith("git@github.com:"):
+        slug = value.split(":", 1)[1].strip()
+        if slug.endswith(".git"):
+            slug = slug[:-4]
+        slug = slug.strip("/")
+        if slug.count("/") == 1 and all(part for part in slug.split("/", 1)):
+            return slug
+        return None
+    parsed = urlparse(value)
+    if parsed.scheme not in {"http", "https"}:
+        return None
+    host = parsed.hostname
+    if host is None or host.lower() not in _ALLOWED_GITHUB_HOSTS:
+        return None
+    path = parsed.path.strip("/")
+    if path.endswith(".git"):
+        path = path[:-4]
+    if path.count("/") != 1:
+        return None
+    owner, repo = path.split("/", 1)
+    if not owner or not repo:
+        return None
+    return f"{owner}/{repo}"
 
 
 def _utc_now() -> str:
@@ -145,9 +176,9 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
         )
         token_ref = configuration.settings.integrations.github_token
         if token_ref is not None:
-            token = SecretResolver(repository_root, _credential_environment(repository_root)).resolve(
-                token_ref
-            )
+            token = SecretResolver(
+                repository_root, _credential_environment(repository_root)
+            ).resolve(token_ref)
             if token.strip():
                 return token, "config"
     except Exception:
@@ -262,7 +293,11 @@ def _probe_github_write_readback(repository_slug: str, token: str) -> dict[str, 
             None,
         )
         if not base_sha:
-            return {"write_attempted": False, "write_readback_ok": False, "reason": "default_branch_sha_unavailable"}
+            return {
+                "write_attempted": False,
+                "write_readback_ok": False,
+                "reason": "default_branch_sha_unavailable",
+            }
         existing = {branch.name for branch in adapter.iter_branches(repository_slug)}
         if branch_name in existing:
             adapter.delete_branch(repository_slug, branch=branch_name, context=context)
@@ -306,7 +341,11 @@ def _probe_jira_write_readback(repository_root: Path) -> dict[str, Any]:
     try:
         adapter = _build_jira_adapter(repository_root)
     except Exception as error:
-        return {"credential_available": False, "write_readback_ok": False, "reason": error.__class__.__name__}
+        return {
+            "credential_available": False,
+            "write_readback_ok": False,
+            "reason": error.__class__.__name__,
+        }
 
     remote_key = _resolve_jira_remote_key(adapter, repository_root)
     if not remote_key:
@@ -498,7 +537,9 @@ def _qualify_command_center(*, disposable_root: Path) -> StageResult:
             "context_summary": snapshot["context_summary"],
             "restart_last_verified_sha": restarted["context_summary"]["last_verified_sha"],
         },
-        reasons=() if truth_ok else ("command center projection was not derived from durable state",),
+        reasons=()
+        if truth_ok
+        else ("command center projection was not derived from durable state",),
     )
 
 
@@ -512,7 +553,9 @@ def _qualify_local_provider(disposable_root: Path) -> StageResult:
             task_id="PP-TASK-000384",
             worker_id="local-qualifier",
             model_or_tool="local-subprocess",
-            budget=BudgetDecision(allowed=True, reason="live-qualification", decision_id="BUD-LQ-001"),
+            budget=BudgetDecision(
+                allowed=True, reason="live-qualification", decision_id="BUD-LQ-001"
+            ),
             lease_fence="live-qual-fence",
             expected_fence="live-qual-fence",
             idempotency_key="live-qual-provider",
@@ -523,7 +566,10 @@ def _qualify_local_provider(disposable_root: Path) -> StageResult:
     return StageResult(
         stage_id="local_provider_dispatch",
         outcome=StageOutcome.PASSED if passed else StageOutcome.FAILED,
-        observations={"receipt_status": receipt["status"], "live_qualification": receipt["live_qualification"]},
+        observations={
+            "receipt_status": receipt["status"],
+            "live_qualification": receipt["live_qualification"],
+        },
         reasons=() if passed else ("local provider dispatch did not succeed",),
     )
 
@@ -536,7 +582,10 @@ def _qualify_github_jira_governance(repository_root: Path) -> StageResult:
         return StageResult(
             stage_id="github_jira_governance",
             outcome=StageOutcome.FAILED,
-            observations={"github_steward": github_steward.exists(), "jira_steward": jira_module.exists()},
+            observations={
+                "github_steward": github_steward.exists(),
+                "jira_steward": jira_module.exists(),
+            },
             reasons=("governed adapter modules are missing",),
         )
 
@@ -544,8 +593,10 @@ def _qualify_github_jira_governance(repository_root: Path) -> StageResult:
     project_json = repository_root / "config" / "project.json"
     if project_json.is_file():
         repository_url = json.loads(project_json.read_text(encoding="utf-8")).get("repository", "")
-        if isinstance(repository_url, str) and "github.com/" in repository_url:
-            repository_slug = repository_url.rstrip("/").split("github.com/", 1)[-1]
+        if isinstance(repository_url, str):
+            parsed_slug = _github_repository_slug_from_url(repository_url)
+            if parsed_slug is not None:
+                repository_slug = parsed_slug
 
     github_probe = _probe_github_read(repository_slug)
     jira_probe = _probe_jira_read(repository_root)
@@ -628,7 +679,9 @@ def _qualify_cursor_cli_provider(repository_root: Path) -> StageResult:
         stage_id="cursor_cli_provider_dispatch",
         outcome=StageOutcome.BLOCKED_EXTERNAL,
         observations={"provider_id": "provider:cursor-cli", "evidence_present": True},
-        reasons=("evidence artifacts exist; live dispatch qualification still requires operator session",),
+        reasons=(
+            "evidence artifacts exist; live dispatch qualification still requires operator session",
+        ),
     )
 
 
@@ -667,8 +720,12 @@ def write_live_qualification_evidence(
     evidence_dir: Path | None = None,
     disposable_root: Path | None = None,
 ) -> Path:
-    report = run_live_qualification(repository_root=repository_root, disposable_root=disposable_root)
-    target = evidence_dir or (repository_root / "evidence" / "autonomy_runtime" / "live_qualification")
+    report = run_live_qualification(
+        repository_root=repository_root, disposable_root=disposable_root
+    )
+    target = evidence_dir or (
+        repository_root / "evidence" / "autonomy_runtime" / "live_qualification"
+    )
     target.mkdir(parents=True, exist_ok=True)
     output = target / "live_qualification_latest.json"
     output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
