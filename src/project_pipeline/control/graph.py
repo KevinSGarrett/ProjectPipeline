@@ -137,7 +137,10 @@ class BuildSequencer:
                 task_id=fact.task_id,
                 state=EligibilityState.HUMAN_REQUIRED,
                 eligible=False,
-                reasons=("task requires a human decision or action before autonomous admission",),
+                reasons=(
+                    "task is blocked by an external precondition that autonomous admission "
+                    "cannot satisfy yet",
+                ),
             )
         if fact.external_blocked:
             return TaskEligibility(

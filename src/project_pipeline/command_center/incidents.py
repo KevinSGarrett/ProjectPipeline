@@ -48,7 +48,7 @@ class IncidentManager:
                 level=severity,
                 title=incident.summary,
                 impact=self._impact(incident),
-                exact_action=incident.exact_human_action,
+                exact_action=f"Autonomous recheck: {incident.exact_human_action}",
                 post_action_verification="; ".join(incident.verification_steps),
                 critical_path=bool(incident.blocked_work),
                 blocked_tasks=len(incident.blocked_work),

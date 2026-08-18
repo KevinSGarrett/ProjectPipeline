@@ -712,6 +712,16 @@ class LaneRegistry:
             for row in rows
         ]
 
+    def list_known_lane_ids(self) -> tuple[str, ...]:
+        rows = self._conn.execute(
+            """
+            SELECT DISTINCT logical_lane_id
+            FROM lane_attempts
+            ORDER BY logical_lane_id
+            """
+        ).fetchall()
+        return tuple(str(row["logical_lane_id"]) for row in rows)
+
     def list_attempts(self, lane_id: str) -> list[dict[str, Any]]:
         rows = self._conn.execute(
             """

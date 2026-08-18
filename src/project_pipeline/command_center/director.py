@@ -109,11 +109,12 @@ class DeterministicGroundedDirectorResponder:
                 "summary", "Incident details are unavailable from the authorized projection."
             )
             exact_action = raw.get(
-                "exact_human_action", "Use the Recovery Center for the canonical requested action."
+                "exact_human_action",
+                "Schedule an autonomous recheck of the blocked external capability.",
             )
             verification = raw.get("verification_steps", [])
             answer = (
-                f"Incident {context.incident_id}: {summary} Exact operator action: {exact_action} "
+                f"Incident {context.incident_id}: {summary} Autonomous recheck: {exact_action} "
                 f"Verification steps: {', '.join(verification) if verification else 'see canonical incident record'}."
             )
         else:

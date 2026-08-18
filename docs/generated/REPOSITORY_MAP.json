@@ -17,7 +17,7 @@
     ".mod": 1,
     ".png": 15,
     ".ps1": 8,
-    ".py": 541,
+    ".py": 544,
     ".rego": 1,
     ".rs": 2,
     ".sha256": 1,
@@ -60,11 +60,11 @@
     "runbooks": 28,
     "schemas": 209,
     "scripts": 36,
-    "src": 292,
-    "tests": 199,
+    "src": 293,
+    "tests": 201,
     "third_party": 1
   },
-  "file_count": 2865,
+  "file_count": 2868,
   "files": [
     {
       "extension": ".md",
@@ -230,8 +230,8 @@
     {
       "extension": "[none]",
       "path": ".git",
-      "sha256": "bb34d50724c6cdf98062ab65b39baccf5365a366af0b35e6bff765bd6a6116fc",
-      "size_bytes": 66,
+      "sha256": "5225e5128b88481df2624aceef00206814c4ed363992fe927e9b8d44a09ce2d3",
+      "size_bytes": 74,
       "top_level": "_root"
     },
     {
@@ -5662,14 +5662,14 @@
     {
       "extension": ".jsonl",
       "path": "evidence/EVIDENCE_LEDGER.jsonl",
-      "sha256": "4a06f4a5f8fecb1017101e70a050af35e97795febc9097d3a0eeeb0c45c4db0f",
-      "size_bytes": 142980,
+      "sha256": "773ab20a9ec896908cba5f6b635fb6b314a9eb7ab2e44fc71bbf4b9586c569a8",
+      "size_bytes": 142804,
       "top_level": "evidence"
     },
     {
       "extension": ".json",
       "path": "evidence/EVIDENCE_SUMMARY.json",
-      "sha256": "fa4ccbcb4fd4ff4d4884877bdf0d5260d9b2465be5e14e3bc84675756a2b52c8",
+      "sha256": "c95b5e61d036ffc1b3003637a0b23b94f7aa67ad197534c66ccc9847bddf4211",
       "size_bytes": 286,
       "top_level": "evidence"
     },
@@ -6033,8 +6033,8 @@
     {
       "extension": ".json",
       "path": "evidence/pp379_attestation_recovery_provenance.json",
-      "sha256": "ebd5dc954784748d8855b898c4bcb28a23e6390a5a37b70b8adb3c4eac1c4f4d",
-      "size_bytes": 1372,
+      "sha256": "bc2917caef70b480b866910b28af675cd172e86aef2d35ab54702f8df4e44404",
+      "size_bytes": 1344,
       "top_level": "evidence"
     },
     {
@@ -6089,8 +6089,8 @@
     {
       "extension": ".json",
       "path": "evidence/pp380_383_cycle11_integrated_main_audit.json",
-      "sha256": "09c69914e63ca8340b96a1bb853f8c8f44a047733e666775eeafdd00fdd4ba1d",
-      "size_bytes": 1495,
+      "sha256": "a74bd7393800ba1b9d2ffc135496a387050ffda6d1c863171bc90e6e8043c2bc",
+      "size_bytes": 1444,
       "top_level": "evidence"
     },
     {
@@ -6831,8 +6831,8 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "a573a26d3747c10e07890e9f72d574d99d5f0b7aa34ff783ef452fdacd488c39",
-      "size_bytes": 327545,
+      "sha256": "a6be432682c964229bdf767152e0d7c6bef4a04e2ab4f7fcd9cff3677caf76ce",
+      "size_bytes": 327649,
       "top_level": "_root"
     },
     {
@@ -7580,15 +7580,15 @@
     {
       "extension": ".jsonl",
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "e8eb2722ce076985fe4b9ae4dc8a3d980180991d7fd6f4e379e405a93c351bab",
-      "size_bytes": 1671418,
+      "sha256": "1da9aa5037e42abf70496b29ff4c6c10c4727b3620ed12770bf07a5e5866a68f",
+      "size_bytes": 1672115,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "23fca22277a1dd7a121bbe0cc75cd3c2d4d14f9961f74146c008a360174f2b2a",
-      "size_bytes": 1979467,
+      "sha256": "4fc8f1e91f2d358b9b8e2696402731c42344d5be4963e03176ddeffffd38f4be",
+      "size_bytes": 1980320,
       "top_level": "jira"
     },
     {
@@ -7629,8 +7629,8 @@
     {
       "extension": ".json",
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "b980fcb135078690b4db4f814dd3fbd613c8f2007158d609ff691bad199c20e7",
-      "size_bytes": 2090,
+      "sha256": "d525f6678784cc850b2122e2c1d757cec7d1564527186f3f2713413a67a8c7d7",
+      "size_bytes": 2018,
       "top_level": "jira"
     },
     {
@@ -13012,36 +13012,36 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000380.json",
-      "sha256": "4b186cb615d53709926e96cc19454a157964971c98c7a41eda146645b7bd3c21",
-      "size_bytes": 4791,
+      "sha256": "844730409cbbb623806b971d0cbd0daa4dcbac98aa022f0dd825a552750437c5",
+      "size_bytes": 4742,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000381.json",
-      "sha256": "55b502be2ed25820d8df4702736f37ae0e8a1d6ba75c823ce628f0d972546966",
-      "size_bytes": 3817,
+      "sha256": "85ae55095b5512a835acfb8d03eab2d4cea2b1be7fdeb51274f3b4721b6e847a",
+      "size_bytes": 3783,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000382.json",
-      "sha256": "337b0978d262b8621b6da6825fec0b541ddb4102805c037a7dc33dc1e09d7781",
-      "size_bytes": 3905,
+      "sha256": "56e32f99f2f83cb060d853003475b4b546983530f87db8b20b9d6477d61f57b4",
+      "size_bytes": 3867,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000383.json",
-      "sha256": "6187223e1241a721296091dfb45bfc1c1684980010ed68cdc35a63d05777c084",
-      "size_bytes": 4136,
+      "sha256": "337386799ee1edb8339c87f62a0ddc55093ffaa5c3327552567469127ef06397",
+      "size_bytes": 4101,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000384.json",
-      "sha256": "d954a2664b777b689bb09ab57a782fe556cdb4e79c8b385c7ace6e52d0569a21",
-      "size_bytes": 3592,
+      "sha256": "d1a6eb9ce5400a8edb7275429f21535b1c3711ba396ab503a77e2b46424d91b4",
+      "size_bytes": 4101,
       "top_level": "jira"
     },
     {
@@ -14048,8 +14048,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "81d1c7131b33eabe10281e6967eb47a9d3e928aca106398030d9019523facc27",
-      "size_bytes": 536353,
+      "sha256": "e207cdd4ca00fe489add25cbf2c323d411ad3ec490e26035531992ff57b58f30",
+      "size_bytes": 536530,
       "top_level": "_root"
     },
     {
@@ -14762,8 +14762,8 @@
     {
       "extension": ".md",
       "path": "runbooks/autonomy_runtime/live_qualification.md",
-      "sha256": "c4305697ebc97efd34ef4a6d0a48ebbaeee99de7b6cc5b71f93ddf42fe9eb979",
-      "size_bytes": 1647,
+      "sha256": "862318c6d152f462fecba92210a0d1040fe214eb5c7bd697d50b43fc13987faf",
+      "size_bytes": 1835,
       "top_level": "runbooks"
     },
     {
@@ -16911,22 +16911,22 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/cursor_cli_qualification.py",
-      "sha256": "d5eb39b8045b1725eeeb1387e406cafb5bd57f5eee88102d4416c3fc1ace4e72",
-      "size_bytes": 17601,
+      "sha256": "b3a09fd417143bfb0608d09c338c559fe5bee0008516c117884f41354bcd5491",
+      "size_bytes": 17528,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/golden.py",
-      "sha256": "75db783a4ceb3aa0eafab00fd66946ac80a65f0e820556484f9526153ed340d4",
-      "size_bytes": 20794,
+      "sha256": "eb3a6e975970a0b7b66348dca4ac3f9052da0341543d9fef4463a314784bc215",
+      "size_bytes": 21051,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/lanes.py",
-      "sha256": "aaf70f921ea54bc663796aceff631fe967ad11a210f56be5035b09f1ed66e9be",
-      "size_bytes": 26363,
+      "sha256": "32a387681d2a5d2dffd351415d3276331cbf3e74d1f2f9fb4411e0e9acf45535",
+      "size_bytes": 26684,
       "top_level": "src"
     },
     {
@@ -16934,6 +16934,13 @@
       "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
       "sha256": "7a3aded4258fa2c9c416bcff486ba4657cb611a07b0bdeba03cbe5516c6f4865",
       "size_bytes": 28478,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/autonomy_runtime/projection.py",
+      "sha256": "f9180445e14dc278a18766d1716731bb71492abffa34d20cf34c3c5dd52899f2",
+      "size_bytes": 1524,
       "top_level": "src"
     },
     {
@@ -16960,8 +16967,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/service.py",
-      "sha256": "617596e4fa843151508733a7e22e3418badc8a118d6ee1d04c00a6ae5d39d615",
-      "size_bytes": 20856,
+      "sha256": "895946618fe68117fe15cd8a569f40f5b8aab327a1b4ac37d0f99ba518a63182",
+      "size_bytes": 20960,
       "top_level": "src"
     },
     {
@@ -17100,15 +17107,15 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/autonomy.py",
-      "sha256": "88dc27ec6416981126d960682e2e8a9462cf7ab1e5ba88f564751c6c9db05886",
-      "size_bytes": 3789,
+      "sha256": "a7478552da75ec45edb78534d898a3cacbadd82502cf08e21691762af33d251e",
+      "size_bytes": 4737,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/director.py",
-      "sha256": "4a40cfbf74384440e855aa6956a17f91386171e97413aac35312c82d2c09745d",
-      "size_bytes": 9670,
+      "sha256": "5d25d514b669f589796e1906776587818439d23b5983b30d56b85a2a6714d16f",
+      "size_bytes": 9691,
       "top_level": "src"
     },
     {
@@ -17121,8 +17128,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/incidents.py",
-      "sha256": "95d3ce40383d02a685f6380e13a96695cc2b0c0bf5cc7059f0551703e6ba6d7c",
-      "size_bytes": 5870,
+      "sha256": "eba963925e94786f746012b018206ea9db34407cb81e4d4cbafa4ecc248fe84a",
+      "size_bytes": 5895,
       "top_level": "src"
     },
     {
@@ -17317,8 +17324,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/control/graph.py",
-      "sha256": "9d0202f7d12edfedcfdbae9376966d92f41e8c1ee6b18702e0eb70d5a8c99f9a",
-      "size_bytes": 18409,
+      "sha256": "34114640690fd394a36c723cab335973eb82ecf6b35071fbd8b8c9a215ec7815",
+      "size_bytes": 18490,
       "top_level": "src"
     },
     {
@@ -17842,8 +17849,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/lifecycle/__init__.py",
-      "sha256": "1f1cad482e400d150ef5dfbfde76efad3634bb19ea977bfbcad07bf387978c4f",
-      "size_bytes": 3739,
+      "sha256": "4071f19f9ee55b5b1fb7838ec2fa04ed8d9999aa3ca14b5d9bf7f97fb308d88d",
+      "size_bytes": 3791,
       "top_level": "src"
     },
     {
@@ -17856,8 +17863,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/lifecycle/attestation_recovery.py",
-      "sha256": "249b7549152f7d1fbdf3c8fdd2a7f0387376f18a1fc617f681424d5b3c1087b2",
-      "size_bytes": 20977,
+      "sha256": "bd9cb042c5f6b41e18e25321c9ebac44c32d8c408cd9e8ce9482e69090edc4de",
+      "size_bytes": 21485,
       "top_level": "src"
     },
     {
@@ -18738,22 +18745,22 @@
     {
       "extension": ".json",
       "path": "tests/fixtures/pp379_durable/privacy_attestation.json",
-      "sha256": "42700207a0593a980698fa3089885ab17b448eefe85ab6dca11a114d2410190c",
-      "size_bytes": 443,
+      "sha256": "51108d6b3b87bd13cf968a45606f4fa331b968d2e4eb081afab15f4606c65c81",
+      "size_bytes": 433,
       "top_level": "tests"
     },
     {
       "extension": ".json",
       "path": "tests/fixtures/pp379_durable/provider_qualification.json",
-      "sha256": "7da69342bf9708b407a67d43563986ae6247823c244237ae1b978a89ceda173b",
-      "size_bytes": 455,
+      "sha256": "2a023388a974109bc457194bf8e32ab7a6be11a5e2b45b34fd67762ab07727dd",
+      "size_bytes": 445,
       "top_level": "tests"
     },
     {
       "extension": ".py",
       "path": "tests/integration/autonomy_runtime/test_golden_journey.py",
-      "sha256": "b364f482de12736a4f674ee347bde2045c450edfd2fd5d3d7f76336b29ead716",
-      "size_bytes": 1536,
+      "sha256": "7e46aa5af6775fe6fd06090c3a819b7536076de292896ff12491ec399f766c9e",
+      "size_bytes": 1721,
       "top_level": "tests"
     },
     {
@@ -18934,8 +18941,8 @@
     {
       "extension": ".py",
       "path": "tests/test_attestation_recovery.py",
-      "sha256": "0fbe8050e72f7e0ba547c6218ca3a165ca81440fff68c65d0e88df6a135ecde7",
-      "size_bytes": 7834,
+      "sha256": "bfafe4a016268339bc7901f4efea62d4279ab41b92ed2af43fccf9097100f1e6",
+      "size_bytes": 9061,
       "top_level": "tests"
     },
     {
@@ -19053,8 +19060,8 @@
     {
       "extension": ".json",
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "3d1b4514542dc11b8991a56e0e470f965101df0924c6a2dd8535091658bebedc",
-      "size_bytes": 94649,
+      "sha256": "ec5b1f6df5f9dbef83b1591c315aa90b0b15c56bcdbe5fc768ac12f9a1ef9728",
+      "size_bytes": 95874,
       "top_level": "tests"
     },
     {
@@ -19088,8 +19095,8 @@
     {
       "extension": ".py",
       "path": "tests/test_command_center_autonomy.py",
-      "sha256": "76c3bd156f40eeecb4b38bc3365d096d72ebfe30d7819a6b66153277cd0b7c4e",
-      "size_bytes": 3144,
+      "sha256": "9feb5894b4227b41d7f097533065b6b07b354908a49297cc8ff67dfbaba0b42a",
+      "size_bytes": 3335,
       "top_level": "tests"
     },
     {
@@ -19116,8 +19123,8 @@
     {
       "extension": ".py",
       "path": "tests/test_command_center_pass21.py",
-      "sha256": "5516ddac4640f3380fbcfb9d4cb238f4b25f8a52f7d44499a3a85187593b4aa4",
-      "size_bytes": 19117,
+      "sha256": "0a0141d6fa8d4d8c5789e27bfff07f4a62c598a10bc17eac09df33d0a1085606",
+      "size_bytes": 19142,
       "top_level": "tests"
     },
     {
@@ -19242,8 +19249,8 @@
     {
       "extension": ".py",
       "path": "tests/test_control_kernel.py",
-      "sha256": "4935b162fcef8d9d4d7b74d0eb02e7e1cf14b2bb94868a36d6612e2e8218e788",
-      "size_bytes": 12126,
+      "sha256": "e051efdf29b7c11abbbbf883f31a9e679798c6058a1d603ec75b036607c07516",
+      "size_bytes": 12132,
       "top_level": "tests"
     },
     {
@@ -19270,8 +19277,8 @@
     {
       "extension": ".py",
       "path": "tests/test_cursor_cli_qualification.py",
-      "sha256": "a5e6db41fc8bc3febc7e54be0b504b379c2a727fd5c9e20616175edc17eade50",
-      "size_bytes": 11875,
+      "sha256": "3296b48a204429b9e95694d468097d17a53f37f1b234704578d6dedf6b1529b1",
+      "size_bytes": 12978,
       "top_level": "tests"
     },
     {
@@ -19286,6 +19293,13 @@
       "path": "tests/test_cursor_takeover.py",
       "sha256": "b589f511fded15f413493a17c31f2848c03422e10cd1b9fba9df835f8816826e",
       "size_bytes": 4360,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_cycle11_pp380_384_bound.py",
+      "sha256": "f87d751d71a62dda9edd6ff863505f5fd574423eba914318a323c31560e52ff8",
+      "size_bytes": 2618,
       "top_level": "tests"
     },
     {
@@ -19808,6 +19822,13 @@
     },
     {
       "extension": ".py",
+      "path": "tests/test_runtime_projection.py",
+      "sha256": "88aecbecc8d8c8ccae439ca5ee74ba4d4bdb45669e4cb4683351cc571977e02b",
+      "size_bytes": 2162,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
       "path": "tests/test_scheduler_backpressure.py",
       "sha256": "8138437e5c13f0c5e62bea587dd950ac449eaf65ff6808026c72d74e3087dfa0",
       "size_bytes": 911,
@@ -20122,7 +20143,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-18T18:04:57.808167+00:00",
+  "generated_at_utc": "2026-08-18T19:52:23.610756+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

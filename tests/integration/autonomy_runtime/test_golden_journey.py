@@ -28,6 +28,9 @@ def test_local_real_golden_journey(tmp_path: Path) -> None:
     assert evidence["15_human_required_and_unaffected"]["human_required"] == "HUMAN_REQUIRED"
     assert evidence["15_human_required_and_unaffected"]["unaffected_completed"] is True
     assert evidence["15_human_required_and_unaffected"]["command_center_incident_ids"]
+    live_states = evidence["15_human_required_and_unaffected"]["command_center_live_states"]
+    assert "BLOCKED_EXTERNAL" in live_states
+    assert "HUMAN_REQUIRED" not in live_states
     assert evidence["16_next_eligible_selection"]["next_eligible_task_id"] == "PP-GOLDEN-002"
     assert all(key in evidence for key in BEHAVIOR_KEYS)
     assert str(harness.evidence_path).startswith(str(tmp_path))
