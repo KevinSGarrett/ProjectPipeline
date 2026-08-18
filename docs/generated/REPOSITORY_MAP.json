@@ -230,8 +230,8 @@
     {
       "extension": "[none]",
       "path": ".git",
-      "sha256": "3cc87774906eb396f9204d268d2b47af924a9b4c1710a7c2f5fd10cae72bc692",
-      "size_bytes": 71,
+      "sha256": "19178939d2bb057d823ef075f9a87c76c2b8b547a56f464285644be5ed99045d",
+      "size_bytes": 63,
       "top_level": "_root"
     },
     {
@@ -6831,7 +6831,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "ff317371b7b8fbc17afa520b81d0ac43e15d7b7cfaaf39645fa492e2d9660d53",
+      "sha256": "e0e2aceb856ad25e6a862d1cdec14e1fbc8491cbe3293b7c8a847958cdb131aa",
       "size_bytes": 328288,
       "top_level": "_root"
     },
@@ -14048,7 +14048,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "06212b085260e39d3329f26378c61b9e13edcafd4db3bf0fc0bd1d7666eed4bb",
+      "sha256": "e2da8b0704eacdf75c199fb627397d0e6bbf54d63588189d0c88fa80896078c6",
       "size_bytes": 537607,
       "top_level": "_root"
     },
@@ -16960,8 +16960,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/recheck.py",
-      "sha256": "5f60eaf4ed9e43046eccb4a2a583fe92fb92b584541f445316ce016d953f985c",
-      "size_bytes": 3894,
+      "sha256": "52250e606f4ff8850f2ed84048b73ee7804bfd76cc542b3d22f8883f82711662",
+      "size_bytes": 6051,
       "top_level": "src"
     },
     {
@@ -18962,8 +18962,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomous_recheck.py",
-      "sha256": "88a849d12b261d02c63c299a413cefac92c8a6dcb409c534339c19609eb0dba6",
-      "size_bytes": 2393,
+      "sha256": "1584c133ab3cc08613b9286b9e2d65c1ae2179de6c8fbdb16e57e5deab58a72b",
+      "size_bytes": 3552,
       "top_level": "tests"
     },
     {
@@ -20171,7 +20171,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-18T20:32:13.356625+00:00",
+  "generated_at_utc": "2026-08-18T20:40:37.597273+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

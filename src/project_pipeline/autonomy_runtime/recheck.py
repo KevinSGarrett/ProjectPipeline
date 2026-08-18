@@ -7,6 +7,7 @@ by the autonomy runtime, persist outside chat, and never assign operator work.
 from __future__ import annotations
 
 import json
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -99,6 +100,58 @@ class AutonomousRecheckStore:
             if next_at <= current:
                 due_items.append(row)
         return tuple(due_items)
+
+    def execute_due(
+        self,
+        *,
+        now: datetime | None = None,
+        probes: dict[str, Callable[[], dict[str, Any]]] | None = None,
+    ) -> tuple[dict[str, Any], ...]:
+        current = _aware(now or datetime.now(UTC))
+        probes = probes or {}
+        results: list[dict[str, Any]] = []
+        for item in self.due(now=current):
+            capability = str(item["capability"])
+            probe = probes.get(capability)
+            observation = (
+                probe()
+                if probe is not None
+                else {
+                    "outcome": LIVE_EXTERNAL_PRECONDITION,
+                    "reason": "no autonomous probe registered",
+                }
+            )
+            outcome = project_runtime_state(
+                str(observation.get("outcome") or LIVE_EXTERNAL_PRECONDITION)
+            )
+            if outcome != "PASSED":
+                refreshed = self.schedule(
+                    capability=capability,
+                    reason=str(observation.get("reason") or item.get("reason") or capability),
+                    interval_seconds=int(item.get("interval_seconds") or DEFAULT_INTERVAL_SECONDS),
+                    now=current,
+                    affected_lane_ids=tuple(item.get("affected_lane_ids") or ()),
+                    continuing_lane_ids=tuple(item.get("continuing_lane_ids") or ()),
+                )
+            else:
+                payload = self.load()
+                payload["items"] = [
+                    row
+                    for row in payload["items"]
+                    if not (isinstance(row, dict) and row.get("capability") == capability)
+                ]
+                self.save(payload)
+                refreshed = {"capability": capability, "status": "PASSED", "cleared": True}
+            results.append(
+                {
+                    "capability": capability,
+                    "outcome": outcome,
+                    "observation": observation,
+                    "scheduled": refreshed,
+                    "global_stop": False,
+                }
+            )
+        return tuple(results)
 
     def snapshot(self) -> dict[str, Any]:
         payload = self.load()
