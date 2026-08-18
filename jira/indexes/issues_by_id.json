@@ -48995,7 +48995,10 @@
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "evidence/pp380_383_cycle11_integrated_main_audit.json",
+      "tests/test_product_outcome_contract.py"
+    ],
     "definition_of_done": [
       "Previous defective state fails the new validators.",
       "All canonical model layers agree.",
@@ -49032,7 +49035,13 @@
       "model-realignment",
       "product-outcome"
     ],
-    "last_observed_remote_state": null,
+    "last_observed_remote_state": {
+      "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+      "remote_id": "25366",
+      "remote_key": "PP-392",
+      "snapshot_id": "C11-LIVE-PP392",
+      "status_name": "Done"
+    },
     "local_id": "PP-TASK-000380",
     "objective": "Repair product definition and source-to-control traceability",
     "observability_impact": "Adds explicit product-outcome drift and reconciliation findings.",
@@ -49060,7 +49069,7 @@
         "type": "BLOCKS"
       }
     ],
-    "remote_jira_key": null,
+    "remote_jira_key": "PP-392",
     "required_tests": [],
     "requirement_ids": [
       "REQ-PDEF-0011"
@@ -49081,7 +49090,7 @@
       "SRC-014:L000001-L000086",
       "SRC-015:L000001-L000112"
     ],
-    "state": "IN_PROGRESS",
+    "state": "DONE",
     "title": "Repair product definition and source-to-control traceability",
     "upstream_dependencies": []
   },
@@ -49099,7 +49108,10 @@
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "evidence/pp380_383_cycle11_integrated_main_audit.json",
+      "tests/integration/autonomy_runtime/test_supervisor.py"
+    ],
     "definition_of_done": [
       "Persistent service entry point exists and runs.",
       "Operations are idempotent and restart-safe.",
@@ -49130,7 +49142,13 @@
       "cohesive-slice",
       "implemented"
     ],
-    "last_observed_remote_state": null,
+    "last_observed_remote_state": {
+      "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+      "remote_id": "25364",
+      "remote_key": "PP-390",
+      "snapshot_id": "C11-LIVE-PP390",
+      "status_name": "Done"
+    },
     "local_id": "PP-TASK-000381",
     "objective": "Implement the persistent Autonomy Runtime supervisor",
     "observability_impact": "Records durable cycles, operations, dispatches, results, state recomputation, and continuation.",
@@ -49162,7 +49180,7 @@
         "type": "BLOCKS"
       }
     ],
-    "remote_jira_key": null,
+    "remote_jira_key": "PP-390",
     "required_tests": [],
     "requirement_ids": [
       "REQ-PDEF-0011",
@@ -49180,7 +49198,7 @@
     "source_references": [
       "SRC-014:L000005-L000086"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement the persistent Autonomy Runtime supervisor",
     "upstream_dependencies": []
   },
@@ -49198,7 +49216,10 @@
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "evidence/pp380_383_cycle11_integrated_main_audit.json",
+      "tests/integration/autonomy_runtime/test_parallel_recovery.py"
+    ],
     "definition_of_done": [
       "Claims and fencing prevent collision.",
       "Worker loss is durably recovered.",
@@ -49230,7 +49251,13 @@
       "cohesive-slice",
       "implemented"
     ],
-    "last_observed_remote_state": null,
+    "last_observed_remote_state": {
+      "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+      "remote_id": "25363",
+      "remote_key": "PP-389",
+      "snapshot_id": "C11-LIVE-PP389",
+      "status_name": "Done"
+    },
     "local_id": "PP-TASK-000382",
     "objective": "Integrate conflict-safe lanes, recovery, and HUMAN_REQUIRED continuation",
     "observability_impact": "Records lane admission, leases, fencing, retries, incidents, recovery, and independent continuation.",
@@ -49262,7 +49289,7 @@
         "type": "BLOCKS"
       }
     ],
-    "remote_jira_key": null,
+    "remote_jira_key": "PP-389",
     "required_tests": [],
     "requirement_ids": [
       "REQ-PDEF-0011",
@@ -49283,7 +49310,7 @@
       "SRC-014:L000028-L000084",
       "SRC-015:L000001-L000112"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Integrate conflict-safe lanes, recovery, and partial continuation",
     "upstream_dependencies": []
   },
@@ -49301,7 +49328,10 @@
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "evidence/pp380_383_cycle11_integrated_main_audit.json",
+      "tests/integration/autonomy_runtime/test_golden_journey.py"
+    ],
     "definition_of_done": [
       "Real source and tests change in isolated Git worktrees.",
       "Independent verification and governed integration pass.",
@@ -49335,7 +49365,13 @@
       "cohesive-slice",
       "implemented"
     ],
-    "last_observed_remote_state": null,
+    "last_observed_remote_state": {
+      "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+      "remote_id": "25361",
+      "remote_key": "PP-387",
+      "snapshot_id": "C11-LIVE-PP387",
+      "status_name": "Done"
+    },
     "local_id": "PP-TASK-000383",
     "objective": "Prove the complete local-real autonomous project journey",
     "observability_impact": "Preserves evidence for every material operation and exposes truthful live journey state.",
@@ -49367,7 +49403,7 @@
         "type": "BLOCKS"
       }
     ],
-    "remote_jira_key": null,
+    "remote_jira_key": "PP-387",
     "required_tests": [],
     "requirement_ids": [
       "REQ-PDEF-0011"
@@ -49383,7 +49419,7 @@
       "SRC-014:L000001-L000086",
       "SRC-015:L000001-L000112"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Prove the complete local-real autonomous project journey",
     "upstream_dependencies": []
   },

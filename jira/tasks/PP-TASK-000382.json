@@ -12,7 +12,10 @@
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "evidence/pp380_383_cycle11_integrated_main_audit.json",
+    "tests/integration/autonomy_runtime/test_parallel_recovery.py"
+  ],
   "definition_of_done": [
     "Claims and fencing prevent collision.",
     "Worker loss is durably recovered.",
@@ -44,7 +47,13 @@
     "cohesive-slice",
     "implemented"
   ],
-  "last_observed_remote_state": null,
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+    "remote_id": "25363",
+    "remote_key": "PP-389",
+    "snapshot_id": "C11-LIVE-PP389",
+    "status_name": "Done"
+  },
   "local_id": "PP-TASK-000382",
   "objective": "Integrate conflict-safe lanes, recovery, and HUMAN_REQUIRED continuation",
   "observability_impact": "Records lane admission, leases, fencing, retries, incidents, recovery, and independent continuation.",
@@ -76,7 +85,7 @@
       "type": "BLOCKS"
     }
   ],
-  "remote_jira_key": null,
+  "remote_jira_key": "PP-389",
   "required_tests": [],
   "requirement_ids": [
     "REQ-PDEF-0011",
@@ -97,7 +106,7 @@
     "SRC-014:L000028-L000084",
     "SRC-015:L000001-L000112"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Integrate conflict-safe lanes, recovery, and partial continuation",
   "upstream_dependencies": []
 }

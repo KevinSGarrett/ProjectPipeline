@@ -1,0 +1,51 @@
+{
+  "acceptance_recheck": {
+    "PP-TASK-000380": {
+      "result": "PASSED",
+      "test": "tests/test_product_outcome_contract.py"
+    },
+    "PP-TASK-000381": {
+      "result": "PASSED",
+      "test": "tests/integration/autonomy_runtime/test_supervisor.py"
+    },
+    "PP-TASK-000382": {
+      "result": "PASSED",
+      "test": "tests/integration/autonomy_runtime/test_parallel_recovery.py"
+    },
+    "PP-TASK-000383": {
+      "result": "PASSED",
+      "test": "tests/integration/autonomy_runtime/test_golden_journey.py"
+    }
+  },
+  "audit_id": "PP380-383-C11-INTEGRATED-MAIN",
+  "evaluated_at_utc": "2026-08-18T17:48:28.022032+00:00",
+  "live_jira": {
+    "PP-TASK-000380": {
+      "comment_id": "14367",
+      "remote_id": "25366",
+      "remote_key": "PP-392",
+      "status": "Done"
+    },
+    "PP-TASK-000381": {
+      "comment_id": "14368",
+      "remote_id": "25364",
+      "remote_key": "PP-390",
+      "status": "Done"
+    },
+    "PP-TASK-000382": {
+      "comment_id": "14369",
+      "remote_id": "25363",
+      "remote_key": "PP-389",
+      "status": "Done"
+    },
+    "PP-TASK-000383": {
+      "comment_id": "14370",
+      "remote_id": "25361",
+      "remote_key": "PP-387",
+      "status": "Done"
+    }
+  },
+  "method": "re-run acceptance tests on clean origin/main plus live Jira readback; not a blind copy of dirty local files",
+  "origin_main_sha": "295058e2bb60973c5d62d23457efabe2e50d4ed1",
+  "schema_version": "1.0.0"
+}

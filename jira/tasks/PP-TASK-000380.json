@@ -22,7 +22,10 @@
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "evidence/pp380_383_cycle11_integrated_main_audit.json",
+    "tests/test_product_outcome_contract.py"
+  ],
   "definition_of_done": [
     "Previous defective state fails the new validators.",
     "All canonical model layers agree.",
@@ -59,7 +62,13 @@
     "model-realignment",
     "product-outcome"
   ],
-  "last_observed_remote_state": null,
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+    "remote_id": "25366",
+    "remote_key": "PP-392",
+    "snapshot_id": "C11-LIVE-PP392",
+    "status_name": "Done"
+  },
   "local_id": "PP-TASK-000380",
   "objective": "Repair product definition and source-to-control traceability",
   "observability_impact": "Adds explicit product-outcome drift and reconciliation findings.",
@@ -87,7 +96,7 @@
       "type": "BLOCKS"
     }
   ],
-  "remote_jira_key": null,
+  "remote_jira_key": "PP-392",
   "required_tests": [],
   "requirement_ids": [
     "REQ-PDEF-0011"
@@ -108,7 +117,7 @@
     "SRC-014:L000001-L000086",
     "SRC-015:L000001-L000112"
   ],
-  "state": "IN_PROGRESS",
+  "state": "DONE",
   "title": "Repair product definition and source-to-control traceability",
   "upstream_dependencies": []
 }
