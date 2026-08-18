@@ -14,7 +14,7 @@ from project_pipeline.domain.base import DomainModel, utc_now
 HEX_SHA = re.compile(r"^[0-9a-f]{7,64}$")
 REPOSITORY_SLUG = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 GITHUB_RECORD_ID = re.compile(
-    r"^(GHREP|GHBR|GHWT|GHOWN|GHPR|GHREV|GHCHK|GHGATE|GHOP|GHREC)-[A-F0-9]{20}$"
+    r"^(GHREP|GHBR|GHWT|GHOWN|GHPR|GHREV|GHCHK|GHGATE|GHOP|GHREC|GHARV|GHDRF|GHCON|GHLIF)-[A-F0-9]{20}$"
 )
 
 
@@ -24,7 +24,20 @@ def _canonical(value: Any) -> str:
 
 def github_identifier(
     prefix: Literal[
-        "GHREP", "GHBR", "GHWT", "GHOWN", "GHPR", "GHREV", "GHCHK", "GHGATE", "GHOP", "GHREC"
+        "GHREP",
+        "GHBR",
+        "GHWT",
+        "GHOWN",
+        "GHPR",
+        "GHREV",
+        "GHCHK",
+        "GHGATE",
+        "GHOP",
+        "GHREC",
+        "GHARV",
+        "GHDRF",
+        "GHCON",
+        "GHLIF",
     ],
     *parts: str,
 ) -> str:
@@ -128,6 +141,10 @@ class GitOperationType(StrEnum):
     CREATE_WORKTREE = "CREATE_WORKTREE"
     REMOVE_WORKTREE = "REMOVE_WORKTREE"
     RELEASE_OWNERSHIP = "RELEASE_OWNERSHIP"
+    CLOSE_PULL_REQUEST = "CLOSE_PULL_REQUEST"
+    SUPERSEDE_PULL_REQUEST = "SUPERSEDE_PULL_REQUEST"
+    RECORD_REVIEW = "RECORD_REVIEW"
+    VERIFY_INTEGRATED_TREE = "VERIFY_INTEGRATED_TREE"
 
 
 class GuardianFindingSeverity(StrEnum):
@@ -284,6 +301,7 @@ class PullRequestCheck(DomainModel):
     conclusion: CheckConclusion | None = None
     required: bool = False
     details_url: str | None = None
+    app_id: int | None = None
 
     @model_validator(mode="after")
     def validate_completion(self) -> PullRequestCheck:
@@ -345,6 +363,9 @@ class MergeGateDecision(DomainModel):
     observed_checks: tuple[str, ...] = ()
     approvals_required: int = Field(default=1, ge=0)
     approvals_observed: int = Field(default=0, ge=0)
+    autonomous_review_id: str | None = None
+    autonomous_review_accepted: bool = False
+    protection_drift: tuple[str, ...] = ()
     evaluated_at_utc: datetime = Field(default_factory=utc_now)
 
     @field_validator("gate_id")
@@ -385,10 +406,19 @@ class GitHubBranchProtection(DomainModel):
     branch: str
     protected: bool
     required_status_checks: tuple[str, ...] = ()
+    required_status_check_app_ids: tuple[int | None, ...] = ()
+    contexts_only_required_checks: bool = False
+    required_status_checks_strict: bool = True
+    reviews_object_present: bool = True
     required_approving_review_count: int = Field(default=0, ge=0)
-    dismiss_stale_reviews: bool = False
+    dismiss_stale_reviews: bool = True
     require_code_owner_reviews: bool = False
-    enforce_admins: bool = False
+    require_last_push_approval: bool = False
+    enforce_admins: bool = True
+    require_linear_history: bool = True
+    require_conversation_resolution: bool = True
+    allow_force_pushes: bool = False
+    allow_deletions: bool = False
 
 
 class GitHubOperation(DomainModel):
@@ -471,4 +501,127 @@ class GitHubOperationReceipt(DomainModel):
     def validate_id(cls, value: str) -> str:
         if not GITHUB_RECORD_ID.fullmatch(value) or not value.startswith("GHREC-"):
             raise ValueError("invalid GitHub receipt identifier")
+        return value
+
+
+class ReviewFinding(DomainModel):
+    finding_id: str = Field(min_length=1, max_length=64)
+    severity: Literal["BLOCKING", "WARNING", "INFO"]
+    summary: str = Field(min_length=1, max_length=2000)
+    disposition: Literal["OPEN", "ACCEPTED", "MITIGATED", "FALSE_POSITIVE"] = "OPEN"
+
+
+class AutonomousReviewReceipt(DomainModel):
+    receipt_id: str
+    implementer_id: str = Field(min_length=1, max_length=191)
+    reviewer_id: str = Field(min_length=1, max_length=191)
+    implementer_context_fingerprint: str = Field(pattern=r"^[a-f0-9]{64}$")
+    reviewer_context_fingerprint: str = Field(pattern=r"^[a-f0-9]{64}$")
+    head_sha: str
+    tree_sha: str
+    risk: Literal["LOW", "MEDIUM", "HIGH", "CRITICAL"] = "HIGH"
+    criterion_ids: tuple[str, ...] = ()
+    findings: tuple[ReviewFinding, ...] = ()
+    evidence_ids: tuple[str, ...] = ()
+    conflicts: tuple[str, ...] = ()
+    reviewer_authority: Literal["READ_ONLY"] = "READ_ONLY"
+    completed_at_utc: datetime = Field(default_factory=utc_now)
+    max_age_seconds: int = Field(default=86400, gt=0)
+    validation_evidence: dict[str, Any] = Field(default_factory=dict)
+
+    @field_validator("receipt_id")
+    @classmethod
+    def validate_id(cls, value: str) -> str:
+        if not GITHUB_RECORD_ID.fullmatch(value) or not value.startswith("GHARV-"):
+            raise ValueError("invalid autonomous review receipt identifier")
+        return value
+
+    @field_validator("head_sha", "tree_sha")
+    @classmethod
+    def validate_sha(cls, value: str) -> str:
+        if not HEX_SHA.fullmatch(value.lower()):
+            raise ValueError("review sha must be hexadecimal")
+        return value.lower()
+
+    @property
+    def blocking_finding_count(self) -> int:
+        return sum(
+            1
+            for item in self.findings
+            if item.severity == "BLOCKING" and item.disposition == "OPEN"
+        )
+
+    @property
+    def independent(self) -> bool:
+        return (
+            self.implementer_id != self.reviewer_id
+            and self.implementer_context_fingerprint != self.reviewer_context_fingerprint
+            and not self.conflicts
+            and self.reviewer_authority == "READ_ONLY"
+        )
+
+
+class ProtectionDriftDecision(DomainModel):
+    decision_id: str
+    repository_slug: str
+    branch: str
+    aligned: bool
+    drifts: tuple[str, ...] = ()
+    observed: dict[str, Any] = Field(default_factory=dict)
+    expected: dict[str, Any] = Field(default_factory=dict)
+    evaluated_at_utc: datetime = Field(default_factory=utc_now)
+
+    @field_validator("decision_id")
+    @classmethod
+    def validate_id(cls, value: str) -> str:
+        if not GITHUB_RECORD_ID.fullmatch(value) or not value.startswith("GHDRF-"):
+            raise ValueError("invalid protection drift identifier")
+        return value
+
+
+class ConsolidationProof(DomainModel):
+    proof_id: str
+    repository_slug: str
+    consolidated_head: str
+    consolidated_tree: str
+    component_heads: tuple[str, ...]
+    ancestor_failures: tuple[str, ...] = ()
+    tree_mismatches: tuple[str, ...] = ()
+    eligible_to_supersede: bool
+    evaluated_at_utc: datetime = Field(default_factory=utc_now)
+
+    @field_validator("proof_id")
+    @classmethod
+    def validate_id(cls, value: str) -> str:
+        if not GITHUB_RECORD_ID.fullmatch(value) or not value.startswith("GHCON-"):
+            raise ValueError("invalid consolidation proof identifier")
+        return value
+
+
+class LifecycleStep(DomainModel):
+    step_id: str
+    operation_type: GitOperationType
+    state: GitOperationState
+    intent_fingerprint: str = Field(pattern=r"^[0-9a-f]{64}$")
+    expected_head_sha: str | None = None
+    readback: dict[str, Any] = Field(default_factory=dict)
+    unknown_outcome: bool = False
+
+
+class LifecycleRecord(DomainModel):
+    lifecycle_id: str
+    repository_slug: str
+    pull_number: int = Field(ge=1)
+    head_sha: str
+    steps: tuple[LifecycleStep, ...] = ()
+    jira_reconciled: bool = False
+    integrated_tree_verified: bool = False
+    cleanup_completed: bool = False
+    created_at_utc: datetime = Field(default_factory=utc_now)
+
+    @field_validator("lifecycle_id")
+    @classmethod
+    def validate_id(cls, value: str) -> str:
+        if not GITHUB_RECORD_ID.fullmatch(value) or not value.startswith("GHLIF-"):
+            raise ValueError("invalid lifecycle identifier")
         return value

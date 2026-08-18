@@ -1,0 +1,54 @@
+{
+  "$id": "https://project-pipeline.local/schemas/github_protection_drift_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "aligned": {
+      "title": "Aligned",
+      "type": "boolean"
+    },
+    "branch": {
+      "title": "Branch",
+      "type": "string"
+    },
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "drifts": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Drifts",
+      "type": "array"
+    },
+    "evaluated_at_utc": {
+      "format": "date-time",
+      "title": "Evaluated At Utc",
+      "type": "string"
+    },
+    "expected": {
+      "additionalProperties": true,
+      "title": "Expected",
+      "type": "object"
+    },
+    "observed": {
+      "additionalProperties": true,
+      "title": "Observed",
+      "type": "object"
+    },
+    "repository_slug": {
+      "title": "Repository Slug",
+      "type": "string"
+    }
+  },
+  "required": [
+    "decision_id",
+    "repository_slug",
+    "branch",
+    "aligned"
+  ],
+  "title": "ProtectionDriftDecision",
+  "type": "object"
+}

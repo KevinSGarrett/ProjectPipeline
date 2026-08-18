@@ -258,9 +258,10 @@
     },
     "human_required": {
       "aliases": [
-        "HUMAN_REQUIRED"
+        "HUMAN_REQUIRED",
+        "BLOCKED_EXTERNAL"
       ],
-      "definition": "A state in which safe continuation of dependent work requires an operator decision or action.",
+      "definition": "Compatibility alias for BLOCKED_EXTERNAL: dependent work cannot continue until an external precondition is autonomously rechecked. This does not assign operator work and does not stop unaffected lanes.",
       "source_references": [
         "SRC-015:L000031-L000150"
       ]

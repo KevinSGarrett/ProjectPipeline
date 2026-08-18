@@ -3,14 +3,14 @@
   "hooks": {
     "beforeShellExecution": [
       {
-        "command": "python .cursor/hooks/guard_shell.py",
+        "command": ".cursor\\hooks\\invoke_python.cmd .cursor\\hooks\\guard_shell.py",
         "failClosed": true,
         "timeout": 30
       }
     ],
     "stop": [
       {
-        "command": "python .cursor/hooks/continue-cycle.py",
+        "command": ".cursor\\hooks\\invoke_python.cmd .cursor\\hooks\\continue-cycle.py",
         "timeout": 30
       }
     ]

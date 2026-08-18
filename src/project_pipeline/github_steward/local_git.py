@@ -273,6 +273,8 @@ class LocalGitRepository:
             raise LocalGitError("worktree is not registered with this repository")
         if item.state is WorktreeState.DIRTY:
             raise LocalGitError("dirty worktree cannot be removed by Repository Steward")
+        if item.branch == self.default_branch():
+            raise LocalGitError("default-branch worktree cannot be removed by Repository Steward")
         if not apply:
             return {"mode": "DRY_RUN", "path": str(candidate), "applied": False}
         self._run("worktree", "remove", str(candidate))
@@ -330,6 +332,24 @@ def evaluate_branch_guardian(
                 remediation="Preserve the branch locally and explicitly authorize any remote publication.",
             )
         )
+    if current and current.ahead and current.behind:
+        findings.append(
+            BranchGuardianFinding(
+                code="REMOTE_DIVERGENCE",
+                severity=GuardianFindingSeverity.BLOCKING,
+                message="Current branch has diverged from its upstream.",
+                remediation="Reconcile unpublished and unmerged commits before cleanup or merge.",
+            )
+        )
+    if current and current.merged_into_default is False and current.ahead:
+        findings.append(
+            BranchGuardianFinding(
+                code="UNMERGED_CONTENT",
+                severity=GuardianFindingSeverity.WARNING,
+                message="Current branch contains commits that are not merged into the default branch.",
+                remediation="Merge through the Merge Gate or preserve the unpublished work before deletion.",
+            )
+        )
     dirty_other = [
         item.path
         for item in worktrees
@@ -352,5 +372,80 @@ def evaluate_branch_guardian(
         branch=branch,
         safe_for_work=not blocking,
         safe_for_cleanup=not blocking and not dirty,
+        findings=tuple(findings),
+    )
+
+
+def evaluate_branch_deletion(
+    *,
+    branch: str,
+    default_branch: str,
+    worktree_branches: Iterable[str | None],
+    dirty: bool,
+    merged_into_default: bool | None,
+    remote_only: bool,
+    unpublished: bool = False,
+) -> BranchGuardianDecision:
+    findings: list[BranchGuardianFinding] = []
+    if branch == default_branch:
+        findings.append(
+            BranchGuardianFinding(
+                code="DEFAULT_BRANCH_ACTIVE",
+                severity=GuardianFindingSeverity.BLOCKING,
+                message="The default branch cannot be deleted.",
+                remediation="Leave the protected default branch in place.",
+            )
+        )
+    if branch in set(worktree_branches):
+        findings.append(
+            BranchGuardianFinding(
+                code="ACTIVE_WORKTREE",
+                severity=GuardianFindingSeverity.BLOCKING,
+                message="A registered worktree still owns this branch.",
+                remediation="Remove the worktree only after it is clean and preserved.",
+            )
+        )
+    if dirty:
+        findings.append(
+            BranchGuardianFinding(
+                code="WORKTREE_DIRTY",
+                severity=GuardianFindingSeverity.BLOCKING,
+                message="Dirty or unpreserved work is still bound to this branch.",
+                remediation="Preserve or restore the dirty paths before deletion.",
+            )
+        )
+    if merged_into_default is False:
+        findings.append(
+            BranchGuardianFinding(
+                code="UNMERGED_CONTENT",
+                severity=GuardianFindingSeverity.BLOCKING,
+                message="Branch is not merged into the default branch.",
+                remediation="Merge through the Merge Gate or archive the unique work first.",
+            )
+        )
+    if unpublished:
+        findings.append(
+            BranchGuardianFinding(
+                code="UNPUBLISHED_COMMITS",
+                severity=GuardianFindingSeverity.BLOCKING,
+                message="Branch still has unpublished local commits.",
+                remediation="Publish or archive the commits before deleting the branch.",
+            )
+        )
+    if remote_only and findings:
+        findings.append(
+            BranchGuardianFinding(
+                code="UNSAFE_DELETION",
+                severity=GuardianFindingSeverity.BLOCKING,
+                message="Remote deletion is denied while local safety predicates fail.",
+                remediation="Do not delete the remote branch until every local predicate is green.",
+            )
+        )
+    blocking = any(item.severity is GuardianFindingSeverity.BLOCKING for item in findings)
+    return BranchGuardianDecision(
+        repository_slug="local/deletion",
+        branch=branch,
+        safe_for_work=not blocking,
+        safe_for_cleanup=not blocking,
         findings=tuple(findings),
     )

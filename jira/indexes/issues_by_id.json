@@ -27778,7 +27778,7 @@
         "criterion_id": "AC-PP-000221-01",
         "statement": "Implement typed repository, branch, worktree, ownership, pull-request, review, check, and operation models plus safe local Git inspection. is implemented with deterministic, fail-closed behavior.",
         "verification": {
-          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py",
+          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/domain/github.py",
           "status": "PLANNED"
@@ -27831,16 +27831,23 @@
     ],
     "expected_implementation_artifacts": [
       "src/project_pipeline/domain/github.py",
-      "src/project_pipeline/github_steward/local_git.py"
+      "src/project_pipeline/github_steward/local_git.py",
+      "src/project_pipeline/github_steward/autonomous_review.py",
+      "src/project_pipeline/github_steward/lifecycle.py",
+      "src/project_pipeline/github_steward/protection_drift.py",
+      "src/project_pipeline/github_steward/consolidation.py",
+      "tests/test_github_steward_lifecycle.py",
+      "docs/operations/github_steward_lifecycle.md"
     ],
     "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "repository-steward",
-      "github",
-      "git",
       "deterministic",
-      "dry-run-default"
+      "dry-run-default",
+      "git",
+      "github",
+      "implemented",
+      "repository-steward"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -27874,9 +27881,10 @@
     ],
     "remote_jira_key": "PP-297",
     "required_tests": [
-      "TEST-GITHUB-DOMAIN-001",
-      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-ADAPTER-001",
+      "TEST-GITHUB-DOMAIN-001",
+      "TEST-GITHUB-LIFECYCLE-001",
+      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-MERGE-GATE-001"
     ],
     "requirement_ids": [
@@ -28175,7 +28183,7 @@
         "criterion_id": "AC-PP-000224-01",
         "statement": "Implement fail-closed detection of default-branch work, detached HEAD, dirty workspaces, upstream divergence, and unsafe cleanup. is implemented with deterministic, fail-closed behavior.",
         "verification": {
-          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py",
+          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/github_steward/local_git.py",
           "status": "PLANNED"
@@ -28230,16 +28238,23 @@
       "src/project_pipeline/github_steward/local_git.py"
     ],
     "expected_implementation_artifacts": [
-      "src/project_pipeline/github_steward/local_git.py"
+      "src/project_pipeline/github_steward/local_git.py",
+      "src/project_pipeline/github_steward/autonomous_review.py",
+      "src/project_pipeline/github_steward/lifecycle.py",
+      "src/project_pipeline/github_steward/protection_drift.py",
+      "src/project_pipeline/github_steward/consolidation.py",
+      "tests/test_github_steward_lifecycle.py",
+      "docs/operations/github_steward_lifecycle.md"
     ],
     "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "repository-steward",
-      "github",
-      "git",
       "deterministic",
-      "dry-run-default"
+      "dry-run-default",
+      "git",
+      "github",
+      "implemented",
+      "repository-steward"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -28285,9 +28300,10 @@
     ],
     "remote_jira_key": "PP-151",
     "required_tests": [
-      "TEST-GITHUB-DOMAIN-001",
-      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-ADAPTER-001",
+      "TEST-GITHUB-DOMAIN-001",
+      "TEST-GITHUB-LIFECYCLE-001",
+      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-MERGE-GATE-001"
     ],
     "requirement_ids": [
@@ -28319,7 +28335,7 @@
         "criterion_id": "AC-PP-000225-01",
         "statement": "Implement provider-neutral pull-request, review, check, and branch-protection observations at an immutable head SHA. is implemented with deterministic, fail-closed behavior.",
         "verification": {
-          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py",
+          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/domain/github.py",
           "status": "PLANNED"
@@ -28374,16 +28390,23 @@
     ],
     "expected_implementation_artifacts": [
       "src/project_pipeline/domain/github.py",
-      "src/project_pipeline/github_steward/ports.py"
+      "src/project_pipeline/github_steward/ports.py",
+      "src/project_pipeline/github_steward/autonomous_review.py",
+      "src/project_pipeline/github_steward/lifecycle.py",
+      "src/project_pipeline/github_steward/protection_drift.py",
+      "src/project_pipeline/github_steward/consolidation.py",
+      "tests/test_github_steward_lifecycle.py",
+      "docs/operations/github_steward_lifecycle.md"
     ],
     "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "repository-steward",
-      "github",
-      "git",
       "deterministic",
-      "dry-run-default"
+      "dry-run-default",
+      "git",
+      "github",
+      "implemented",
+      "repository-steward"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -28421,9 +28444,10 @@
     ],
     "remote_jira_key": "PP-142",
     "required_tests": [
-      "TEST-GITHUB-DOMAIN-001",
-      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-ADAPTER-001",
+      "TEST-GITHUB-DOMAIN-001",
+      "TEST-GITHUB-LIFECYCLE-001",
+      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-MERGE-GATE-001"
     ],
     "requirement_ids": [
@@ -28453,7 +28477,7 @@
         "criterion_id": "AC-PP-000226-01",
         "statement": "Implement deterministic merge readiness across draft, mergeability, head SHA, approvals, changes requested, and required checks. is implemented with deterministic, fail-closed behavior.",
         "verification": {
-          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py",
+          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/github_steward/merge_gate.py",
           "status": "PLANNED"
@@ -28507,16 +28531,23 @@
       "src/project_pipeline/github_steward/merge_gate.py"
     ],
     "expected_implementation_artifacts": [
-      "src/project_pipeline/github_steward/merge_gate.py"
+      "src/project_pipeline/github_steward/merge_gate.py",
+      "src/project_pipeline/github_steward/autonomous_review.py",
+      "src/project_pipeline/github_steward/lifecycle.py",
+      "src/project_pipeline/github_steward/protection_drift.py",
+      "src/project_pipeline/github_steward/consolidation.py",
+      "tests/test_github_steward_lifecycle.py",
+      "docs/operations/github_steward_lifecycle.md"
     ],
     "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "repository-steward",
-      "github",
-      "git",
       "deterministic",
-      "dry-run-default"
+      "dry-run-default",
+      "git",
+      "github",
+      "implemented",
+      "repository-steward"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -28558,9 +28589,10 @@
     ],
     "remote_jira_key": "PP-199",
     "required_tests": [
-      "TEST-GITHUB-DOMAIN-001",
-      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-ADAPTER-001",
+      "TEST-GITHUB-DOMAIN-001",
+      "TEST-GITHUB-LIFECYCLE-001",
+      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-MERGE-GATE-001"
     ],
     "requirement_ids": [
@@ -28862,7 +28894,7 @@
         "criterion_id": "AC-PP-000229-01",
         "statement": "Implement cleanup classification that protects default, active-worktree, dirty, and unmerged branches and separates local from remote deletion authority. is implemented with deterministic, fail-closed behavior.",
         "verification": {
-          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py",
+          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/github_steward/service.py",
           "status": "PLANNED"
@@ -28919,16 +28951,23 @@
     ],
     "expected_implementation_artifacts": [
       "src/project_pipeline/github_steward/service.py",
-      "runbooks/github_unknown_outcome_reconciliation.md"
+      "runbooks/github_unknown_outcome_reconciliation.md",
+      "src/project_pipeline/github_steward/autonomous_review.py",
+      "src/project_pipeline/github_steward/lifecycle.py",
+      "src/project_pipeline/github_steward/protection_drift.py",
+      "src/project_pipeline/github_steward/consolidation.py",
+      "tests/test_github_steward_lifecycle.py",
+      "docs/operations/github_steward_lifecycle.md"
     ],
     "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "repository-steward",
-      "github",
-      "git",
       "deterministic",
-      "dry-run-default"
+      "dry-run-default",
+      "git",
+      "github",
+      "implemented",
+      "repository-steward"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -28974,9 +29013,10 @@
     ],
     "remote_jira_key": "PP-351",
     "required_tests": [
-      "TEST-GITHUB-DOMAIN-001",
-      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-ADAPTER-001",
+      "TEST-GITHUB-DOMAIN-001",
+      "TEST-GITHUB-LIFECYCLE-001",
+      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-MERGE-GATE-001"
     ],
     "requirement_ids": [
@@ -29010,7 +29050,7 @@
         "criterion_id": "AC-PP-000230-01",
         "statement": "Expose machine-readable stewardship commands, generated schemas, self-validation, operator documentation, and evidence without claiming unavailable live GitHub verification. is implemented with deterministic, fail-closed behavior.",
         "verification": {
-          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py",
+          "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/cli.py",
           "status": "PLANNED"
@@ -29079,16 +29119,23 @@
       "src/project_pipeline/cli.py",
       "src/project_pipeline/github_steward/validation.py",
       "docs/github/repository_steward.md",
-      "docs/github/merge_gate.md"
+      "docs/github/merge_gate.md",
+      "src/project_pipeline/github_steward/autonomous_review.py",
+      "src/project_pipeline/github_steward/lifecycle.py",
+      "src/project_pipeline/github_steward/protection_drift.py",
+      "src/project_pipeline/github_steward/consolidation.py",
+      "tests/test_github_steward_lifecycle.py",
+      "docs/operations/github_steward_lifecycle.md"
     ],
     "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "repository-steward",
-      "github",
-      "git",
       "deterministic",
-      "dry-run-default"
+      "dry-run-default",
+      "git",
+      "github",
+      "implemented",
+      "repository-steward"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -29158,9 +29205,10 @@
     ],
     "remote_jira_key": "PP-208",
     "required_tests": [
-      "TEST-GITHUB-DOMAIN-001",
-      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-ADAPTER-001",
+      "TEST-GITHUB-DOMAIN-001",
+      "TEST-GITHUB-LIFECYCLE-001",
+      "TEST-GITHUB-LOCAL-GIT-001",
       "TEST-GITHUB-MERGE-GATE-001"
     ],
     "requirement_ids": [

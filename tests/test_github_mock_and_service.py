@@ -91,6 +91,7 @@ def seeded_adapter() -> MockGitHubAdapter:
             review_id="r1",
             author="reviewer",
             state=ReviewState.APPROVED,
+            commit_sha=SHA2,
             submitted_at_utc=datetime.now(UTC),
         ),
     )

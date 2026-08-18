@@ -5,6 +5,7 @@ from typing import Any
 from project_pipeline.contracts import ActionIntent, ApprovalState
 from project_pipeline.domain.base import utc_now
 from project_pipeline.domain.github import (
+    AutonomousReviewReceipt,
     BranchGuardianDecision,
     GitHubOperation,
     GitHubOperationReceipt,
@@ -18,11 +19,16 @@ from project_pipeline.domain.github import (
     github_identifier,
 )
 from project_pipeline.github_steward.errors import GitHubAdapterError, GitHubStewardError
-from project_pipeline.github_steward.local_git import LocalGitRepository, evaluate_branch_guardian
+from project_pipeline.github_steward.local_git import (
+    LocalGitRepository,
+    evaluate_branch_deletion,
+    evaluate_branch_guardian,
+)
 from project_pipeline.github_steward.merge_gate import evaluate_merge_gate
 from project_pipeline.github_steward.ownership import OwnershipRegistry
 from project_pipeline.github_steward.persistence import GitHubStewardStore
 from project_pipeline.github_steward.ports import GitHubRemotePort, GitHubWriteContext
+from project_pipeline.github_steward.protection_drift import evaluate_protection_drift
 from project_pipeline.github_steward.worktrunk import WorktrunkAdapter, WorktrunkPlan
 
 
@@ -97,6 +103,9 @@ class RepositorySteward:
         required_checks: tuple[str, ...] | None = None,
         approvals_required: int | None = None,
         expected_head_sha: str | None = None,
+        autonomous_review: AutonomousReviewReceipt | None = None,
+        expected_tree_sha: str | None = None,
+        assert_protection_policy: bool = True,
     ) -> MergeGateDecision:
         pull = self.pull_snapshot(repository_slug, number)
         protection = self.remote.get_branch_protection(repository_slug, pull.base_branch)
@@ -106,11 +115,21 @@ class RepositorySteward:
             if approvals_required is None
             else approvals_required
         )
+        drift_policy = (
+            "autonomous_main"
+            if assert_protection_policy
+            and (repository_slug, pull.base_branch) == ("KevinSGarrett/ProjectPipeline", "main")
+            else "auto"
+        )
+        drift = evaluate_protection_drift(protection, policy=drift_policy)
         gate = evaluate_merge_gate(
             pull,
             required_checks=checks,
             approvals_required=approvals,
             require_head_sha=expected_head_sha,
+            autonomous_review=autonomous_review,
+            expected_tree_sha=expected_tree_sha,
+            protection_drift=drift,
         )
         self.store.save_gate(gate)
         return gate
@@ -123,18 +142,43 @@ class RepositorySteward:
         actor_id: str,
         correlation_id: str,
         method: str = "squash",
+        expected_head_sha: str | None = None,
+        autonomous_review: AutonomousReviewReceipt | None = None,
+        expected_tree_sha: str | None = None,
+        assert_protection_policy: bool = True,
     ) -> tuple[MergeGateDecision, GitHubOperation]:
         pull = self.pull_snapshot(repository_slug, number)
-        gate = self.merge_gate(repository_slug, number, expected_head_sha=pull.head_sha)
+        required_head = (expected_head_sha or pull.head_sha).lower()
+        gate = self.merge_gate(
+            repository_slug,
+            number,
+            expected_head_sha=required_head,
+            autonomous_review=autonomous_review,
+            expected_tree_sha=expected_tree_sha,
+            assert_protection_policy=assert_protection_policy,
+        )
+        for pending in self.store.pending_operations(repository_slug):
+            if (
+                pending.operation_type is GitOperationType.MERGE_PULL_REQUEST
+                and pending.target == str(number)
+                and pending.state is GitOperationState.UNKNOWN_OUTCOME
+            ):
+                raise GitHubStewardError(
+                    "unknown-outcome operations must be reconciled before any retry"
+                )
         operation = GitHubOperation.create(
             operation_type=GitOperationType.MERGE_PULL_REQUEST,
             repository_slug=repository_slug,
             target=str(number),
-            idempotency_key=f"github-merge:{repository_slug}:{number}:{pull.head_sha}",
+            idempotency_key=f"github-merge:{repository_slug}:{number}:{required_head}",
             actor_id=actor_id,
             correlation_id=correlation_id,
-            payload={"method": method, "pull_number": number},
-            expected_head_sha=pull.head_sha,
+            payload={
+                "method": method,
+                "pull_number": number,
+                "review_id": None if autonomous_review is None else autonomous_review.receipt_id,
+            },
+            expected_head_sha=required_head,
         )
         self.store.save_operation(operation)
         return gate, operation
@@ -147,6 +191,11 @@ class RepositorySteward:
         action_intent: ActionIntent,
         authorization_id: str,
     ) -> GitHubOperationReceipt:
+        stored = self.store.get_operation(operation.operation_id)
+        if stored is not None and stored.state is GitOperationState.UNKNOWN_OUTCOME:
+            raise GitHubStewardError(
+                "unknown-outcome operations must be reconciled before any retry"
+            )
         if gate.state is not MergeGateState.READY:
             raise GitHubStewardError("Merge Gate is blocked")
         if operation.operation_type is not GitOperationType.MERGE_PULL_REQUEST:
@@ -237,6 +286,26 @@ class RepositorySteward:
                 continue
             if local_branch and not local_branch.merged_into_default:
                 protected.append({"branch": name, "reason": "not_merged_into_default"})
+                continue
+            deletion = evaluate_branch_deletion(
+                branch=name,
+                default_branch=default,
+                worktree_branches=worktree_branches,
+                dirty=bool(local_branch and local_branch.ahead and not local_branch.upstream),
+                merged_into_default=None
+                if local_branch is None
+                else local_branch.merged_into_default,
+                remote_only=name in remote and local_branch is None,
+                unpublished=bool(local_branch and local_branch.ahead and not local_branch.upstream),
+            )
+            if not deletion.safe_for_cleanup:
+                protected.append(
+                    {
+                        "branch": name,
+                        "reason": "branch_guardian_blocked",
+                        "findings": [item.model_dump(mode="json") for item in deletion.findings],
+                    }
+                )
                 continue
             candidates.append(
                 {

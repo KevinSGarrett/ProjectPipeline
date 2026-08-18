@@ -1,0 +1,65 @@
+{
+  "$id": "https://project-pipeline.local/schemas/github_consolidation_proof.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "ancestor_failures": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Ancestor Failures",
+      "type": "array"
+    },
+    "component_heads": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Component Heads",
+      "type": "array"
+    },
+    "consolidated_head": {
+      "title": "Consolidated Head",
+      "type": "string"
+    },
+    "consolidated_tree": {
+      "title": "Consolidated Tree",
+      "type": "string"
+    },
+    "eligible_to_supersede": {
+      "title": "Eligible To Supersede",
+      "type": "boolean"
+    },
+    "evaluated_at_utc": {
+      "format": "date-time",
+      "title": "Evaluated At Utc",
+      "type": "string"
+    },
+    "proof_id": {
+      "title": "Proof Id",
+      "type": "string"
+    },
+    "repository_slug": {
+      "title": "Repository Slug",
+      "type": "string"
+    },
+    "tree_mismatches": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Tree Mismatches",
+      "type": "array"
+    }
+  },
+  "required": [
+    "proof_id",
+    "repository_slug",
+    "consolidated_head",
+    "consolidated_tree",
+    "component_heads",
+    "eligible_to_supersede"
+  ],
+  "title": "ConsolidationProof",
+  "type": "object"
+}

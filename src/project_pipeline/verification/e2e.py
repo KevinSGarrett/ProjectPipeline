@@ -393,6 +393,7 @@ def _github_mock_flow(root: Path, temp_root: Path) -> tuple[bool, str]:
             review_id="review-pass23",
             author="independent-reviewer",
             state=ReviewState.APPROVED,
+            commit_sha=sha2,
             submitted_at_utc=datetime.now(UTC),
         ),
     )

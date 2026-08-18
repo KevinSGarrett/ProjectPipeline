@@ -128,6 +128,7 @@ from project_pipeline.domain.orchestration import (
 )
 from project_pipeline.domain.security import RootOfTrust, SecurityIdentity
 from project_pipeline.github_steward import (
+    ClosedLoopLifecycle,
     GitHubRestAdapter,
     GitHubStewardError,
     GitHubStewardStore,
@@ -135,6 +136,8 @@ from project_pipeline.github_steward import (
     LocalGitRepository,
     MockGitHubAdapter,
     RepositorySteward,
+    evaluate_protection_drift,
+    prove_consolidation,
 )
 from project_pipeline.intake import (
     BootstrapError,
@@ -595,7 +598,19 @@ def build_parser() -> argparse.ArgumentParser:
         "github", help="Inspect pull requests and evaluate or apply governed GitHub operations"
     )
     github.add_argument(
-        "action", choices=("status", "snapshot", "pull", "merge-gate", "merge", "cleanup")
+        "action",
+        choices=(
+            "status",
+            "snapshot",
+            "pull",
+            "plan",
+            "merge-gate",
+            "merge",
+            "cleanup",
+            "protection-drift",
+            "lifecycle",
+            "consolidate",
+        ),
     )
     github.add_argument("--root", type=_root, default=Path.cwd())
     github.add_argument("--repository-root", type=Path)
@@ -605,6 +620,16 @@ def build_parser() -> argparse.ArgumentParser:
     github.add_argument("--pull-number", type=int)
     github.add_argument("--required-check", action="append", default=[])
     github.add_argument("--approvals-required", type=int)
+    github.add_argument("--expected-head-sha")
+    github.add_argument("--expected-tree-sha")
+    github.add_argument("--review-receipt", type=Path)
+    github.add_argument("--component-head", action="append", default=[])
+    github.add_argument(
+        "--assert-protection",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Evaluate protection-drift on merge-gate, plan, and lifecycle (default: on).",
+    )
     github.add_argument("--merge-method", choices=("merge", "squash", "rebase"), default="squash")
     github.add_argument("--apply", action="store_true")
     github.add_argument("--approve", action="store_true")
@@ -1306,24 +1331,66 @@ def _run_github_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             }, 0
         if args.action == "cleanup":
             return steward.cleanup_plan(repository_slug), 0
+        if args.action == "protection-drift":
+            protection = adapter.get_branch_protection(repository_slug, local.default_branch())
+            decision = evaluate_protection_drift(protection)
+            return decision.model_dump(mode="json"), 0 if decision.aligned else 1
+        if args.action == "consolidate":
+            proof = prove_consolidation(
+                local.root,
+                repository_slug=repository_slug,
+                consolidated_head=str(_require_argument(args, "expected_head_sha")),
+                component_heads=tuple(args.component_head),
+                expected_tree=args.expected_tree_sha,
+            )
+            return proof.model_dump(mode="json"), 0 if proof.eligible_to_supersede else 1
         number = int(_require_argument(args, "pull_number"))
+        review = None
+        if args.review_receipt:
+            from project_pipeline.domain.github import AutonomousReviewReceipt
+
+            review = AutonomousReviewReceipt.model_validate_json(
+                Path(args.review_receipt).read_text(encoding="utf-8")
+            )
         if args.action == "pull":
             pull = steward.pull_snapshot(repository_slug, number)
             return pull.model_dump(mode="json"), 0
-        if args.action == "merge-gate":
+        if args.action in {"merge-gate", "plan", "lifecycle"}:
             gate = steward.merge_gate(
                 repository_slug,
                 number,
                 required_checks=tuple(args.required_check) if args.required_check else None,
                 approvals_required=args.approvals_required,
+                expected_head_sha=args.expected_head_sha,
+                autonomous_review=review,
+                expected_tree_sha=args.expected_tree_sha,
+                assert_protection_policy=(
+                    True if args.action == "merge-gate" else bool(args.assert_protection)
+                ),
             )
-            return gate.model_dump(mode="json"), 0 if gate.state.value == "READY" else 1
+            lifecycle = ClosedLoopLifecycle(
+                remote=adapter, store=store, repository_slug=repository_slug
+            )
+            payload = {
+                "mode": "PLAN",
+                "gate": gate.model_dump(mode="json"),
+                "readback": lifecycle.readback_pull(number),
+            }
+            if args.action == "merge-gate":
+                return gate.model_dump(mode="json"), 0 if gate.state.value == "READY" else 1
+            return payload, 0 if gate.state.value == "READY" else 1
+        if args.expected_head_sha is None:
+            raise ConfigurationError("GitHub merge requires --expected-head-sha")
         gate, operation = steward.plan_merge(
             repository_slug,
             number,
             actor_id=args.actor_id,
             correlation_id=args.correlation_id,
             method=args.merge_method,
+            expected_head_sha=args.expected_head_sha,
+            autonomous_review=review,
+            expected_tree_sha=args.expected_tree_sha,
+            assert_protection_policy=True,
         )
         if not args.apply:
             return {

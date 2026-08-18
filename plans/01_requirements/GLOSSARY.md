@@ -216,9 +216,9 @@ Sources: `SRC-008:L000956-L000985`
 
 ## Human Required
 
-A state in which safe continuation of dependent work requires an operator decision or action.
+Compatibility alias for BLOCKED_EXTERNAL: dependent work cannot continue until an external precondition is autonomously rechecked. This does not assign operator work and does not stop unaffected lanes.
 
-Aliases: `HUMAN_REQUIRED`
+Aliases: `HUMAN_REQUIRED`, `BLOCKED_EXTERNAL`
 Sources: `SRC-015:L000031-L000150`
 
 ## Idempotency Key

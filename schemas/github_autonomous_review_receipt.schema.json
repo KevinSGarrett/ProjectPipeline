@@ -1,0 +1,163 @@
+{
+  "$defs": {
+    "ReviewFinding": {
+      "additionalProperties": false,
+      "properties": {
+        "disposition": {
+          "default": "OPEN",
+          "enum": [
+            "OPEN",
+            "ACCEPTED",
+            "MITIGATED",
+            "FALSE_POSITIVE"
+          ],
+          "title": "Disposition",
+          "type": "string"
+        },
+        "finding_id": {
+          "maxLength": 64,
+          "minLength": 1,
+          "title": "Finding Id",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "BLOCKING",
+            "WARNING",
+            "INFO"
+          ],
+          "title": "Severity",
+          "type": "string"
+        },
+        "summary": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Summary",
+          "type": "string"
+        }
+      },
+      "required": [
+        "finding_id",
+        "severity",
+        "summary"
+      ],
+      "title": "ReviewFinding",
+      "type": "object"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/github_autonomous_review_receipt.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "completed_at_utc": {
+      "format": "date-time",
+      "title": "Completed At Utc",
+      "type": "string"
+    },
+    "conflicts": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Conflicts",
+      "type": "array"
+    },
+    "criterion_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Criterion Ids",
+      "type": "array"
+    },
+    "evidence_ids": {
+      "default": [],
+      "items": {
+        "type": "string"
+      },
+      "title": "Evidence Ids",
+      "type": "array"
+    },
+    "findings": {
+      "default": [],
+      "items": {
+        "$ref": "#/$defs/ReviewFinding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "head_sha": {
+      "title": "Head Sha",
+      "type": "string"
+    },
+    "implementer_context_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Implementer Context Fingerprint",
+      "type": "string"
+    },
+    "implementer_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Implementer Id",
+      "type": "string"
+    },
+    "max_age_seconds": {
+      "default": 86400,
+      "exclusiveMinimum": 0,
+      "title": "Max Age Seconds",
+      "type": "integer"
+    },
+    "receipt_id": {
+      "title": "Receipt Id",
+      "type": "string"
+    },
+    "reviewer_authority": {
+      "const": "READ_ONLY",
+      "default": "READ_ONLY",
+      "title": "Reviewer Authority",
+      "type": "string"
+    },
+    "reviewer_context_fingerprint": {
+      "pattern": "^[a-f0-9]{64}$",
+      "title": "Reviewer Context Fingerprint",
+      "type": "string"
+    },
+    "reviewer_id": {
+      "maxLength": 191,
+      "minLength": 1,
+      "title": "Reviewer Id",
+      "type": "string"
+    },
+    "risk": {
+      "default": "HIGH",
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH",
+        "CRITICAL"
+      ],
+      "title": "Risk",
+      "type": "string"
+    },
+    "tree_sha": {
+      "title": "Tree Sha",
+      "type": "string"
+    },
+    "validation_evidence": {
+      "additionalProperties": true,
+      "title": "Validation Evidence",
+      "type": "object"
+    }
+  },
+  "required": [
+    "receipt_id",
+    "implementer_id",
+    "reviewer_id",
+    "implementer_context_fingerprint",
+    "reviewer_context_fingerprint",
+    "head_sha",
+    "tree_sha"
+  ],
+  "title": "AutonomousReviewReceipt",
+  "type": "object"
+}
