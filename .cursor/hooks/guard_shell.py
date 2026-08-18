@@ -55,7 +55,8 @@ def main() -> int:
                 encoding="utf-8",
             )
         except OSError:
-            pass
+            _emit("allow")
+            return 0
         _emit("allow")
         return 0
 
