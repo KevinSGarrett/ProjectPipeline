@@ -98,3 +98,21 @@ def test_ready_apply_transitions_only_currently_ready_backlog(tmp_path: Path, ca
     assert code == 0
     assert result["applied_transition_count"] == 0
     assert result["applied_transitions"] == []
+
+
+def test_cli_has_no_takeover_writer_command() -> None:
+    from project_pipeline.cli import build_parser
+
+    parser = build_parser()
+    subparsers = next(
+        action for action in parser._subparsers._group_actions if action.choices is not None
+    )
+    assert "takeover" not in subparsers.choices
+    assert not (ROOT / "src/project_pipeline/lifecycle/takeover_cli.py").exists()
+
+
+def test_control_evaluate_omits_takeover_governor(tmp_path: Path, capsys) -> None:
+    db = tmp_path / "control.db"
+    assert main(["control", "evaluate", "--root", str(ROOT), "--database", str(db)]) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert "takeover_governor" not in result
