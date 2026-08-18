@@ -92,6 +92,26 @@ class ClosedLoopLifecycle:
     ) -> GitHubOperationReceipt:
         if action_intent.approval_state is not ApprovalState.APPROVED:
             raise GitHubStewardError("action intent is not approved")
+        current = self.store.get_operation(operation.operation_id)
+        if current is not None and current.state is GitOperationState.UNKNOWN_OUTCOME:
+            raise GitHubStewardError(
+                "unknown-outcome operations must be reconciled before any retry"
+            )
+        if operation.operation_type is GitOperationType.MERGE_PULL_REQUEST:
+            ready = self.evaluate_ready(
+                int(operation.target),
+                expected_head_sha=str(operation.expected_head_sha),
+                review=(
+                    AutonomousReviewReceipt.model_validate(operation.payload["receipt"])
+                    if operation.payload.get("receipt")
+                    else None
+                ),
+                required_checks=tuple(operation.payload.get("required_checks") or ()),
+            )
+            if not ready["ready"]:
+                raise GitHubStewardError(
+                    f"Merge Gate is blocked: {ready['gate'].get('blockers')}"
+                )
         if not apply:
             return GitHubOperationReceipt(
                 receipt_id=github_identifier("GHREC", operation.operation_id, "PLANNED"),
@@ -171,6 +191,18 @@ class ClosedLoopLifecycle:
                     update={
                         "state": GitOperationState.RECONCILED,
                         "observed_result": readback,
+                        "updated_at_utc": utc_now(),
+                    }
+                )
+                self.store.save_operation(reconciled)
+                return reconciled
+        if operation.operation_type is GitOperationType.DELETE_BRANCH:
+            remaining = {item.name for item in self.remote.iter_branches(self.repository_slug)}
+            if operation.target not in remaining:
+                reconciled = operation.model_copy(
+                    update={
+                        "state": GitOperationState.RECONCILED,
+                        "observed_result": {"deleted": operation.target, "still_present": False},
                         "updated_at_utc": utc_now(),
                     }
                 )

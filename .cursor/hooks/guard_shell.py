@@ -3,12 +3,14 @@ from __future__ import annotations
 import json
 import re
 import sys
-from pathlib import Path
 
 DENIED_PATTERNS = (
     re.compile(r"(?i)(?:^|[\s\"';&|])git\s+push\s+[^\r\n]*(?:--force|-f)(?:\s|$)"),
+    re.compile(r"(?i)git\s+push\s+[^\r\n]*\borigin\s+(main|master)\b"),
     re.compile(r"(?i)(?:^|[\s\"';&|])git\s+reset\s+--hard(?:\s|$)"),
     re.compile(r"(?i)(?:^|[\s\"';&|])git\s+clean\s+-\S*f"),
+    re.compile(r"(?i)(?:^|[\s\"';&|])(?:rm|del|rmdir|remove-item)\s+[^\r\n]*(?:-r|-recurse).*?(?:-force|-f)"),
+    re.compile(r"(?i)(?:^|[\s\"';&|])(?:curl|wget|invoke-webrequest|invoke-restmethod)\s+"),
     re.compile(r"(?i)(?:type|get-content|cat)\s+[^\r\n]*(?:\.env|\.pem|\.key|credential|Github_Repo)"),
 )
 
@@ -31,33 +33,26 @@ def _command_from_payload(raw: str) -> str:
 
 
 def main() -> int:
-    raw = sys.stdin.read()
     try:
-        command = _command_from_payload(raw)
+        command = _command_from_payload(sys.stdin.read())
         if any(pattern.search(command) for pattern in DENIED_PATTERNS):
             _emit(
                 "deny",
                 agentMessage=(
-                    "ProjectPipeline blocks force-push, hard reset, "
-                    "broad git clean, and secret-bearing reads."
+                    "ProjectPipeline requires governed adapters for destructive, "
+                    "secret-bearing, protected-main, and network commands."
                 ),
                 userMessage="Blocked by the ProjectPipeline Cursor shell policy.",
             )
             return 0
         _emit("allow")
         return 0
-    except Exception as exc:  # noqa: BLE001
-        log_path = Path("C:/Project_X/.local/state/cursor/guard_shell_error.json")
-        try:
-            log_path.parent.mkdir(parents=True, exist_ok=True)
-            log_path.write_text(
-                json.dumps({"error": type(exc).__name__, "stdin_bytes": len(raw)}, indent=2),
-                encoding="utf-8",
-            )
-        except OSError:
-            _emit("allow")
-            return 0
-        _emit("allow")
+    except Exception as exc:
+        _emit(
+            "deny",
+            agentMessage=f"shell hook failed closed: {type(exc).__name__}",
+            userMessage="Blocked by the ProjectPipeline Cursor shell policy.",
+        )
         return 0
 
 

@@ -105,7 +105,7 @@ class RepositorySteward:
         expected_head_sha: str | None = None,
         autonomous_review: AutonomousReviewReceipt | None = None,
         expected_tree_sha: str | None = None,
-        assert_protection_policy: bool = False,
+        assert_protection_policy: bool = True,
     ) -> MergeGateDecision:
         pull = self.pull_snapshot(repository_slug, number)
         protection = self.remote.get_branch_protection(repository_slug, pull.base_branch)
@@ -115,7 +115,11 @@ class RepositorySteward:
             if approvals_required is None
             else approvals_required
         )
-        drift = evaluate_protection_drift(protection) if assert_protection_policy else None
+        drift_policy = "autonomous_main" if assert_protection_policy and (
+            repository_slug,
+            pull.base_branch,
+        ) == ("KevinSGarrett/ProjectPipeline", "main") else "auto"
+        drift = evaluate_protection_drift(protection, required_checks=checks, policy=drift_policy)
         gate = evaluate_merge_gate(
             pull,
             required_checks=checks,
@@ -136,18 +140,34 @@ class RepositorySteward:
         actor_id: str,
         correlation_id: str,
         method: str = "squash",
+        expected_head_sha: str | None = None,
+        autonomous_review: AutonomousReviewReceipt | None = None,
+        expected_tree_sha: str | None = None,
+        assert_protection_policy: bool = True,
     ) -> tuple[MergeGateDecision, GitHubOperation]:
         pull = self.pull_snapshot(repository_slug, number)
-        gate = self.merge_gate(repository_slug, number, expected_head_sha=pull.head_sha)
+        required_head = (expected_head_sha or pull.head_sha).lower()
+        gate = self.merge_gate(
+            repository_slug,
+            number,
+            expected_head_sha=required_head,
+            autonomous_review=autonomous_review,
+            expected_tree_sha=expected_tree_sha,
+            assert_protection_policy=assert_protection_policy,
+        )
         operation = GitHubOperation.create(
             operation_type=GitOperationType.MERGE_PULL_REQUEST,
             repository_slug=repository_slug,
             target=str(number),
-            idempotency_key=f"github-merge:{repository_slug}:{number}:{pull.head_sha}",
+            idempotency_key=f"github-merge:{repository_slug}:{number}:{required_head}",
             actor_id=actor_id,
             correlation_id=correlation_id,
-            payload={"method": method, "pull_number": number},
-            expected_head_sha=pull.head_sha,
+            payload={
+                "method": method,
+                "pull_number": number,
+                "review_id": None if autonomous_review is None else autonomous_review.receipt_id,
+            },
+            expected_head_sha=required_head,
         )
         self.store.save_operation(operation)
         return gate, operation

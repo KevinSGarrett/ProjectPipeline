@@ -41,7 +41,9 @@ def prove_consolidation(
         if probe.returncode != 0:
             ancestor_failures.append(sha)
     tree_mismatches: list[str] = []
-    if expected_tree and expected_tree.lower() != resolved_tree:
+    if expected_tree is None:
+        tree_mismatches.append("expected_tree_missing")
+    elif expected_tree.lower() != resolved_tree:
         tree_mismatches.append(expected_tree.lower())
     eligible = not ancestor_failures and not tree_mismatches
     return ConsolidationProof(

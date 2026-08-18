@@ -157,7 +157,7 @@ def test_protection_drift_rejects_second_human_requirement():
         require_code_owner_reviews=True,
         require_last_push_approval=True,
     )
-    decision = evaluate_protection_drift(drifted)
+    decision = evaluate_protection_drift(drifted, policy="autonomous_main")
     assert decision.aligned is False
     assert "human_approval_count_not_zero" in decision.drifts
     assert "code_owner_reviews_required" in decision.drifts
@@ -168,7 +168,7 @@ def test_protection_drift_rejects_second_human_requirement():
             "require_last_push_approval": False,
         }
     )
-    assert evaluate_protection_drift(aligned).aligned is True
+    assert evaluate_protection_drift(aligned, policy="autonomous_main").aligned is True
 
 
 def test_remote_deletion_denied_for_dirty_or_unmerged_branch():
@@ -337,6 +337,120 @@ def test_cli_plan_and_protection_drift_are_read_only(tmp_path, capsys):
     assert code in {0, 1}
     assert "drifts" in payload
     assert "aligned" in payload
+
+
+def test_unknown_outcome_is_reconciled_not_retried(tmp_path):
+    adapter = seeded_adapter()
+    adapter.schedule_failure("merge_pull_request", AdapterErrorCategory.UNKNOWN_OUTCOME)
+    with GitHubStewardStore(tmp_path / "state.db", Path.cwd()) as store:
+        lifecycle = ClosedLoopLifecycle(
+            remote=adapter, store=store, repository_slug="owner/repo"
+        )
+        operation = lifecycle.persist_intent(
+            operation_type=GitOperationType.MERGE_PULL_REQUEST,
+            target="1",
+            actor_id="actor:test",
+            correlation_id="corr:test",
+            payload={"method": "squash"},
+            expected_head_sha=SHA2,
+        )
+        intent = ActionIntent(
+            actor_id="actor:test",
+            authority="github.steward",
+            target="owner/repo",
+            operation="github.merge",
+            idempotency_key=operation.idempotency_key,
+            approval_state=ApprovalState.APPROVED,
+            correlation_id="corr:test",
+            risk=RiskLevel.HIGH,
+        )
+        first = lifecycle.apply_step(
+            operation, action_intent=intent, authorization_id="auth:test", apply=True
+        )
+        assert first.state is GitOperationState.UNKNOWN_OUTCOME
+        stored = store.get_operation(operation.operation_id)
+        with pytest.raises(GitHubStewardError, match="unknown-outcome"):
+            lifecycle.apply_step(
+                stored, action_intent=intent, authorization_id="auth:test", apply=True
+            )
+        adapter._pulls[1] = adapter._pulls[1].model_copy(
+            update={"state": PullRequestState.MERGED}
+        )
+        reconciled = lifecycle.reconcile_unknown(stored)
+        assert reconciled.state is GitOperationState.RECONCILED
+
+
+def test_unknown_delete_reconciles_without_second_delete(tmp_path):
+    adapter = seeded_adapter()
+    adapter.schedule_failure("delete_branch", AdapterErrorCategory.UNKNOWN_OUTCOME)
+    with GitHubStewardStore(tmp_path / "state.db", Path.cwd()) as store:
+        lifecycle = ClosedLoopLifecycle(
+            remote=adapter, store=store, repository_slug="owner/repo"
+        )
+        operation = lifecycle.persist_intent(
+            operation_type=GitOperationType.DELETE_BRANCH,
+            target="feature/x",
+            actor_id="actor:test",
+            correlation_id="corr:del",
+            payload={},
+        )
+        intent = ActionIntent(
+            actor_id="actor:test",
+            authority="github.steward",
+            target="owner/repo",
+            operation="github.merge",
+            idempotency_key=operation.idempotency_key,
+            approval_state=ApprovalState.APPROVED,
+            correlation_id="corr:del",
+            risk=RiskLevel.HIGH,
+        )
+        receipt = lifecycle.apply_step(
+            operation, action_intent=intent, authorization_id="auth:del", apply=True
+        )
+        assert receipt.state is GitOperationState.UNKNOWN_OUTCOME
+        assert "feature/x" not in {item.name for item in adapter.iter_branches("owner/repo")}
+        reconciled = lifecycle.reconcile_unknown(store.get_operation(operation.operation_id))
+        assert reconciled.state is GitOperationState.RECONCILED
+        assert adapter.calls.count(("delete_branch", "feature/x")) == 1
+
+
+def test_apply_step_refuses_merge_when_gate_blocked(tmp_path):
+    adapter = seeded_adapter()
+    adapter.set_branch_protection(
+        GitHubBranchProtection(
+            repository_slug="owner/repo",
+            branch="main",
+            protected=True,
+            required_status_checks=("tests",),
+            required_approving_review_count=0,
+        )
+    )
+    with GitHubStewardStore(tmp_path / "state.db", Path.cwd()) as store:
+        lifecycle = ClosedLoopLifecycle(
+            remote=adapter, store=store, repository_slug="owner/repo"
+        )
+        operation = lifecycle.persist_intent(
+            operation_type=GitOperationType.MERGE_PULL_REQUEST,
+            target="1",
+            actor_id="actor:test",
+            correlation_id="corr:test",
+            payload={"method": "squash"},
+            expected_head_sha=SHA2,
+        )
+        intent = ActionIntent(
+            actor_id="actor:test",
+            authority="github.steward",
+            target="owner/repo",
+            operation="github.merge",
+            idempotency_key=operation.idempotency_key,
+            approval_state=ApprovalState.APPROVED,
+            correlation_id="corr:test",
+            risk=RiskLevel.HIGH,
+        )
+        with pytest.raises(GitHubStewardError, match="Merge Gate is blocked"):
+            lifecycle.apply_step(
+                operation, action_intent=intent, authorization_id="auth:test", apply=True
+            )
 
 
 def test_service_merge_gate_rejects_changed_head_with_receipt(tmp_path):

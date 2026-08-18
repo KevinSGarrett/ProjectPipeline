@@ -1372,12 +1372,18 @@ def _run_github_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             if args.action == "merge-gate":
                 return gate.model_dump(mode="json"), 0 if gate.state.value == "READY" else 1
             return payload, 0 if gate.state.value == "READY" else 1
+        if args.expected_head_sha is None:
+            raise ConfigurationError("GitHub merge requires --expected-head-sha")
         gate, operation = steward.plan_merge(
             repository_slug,
             number,
             actor_id=args.actor_id,
             correlation_id=args.correlation_id,
             method=args.merge_method,
+            expected_head_sha=args.expected_head_sha,
+            autonomous_review=review,
+            expected_tree_sha=args.expected_tree_sha,
+            assert_protection_policy=True,
         )
         if not args.apply:
             return {
