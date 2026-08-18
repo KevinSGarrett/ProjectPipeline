@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "42eac892760a283db9d14eb6f0420533f7da949be157554c93316236ca710a7c",
+  "aggregate_sha256": "350114292b6d069800b776f5baa8cc7befdbe58260765c5d8e94fdfb1afc28cd",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -4002,7 +4002,7 @@
     },
     {
       "path": "evidence/EVIDENCE_LEDGER.jsonl",
-      "sha256": "d42ade2f2eceeaef875547987c44a2dbd512c457e71479fb99433f4b0f345b8a",
+      "sha256": "773ab20a9ec896908cba5f6b635fb6b314a9eb7ab2e44fc71bbf4b9586c569a8",
       "size_bytes": 142804
     },
     {
@@ -14326,7 +14326,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T18:45:14.044248+00:00",
+  "generated_at_utc": "2026-08-18T18:58:09.018949+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
