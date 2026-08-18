@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "359be36b76d6ca588f83cab23152d178600ef511e0d444661402fdba71be7ff4",
+  "aggregate_sha256": "5e822f2f8d2c320bc018ca9e666629c71382e63a7b230df5734eae82685527c1",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -72,8 +72,8 @@
     },
     {
       "path": ".cursor/hooks/guard_shell.py",
-      "sha256": "1d09c85f8705f32fc98fb4912c7264b52138a216bd4e8ef05358bc04117a6ff9",
-      "size_bytes": 3370
+      "sha256": "b001847cc83ba0978c08f2c521c9c6304b9ddf8a093e0050a4a549cef792a7ba",
+      "size_bytes": 3520
     },
     {
       "path": ".cursor/mcp.example.json",
@@ -13637,8 +13637,8 @@
     },
     {
       "path": "tests/test_cursor_shell_hook.py",
-      "sha256": "3e321d622b859aa0727c8f5f91beac930fdea8e2b7d7d8734b3d08fbeb4efa24",
-      "size_bytes": 5696
+      "sha256": "c299dceb48f7b8d2ecf474c3074940a77b4d45be4eda0542ff2447d20c9ba345",
+      "size_bytes": 5809
     },
     {
       "path": "tests/test_cursor_takeover.py",
@@ -14260,5 +14260,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25243768
+  "total_bytes": 25244031
 }

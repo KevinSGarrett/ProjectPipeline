@@ -109,6 +109,8 @@ def test_hook_blocks_git_flag_and_quoted_main_evasions(tmp_path):
         "gh api repos/KevinSGarrett/ProjectPipeline/pulls/52/merge -X PUT",
         "gh api graphql -f query=mutation { mergePullRequest }",
         "hub merge 52",
+        r"C:\Program Files\GitHub CLI\gh.exe pr merge 52",
+        r"C:\Program Files\GitHub CLI\hub.exe merge",
         "git.cmd push origin main",
         r"C:\Program Files\Git\cmd\git.exe push origin main",
         r"C:\Program Files\Git\cmd\git.cmd push origin HEAD:main",
