@@ -301,6 +301,7 @@ class PullRequestCheck(DomainModel):
     conclusion: CheckConclusion | None = None
     required: bool = False
     details_url: str | None = None
+    app_id: int | None = None
 
     @model_validator(mode="after")
     def validate_completion(self) -> PullRequestCheck:
@@ -405,6 +406,8 @@ class GitHubBranchProtection(DomainModel):
     branch: str
     protected: bool
     required_status_checks: tuple[str, ...] = ()
+    required_status_check_app_ids: tuple[int | None, ...] = ()
+    contexts_only_required_checks: bool = False
     required_status_checks_strict: bool = True
     reviews_object_present: bool = True
     required_approving_review_count: int = Field(default=0, ge=0)

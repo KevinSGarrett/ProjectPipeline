@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "7f98db505c38ae3ec1f89ae6c619b97922266bf573975ee340df19738c60b035",
+  "aggregate_sha256": "d6e267b2067f39c88e0b9f56afcc4216e91d0e41a46b47e13bca14176716905a",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -62,8 +62,8 @@
     },
     {
       "path": ".cursor/hooks.json",
-      "sha256": "871821521c50d04faf816d1d8c8cd80aba0e0aea7fb71bceeb04fbe3d49b3a6f",
-      "size_bytes": 361
+      "sha256": "984519ab4deaf5c944b67c7e5466119bf8b45bfdcbdb81dad18efc7390b7bf93",
+      "size_bytes": 375
     },
     {
       "path": ".cursor/hooks/continue-cycle.py",
@@ -72,8 +72,8 @@
     },
     {
       "path": ".cursor/hooks/guard_shell.py",
-      "sha256": "e3a7709b30f79202038dc6d19952c3fe249d61cb19f2699e4b37b409f4108b26",
-      "size_bytes": 2020
+      "sha256": "421a3481d0c030e54e43c03211b55d9e3ae83c88d68a98851fee26dcd525adfd",
+      "size_bytes": 2652
     },
     {
       "path": ".cursor/mcp.example.json",
@@ -5342,13 +5342,13 @@
     },
     {
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "2d84144e0ebde744ae8a7ce674a34309b68da6c1933c6ffe0786c81bea37f05f",
-      "size_bytes": 1670760
+      "sha256": "bfd874c726ea5dab9fb41a5c4f4fcc3a9f9f7978b5741b8df8155639f2091353",
+      "size_bytes": 1670754
     },
     {
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "3b5b4ddf967d93ee3c31e4f38312c4005015f176bf466804ac49750126a6a4f3",
-      "size_bytes": 1978617
+      "sha256": "975f3dae3db04a90d88c67397fd3345344c901b7aea4ce5f10a3ef4707d58a1f",
+      "size_bytes": 1978611
     },
     {
       "path": "jira/README.md",
@@ -5377,7 +5377,7 @@
     },
     {
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "3d6cb04932a7544850ee94b25e7e67a2d6d68c3173492ca7e492c8b2cdd34215",
+      "sha256": "c58d193fe88223f754a4f68f201ca69104c9bd62ecdfefebe45fd89a7c3a5553",
       "size_bytes": 1915
     },
     {
@@ -8427,8 +8427,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000221.json",
-      "sha256": "3fc11564596fed307e4a3876e33e5272397a339a6f2c16676503ec2ed0f7598c",
-      "size_bytes": 5873
+      "sha256": "39ac36e18c690409b970ca1dbf63736f5afc4042720aff1bb000182ebae37ed6",
+      "size_bytes": 5872
     },
     {
       "path": "jira/tasks/PP-TASK-000222.json",
@@ -8442,18 +8442,18 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000224.json",
-      "sha256": "be4ab47d60205488e24b3cf19ac3417bbfe50de2aec2d1cbb09edcdd869f88dc",
-      "size_bytes": 6086
+      "sha256": "5d75cfd9b0722b25228f008b952c0e530caed521aec5c0f470574ef49d325fc0",
+      "size_bytes": 6085
     },
     {
       "path": "jira/tasks/PP-TASK-000225.json",
-      "sha256": "ab3d83bd43d0c685eda34f02607c67bf6ae1b048048c92091aeab3b383abd46b",
-      "size_bytes": 5870
+      "sha256": "2350aa6ade8e1f7707f9f0194adccdb32c09ac5e6f672e7ddb0d510276ef3507",
+      "size_bytes": 5869
     },
     {
       "path": "jira/tasks/PP-TASK-000226.json",
-      "sha256": "a92af0fc40ff6240bbef429662f8292f43865e61e2ca91fffbaa8e0031450a82",
-      "size_bytes": 5930
+      "sha256": "c4c507759d07984a84c8290451079a769116862d503d94903b30dfb36c8fd94a",
+      "size_bytes": 5929
     },
     {
       "path": "jira/tasks/PP-TASK-000227.json",
@@ -8467,13 +8467,13 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000229.json",
-      "sha256": "642332dbd6667d022ee700d19e882d43aba4b449327ddeeb622e7169cdc13158",
-      "size_bytes": 6345
+      "sha256": "f5b37d500a3fcd261958b9c3ee776528e8dd4518cd9724f6b2008b6cfdf1ff91",
+      "size_bytes": 6344
     },
     {
       "path": "jira/tasks/PP-TASK-000230.json",
-      "sha256": "b3556c3ac9e4f90c977442eb5f44fffd55932b2fce38c7fca4339fc5fe57f679",
-      "size_bytes": 7097
+      "sha256": "8aa696aba642c29e4144766e62071597440460416d1c0c41b97372ed1b91685f",
+      "size_bytes": 7096
     },
     {
       "path": "jira/tasks/PP-TASK-000231.json",
@@ -11072,8 +11072,8 @@
     },
     {
       "path": "schemas/github_branch_protection.schema.json",
-      "sha256": "1144cf8b7b899eb4d1b1601f244f1364865fe89aca6fa5a4df9acfbc42e3c728",
-      "size_bytes": 2194
+      "sha256": "7b902e903c853c550e5ab3e587e14cf8c52084e6967bbfcbda5858901266b6de",
+      "size_bytes": 2634
     },
     {
       "path": "schemas/github_consolidation_proof.schema.json",
@@ -11107,13 +11107,13 @@
     },
     {
       "path": "schemas/github_pull_request.schema.json",
-      "sha256": "3eac01ffd0025b36c58a0bee9da1aa5356e12fa55c6695a79d57192d673ae07a",
-      "size_bytes": 5948
+      "sha256": "3707d94a57735a8a22d961a3f83ef73a2c164289b903f66339da6c4f787a8d09",
+      "size_bytes": 6186
     },
     {
       "path": "schemas/github_pull_request_check.schema.json",
-      "sha256": "d589fe37e9436de12804797bc14a8fe1b0197e4c134110892723627adbf7d1fb",
-      "size_bytes": 1525
+      "sha256": "743c628db12e2464a387ef4d656c2ae792ebc9814d45964a84fc271073b9e3cb",
+      "size_bytes": 1715
     },
     {
       "path": "schemas/github_pull_request_review.schema.json",
@@ -12372,8 +12372,8 @@
     },
     {
       "path": "src/project_pipeline/domain/github.py",
-      "sha256": "1e3050c3e7df1a629388e658cc468fc3801ddc3498ebd53ddc30f71c308f23ee",
-      "size_bytes": 19711
+      "sha256": "77ee25b4100a9757d37f92a4365a6afe52a5aeca61958c5f84571fffb9c1727a",
+      "size_bytes": 19852
     },
     {
       "path": "src/project_pipeline/domain/identifiers.py",
@@ -12452,13 +12452,13 @@
     },
     {
       "path": "src/project_pipeline/github_steward/adapter.py",
-      "sha256": "3e7bf543fb2b4f4d6851688b67bbb603fffe0421d02edd437020d8c2642ef89e",
-      "size_bytes": 20745
+      "sha256": "310cde4040d320b8112605a9a27064adce1a1740761dde827cccb0a5348d36dc",
+      "size_bytes": 21539
     },
     {
       "path": "src/project_pipeline/github_steward/autonomous_review.py",
-      "sha256": "8109cee058deab84513b4d42dce482efa02b1590b25a5a77d68411379d383c80",
-      "size_bytes": 1519
+      "sha256": "fdbdabdd3964ea6876fd1cb6fa1478f78725dee2337d2bdc6d4a8d5218bc1ad7",
+      "size_bytes": 1631
     },
     {
       "path": "src/project_pipeline/github_steward/consolidation.py",
@@ -12482,8 +12482,8 @@
     },
     {
       "path": "src/project_pipeline/github_steward/merge_gate.py",
-      "sha256": "040ff72d8c1a460660f6525830033c70cbdb8757d326fe76e94303db8d00c262",
-      "size_bytes": 4508
+      "sha256": "830a59dcd04fef1ee65fa20d740fb104e17f1025b6184e1cb4e6a4fd4ef0c34d",
+      "size_bytes": 6185
     },
     {
       "path": "src/project_pipeline/github_steward/mock.py",
@@ -12497,8 +12497,8 @@
     },
     {
       "path": "src/project_pipeline/github_steward/persistence.py",
-      "sha256": "a350121df5c768641defdbbaad8f2e3a12983e7192d1d29d00669d2c3c2e761d",
-      "size_bytes": 7950
+      "sha256": "8acf9bd9c2177a98e95176127ac5f23e83b7c96012a6976fcce2c947b3a3ebc3",
+      "size_bytes": 8430
     },
     {
       "path": "src/project_pipeline/github_steward/ports.py",
@@ -12507,13 +12507,13 @@
     },
     {
       "path": "src/project_pipeline/github_steward/protection_drift.py",
-      "sha256": "84e3bfeed69bc8e4916b645d5f7d846e1a0d812fe44fb25d9925b7c47f728972",
-      "size_bytes": 4232
+      "sha256": "0d390753561108ac79ee7d2405ed7e6b188f5f5901be1d9a6e5c7a1c5a662f9a",
+      "size_bytes": 5774
     },
     {
       "path": "src/project_pipeline/github_steward/service.py",
-      "sha256": "9763b88f23719dc74bddb48b7f0b51fbe791a17063e800602385e3ba343b217f",
-      "size_bytes": 13330
+      "sha256": "00c89c3be615bea808f562b8ef5da253672fa6eb3918d49d520c2400ee698ae6",
+      "size_bytes": 14002
     },
     {
       "path": "src/project_pipeline/github_steward/validation.py",
@@ -13637,8 +13637,8 @@
     },
     {
       "path": "tests/test_cursor_shell_hook.py",
-      "sha256": "34c611b0c8da9aa4a213e895b05f1df522d6e0a174affc746593a706b4605c32",
-      "size_bytes": 1586
+      "sha256": "664d2ddb94528026978433148a9e48a554f85b8f415a69ef290ef40c4c3a1f52",
+      "size_bytes": 4119
     },
     {
       "path": "tests/test_cursor_takeover.py",
@@ -13682,28 +13682,28 @@
     },
     {
       "path": "tests/test_github_mock_and_service.py",
-      "sha256": "1d4d3bd7179b99dde4883386af28d1f5d8bc039322e99865561a7e8a7c57c1f3",
-      "size_bytes": 6871
+      "sha256": "2cc783f0d18f8a32671f502dd9188aa900bdd5dafa861819bc2b480f3bdaf437",
+      "size_bytes": 6900
     },
     {
       "path": "tests/test_github_rest_adapter.py",
-      "sha256": "f61b741a52e94868c06e32c2c6727bce638b671cc7ad84923cbd261b4f99a03e",
-      "size_bytes": 6099
+      "sha256": "2efea8c8ff393639d8c607c6b19b74702b7c321b957067d898f76a211011bade",
+      "size_bytes": 7602
     },
     {
       "path": "tests/test_github_steward_domain.py",
-      "sha256": "b4c46b3a2c3ee050d890638b6fc3bcf1501e0c284a36a3abb7b92eb2f219f09d",
-      "size_bytes": 5034
+      "sha256": "b871c3d8205c163d8e7e60101b39a0186c595b8387d8e19938b12a987795acf8",
+      "size_bytes": 7884
     },
     {
       "path": "tests/test_github_steward_lifecycle.py",
-      "sha256": "900716995bba2c91350e157e5460bb41b8b2dcb0ae113b66876956d172f996c2",
-      "size_bytes": 17463
+      "sha256": "f4693a429a05f029e8779680fbdc4cf78d38857b3f67653501c43ec9c21f7395",
+      "size_bytes": 21304
     },
     {
       "path": "tests/test_github_steward_persistence.py",
-      "sha256": "01362d467e9fa0daa00279617b5c0a1a94d64b8a18e6f534fee45b2e8f5e5603",
-      "size_bytes": 2485
+      "sha256": "079ef20225cf31ca79a7f4d7bf4b0ff0404d5fe4bac3e8ee8d0699787d852c6e",
+      "size_bytes": 3027
     },
     {
       "path": "tests/test_ids.py",
@@ -14251,7 +14251,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T05:11:03.507747+00:00",
+  "generated_at_utc": "2026-08-18T05:27:31.191283+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14260,5 +14260,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25222082
+  "total_bytes": 25240294
 }

@@ -23,7 +23,16 @@ def _run_hook(command: str, tmp_path: Path) -> dict:
 def test_hook_allows_governed_git_and_gh(tmp_path):
     assert _run_hook("git status", tmp_path)["permission"] == "allow"
     assert _run_hook("git push -u origin HEAD", tmp_path)["permission"] == "allow"
+    assert _run_hook("git push origin feat/x", tmp_path)["permission"] == "allow"
     assert _run_hook("gh pr list --state open", tmp_path)["permission"] == "allow"
+    assert (
+        _run_hook(
+            "gh pr merge 52 --squash --delete-branch --match-head-commit "
+            "eae6137c1b7d720a30e243ffef3f35325e3aa208",
+            tmp_path,
+        )["permission"]
+        == "allow"
+    )
 
 
 def test_hook_blocks_force_push_and_hard_reset(tmp_path):
@@ -32,6 +41,59 @@ def test_hook_blocks_force_push_and_hard_reset(tmp_path):
     assert _run_hook("git clean -fdx", tmp_path)["permission"] == "deny"
     assert _run_hook("curl https://example.invalid", tmp_path)["permission"] == "deny"
     assert _run_hook("Remove-Item -Recurse -Force C:\\tmp\\x", tmp_path)["permission"] == "deny"
+    assert _run_hook("git push --force-with-lease origin feat/x", tmp_path)["permission"] == "deny"
+    assert _run_hook("git push -f origin feat/x", tmp_path)["permission"] == "deny"
+    assert _run_hook("git push origin +main", tmp_path)["permission"] == "deny"
+    assert _run_hook("git push origin HEAD:main", tmp_path)["permission"] == "deny"
+    assert _run_hook("git push origin refs/heads/main", tmp_path)["permission"] == "deny"
+    assert _run_hook("git push origin feat:main", tmp_path)["permission"] == "deny"
+    assert (
+        _run_hook("git push https://github.com/KevinSGarrett/ProjectPipeline.git main", tmp_path)[
+            "permission"
+        ]
+        == "deny"
+    )
+    assert (
+        _run_hook("git push git@github.com:KevinSGarrett/ProjectPipeline.git HEAD:main", tmp_path)[
+            "permission"
+        ]
+        == "deny"
+    )
+    assert (
+        _run_hook(
+            "git push ssh://git@github.com/KevinSGarrett/ProjectPipeline.git refs/heads/main",
+            tmp_path,
+        )["permission"]
+        == "deny"
+    )
+    assert _run_hook("git.exe push --force origin feat/x", tmp_path)["permission"] == "deny"
+    assert (
+        _run_hook(r'"C:\Program Files\Git\cmd\git.exe" push origin HEAD:main', tmp_path)[
+            "permission"
+        ]
+        == "deny"
+    )
+    assert (
+        _run_hook(
+            r"C:\Git\cmd\git.exe push https://github.com/KevinSGarrett/ProjectPipeline.git main",
+            tmp_path,
+        )["permission"]
+        == "deny"
+    )
+    assert _run_hook("gh pr merge 52 --admin --squash", tmp_path)["permission"] == "deny"
+    assert _run_hook("hub merge --admin", tmp_path)["permission"] == "deny"
+    assert _run_hook("gh pr merge 52 --squash --delete-branch", tmp_path)["permission"] == "deny"
+
+
+def test_hook_uses_canonical_interpreter_wrapper():
+    hooks = json.loads(
+        (Path(__file__).resolve().parents[1] / ".cursor" / "hooks.json").read_text(encoding="utf-8")
+    )
+    command = hooks["hooks"]["beforeShellExecution"][0]["command"]
+    assert command.startswith(".cursor\\hooks\\invoke_python.cmd")
+    assert (
+        Path(__file__).resolve().parents[1] / ".cursor" / "hooks" / "invoke_python.cmd"
+    ).is_file()
 
 
 def test_hook_emits_json_decision_on_empty_stdin():

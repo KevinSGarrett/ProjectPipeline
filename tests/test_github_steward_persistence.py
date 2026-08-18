@@ -2,12 +2,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from project_pipeline.domain.github import (
     GitHubOperation,
     GitOperationState,
     GitOperationType,
     OwnershipKind,
 )
+from project_pipeline.github_steward.errors import GitHubStewardError
 from project_pipeline.github_steward.ownership import OwnershipRegistry
 from project_pipeline.github_steward.persistence import GitHubStewardStore
 from project_pipeline.persistence.migrations import load_migration_catalog
@@ -61,3 +64,10 @@ def test_unknown_operation_appears_in_reconciliation_status(tmp_path):
         status = store.status("owner/repo")
         assert status["reconciliation_required"]
         assert len(store.pending_operations("owner/repo")) == 1
+        with pytest.raises(GitHubStewardError, match="reconciled before any retry"):
+            store.save_operation(op)
+        stored = store.get_operation(op.operation_id)
+        assert stored is not None
+        assert stored.state is GitOperationState.UNKNOWN_OUTCOME
+        store.save_operation(op.model_copy(update={"state": GitOperationState.RECONCILED}))
+        assert store.get_operation(op.operation_id).state is GitOperationState.RECONCILED

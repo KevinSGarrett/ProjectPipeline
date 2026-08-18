@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0.0",
-  "generated_at_utc": "2026-08-17T20:26:18.529532+00:00",
+  "generated_at_utc": "2026-08-18T05:20:58.426435+00:00",
   "authority_mode": "SOURCE_CONTROLLED_LOCAL",
   "instruction_citations": [
     "instructions/06_JIRA_OPERATING_PROTOCOL.md",
@@ -11,7 +11,7 @@
     "instructions/policies/CONTEXT_ROUTING.json"
   ],
   "project_key": "PP",
-  "local_mirror_fingerprint": "e63b205f3c521fa355a4661ac3598234e838cfd5b0e9e55670e9cc7b4caeea1a",
+  "local_mirror_fingerprint": "24e371909d02b1944aae08437dbc8cadffbf9d9db6df676e2f549ea7b3459b4f",
   "local_issue_count": 393,
   "local_edge_count": 848,
   "plan_id": "JPLAN-30A6C466043D4D29E49E",

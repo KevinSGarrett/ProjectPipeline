@@ -43,10 +43,21 @@ def evaluate_merge_gate(
     if require_head_sha and pull_request.head_sha != require_head_sha.lower():
         blockers.append("pull_request_head_changed")
 
+    evaluated_head = (require_head_sha or pull_request.head_sha).lower()
     latest_review_by_author = {}
     for review in sorted(
         pull_request.reviews, key=lambda item: item.submitted_at_utc or pull_request.updated_at_utc
     ):
+        if pull_request.author and review.author and review.author == pull_request.author:
+            blockers.append("self_review")
+            continue
+        commit_sha = (review.commit_sha or "").lower()
+        if commit_sha != evaluated_head:
+            if review.state is ReviewState.APPROVED:
+                blockers.append("stale_review")
+            elif review.state is ReviewState.CHANGES_REQUESTED:
+                blockers.append("changes_requested")
+            continue
         latest_review_by_author[review.author] = review
     approvals = sum(
         1 for review in latest_review_by_author.values() if review.state is ReviewState.APPROVED
@@ -75,15 +86,41 @@ def evaluate_merge_gate(
             if not accepted:
                 blockers.append("autonomous_review_rejected")
 
-    by_name = {check.name: check for check in pull_request.checks}
     for name in required_checks:
-        check = by_name.get(name)
+        named = [check for check in pull_request.checks if check.name == name]
+        app_ids = {check.app_id for check in named}
+        if len(named) > 1 and len(app_ids) > 1:
+            blockers.append(f"required_check_ambiguous:{name}")
+            continue
+        check = named[0] if named else None
         if check is None:
             blockers.append(f"required_check_missing:{name}")
-        elif check.state is not CheckState.COMPLETED:
+            continue
+        if check.state is not CheckState.COMPLETED:
             blockers.append(f"required_check_incomplete:{name}")
         elif check.conclusion not in _SUCCESS_CHECKS:
             blockers.append(f"required_check_failed:{name}")
+    if protection_drift is not None:
+        observed_protection = protection_drift.observed
+        if observed_protection.get("contexts_only_required_checks"):
+            blockers.append("required_checks_contexts_only")
+        bindings = list(
+            zip(
+                observed_protection.get("required_status_checks") or (),
+                observed_protection.get("required_status_check_app_ids") or (),
+                strict=False,
+            )
+        )
+        for context, app_id in bindings:
+            if app_id is None:
+                continue
+            matched = [
+                check
+                for check in pull_request.checks
+                if check.name == context and check.app_id == app_id
+            ]
+            if not matched:
+                blockers.append(f"required_check_app_id_missing:{context}")
 
     if guardian is not None and not guardian.safe_for_work:
         blockers.append("branch_guardian_blocked")
@@ -108,7 +145,7 @@ def evaluate_merge_gate(
         blockers=tuple(sorted(set(blockers))),
         warnings=tuple(sorted(set(warnings))),
         required_checks=required_checks,
-        observed_checks=tuple(sorted(by_name)),
+        observed_checks=tuple(sorted({check.name for check in pull_request.checks})),
         approvals_required=approvals_required,
         approvals_observed=approvals,
         autonomous_review_id=review_id,

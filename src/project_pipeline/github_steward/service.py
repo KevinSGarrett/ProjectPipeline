@@ -118,11 +118,7 @@ class RepositorySteward:
         drift_policy = (
             "autonomous_main"
             if assert_protection_policy
-            and (
-                repository_slug,
-                pull.base_branch,
-            )
-            == ("KevinSGarrett/ProjectPipeline", "main")
+            and (repository_slug, pull.base_branch) == ("KevinSGarrett/ProjectPipeline", "main")
             else "auto"
         )
         drift = evaluate_protection_drift(protection, required_checks=checks, policy=drift_policy)
@@ -161,6 +157,15 @@ class RepositorySteward:
             expected_tree_sha=expected_tree_sha,
             assert_protection_policy=assert_protection_policy,
         )
+        for pending in self.store.pending_operations(repository_slug):
+            if (
+                pending.operation_type is GitOperationType.MERGE_PULL_REQUEST
+                and pending.target == str(number)
+                and pending.state is GitOperationState.UNKNOWN_OUTCOME
+            ):
+                raise GitHubStewardError(
+                    "unknown-outcome operations must be reconciled before any retry"
+                )
         operation = GitHubOperation.create(
             operation_type=GitOperationType.MERGE_PULL_REQUEST,
             repository_slug=repository_slug,
@@ -186,6 +191,11 @@ class RepositorySteward:
         action_intent: ActionIntent,
         authorization_id: str,
     ) -> GitHubOperationReceipt:
+        stored = self.store.get_operation(operation.operation_id)
+        if stored is not None and stored.state is GitOperationState.UNKNOWN_OUTCOME:
+            raise GitHubStewardError(
+                "unknown-outcome operations must be reconciled before any retry"
+            )
         if gate.state is not MergeGateState.READY:
             raise GitHubStewardError("Merge Gate is blocked")
         if operation.operation_type is not GitOperationType.MERGE_PULL_REQUEST:

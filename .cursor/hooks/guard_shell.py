@@ -4,14 +4,34 @@ import json
 import re
 import sys
 
+_GIT = (
+    r"(?:"
+    r"\"[^\"]*[\\/](?:git\.exe|git)\""
+    r"|'[^\']*[\\/](?:git\.exe|git)'"
+    r"|(?:[A-Za-z]:[^\s\"';&|]*[\\/])?(?:git\.exe|git)"
+    r")"
+)
+_MAIN_DEST = r"(?:\+?(?:HEAD|[A-Za-z0-9._/-]+)?:)?(?:refs/heads/)?(?:main|master)(?:\s|$|[\"'])"
+
 DENIED_PATTERNS = (
-    re.compile(r"(?i)(?:^|[\s\"';&|])git\s+push\s+[^\r\n]*(?:--force|-f)(?:\s|$)"),
-    re.compile(r"(?i)git\s+push\s+[^\r\n]*\borigin\s+(main|master)\b"),
-    re.compile(r"(?i)(?:^|[\s\"';&|])git\s+reset\s+--hard(?:\s|$)"),
-    re.compile(r"(?i)(?:^|[\s\"';&|])git\s+clean\s+-\S*f"),
-    re.compile(r"(?i)(?:^|[\s\"';&|])(?:rm|del|rmdir|remove-item)\s+[^\r\n]*(?:-r|-recurse).*?(?:-force|-f)"),
+    re.compile(
+        rf"(?i)(?:^|[\s\"';&|]){_GIT}\s+push\s+[^\r\n]*(?:--force-with-lease|--force|-f)(?:\s|$)"
+    ),
+    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GIT}\s+push\s+[^\r\n]*\s\+[A-Za-z0-9:/\._-]+"),
+    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GIT}\s+push\b[^\r\n]*[\s]{_MAIN_DEST}"),
+    re.compile(r"(?i)(?:^|[\s\"';&|])(?:gh|hub)\s+[^\r\n]*\s--admin(?:\s|$)"),
+    re.compile(
+        r"(?i)(?:^|[\s\"';&|])(?:gh|hub)\s+[^\r\n]*\bpr\s+merge\b(?![^\r\n]*--match-head-commit)"
+    ),
+    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GIT}\s+reset\s+--hard(?:\s|$)"),
+    re.compile(rf"(?i)(?:^|[\s\"';&|]){_GIT}\s+clean\s+-\S*f"),
+    re.compile(
+        r"(?i)(?:^|[\s\"';&|])(?:rm|del|rmdir|remove-item)\s+[^\r\n]*(?:-r|-recurse).*?(?:-force|-f)"
+    ),
     re.compile(r"(?i)(?:^|[\s\"';&|])(?:curl|wget|invoke-webrequest|invoke-restmethod)\s+"),
-    re.compile(r"(?i)(?:type|get-content|cat)\s+[^\r\n]*(?:\.env|\.pem|\.key|credential|Github_Repo)"),
+    re.compile(
+        r"(?i)(?:type|get-content|cat)\s+[^\r\n]*(?:\.env|\.pem|\.key|credential|Github_Repo)"
+    ),
 )
 
 

@@ -143,21 +143,22 @@ def test_merge_gate_rejects_failed_check_uncertain_merge_and_missing_review():
 
 
 def test_protection_drift_rejects_second_human_requirement():
+    from project_pipeline.github_steward.protection_drift import (
+        DEFAULT_REQUIRED_CHECK_APP_IDS,
+        DEFAULT_REQUIRED_CHECKS,
+    )
+
     drifted = GitHubBranchProtection(
-        repository_slug="owner/repo",
+        repository_slug="KevinSGarrett/ProjectPipeline",
         branch="main",
         protected=True,
-        required_status_checks=(
-            "Python 3.11 verification",
-            "Python 3.13 verification",
-            "dependency-audit",
-            "Python CodeQL",
-        ),
+        required_status_checks=DEFAULT_REQUIRED_CHECKS,
+        required_status_check_app_ids=DEFAULT_REQUIRED_CHECK_APP_IDS,
         required_approving_review_count=1,
         require_code_owner_reviews=True,
         require_last_push_approval=True,
     )
-    decision = evaluate_protection_drift(drifted, policy="autonomous_main")
+    decision = evaluate_protection_drift(drifted)
     assert decision.aligned is False
     assert "human_approval_count_not_zero" in decision.drifts
     assert "code_owner_reviews_required" in decision.drifts
@@ -168,7 +169,28 @@ def test_protection_drift_rejects_second_human_requirement():
             "require_last_push_approval": False,
         }
     )
-    assert evaluate_protection_drift(aligned, policy="autonomous_main").aligned is True
+    assert evaluate_protection_drift(aligned).aligned is True
+
+
+def test_protection_drift_fails_name_only_required_checks():
+    from project_pipeline.github_steward.protection_drift import DEFAULT_REQUIRED_CHECKS
+
+    name_only = GitHubBranchProtection(
+        repository_slug="KevinSGarrett/ProjectPipeline",
+        branch="main",
+        protected=True,
+        required_status_checks=DEFAULT_REQUIRED_CHECKS,
+        required_status_check_app_ids=(),
+        contexts_only_required_checks=True,
+        required_approving_review_count=0,
+    )
+    decision = evaluate_protection_drift(name_only)
+    assert decision.aligned is False
+    assert "contexts_only_required_checks" in decision.drifts
+    assert "required_check_app_id_missing" in decision.drifts
+    missing_apps = name_only.model_copy(update={"contexts_only_required_checks": False})
+    missing = evaluate_protection_drift(missing_apps)
+    assert "required_check_app_id_missing" in missing.drifts
 
 
 def test_remote_deletion_denied_for_dirty_or_unmerged_branch():
@@ -348,6 +370,31 @@ def test_cli_merge_gate_defaults_protection_drift_assert_on():
     assert off.assert_protection is False
 
 
+def test_merge_gate_default_evaluates_protection_drift_predicates(tmp_path):
+    from project_pipeline.github_steward.protection_drift import DEFAULT_REQUIRED_CHECKS
+
+    repo = make_repo(tmp_path)
+    adapter = seeded_adapter()
+    adapter.repository_slug = "KevinSGarrett/ProjectPipeline"
+    adapter.set_branch_protection(
+        GitHubBranchProtection(
+            repository_slug="KevinSGarrett/ProjectPipeline",
+            branch="main",
+            protected=True,
+            required_status_checks=DEFAULT_REQUIRED_CHECKS,
+            required_status_check_app_ids=(15368, 15368, 15368, None),
+            required_approving_review_count=1,
+            require_code_owner_reviews=False,
+            require_last_push_approval=False,
+        )
+    )
+    with GitHubStewardStore(tmp_path / "state.db", Path.cwd()) as store:
+        steward = RepositorySteward(local=LocalGitRepository(repo), remote=adapter, store=store)
+        gate = steward.merge_gate("KevinSGarrett/ProjectPipeline", 1)
+    assert "protection_changed" in gate.blockers
+    assert "human_approval_count_not_zero" in gate.protection_drift
+
+
 def test_unknown_outcome_is_reconciled_not_retried(tmp_path):
     adapter = seeded_adapter()
     adapter.schedule_failure("merge_pull_request", AdapterErrorCategory.UNKNOWN_OUTCOME)
@@ -466,3 +513,49 @@ def test_service_merge_gate_rejects_changed_head_with_receipt(tmp_path):
             autonomous_review=_receipt(),
         )
         assert "pull_request_head_changed" in gate.blockers
+
+
+def test_apply_merge_refuses_unknown_outcome_retry(tmp_path):
+    repo = make_repo(tmp_path)
+    adapter = seeded_adapter()
+    with GitHubStewardStore(tmp_path / "state.db", Path.cwd()) as store:
+        steward = RepositorySteward(local=LocalGitRepository(repo), remote=adapter, store=store)
+        gate, operation = steward.plan_merge(
+            "owner/repo",
+            1,
+            actor_id="actor:test",
+            correlation_id="corr:unknown",
+            expected_head_sha=SHA2,
+            autonomous_review=_receipt(),
+        )
+        store.save_operation(
+            operation.model_copy(update={"state": GitOperationState.UNKNOWN_OUTCOME})
+        )
+        intent = ActionIntent(
+            actor_id="actor:test",
+            authority="github.steward",
+            target="owner/repo",
+            operation="github.merge",
+            idempotency_key=operation.idempotency_key,
+            approval_state=ApprovalState.APPROVED,
+            correlation_id="corr:unknown",
+            risk=RiskLevel.HIGH,
+        )
+        with pytest.raises(GitHubStewardError, match="reconciled before any retry"):
+            steward.apply_merge(operation, gate, action_intent=intent, authorization_id="auth:x")
+
+
+def test_autonomous_review_age_is_capped_by_policy_constant():
+    from project_pipeline.github_steward.autonomous_review import (
+        MAX_AUTONOMOUS_REVIEW_AGE_SECONDS,
+        evaluate_autonomous_review,
+    )
+
+    old = _receipt(
+        completed_at_utc=datetime.now(UTC)
+        - timedelta(seconds=MAX_AUTONOMOUS_REVIEW_AGE_SECONDS + 5),
+        max_age_seconds=86400,
+    )
+    accepted, blockers = evaluate_autonomous_review(old, expected_head_sha=SHA2)
+    assert accepted is False
+    assert "stale_review" in blockers

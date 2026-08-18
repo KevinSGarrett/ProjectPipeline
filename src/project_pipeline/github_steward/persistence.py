@@ -12,6 +12,7 @@ from project_pipeline.domain.github import (
     MergeGateDecision,
     ResourceOwnershipClaim,
 )
+from project_pipeline.github_steward.errors import GitHubStewardError
 from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 
 
@@ -93,6 +94,15 @@ class GitHubStewardStore:
         self.db.commit()
 
     def save_operation(self, operation: GitHubOperation) -> None:
+        existing = self.get_operation(operation.operation_id)
+        if (
+            existing is not None
+            and existing.state is GitOperationState.UNKNOWN_OUTCOME
+            and operation.state in {GitOperationState.PLANNED, GitOperationState.PENDING}
+        ):
+            raise GitHubStewardError(
+                "unknown-outcome operations must be reconciled before any retry"
+            )
         self.db.execute(
             """
             INSERT INTO github_operations

@@ -49,6 +49,7 @@ def test_merge_gate_requires_checks_and_approval():
                 review_id="1",
                 author="reviewer",
                 state=ReviewState.APPROVED,
+                commit_sha=SHA2,
                 submitted_at_utc=datetime.now(UTC),
             ),
         ),
@@ -166,3 +167,93 @@ def test_branch_protection_accepts_explicit_requirements():
         require_code_owner_reviews=True,
     )
     assert p.required_approving_review_count == 2
+
+
+def test_merge_gate_treats_missing_or_prior_commit_sha_as_stale_review():
+    missing = pull(
+        reviews=(
+            PullRequestReview(
+                review_id="r-missing",
+                author="reviewer",
+                state=ReviewState.APPROVED,
+                submitted_at_utc=datetime.now(UTC),
+            ),
+        ),
+        checks=(
+            PullRequestCheck(
+                check_id="1",
+                name="tests",
+                state=CheckState.COMPLETED,
+                conclusion=CheckConclusion.SUCCESS,
+            ),
+        ),
+    )
+    gate = evaluate_merge_gate(
+        missing, required_checks=("tests",), approvals_required=1, require_head_sha=SHA2
+    )
+    assert gate.state is MergeGateState.BLOCKED
+    assert "stale_review" in gate.blockers
+    assert gate.approvals_observed == 0
+    prior = pull(
+        reviews=(
+            PullRequestReview(
+                review_id="r-prior",
+                author="reviewer",
+                state=ReviewState.APPROVED,
+                commit_sha=SHA1,
+                submitted_at_utc=datetime.now(UTC),
+            ),
+        ),
+        checks=(
+            PullRequestCheck(
+                check_id="1",
+                name="tests",
+                state=CheckState.COMPLETED,
+                conclusion=CheckConclusion.SUCCESS,
+            ),
+        ),
+    )
+    gate = evaluate_merge_gate(
+        prior, required_checks=("tests",), approvals_required=1, require_head_sha=SHA2
+    )
+    assert "stale_review" in gate.blockers
+    assert gate.approvals_observed == 0
+
+
+def test_merge_gate_ignores_pull_author_self_approval():
+    pr = PullRequestSnapshot(
+        pull_request_id=github_identifier("GHPR", "owner/repo", "7", SHA2),
+        repository_slug="owner/repo",
+        number=7,
+        title="Implement governed repository stewardship",
+        state=PullRequestState.OPEN,
+        base_branch="main",
+        head_branch="feature/pp-7",
+        base_sha=SHA1,
+        head_sha=SHA2,
+        mergeable=True,
+        author="implementer",
+        reviews=(
+            PullRequestReview(
+                review_id="r-self",
+                author="implementer",
+                state=ReviewState.APPROVED,
+                commit_sha=SHA2,
+                submitted_at_utc=datetime.now(UTC),
+            ),
+        ),
+        checks=(
+            PullRequestCheck(
+                check_id="1",
+                name="tests",
+                state=CheckState.COMPLETED,
+                conclusion=CheckConclusion.SUCCESS,
+            ),
+        ),
+    )
+    gate = evaluate_merge_gate(
+        pr, required_checks=("tests",), approvals_required=1, require_head_sha=SHA2
+    )
+    assert gate.state is MergeGateState.BLOCKED
+    assert "self_review" in gate.blockers
+    assert gate.approvals_observed == 0

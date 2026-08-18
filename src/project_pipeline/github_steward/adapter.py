@@ -108,23 +108,34 @@ class GitHubRestAdapter(GitHubRemotePort):
                     repository_slug=repository_slug, branch=branch, protected=False
                 )
             raise
+        status_checks = payload.get("required_status_checks") or {}
+        check_bindings = [
+            item for item in (status_checks.get("checks") or ()) if isinstance(item, dict)
+        ]
         contexts = tuple(
-            sorted(
-                str(item)
-                for item in ((payload.get("required_status_checks") or {}).get("contexts") or ())
-                if str(item).strip()
-            )
+            sorted(str(item) for item in (status_checks.get("contexts") or ()) if str(item).strip())
         )
+        if check_bindings:
+            names = tuple(str(item.get("context") or "").strip() for item in check_bindings)
+            app_ids = tuple(
+                int(item["app_id"]) if item.get("app_id") is not None else None
+                for item in check_bindings
+            )
+            contexts_only = False
+        else:
+            names = contexts
+            app_ids = tuple(None for _ in names)
+            contexts_only = bool(contexts)
         reviews_raw = payload.get("required_pull_request_reviews")
         reviews = reviews_raw or {}
         return GitHubBranchProtection(
             repository_slug=repository_slug,
             branch=branch,
             protected=True,
-            required_status_checks=contexts,
-            required_status_checks_strict=bool(
-                (payload.get("required_status_checks") or {}).get("strict", False)
-            ),
+            required_status_checks=names,
+            required_status_check_app_ids=app_ids,
+            contexts_only_required_checks=contexts_only,
+            required_status_checks_strict=bool(status_checks.get("strict", False)),
             reviews_object_present=reviews_raw is not None,
             required_approving_review_count=int(
                 reviews.get("required_approving_review_count") or 0
@@ -212,6 +223,8 @@ class GitHubRestAdapter(GitHubRemotePort):
                     if conclusion_raw in CheckConclusion._value2member_map_
                     else CheckConclusion.UNKNOWN
                 )
+                app = item.get("app") if isinstance(item.get("app"), dict) else {}
+                app_id = app.get("id")
                 yield PullRequestCheck(
                     check_id=str(
                         item.get("id", github_identifier("GHCHK", repository_slug, ref, str(item)))
@@ -220,6 +233,7 @@ class GitHubRestAdapter(GitHubRemotePort):
                     state=state,
                     conclusion=conclusion if state is CheckState.COMPLETED else None,
                     details_url=item.get("details_url"),
+                    app_id=int(app_id) if app_id is not None else None,
                 )
             if len(rows) < page_size:
                 return

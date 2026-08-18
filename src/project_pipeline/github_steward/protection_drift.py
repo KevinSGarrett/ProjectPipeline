@@ -14,6 +14,7 @@ DEFAULT_REQUIRED_CHECKS = (
     "dependency-audit",
     "Python CodeQL",
 )
+DEFAULT_REQUIRED_CHECK_APP_IDS: tuple[int | None, ...] = (15368, 15368, 15368, None)
 
 
 def expected_main_protection(
@@ -27,6 +28,10 @@ def expected_main_protection(
         "branch": branch,
         "protected": True,
         "required_status_checks": list(required_checks),
+        "required_status_check_app_ids": list(DEFAULT_REQUIRED_CHECK_APP_IDS)
+        if required_checks == DEFAULT_REQUIRED_CHECKS
+        else [],
+        "contexts_only_required_checks": False,
         "required_status_checks_strict": True,
         "reviews_object_present": True,
         "required_approving_review_count": 0,
@@ -72,10 +77,39 @@ def evaluate_protection_drift(
         drifts.append("branch_unprotected")
     if not observed.reviews_object_present:
         drifts.append("reviews_object_absent")
+    if observed.contexts_only_required_checks:
+        drifts.append("contexts_only_required_checks")
     if not observed.required_status_checks:
         drifts.append("required_checks_empty")
     elif tuple(sorted(observed.required_status_checks)) != tuple(sorted(expected_checks)):
         drifts.append("required_checks_drifted")
+    if full_policy and required_checks in {None, DEFAULT_REQUIRED_CHECKS}:
+        expected_by_name = dict(
+            zip(DEFAULT_REQUIRED_CHECKS, DEFAULT_REQUIRED_CHECK_APP_IDS, strict=True)
+        )
+        observed_by_name = dict(
+            zip(
+                observed.required_status_checks,
+                observed.required_status_check_app_ids,
+                strict=False,
+            )
+        )
+        observed_apps = tuple(observed.required_status_check_app_ids)
+        missing_app = not observed_apps
+        changed_app = False
+        for name, expected_app in expected_by_name.items():
+            if expected_app is None:
+                continue
+            if name not in observed_by_name or observed_by_name[name] is None:
+                missing_app = True
+            elif observed_by_name[name] != expected_app:
+                changed_app = True
+        if missing_app:
+            drifts.append("required_check_app_id_missing")
+        if changed_app or (
+            observed_apps and not missing_app and observed_apps != DEFAULT_REQUIRED_CHECK_APP_IDS
+        ):
+            drifts.append("required_check_app_id_changed")
     if observed.allow_force_pushes:
         drifts.append("force_pushes_allowed")
     if observed.allow_deletions:

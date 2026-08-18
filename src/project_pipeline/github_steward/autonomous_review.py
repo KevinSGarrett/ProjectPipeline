@@ -4,6 +4,8 @@ from datetime import UTC, datetime
 
 from project_pipeline.domain.github import AutonomousReviewReceipt
 
+MAX_AUTONOMOUS_REVIEW_AGE_SECONDS = 3600
+
 
 def evaluate_autonomous_review(
     receipt: AutonomousReviewReceipt,
@@ -32,7 +34,8 @@ def evaluate_autonomous_review(
     if observed.tzinfo is None:
         observed = observed.replace(tzinfo=UTC)
     age = (current - observed).total_seconds()
-    if age > receipt.max_age_seconds:
+    allowed_age = min(receipt.max_age_seconds, MAX_AUTONOMOUS_REVIEW_AGE_SECONDS)
+    if age > allowed_age:
         blockers.append("stale_review")
     if age < 0:
         blockers.append("review_timestamp_in_future")

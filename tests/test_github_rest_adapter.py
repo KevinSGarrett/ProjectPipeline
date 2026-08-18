@@ -88,6 +88,7 @@ def test_pull_reviews_and_checks_are_parsed():
                             "status": "completed",
                             "conclusion": "success",
                             "details_url": "https://example.test",
+                            "app": {"id": 15368, "slug": "github-actions"},
                         }
                     ]
                 }
@@ -101,6 +102,40 @@ def test_pull_reviews_and_checks_are_parsed():
     assert pr.number == 4 and pr.head_sha == SHA2
     assert reviews[0].state.value == "APPROVED"
     assert checks[0].conclusion.value == "SUCCESS"
+    assert checks[0].app_id == 15368
+
+
+def test_branch_protection_persists_check_app_ids():
+    opener = Opener(
+        [
+            Response(
+                {
+                    "required_status_checks": {
+                        "strict": True,
+                        "contexts": ["Python 3.11 verification"],
+                        "checks": [
+                            {"context": "Python 3.11 verification", "app_id": 15368},
+                            {"context": "Python CodeQL", "app_id": None},
+                        ],
+                    },
+                    "required_pull_request_reviews": {"required_approving_review_count": 0},
+                    "enforce_admins": {"enabled": True},
+                    "required_linear_history": {"enabled": True},
+                    "required_conversation_resolution": {"enabled": True},
+                    "allow_force_pushes": {"enabled": False},
+                    "allow_deletions": {"enabled": False},
+                }
+            )
+        ]
+    )
+    adapter = GitHubRestAdapter(opener=opener, retry_base_seconds=0)
+    protection = adapter.get_branch_protection("KevinSGarrett/ProjectPipeline", "main")
+    assert protection.required_status_checks == (
+        "Python 3.11 verification",
+        "Python CodeQL",
+    )
+    assert protection.required_status_check_app_ids == (15368, None)
+    assert protection.contexts_only_required_checks is False
 
 
 def test_branch_protection_404_is_unprotected():

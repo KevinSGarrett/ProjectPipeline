@@ -17,6 +17,11 @@
       "title": "Branch",
       "type": "string"
     },
+    "contexts_only_required_checks": {
+      "default": false,
+      "title": "Contexts Only Required Checks",
+      "type": "boolean"
+    },
     "dismiss_stale_reviews": {
       "default": true,
       "title": "Dismiss Stale Reviews",
@@ -60,6 +65,21 @@
       "minimum": 0,
       "title": "Required Approving Review Count",
       "type": "integer"
+    },
+    "required_status_check_app_ids": {
+      "default": [],
+      "items": {
+        "anyOf": [
+          {
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ]
+      },
+      "title": "Required Status Check App Ids",
+      "type": "array"
     },
     "required_status_checks": {
       "default": [],
