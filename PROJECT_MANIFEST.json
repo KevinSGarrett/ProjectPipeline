@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "5f8b392887bddc0a7076fc4b858f89490fb774c8d6e7081fc89b627fac6d9b81",
+  "aggregate_sha256": "42eac892760a283db9d14eb6f0420533f7da949be157554c93316236ca710a7c",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -10492,8 +10492,8 @@
     },
     {
       "path": "runbooks/autonomy_runtime/live_qualification.md",
-      "sha256": "c4305697ebc97efd34ef4a6d0a48ebbaeee99de7b6cc5b71f93ddf42fe9eb979",
-      "size_bytes": 1647
+      "sha256": "862318c6d152f462fecba92210a0d1040fe214eb5c7bd697d50b43fc13987faf",
+      "size_bytes": 1835
     },
     {
       "path": "runbooks/autonomy_runtime/unattended_operation.md",
@@ -12027,8 +12027,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/cursor_cli_qualification.py",
-      "sha256": "601c47734b358f80804e566ccb3dedf2461537ddc19e2ae4a1b9a71a78520cac",
-      "size_bytes": 17617
+      "sha256": "b3a09fd417143bfb0608d09c338c559fe5bee0008516c117884f41354bcd5491",
+      "size_bytes": 17528
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/golden.py",
@@ -12692,8 +12692,8 @@
     },
     {
       "path": "src/project_pipeline/lifecycle/__init__.py",
-      "sha256": "1f1cad482e400d150ef5dfbfde76efad3634bb19ea977bfbcad07bf387978c4f",
-      "size_bytes": 3739
+      "sha256": "4071f19f9ee55b5b1fb7838ec2fa04ed8d9999aa3ca14b5d9bf7f97fb308d88d",
+      "size_bytes": 3791
     },
     {
       "path": "src/project_pipeline/lifecycle/adoption.py",
@@ -12702,8 +12702,8 @@
     },
     {
       "path": "src/project_pipeline/lifecycle/attestation_recovery.py",
-      "sha256": "249b7549152f7d1fbdf3c8fdd2a7f0387376f18a1fc617f681424d5b3c1087b2",
-      "size_bytes": 20977
+      "sha256": "bd9cb042c5f6b41e18e25321c9ebac44c32d8c408cd9e8ce9482e69090edc4de",
+      "size_bytes": 21485
     },
     {
       "path": "src/project_pipeline/lifecycle/contracts.py",
@@ -13472,8 +13472,8 @@
     },
     {
       "path": "tests/test_attestation_recovery.py",
-      "sha256": "0fbe8050e72f7e0ba547c6218ca3a165ca81440fff68c65d0e88df6a135ecde7",
-      "size_bytes": 7834
+      "sha256": "bfafe4a016268339bc7901f4efea62d4279ab41b92ed2af43fccf9097100f1e6",
+      "size_bytes": 9061
     },
     {
       "path": "tests/test_autonomy_live_qualification.py",
@@ -13712,8 +13712,8 @@
     },
     {
       "path": "tests/test_cursor_cli_qualification.py",
-      "sha256": "a5e6db41fc8bc3febc7e54be0b504b379c2a727fd5c9e20616175edc17eade50",
-      "size_bytes": 11875
+      "sha256": "3296b48a204429b9e95694d468097d17a53f37f1b234704578d6dedf6b1529b1",
+      "size_bytes": 12978
     },
     {
       "path": "tests/test_cursor_shell_hook.py",
@@ -14326,7 +14326,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T18:25:40.427326+00:00",
+  "generated_at_utc": "2026-08-18T18:45:14.044248+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14335,5 +14335,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25326509
+  "total_bytes": 25329498
 }

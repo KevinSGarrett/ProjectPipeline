@@ -30,7 +30,9 @@ Allowed live outcomes are `PASSED`, `BLOCKED_EXTERNAL`, and `FAILED`. Legacy
 
 Exact PP-379 public bytes are recovered only through
 `python -m project_pipeline attestation recover --root . --apply`. Arbitrary JSON
-copied to the expected paths cannot pass.
+copied to the expected paths cannot pass. Durable private records default to the
+machine-local takeover directory when those files exist; otherwise they resolve
+under `<root>/.local/state/takeover`. Override with `--durable-dir`.
 
 ## Run
 

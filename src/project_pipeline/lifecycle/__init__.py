@@ -5,6 +5,7 @@ from project_pipeline.lifecycle.attestation_recovery import (
     RecoveryError,
     evaluate_attestation_recovery,
     recover_and_restore,
+    resolve_durable_dir,
 )
 from project_pipeline.lifecycle.contracts import ContractEvolutionManager
 from project_pipeline.lifecycle.environments import EnvironmentManager, TestDataLifecycleManager
@@ -90,6 +91,7 @@ __all__ = [
     "pp327_collision",
     "provider_dispatch_blocked",
     "recover_and_restore",
+    "resolve_durable_dir",
     "scoped_lane_state",
     "should_request_human_attestation",
     "simulate_scenario",

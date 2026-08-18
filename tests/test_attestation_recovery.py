@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from project_pipeline.lifecycle import attestation_recovery as attestation_recovery_module
 from project_pipeline.lifecycle.attestation_recovery import (
     EXPECTED_PUBLIC_ATTESTATION_BYTES,
     EXPECTED_PUBLIC_ATTESTATION_SHA256,
@@ -17,6 +18,7 @@ from project_pipeline.lifecycle.attestation_recovery import (
     evaluate_attestation_recovery,
     import_exact_public_artifact,
     recover_and_restore,
+    resolve_durable_dir,
     sha256_bytes,
 )
 from tests.pp379_recovery_support import (
@@ -179,3 +181,31 @@ def test_invalid_timestamp_is_not_valid(tmp_path: Path) -> None:
     assert evaluation["accepted_for_restore"] is False
     assert "missing_or_invalid_timestamp" in by_kind["privacy_attestation"]["validator_reasons"]
     assert by_kind["privacy_attestation"]["current_policy_state"] != "VALID"
+
+
+def test_resolve_durable_dir_honors_explicit(tmp_path: Path) -> None:
+    explicit = tmp_path / "explicit"
+    assert resolve_durable_dir(tmp_path / "repo", explicit) == explicit
+
+
+def test_resolve_durable_dir_prefers_canonical_when_present(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    canonical = tmp_path / "canonical"
+    write_json(canonical / "privacy_attestation.json", {"ok": True})
+    write_json(canonical / "provider_qualification.json", {"ok": True})
+    monkeypatch.setattr(attestation_recovery_module, "DEFAULT_DURABLE_DIR", canonical)
+    repo = tmp_path / "worktree"
+    assert attestation_recovery_module.resolve_durable_dir(repo, None) == canonical
+
+
+def test_resolve_durable_dir_falls_back_to_repo_when_canonical_absent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(
+        attestation_recovery_module, "DEFAULT_DURABLE_DIR", tmp_path / "missing-canonical"
+    )
+    repo = tmp_path / "worktree"
+    assert attestation_recovery_module.resolve_durable_dir(repo, None) == (
+        repo / ".local" / "state" / "takeover"
+    )

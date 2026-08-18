@@ -48,6 +48,17 @@ DEFAULT_PRESERVATION_ROOT = Path(r"C:\Project_X\.local\pm_cycle_010\preservation
 DEFAULT_DURABLE_DIR = Path(r"C:\Project_X\.local\state\takeover")
 
 
+def resolve_durable_dir(repository_root: Path, durable_dir: Path | None = None) -> Path:
+    """Prefer an explicit dir, then machine-local private records, then repo-relative state."""
+    if durable_dir is not None:
+        return durable_dir
+    if (DEFAULT_DURABLE_DIR / "privacy_attestation.json").is_file() and (
+        DEFAULT_DURABLE_DIR / "provider_qualification.json"
+    ).is_file():
+        return DEFAULT_DURABLE_DIR
+    return repository_root / ".local" / "state" / "takeover"
+
+
 class RecoveryDisposition(StrEnum):
     RECOVERED_VALID = "RECOVERED_VALID"
     RECOVERED_BUT_STALE = "RECOVERED_BUT_STALE"
@@ -450,7 +461,7 @@ def recover_and_restore(
     apply: bool = False,
 ) -> dict[str, Any]:
     source_root = source_root or DEFAULT_PRESERVATION_ROOT
-    durable_dir = durable_dir or DEFAULT_DURABLE_DIR
+    durable_dir = resolve_durable_dir(repository_root, durable_dir)
     verification_dir = verification_dir or (
         repository_root / ".local" / "attestation_recovery_verify"
     )

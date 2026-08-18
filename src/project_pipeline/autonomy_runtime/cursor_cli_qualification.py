@@ -27,6 +27,7 @@ from project_pipeline.lifecycle.attestation_recovery import (
     evaluate_attestation_recovery,
     load_current_attestation_policy,
     recover_and_restore,
+    resolve_durable_dir,
     sha256_bytes,
 )
 
@@ -220,6 +221,7 @@ def qualify_cursor_cli_provider(
     policy: CurrentAttestationPolicy | None = None,
 ) -> dict[str, Any]:
     repository_root = repository_root.resolve()
+    durable_dir = resolve_durable_dir(repository_root, durable_dir)
     workspace = (disposable_root / "cursor-cli-qualification").resolve()
     if workspace.exists():
         shutil.rmtree(workspace)
@@ -260,14 +262,8 @@ def qualify_cursor_cli_provider(
         source_qualification=public_qualification
         if public_qualification.is_file()
         else (source_root / PUBLIC_QUALIFICATION_REF if source_root else public_qualification),
-        durable_attestation_path=(
-            (durable_dir or repository_root / ".local" / "state" / "takeover")
-            / "privacy_attestation.json"
-        ),
-        durable_qualification_path=(
-            (durable_dir or repository_root / ".local" / "state" / "takeover")
-            / "provider_qualification.json"
-        ),
+        durable_attestation_path=durable_dir / "privacy_attestation.json",
+        durable_qualification_path=durable_dir / "provider_qualification.json",
         verification_dir=disposable_root / "evidence-verify",
         historical_receipt_path=repository_root
         / "evidence"

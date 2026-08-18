@@ -5,6 +5,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from subprocess import CompletedProcess
 
+import pytest
+
 from project_pipeline.agent_router.adapters import ProviderAdapterError
 from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
     ARTIFACT_NAME,
@@ -12,6 +14,7 @@ from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
     _write_expected_artifact,
     qualify_cursor_cli_provider,
 )
+from project_pipeline.lifecycle import attestation_recovery as attestation_recovery_module
 from project_pipeline.lifecycle.attestation_recovery import (
     EXPECTED_PUBLIC_ATTESTATION_SHA256,
     PUBLIC_ATTESTATION_REF,
@@ -89,6 +92,7 @@ def test_missing_evidence_without_recoverable_source_fails(tmp_path: Path) -> No
     report = qualify_cursor_cli_provider(
         repository_root=repo,
         disposable_root=tmp_path / "runtime",
+        durable_dir=tmp_path / "absent-durable",
         runner=_success_runner(tmp_path / "runtime"),
         executable="agent",
     )
@@ -342,3 +346,25 @@ def test_copying_arbitrary_json_cannot_pass_pp384(tmp_path: Path) -> None:
         executable="agent",
     )
     assert report["outcome"] != "PASSED"
+
+
+def test_worktree_without_repo_durable_uses_canonical_private_records(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(attestation_recovery_module, "DEFAULT_DURABLE_DIR", durable_dir())
+    repo = _repo_with_evidence(tmp_path)
+    repo_durable = repo / ".local" / "state" / "takeover" / "privacy_attestation.json"
+    assert not repo_durable.is_file()
+    report = qualify_cursor_cli_provider(
+        repository_root=repo,
+        disposable_root=tmp_path / "runtime",
+        runner=_success_runner(tmp_path / "runtime"),
+        executable="agent",
+    )
+    assert report["outcome"] == "PASSED"
+    validation = next(item for item in report["phases"] if item["phase"] == "EVIDENCE_VALIDATION")
+    durable_paths = {
+        Path(artifact["durable_record_path"])
+        for artifact in validation["observations"]["artifacts"]
+    }
+    assert all(path.parent == durable_dir() for path in durable_paths)
