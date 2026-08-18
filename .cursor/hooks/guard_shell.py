@@ -28,11 +28,9 @@ _MAIN_DEST = (
 )
 _GH = (
     r"(?:"
-    r"\"[^\"]*[\\/](?:gh\.exe|hub\.exe|gh|hub)\""
-    r"|'[^\']*[\\/](?:gh\.exe|hub\.exe|gh|hub)'"
-    # Unquoted Windows paths may contain spaces (Program Files). Stop at
-    # shell metacharacters, not whitespace, so the basename still matches.
-    r"|(?:[A-Za-z]:[^\"';&|\r\n]*[\\/])?(?:gh\.exe|hub\.exe|gh|hub)"
+    r"\"[^\"]*[\\/](?:gh\.exe|gh\.cmd|hub\.exe|hub\.cmd|gh|hub)\""
+    r"|'[^\']*[\\/](?:gh\.exe|gh\.cmd|hub\.exe|hub\.cmd|gh|hub)'"
+    r"|(?:[A-Za-z]:(?:\\[\w .()-]+)+\\)?(?:gh\.exe|gh\.cmd|hub\.exe|hub\.cmd|gh|hub)"
     r")"
 )
 

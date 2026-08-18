@@ -121,6 +121,18 @@ def test_hook_blocks_git_flag_and_quoted_main_evasions(tmp_path):
         assert _run_hook(command, tmp_path)["permission"] == "deny", command
 
 
+def test_hook_blocks_unquoted_spaced_windows_gh_hub_merge(tmp_path):
+    denies = (
+        r"C:\Program Files\GitHub CLI\gh.exe pr merge 52",
+        r"C:\Program Files\GitHub CLI\hub.exe merge",
+        r"C:\Program Files\GitHub CLI\gh.exe pr merge 52 --squash",
+        r"C:\Users\kevin\AppData\Local\GitHub CLI\gh.exe pr merge 52 --squash",
+        "gh.cmd pr merge 52 --squash",
+    )
+    for command in denies:
+        assert _run_hook(command, tmp_path)["permission"] == "deny", command
+
+
 def test_hook_uses_canonical_interpreter_wrapper():
     hooks = json.loads(
         (Path(__file__).resolve().parents[1] / ".cursor" / "hooks.json").read_text(encoding="utf-8")
