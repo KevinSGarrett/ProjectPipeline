@@ -343,9 +343,7 @@ def test_unknown_outcome_is_reconciled_not_retried(tmp_path):
     adapter = seeded_adapter()
     adapter.schedule_failure("merge_pull_request", AdapterErrorCategory.UNKNOWN_OUTCOME)
     with GitHubStewardStore(tmp_path / "state.db", Path.cwd()) as store:
-        lifecycle = ClosedLoopLifecycle(
-            remote=adapter, store=store, repository_slug="owner/repo"
-        )
+        lifecycle = ClosedLoopLifecycle(remote=adapter, store=store, repository_slug="owner/repo")
         operation = lifecycle.persist_intent(
             operation_type=GitOperationType.MERGE_PULL_REQUEST,
             target="1",
@@ -373,9 +371,7 @@ def test_unknown_outcome_is_reconciled_not_retried(tmp_path):
             lifecycle.apply_step(
                 stored, action_intent=intent, authorization_id="auth:test", apply=True
             )
-        adapter._pulls[1] = adapter._pulls[1].model_copy(
-            update={"state": PullRequestState.MERGED}
-        )
+        adapter._pulls[1] = adapter._pulls[1].model_copy(update={"state": PullRequestState.MERGED})
         reconciled = lifecycle.reconcile_unknown(stored)
         assert reconciled.state is GitOperationState.RECONCILED
 
@@ -384,9 +380,7 @@ def test_unknown_delete_reconciles_without_second_delete(tmp_path):
     adapter = seeded_adapter()
     adapter.schedule_failure("delete_branch", AdapterErrorCategory.UNKNOWN_OUTCOME)
     with GitHubStewardStore(tmp_path / "state.db", Path.cwd()) as store:
-        lifecycle = ClosedLoopLifecycle(
-            remote=adapter, store=store, repository_slug="owner/repo"
-        )
+        lifecycle = ClosedLoopLifecycle(remote=adapter, store=store, repository_slug="owner/repo")
         operation = lifecycle.persist_intent(
             operation_type=GitOperationType.DELETE_BRANCH,
             target="feature/x",
@@ -426,9 +420,7 @@ def test_apply_step_refuses_merge_when_gate_blocked(tmp_path):
         )
     )
     with GitHubStewardStore(tmp_path / "state.db", Path.cwd()) as store:
-        lifecycle = ClosedLoopLifecycle(
-            remote=adapter, store=store, repository_slug="owner/repo"
-        )
+        lifecycle = ClosedLoopLifecycle(remote=adapter, store=store, repository_slug="owner/repo")
         operation = lifecycle.persist_intent(
             operation_type=GitOperationType.MERGE_PULL_REQUEST,
             target="1",

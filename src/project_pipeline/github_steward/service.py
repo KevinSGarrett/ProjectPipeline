@@ -115,10 +115,16 @@ class RepositorySteward:
             if approvals_required is None
             else approvals_required
         )
-        drift_policy = "autonomous_main" if assert_protection_policy and (
-            repository_slug,
-            pull.base_branch,
-        ) == ("KevinSGarrett/ProjectPipeline", "main") else "auto"
+        drift_policy = (
+            "autonomous_main"
+            if assert_protection_policy
+            and (
+                repository_slug,
+                pull.base_branch,
+            )
+            == ("KevinSGarrett/ProjectPipeline", "main")
+            else "auto"
+        )
         drift = evaluate_protection_drift(protection, required_checks=checks, policy=drift_policy)
         gate = evaluate_merge_gate(
             pull,

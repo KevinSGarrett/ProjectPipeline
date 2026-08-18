@@ -109,9 +109,7 @@ class ClosedLoopLifecycle:
                 required_checks=tuple(operation.payload.get("required_checks") or ()),
             )
             if not ready["ready"]:
-                raise GitHubStewardError(
-                    f"Merge Gate is blocked: {ready['gate'].get('blockers')}"
-                )
+                raise GitHubStewardError(f"Merge Gate is blocked: {ready['gate'].get('blockers')}")
         if not apply:
             return GitHubOperationReceipt(
                 receipt_id=github_identifier("GHREC", operation.operation_id, "PLANNED"),
