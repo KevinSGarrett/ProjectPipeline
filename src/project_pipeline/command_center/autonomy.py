@@ -8,6 +8,7 @@ from project_pipeline.autonomy_runtime.projection import (
     is_compatibility_human_required,
     project_runtime_state,
 )
+from project_pipeline.autonomy_runtime.recheck import AutonomousRecheckStore
 from project_pipeline.autonomy_runtime.supervisor import PersistentSupervisor
 from project_pipeline.autonomy_runtime.windows_service import (
     AutonomyRuntimeWindowsService,
@@ -29,6 +30,7 @@ def project_autonomy_runtime(
     repository_root: Path | None = None,
     ready_task_ids: list[str] | None = None,
     provider_status: dict[str, Any] | None = None,
+    recheck_state: Path | None = None,
 ) -> dict[str, Any]:
     supervisor = PersistentSupervisor(supervisor_state, repository_root=repository_root)
     status = supervisor.status()
@@ -108,6 +110,9 @@ def project_autonomy_runtime(
             "continuing_lane_ids": tuple(
                 lane_id for lane_id in known_lane_ids if lane_id not in blocked_lane_ids
             ),
+            "autonomous_rechecks": AutonomousRecheckStore(recheck_state).snapshot()
+            if recheck_state is not None
+            else {"count": 0, "items": [], "global_stop": False, "owner": "autonomy-runtime"},
             "source": "durable_state",
         },
     )
