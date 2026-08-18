@@ -18,9 +18,21 @@ def test_cursor_control_package_uses_live_qualification_without_human_gate():
     root = Path(__file__).parents[1]
     report = validate_cursor_takeover(root)
     assert report.configuration_ready is True, report.errors
-    assert report.activation_ready is True, report.activation_blockers
     assert report.unattended_ready is False
-    assert not any("operator" in blocker.lower() for blocker in report.activation_blockers)
+    forbidden = ("operator", "human", "ask the user", "approve this pr")
+    assert not any(
+        token in blocker.lower()
+        for blocker in (*report.activation_blockers, *report.errors)
+        for token in forbidden
+    )
+    if report.cursor_cli_path:
+        assert report.activation_ready is True, report.activation_blockers
+    else:
+        assert report.activation_ready is False
+        assert any(
+            "Cursor Agent CLI is unavailable after native and WSL discovery" in blocker
+            for blocker in report.activation_blockers
+        )
 
 
 def test_issue_audit_selects_missing_issue_specific_implementation(tmp_path: Path):
@@ -86,6 +98,26 @@ def test_cursor_shell_hook_denies_direct_external_mutation():
         shell=False,
     )
     assert json.loads(safe_result.stdout)["permission"] == "allow"
+
+
+def test_missing_cursor_cli_is_external_precondition_not_human_gate(monkeypatch) -> None:
+    from project_pipeline import cursor_takeover as takeover
+    from project_pipeline.autonomy_runtime import cursor_cli_qualification
+
+    monkeypatch.setattr(cursor_cli_qualification, "locate_cursor_cli_launch", lambda: None)
+    root = Path(__file__).parents[1]
+    report = takeover.validate_cursor_takeover(root)
+    assert report.configuration_ready is True, report.errors
+    assert report.activation_ready is False
+    assert report.cursor_cli_path is None
+    assert (
+        "Cursor Agent CLI is unavailable after native and WSL discovery"
+        in report.activation_blockers
+    )
+    assert not any(
+        "human" in blocker.lower() or "operator" in blocker.lower()
+        for blocker in report.activation_blockers
+    )
 
 
 def test_cursor_stop_hook_does_not_invent_continuation_without_durable_state(tmp_path: Path):

@@ -15,7 +15,12 @@ from project_pipeline.ids import (
     REQUIREMENT_ID,
     SOURCE_REFERENCE,
 )
-from project_pipeline.io import iter_repository_files, read_json, read_jsonl, sha256_file
+from project_pipeline.io import (
+    iter_repository_files,
+    read_json,
+    read_jsonl,
+    sha256_canonical_file,
+)
 from project_pipeline.jira import build_relationship_edges
 from project_pipeline.validation.models import ValidationReport
 
@@ -849,7 +854,7 @@ def check_evidence_ledger(root: Path, report: ValidationReport) -> None:
                 f"Evidence artifact is missing: {artifact_path}",
                 path.relative_to(root).as_posix(),
             )
-        elif row.get("sha256") != sha256_file(artifact):
+        elif row.get("sha256") != sha256_canonical_file(artifact):
             report.add(
                 "ERROR",
                 "EVID003",

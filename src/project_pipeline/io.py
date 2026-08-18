@@ -127,6 +127,27 @@ def sha256_file(path: Path) -> str:
     return digest.hexdigest()
 
 
+def sha256_canonical_file(path: Path) -> str:
+    """Hash file bytes with UTF-8 CRLF/CR normalized to LF.
+
+    Binary content and non-UTF-8 files are hashed unchanged. Text evidence and
+    other host-checked artifacts must bind to git-canonical LF bytes so Windows
+    ``core.autocrlf`` checkouts do not diverge from Linux CI.
+    """
+    content = path.read_bytes()
+    if b"\0" not in content and _utf8_text(content):
+        content = content.replace(b"\r\n", b"\n").replace(b"\r", b"\n")
+    return hashlib.sha256(content).hexdigest()
+
+
+def _utf8_text(content: bytes) -> bool:
+    try:
+        content.decode("utf-8")
+    except UnicodeDecodeError:
+        return False
+    return True
+
+
 def iter_repository_files(
     root: Path,
     *,
