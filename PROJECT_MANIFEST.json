@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "beb64e5ae3ea51bba09866536f515960d6a0d544bbee66a93fdea05791d2f537",
+  "aggregate_sha256": "ef4bd669706c5024cf0cb8aabc08581f3b9adf49da69f153b270b0bc5ad862cf",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2848,
+  "file_count": 2845,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -12077,8 +12077,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "1f35de5d153dbd56954d28a5af40b803cf023becb7be553e784dd86b68d1bd30",
-      "size_bytes": 145243
+      "sha256": "943df92ce90303545ec3f7badab1f85b67e97e66eed8ea5d2046144db1563843",
+      "size_bytes": 143268
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12694,11 +12694,6 @@
       "path": "src/project_pipeline/lifecycle/takeover.py",
       "sha256": "05e5349ac1aa1b8fc013854f2936a966d17e5620a3b40a623544de430de3d8a5",
       "size_bytes": 14321
-    },
-    {
-      "path": "src/project_pipeline/lifecycle/takeover_cli.py",
-      "sha256": "8d5fa0aad09f45a356d530d0bfc6902883659a7cfd38569aa7f6165107f72edf",
-      "size_bytes": 29600
     },
     {
       "path": "src/project_pipeline/lifecycle/validation.py",
@@ -14116,16 +14111,6 @@
       "size_bytes": 2674
     },
     {
-      "path": "tests/test_takeover_reconciliation_parity.py",
-      "sha256": "336dd21fdd0d411dcb37b890783a0efad2800ab4df4bbd77a6677272a4ab2b17",
-      "size_bytes": 4526
-    },
-    {
-      "path": "tests/test_takeover_writer_flow.py",
-      "sha256": "9da85e8e9c1e58b239d068cb736839024adbbe513d31dd7493ffd5b3ac364613",
-      "size_bytes": 5295
-    },
-    {
       "path": "tests/test_traceability.py",
       "sha256": "eaee850a498be5c25995ed768b4e21d932606f1f2a83fba9c6c52a568f6967ec",
       "size_bytes": 2708
@@ -14251,7 +14236,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T06:14:26.751528+00:00",
+  "generated_at_utc": "2026-08-18T07:02:38.409628+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14260,5 +14245,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25244430
+  "total_bytes": 25203034
 }

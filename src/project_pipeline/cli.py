@@ -160,7 +160,6 @@ from project_pipeline.jira_steward import (
     load_jira_reconciliation_policy,
 )
 from project_pipeline.jira_steward.persistence import JiraSyncStore
-from project_pipeline.lifecycle.takeover_cli import run_takeover_command, takeover_governor_status
 from project_pipeline.line_numbering import generate_line_numbered_plans
 from project_pipeline.manifest import write_manifest
 from project_pipeline.orchestration import (
@@ -702,22 +701,6 @@ def build_parser() -> argparse.ArgumentParser:
     scheduler.add_argument("--correlation-id", default="corr:local-scheduler")
     scheduler.add_argument("--json-output", type=Path)
     _add_configuration_arguments(scheduler)
-
-    takeover = commands.add_parser(
-        "takeover",
-        help="Write governed durable takeover attestation and provider qualification records",
-    )
-    takeover.add_argument(
-        "action",
-        choices=("write-attestation", "write-provider-qualification"),
-    )
-    takeover.add_argument("--root", type=_root, default=Path.cwd())
-    takeover.add_argument("--project-id")
-    takeover.add_argument("--provider-id", default="provider:cursor-cli")
-    takeover.add_argument("--scope", default="local-governed-phase1")
-    takeover.add_argument("--evidence-ref", required=True)
-    takeover.add_argument("--json-output", type=Path)
-    _add_configuration_arguments(takeover)
 
     agent_router = commands.add_parser(
         "agent-router", help="Inspect capability registries and evaluate provider-neutral routing"
@@ -1503,12 +1486,6 @@ def _run_control_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]
             else:
                 raise ConfigurationError(f"unsupported control action: {args.action}")
 
-    result["takeover_governor"] = takeover_governor_status(
-        root=args.root,
-        project_id=project_id,
-        provider_id="provider:cursor-cli",
-        active_lane_count=snapshot.sequence.ready_count,
-    )
     with ControlStore(database, args.root) as control_store:
         control_store.save_snapshot(snapshot)
         result["control_status"] = control_store.status(project_id)
@@ -1597,19 +1574,12 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             max_lanes=args.max_lanes,
         )
         scheduler_store.save_plan(plan)
-        takeover_governor = takeover_governor_status(
-            root=args.root,
-            project_id=project_id,
-            provider_id="provider:cursor-cli",
-            active_lane_count=len(plan.lanes),
-        )
 
         if args.action == "plan":
             return {
                 "database": str(database),
                 "control_snapshot_id": control.snapshot_id,
                 "plan": plan.model_dump(mode="json"),
-                "takeover_governor": takeover_governor,
                 "dry_run": True,
             }, 0
         if args.action == "simulate":
@@ -1630,11 +1600,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 )
                 scheduler_store.save_simulation(result)
                 results.append(result.model_dump(mode="json"))
-            return {
-                "database": str(database),
-                "simulations": results,
-                "takeover_governor": takeover_governor,
-            }, 0
+            return {"database": str(database), "simulations": results}, 0
         if args.action == "acquire":
             if not args.apply or not args.approve:
                 raise ConfigurationError("scheduler acquire requires both --apply and --approve")
@@ -1685,7 +1651,6 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 "plan_id": plan.plan_id,
                 "lease_bundle": bundle.model_dump(mode="json"),
                 "recovered_in_progress_task": recovered,
-                "takeover_governor": takeover_governor,
             }, 0 if bundle.acquired else 1
         raise ConfigurationError(f"unsupported scheduler action: {args.action}")
 
@@ -3212,18 +3177,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             return code
         if args.command == "scheduler":
             result, code = _run_scheduler_command(args)
-            _write_json_output(result, args.json_output)
-            return code
-        if args.command == "takeover":
-            configuration = _load_configuration(args)
-            result, code = run_takeover_command(
-                root=args.root,
-                action=args.action,
-                project_id=args.project_id or configuration.settings.project_id,
-                provider_id=str(args.provider_id),
-                scope=str(args.scope),
-                evidence_ref=str(args.evidence_ref),
-            )
             _write_json_output(result, args.json_output)
             return code
         if args.command == "agent-router":
