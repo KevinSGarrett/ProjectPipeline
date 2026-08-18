@@ -58,8 +58,10 @@ def evaluate_protection_drift(
     full_policy = policy == "autonomous_main" or (
         policy == "auto" and (observed.repository_slug, observed.branch) == PROJECT_MAIN
     )
-    expected_checks = required_checks or (
-        DEFAULT_REQUIRED_CHECKS if full_policy else observed.required_status_checks
+    expected_checks = (
+        DEFAULT_REQUIRED_CHECKS
+        if full_policy
+        else (required_checks or observed.required_status_checks)
     )
     expected = expected_main_protection(
         observed.repository_slug, branch=observed.branch, required_checks=expected_checks
@@ -83,7 +85,7 @@ def evaluate_protection_drift(
         drifts.append("required_checks_empty")
     elif tuple(sorted(observed.required_status_checks)) != tuple(sorted(expected_checks)):
         drifts.append("required_checks_drifted")
-    if full_policy and required_checks in {None, DEFAULT_REQUIRED_CHECKS}:
+    if full_policy:
         expected_by_name = dict(
             zip(DEFAULT_REQUIRED_CHECKS, DEFAULT_REQUIRED_CHECK_APP_IDS, strict=True)
         )

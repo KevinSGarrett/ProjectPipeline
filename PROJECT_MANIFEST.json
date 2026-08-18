@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "75fc88931a2131f248bcb5a2315b880abe1c133a57d4a7b538b457b13b0b54ab",
+  "aggregate_sha256": "359be36b76d6ca588f83cab23152d178600ef511e0d444661402fdba71be7ff4",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -72,8 +72,8 @@
     },
     {
       "path": ".cursor/hooks/guard_shell.py",
-      "sha256": "128816dd71db407061ea69c18027995acb40232fe998568d6a9eec25b47c6886",
-      "size_bytes": 3269
+      "sha256": "1d09c85f8705f32fc98fb4912c7264b52138a216bd4e8ef05358bc04117a6ff9",
+      "size_bytes": 3370
     },
     {
       "path": ".cursor/mcp.example.json",
@@ -12507,13 +12507,13 @@
     },
     {
       "path": "src/project_pipeline/github_steward/protection_drift.py",
-      "sha256": "0d390753561108ac79ee7d2405ed7e6b188f5f5901be1d9a6e5c7a1c5a662f9a",
-      "size_bytes": 5774
+      "sha256": "e0e1ae4e42400d71f2a48f5e459044fd60408fa3f5a58ee94281e05cda796cf0",
+      "size_bytes": 5737
     },
     {
       "path": "src/project_pipeline/github_steward/service.py",
-      "sha256": "00c89c3be615bea808f562b8ef5da253672fa6eb3918d49d520c2400ee698ae6",
-      "size_bytes": 14002
+      "sha256": "24a228269915feddad272327475e4c6c57100ed64988afb74915811a06e264c3",
+      "size_bytes": 13978
     },
     {
       "path": "src/project_pipeline/github_steward/validation.py",
@@ -13637,8 +13637,8 @@
     },
     {
       "path": "tests/test_cursor_shell_hook.py",
-      "sha256": "099818263e473618a7ba3344faa658013ab2eb12668166ef11e5d01ce970a339",
-      "size_bytes": 5462
+      "sha256": "3e321d622b859aa0727c8f5f91beac930fdea8e2b7d7d8734b3d08fbeb4efa24",
+      "size_bytes": 5696
     },
     {
       "path": "tests/test_cursor_takeover.py",
@@ -13697,8 +13697,8 @@
     },
     {
       "path": "tests/test_github_steward_lifecycle.py",
-      "sha256": "f4693a429a05f029e8779680fbdc4cf78d38857b3f67653501c43ec9c21f7395",
-      "size_bytes": 21304
+      "sha256": "1e3969f502d6f2affd25876ece8d8293d6c7b8ad1b045ee0b9e19223349caafc",
+      "size_bytes": 22267
     },
     {
       "path": "tests/test_github_steward_persistence.py",
@@ -14251,7 +14251,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T05:50:15.049018+00:00",
+  "generated_at_utc": "2026-08-18T05:53:14.257153+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14260,5 +14260,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25242531
+  "total_bytes": 25243768
 }

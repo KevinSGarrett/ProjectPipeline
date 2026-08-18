@@ -6,9 +6,9 @@ import sys
 
 _GIT = (
     r"(?:"
-    r"\"[^\"]*[\\/](?:git\.exe|git)\""
-    r"|'[^\']*[\\/](?:git\.exe|git)'"
-    r"|(?:[A-Za-z]:[^\s\"';&|]*[\\/])?(?:git\.exe|git)"
+    r"\"[^\"]*[\\/](?:git\.exe|git\.cmd|git)\""
+    r"|'[^\']*[\\/](?:git\.exe|git\.cmd|git)'"
+    r"|(?:[A-Za-z]:(?:\\[\w .()-]+)+\\)?(?:git\.exe|git\.cmd|git)"
     r")"
 )
 _GIT_GLOBALS = (
@@ -38,6 +38,7 @@ DENIED_PATTERNS = (
     re.compile(rf"(?i){_GIT_CMD}push\s+[^\r\n]*(?:--force-with-lease|--force|-f)(?:\s|=|$)"),
     re.compile(rf"(?i){_GIT_CMD}push\s+[^\r\n]*\s\+[A-Za-z0-9:/\._-]+"),
     re.compile(rf"(?i){_GIT_CMD}push\b[^\r\n]*[\s]{_MAIN_DEST}"),
+    re.compile(rf"(?i){_GIT_CMD}push\b[^\r\n]*[\s]\S+\s+HEAD(?:\s|$)"),
     re.compile(rf"(?i){_GIT_CMD}push\s+[^\r\n]*(?:--mirror|--all)(?:\s|$)"),
     re.compile(rf"(?i)(?:^|[\s\"';&|]){_GH}\s+[^\r\n]*\s--admin(?:\s|=|$)"),
     re.compile(rf"(?i)(?:^|[\s\"';&|]){_GH}\s+[^\r\n]*\bpr\s+merge\b"),

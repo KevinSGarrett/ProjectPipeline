@@ -22,7 +22,7 @@ def _run_hook(command: str, tmp_path: Path) -> dict:
 
 def test_hook_allows_governed_git_and_gh(tmp_path):
     assert _run_hook("git status", tmp_path)["permission"] == "allow"
-    assert _run_hook("git push -u origin HEAD", tmp_path)["permission"] == "allow"
+    assert _run_hook("git push -u origin feat/x", tmp_path)["permission"] == "allow"
     assert _run_hook("git push origin feat/x", tmp_path)["permission"] == "allow"
     assert _run_hook("gh pr list --state open", tmp_path)["permission"] == "allow"
 
@@ -109,6 +109,11 @@ def test_hook_blocks_git_flag_and_quoted_main_evasions(tmp_path):
         "gh api repos/KevinSGarrett/ProjectPipeline/pulls/52/merge -X PUT",
         "gh api graphql -f query=mutation { mergePullRequest }",
         "hub merge 52",
+        "git.cmd push origin main",
+        r"C:\Program Files\Git\cmd\git.exe push origin main",
+        r"C:\Program Files\Git\cmd\git.cmd push origin HEAD:main",
+        "git push -u origin HEAD",
+        "git push origin HEAD",
     )
     for command in denies:
         assert _run_hook(command, tmp_path)["permission"] == "deny", command

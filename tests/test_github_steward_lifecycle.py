@@ -370,6 +370,28 @@ def test_cli_merge_gate_defaults_protection_drift_assert_on():
     assert off.assert_protection is False
 
 
+def test_merge_gate_compares_observed_checks_to_policy_expected_set(tmp_path):
+    repo = make_repo(tmp_path)
+    adapter = seeded_adapter()
+    adapter.repository_slug = "KevinSGarrett/ProjectPipeline"
+    adapter.set_branch_protection(
+        GitHubBranchProtection(
+            repository_slug="KevinSGarrett/ProjectPipeline",
+            branch="main",
+            protected=True,
+            required_status_checks=("tests",),
+            required_status_check_app_ids=(),
+            required_approving_review_count=0,
+        )
+    )
+    with GitHubStewardStore(tmp_path / "state.db", Path.cwd()) as store:
+        steward = RepositorySteward(local=LocalGitRepository(repo), remote=adapter, store=store)
+        gate = steward.merge_gate("KevinSGarrett/ProjectPipeline", 1)
+    assert "protection_changed" in gate.blockers
+    assert "required_checks_drifted" in gate.protection_drift
+    assert "required_check_app_id_missing" in gate.protection_drift
+
+
 def test_merge_gate_default_evaluates_protection_drift_predicates(tmp_path):
     from project_pipeline.github_steward.protection_drift import DEFAULT_REQUIRED_CHECKS
 
