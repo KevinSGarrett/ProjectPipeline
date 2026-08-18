@@ -12,4 +12,4 @@ description: Discover and dispatch bounded ProjectPipeline work to COMFY-V4-CPU-
 5. Transfer minimum permitted data; secrets require scoped runtime authority.
 6. Require structured result, logs, environment, digests, exit status, evidence, and branch/SHA.
 7. Validate returned work before canonical acceptance.
-8. On worker loss, fence, inspect, reconcile, preserve, then reassign or escalate exact operator action.
+8. On worker loss, fence, inspect, reconcile, preserve, then reassign or record a typed external precondition with no operator work assignment.

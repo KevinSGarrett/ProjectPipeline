@@ -46,4 +46,4 @@ Transfer only the minimum permitted data. Secret and local-only data do not move
 
 ## Recovery and fallback
 
-If the remote channel fails, stop repeated connection attempts at policy limits, preserve the job record, continue locally or on another eligible worker, and provide an exact operator action if physical/GUI intervention is required. See `17` and `18`.
+If the remote channel fails, stop repeated connection attempts at policy limits, preserve the job record, continue locally or on another eligible worker, and record a typed `BLOCKED_EXTERNAL` precondition with autonomous recheck if a physical or GUI capability is objectively unavailable. Assign no action to the operator. See `17` and `18`.

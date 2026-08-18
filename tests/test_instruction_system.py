@@ -126,6 +126,19 @@ def test_context_and_security_policy_weakening_are_rejected() -> None:
     assert {item.code for item in report.errors}.issuperset({"POL005", "POL006"})
 
 
+def test_remote_worker_instructions_do_not_assign_operator_work() -> None:
+    remote = (ROOT / "instructions/16_REMOTE_MACHINE_AND_RESOURCE_PROTOCOL.md").read_text(
+        encoding="utf-8"
+    )
+    skill = (ROOT / ".agents/skills/remote-cpu-worker/SKILL.md").read_text(encoding="utf-8")
+    authority = json.loads((ROOT / "instructions/AUTHORITY_MAP.json").read_text(encoding="utf-8"))
+    assert "exact operator action" not in remote
+    assert "exact operator action" not in skill
+    assert "actionable escalation" not in json.dumps(authority)
+    assert "BLOCKED_EXTERNAL" in remote
+    assert "no operator work assignment" in skill
+
+
 def test_routine_development_policy_has_no_human_approval_terminal() -> None:
     mutation = json.loads(
         (ROOT / "instructions/policies/EXTERNAL_MUTATION_AUTHORITY.json").read_text(

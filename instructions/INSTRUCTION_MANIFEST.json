@@ -109,8 +109,8 @@
       "instruction_id": "PP-ASSET-AGENTS-SKILLS-REMOTE-CPU-WORKER-SKILL-MD",
       "kind": "SKILL",
       "path": ".agents/skills/remote-cpu-worker/SKILL.md",
-      "sha256": "17a89bcc31833c9f6a98b1a9957f4dc2b5abde55b2ffe44154b46448edf1684e",
-      "size_bytes": 914
+      "sha256": "2cb341baa2240a15ffbe6702a534611a8b152667c987ff04b5c0c60360d35fb6",
+      "size_bytes": 953
     },
     {
       "instruction_id": "PP-ASSET-AGENTS-SKILLS-UPSTREAM-QUALIFICATION-SKILL-MD",
@@ -340,8 +340,8 @@
       "instruction_id": "PP-INST-16",
       "kind": "INSTRUCTION",
       "path": "instructions/16_REMOTE_MACHINE_AND_RESOURCE_PROTOCOL.md",
-      "sha256": "ee938dc8038bd4fb80dbc5b42926c0c97427b81e5a6f8097df3e948fff9e4e40",
-      "size_bytes": 3103
+      "sha256": "6828cec633df4d4ee816f5be0cb08a4f7d0150a3ed3475ef8dbc34acef2f1168",
+      "size_bytes": 3193
     },
     {
       "instruction_id": "PP-INST-17",
@@ -375,8 +375,8 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-AUTHORITY-MAP-JSON",
       "kind": "INSTRUCTION",
       "path": "instructions/AUTHORITY_MAP.json",
-      "sha256": "6ad284c928cd72270a373c0de8eea9ba486af5f40513c83aaa1510ae6f41eb3b",
-      "size_bytes": 4120
+      "sha256": "4a2eda50b414b290e5ec4659d72a76bcb03c627ecd9b5b29da767f4a497e6d81",
+      "size_bytes": 4159
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-CHANGELOG-MD",
@@ -613,8 +613,8 @@
       "instruction_id": "PP-ASSET-TESTS-TEST-INSTRUCTION-SYSTEM-PY",
       "kind": "TEST",
       "path": "tests/test_instruction_system.py",
-      "sha256": "6c076256eb1b70f351d6fa98bb28755fcb5cc6a085949fbb34b6219ef9a90a13",
-      "size_bytes": 8761
+      "sha256": "87fdebea25094ee889ec2742f985f4eec919bf9df1a5210ed4eb65543471edd8",
+      "size_bytes": 9403
     },
     {
       "instruction_id": "PP-ASSET-TESTS-TEST-SECURITY-UPSTREAM-ADAPTERS-PY",
