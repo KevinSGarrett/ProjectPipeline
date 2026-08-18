@@ -4,8 +4,11 @@ import pytest
 
 from project_pipeline.agent_router import (
     REQUIRED_ADAPTER_CHECKS,
+    MockProviderAdapter,
+    accept_qualification_report,
     build_registry,
     qualification_report,
+    run_adapter_qualification,
 )
 from project_pipeline.domain import (
     AgentSpec,
@@ -67,6 +70,45 @@ def test_task_contract_requires_capability_identifiers():
         )
 
 
+def test_registry_rejects_duplicate_ids_and_incompatible_capabilities():
+    cap, provider, model, agent = _base()
+    duplicate = provider.model_copy()
+    with pytest.raises(ValueError, match="duplicate provider"):
+        build_registry(
+            capabilities=(cap,),
+            providers=(provider, duplicate),
+            models=(model,),
+            agents=(agent,),
+        )
+    extra = CapabilitySpec(capability_id="visual_review", description="vision")
+    incompatible = agent.model_copy(update={"capabilities": (extra.capability_id,)})
+    with pytest.raises(ValueError, match="incompatible"):
+        build_registry(
+            capabilities=(cap, extra),
+            providers=(provider,),
+            models=(model,),
+            agents=(incompatible,),
+        )
+
+
+def test_registry_rejects_secret_values_and_exposes_execution_targets():
+    from project_pipeline.agent_router.registry import execution_targets
+
+    cap, provider, model, agent = _base()
+    leaked = provider.model_copy(update={"constraints": ("sk-abcdefghijklmnopqrstuvwxyz",)})
+    with pytest.raises(ValueError, match="secret"):
+        build_registry(capabilities=(cap,), providers=(leaked,), models=(model,), agents=(agent,))
+    registry = build_registry(
+        capabilities=(cap,), providers=(provider,), models=(model,), agents=(agent,)
+    )
+    targets = execution_targets(registry)
+    assert targets[0]["target_id"] == model.model_id
+    assert targets[0]["adapter_id"] == provider.adapter_id
+    encoded = registry.model_dump_json()
+    restored = type(registry).model_validate_json(encoded)
+    assert restored.registry_id == registry.registry_id
+
+
 def test_adapter_qualification_requires_every_standard_check_and_rollback():
     checks = [QualificationCheckResult(check_name=n, passed=True) for n in REQUIRED_ADAPTER_CHECKS]
     assert (
@@ -81,3 +123,29 @@ def test_adapter_qualification_requires_every_standard_check_and_rollback():
         qualification_report("adapter:test", "1", checks, rollback_ready=False).state
         is QualificationState.QUARANTINED
     )
+
+
+def test_run_adapter_qualification_invokes_adapter_and_rejects_stale_or_forged_reports():
+    adapter = MockProviderAdapter("provider:test")
+    report = run_adapter_qualification(adapter, rollback_ready=True)
+    assert report.state is QualificationState.QUALIFIED
+    accepted = accept_qualification_report(
+        report,
+        expected_subject_id=adapter.adapter_id,
+        expected_subject_version=adapter.adapter_version,
+    )
+    assert accepted.report_id == report.report_id
+    stale = report.model_copy(update={"evaluated_at_utc": datetime(2020, 1, 1, tzinfo=UTC)})
+    with pytest.raises(ValueError, match="stale"):
+        accept_qualification_report(
+            stale,
+            expected_subject_id=adapter.adapter_id,
+            expected_subject_version=adapter.adapter_version,
+        )
+    forged = report.model_copy(update={"report_id": "QUAL-forged"})
+    with pytest.raises(ValueError, match="forged"):
+        accept_qualification_report(
+            forged,
+            expected_subject_id=adapter.adapter_id,
+            expected_subject_version=adapter.adapter_version,
+        )

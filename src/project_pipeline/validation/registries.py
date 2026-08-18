@@ -37,6 +37,12 @@ UPSTREAM_DISPOSITIONS = {
     "REJECT",
     "NOT_RELEVANT",
 }
+_PLAN_STATUS = re.compile(
+    r"(?im)^(?:"
+    r"\s*(?:-\s*)?\*\*(?:Status|Implementation status|Plan status):\*\*\s*`?([A-Z_]+)`?\s*"
+    r"|#\s+PLAN-[A-Z]+-[0-9]{3}\b.*\[Status:\s*([A-Z_]+)\]\s*"
+    r")$"
+)
 
 
 def check_json_documents(root: Path, report: ValidationReport) -> None:
@@ -89,6 +95,22 @@ def check_plan_registry(root: Path, report: ValidationReport) -> tuple[set[str],
         text = path.read_text(encoding="utf-8")
         if not text.startswith(f"# {plan_id} "):
             report.add("ERROR", "PLAN004", "Plan heading does not match catalog ID", relative, 1)
+        status_match = _PLAN_STATUS.search(text)
+        plan_status: str | None = None
+        if status_match is None:
+            report.add("ERROR", "PLAN012", "Plan has no authoritative status metadata", relative)
+        else:
+            plan_status = next(group for group in status_match.groups() if group).upper()
+        if plan_status is not None and plan_status != str(entry.get("status", "")).upper():
+            report.add(
+                "ERROR",
+                "PLAN013",
+                (
+                    f"Plan status {plan_status} does not match catalog "
+                    f"status {str(entry.get('status', '')).upper()}"
+                ),
+                relative,
+            )
         sections = re.findall(r"^##\s+([A-Z0-9-]+:SEC-[0-9]{2})\b", text, flags=re.MULTILINE)
         if not sections:
             report.add("ERROR", "PLAN005", "Plan has no stable section IDs", relative)
@@ -298,7 +320,11 @@ def check_jira_registry(
         if not context_path.exists():
             report.add("ERROR", "JIRA021", "Issue source-context file is missing", relative)
     for issue_id, issue in issues.items():
-        if issue.get("issue_type") == "EPIC" and child_counts[issue_id] == 0:
+        if (
+            issue.get("issue_type") == "EPIC"
+            and child_counts[issue_id] == 0
+            and issue.get("state") != "CANCELLED"
+        ):
             report.add(
                 "ERROR", "JIRA022", "Orphan epic has no child", f"jira/epics/{issue_id}.json"
             )

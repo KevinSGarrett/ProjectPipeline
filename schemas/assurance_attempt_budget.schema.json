@@ -10,6 +10,20 @@
       "title": "Max Attempts",
       "type": "integer"
     },
+    "max_noncritical_administrative_ratio_milli": {
+      "default": 100,
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Max Noncritical Administrative Ratio Milli",
+      "type": "integer"
+    },
+    "max_progressless_cycles": {
+      "default": 2,
+      "maximum": 20,
+      "minimum": 1,
+      "title": "Max Progressless Cycles",
+      "type": "integer"
+    },
     "max_same_failure": {
       "default": 2,
       "maximum": 20,

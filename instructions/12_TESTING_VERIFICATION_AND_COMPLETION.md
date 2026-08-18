@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-12` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.2.0` |
 | Primary domains | `testing`, `evidence`, `completion` |
 | Governing entry point | `AGENTS.md` |
 
@@ -22,6 +22,8 @@ targeted falsifying test
 ```
 
 Do not rerun a long full suite after every one-line edit. Do not stop at a single unit test when acceptance spans integration, recovery, security, UI, migration, or live external behavior.
+
+Use targeted falsification while editing and run the expensive applicable gate once at the cohesive vertical-slice boundary. Intermediate Jira states do not create new validation boundaries. Reuse fresh evidence when its exact code, environment, criterion, and validity window still match; do not repeatedly re-prove unchanged behavior for bookkeeping transitions.
 
 ## Verification plan
 
@@ -46,7 +48,7 @@ Applicable completion requires:
 - security/supply-chain checks;
 - evidence with valid freshness;
 - source-to-evidence traceability;
-- required self and independent review;
+- required self-review and policy-qualified independent verification receipt, with no human-review dependency;
 - merge to the integrated branch;
 - post-merge verification;
 - Jira reconciliation;

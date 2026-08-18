@@ -1,19 +1,19 @@
 # Requirement Catalog Status
 
-- Requirements: `351`
+- Requirements: `352`
 - Domains: `18`
 - Canonical source sections: `1109`
 - Source sections with explicit dispositions: `1109`
 
 ## Implementation state
 
-- `IMPLEMENTED`: 185
-- `PARTIALLY_IMPLEMENTED`: 136
+- `IMPLEMENTED`: 209
+- `PARTIALLY_IMPLEMENTED`: 113
 - `PLANNED_ONLY`: 30
 
 ## Priority
 
-- `P0`: 237
+- `P0`: 238
 - `P1`: 109
 - `P2`: 5
 
@@ -29,7 +29,7 @@
 - `INFRA`: 19
 - `LIFE`: 18
 - `OPS`: 19
-- `PDEF`: 10
+- `PDEF`: 11
 - `REL`: 14
 - `REQ`: 17
 - `RES`: 25

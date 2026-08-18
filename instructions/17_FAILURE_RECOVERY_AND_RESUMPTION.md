@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-17` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.2.0` |
 | Primary domains | `failure_recovery`, `session_resumption` |
 | Governing entry point | `AGENTS.md` |
 
@@ -31,7 +31,7 @@ Use `templates/SESSION_CHECKPOINT.md` and `scripts/instruction_cold_start.py`.
 
 ## Failure classification
 
-Classify local implementation, dependency/tool, requirement/decision, security, credential, external provider, hardware, budget, resource conflict, stale generated state, benchmark input, unknown mutation outcome, split-brain, or corruption. The classification determines whether to retry, change strategy, reconcile, block, recover, or escalate.
+Classify local implementation, dependency/tool, requirement/decision, security, credential, external provider, hardware, budget, resource conflict, stale generated state, benchmark input, unknown mutation outcome, split-brain, or corruption. The classification determines whether to retry, change strategy, reconcile, block, recover, or record an external precondition for autonomous recheck.
 
 ## Unknown external outcome
 
@@ -59,4 +59,4 @@ Record exact task, state, branch/worktree/SHA, changed files, tests, evidence, a
 
 ## Global versus lane stop
 
-Stop only the affected lane unless authority, security containment, split-brain, canonical corruption, or critical release integrity requires a global pause. Continue unaffected eligible work.
+Stop only the affected lane unless authority, security containment, split-brain, canonical corruption, or critical release integrity requires a global pause. Continue unaffected eligible work. A global pause is a fail-closed system state with autonomous monitoring and recovery criteria, not a request for operator labor.

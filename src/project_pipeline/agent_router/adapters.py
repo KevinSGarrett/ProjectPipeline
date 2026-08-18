@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import json
+import os
+import shutil
 import subprocess
 import urllib.error
 import urllib.request
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass
-from typing import Any, Protocol
+from typing import Any, Protocol, cast
 
 from project_pipeline.domain.agents import (
     ExecutionTaskContract,
@@ -83,13 +85,23 @@ class BaseHttpProviderAdapter:
     def _post(
         self, path: str, headers: Mapping[str, str], payload: Mapping[str, Any]
     ) -> tuple[Any, Mapping[str, str]]:
-        status, response_headers, body = self.transport(
-            "POST",
-            self.base_url.rstrip("/") + path,
-            headers,
-            json.dumps(payload).encode(),
-            self.timeout_seconds,
-        )
+        try:
+            status, response_headers, body = self.transport(
+                "POST",
+                self.base_url.rstrip("/") + path,
+                headers,
+                json.dumps(payload).encode(),
+                self.timeout_seconds,
+            )
+        except ProviderAdapterError:
+            raise
+        except Exception as error:
+            raise ProviderAdapterError(
+                f"hosted provider outcome is unknown: {error}",
+                kind="UNKNOWN_OUTCOME",
+                retryable=True,
+                provider_state="UNAVAILABLE",
+            ) from error
         try:
             data = json.loads(body.decode("utf-8")) if body else {}
         except Exception as error:
@@ -355,6 +367,13 @@ class LocalProcessProviderAdapter:
                 retryable=True,
                 provider_state="DEGRADED",
             ) from error
+        if result.returncode < 0:
+            raise ProviderAdapterError(
+                f"local provider process was lost: {result.returncode}",
+                kind="PROCESS_LOSS",
+                retryable=False,
+                provider_state="UNAVAILABLE",
+            )
         if result.returncode != 0:
             raise ProviderAdapterError(
                 f"local provider exited {result.returncode}",
@@ -381,6 +400,142 @@ class LocalProcessProviderAdapter:
             usage=NormalizedUsage.model_validate(data.get("usage") or {}),
             provider_request_id=data.get("request_id"),
             finish_reason=data.get("finish_reason"),
+        )
+
+
+class CursorCliProviderAdapter:
+    """Governed Cursor Agent CLI boundary.
+
+    Registry configuration keeps this adapter quarantined until representative
+    qualification is recorded. It never invokes a shell and enables file writes
+    only when the controlling caller explicitly admits a mutating execution.
+    """
+
+    adapter_id = "adapter:cursor-cli"
+    adapter_version = "1.0.0"
+
+    def __init__(
+        self,
+        workspace: str,
+        *,
+        executable: str | None = None,
+        allow_write: bool = False,
+        timeout_seconds: float = 3600.0,
+        runner: Callable[..., subprocess.CompletedProcess[bytes]] = subprocess.run,
+    ) -> None:
+        if not workspace.strip():
+            raise ValueError("workspace must be non-empty")
+        self.workspace = os.path.abspath(workspace)
+        self.executable = executable or ("agent" if shutil.which("agent") else "cursor-agent")
+        self.allow_write = allow_write
+        self.timeout_seconds = timeout_seconds
+        self.runner = runner
+
+    def health(self) -> Mapping[str, Any]:
+        resolved = shutil.which(self.executable)
+        return {
+            "adapter_id": self.adapter_id,
+            "configured": resolved is not None and os.path.isdir(self.workspace),
+            "executable": resolved,
+            "workspace": self.workspace,
+            "allow_write": self.allow_write,
+        }
+
+    def cancel(self, operation_id: str) -> bool:
+        return False
+
+    def checkpoint(self, operation_id: str) -> Mapping[str, Any]:
+        return {
+            "operation_id": operation_id,
+            "checkpoint_supported": True,
+            "resume_command": f"{self.executable} --resume={operation_id}",
+        }
+
+    def execute(
+        self, contract: ExecutionTaskContract, *, model_name: str
+    ) -> ProviderInvocationResult:
+        argv = [
+            self.executable,
+            "--print",
+            "--output-format",
+            "json",
+            "--model",
+            model_name,
+        ]
+        if self.allow_write:
+            argv.append("--force")
+        prompt = json.dumps(
+            {
+                "project_pipeline_execution_contract": contract.model_dump(mode="json"),
+                "instruction": (
+                    "Execute only this bounded contract. Repository rules and "
+                    "ProjectPipeline deterministic authority remain controlling."
+                ),
+            },
+            sort_keys=True,
+        ).encode("utf-8")
+        try:
+            result = self.runner(
+                argv,
+                input=prompt,
+                capture_output=True,
+                cwd=self.workspace,
+                timeout=self.timeout_seconds,
+                check=False,
+                shell=False,
+            )
+        except FileNotFoundError as error:
+            raise ProviderAdapterError(
+                "Cursor Agent CLI is not installed",
+                kind="UNAVAILABLE",
+                provider_state="UNAVAILABLE",
+            ) from error
+        except subprocess.TimeoutExpired as error:
+            raise ProviderAdapterError(
+                "Cursor Agent CLI timed out",
+                kind="TIMEOUT",
+                retryable=True,
+                provider_state="DEGRADED",
+            ) from error
+        if result.returncode != 0:
+            detail = result.stderr.decode("utf-8", errors="replace").strip()
+            raise ProviderAdapterError(
+                f"Cursor Agent CLI exited {result.returncode}: {detail[:500]}",
+                kind="PROCESS_ERROR",
+                retryable=False,
+                provider_state="DEGRADED",
+            )
+        try:
+            data = json.loads(result.stdout.decode("utf-8"))
+        except (UnicodeDecodeError, json.JSONDecodeError) as error:
+            raise ProviderAdapterError(
+                f"Cursor Agent CLI returned malformed JSON: {error}",
+                kind="MALFORMED_OUTPUT",
+            ) from error
+        if not isinstance(data, dict) or data.get("type") not in {None, "result"}:
+            raise ProviderAdapterError(
+                "Cursor Agent CLI response is not a result object",
+                kind="MALFORMED_OUTPUT",
+            )
+        raw_usage = data.get("usage")
+        usage: dict[str, Any] = raw_usage if isinstance(raw_usage, dict) else {}
+        text = data.get("result") or data.get("text") or data.get("message") or ""
+        return ProviderInvocationResult(
+            provider_id="provider:cursor-cli",
+            model_id=model_name,
+            output={"text": str(text), "response": data},
+            usage=NormalizedUsage(
+                input_units=int(usage.get("input_tokens", 0) or 0),
+                output_units=int(usage.get("output_tokens", 0) or 0),
+                cached_input_units=int(usage.get("cached_input_tokens", 0) or 0),
+                cost_microunits=(
+                    int(usage["cost_microunits"])
+                    if usage.get("cost_microunits") is not None
+                    else None
+                ),
+            ),
+            provider_request_id=data.get("session_id") or data.get("request_id"),
+            finish_reason="completed",
         )
 
 
@@ -417,6 +572,29 @@ class MockProviderAdapter:
             output={"text": f"mock:{contract.task_id}"},
             usage=NormalizedUsage(),
         )
+
+
+def build_adapter(adapter_id: str, **kwargs: Any) -> ProviderAdapter:
+    factories: dict[str, type] = {
+        "adapter:openai-responses": OpenAIResponsesAdapter,
+        "adapter:anthropic-messages": AnthropicMessagesAdapter,
+        "adapter:gemini-generate-content": GeminiGenerateContentAdapter,
+        "adapter:litellm-proxy": LiteLLMProxyAdapter,
+        "adapter:local-json-process": LocalProcessProviderAdapter,
+        "adapter:cursor-cli": CursorCliProviderAdapter,
+        "adapter:mock-provider": MockProviderAdapter,
+    }
+    try:
+        from project_pipeline.agent_router.pydantic_ai_adapter import PydanticAIProviderAdapter
+
+        factories["adapter:pydantic-ai"] = PydanticAIProviderAdapter
+    except Exception as error:
+        _optional_adapter_error = str(error)
+        del _optional_adapter_error
+    factory = factories.get(adapter_id)
+    if factory is None:
+        raise ValueError(f"unknown adapter: {adapter_id}")
+    return cast(ProviderAdapter, factory(**kwargs))
 
 
 class ToolAdapter(Protocol):

@@ -10,6 +10,11 @@
     "no uncommitted or unpublished work",
     "post-merge verification complete"
   ],
+  "cleanup_authority": {
+    "human_confirmation_required": false,
+    "mode": "AUTONOMOUS_WHEN_PRECONDITIONS_PASS",
+    "remote_readback_required": true
+  },
   "default_branch": "main",
   "dirty_worktree_policy": "PRESERVE_INSPECT_RECONCILE",
   "epics_are_directly_executable": false,
@@ -20,6 +25,14 @@
     "single rollback unit",
     "coherent review"
   ],
+  "delivery_progress_gate": {
+    "already_implemented_work": "RECONCILIATION_REQUIRED_NOT_IMPLEMENTATION_READY",
+    "expensive_gate_boundary": "COHESIVE_VERTICAL_SLICE",
+    "lifecycle_transition_is_deliverable": false,
+    "lifecycle_only_pr_allowed": false,
+    "minimum_evidence_backed_reconciliation_batch_items": 3,
+    "single_task_lifecycle_pr_exception": "NONE"
+  },
   "permanent_development_branch": false,
   "pr_split_required_when": [
     "unrelated architectural domains",
@@ -27,6 +40,11 @@
     "materially different risk or reviewer boundary"
   ],
   "pr_unit": "coherent_mergeable_engineering_change",
+  "review_authority": {
+    "github_human_approval_required": false,
+    "independent_receipt_required_by_risk": true,
+    "independent_verifier_may_be_automated": true
+  },
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "wip": {

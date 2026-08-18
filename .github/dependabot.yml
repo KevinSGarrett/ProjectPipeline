@@ -5,7 +5,42 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "15:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 2
+    labels:
+      - "dependencies"
+      - "python"
+    groups:
+      python-patch-minor-batch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "15:30"
+      timezone: "UTC"
+    open-pull-requests-limit: 1
+    labels:
+      - "dependencies"
+      - "github_actions"
+    groups:
+      github-actions-patch-minor-batch:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      - dependency-name: "actions/*"
+        update-types:
+          - "version-update:semver-major"
+      - dependency-name: "github/codeql-action*"
+        update-types:
+          - "version-update:semver-major"

@@ -9,7 +9,7 @@
     "budget": "Project Pipeline budget governor",
     "completion": "Project Pipeline assurance Completion Gate",
     "policy": "Project Pipeline policy engine",
-    "release": "Project Pipeline Completion Gate + human-authorized release action"
+    "release": "Project Pipeline Completion Gate + autonomously policy-gated release action"
   },
   "cleanup_protected_prefixes": [
     "evidence/",

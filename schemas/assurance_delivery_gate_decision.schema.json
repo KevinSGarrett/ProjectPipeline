@@ -1,0 +1,121 @@
+{
+  "$defs": {
+    "DeliveryGateState": {
+      "enum": [
+        "PASS",
+        "BLOCKED"
+      ],
+      "title": "DeliveryGateState",
+      "type": "string"
+    }
+  },
+  "$id": "https://project-pipeline.local/schemas/assurance_delivery_gate_decision.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "activity_units": {
+      "minimum": 0,
+      "title": "Activity Units",
+      "type": "integer"
+    },
+    "administrative_ratio_milli": {
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Administrative Ratio Milli",
+      "type": "integer"
+    },
+    "administrative_units": {
+      "minimum": 0,
+      "title": "Administrative Units",
+      "type": "integer"
+    },
+    "base_ref": {
+      "title": "Base Ref",
+      "type": "string"
+    },
+    "changed_paths": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Changed Paths",
+      "type": "array"
+    },
+    "decision_id": {
+      "title": "Decision Id",
+      "type": "string"
+    },
+    "head_ref": {
+      "title": "Head Ref",
+      "type": "string"
+    },
+    "lifecycle_only_task_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Lifecycle Only Task Ids",
+      "type": "array"
+    },
+    "noncritical_administrative_ratio_milli": {
+      "maximum": 1000,
+      "minimum": 0,
+      "title": "Noncritical Administrative Ratio Milli",
+      "type": "integer"
+    },
+    "noncritical_administrative_units": {
+      "minimum": 0,
+      "title": "Noncritical Administrative Units",
+      "type": "integer"
+    },
+    "objective_progress_units": {
+      "minimum": 0,
+      "title": "Objective Progress Units",
+      "type": "integer"
+    },
+    "reasons": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Reasons",
+      "type": "array"
+    },
+    "reconciliation_batch": {
+      "default": false,
+      "title": "Reconciliation Batch",
+      "type": "boolean"
+    },
+    "schema_version": {
+      "const": "1.0.0",
+      "default": "1.0.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "state": {
+      "$ref": "#/$defs/DeliveryGateState"
+    },
+    "task_ids": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Task Ids",
+      "type": "array"
+    }
+  },
+  "required": [
+    "decision_id",
+    "state",
+    "base_ref",
+    "head_ref",
+    "task_ids",
+    "changed_paths",
+    "lifecycle_only_task_ids",
+    "objective_progress_units",
+    "activity_units",
+    "administrative_units",
+    "administrative_ratio_milli",
+    "noncritical_administrative_units",
+    "noncritical_administrative_ratio_milli",
+    "reasons"
+  ],
+  "title": "DeliveryGateDecision",
+  "type": "object"
+}

@@ -13,6 +13,7 @@ from project_pipeline.agent_router import (
     AgentRouter,
     AgentRouterStore,
     load_agent_registry,
+    simulate_circuit_open_and_recovery,
     simulate_provider_failover,
 )
 from project_pipeline.architecture import (
@@ -23,13 +24,24 @@ from project_pipeline.architecture import (
 )
 from project_pipeline.archive import create_archive, verify_archive
 from project_pipeline.assurance import (
+    AssurancePolicy,
     AssuranceStore,
     assess_candidate_completion,
     build_repository_gate_facts,
     compile_repository_plan,
     evaluate_completion_gate,
+    evaluate_delivery_gate,
     evaluate_loop,
     evaluate_scope_change,
+    load_delivery_policy,
+)
+from project_pipeline.assurance.requirement_reconciliation import (
+    apply_evidence_bound_requirement_states,
+    propose_evidence_bound_requirement_states,
+)
+from project_pipeline.assurance.requirement_truth_ledger import (
+    validate_requirement_truth_ledger,
+    write_requirement_truth_ledger,
 )
 from project_pipeline.assurance.simulation import (
     simulate_scenario as simulate_assurance_scenario,
@@ -145,6 +157,7 @@ from project_pipeline.jira_steward import (
     load_jira_reconciliation_policy,
 )
 from project_pipeline.jira_steward.persistence import JiraSyncStore
+from project_pipeline.lifecycle.takeover_cli import run_takeover_command, takeover_governor_status
 from project_pipeline.line_numbering import generate_line_numbered_plans
 from project_pipeline.manifest import write_manifest
 from project_pipeline.orchestration import (
@@ -187,10 +200,13 @@ from project_pipeline.resilience import (
     supported_scenarios as supported_resilience_scenarios,
 )
 from project_pipeline.resilience.aws import aws_safety_plan
+from project_pipeline.resilience.backup import build_integrity_manifest
+from project_pipeline.resilience.restore import RestoreIntentStore, RestoreTargetPolicy
 from project_pipeline.runtime import run_bootstrap, run_foundation_smoke
 from project_pipeline.scheduler import (
     DynamicLaneScheduler,
     SchedulerStore,
+    claims_for_task,
     profiles_from_repository,
 )
 from project_pipeline.scheduler import (
@@ -201,6 +217,7 @@ from project_pipeline.security import (
     build_repository_sbom,
     evaluate_supply_chain,
 )
+from project_pipeline.security.artifact_binding import ArtifactBindingStore
 from project_pipeline.security.simulation import simulate_security, supported_security_scenarios
 from project_pipeline.security.supply_chain import assess_self_modification
 from project_pipeline.services import (
@@ -376,6 +393,27 @@ def build_parser() -> argparse.ArgumentParser:
         "requirement-views", help="Regenerate human-readable requirement registry views"
     )
     requirement_views.add_argument("--root", type=_root, default=Path.cwd())
+
+    requirement_truth_ledger = commands.add_parser(
+        "requirement-truth-ledger",
+        help="Generate and validate the 352-row requirement truth ledger",
+    )
+    requirement_truth_ledger.add_argument("--root", type=_root, default=Path.cwd())
+    requirement_truth_ledger.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Ledger JSON output path",
+    )
+
+    requirement_reconcile = commands.add_parser(
+        "requirement-reconcile",
+        help="Propose or apply evidence-bound requirement implementation states",
+    )
+    requirement_reconcile.add_argument("--root", type=_root, default=Path.cwd())
+    requirement_reconcile.add_argument("--limit", type=int, default=None)
+    requirement_reconcile.add_argument("--apply", action="store_true")
+    requirement_reconcile.add_argument("--approve", action="store_true")
 
     architecture = commands.add_parser(
         "architecture", help="Query the target architecture and technology stack"
@@ -640,6 +678,22 @@ def build_parser() -> argparse.ArgumentParser:
     scheduler.add_argument("--json-output", type=Path)
     _add_configuration_arguments(scheduler)
 
+    takeover = commands.add_parser(
+        "takeover",
+        help="Write governed durable takeover attestation and provider qualification records",
+    )
+    takeover.add_argument(
+        "action",
+        choices=("write-attestation", "write-provider-qualification"),
+    )
+    takeover.add_argument("--root", type=_root, default=Path.cwd())
+    takeover.add_argument("--project-id")
+    takeover.add_argument("--provider-id", default="provider:cursor-cli")
+    takeover.add_argument("--scope", default="local-governed-phase1")
+    takeover.add_argument("--evidence-ref", required=True)
+    takeover.add_argument("--json-output", type=Path)
+    _add_configuration_arguments(takeover)
+
     agent_router = commands.add_parser(
         "agent-router", help="Inspect capability registries and evaluate provider-neutral routing"
     )
@@ -657,6 +711,9 @@ def build_parser() -> argparse.ArgumentParser:
     agent_router.add_argument("--deny-data-egress", action="store_true")
     agent_router.add_argument("--allow-canary", action="store_true")
     agent_router.add_argument("--no-degraded", action="store_true")
+    agent_router.add_argument("--apply", action="store_true")
+    agent_router.add_argument("--approve", action="store_true")
+    agent_router.add_argument("--scenario", default="failover")
     agent_router.add_argument("--json-output", type=Path)
     _add_configuration_arguments(agent_router)
 
@@ -794,6 +851,7 @@ def build_parser() -> argparse.ArgumentParser:
             "completion-gate",
             "candidate",
             "loop-guard",
+            "delivery-gate",
             "scope-change",
             "simulate",
         ),
@@ -802,6 +860,8 @@ def build_parser() -> argparse.ArgumentParser:
     assurance.add_argument("--database", type=Path)
     assurance.add_argument("--project-id", default="PROJECT-PIPELINE")
     assurance.add_argument("--input", type=Path)
+    assurance.add_argument("--base-ref")
+    assurance.add_argument("--head-ref", default="HEAD")
     assurance.add_argument("--scope", type=Path)
     assurance.add_argument("--requested-behavior", action="append", default=[])
     assurance.add_argument("--requested-path", action="append", default=[])
@@ -844,6 +904,17 @@ def build_parser() -> argparse.ArgumentParser:
         "action",
         choices=(
             "status",
+            "identities",
+            "grants",
+            "approvals",
+            "policy-decisions",
+            "egress-decisions",
+            "secret-references",
+            "secret-leases",
+            "audit-events",
+            "sboms",
+            "supply-chain-gates",
+            "root-trust-records",
             "tools",
             "root-trust",
             "sbom",
@@ -851,12 +922,28 @@ def build_parser() -> argparse.ArgumentParser:
             "self-modification",
             "record-identity",
             "simulate",
+            "bind-artifact",
+            "artifact-bindings",
+            "revoke-artifact",
         ),
     )
     security.add_argument("--root", type=_root, default=Path.cwd())
     security.add_argument("--database", type=Path)
     security.add_argument("--project-id", default="PROJECT-PIPELINE")
     security.add_argument("--input", type=Path)
+    security.add_argument("--limit", type=int, default=50)
+    security.add_argument("--offset", type=int, default=0)
+    security.add_argument("--identity-id")
+    security.add_argument("--grant-id")
+    security.add_argument("--approval-id")
+    security.add_argument("--decision-id")
+    security.add_argument("--binding-id")
+    security.add_argument("--secret-ref-id")
+    security.add_argument("--lease-id")
+    security.add_argument("--audit-id")
+    security.add_argument("--sbom-id")
+    security.add_argument("--gate-id")
+    security.add_argument("--root-id")
     security.add_argument("--changed-path", action="append", default=[])
     security.add_argument("--scenario", choices=supported_security_scenarios())
     security.add_argument("--apply", action="store_true")
@@ -877,6 +964,11 @@ def build_parser() -> argparse.ArgumentParser:
             "local-runtime",
             "backup-plan",
             "restore-plan",
+            "restore-intent",
+            "restore-dry-run",
+            "restore-apply",
+            "restore-verify",
+            "restore-reconcile",
             "aws-plan",
         ),
     )
@@ -887,8 +979,14 @@ def build_parser() -> argparse.ArgumentParser:
     resilience.add_argument("--source")
     resilience.add_argument("--repository", default=".local/backups")
     resilience.add_argument("--target")
+    resilience.add_argument("--allow-root", type=Path)
+    resilience.add_argument("--intent-id")
+    resilience.add_argument("--idempotency-key")
+    resilience.add_argument("--manifest", type=Path)
     resilience.add_argument("--capability", action="append", default=[])
     resilience.add_argument("--json-output", type=Path)
+    resilience.add_argument("--apply", action="store_true")
+    resilience.add_argument("--approve", action="store_true")
     _add_configuration_arguments(resilience)
 
     upstream = commands.add_parser("upstream", help="Query upstream review and adoption records")
@@ -1338,6 +1436,12 @@ def _run_control_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]
             else:
                 raise ConfigurationError(f"unsupported control action: {args.action}")
 
+    result["takeover_governor"] = takeover_governor_status(
+        root=args.root,
+        project_id=project_id,
+        provider_id="provider:cursor-cli",
+        active_lane_count=snapshot.sequence.ready_count,
+    )
     with ControlStore(database, args.root) as control_store:
         control_store.save_snapshot(snapshot)
         result["control_status"] = control_store.status(project_id)
@@ -1426,12 +1530,19 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             max_lanes=args.max_lanes,
         )
         scheduler_store.save_plan(plan)
+        takeover_governor = takeover_governor_status(
+            root=args.root,
+            project_id=project_id,
+            provider_id="provider:cursor-cli",
+            active_lane_count=len(plan.lanes),
+        )
 
         if args.action == "plan":
             return {
                 "database": str(database),
                 "control_snapshot_id": control.snapshot_id,
                 "plan": plan.model_dump(mode="json"),
+                "takeover_governor": takeover_governor,
                 "dry_run": True,
             }, 0
         if args.action == "simulate":
@@ -1452,27 +1563,62 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 )
                 scheduler_store.save_simulation(result)
                 results.append(result.model_dump(mode="json"))
-            return {"database": str(database), "simulations": results}, 0
+            return {
+                "database": str(database),
+                "simulations": results,
+                "takeover_governor": takeover_governor,
+            }, 0
         if args.action == "acquire":
             if not args.apply or not args.approve:
                 raise ConfigurationError("scheduler acquire requires both --apply and --approve")
             if not args.task_id:
                 raise ConfigurationError("scheduler acquire requires --task-id")
             lane = next((item for item in plan.lanes if item.task_id == args.task_id), None)
-            if lane is None:
-                raise ConfigurationError(
-                    "requested task is not admitted by the current scheduler plan"
+            recovered = False
+            if lane is not None:
+                claims = lane.claims
+                task_id = lane.task_id
+            else:
+                active_for_task = tuple(
+                    lease
+                    for lease in scheduler_store.list_active_leases()
+                    if lease.task_id == args.task_id and lease.released_at_utc is None
                 )
+                foreign_holders = sorted(
+                    {
+                        lease.holder_id
+                        for lease in active_for_task
+                        if lease.holder_id != args.holder_id
+                    }
+                )
+                if foreign_holders:
+                    raise ConfigurationError(
+                        "requested task has active lease ownership by other holder(s): "
+                        + ",".join(foreign_holders)
+                    )
+                claims = scheduler_store.recover_claims_for_task(
+                    args.task_id, holder_id=args.holder_id
+                )
+                if not claims:
+                    claims = claims_for_task(args.root, args.task_id)
+                if not claims:
+                    raise ConfigurationError(
+                        "requested task is not admitted by the current scheduler plan"
+                    )
+                task_id = args.task_id
+                recovered = True
             bundle = scheduler_store.acquire_bundle(
-                task_id=lane.task_id,
+                task_id=task_id,
                 holder_id=args.holder_id,
-                claims=lane.claims,
+                claims=claims,
                 ttl_seconds=args.ttl_seconds,
             )
             return {
                 "database": str(database),
                 "plan_id": plan.plan_id,
                 "lease_bundle": bundle.model_dump(mode="json"),
+                "recovered_in_progress_task": recovered,
+                "takeover_governor": takeover_governor,
             }, 0 if bundle.acquired else 1
         raise ConfigurationError(f"unsupported scheduler action: {args.action}")
 
@@ -1522,7 +1668,22 @@ def _run_agent_router_command(args: argparse.Namespace) -> tuple[dict[str, Any],
         if args.action == "registry":
             return {"database": str(database), "registry": registry.model_dump(mode="json")}, 0
         if args.action == "simulate":
-            return {"database": str(database), "simulation": simulate_provider_failover()}, 0
+            if args.apply and not args.approve:
+                return {
+                    "database": str(database),
+                    "error": "simulate --apply requires --approve",
+                    "applied": False,
+                }, 2
+            simulation = (
+                simulate_circuit_open_and_recovery()
+                if args.scenario == "circuit"
+                else simulate_provider_failover()
+            )
+            return {
+                "database": str(database),
+                "simulation": simulation,
+                "applied": bool(args.apply and args.approve),
+            }, 0
         capabilities = tuple(args.capability or ["routine_reasoning"])
         contract = ExecutionTaskContract(
             task_id=args.task_id,
@@ -2178,6 +2339,25 @@ def _run_assurance_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             "candidate_completion": result.model_dump(mode="json")
         }, 0 if result.state.value == "READY_FOR_COMPLETION_GATE" else 1
 
+    if args.action == "delivery-gate":
+        base_ref = str(_require_argument(args, "base_ref"))
+        delivery_policy = load_delivery_policy(args.root)
+        delivery_decision = evaluate_delivery_gate(
+            args.root,
+            base_ref=base_ref,
+            head_ref=str(args.head_ref),
+            minimum_reconciliation_batch_items=int(
+                delivery_policy["minimum_reconciliation_batch_items"]
+            ),
+            maximum_noncritical_administrative_ratio_milli=int(
+                delivery_policy["maximum_noncritical_administrative_ratio_milli"]
+            ),
+        )
+        return {
+            "delivery_gate": delivery_decision.model_dump(mode="json"),
+            "policy": delivery_policy,
+        }, 0 if delivery_decision.state.value == "PASS" else 1
+
     database = _assurance_database(args)
     store = AssuranceStore(database)
     if args.action == "status":
@@ -2211,7 +2391,18 @@ def _run_assurance_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
         observations = tuple(
             AttemptObservation.model_validate(item) for item in payload.get("observations", ())
         )
-        budget = AttemptBudget.model_validate(payload.get("budget", {}))
+        assurance_policy = AssurancePolicy.model_validate_json(
+            (args.root / "config" / "assurance_policy.json").read_text(encoding="utf-8")
+        )
+        budget_payload = {
+            "max_attempts": assurance_policy.loop_max_attempts,
+            "max_same_failure": assurance_policy.loop_max_same_failure,
+            "max_unchanged_outputs": assurance_policy.loop_max_unchanged_outputs,
+            "max_progressless_cycles": assurance_policy.loop_max_progressless_cycles,
+            "max_noncritical_administrative_ratio_milli": assurance_policy.delivery_progress.maximum_noncritical_administrative_ratio_milli,
+            **payload.get("budget", {}),
+        }
+        budget = AttemptBudget.model_validate(budget_payload)
         decision = evaluate_loop(observations, budget)
         if args.record:
             store.save_loop(args.project_id, decision)
@@ -2308,10 +2499,180 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
     if args.action == "self-modification":
         assessment = assess_self_modification(tuple(args.changed_path))
         return {"self_modification": assessment.model_dump(mode="json")}, 0
+    if args.action in {"bind-artifact", "artifact-bindings", "revoke-artifact"}:
+        binding_db = (
+            Path(args.database).resolve()
+            if args.database is not None
+            else (args.root / ".local/state/artifact_bindings.sqlite3").resolve()
+        )
+        store = ArtifactBindingStore(binding_db)
+        try:
+            if args.action == "bind-artifact":
+                if not args.apply or not args.approve:
+                    raise ConfigurationError("security bind-artifact requires --apply --approve")
+                if args.input is None:
+                    raise ConfigurationError("security bind-artifact requires --input")
+                payload = json.loads(Path(args.input).read_text(encoding="utf-8"))
+                return {"artifact_binding": store.bind(payload)}, 0
+            if args.action == "revoke-artifact":
+                if not args.apply or not args.approve:
+                    raise ConfigurationError("security revoke-artifact requires --apply --approve")
+                if not args.binding_id:
+                    raise ConfigurationError("security revoke-artifact requires --binding-id")
+                return {"artifact_binding": store.revoke(str(args.binding_id))}, 0
+            return {"artifact_bindings": store.query(limit=args.limit, offset=args.offset)}, 0
+        finally:
+            store.close()
+    if args.action == "identities":
+        database = _security_database(args)
+        with SecurityStore(database, args.root) as store:
+            if args.identity_id:
+                identity = store.get_identity(str(args.identity_id))
+                identities = () if identity is None else (identity,)
+            else:
+                identities = store.list_identities(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "identities": [item.model_dump(mode="json") for item in identities],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "grants":
+        database = _security_database(args)
+        with SecurityStore(database, args.root) as store:
+            if args.grant_id:
+                grant = store.get_grant(str(args.grant_id))
+                grants = () if grant is None else (grant,)
+            else:
+                grants = store.list_grants(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "grants": [item.model_dump(mode="json") for item in grants],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "approvals":
+        database = _security_database(args)
+        with SecurityStore(database, args.root) as store:
+            if args.approval_id:
+                value = store.get_approval(str(args.approval_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_approvals(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "approvals": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
     database = _security_database(args)
     if args.action == "status":
         with SecurityStore(database, args.root) as store:
             return {"database": str(database), "security": store.status()}, 0
+    if args.action == "policy-decisions":
+        with SecurityStore(database, args.root) as store:
+            if args.decision_id:
+                value = store.get_policy_decision(str(args.decision_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_policy_decisions(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "policy_decisions": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "egress-decisions":
+        with SecurityStore(database, args.root) as store:
+            if args.decision_id:
+                value = store.get_egress_decision(str(args.decision_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_egress_decisions(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "egress_decisions": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "secret-references":
+        with SecurityStore(database, args.root) as store:
+            if args.secret_ref_id:
+                ref = store.get_secret_reference(str(args.secret_ref_id))
+                refs = () if ref is None else (ref,)
+            else:
+                refs = store.list_secret_references(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "secret_references": [item.model_dump(mode="json") for item in refs],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "secret-leases":
+        with SecurityStore(database, args.root) as store:
+            if args.lease_id:
+                lease = store.get_secret_lease(str(args.lease_id))
+                leases = () if lease is None else (lease,)
+            else:
+                leases = store.list_secret_leases(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "secret_leases": [item.model_dump(mode="json") for item in leases],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "audit-events":
+        with SecurityStore(database, args.root) as store:
+            if args.audit_id:
+                value = store.get_audit_event(str(args.audit_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_audit_events(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "audit_events": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "sboms":
+        with SecurityStore(database, args.root) as store:
+            if args.sbom_id:
+                value = store.get_sbom(str(args.sbom_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_sboms(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "sboms": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "supply-chain-gates":
+        with SecurityStore(database, args.root) as store:
+            if args.gate_id:
+                value = store.get_supply_chain_gate(str(args.gate_id))
+                values = () if value is None else (value,)
+            else:
+                values = store.list_supply_chain_gates(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "supply_chain_gates": [item.model_dump(mode="json") for item in values],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
+    if args.action == "root-trust-records":
+        with SecurityStore(database, args.root) as store:
+            if args.root_id:
+                root_record = store.get_root_of_trust(str(args.root_id))
+                records = () if root_record is None else (root_record,)
+            else:
+                records = store.list_root_of_trust(limit=args.limit, offset=args.offset)
+        return {
+            "database": str(database),
+            "root_of_trust_records": [item.model_dump(mode="json") for item in records],
+            "limit": max(1, min(args.limit, 500)),
+            "offset": max(0, int(args.offset)),
+        }, 0
     if args.action == "record-identity":
         if not (args.apply and args.approve):
             raise ConfigurationError("security record-identity requires --apply --approve")
@@ -2333,6 +2694,67 @@ def _resilience_database(args: argparse.Namespace) -> Path | str:
             ).resolve()
         )
     return (args.root / ".local/state/resilience.sqlite3").resolve()
+
+
+def _run_restore_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    if args.allow_root is None:
+        raise ConfigurationError("restore mutation commands require --allow-root")
+    allow = Path(args.allow_root).resolve()
+    policy = RestoreTargetPolicy([allow], workspace_roots=[Path(args.root).resolve()])
+    database = (
+        Path(args.database).resolve()
+        if args.database is not None
+        else (allow / "restore-intents.sqlite3")
+    )
+    store = RestoreIntentStore(database)
+    try:
+        if args.action == "restore-intent":
+            target = policy.resolve(str(_require_argument(args, "target")))
+            key = str(args.idempotency_key or "").strip()
+            if not key:
+                raise ConfigurationError("restore-intent requires --idempotency-key")
+            manifest_sha = "0" * 64
+            if args.manifest is not None:
+                payload = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
+                if "aggregate_sha256" in payload:
+                    manifest_sha = str(payload["aggregate_sha256"])
+                else:
+                    manifest_sha = str(
+                        build_integrity_manifest(payload["entries"])["aggregate_sha256"]
+                    )
+            return {
+                "restore_intent": store.record_intent(
+                    idempotency_key=key,
+                    domain=str(_require_argument(args, "domain")),
+                    target=target,
+                    manifest_sha256=manifest_sha,
+                )
+            }, 0
+        intent_id = str(args.intent_id or "").strip()
+        if not intent_id:
+            raise ConfigurationError(f"{args.action} requires --intent-id")
+        if args.action == "restore-dry-run":
+            return {"restore_intent": store.dry_run(intent_id, policy)}, 0
+        if args.action == "restore-apply":
+            if not args.apply or not args.approve:
+                raise ConfigurationError("restore-apply requires --apply --approve")
+            source = Path(str(_require_argument(args, "source")))
+            return {
+                "restore_intent": store.apply(intent_id, source=source, policy=policy, approve=True)
+            }, 0
+        if args.action == "restore-verify":
+            if args.manifest is None:
+                raise ConfigurationError("restore-verify requires --manifest")
+            payload = json.loads(Path(args.manifest).read_text(encoding="utf-8"))
+            manifest = (
+                payload
+                if "entries" in payload and "aggregate_sha256" in payload
+                else build_integrity_manifest(payload["entries"])
+            )
+            return {"restore_intent": store.verify(intent_id, manifest, policy)}, 0
+        return {"restore_intent": store.reconcile(intent_id)}, 0
+    finally:
+        store.close()
 
 
 def _run_resilience_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -2372,6 +2794,14 @@ def _run_resilience_command(args: argparse.Namespace) -> tuple[dict[str, Any], i
                 isolated_target=str(_require_argument(args, "target")),
             )
         }, 0
+    if args.action in {
+        "restore-intent",
+        "restore-dry-run",
+        "restore-apply",
+        "restore-verify",
+        "restore-reconcile",
+    }:
+        return _run_restore_command(args)
     if args.action == "aws-plan":
         return {"aws_plan": aws_safety_plan(args.root)}, 0
     if args.action == "status":
@@ -2627,6 +3057,45 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "requirement-views":
             _write_json_output(write_requirement_views(args.root), None)
             return 0
+        if args.command == "requirement-reconcile":
+            if args.apply and not args.approve:
+                _write_json_output(
+                    {
+                        "error": "configuration_invalid",
+                        "message": "requirement-reconcile --apply requires --approve",
+                    },
+                    None,
+                )
+                return 2
+            if args.apply:
+                applied = apply_evidence_bound_requirement_states(args.root, limit=args.limit)
+                _write_json_output(
+                    {"mode": "APPLIED", "applied_count": len(applied), "applied": applied},
+                    None,
+                )
+                return 0
+            proposals = propose_evidence_bound_requirement_states(args.root, limit=args.limit)
+            _write_json_output(
+                {"mode": "DRY_RUN", "proposal_count": len(proposals), "proposals": proposals},
+                None,
+            )
+            return 0
+        if args.command == "requirement-truth-ledger":
+            output = args.output or (
+                args.root / ".local" / "pm_cycle_009" / "requirement_truth_ledger.json"
+            )
+            document = write_requirement_truth_ledger(args.root, output)
+            errors = validate_requirement_truth_ledger(document, args.root)
+            _write_json_output(
+                {
+                    "output": str(output),
+                    "row_count": document["row_count"],
+                    "head": document["head"],
+                    "errors": errors,
+                },
+                None,
+            )
+            return 0 if not errors else 1
         if args.command == "architecture":
             if args.write_views:
                 _write_json_output(write_architecture_views(args.root), None)
@@ -2676,6 +3145,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             return code
         if args.command == "scheduler":
             result, code = _run_scheduler_command(args)
+            _write_json_output(result, args.json_output)
+            return code
+        if args.command == "takeover":
+            configuration = _load_configuration(args)
+            result, code = run_takeover_command(
+                root=args.root,
+                action=args.action,
+                project_id=args.project_id or configuration.settings.project_id,
+                provider_id=str(args.provider_id),
+                scope=str(args.scope),
+                evidence_ref=str(args.evidence_ref),
+            )
             _write_json_output(result, args.json_output)
             return code
         if args.command == "agent-router":

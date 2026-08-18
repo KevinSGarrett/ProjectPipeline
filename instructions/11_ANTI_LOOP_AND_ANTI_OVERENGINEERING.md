@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-11` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.2.0` |
 | Primary domains | `anti_loop`, `anti_overengineering` |
 | Governing entry point | `AGENTS.md` |
 
@@ -39,9 +39,11 @@ A sustained cycle produces one or more of:
 
 Repeated rereading, status rewriting, branch recreation, cloning, formatting, report generation, or unchanged tests are not progress.
 
+Calculate progress from objective before/after facts through Assurance. Lifecycle transitions, branches, PRs, CI runs, snapshots, manifest refreshes, and generated Jira views count as administrative activity, never as progress by themselves. Stop after the configured consecutive progressless-cycle limit and select a materially different action.
+
 ## Stuck-work escape hatch
 
-Capture owning item, exact error, fingerprint, attempts, current hypothesis, preserved changes, blocker class, dependency/critical-path impact, and next safe experiment or human action. Mark the lane blocked, release only safe resources, and continue independent work.
+Capture owning item, exact error, fingerprint, attempts, current hypothesis, preserved changes, blocker class, dependency/critical-path impact, and next safe autonomous experiment or external-precondition recheck. Mark only the lane blocked, release safe resources, and continue independent work. Do not convert repeated failure into an operator work assignment.
 
 ## Smallest production-quality implementation
 
@@ -58,6 +60,8 @@ When a change exceeds the accepted item, classify it as necessary implementation
 ## Housekeeping budget
 
 Cleanup follows merge, real hygiene risk, periodic bounded maintenance, or release preparation. Set a clear objective and stop condition. Do not spend an autonomous session continuously reorganizing while implementation remains ready.
+
+Noncritical administration may consume at most the machine-policy ratio of a sustained delivery window (normally ten percent). Once exceeded without objective progress, block further noncritical housekeeping until implementation, acceptance, blocker reduction, or durable evidence advances. Never create a branch, PR, full gate, independent review, merge, or reconciliation merely to move one lifecycle arrow.
 
 ## Review-loop limit
 

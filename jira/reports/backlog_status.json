@@ -1,18 +1,21 @@
 {
   "counts_by_state": {
-    "BACKLOG": 371,
-    "MERGE_READY": 7
+    "BACKLOG": 378,
+    "BLOCKED": 1,
+    "CANCELLED": 1,
+    "IN_PROGRESS": 5,
+    "MERGE_READY": 8
   },
   "counts_by_type": {
     "BUG": 0,
-    "EPIC": 18,
+    "EPIC": 20,
     "SPIKE": 0,
-    "STORY": 107,
+    "STORY": 113,
     "SUBTASK": 16,
-    "TASK": 237
+    "TASK": 244
   },
-  "edge_count": 848,
-  "issue_count": 378,
-  "requirements_referenced": 351,
+  "edge_count": 890,
+  "issue_count": 393,
+  "requirements_referenced": 352,
   "schema_version": "1.0.0"
 }

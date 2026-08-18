@@ -1,0 +1,18 @@
+---
+description: Verification, evidence, Windows qualification, and completion truth
+alwaysApply: true
+---
+
+# Verification and completion
+
+- Use targeted falsifying tests, implementation, related tests, risk-based PR gates,
+  and integrated-main verification.
+- Linux/cloud execution cannot claim Windows-native verification.
+- Mock, dry-run, component, or local-only evidence cannot claim live unattended operation.
+- Require a genuine golden journey covering intake, missing-work selection,
+  implementation, tests, governed branch/PR/merge, Jira reconciliation, next-work
+  recomputation, restart recovery, and continued work around a HUMAN_REQUIRED lane.
+- The unattended qualification ladder is fixture, controlled external writes,
+  recovery, 4-hour trial, 24-hour soak, and 72-hour soak.
+- Only the deterministic Completion Gate may declare the project complete, and it
+  must include passing unattended operating-loop qualification.

@@ -11,13 +11,30 @@ def test_ppdb_0010_is_catalogued_and_reversible(project_root):
     connection = sqlite3.connect(":memory:")
     runner = SQLiteMigrationRunner(connection, project_root)
     status = runner.apply_all()
-    assert status.latest_applied == "PPDB-0019"
+    assert status.latest_applied == "PPDB-0021"
     tables = {
         row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")
     }
     assert "orchestration_workflows" in tables and "orchestration_outbox" in tables
     assert "verification_runs" in tables
     assert "lifecycle_portfolio_projects" in tables
+    assert "autonomy_runtime_operations" in tables
+
+    status = runner.rollback_last()
+    assert status.latest_applied == "PPDB-0020"
+    tables = {
+        row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    }
+    assert "lifecycle_portfolio_projects" in tables
+    assert "autonomy_runtime_operations" in tables
+    assert "qualification_runs" not in tables
+    status = runner.rollback_last()
+    assert status.latest_applied == "PPDB-0019"
+    tables = {
+        row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")
+    }
+    assert "lifecycle_portfolio_projects" in tables
+    assert "autonomy_runtime_operations" not in tables
 
     # Remove Pass 25 audit immutability first; lifecycle state must survive.
     status = runner.rollback_last()

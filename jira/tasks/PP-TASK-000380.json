@@ -1,0 +1,114 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000380-01",
+      "statement": "The source-to-control model contains the accepted autonomous outcome, ten explicit user-intent mappings, truthful plan statuses, a cohesive epic/journey, stale-implementation reconciliation findings, and fail-closed validators for every operator-listed defect.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_product_outcome_contract.py",
+        "method": "falsifying_model_validation",
+        "path": "tests/test_product_outcome_contract.py",
+        "status": "VERIFIED"
+      }
+    },
+    {
+      "criterion_id": "AC-PP-000380-02",
+      "statement": "An independent product-model auditor, separate from validate_product_outcome, confirms ten user-intent mappings, plan truth, epic/journey cohesion, stale-implementation findings, and that Control's top bounded work is genuinely missing.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_product_outcome_contract.py",
+        "method": "independent_product_model_audit",
+        "path": "src/project_pipeline/validation/product_model_audit.py",
+        "status": "VERIFIED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Previous defective state fails the new validators.",
+    "All canonical model layers agree.",
+    "Independent audit confirms Control's top work is genuinely missing critical-path behavior."
+  ],
+  "dependencies": [],
+  "description": "Execute one cohesive product-definition and traceability repair before ordinary Control selection resumes.",
+  "evidence_required": [],
+  "exclusions": [
+    "No claim that the Autonomy Runtime or terminal product is complete.",
+    "No per-lifecycle PRs."
+  ],
+  "expected_file_locations": [
+    "config/product_outcome.json",
+    "plans/_traceability",
+    "plans/PLAN_CATALOG.json",
+    "jira",
+    "src/project_pipeline/validation/product_outcome.py",
+    "src/project_pipeline/validation/product_model_audit.py",
+    "src/project_pipeline/assurance/completion.py"
+  ],
+  "expected_implementation_artifacts": [
+    "config/product_outcome.json",
+    "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
+    "src/project_pipeline/validation/product_outcome.py",
+    "src/project_pipeline/validation/product_model_audit.py",
+    "tests/test_product_outcome_contract.py"
+  ],
+  "implementation_state": "IMPLEMENTED",
+  "issue_type": "TASK",
+  "labels": [
+    "cohesive-slice",
+    "implemented",
+    "model-realignment",
+    "product-outcome"
+  ],
+  "last_observed_remote_state": null,
+  "local_id": "PP-TASK-000380",
+  "objective": "Repair product definition and source-to-control traceability",
+  "observability_impact": "Adds explicit product-outcome drift and reconciliation findings.",
+  "owner_required_capability": "requirements_traceability_and_control_authority",
+  "parent": "PP-STORY-000138",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
+      "end_line": 13,
+      "line_numbered_path": "plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt",
+      "line_reference": "PLAN-CTRL-003:SEC-01:L000008-L000013",
+      "plan_id": "PLAN-CTRL-003",
+      "section_id": "PLAN-CTRL-003:SEC-01",
+      "start_line": 8
+    }
+  ],
+  "rationale": "The compiled model omitted the central product outcome and misclassified already-built foundations as fresh work.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000138",
+      "type": "CHILD_OF"
+    },
+    {
+      "target": "PP-TASK-000381",
+      "type": "BLOCKS"
+    }
+  ],
+  "remote_jira_key": null,
+  "required_tests": [],
+  "requirement_ids": [
+    "REQ-PDEF-0011"
+  ],
+  "risk_classification": "CRITICAL",
+  "rollback_recovery_consideration": "Restore verified bundle/database snapshot and regenerate projections from the prior registries.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Product contract",
+    "traceability",
+    "plans",
+    "Jira",
+    "Control",
+    "Completion Gate"
+  ],
+  "security_impact": "Prevents autonomous authority from acting on an invalid product model.",
+  "source_references": [
+    "SRC-014:L000001-L000086",
+    "SRC-015:L000001-L000112"
+  ],
+  "state": "IN_PROGRESS",
+  "title": "Repair product definition and source-to-control traceability",
+  "upstream_dependencies": []
+}

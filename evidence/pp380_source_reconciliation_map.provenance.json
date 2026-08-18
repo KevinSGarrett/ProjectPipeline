@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0.0",
+  "artifact": "evidence/pp380_source_reconciliation_map.json",
+  "source_kind": "cycle2_main_reconciliation_inventory",
+  "unversioned_source_path": ".local/pm_cycle_002/pp380_main_reconciliation_map.json",
+  "promoted_reason": "Bounded versioned source for PP-380 canonical generation; removes machine-local .local dependency.",
+  "promoted_at_utc": "2026-08-17T14:35:00Z",
+  "content_sha256": "f9055cdf3b9aaa30c089f5fb796449692784e314db04b52233d06c682cc9bcbc",
+  "sanitization": "Promoted Cycle 2 inventory as LF-normalized repository text so clean clones hash identically.",
+  "authoritative_use": "Pair with evidence/pp380_cycle5_execution_dispositions.json and explicit fetched Git refs. Not an already-corrected disposition ledger."
+}

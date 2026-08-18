@@ -11,6 +11,6 @@ description: Execute one ready ProjectPipeline Jira work item with bounded conte
 4. Search for completed or overlapping work before claiming resources.
 5. Create the work/resource claim and isolated branch/worktree.
 6. Implement one cohesive acceptance boundary and run risk-proportional tests/evidence.
-7. Update Jira only at meaningful lifecycle points through Jira Steward.
+7. Update Jira autonomously at meaningful lifecycle points through Jira Steward; transition remote `Done` when local `DONE`, evidence, integrated-main verification, provisioned credentials, and readback preconditions pass.
 8. Reconcile remote state before retrying any uncertain write.
-9. Mark complete only after integration, post-merge verification, evidence, and local/remote reconciliation.
+9. Mark complete only after integration, post-merge verification, evidence, and local/remote reconciliation. Never park eligible Jira work for human approval.

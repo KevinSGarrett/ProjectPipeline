@@ -1,0 +1,11 @@
+.env*
+!.env.example
+.local/
+.codex*
+.claude/
+Github_Repo/
+dummy/
+**/*.key
+**/*.pem
+**/*credential*
+Universal_Autonomous_Parallel_System_AI_Knowledge_Pack_v1.zip

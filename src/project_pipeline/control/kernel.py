@@ -20,6 +20,7 @@ from project_pipeline.domain.control import (
     control_identifier,
 )
 from project_pipeline.domain.state import TaskLifecycleState
+from project_pipeline.io import read_json
 from project_pipeline.jira import load_issues
 from project_pipeline.persistence import SQLiteStateStore
 from project_pipeline.requirements import load_requirement_catalog
@@ -37,6 +38,57 @@ _ACTIVE_WORK = {
     TaskLifecycleState.IN_REVIEW,
     TaskLifecycleState.VALIDATING,
 }
+_PRODUCT_SELECTION_BOUNDED_MODES = {
+    "PAUSED_PENDING_INDEPENDENT_PRODUCT_MODEL_AUDIT",
+    "PRODUCT_OUTCOME_CRITICAL_PATH_ONLY",
+}
+_RECONCILABLE_ISSUE_IMPLEMENTATION_STATES = {
+    ImplementationState.IMPLEMENTED.value,
+    ImplementationState.MOCK_VERIFIED.value,
+    ImplementationState.LIVE_VERIFIED.value,
+}
+
+
+def issue_has_reconciliation_evidence(root: Path, issue: dict[str, Any]) -> bool:
+    implementation_state = issue.get("implementation_state")
+    if implementation_state not in _RECONCILABLE_ISSUE_IMPLEMENTATION_STATES | {
+        ImplementationState.PLANNED_ONLY.value,
+        ImplementationState.PARTIALLY_IMPLEMENTED.value,
+    }:
+        return False
+    artifacts = issue.get("expected_implementation_artifacts", ())
+    if not artifacts or not all(
+        isinstance(path, str) and (root / path).exists() for path in artifacts
+    ):
+        return False
+    criteria = issue.get("acceptance_criteria", ())
+    if not criteria:
+        return False
+    for item in criteria:
+        if not isinstance(item, dict) or not isinstance(item.get("verification"), dict):
+            return False
+        verification = item["verification"]
+        path = verification.get("path")
+        if not isinstance(path, str) or not (root / path).exists():
+            return False
+        if (
+            implementation_state in _RECONCILABLE_ISSUE_IMPLEMENTATION_STATES
+            and verification.get("status") != "VERIFIED"
+        ):
+            return False
+    return bool(issue.get("required_tests")) and bool(issue.get("completion_evidence"))
+
+
+def reconciliation_quarantine_ids(root: Path) -> frozenset[str]:
+    path = root / "plans/reconciliation/IMPLEMENTED_REQUIREMENT_JIRA_AUDIT.json"
+    if not path.exists():
+        return frozenset()
+    audit = read_json(path)
+    return frozenset(
+        str(item.get("issue_id"))
+        for item in audit.get("issue_findings", [])
+        if item.get("status") == "ISSUE_SPECIFIC_AUDIT_REQUIRED"
+    )
 
 
 def _json_fingerprint(value: Any) -> str:
@@ -54,12 +106,33 @@ class ProjectControlKernel:
         self.store = store
         self.project_id = project_id
 
+    def _selection_scope(self) -> tuple[str, frozenset[str], bool]:
+        """Return (mode, allowed_ids, fail_closed_pause) for control selection."""
+        contract = read_json(self.root / "config/product_outcome.json")
+        selection = contract.get("control_selection", {})
+        if not isinstance(selection, dict):
+            return "", frozenset(), True
+        mode = str(selection.get("mode", "")).strip()
+        allowed_raw = selection.get("allowed_issue_ids", ())
+        allowed = (
+            frozenset(str(item) for item in allowed_raw if str(item).strip())
+            if isinstance(allowed_raw, list)
+            else frozenset()
+        )
+        if mode not in _PRODUCT_SELECTION_BOUNDED_MODES:
+            return mode, frozenset(), True
+        if not allowed:
+            return mode, frozenset(), True
+        return mode, allowed, False
+
     def task_facts(self) -> tuple[TaskControlFact, ...]:
         issues = {item["local_id"]: item for item in load_issues(self.root)}
         requirements = {
             item["requirement_id"]: item for item in load_requirement_catalog(self.root)
         }
         states = self.store.list_task_states(self.project_id)
+        quarantined = reconciliation_quarantine_ids(self.root)
+        _, selection_scope, _ = self._selection_scope()
         facts: list[TaskControlFact] = []
         for state in states:
             issue = issues.get(state.task_id)
@@ -91,6 +164,11 @@ class ProjectControlKernel:
                     requirement_ids=tuple(issue.get("requirement_ids", ())),
                     accepted=accepted,
                     external_blocked=external_blocked,
+                    reconciliation_required=(
+                        issue_has_reconciliation_evidence(self.root, issue)
+                        or state.task_id in quarantined
+                    ),
+                    product_scope_allowed=state.task_id in selection_scope,
                 )
             )
         return tuple(sorted(facts, key=lambda item: item.task_id))
@@ -207,6 +285,16 @@ class ProjectControlKernel:
         active = sum(item.state in _ACTIVE_WORK for item in states)
         blocked = sum(item.state is TaskLifecycleState.BLOCKED for item in states)
         failed = sum(item.state is TaskLifecycleState.FAILED for item in states)
+        mode, selection_scope, _ = self._selection_scope()
+        ordinary_active = sum(
+            item.state in _ACTIVE_WORK and item.task_id not in selection_scope for item in states
+        )
+        readiness_by_id = {item.task_id: item for item in readiness}
+        ordinary_ready = sum(
+            bool(entry.ready)
+            for task_id, entry in readiness_by_id.items()
+            if task_id not in selection_scope
+        )
         req_complete = sum(
             item.get("implementation_state") in _COMPLETE_REQUIREMENT_STATES
             for item in requirements
@@ -214,7 +302,21 @@ class ProjectControlKernel:
         reasons: list[str] = []
         all_work_terminal = completed == total
         all_requirements_complete = req_complete == len(requirements)
-        if failed:
+        if mode == "PAUSED_PENDING_INDEPENDENT_PRODUCT_MODEL_AUDIT" and (
+            ordinary_active or ordinary_ready
+        ):
+            state = CompletionProjectionState.FAILED
+            if ordinary_active:
+                reasons.append(
+                    "ordinary active lanes remain while product-model audit is pending: "
+                    f"{ordinary_active}"
+                )
+            if ordinary_ready:
+                reasons.append(
+                    "ordinary backlog remains ready while product-model audit is pending: "
+                    f"{ordinary_ready}"
+                )
+        elif failed:
             state = CompletionProjectionState.FAILED
             reasons.append(f"{failed} work items are in FAILED state")
         elif blocked and sequence.ready_count == 0 and active == 0:

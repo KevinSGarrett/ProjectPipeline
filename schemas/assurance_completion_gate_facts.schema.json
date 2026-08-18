@@ -11,6 +11,10 @@
       "title": "Ai Continuable From Repo And Jira",
       "type": "boolean"
     },
+    "autonomous_runtime_qualified": {
+      "title": "Autonomous Runtime Qualified",
+      "type": "boolean"
+    },
     "command_center_truthful": {
       "title": "Command Center Truthful",
       "type": "boolean"
@@ -80,8 +84,8 @@
       "type": "boolean"
     },
     "schema_version": {
-      "const": "1.0.0",
-      "default": "1.0.0",
+      "const": "1.1.0",
+      "default": "1.1.0",
       "title": "Schema Version",
       "type": "string"
     },
@@ -96,6 +100,10 @@
     },
     "source_requirements_dispositioned": {
       "title": "Source Requirements Dispositioned",
+      "type": "boolean"
+    },
+    "unattended_operating_loop_qualified": {
+      "title": "Unattended Operating Loop Qualified",
       "type": "boolean"
     },
     "unexplained_gap_count": {
@@ -115,6 +123,7 @@
     "implementation_traceability_complete",
     "critical_paths_tested",
     "golden_journeys_pass",
+    "autonomous_runtime_qualified",
     "security_gates_satisfied",
     "resilience_verified",
     "deployment_reproducible",
@@ -124,6 +133,7 @@
     "unresolved_items_truthful",
     "command_center_truthful",
     "jira_truthful",
+    "unattended_operating_loop_qualified",
     "unexplained_gap_count",
     "snapshot_fingerprint"
   ],

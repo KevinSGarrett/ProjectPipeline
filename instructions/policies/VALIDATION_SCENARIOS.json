@@ -113,12 +113,13 @@
     },
     {
       "expected": [
-        "creates actionable escalation",
+        "records a typed external precondition without assigning operator work",
         "preserves resume point",
-        "continues unaffected work"
+        "continues unaffected work",
+        "schedules autonomous recheck"
       ],
       "id": "L",
-      "name": "human_action",
+      "name": "external_precondition",
       "trigger": "MFA or credential rotation is required."
     }
   ],

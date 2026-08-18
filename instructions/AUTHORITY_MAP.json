@@ -11,7 +11,7 @@
     "Use normative order for requested behavior and observational order for claims about what has been proven.",
     "Prefer an explicit later revision only when the revision relationship is recorded.",
     "Do not modify benchmark inputs, tests, or evidence merely to remove a conflict.",
-    "Record an open decision or actionable escalation when higher authority does not resolve the conflict."
+    "Record an open decision or typed BLOCKED_EXTERNAL precondition when higher authority does not resolve the conflict; assign no operator work."
   ],
   "derived_and_advisory": [
     {

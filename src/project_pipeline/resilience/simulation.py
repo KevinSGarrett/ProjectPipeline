@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import tempfile
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 
 from project_pipeline.domain.resilience import (
     FailureDomain,
@@ -90,10 +92,13 @@ def simulate_scenario(root, scenario: str) -> dict[str, object]:
         details = decision.model_dump(mode="json")
     elif scenario == "backup-restore":
         planner = BackupPlanner(load_recovery_objectives(root))
+        isolated = (
+            Path(tempfile.gettempdir()) / "project-pipeline-restore-sim" / "isolated-postgres"
+        )
         plan = planner.plan_restore(
             domain="canonical_state",
             repository="repo",
-            isolated_target=".local/recovery/isolated-postgres",
+            isolated_target=str(isolated),
         )
         passed = (
             bool(plan["verification_required"])

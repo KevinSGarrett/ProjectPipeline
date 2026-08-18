@@ -23,6 +23,7 @@ from project_pipeline.github_steward.merge_gate import evaluate_merge_gate
 from project_pipeline.github_steward.ownership import OwnershipRegistry
 from project_pipeline.github_steward.persistence import GitHubStewardStore
 from project_pipeline.github_steward.ports import GitHubRemotePort, GitHubWriteContext
+from project_pipeline.github_steward.worktrunk import WorktrunkAdapter, WorktrunkPlan
 
 
 class RepositorySteward:
@@ -32,6 +33,21 @@ class RepositorySteward:
         self.local = local
         self.remote = remote
         self.store = store
+
+    def plan_worktrunk(
+        self,
+        adapter: WorktrunkAdapter,
+        branch: str,
+        *,
+        approved: bool = False,
+        base: str | None = None,
+    ) -> dict[str, Any]:
+        snapshot = self.local.snapshot()
+        protected = {snapshot.default_branch, "main", "master"}
+        if snapshot.current_branch in protected and approved:
+            raise GitHubStewardError("worktrunk must not mutate protected main directly")
+        plan: WorktrunkPlan = adapter.create_plan(self.local.root, branch, base=base)
+        return adapter.execute(plan, approved=approved)
 
     def inspect_local(self) -> dict[str, Any]:
         snapshot = self.local.snapshot()

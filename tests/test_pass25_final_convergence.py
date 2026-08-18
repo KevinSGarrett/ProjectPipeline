@@ -13,6 +13,7 @@ from project_pipeline.release_hardening.post_deploy import (
     PostDeploymentObservation,
     verify_post_deployment,
 )
+from project_pipeline.requirements import load_requirement_catalog
 from project_pipeline.resilience import RunbookActionResult, RunbookExecutor, load_approved_runbook
 from project_pipeline.security.persistence import SecurityStore
 
@@ -53,14 +54,14 @@ def test_ppdb_0019_database_enforces_append_only_audit_history(tmp_path):
         assert row[0] == "TEST"
 
 
-def test_ppdb_0019_is_latest_and_reversible_without_removing_ppdb_0018(tmp_path):
+def test_ppdb_0020_is_latest_and_reversible_without_removing_ppdb_0019(tmp_path):
     db = sqlite3.connect(tmp_path / "m.db")
     runner = SQLiteMigrationRunner(db, ROOT)
     runner.apply_all()
-    assert runner.status().latest_applied == "PPDB-0019"
+    assert runner.status().latest_applied == "PPDB-0021"
     runner.rollback_last()
     ids = {r[0] for r in db.execute("SELECT migration_id FROM schema_migrations")}
-    assert "PPDB-0018" in ids and "PPDB-0019" not in ids
+    assert "PPDB-0020" in ids and "PPDB-0021" not in ids
 
 
 def test_versioned_approved_runbook_dry_run_is_non_mutating_and_recorded():
@@ -155,8 +156,14 @@ def test_aws_budget_circuit_breaker_source_is_fail_closed_and_independent():
 
 def test_final_convergence_audit_enumerates_every_accepted_requirement_and_keeps_truth_boundary():
     report = build_convergence_audit(ROOT)
-    assert report["accepted_requirement_count"] == 351
-    assert len(report["requirements"]) == 351
+    expected_accepted = sum(
+        1
+        for requirement in load_requirement_catalog(ROOT)
+        if requirement.get("disposition") == "ACCEPTED"
+    )
+    assert expected_accepted == 352
+    assert report["accepted_requirement_count"] == expected_accepted
+    assert len(report["requirements"]) == expected_accepted
     assert report["project_complete"] is False
     assert report["completion_gate_state"] == "NOT_COMPLETE"
     assert report["truth_boundary"].startswith("audit completion means")

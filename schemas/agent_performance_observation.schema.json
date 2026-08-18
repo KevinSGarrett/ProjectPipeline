@@ -20,6 +20,18 @@
       "default": null,
       "title": "Cost Microunits"
     },
+    "evidence_id": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Evidence Id"
+    },
     "latency_ms": {
       "minimum": 0,
       "title": "Latency Ms",
@@ -67,6 +79,11 @@
     },
     "success": {
       "title": "Success",
+      "type": "boolean"
+    },
+    "synthetic": {
+      "default": false,
+      "title": "Synthetic",
       "type": "boolean"
     },
     "target_id": {

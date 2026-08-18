@@ -1,0 +1,463 @@
+{
+  "schema_version": "1.0.0",
+  "captured_at_utc": "2026-08-16T23:36:19.997699+00:00",
+  "worktree": "C:/Project_X",
+  "total_paths": 90,
+  "counts": {
+    "modified": 18,
+    "untracked": 72
+  },
+  "paths": [
+    {
+      "code": " M",
+      "path": ".github/dependabot.yml",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "FILE_MANIFEST.sha256",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "PROJECT_MANIFEST.json",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "docs/development/dependency_management.md",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "jira/BOARD_MANIFEST.json",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "jira/reports/live_jira_sync_report.json",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "plans/00_project_definition/README.md",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "plans/01_requirements/PLAN-REQ-002_requirement_catalog_and_coverage.md",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "plans/01_requirements/README.md",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "plans/_indexes/plan_section_index.json",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "plans/_line_numbered/PLAN-PDEF-001_project_definition.lines.txt",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "plans/_line_numbered/PLAN-REQ-002_requirement_catalog_and_coverage.lines.txt",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "plans/_traceability/README.md",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "src/project_pipeline/cli.py",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "src/project_pipeline/lifecycle/__init__.py",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "tests/test_control_cli.py",
+      "classification": "modified"
+    },
+    {
+      "code": " M",
+      "path": "tests/test_scheduler_cli.py",
+      "classification": "modified"
+    },
+    {
+      "code": "??",
+      "path": "config/product_outcome.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/control_completion_post_remediation.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/dependency_pr_queue.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/jira_export_20260816T180113.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/jira_plan_20260816T180113.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/jira_snapshot_20260816T180113.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/jira_status_mock_20260816T1809.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/jira_sync_remediation_20260816T230645Z.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/jira_validate_20260816T180113.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/jira_validate_post_remediation.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/lane_c_verification_report.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/post_ci_followup_pr44_pr46_20260816T1746-0500.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/post_update_gate_checkpoint_pr44_pr46_20260816T2317Z.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/post_update_gate_checkpoint_pr44_pr46_20260816T2320Z.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_attestation_lifecycle_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_claim_conflict_reconciliation.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_claim_human_required_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_closure_checkpoint_post_stabilization.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_completion_human_required.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_completion_post_alignment.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_evaluate_human_required.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_evaluate_post_alignment.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_ready_plan_human_required.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_ready_plan_post_alignment.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_scope_human_required.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_scope_post_alignment.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_sequence_closure_pass.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_sequence_human_required.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_sequence_merge_candidate.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_sequence_missing_attestation.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_sequence_missing_provider_qualification.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_sequence_post_alignment.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_sequence_post_convergence_stabilization.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_sequence_reconciliation_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_sequence_valid_attestation.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_sequence_valid_provider_qualification.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_control_sequence_writer_bound_records.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_human_required_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_mixed_lane_admission_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_post_audit_convergence_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_post_convergence_stabilization_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_pr_next_commands.txt",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_pr_ready_packet_local.md",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_product_outcome_control_alignment_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_provider_qualification_lifecycle_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_scheduler_plan_closure_pass.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_scheduler_plan_merge_candidate.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_scheduler_plan_missing_attestation.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_scheduler_plan_missing_provider_qualification.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_scheduler_plan_post_convergence_stabilization.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_scheduler_plan_reconciliation_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_scheduler_plan_valid_attestation.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_scheduler_plan_valid_provider_qualification.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_scheduler_plan_writer_bound_records.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_takeover_reconciliation_lifecycle_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_takeover_write_attestation_result.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_takeover_write_provider_qualification_result.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_writer_attestation_evidence.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_writer_flow_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pp379_writer_provider_qualification_evidence.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "evidence/pr_hygiene_cleanup_checkpoint.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "jira/reports/jira_sync_guard.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "schemas/product_outcome.schema.json",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "scripts/run_takeover_lane_c_verification.py",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "src/project_pipeline/jira_steward/sync_guard.py",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "src/project_pipeline/lifecycle/takeover.py",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "tests/test_jira_sync_guard.py",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "tests/test_product_outcome_reconciliation.py",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "tests/test_takeover_governor.py",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "tests/test_takeover_lane_invariants_meta.py",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "tests/test_takeover_reconciliation_parity.py",
+      "classification": "untracked"
+    },
+    {
+      "code": "??",
+      "path": "tests/test_takeover_writer_flow.py",
+      "classification": "untracked"
+    }
+  ],
+  "preservation_note": "Post-remediation snapshot; no destructive cleanup/reset/delete actions executed."
+}

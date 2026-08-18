@@ -43,7 +43,7 @@
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000090", "PP-TASK-000323"], "requirement_id": "REQ-ASSURE-0008"}
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000092", "PP-TASK-000324"], "requirement_id": "REQ-ASSURE-0009"}
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000092", "PP-TASK-000187"], "requirement_id": "REQ-ASSURE-0010"}
-{"jira_ids": ["PP-EPIC-000017", "PP-STORY-000092"], "requirement_id": "REQ-ASSURE-0011"}
+{"jira_ids": ["PP-EPIC-000017", "PP-STORY-000092", "PP-TASK-000323"], "requirement_id": "REQ-ASSURE-0011"}
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000092", "PP-TASK-000324"], "requirement_id": "REQ-ASSURE-0012"}
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000089", "PP-TASK-000326"], "requirement_id": "REQ-ASSURE-0013"}
 {"jira_ids": ["PP-EPIC-000017", "PP-STORY-000089", "PP-TASK-000172", "PP-TASK-000321", "PP-TASK-000329"], "requirement_id": "REQ-ASSURE-0014"}
@@ -90,7 +90,7 @@
 {"jira_ids": ["PP-EPIC-000007", "PP-STORY-000008", "PP-TASK-000196", "PP-TASK-000197", "PP-TASK-000200", "PP-TASK-000231", "PP-TASK-000238", "PP-TASK-000239", "PP-TASK-000240"], "requirement_id": "REQ-CTRL-0001"}
 {"jira_ids": ["PP-EPIC-000007", "PP-STORY-000008", "PP-TASK-000367"], "requirement_id": "REQ-CTRL-0002"}
 {"jira_ids": ["PP-EPIC-000007", "PP-STORY-000008", "PP-TASK-000162", "PP-TASK-000196", "PP-TASK-000197", "PP-TASK-000198", "PP-TASK-000301", "PP-TASK-000303", "PP-TASK-000307", "PP-TASK-000309"], "requirement_id": "REQ-CTRL-0003"}
-{"jira_ids": ["PP-EPIC-000007", "PP-STORY-000065"], "requirement_id": "REQ-CTRL-0004"}
+{"jira_ids": ["PP-EPIC-000007", "PP-STORY-000065", "PP-EPIC-000036", "PP-TASK-000381"], "requirement_id": "REQ-CTRL-0004"}
 {"jira_ids": ["PP-EPIC-000007", "PP-STORY-000065", "PP-TASK-000231"], "requirement_id": "REQ-CTRL-0005"}
 {"jira_ids": ["PP-EPIC-000007", "PP-STORY-000068"], "requirement_id": "REQ-CTRL-0006"}
 {"jira_ids": ["PP-EPIC-000007", "PP-STORY-000068"], "requirement_id": "REQ-CTRL-0007"}
@@ -212,6 +212,7 @@
 {"jira_ids": ["PP-EPIC-000001", "PP-STORY-000049"], "requirement_id": "REQ-PDEF-0008"}
 {"jira_ids": ["PP-EPIC-000001", "PP-STORY-000049", "PP-TASK-000186"], "requirement_id": "REQ-PDEF-0009"}
 {"jira_ids": ["PP-EPIC-000001", "PP-STORY-000049"], "requirement_id": "REQ-PDEF-0010"}
+{"jira_ids": ["PP-EPIC-000036", "PP-STORY-000138", "PP-STORY-000139", "PP-STORY-000140", "PP-STORY-000141", "PP-STORY-000142", "PP-STORY-000143", "PP-TASK-000380", "PP-TASK-000381", "PP-TASK-000382", "PP-TASK-000383", "PP-TASK-000384", "PP-TASK-000385"], "requirement_id": "REQ-PDEF-0011"}
 {"jira_ids": ["PP-EPIC-000035", "PP-STORY-000036", "PP-SUBTASK-000047", "PP-SUBTASK-000048", "PP-TASK-000044"], "requirement_id": "REQ-REL-0001"}
 {"jira_ids": ["PP-EPIC-000035", "PP-STORY-000036", "PP-SUBTASK-000048", "PP-TASK-000044"], "requirement_id": "REQ-REL-0002"}
 {"jira_ids": ["PP-EPIC-000035", "PP-STORY-000036", "PP-TASK-000378"], "requirement_id": "REQ-REL-0003"}
@@ -286,14 +287,14 @@
 {"jira_ids": ["PP-EPIC-000009", "PP-STORY-000071", "PP-TASK-000247"], "requirement_id": "REQ-SCHED-0016"}
 {"jira_ids": ["PP-EPIC-000009", "PP-STORY-000072", "PP-TASK-000248", "PP-TASK-000250"], "requirement_id": "REQ-SCHED-0017"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000020", "PP-SUBTASK-000046", "PP-TASK-000043"], "requirement_id": "REQ-SEC-0001"}
-{"jira_ids": ["PP-EPIC-000019", "PP-STORY-000020", "PP-TASK-000040", "PP-TASK-000168", "PP-TASK-000188"], "requirement_id": "REQ-SEC-0002"}
+{"jira_ids": ["PP-EPIC-000019", "PP-STORY-000020", "PP-TASK-000040", "PP-TASK-000188"], "requirement_id": "REQ-SEC-0002"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000020", "PP-TASK-000191"], "requirement_id": "REQ-SEC-0003"}
-{"jira_ids": ["PP-EPIC-000019", "PP-STORY-000020", "PP-TASK-000043", "PP-TASK-000187", "PP-TASK-000192", "PP-TASK-000340", "PP-TASK-000346", "PP-TASK-000349", "PP-TASK-000369", "PP-TASK-000370"], "requirement_id": "REQ-SEC-0004"}
+{"jira_ids": ["PP-EPIC-000019", "PP-STORY-000020", "PP-TASK-000043", "PP-TASK-000168", "PP-TASK-000187", "PP-TASK-000192", "PP-TASK-000340", "PP-TASK-000346", "PP-TASK-000349", "PP-TASK-000369", "PP-TASK-000370"], "requirement_id": "REQ-SEC-0004"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000096", "PP-TASK-000169", "PP-TASK-000341"], "requirement_id": "REQ-SEC-0005"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000096", "PP-TASK-000341"], "requirement_id": "REQ-SEC-0006"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000096", "PP-TASK-000342"], "requirement_id": "REQ-SEC-0007"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000096", "PP-TASK-000341"], "requirement_id": "REQ-SEC-0008"}
-{"jira_ids": ["PP-EPIC-000019", "PP-STORY-000097", "PP-TASK-000169", "PP-TASK-000342", "PP-TASK-000349"], "requirement_id": "REQ-SEC-0009"}
+{"jira_ids": ["PP-EPIC-000019", "PP-STORY-000097", "PP-TASK-000168", "PP-TASK-000169", "PP-TASK-000342", "PP-TASK-000349"], "requirement_id": "REQ-SEC-0009"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000098", "PP-TASK-000344", "PP-TASK-000349"], "requirement_id": "REQ-SEC-0010"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000098", "PP-TASK-000344"], "requirement_id": "REQ-SEC-0011"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000098", "PP-TASK-000188", "PP-TASK-000190"], "requirement_id": "REQ-SEC-0012"}
@@ -301,7 +302,7 @@
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000095", "PP-TASK-000343"], "requirement_id": "REQ-SEC-0014"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000095", "PP-TASK-000343"], "requirement_id": "REQ-SEC-0015"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000097", "PP-TASK-000342"], "requirement_id": "REQ-SEC-0016"}
-{"jira_ids": ["PP-EPIC-000019", "PP-STORY-000098", "PP-TASK-000168", "PP-TASK-000345"], "requirement_id": "REQ-SEC-0017"}
+{"jira_ids": ["PP-EPIC-000019", "PP-STORY-000098", "PP-TASK-000345"], "requirement_id": "REQ-SEC-0017"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000099", "PP-TASK-000187", "PP-TASK-000192", "PP-TASK-000346", "PP-TASK-000369", "PP-TASK-000370"], "requirement_id": "REQ-SEC-0018"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000099", "PP-TASK-000347"], "requirement_id": "REQ-SEC-0019"}
 {"jira_ids": ["PP-EPIC-000019", "PP-STORY-000099", "PP-TASK-000347", "PP-TASK-000369", "PP-TASK-000370"], "requirement_id": "REQ-SEC-0020"}

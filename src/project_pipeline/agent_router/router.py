@@ -26,6 +26,16 @@ _ALLOWED_DEGRADED = {
     ProviderRuntimeState.QUOTA_LOW,
     ProviderRuntimeState.RECOVERING,
 }
+_PRESSURE_STATES = {
+    ProviderRuntimeState.DEGRADED,
+    ProviderRuntimeState.RATE_LIMITED,
+    ProviderRuntimeState.QUOTA_LOW,
+    ProviderRuntimeState.BUDGET_EXHAUSTED,
+    ProviderRuntimeState.AUTH_FAILED,
+    ProviderRuntimeState.UNAVAILABLE,
+    ProviderRuntimeState.DISABLED,
+    ProviderRuntimeState.MAINTENANCE,
+}
 
 
 class AgentRouter:
@@ -50,7 +60,7 @@ class AgentRouter:
             item.provider_id: normalize_circuit(item, self.circuit_policy, now)
             for item in circuit_records
         }
-        perf = summarize_performance(performance)
+        perf = summarize_performance(performance, now=now)
         providers = {item.provider_id: item for item in registry.providers}
         models = {item.model_id: item for item in registry.models}
         policies = {item.capability_id: item for item in registry.routing_policies}
@@ -65,6 +75,15 @@ class AgentRouter:
             else ()
         )
         order_index = {provider_id: index for index, provider_id in enumerate(order)}
+        under_pressure = False
+        if primary_policy is not None and primary_policy.prefer_local_under_pressure:
+            for provider_id in primary_policy.preferred_provider_ids:
+                observation = states.get(provider_id)
+                if observation is not None and observation.state in _PRESSURE_STATES:
+                    under_pressure = True
+                circuit = circuits.get(provider_id)
+                if circuit is not None and not circuit.permits(now, self.circuit_policy):
+                    under_pressure = True
         candidates = []
         required = set(request.required_capabilities)
         for agent in registry.agents:
@@ -139,6 +158,8 @@ class AgentRouter:
             score = 100000 - rank * 1000
             if provider.local:
                 score += 300
+            if under_pressure and provider.local:
+                score += 5000
             if observation.state is ProviderRuntimeState.HEALTHY:
                 score += 500
             elif observation.state is ProviderRuntimeState.DEGRADED:

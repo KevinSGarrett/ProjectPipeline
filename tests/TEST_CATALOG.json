@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 491,
+  "test_count": 510,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -31,6 +31,16 @@
       "callable": "test_mock_tool_adapter_enforces_operation_allowlist",
       "path": "tests/test_agent_router_adapters.py",
       "test_id": "TEST-AGENT-ADAPTER-006"
+    },
+    {
+      "callable": "test_cursor_cli_adapter_is_shell_free_and_read_only_by_default",
+      "path": "tests/test_agent_router_adapters.py",
+      "test_id": "TEST-AGENT-ADAPTER-007"
+    },
+    {
+      "callable": "test_cursor_cli_adapter_requires_explicit_mutation_admission",
+      "path": "tests/test_agent_router_adapters.py",
+      "test_id": "TEST-AGENT-ADAPTER-008"
     },
     {
       "callable": "test_circuit_opens_after_bounded_failures",
@@ -198,6 +208,11 @@
       "test_id": "TEST-ARTIFACT-STORE-001"
     },
     {
+      "callable": "test_unattended_operating_loop_is_a_non_optional_completion_fact",
+      "path": "tests/test_assurance_completion.py",
+      "test_id": "TEST-ASSURANCE-COMPLETION-007"
+    },
+    {
       "callable": "test_candidate_claim_is_challenged_by_missing_or_stale_evidence",
       "path": "tests/test_assurance_completion.py",
       "test_id": "TEST-ASSURE-CANDIDATE-001"
@@ -216,6 +231,11 @@
       "callable": "test_repository_plan_rejects_unverifiable_criterion_before_work",
       "path": "tests/test_assurance_compiler.py",
       "test_id": "TEST-ASSURE-COMPILER-002"
+    },
+    {
+      "callable": "test_single_item_lifecycle_only_delivery_is_blocked",
+      "path": "tests/test_delivery_progress.py",
+      "test_id": "TEST-ASSURE-DELIVERY-001"
     },
     {
       "callable": "test_completion_gate_model_rejects_false_complete_claim",
@@ -261,6 +281,11 @@
       "callable": "test_self_review_never_satisfies_high_risk_review",
       "path": "tests/test_assurance_evidence.py",
       "test_id": "TEST-ASSURE-REVIEW-001"
+    },
+    {
+      "callable": "test_component_golden_journeys_cannot_replace_autonomous_runtime_qualification",
+      "path": "tests/test_assurance_completion.py",
+      "test_id": "TEST-ASSURE-RUNTIME-GATE-001"
     },
     {
       "callable": "test_scope_change_budget_exhaustion_blocks_autonomous_expansion",
@@ -838,6 +863,11 @@
       "test_id": "TEST-CONTROL-READINESS-001"
     },
     {
+      "callable": "test_issue_with_complete_requirements_but_incomplete_issue_proof_is_quarantined",
+      "path": "tests/test_control_kernel.py",
+      "test_id": "TEST-CONTROL-RECONCILIATION-001"
+    },
+    {
       "callable": "test_priority_score_considers_priority_criticality_deadline_risk_and_unblock",
       "path": "tests/test_build_sequencer.py",
       "test_id": "TEST-CONTROL-SEQUENCE-001"
@@ -1051,6 +1081,11 @@
       "callable": "test_context_foundation_is_registered_and_valid",
       "path": "tests/test_context_validation.py",
       "test_id": "TEST-CTX-VALIDATION-001"
+    },
+    {
+      "callable": "test_cursor_control_package_is_complete_and_fail_closed_before_live_qualification",
+      "path": "tests/test_cursor_takeover.py",
+      "test_id": "TEST-CURSOR-TAKEOVER-001"
     },
     {
       "callable": "DecisionResolutionTests.test_accepted_adrs_link_sources_requirements_components_and_tradeoffs",
@@ -1363,6 +1398,26 @@
       "test_id": "TEST-JIRA-ADAPTER-004"
     },
     {
+      "callable": "test_jira_source_database_views_and_remote_readback_align",
+      "path": "tests/test_jira_operational_alignment.py",
+      "test_id": "TEST-JIRA-ALIGN-001"
+    },
+    {
+      "callable": "test_jira_database_state_drift_fails_closed",
+      "path": "tests/test_jira_operational_alignment.py",
+      "test_id": "TEST-JIRA-ALIGN-002"
+    },
+    {
+      "callable": "test_jira_generated_projection_drift_fails_closed",
+      "path": "tests/test_jira_operational_alignment.py",
+      "test_id": "TEST-JIRA-ALIGN-003"
+    },
+    {
+      "callable": "test_jira_remote_observation_must_match_its_cited_snapshot",
+      "path": "tests/test_jira_operational_alignment.py",
+      "test_id": "TEST-JIRA-ALIGN-004"
+    },
+    {
       "callable": "JiraCliTests.test_validate_and_export_import_round_trip",
       "path": "tests/test_jira_cli.py",
       "test_id": "TEST-JIRA-CLI-001"
@@ -1666,6 +1721,46 @@
       "callable": "test_all_orchestration_simulations_pass",
       "path": "tests/test_orchestration_simulation.py",
       "test_id": "TEST-ORCH-SIM-001"
+    },
+    {
+      "callable": "test_repaired_product_outcome_contract_is_fail_closed_and_valid",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-001"
+    },
+    {
+      "callable": "test_previous_missing_outcome_and_broad_intake_coverage_fail",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-002"
+    },
+    {
+      "callable": "test_command_center_director_chat_cannot_qualify_persistent_director",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-003"
+    },
+    {
+      "callable": "test_user_intent_context_cannot_silently_remove_operator_outcome",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-004"
+    },
+    {
+      "callable": "test_outcome_requires_cohesive_epic_and_local_real_journey",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-005"
+    },
+    {
+      "callable": "test_local_or_mock_evidence_cannot_qualify_product_outcome",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-006"
+    },
+    {
+      "callable": "test_implemented_requirement_with_only_planned_jira_requires_finding",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-007"
+    },
+    {
+      "callable": "test_plan_catalog_must_match_authoritative_plan_status",
+      "path": "tests/test_product_outcome_contract.py",
+      "test_id": "TEST-PDEF-OUTCOME-008"
     },
     {
       "callable": "ProvenanceTests.test_knowledge_pack_registry_preserves_source_relations",

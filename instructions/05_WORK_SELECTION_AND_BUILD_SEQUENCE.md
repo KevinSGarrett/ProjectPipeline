@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-05` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.2.0` |
 | Primary domains | `work_selection`, `budgeting` |
 | Governing entry point | `AGENTS.md` |
 
@@ -52,11 +52,15 @@ Before claiming an item, confirm:
 - expected cost fits the budget policy;
 - required context and verification are attainable.
 
+Bulk-audit a compatible candidate set before admitting implementation. Compare accepted requirements with existing code, tests, evidence, and implementation mappings. When these already prove the work, Project Control reports `RECONCILIATION_REQUIRED`; do not start another implementation lane. Reconcile at least the machine-policy batch minimum in one bounded change unless a real implementation or defect correction is also present.
+
 If the top-ranked item is blocked, record the blocker and select the next independent eligible item. Do not stop the project unless the blocker is globally critical.
 
 ## Vertical slices and cohesion
 
 Prefer a complete behavior with code, tests, generated artifacts, documentation, traceability, and evidence over scattered partial edits across unrelated components. One cohesive PR may satisfy multiple linked tasks when acceptance and rollback boundaries align.
+
+The unit of delivery is the cohesive vertical slice, not a Jira lifecycle arrow. Compatible transitions inside a slice are bookkeeping and share one branch, PR, expensive gate, independent review, merge, and post-merge reconciliation. Never advance one already-complete item through a branch or PR per state.
 
 Do not bounce between unrelated components to maximize apparent activity.
 

@@ -2,6 +2,11 @@ from project_pipeline.resilience.backup import BackupPlanner, load_recovery_obje
 from project_pipeline.resilience.failover import RecoveryDirector, decide_operating_mode
 from project_pipeline.resilience.local_models import LocalModelGateway, load_local_runtimes
 from project_pipeline.resilience.persistence import ResilienceStore
+from project_pipeline.resilience.restore import (
+    RestoreIntentStore,
+    RestoreTargetPolicy,
+    verify_restored_tree,
+)
 from project_pipeline.resilience.runbook import (
     ApprovedRunbook,
     RunbookActionResult,
@@ -19,6 +24,8 @@ __all__ = [
     "LocalModelGateway",
     "RecoveryDirector",
     "ResilienceStore",
+    "RestoreIntentStore",
+    "RestoreTargetPolicy",
     "RunbookActionResult",
     "RunbookExecutionResult",
     "RunbookExecutor",
@@ -30,4 +37,5 @@ __all__ = [
     "simulate_scenario",
     "supported_scenarios",
     "validate_resilience_foundation",
+    "verify_restored_tree",
 ]

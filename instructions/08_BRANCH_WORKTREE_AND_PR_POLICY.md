@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-08` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.2.0` |
 | Primary domains | `branches`, `worktrees`, `pull_requests` |
 | Governing entry point | `AGENTS.md` |
 
@@ -55,6 +55,8 @@ One PR may satisfy multiple tasks when they form one functional slice, share acc
 
 Bad granularity separates a variable rename, its tests, regenerated index, and Jira traceability into different PRs. Good granularity integrates behavior, tests, generated output, documentation, traceability, and evidence in one reviewable change.
 
+A PR that changes only one item's lifecycle or generated lifecycle projections is prohibited. An evidence-backed reconciliation-only PR must contain at least the batch size in `policies/BRANCH_PR_POLICY.json`; otherwise fold it into a real cohesive implementation slice or perform no PR-producing mutation. The delivery-progress gate evaluates the exact base and head and fails closed when this invariant is violated.
+
 ## PR content
 
 Use `.github/pull_request_template.md` or `templates/PULL_REQUEST_BODY.md`. Include objective, Jira IDs, requirements, plans/ADRs, implementation summary, acceptance, tests/evidence, security/data/observability/operations impact, dependencies, external-system impact, rollback/recovery, UI evidence, known limitations, and follow-up.
@@ -76,3 +78,5 @@ Cleanup requires all of:
 - no uncommitted or unpublished changes;
 - Jira/evidence reconciliation complete;
 - remote deletion authorized when requested.
+
+When every condition is true, cleanup is autonomously authorized and mandatory in the same integration lifecycle. No human confirmation is required. If a condition is false, preserve the branch/worktree and record the exact failed condition; do not create a new lane merely to avoid cleanup.

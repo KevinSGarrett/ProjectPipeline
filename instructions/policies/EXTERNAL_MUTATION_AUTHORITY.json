@@ -5,23 +5,26 @@
       "local tests and deterministic generation",
       "local branches and registered worktrees",
       "normal local commits associated with owned work",
+      "policy-compatible routine dependency installation",
       "dry-run external plans",
       "normal ProjectPipeline pull-request creation when a standing grant and all write preconditions exist",
-      "eligible pull-request merge only after all required deterministic and independent gates pass",
+      "eligible pull-request merge after deterministic gates and policy-qualified independent verification pass without human review",
       "ProjectPipeline Jira lifecycle updates when a standing grant and reconciliation contract exist",
+      "evidence-backed remote Jira Done transition after integrated-main verification",
+      "eligible local and remote branch and worktree cleanup after merge proof",
       "namespaced PPQS test repositories, branches, pull requests, Jira projects, and test releases"
     ],
-    "HUMAN_REQUIRED": [
+    "EXTERNAL_PRECONDITION": [
       "unresolved legal or license question",
       "MFA or CAPTCHA",
-      "missing secret requiring owner provisioning or rotation",
+      "required credential reference is unavailable",
       "destructive action outside established scope",
       "material cost above policy",
       "irreconcilable source requirements",
       "security incident requiring account or identity intervention",
       "physical hardware action"
     ],
-    "POLICY_GATED": [
+    "AUTONOMOUSLY_POLICY_GATED": [
       "remote branch deletion",
       "GitHub ruleset or protection changes",
       "CI permission changes",
@@ -45,6 +48,13 @@
     ]
   },
   "default": "DENY",
+  "external_precondition_behavior": {
+    "assign_operator_work": false,
+    "continue_unaffected_work": true,
+    "fabricate_capability": false,
+    "schedule_autonomous_recheck": true,
+    "state": "BLOCKED_EXTERNAL"
+  },
   "preconditions_for_any_remote_write": [
     "validated action intent",
     "known actor identity",
@@ -53,7 +63,8 @@
     "idempotency key",
     "required credentials through approved references",
     "budget and security gates when applicable",
-    "reconciliation plan for an unknown outcome"
+    "reconciliation plan for an unknown outcome",
+    "readback verification path"
   ],
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",

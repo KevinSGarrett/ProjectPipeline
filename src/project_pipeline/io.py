@@ -16,7 +16,6 @@ DEFAULT_IGNORED_DIRECTORIES = frozenset(
         ".codex",
         ".codex_backups",
         ".claude",
-        ".cursor",
         ".cache",
         ".direnv",
         ".eggs",
@@ -68,6 +67,24 @@ def _is_ignored_file(name: str) -> bool:
         or lower == "coverage.xml"
         or (lower.startswith("junit") and lower.endswith(".xml"))
         or lower.endswith((".prof", ".pyc", ".pyo"))
+    )
+
+
+def _is_shared_cursor_path(relative: Path) -> bool:
+    value = relative.as_posix()
+    if value in {
+        ".cursor/cli.json",
+        ".cursor/hooks.json",
+        ".cursor/environment.json",
+        ".cursor/mcp.example.json",
+        ".cursor/hooks/guard_shell.py",
+        ".cursor/hooks/continue-cycle.py",
+    }:
+        return True
+    return (
+        len(relative.parts) >= 3
+        and relative.parts[:2] == (".cursor", "rules")
+        and relative.suffix == ".mdc"
     )
 
 
@@ -137,6 +154,12 @@ def iter_repository_files(
     for path in sorted(candidates, key=lambda item: item.as_posix().lower()):
         relative = path.relative_to(root)
         if relative.parts and relative.parts[0].startswith(".codex"):
+            continue
+        if (
+            relative.parts
+            and relative.parts[0] == ".cursor"
+            and not _is_shared_cursor_path(relative)
+        ):
             continue
         if relative.parts and relative.parts[0] == "state":
             continue

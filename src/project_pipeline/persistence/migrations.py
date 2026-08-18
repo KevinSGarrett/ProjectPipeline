@@ -321,6 +321,24 @@ def write_migration_catalog(root: Path) -> MigrationCatalog:
                 reversible=True,
                 compatibility_phase="VERIFY",
             ),
+            _record(
+                root,
+                migration_id="PPDB-0020",
+                sequence=20,
+                name="autonomy_runtime_supervisor",
+                depends_on=("PPDB-0019",),
+                reversible=True,
+                compatibility_phase="EXPAND",
+            ),
+            _record(
+                root,
+                migration_id="PPDB-0021",
+                sequence=21,
+                name="unattended_qualification",
+                depends_on=("PPDB-0020",),
+                reversible=True,
+                compatibility_phase="EXPAND",
+            ),
         )
     )
     write_json(_catalog_path(root), catalog.model_dump(mode="json"))

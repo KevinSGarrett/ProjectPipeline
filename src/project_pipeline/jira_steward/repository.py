@@ -8,11 +8,12 @@ from typing import Any
 
 from project_pipeline.domain.jira import (
     JiraIssueType,
+    JiraLifecycleState,
     JiraMirrorBundle,
     JiraRelationshipType,
     LocalJiraIssue,
 )
-from project_pipeline.io import read_json, write_json
+from project_pipeline.io import read_json, read_jsonl, write_json
 from project_pipeline.jira import ISSUE_DIRECTORIES, build_relationship_edges
 
 
@@ -197,7 +198,11 @@ def validate_jira_mirror(
         ):
             errors.append(f"{issue.local_id} relationship dependencies are internally inconsistent")
     for issue in issues:
-        if issue.issue_type is JiraIssueType.EPIC and child_counts[issue.local_id] == 0:
+        if (
+            issue.issue_type is JiraIssueType.EPIC
+            and child_counts[issue.local_id] == 0
+            and issue.state is not JiraLifecycleState.CANCELLED
+        ):
             errors.append(f"epic {issue.local_id} is orphaned")
     parent_cycles = _cycle_nodes(parent_edges)
     if parent_cycles:
@@ -223,6 +228,18 @@ def validate_jira_mirror(
             errors.append("stored Jira graph nodes differ from typed issue records")
     else:
         errors.append("stored Jira relationship graph is missing")
+    issue_index_path = root / "jira" / "indexes" / "issues.jsonl"
+    issue_by_id_path = root / "jira" / "indexes" / "issues_by_id.json"
+    expected_issue_rows = {item.local_id: item.model_dump(mode="json") for item in issues}
+    observed_issue_rows = (
+        {str(item.get("local_id")): item for item in read_jsonl(issue_index_path)}
+        if issue_index_path.exists()
+        else {}
+    )
+    if observed_issue_rows != expected_issue_rows:
+        errors.append("stored Jira issue index differs from canonical source issues")
+    if not issue_by_id_path.exists() or read_json(issue_by_id_path) != expected_issue_rows:
+        errors.append("stored Jira issue-by-id index differs from canonical source issues")
     if any(item.last_observed_remote_state for item in issues) and not remote_keys:
         warnings.append("remote observations exist without stable remote Jira key mappings")
     return JiraMirrorValidationReport(

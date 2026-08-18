@@ -10,7 +10,8 @@
         "STALE_REMOTE_OBSERVATION",
         "UNKNOWN_WRITE_OUTCOME",
         "UNSUPPORTED_REMOTE_TYPE",
-        "HUMAN_DECISION_REQUIRED"
+        "HUMAN_DECISION_REQUIRED",
+        "EVIDENCE_RECONCILIATION_REQUIRED"
       ],
       "title": "JiraConflictKind",
       "type": "string"

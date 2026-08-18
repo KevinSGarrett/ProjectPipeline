@@ -1,15 +1,20 @@
 import json
+import subprocess
 import sys
+from pathlib import Path
 
 import pytest
 
 from project_pipeline.agent_router import (
     AnthropicMessagesAdapter,
+    CursorCliProviderAdapter,
     GeminiGenerateContentAdapter,
     LocalProcessProviderAdapter,
+    MockProviderAdapter,
     MockToolAdapter,
     OpenAIResponsesAdapter,
     ProviderAdapterError,
+    build_adapter,
 )
 from project_pipeline.domain import ExecutionTaskContract
 
@@ -119,8 +124,84 @@ def test_local_process_adapter_uses_no_shell_and_parses_json():
     assert result.output["echo"] == "T" and result.usage.input_units == 1
 
 
+def test_build_adapter_is_provider_neutral_and_rejects_unknown_ids():
+    adapter = build_adapter("adapter:mock-provider", provider_id="provider:mock-local")
+    assert isinstance(adapter, MockProviderAdapter)
+    litellm = build_adapter("adapter:litellm-proxy", api_key="", base_url="http://127.0.0.1:4000")
+    assert litellm.adapter_id == "adapter:litellm-proxy"
+    with pytest.raises(ValueError, match="unknown adapter"):
+        build_adapter("adapter:does-not-exist")
+
+
+def test_hosted_connection_loss_is_unknown_outcome():
+    def transport(*args):
+        raise OSError("connection reset")
+
+    with pytest.raises(ProviderAdapterError) as error:
+        OpenAIResponsesAdapter("x", transport=transport).execute(contract(), model_name="m")
+    assert error.value.kind == "UNKNOWN_OUTCOME"
+    assert error.value.retryable is True
+
+
+def test_local_process_loss_is_not_retryable(monkeypatch):
+    class Lost:
+        returncode = -9
+        stdout = b""
+        stderr = b""
+
+    monkeypatch.setattr(subprocess, "run", lambda *args, **kwargs: Lost())
+    with pytest.raises(ProviderAdapterError) as error:
+        LocalProcessProviderAdapter((sys.executable, "-c", "pass")).execute(
+            contract(), model_name="local"
+        )
+    assert error.value.kind == "PROCESS_LOSS"
+    assert error.value.retryable is False
+
+
 def test_mock_tool_adapter_enforces_operation_allowlist():
     tool = MockToolAdapter({"tool:test": {"read"}})
     assert tool.invoke("tool:test", "read", {"x": 1})["outcome"] == "MOCK_VERIFIED"
     with pytest.raises(ProviderAdapterError):
         tool.invoke("tool:test", "write", {})
+
+
+def test_cursor_cli_adapter_is_shell_free_and_read_only_by_default(tmp_path: Path):
+    observed = {}
+
+    def runner(argv, **kwargs):
+        observed.update(argv=argv, kwargs=kwargs)
+        return subprocess.CompletedProcess(
+            argv,
+            0,
+            json.dumps(
+                {
+                    "type": "result",
+                    "result": "bounded audit complete",
+                    "session_id": "cursor-session-1",
+                    "usage": {"input_tokens": 7, "output_tokens": 3},
+                }
+            ).encode(),
+            b"",
+        )
+
+    result = CursorCliProviderAdapter(str(tmp_path), runner=runner).execute(
+        contract(), model_name="auto"
+    )
+    assert observed["kwargs"]["shell"] is False
+    assert "--force" not in observed["argv"]
+    assert observed["kwargs"]["cwd"] == str(tmp_path)
+    assert result.provider_request_id == "cursor-session-1"
+    assert result.usage.input_units == 7
+
+
+def test_cursor_cli_adapter_requires_explicit_mutation_admission(tmp_path: Path):
+    observed = {}
+
+    def runner(argv, **kwargs):
+        observed["argv"] = argv
+        return subprocess.CompletedProcess(argv, 0, b'{"type":"result","result":"ok"}', b"")
+
+    CursorCliProviderAdapter(str(tmp_path), allow_write=True, runner=runner).execute(
+        contract(), model_name="auto"
+    )
+    assert "--force" in observed["argv"]

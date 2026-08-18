@@ -65,7 +65,8 @@ class DeterministicGroundedDirectorResponder:
     """Fail-closed responder used when no qualified model adapter is configured.
 
     It provides useful state summaries and typed action proposals without pretending that a
-    model-generated answer or hidden reasoning exists.
+    model-generated answer or hidden reasoning exists. This is the Command Center's operator
+    interaction boundary, not the persistent Autonomy Director or autonomous operating loop.
     """
 
     def respond(

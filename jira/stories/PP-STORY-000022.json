@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline coverage --root .",
         "method": "traceability_check",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "completion_gate_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -56,10 +56,12 @@
     "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
+    "bulk-reconciled",
     "domain-story",
+    "implemented",
     "plan-budget-001"
   ],
   "last_observed_remote_state": {

@@ -63,7 +63,7 @@ class JiraReconciliationPolicy:
         }
     )
     import_remote_only_issues: bool = False
-    require_human_for_remote_done: bool = True
+    require_completion_evidence_for_remote_done: bool = True
 
 
 class JiraReconciler:
@@ -163,7 +163,6 @@ class JiraReconciler:
                         local_id=remote_issue.local_id,
                         remote_key=remote_issue.remote_key,
                         payload=remote_issue.model_dump(mode="json"),
-                        requires_human_approval=True,
                     )
                 )
         self._plan_relationship_links(local_by_id, remote, operations)
@@ -378,8 +377,8 @@ class JiraReconciler:
             return
         if remote_state is local.state:
             return
-        human_required = (
-            self.policy.require_human_for_remote_done
+        evidence_reconciliation_required = (
+            self.policy.require_completion_evidence_for_remote_done
             and remote_state is JiraLifecycleState.DONE
             and local.state is not JiraLifecycleState.DONE
         )
@@ -397,18 +396,17 @@ class JiraReconciler:
                     "observed_internal_state": remote_state.value,
                     "current_local_state": local.state.value,
                 },
-                requires_human_approval=human_required,
             )
         )
-        if human_required:
+        if evidence_reconciliation_required:
             conflicts.append(
                 self._conflict(
-                    JiraConflictKind.HUMAN_DECISION_REQUIRED,
+                    JiraConflictKind.EVIDENCE_RECONCILIATION_REQUIRED,
                     local_id=local.local_id,
                     remote_key=remote.remote_key,
                     fields=("state", "completion_evidence"),
                     description="Remote Jira reports completion while the local evidence-backed record is not done.",
-                    required_resolution="Verify acceptance, tests, review, blockers, and completion evidence before accepting DONE.",
+                    required_resolution="Autonomously reconcile acceptance, tests, independent verification, blockers, integrated-main state, and completion evidence before accepting DONE.",
                 )
             )
 
@@ -588,5 +586,7 @@ def load_jira_reconciliation_policy(
         status_mapping=status_mapping,
         preferred_remote_status=preferred,
         import_remote_only_issues=bool(policy_document["import_remote_only_issues"]),
-        require_human_for_remote_done=bool(policy_document["require_human_for_remote_done"]),
+        require_completion_evidence_for_remote_done=bool(
+            policy_document["require_completion_evidence_for_remote_done"]
+        ),
     )

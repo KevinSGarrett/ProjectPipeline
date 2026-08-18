@@ -96,7 +96,7 @@ class DetailedRequirementTests(unittest.TestCase):
         }
 
     def test_atomic_catalog_has_stable_ids_fields_and_all_domains(self) -> None:
-        self.assertGreaterEqual(len(self.requirements), 351)
+        self.assertGreaterEqual(len(self.requirements), 352)
         identifiers = [item["requirement_id"] for item in self.requirements]
         self.assertEqual(len(identifiers), len(set(identifiers)))
         self.assertEqual({item["domain"] for item in self.requirements}, DOMAINS)

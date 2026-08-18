@@ -127,9 +127,19 @@
       "title": "Priority",
       "type": "string"
     },
+    "product_scope_allowed": {
+      "default": true,
+      "title": "Product Scope Allowed",
+      "type": "boolean"
+    },
     "project_id": {
       "title": "Project Id",
       "type": "string"
+    },
+    "reconciliation_required": {
+      "default": false,
+      "title": "Reconciliation Required",
+      "type": "boolean"
     },
     "requirement_ids": {
       "default": [],

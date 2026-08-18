@@ -40,3 +40,7 @@ Success requires bidirectional traceability, reproducible deployment, verified c
 ## PLAN-PDEF-001:SEC-07 Constraints
 
 The target Windows path and locally downloaded upstream repositories are not available in the current execution environment. External GitHub, Jira, provider, purchasing, and cloud mutations remain disabled without explicit authorization and credentials. These constraints do not prevent local implementation, mock verification, contracts, tests, packaging, or exact activation procedures.
+
+## PLAN-PDEF-001:SEC-08 Autonomous operating outcome
+
+ProjectPipeline SHALL preserve and enforce the complete source-derived autonomous operating-loop product outcome in requirements, completion controls, and runtime governance without reducing it to disconnected component checklists.

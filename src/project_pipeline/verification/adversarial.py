@@ -38,6 +38,7 @@ def run_adversarial_checks(root: Path) -> tuple[str, ...]:
         "implementation_traceability_complete": True,
         "critical_paths_tested": True,
         "golden_journeys_pass": True,
+        "autonomous_runtime_qualified": True,
         "security_gates_satisfied": True,
         "resilience_verified": True,
         "deployment_reproducible": True,
@@ -47,6 +48,7 @@ def run_adversarial_checks(root: Path) -> tuple[str, ...]:
         "unresolved_items_truthful": True,
         "command_center_truthful": False,
         "jira_truthful": True,
+        "unattended_operating_loop_qualified": True,
         "unexplained_gap_count": 0,
     }
     decision = evaluate_completion_gate(

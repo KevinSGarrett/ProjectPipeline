@@ -1,8 +1,64 @@
 {
+  "$defs": {
+    "SBOMComponentCompliance": {
+      "additionalProperties": false,
+      "properties": {
+        "modification_obligation_record_id": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Modification Obligation Record Id",
+          "type": "string"
+        },
+        "notice_reference": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Notice Reference",
+          "type": "string"
+        },
+        "permitted_use_record_id": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Permitted Use Record Id",
+          "type": "string"
+        },
+        "provenance_reference_id": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Provenance Reference Id",
+          "type": "string"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        }
+      },
+      "required": [
+        "notice_reference",
+        "permitted_use_record_id",
+        "modification_obligation_record_id",
+        "provenance_reference_id"
+      ],
+      "title": "SBOMComponentCompliance",
+      "type": "object"
+    }
+  },
   "$id": "https://project-pipeline.local/schemas/security_sbom_component.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
   "properties": {
+    "compliance": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SBOMComponentCompliance"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
     "component_id": {
       "title": "Component Id",
       "type": "string"

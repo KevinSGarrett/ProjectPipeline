@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "goal_id": "PROJECT-PIPELINE-AUTONOMOUS-END-TO-END",
+  "pursuing_goal": "Deliver and qualify ProjectPipeline as a continuously operating, local-first autonomous engineering organization that accepts complete project inputs, compiles a verified project model, autonomously selects and executes genuinely missing work through conflict-safe parallel lanes and qualified workers, verifies results, governs GitHub and Jira, merges accepted changes, reconciles external state, recomputes project state, records unavailable external preconditions without assigning operator work or stopping unaffected lanes, exposes truthful live state through the Command Center, and continues until the deterministic Completion Gate reports COMPLETE for the integrated, released, and operationally verified system.",
+  "source_references": [
+    "SRC-014:L000001-L000087",
+    "SRC-015:L000001-L000113"
+  ],
+  "original_knowledge_pack": {
+    "artifact_id": "INPUT-KNOWLEDGE-001",
+    "pack_name": "Universal_Autonomous_Parallel_System_AI_Knowledge_Pack_v1",
+    "archive_sha256": "b0f1f69246c36b8c5a0035dd141fbddc757003cf0715f2e6a0e0e150a2482c6b",
+    "canonical_registry": "provenance/source_registry.json",
+    "pack_reference": "provenance/source_pack_reference.json",
+    "raw_archive_policy": "REFERENCE_ONLY_NOT_AGENT_INSTRUCTION"
+  },
+  "provider_id": "provider:cursor-cli",
+  "activation_state": "QUARANTINED",
+  "maximum_implementation_lanes": 2,
+  "maximum_progressless_cycles": 2,
+  "expensive_gate_boundary": "COHESIVE_VERTICAL_SLICE",
+  "ordinary_selection_paused_until_model_repair": true,
+  "require_issue_specific_artifact_audit": true,
+  "require_windows_native_verification": true,
+  "require_privacy_mode": true,
+  "external_write_mode": "GOVERNED_ADAPTERS_ONLY",
+  "unattended_qualification_hours": [4, 24, 72],
+  "activation_stages": [
+    "READ_ONLY_TAKEOVER_AUDIT",
+    "CURSOR_CONFIGURATION",
+    "PRODUCT_MODEL_REPAIR",
+    "INTEGRATED_VERTICAL_SLICE",
+    "FIXTURE_GOLDEN_JOURNEY",
+    "CONTROLLED_EXTERNAL_WRITE_QUALIFICATION",
+    "RESTART_RECOVERY",
+    "FOUR_HOUR_TRIAL",
+    "TWENTY_FOUR_HOUR_SOAK",
+    "SEVENTY_TWO_HOUR_SOAK",
+    "RELEASE_AND_COMPLETION_GATE"
+  ]
+}

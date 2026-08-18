@@ -130,6 +130,30 @@ class AgentRouterStore:
                 ),
             )
 
+    def routing_decisions(self) -> tuple[RoutingDecision, ...]:
+        return tuple(
+            RoutingDecision.model_validate_json(r[0])
+            for r in self.db.execute(
+                "SELECT payload_json FROM agent_routing_decisions ORDER BY created_at_utc,decision_id"
+            )
+        )
+
+    def execution_receipts(self) -> tuple[ExecutionReceipt, ...]:
+        return tuple(
+            ExecutionReceipt.model_validate_json(r[0])
+            for r in self.db.execute(
+                "SELECT payload_json FROM agent_execution_receipts ORDER BY created_at_utc,receipt_id"
+            )
+        )
+
+    def qualifications(self) -> tuple[AdapterQualificationReport, ...]:
+        return tuple(
+            AdapterQualificationReport.model_validate_json(r[0])
+            for r in self.db.execute(
+                "SELECT payload_json FROM agent_qualification_reports ORDER BY evaluated_at_utc,report_id"
+            )
+        )
+
     def save_qualification(self, item: AdapterQualificationReport) -> None:
         with self.db:
             self.db.execute(

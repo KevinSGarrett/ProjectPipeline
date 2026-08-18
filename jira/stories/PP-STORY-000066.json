@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,15 +17,17 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000095",
     "EVID-000096",
     "EVID-000097",
     "EVID-000098",
+    "EVID-000099",
     "EVID-000100",
     "EVID-000101"
   ],
@@ -55,12 +57,14 @@
   "expected_implementation_artifacts": [
     "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
+    "bulk-reconciled",
     "capability-story",
+    "cluster-durability",
     "domain-ctrl",
-    "cluster-durability"
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -117,6 +121,6 @@
     "SRC-017:L000281-L000359"
   ],
   "state": "BACKLOG",
-  "title": "Durability \u2014 Control Plane and Orchestration",
+  "title": "Durability — Control Plane and Orchestration",
   "upstream_dependencies": []
 }

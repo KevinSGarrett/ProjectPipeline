@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-19` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.2.0` |
 | Primary domains | `release`, `post_merge` |
 | Governing entry point | `AGENTS.md` |
 
@@ -34,7 +34,7 @@ Use deterministic archive/build tooling. Exclude `.git`, `.local`, caches, build
 
 ## Publication
 
-Publication is policy-gated. Verify exact repository/tag/release target and existing state before writing. If publication outcome is uncertain, stop and reconcile. Do not publish from an unverified exported snapshot as though it were a release branch.
+Publication is autonomously policy-gated. When the exact target, Completion Gate, required release evidence, provisioned credentials, independent verification receipt, idempotent intent, and readback path all pass, publish and verify without human approval. If publication outcome is uncertain, stop and reconcile. Do not publish from an unverified exported snapshot as though it were a release branch.
 
 ## Post-release verification
 
@@ -46,7 +46,7 @@ Use `templates/RELEASE_HANDOFF.md`. Include identity, SHA/version, scope, archit
 
 ## Branch and worktree cleanup
 
-After integrated verification and Jira/evidence reconciliation, remove eligible worktrees and local branches, then remote branches when authorized. Preserve unmerged, dirty, or evidence-bearing work. Do not infer remote deletion from local absence.
+After integrated verification and Jira/evidence reconciliation, remove eligible worktrees and local branches, then remote branches under the standing cleanup grant. This cleanup is mandatory and autonomous when the proof conditions pass. Preserve unmerged, dirty, or evidence-bearing work. Do not infer remote deletion from local absence.
 
 ## Test resource cleanup
 

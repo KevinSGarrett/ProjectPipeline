@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_migrations.py",
         "method": "automated_behavior_and_evidence_validation",
         "path": "database/MIGRATION_CATALOG.json",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_migrations.py",
         "method": "automated_behavior_and_evidence_validation",
         "path": "tests/test_migrations.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -60,7 +60,7 @@
     "schemas/migration_catalog.schema.json",
     "schemas/migration_record.schema.json"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "migrations",

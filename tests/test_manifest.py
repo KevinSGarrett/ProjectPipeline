@@ -99,3 +99,32 @@ class ManifestTests(unittest.TestCase):
                 paths,
                 {".agents/skills/project/SKILL.md", ".env.example", "src/app.py"},
             )
+
+    def test_manifest_tracks_shared_cursor_controls_but_excludes_private_cursor_state(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for relative in (
+                ".cursor/rules/authority.mdc",
+                ".cursor/cli.json",
+                ".cursor/hooks.json",
+                ".cursor/hooks/guard_shell.py",
+                ".cursor/mcp.example.json",
+                ".cursor/mcp.json",
+                ".cursor/scratchpad.md",
+                ".cursor/session.log",
+                ".cursor/private/secret-notes.txt",
+            ):
+                path = root / relative
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text("value\n", encoding="utf-8")
+            paths = {item["path"] for item in build_manifest(root)["files"]}
+            self.assertEqual(
+                paths,
+                {
+                    ".cursor/cli.json",
+                    ".cursor/hooks.json",
+                    ".cursor/hooks/guard_shell.py",
+                    ".cursor/mcp.example.json",
+                    ".cursor/rules/authority.mdc",
+                },
+            )

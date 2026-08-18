@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
         "method": "automated_behavior_validation",
         "path": "database/migrations/sqlite/PPDB-0010_durable_orchestration_recovery.up.sql",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,12 +17,14 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000029",
+    "EVID-000030",
     "EVID-000095",
     "EVID-000096",
     "EVID-000097",
@@ -63,11 +65,13 @@
     "database/migrations/postgresql/PPDB-0010_durable_orchestration_recovery.up.sql",
     "src/project_pipeline/orchestration/persistence.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "orchestration",
+    "bulk-reconciled",
     "durability",
+    "implemented",
+    "orchestration",
     "pass-13"
   ],
   "last_observed_remote_state": {

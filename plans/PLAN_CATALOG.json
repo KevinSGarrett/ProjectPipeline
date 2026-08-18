@@ -1,6 +1,6 @@
 {
   "catalog_id": "PLAN-CATALOG-001",
-  "plan_count": 40,
+  "plan_count": 41,
   "plans": [
     {
       "path": "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md",
@@ -11,7 +11,7 @@
         "GOV-001:L001560-L001573",
         "SRC-014:L000001-L000115"
       ],
-      "status": "PLANNED",
+      "status": "PARTIALLY_IMPLEMENTED",
       "title": "Agents, Models, Providers, and Tools"
     },
     {
@@ -165,6 +165,17 @@
       "title": "Project Control Kernel and Build Sequencer"
     },
     {
+      "path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
+      "plan_id": "PLAN-CTRL-003",
+      "section_id_pattern": "PLAN-CTRL-003:SEC-NN",
+      "source_references": [
+        "SRC-014:L000001-L000086",
+        "SRC-015:L000001-L000112"
+      ],
+      "status": "ACTIVE",
+      "title": "Autonomous Runtime Integration and Unattended Qualification"
+    },
+    {
       "path": "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md",
       "plan_id": "PLAN-CTX-001",
       "section_id_pattern": "PLAN-CTX-001:SEC-NN",
@@ -247,7 +258,7 @@
         "GOV-001:L000748-L000764",
         "SRC-012:L000001-L000100"
       ],
-      "status": "PROVISIONAL",
+      "status": "PARTIALLY_IMPLEMENTED",
       "title": "Deployment and Infrastructure"
     },
     {
@@ -258,7 +269,7 @@
         "GOV-001:L000733-L000747",
         "GOV-001:L001736-L001748"
       ],
-      "status": "PLANNED",
+      "status": "ACTIVE",
       "title": "Platform Lifecycle and Portfolio Governance"
     },
     {
@@ -376,7 +387,7 @@
         "SRC-012:L000001-L000100",
         "SRC-015:L000003-L000112"
       ],
-      "status": "PLANNED",
+      "status": "PARTIALLY_IMPLEMENTED",
       "title": "Resilience, Recovery, and Disaster Readiness"
     },
     {

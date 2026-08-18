@@ -1,5 +1,5 @@
 {
-  "edge_count": 848,
+  "edge_count": 890,
   "edges": [
     {
       "from": "PP-EPIC-000001",
@@ -534,6 +534,36 @@
     {
       "from": "PP-EPIC-000035",
       "to": "PP-STORY-000137",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000036",
+      "to": "PP-STORY-000138",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000036",
+      "to": "PP-STORY-000139",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000036",
+      "to": "PP-STORY-000140",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000036",
+      "to": "PP-STORY-000141",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000036",
+      "to": "PP-STORY-000142",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-EPIC-000036",
+      "to": "PP-STORY-000143",
       "type": "PARENT_OF"
     },
     {
@@ -2257,6 +2287,96 @@
       "type": "PARENT_OF"
     },
     {
+      "from": "PP-STORY-000138",
+      "to": "PP-EPIC-000036",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000138",
+      "to": "PP-TASK-000379",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000138",
+      "to": "PP-TASK-000380",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000139",
+      "to": "PP-EPIC-000036",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000139",
+      "to": "PP-STORY-000138",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-STORY-000139",
+      "to": "PP-TASK-000381",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000140",
+      "to": "PP-EPIC-000036",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000140",
+      "to": "PP-STORY-000139",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-STORY-000140",
+      "to": "PP-TASK-000382",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000141",
+      "to": "PP-EPIC-000036",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000141",
+      "to": "PP-STORY-000140",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-STORY-000141",
+      "to": "PP-TASK-000383",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000142",
+      "to": "PP-EPIC-000036",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000142",
+      "to": "PP-STORY-000141",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-STORY-000142",
+      "to": "PP-TASK-000384",
+      "type": "PARENT_OF"
+    },
+    {
+      "from": "PP-STORY-000143",
+      "to": "PP-EPIC-000036",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-STORY-000143",
+      "to": "PP-STORY-000142",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-STORY-000143",
+      "to": "PP-TASK-000385",
+      "type": "PARENT_OF"
+    },
+    {
       "from": "PP-SUBTASK-000045",
       "to": "PP-TASK-000043",
       "type": "CHILD_OF"
@@ -3967,6 +4087,11 @@
       "type": "CHILD_OF"
     },
     {
+      "from": "PP-TASK-000323",
+      "to": "PP-STORY-000092",
+      "type": "RELATES_TO"
+    },
+    {
       "from": "PP-TASK-000324",
       "to": "PP-STORY-000092",
       "type": "CHILD_OF"
@@ -4240,9 +4365,94 @@
       "from": "PP-TASK-000378",
       "to": "PP-STORY-000136",
       "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000379",
+      "to": "PP-STORY-000138",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000380",
+      "to": "PP-STORY-000138",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000380",
+      "to": "PP-TASK-000381",
+      "type": "BLOCKS"
+    },
+    {
+      "from": "PP-TASK-000381",
+      "to": "PP-STORY-000139",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000381",
+      "to": "PP-TASK-000380",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000381",
+      "to": "PP-TASK-000382",
+      "type": "BLOCKS"
+    },
+    {
+      "from": "PP-TASK-000382",
+      "to": "PP-STORY-000140",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000382",
+      "to": "PP-TASK-000381",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000382",
+      "to": "PP-TASK-000383",
+      "type": "BLOCKS"
+    },
+    {
+      "from": "PP-TASK-000383",
+      "to": "PP-STORY-000141",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000383",
+      "to": "PP-TASK-000382",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000383",
+      "to": "PP-TASK-000384",
+      "type": "BLOCKS"
+    },
+    {
+      "from": "PP-TASK-000384",
+      "to": "PP-STORY-000142",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000384",
+      "to": "PP-TASK-000383",
+      "type": "DEPENDS_ON"
+    },
+    {
+      "from": "PP-TASK-000384",
+      "to": "PP-TASK-000385",
+      "type": "BLOCKS"
+    },
+    {
+      "from": "PP-TASK-000385",
+      "to": "PP-STORY-000143",
+      "type": "CHILD_OF"
+    },
+    {
+      "from": "PP-TASK-000385",
+      "to": "PP-TASK-000384",
+      "type": "DEPENDS_ON"
     }
   ],
-  "node_count": 378,
+  "node_count": 393,
   "nodes": [
     {
       "id": "PP-EPIC-000001",
@@ -4455,10 +4665,22 @@
       "type": "EPIC"
     },
     {
+      "id": "PP-EPIC-000036",
+      "state": "IN_PROGRESS",
+      "title": "Autonomous Runtime Integration and Unattended Qualification",
+      "type": "EPIC"
+    },
+    {
       "id": "PP-STORY-000036",
       "state": "BACKLOG",
       "title": "Implement and verify Release, Handoff, and Completion Audit",
       "type": "STORY"
+    },
+    {
+      "id": "PP-EPIC-000037",
+      "state": "CANCELLED",
+      "title": "Autonomous Runtime Integration and Unattended Qualification",
+      "type": "EPIC"
     },
     {
       "id": "PP-TASK-000037",
@@ -5067,10 +5289,22 @@
       "type": "STORY"
     },
     {
+      "id": "PP-STORY-000138",
+      "state": "IN_PROGRESS",
+      "title": "Source-to-control product outcome realignment",
+      "type": "STORY"
+    },
+    {
       "id": "PP-TASK-000138",
       "state": "BACKLOG",
       "title": "Generate the detailed requirement catalog",
       "type": "TASK"
+    },
+    {
+      "id": "PP-STORY-000139",
+      "state": "BACKLOG",
+      "title": "Persistent intake-to-next-work autonomy supervisor",
+      "type": "STORY"
     },
     {
       "id": "PP-SUBTASK-000139",
@@ -5079,10 +5313,22 @@
       "type": "SUBTASK"
     },
     {
+      "id": "PP-STORY-000140",
+      "state": "BACKLOG",
+      "title": "Conflict-safe lanes, recovery, and HUMAN_REQUIRED continuation",
+      "type": "STORY"
+    },
+    {
       "id": "PP-TASK-000140",
       "state": "BACKLOG",
       "title": "Implement source-reference validation",
       "type": "TASK"
+    },
+    {
+      "id": "PP-STORY-000141",
+      "state": "BACKLOG",
+      "title": "Local-real autonomous golden journey",
+      "type": "STORY"
     },
     {
       "id": "PP-SUBTASK-000141",
@@ -5091,10 +5337,22 @@
       "type": "SUBTASK"
     },
     {
+      "id": "PP-STORY-000142",
+      "state": "BACKLOG",
+      "title": "Live integrations, real workers, Command Center, and Windows qualification",
+      "type": "STORY"
+    },
+    {
       "id": "PP-TASK-000142",
       "state": "BACKLOG",
       "title": "Generate canonical source-section dispositions",
       "type": "TASK"
+    },
+    {
+      "id": "PP-STORY-000143",
+      "state": "BACKLOG",
+      "title": "Unattended operation, release, and Completion qualification",
+      "type": "STORY"
     },
     {
       "id": "PP-SUBTASK-000143",
@@ -6178,8 +6436,8 @@
     },
     {
       "id": "PP-TASK-000323",
-      "state": "BACKLOG",
-      "title": "Implement Loop Guard attempt novelty and progress controls",
+      "state": "MERGE_READY",
+      "title": "Enforce objective delivery progress and lifecycle batching",
       "type": "TASK"
     },
     {
@@ -6316,13 +6574,13 @@
     },
     {
       "id": "PP-TASK-000346",
-      "state": "BACKLOG",
+      "state": "BLOCKED",
       "title": "Implement supply-chain scanner and policy-conformance adapters",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000347",
-      "state": "BACKLOG",
+      "state": "IN_PROGRESS",
       "title": "Implement SBOM, integrity, provenance, and license gate",
       "type": "TASK"
     },
@@ -6510,6 +6768,48 @@
       "id": "PP-TASK-000378",
       "state": "BACKLOG",
       "title": "Execute exhaustive final convergence and completion audit",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000379",
+      "state": "IN_PROGRESS",
+      "title": "Install governed Cursor takeover and autonomous runtime outcome",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000380",
+      "state": "IN_PROGRESS",
+      "title": "Repair product definition and source-to-control traceability",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000381",
+      "state": "BACKLOG",
+      "title": "Implement the persistent Autonomy Runtime supervisor",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000382",
+      "state": "BACKLOG",
+      "title": "Integrate conflict-safe lanes, recovery, and partial continuation",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000383",
+      "state": "BACKLOG",
+      "title": "Prove the complete local-real autonomous project journey",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000384",
+      "state": "BACKLOG",
+      "title": "Qualify live governance, real workers, Command Center, and Windows runtime",
+      "type": "TASK"
+    },
+    {
+      "id": "PP-TASK-000385",
+      "state": "BACKLOG",
+      "title": "Pass unattended operation, release, and terminal Completion qualification",
       "type": "TASK"
     }
   ],

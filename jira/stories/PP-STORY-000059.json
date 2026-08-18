@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -26,7 +26,9 @@
     "EVID-000016",
     "EVID-000018",
     "EVID-000019",
-    "EVID-000020"
+    "EVID-000020",
+    "EVID-000022",
+    "EVID-000027"
   ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
@@ -53,13 +55,15 @@
   "expected_implementation_artifacts": [
     "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "architecture-decision",
+    "bulk-reconciled",
     "capability-story",
     "cluster-boundaries",
-    "domain-arch"
+    "domain-arch",
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -118,6 +122,6 @@
     "SRC-009:L000080-L000095"
   ],
   "state": "BACKLOG",
-  "title": "Boundaries \u2014 System Architecture",
+  "title": "Boundaries — System Architecture",
   "upstream_dependencies": []
 }

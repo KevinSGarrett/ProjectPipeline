@@ -51,6 +51,14 @@
         "scripts/instruction_cold_start.py",
         "AGENTS.md"
       ]
+    },
+    {
+      "command": "python -m project_pipeline assurance delivery-gate --root . --base-ref <base-sha> --head-ref HEAD",
+      "name": "delivery_progress_gate",
+      "requires_paths": [
+        "config/assurance_policy.json",
+        "src/project_pipeline/assurance/delivery_progress.py"
+      ]
     }
   ],
   "entry_point": "AGENTS.md",
@@ -59,22 +67,22 @@
       "instruction_id": "PP-ASSET-AGENTS-SKILLS-FAILURE-RECOVERY-SKILL-MD",
       "kind": "SKILL",
       "path": ".agents/skills/failure-recovery/SKILL.md",
-      "sha256": "60d18b050896ccf7858b0d7e86b5225564030bcccf654a13a6efa688cf520748",
-      "size_bytes": 833
+      "sha256": "b6d309ea6288c1f022fc63f31466d20bbf5aec4a746f66266766520310ea9ebb",
+      "size_bytes": 927
     },
     {
       "instruction_id": "PP-ASSET-AGENTS-SKILLS-GITHUB-BRANCH-PR-SKILL-MD",
       "kind": "SKILL",
       "path": ".agents/skills/github-branch-pr/SKILL.md",
-      "sha256": "56384850bc32eaac475dd72dcd2b4f5d398b746360bd5c144f52e118b4b2e0d1",
-      "size_bytes": 776
+      "sha256": "4b9add31a41bdc42263170819e24784296ce0660d3fba1cfc65b566ffd4aba45",
+      "size_bytes": 926
     },
     {
       "instruction_id": "PP-ASSET-AGENTS-SKILLS-JIRA-WORK-ITEM-SKILL-MD",
       "kind": "SKILL",
       "path": ".agents/skills/jira-work-item/SKILL.md",
-      "sha256": "ae9fa827d0eada7dcd6386460ea81ff37611325f266c2bfef8c78eb3fa6a991b",
-      "size_bytes": 904
+      "sha256": "994a7410219413e8054bb3b9b8ba3ea4786a31fc5f5e233b0331f3cc4543a14a",
+      "size_bytes": 1104
     },
     {
       "instruction_id": "PP-ASSET-AGENTS-SKILLS-PPQS-BENCHMARK-SKILL-MD",
@@ -94,15 +102,15 @@
       "instruction_id": "PP-ASSET-AGENTS-SKILLS-RELEASE-HANDOFF-SKILL-MD",
       "kind": "SKILL",
       "path": ".agents/skills/release-handoff/SKILL.md",
-      "sha256": "b6f3ffd5bea8a2fd5ded99604a816c65f1938fcc27915d1e32e99ba3312dbbbd",
-      "size_bytes": 821
+      "sha256": "d2af40d0bed79120d21b5cdf3ca8ab7c30ab435a1a7472bb4d7609a8d4ab9ae0",
+      "size_bytes": 908
     },
     {
       "instruction_id": "PP-ASSET-AGENTS-SKILLS-REMOTE-CPU-WORKER-SKILL-MD",
       "kind": "SKILL",
       "path": ".agents/skills/remote-cpu-worker/SKILL.md",
-      "sha256": "17a89bcc31833c9f6a98b1a9957f4dc2b5abde55b2ffe44154b46448edf1684e",
-      "size_bytes": 914
+      "sha256": "2cb341baa2240a15ffbe6702a534611a8b152667c987ff04b5c0c60360d35fb6",
+      "size_bytes": 953
     },
     {
       "instruction_id": "PP-ASSET-AGENTS-SKILLS-UPSTREAM-QUALIFICATION-SKILL-MD",
@@ -143,36 +151,43 @@
       "instruction_id": "PP-ASSET-GITHUB-WORKFLOWS-QUALITY-YML",
       "kind": "GITHUB_GOVERNANCE",
       "path": ".github/workflows/quality.yml",
-      "sha256": "fdf7bba5bccd076a91fc8caaa355c5cd9b184da582a1e9205cba1ba8bb053730",
-      "size_bytes": 3098
+      "sha256": "29c4e79661b813f2f9042f39f813dabe5d78bf4b577d7324760bd40c077090cf",
+      "size_bytes": 3546
     },
     {
       "instruction_id": "PP-ASSET-GITIGNORE",
       "kind": "INTEGRATION_SUPPORT",
       "path": ".gitignore",
-      "sha256": "4efee7ebe62afd27d128ebd7ec049d24ba9b8ee7d072b67547aa128f04e286b4",
-      "size_bytes": 1894
+      "sha256": "6abc65037c1db46be08d8ecfc4625c7ca9899a58ca94c3b9048cfef91f2350ea",
+      "size_bytes": 2185
     },
     {
       "instruction_id": "PP-ENTRY-ROOT",
       "kind": "ENTRY_POINT",
       "path": "AGENTS.md",
-      "sha256": "ed79d288b41acee607217635d3ba33a1817fc6b499128f1455a203d6c537e1db",
-      "size_bytes": 6185
+      "sha256": "0f50c7128dd622535b2aadc55f81f3fa2adc4e1f27d123c8e048a9bb97ceddfc",
+      "size_bytes": 7038
+    },
+    {
+      "instruction_id": "PP-ASSET-CONFIG-ASSURANCE-POLICY-JSON",
+      "kind": "CONFIGURATION",
+      "path": "config/assurance_policy.json",
+      "sha256": "cd0971a7025eb7c8348c0d3fcbfb261f9b63f7e74bf83b298abee46c92dcb627",
+      "size_bytes": 843
     },
     {
       "instruction_id": "PP-ASSET-CONFIG-JIRA-SYNC-POLICY-JSON",
       "kind": "CONFIGURATION",
       "path": "config/jira/sync_policy.json",
-      "sha256": "488bc4c9462961a3b43362ec84e7f157f1e63733cc2ef727307549ceab64d0f4",
-      "size_bytes": 526
+      "sha256": "9d5c1573d7f3df791fefbbabad7d8f016782b6db7a83ccb378414a971a52edef",
+      "size_bytes": 588
     },
     {
       "instruction_id": "PP-ASSET-CONFIG-PROJECT-JSON",
       "kind": "CONFIGURATION",
       "path": "config/project.json",
-      "sha256": "0dbf3d8adb28959fdb98d21d652f0fe66bb9ff933c79e527c2d7c40293f420f7",
-      "size_bytes": 569
+      "sha256": "11c62a6f56ae2d47f298c49d49795bc4a3e677248ab1f447d1f774ed6bd087f5",
+      "size_bytes": 1376
     },
     {
       "instruction_id": "PP-ASSET-CONFIG-PROJECT-MANIFEST-JSON",
@@ -199,8 +214,8 @@
       "instruction_id": "PP-ASSET-CONFIG-SECURITY-POLICY-JSON",
       "kind": "CONFIGURATION",
       "path": "config/security_policy.json",
-      "sha256": "d508acae7ac240f6275567ff62266f45ef0f60fefe5aa53a9581df84d643f242",
-      "size_bytes": 1078
+      "sha256": "6eb725ca32387b330851cfad0bef569807c4187696e4f0f36a97a080686055b0",
+      "size_bytes": 1241
     },
     {
       "instruction_id": "PP-ASSET-CONTRIBUTING-MD",
@@ -213,162 +228,162 @@
       "instruction_id": "PP-INST-00",
       "kind": "INSTRUCTION",
       "path": "instructions/00_START_HERE.md",
-      "sha256": "1198b0f3a3cc3aa7c6159911af2296c08e803e55834faae632b466e4191e5adc",
-      "size_bytes": 4042
+      "sha256": "6a7d3640984979e8e17d5db86919744b66592aeea9751c41fe6254dd083410e1",
+      "size_bytes": 4079
     },
     {
       "instruction_id": "PP-INST-01",
       "kind": "INSTRUCTION",
       "path": "instructions/01_AUTHORITY_AND_SOURCE_OF_TRUTH.md",
-      "sha256": "2b69e8b45bc176c875cc7ca35c13f19555c6a2a708ee23ec3ea9a57935413dfe",
-      "size_bytes": 4510
+      "sha256": "39c6b4dd70c7d5877ce16464bab9df332649bbd15fc53cf02ec826645f0c96e4",
+      "size_bytes": 4601
     },
     {
       "instruction_id": "PP-INST-02",
       "kind": "INSTRUCTION",
       "path": "instructions/02_AUTONOMOUS_OPERATING_CONTRACT.md",
-      "sha256": "ac64418745311307857009a65b4e9c5aee41d721d149ca0c9b55a37edf468141",
-      "size_bytes": 4062
+      "sha256": "1d47cf675cd695da5fca9c37158174c6b227ab2918fa70723a8188db38d794be",
+      "size_bytes": 5870
     },
     {
       "instruction_id": "PP-INST-03",
       "kind": "INSTRUCTION",
       "path": "instructions/03_SESSION_BOOTSTRAP_AND_PREFLIGHT.md",
-      "sha256": "7e2cac71c8fac1cad4dc882fbdf3f713ee14c51400f0fb545fb96bbfa401ea1f",
+      "sha256": "e1d4378345e880fc060ead8600b0995b3c94c5c9dad85e23e68f1cfce37cca3e",
       "size_bytes": 4448
     },
     {
       "instruction_id": "PP-INST-04",
       "kind": "INSTRUCTION",
       "path": "instructions/04_CONTEXT_RETRIEVAL_AND_NAVIGATION.md",
-      "sha256": "e5017d6d07150ca5f1967833502ca96281727c1c91dfff6ce426adf52d74ee35",
+      "sha256": "20324a00d7d21940797ac8012969ac565d4a6986e15564f60f56fb97226f9c5b",
       "size_bytes": 3407
     },
     {
       "instruction_id": "PP-INST-05",
       "kind": "INSTRUCTION",
       "path": "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
-      "sha256": "9354ad76de37079b322516f3b31e0e4073d6a0d8d5329be9ff360498c53b3123",
-      "size_bytes": 3963
+      "sha256": "63b418d8236effff4cf1c9d6603e7f3a518d1db561ad062668c4f45ed77f3987",
+      "size_bytes": 4710
     },
     {
       "instruction_id": "PP-INST-06",
       "kind": "INSTRUCTION",
       "path": "instructions/06_JIRA_OPERATING_PROTOCOL.md",
-      "sha256": "8837da6ebef9beebdf545f6c4f4625063d0f6f1286b018ff95dca2784e1b6ad1",
-      "size_bytes": 4362
+      "sha256": "b1143ea92544b6844a37369d4cf55582695eede0eb8a2c084d84147f7437226a",
+      "size_bytes": 5020
     },
     {
       "instruction_id": "PP-INST-07",
       "kind": "INSTRUCTION",
       "path": "instructions/07_GIT_AND_GITHUB_OPERATING_PROTOCOL.md",
-      "sha256": "6ff2d653d53538c2ac84a7d032f52bd2c6374668873ab680fca6ffdf36cbc750",
-      "size_bytes": 3975
+      "sha256": "5a933845bc76943980e835f59a4725cddbc1690424e174f68dfb8cc1cc725d00",
+      "size_bytes": 4477
     },
     {
       "instruction_id": "PP-INST-08",
       "kind": "INSTRUCTION",
       "path": "instructions/08_BRANCH_WORKTREE_AND_PR_POLICY.md",
-      "sha256": "e382f7fa3603c3553561c35f9d859b041640100069876cc8a28be7c4b05092cf",
-      "size_bytes": 3489
+      "sha256": "acef279ddcd0c97c9826a732f5c9e3288ec1da6d9e96ec7be146ecbde9ebfbef",
+      "size_bytes": 4201
     },
     {
       "instruction_id": "PP-INST-09",
       "kind": "INSTRUCTION",
       "path": "instructions/09_CI_QUALITY_SECURITY_AND_MERGE_GATES.md",
-      "sha256": "b14cb1a79db469a8cd7dcd4850097f5fadd60a3e865453c1a68f06d41dddcf69",
-      "size_bytes": 4256
+      "sha256": "731624416e6e428c36881f999d458de70a7f1de3147c2cd9b2c07c8070d0c788",
+      "size_bytes": 5557
     },
     {
       "instruction_id": "PP-INST-10",
       "kind": "INSTRUCTION",
       "path": "instructions/10_PARALLEL_AGENT_COORDINATION.md",
-      "sha256": "e53a36d54cc2e77dd08eb6be321a85bfaf5c3efb76b704870250de57e90b7e27",
+      "sha256": "e0c45b421c682557957124fb25498ac04f2218783f3d9493750ed49eed02dfc2",
       "size_bytes": 3525
     },
     {
       "instruction_id": "PP-INST-11",
       "kind": "INSTRUCTION",
       "path": "instructions/11_ANTI_LOOP_AND_ANTI_OVERENGINEERING.md",
-      "sha256": "84826438715524408e2b923a12ee3995c927a52009ce33566902ab510d6c452e",
-      "size_bytes": 3435
+      "sha256": "43f9ad2a632b9b639a1a701647351ff4afef6289a31b5cf12c37b675dad4b3d5",
+      "size_bytes": 4288
     },
     {
       "instruction_id": "PP-INST-12",
       "kind": "INSTRUCTION",
       "path": "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md",
-      "sha256": "d9eea22de46f82304ce32a0e317cd35f2e810ae42c5227ed1f6b8b022bd153b5",
-      "size_bytes": 3660
+      "sha256": "9d54b96c1545d303732568c925e18502c07728077d4524e30645a1b93ade0efc",
+      "size_bytes": 4097
     },
     {
       "instruction_id": "PP-INST-13",
       "kind": "INSTRUCTION",
       "path": "instructions/13_PPQS_BENCHMARK_PROTOCOL.md",
-      "sha256": "b055f78db33474880384d9a5fc568303029d45cf69808a9f6c41fc29579153ca",
+      "sha256": "bc3f2394cb144ead2cc5a63fc5ea1a94ea3c9d396d0189bb0b4cd0d0c6068f2e",
       "size_bytes": 3612
     },
     {
       "instruction_id": "PP-INST-14",
       "kind": "INSTRUCTION",
       "path": "instructions/14_UPSTREAM_REPOSITORY_PROTOCOL.md",
-      "sha256": "fdd40f62a51f40a0e1092a23b48e01cab638e8b3f706dd200e129d19cd32085e",
+      "sha256": "b72e06de244a81e50736245b3b839356c022241e5d17a4d363d85e59320d1cdd",
       "size_bytes": 3124
     },
     {
       "instruction_id": "PP-INST-15",
       "kind": "INSTRUCTION",
       "path": "instructions/15_SECRETS_AUTHORITY_AND_EXTERNAL_MUTATION.md",
-      "sha256": "8001f2c98780584ad5df2aea305c97dd4b301f6261bfcd95a07a8b7174b384b9",
-      "size_bytes": 3561
+      "sha256": "b33a726c6745c79f2f8634f3c43872858f65ffa4eb8dc302305b27637b20d5cc",
+      "size_bytes": 4231
     },
     {
       "instruction_id": "PP-INST-16",
       "kind": "INSTRUCTION",
       "path": "instructions/16_REMOTE_MACHINE_AND_RESOURCE_PROTOCOL.md",
-      "sha256": "d03eef7447453aaeab7e0d84f34f7e457de7612908834e3df3dc1777f458f195",
-      "size_bytes": 3103
+      "sha256": "6828cec633df4d4ee816f5be0cb08a4f7d0150a3ed3475ef8dbc34acef2f1168",
+      "size_bytes": 3193
     },
     {
       "instruction_id": "PP-INST-17",
       "kind": "INSTRUCTION",
       "path": "instructions/17_FAILURE_RECOVERY_AND_RESUMPTION.md",
-      "sha256": "9b5bba3e0c24a2855d2d9f7dd0cfbf92e13bd92e0e1294f331f4a723ca16db5d",
-      "size_bytes": 3354
+      "sha256": "c5f5c4e197d14d314dea4354bd6b817141d72000e9385a02c8330d36f6e65d77",
+      "size_bytes": 3529
     },
     {
       "instruction_id": "PP-INST-18",
       "kind": "INSTRUCTION",
       "path": "instructions/18_HUMAN_ESCALATION_PROTOCOL.md",
-      "sha256": "af252cd02106dcaf51120a566053b0e01da1aa32a3587dbb5b81be6e129ac3af",
-      "size_bytes": 2657
+      "sha256": "6c3f995a01c57d361564e78fd4d6a8f0749c91a8cea217b892105c07a75d06c8",
+      "size_bytes": 3835
     },
     {
       "instruction_id": "PP-INST-19",
       "kind": "INSTRUCTION",
       "path": "instructions/19_RELEASE_HANDOFF_AND_CLEANUP.md",
-      "sha256": "ff855312b9591058fd246071d706734ae4adebb2bcdb94d84a733c89f852dc74",
-      "size_bytes": 3123
+      "sha256": "5e1e5e20972015eba375b474b5cd0a8772469099eb1635805f6136007c9231b2",
+      "size_bytes": 3364
     },
     {
       "instruction_id": "PP-INST-20",
       "kind": "INSTRUCTION",
       "path": "instructions/20_INSTRUCTION_MAINTENANCE.md",
-      "sha256": "071b94dc60155ce26637f84c06be1efb30b5e6e98300074476b84a4f01e531d2",
-      "size_bytes": 3769
+      "sha256": "00136f3af50beb6f10ddcdbdbc6aa2070cf3ca37e2a79479482312a5eb6823d4",
+      "size_bytes": 4410
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-AUTHORITY-MAP-JSON",
       "kind": "INSTRUCTION",
       "path": "instructions/AUTHORITY_MAP.json",
-      "sha256": "6ad284c928cd72270a373c0de8eea9ba486af5f40513c83aaa1510ae6f41eb3b",
-      "size_bytes": 4120
+      "sha256": "4a2eda50b414b290e5ec4659d72a76bcb03c627ecd9b5b29da767f4a497e6d81",
+      "size_bytes": 4159
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-CHANGELOG-MD",
       "kind": "INSTRUCTION",
       "path": "instructions/CHANGELOG.md",
-      "sha256": "83ba956dfda06a6e9a54d3a28060ab70ca39d6cae05bdb01622890a95238598f",
-      "size_bytes": 1387
+      "sha256": "b8cbb9fa2f27179b69b7f6ba7facef83395decb1043a8b6583147d5a23f1c300",
+      "size_bytes": 2856
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-CREATION-REPORT-MD",
@@ -402,8 +417,8 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-BRANCH-PR-POLICY-JSON",
       "kind": "MACHINE_POLICY",
       "path": "instructions/policies/BRANCH_PR_POLICY.json",
-      "sha256": "6b23f5c25a09df3d385bab25d1921c9434cb7626ba5e304c7ca17199a0412bdd",
-      "size_bytes": 1457
+      "sha256": "0d280cfa076f384b141fc7e086a4db02526505ff0960d9f7a7fd442629694b50",
+      "size_bytes": 2167
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-CI-RISK-MATRIX-JSON",
@@ -423,15 +438,15 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-ESCALATION-CLASSIFICATIONS-JSON",
       "kind": "MACHINE_POLICY",
       "path": "instructions/policies/ESCALATION_CLASSIFICATIONS.json",
-      "sha256": "bbfaaeb0743dc7269a03f3304db70568bb329aef77950e8ec46dd26ba1682aa7",
-      "size_bytes": 1793
+      "sha256": "a2790cd7b98a2d4b702c8e8e28981c3e85070a122edbad0cef6f2d9a9b9afadc",
+      "size_bytes": 1837
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-EXTERNAL-MUTATION-AUTHORITY-JSON",
       "kind": "MACHINE_POLICY",
       "path": "instructions/policies/EXTERNAL_MUTATION_AUTHORITY.json",
-      "sha256": "4874783dd2802106e2e1bb21a2ae052a90d8129411140df0127fde235c97aca2",
-      "size_bytes": 2511
+      "sha256": "8c7ad360e51b1d97e6254a2138713d95e0cb0ae83f3be0d28116896ffa369233",
+      "size_bytes": 3039
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-MACHINE-REGISTRY-JSON",
@@ -451,8 +466,8 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-VALIDATION-SCENARIOS-JSON",
       "kind": "MACHINE_POLICY",
       "path": "instructions/policies/VALIDATION_SCENARIOS.json",
-      "sha256": "6f3012e339431fb22a19b665a2e1b17b134e4a4cd97fa713b2e49cd1b3d2bf41",
-      "size_bytes": 3464
+      "sha256": "43631d0fcefd8a844b0983191cc180290eabaf7ee6a9352caa4ca6f534386b9f",
+      "size_bytes": 3553
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-README-MD",
@@ -486,15 +501,15 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-SECOND-PASS-REQUIRED-MD",
       "kind": "INSTRUCTION",
       "path": "instructions/SECOND_PASS_REQUIRED.md",
-      "sha256": "c0fe98e88bc84157a46acc2aed5f7c7f3bc0111560d45d37ae0017a822706f33",
-      "size_bytes": 8262
+      "sha256": "3373fad11fae89dbc6a5f01cfb48e8a565f742db36f547540b3264b05c526119",
+      "size_bytes": 8398
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-TEMPLATES-HUMAN-INTERVENTION-REQUEST-MD",
       "kind": "TEMPLATE",
       "path": "instructions/templates/HUMAN_INTERVENTION_REQUEST.md",
-      "sha256": "baf32af11e823e6e1d363af9bc37c884d0c170358ac769c24dd2f50939e1b611",
-      "size_bytes": 1295
+      "sha256": "b19b6c544958c3dd35fe396e79d0c79ac56aca61086bc8b873d6a8559c624541",
+      "size_bytes": 1546
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-TEMPLATES-PULL-REQUEST-BODY-MD",
@@ -528,8 +543,8 @@
       "instruction_id": "PP-ASSET-MAKEFILE",
       "kind": "INTEGRATION_SUPPORT",
       "path": "Makefile",
-      "sha256": "b393fcce0a8ac91c42faec47e73305303c4288241abec0ce5d528f2bbd08d86f",
-      "size_bytes": 1732
+      "sha256": "5e0a7edeafd6ffca3d2ad660709ef75fc790a44f4edbf8854a9f64544fd2f0c3",
+      "size_bytes": 1957
     },
     {
       "instruction_id": "PP-ASSET-PROVENANCE-UPSTREAM-REGISTRY-JSON",
@@ -542,8 +557,8 @@
       "instruction_id": "PP-ASSET-README-MD",
       "kind": "INTEGRATION_SUPPORT",
       "path": "README.md",
-      "sha256": "ce389d7866db134fd9019b0b105c975fefb584be6981fd72372ed76df9fbff55",
-      "size_bytes": 9648
+      "sha256": "bab2f7fe20907c4bf0d93e36d3456e12800d1e09063679466807e3eabccfddbd",
+      "size_bytes": 10178
     },
     {
       "instruction_id": "PP-ASSET-SCHEMAS-RUNTIME-CONFIGURATION-SCHEMA-JSON",
@@ -563,8 +578,8 @@
       "instruction_id": "PP-ASSET-SCRIPTS-VALIDATE-INSTRUCTIONS-PY",
       "kind": "VALIDATION_TOOL",
       "path": "scripts/validate_instructions.py",
-      "sha256": "1bafac1c353ca7bb6dd02651d7368279bc8d69931b29e23f15a5a81ce0235502",
-      "size_bytes": 36721
+      "sha256": "0ba2c754085c0a36635f01f42cc44f49a86a40321f0db7decca0dfad12ee17c8",
+      "size_bytes": 40664
     },
     {
       "instruction_id": "PP-ASSET-SRC-PROJECT-PIPELINE-CONFIGURATION-MODELS-PY",
@@ -584,22 +599,22 @@
       "instruction_id": "PP-ASSET-SRC-PROJECT-PIPELINE-VALIDATION-REPOSITORY-PY",
       "kind": "IMPLEMENTATION_SUPPORT",
       "path": "src/project_pipeline/validation/repository.py",
-      "sha256": "12592bf9262966f17e3b757d5ef5843ee1ef52e0e6d872fab81e74c96e82b2a7",
-      "size_bytes": 15398
+      "sha256": "ccebe20fd710d03c08d502f4c1fe528d492bee2280ba1c4165a877d866ce3f90",
+      "size_bytes": 16137
     },
     {
       "instruction_id": "PP-ASSET-TESTS-TEST-DOMAIN-MODELS-PY",
       "kind": "TEST",
       "path": "tests/test_domain_models.py",
-      "sha256": "f9404a0347cf953bcab93203d6a2c909bd2b59fccd5c3a615a65f44ace6be221",
-      "size_bytes": 3090
+      "sha256": "04e9cb87df921fee53b2155a25198c24b223be4f203880fb0d7db7d9551e8d6e",
+      "size_bytes": 4681
     },
     {
       "instruction_id": "PP-ASSET-TESTS-TEST-INSTRUCTION-SYSTEM-PY",
       "kind": "TEST",
       "path": "tests/test_instruction_system.py",
-      "sha256": "43f0264215e5524ea653bffc762e37f9cf7008af25425fc601ae7f49919fda7a",
-      "size_bytes": 5687
+      "sha256": "87fdebea25094ee889ec2742f985f4eec919bf9df1a5210ed4eb65543471edd8",
+      "size_bytes": 9403
     },
     {
       "instruction_id": "PP-ASSET-TESTS-TEST-SECURITY-UPSTREAM-ADAPTERS-PY",
@@ -616,7 +631,7 @@
       "size_bytes": 4697
     }
   ],
-  "instruction_pack_version": "1.0.1",
+  "instruction_pack_version": "1.2.0",
   "instruction_root": "instructions",
   "managed_support_paths": [
     ".gitignore",
@@ -634,6 +649,7 @@
     "config/project_manifest.json",
     "config/repository_policy.json",
     "config/security_policy.json",
+    "config/assurance_policy.json",
     "scripts/validate_instructions.py",
     "scripts/instruction_cold_start.py",
     "src/project_pipeline/validation/content.py",

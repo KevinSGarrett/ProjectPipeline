@@ -18,6 +18,7 @@ from project_pipeline.domain.orchestration import (
     canonical_payload_sha256,
     orchestration_identifier,
 )
+from project_pipeline.lifecycle import CheckpointDecision
 from project_pipeline.orchestration.persistence import OrchestrationStore
 
 
@@ -178,6 +179,18 @@ class LocalDurableRuntime:
             raise WorkflowStateError("completed workflow has no step to checkpoint")
         if workflow.state != WorkflowState.RUNNING:
             raise WorkflowStateError("checkpoints require a RUNNING workflow")
+        if {
+            "no_additional_action_needed",
+            "eligible_unrelated_lanes",
+        }.issubset(payload):
+            decision = CheckpointDecision(
+                no_additional_action_needed=bool(payload["no_additional_action_needed"]),
+                eligible_unrelated_lanes=tuple(payload["eligible_unrelated_lanes"] or ()),
+            )
+            if not decision.is_valid():
+                raise WorkflowStateError(
+                    "checkpoint cannot assert no additional action while eligible unrelated lanes exist"
+                )
         digest = canonical_payload_sha256(payload)
         checkpoint = WorkflowCheckpoint(
             checkpoint_id=orchestration_identifier(

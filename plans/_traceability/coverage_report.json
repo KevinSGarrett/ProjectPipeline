@@ -1,10 +1,10 @@
 {
   "by_authority": {
     "REQUIRED_IMPLEMENTATION_DETAIL": 4,
-    "SOURCE_DERIVED": 347
+    "SOURCE_DERIVED": 348
   },
   "by_disposition": {
-    "ACCEPTED": 351
+    "ACCEPTED": 352
   },
   "by_domain": {
     "AGENT": 19,
@@ -17,7 +17,7 @@
     "INFRA": 19,
     "LIFE": 18,
     "OPS": 19,
-    "PDEF": 10,
+    "PDEF": 11,
     "REL": 14,
     "REQ": 17,
     "RES": 25,
@@ -27,12 +27,12 @@
     "UX": 26
   },
   "by_implementation_state": {
-    "IMPLEMENTED": 185,
-    "PARTIALLY_IMPLEMENTED": 136,
+    "IMPLEMENTED": 209,
+    "PARTIALLY_IMPLEMENTED": 113,
     "PLANNED_ONLY": 30
   },
   "by_priority": {
-    "P0": 237,
+    "P0": 238,
     "P1": 109,
     "P2": 5
   },
@@ -40,7 +40,7 @@
     "architecture": 5,
     "completion": 2,
     "constraint": 5,
-    "functional": 302,
+    "functional": 303,
     "governance": 8,
     "observability": 2,
     "operational": 6,
@@ -49,39 +49,39 @@
     "testing": 3
   },
   "mapped_counts": {
-    "evidence": 321,
-    "implementation": 321,
-    "jira": 351,
-    "plan": 351,
-    "tests": 321
+    "evidence": 322,
+    "implementation": 322,
+    "jira": 352,
+    "plan": 352,
+    "tests": 322
   },
   "mapped_percent": {
-    "evidence": 91.45,
-    "implementation": 91.45,
+    "evidence": 91.48,
+    "implementation": 91.48,
     "jira": 100.0,
     "plan": 100.0,
-    "tests": 91.45
+    "tests": 91.48
   },
-  "requirement_count": 351,
+  "requirement_count": 352,
   "requirements_by_source": {
     "GOV-001": 116,
     "SRC-001": 19,
-    "SRC-002": 22,
+    "SRC-002": 24,
     "SRC-003": 16,
-    "SRC-004": 16,
+    "SRC-004": 18,
     "SRC-005": 6,
-    "SRC-006": 43,
-    "SRC-007": 24,
-    "SRC-008": 37,
+    "SRC-006": 45,
+    "SRC-007": 26,
+    "SRC-008": 40,
     "SRC-009": 44,
     "SRC-010": 1,
-    "SRC-011": 4,
+    "SRC-011": 3,
     "SRC-012": 12,
-    "SRC-013": 8,
-    "SRC-014": 13,
-    "SRC-015": 11,
-    "SRC-016": 4,
-    "SRC-017": 41
+    "SRC-013": 9,
+    "SRC-014": 14,
+    "SRC-015": 14,
+    "SRC-016": 5,
+    "SRC-017": 43
   },
   "schema_version": "2.0.0",
   "source_section_coverage": {
@@ -90,10 +90,9 @@
       "DUPLICATE_SOURCE": 35,
       "OPEN_DECISION_CONTEXT": 4,
       "PREFIX_OVERLAP_SOURCE": 55,
-      "REQUIREMENT_LINKED": 626,
+      "REQUIREMENT_LINKED": 636,
       "SUPPORTING_EXAMPLE": 66,
-      "UPSTREAM_RESEARCH_CONTEXT": 146,
-      "USER_INTENT_CONTEXT": 10
+      "UPSTREAM_RESEARCH_CONTEXT": 146
     },
     "by_source": {
       "SRC-001": 89,
@@ -116,7 +115,7 @@
       "SRC-018": 35
     },
     "explicit_disposition_count": 1109,
-    "linked_requirement_section_count": 645,
+    "linked_requirement_section_count": 622,
     "schema_version": "1.0.0",
     "section_count": 1109
   },

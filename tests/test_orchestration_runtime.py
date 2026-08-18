@@ -138,6 +138,20 @@ def test_checkpoint_required_before_completion(tmp_path, project_root):
     store.close()
 
 
+def test_checkpoint_rejects_invalid_no_additional_action_decision(tmp_path, project_root):
+    store, runtime, _, workflow = setup_runtime(tmp_path, project_root, checkpoint=True)
+    with pytest.raises(WorkflowStateError):
+        runtime.checkpoint(
+            workflow.workflow_id,
+            {
+                "no_additional_action_needed": True,
+                "eligible_unrelated_lanes": ["lane:local-governed"],
+            },
+            now=NOW,
+        )
+    store.close()
+
+
 def test_signal_wait_is_durable_and_duplicate_signal_is_idempotent(tmp_path, project_root):
     store, runtime, _, workflow = setup_runtime(tmp_path, project_root)
     wait = runtime.wait_for_signal(workflow.workflow_id, "human.fixed", now=NOW)

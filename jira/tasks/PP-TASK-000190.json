@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_observability.py",
         "method": "automated_behavior_and_evidence_validation",
         "path": "tests/test_observability.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,14 +17,16 @@
         "command": "PYTHONPATH=src python -m project_pipeline doctor --root .",
         "method": "automated_behavior_and_evidence_validation",
         "path": "evidence/repository_foundation_smoke.json",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
     "EVID-000022",
-    "EVID-000024"
+    "EVID-000024",
+    "EVID-000075",
+    "EVID-000076"
   ],
   "definition_of_done": [
     "Implementation and configuration for the bounded objective are complete.",
@@ -52,13 +54,15 @@
     "src/project_pipeline/observability/",
     "docs/development/observability.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "observability",
-    "logging",
+    "bulk-reconciled",
     "correlation",
-    "evidence-backed"
+    "evidence-backed",
+    "implemented",
+    "logging",
+    "observability"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

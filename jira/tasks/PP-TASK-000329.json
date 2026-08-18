@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_assurance_*.py",
         "method": "automated_behavior_validation",
         "path": "database/migrations/sqlite/PPDB-0012_execution_assurance_completion_gate.up.sql",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,14 +17,20 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000005",
+    "EVID-000006",
     "EVID-000108",
-    "EVID-000111"
+    "EVID-000109",
+    "EVID-000111",
+    "EVID-000112",
+    "EVID-000113",
+    "EVID-000139"
   ],
   "definition_of_done": [
     "Implementation is present and locally behaviorally verified.",
@@ -57,11 +63,13 @@
     "docs/assurance/execution_assurance.md",
     "docs/assurance/completion_gate.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "assurance",
+    "bulk-reconciled",
     "completion-gate",
+    "implemented",
     "pass-15"
   ],
   "last_observed_remote_state": {

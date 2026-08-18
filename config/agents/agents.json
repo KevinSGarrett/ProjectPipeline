@@ -1,3 +1,7 @@
 [
-  {"agent_id":"agent:local-advisory","model_id":"model:mock-local-general","capabilities":["routine_reasoning","summarization","code_review"],"authority_classes":["ADVISORY","REVIEW"],"qualification":"QUALIFIED","tool_ids":["tool:mock-safe"]}
+  {"agent_id":"agent:local-advisory","model_id":"model:mock-local-general","capabilities":["routine_reasoning","summarization","code_review"],"authority_classes":["ADVISORY","REVIEW"],"qualification":"QUALIFIED","tool_ids":["tool:mock-safe"]},
+  {"agent_id":"agent:cursor-implementer","model_id":"model:cursor-auto","capabilities":["routine_reasoning","summarization","code_implementation","repository_reasoning","visual_review"],"authority_classes":["ADVISORY","IMPLEMENTATION"],"qualification":"QUARANTINED","tool_ids":[]},
+  {"agent_id":"agent:cursor-independent-reviewer","model_id":"model:cursor-auto","capabilities":["routine_reasoning","code_review","repository_reasoning","visual_review"],"authority_classes":["ADVISORY","REVIEW","VERIFICATION"],"qualification":"QUARANTINED","tool_ids":[]},
+  {"agent_id":"agent:pydantic-ai-advisory","model_id":"model:pydantic-ai-advisory","capabilities":["routine_reasoning","summarization"],"authority_classes":["ADVISORY"],"qualification":"QUARANTINED","tool_ids":[]},
+  {"agent_id":"agent:litellm-proxy-advisory","model_id":"model:litellm-proxy-general","capabilities":["routine_reasoning","summarization","code_review"],"authority_classes":["ADVISORY"],"qualification":"QUARANTINED","tool_ids":[]}
 ]

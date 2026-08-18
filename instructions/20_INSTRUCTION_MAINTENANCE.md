@@ -4,13 +4,13 @@
 |---|---|
 | Instruction ID | `PP-INST-20` |
 | Status | `ACTIVE` |
-| Pack version | `1.0.1` |
+| Pack version | `1.2.0` |
 | Primary domains | `instruction_maintenance` |
 | Governing entry point | `AGENTS.md` |
 
 ## Instruction system is control-plane code
 
-Changes to `AGENTS.md`, `/instructions`, `/.agents/skills`, instruction validation, or governing policy are high-impact self-modification. They require source/authority rationale, focused diff, validation, independent review, rollback material, and current manifest hashes.
+Changes to `AGENTS.md`, `/instructions`, `/.agents/skills`, instruction validation, or governing policy are high-impact self-modification. They require source/authority rationale, focused diff, validation, a policy-qualified independent verification receipt, rollback material, and current manifest hashes. The independent verifier may be an isolated automated worker and does not create a human-approval dependency.
 
 ## Ownership
 
@@ -41,7 +41,7 @@ Do not increment for every wording edit. Maintain `CHANGELOG.md` with decisions 
 5. update schemas, skills, templates, examples, and tests only when behavior requires;
 6. run `python scripts/validate_instructions.py --root . --update-hashes`;
 7. run validator normally, cold-start tool, scenario tests, repository validation, and applicable broader tests;
-8. perform an independent review for contradiction, duplicate authority, stale paths, secrets, bureaucracy, unsafe loopholes, benchmark contamination, Git/Jira conflicts, and external mutation;
+8. obtain a content-addressed review from an isolated policy-qualified automated verifier or distinct authorized identity for contradiction, duplicate authority, stale paths, secrets, bureaucracy, unsafe loopholes, benchmark contamination, Git/Jira conflicts, and external mutation;
 9. regenerate project manifest after all repository files are stable;
 10. retain rollback material and update changelog.
 
@@ -53,8 +53,10 @@ Keep root `AGENTS.md` below the validator limit and focused on durable invariant
 
 The focused validator detects missing files, duplicate IDs, hash drift, invalid JSON/schema, broken links, stale paths, secret patterns, forbidden terminology, coverage conflicts, authority defects, branch/Jira inconsistency, unpinned actions, PPQS boundary defects, missing scenarios, and cold-start omissions.
 
+It also requires the delivery-progress policy and exact-base/head CI enforcement that prohibit lifecycle-only micro-PRs, route already-implemented work to batch reconciliation, and bound noncritical administration. Removing or weakening those controls is an instruction-system failure.
+
 It is not a new workflow engine and does not replace Project Control, Scheduler, Jira/GitHub Steward, Assurance, Verification, Security, or Completion Gate.
 
-## Second independent review
+## Second independent verification
 
-Before release of an instruction version, review the entire pack as if entering cold: look for contradiction, duplicated authority, missing domains, stale paths, secret leakage, overloaded root context, process excess, dirty-clone loopholes, micro-PR incentives, false completion, weak loop controls, PPQS contamination, worktree ambiguity, remote-machine races, Jira/GitHub conflict, and unsafe writes. Correct findings before final validation.
+Before release of an instruction version, an isolated policy-qualified automated verifier or distinct authorized identity reviews the entire pack as if entering cold: look for contradiction, duplicated authority, missing domains, stale paths, secret leakage, overloaded root context, process excess, dirty-clone loopholes, micro-PR incentives, false completion, weak loop controls, PPQS contamination, worktree ambiguity, remote-machine races, Jira/GitHub conflict, and unsafe writes. Correct findings before final validation. Human participation is not a gate.

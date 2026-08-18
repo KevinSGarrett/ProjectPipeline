@@ -1,0 +1,97 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-900138-01",
+      "statement": "Product definition, source coverage, requirements, plans, Jira, Control selection, and Completion Gate semantics preserve the original autonomous outcome and fail under the previous defective model.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m pytest -q tests/test_product_outcome_contract.py",
+        "method": "falsifying_contract_validation",
+        "path": "tests/test_product_outcome_contract.py",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "All model layers agree.",
+    "Previous defects are falsified.",
+    "Independent source-to-control audit passes."
+  ],
+  "dependencies": [],
+  "description": "Restore the original source-derived product outcome and align every model and selection/completion authority before normal work selection resumes.",
+  "evidence_required": [],
+  "exclusions": [
+    "Does not claim the Autonomy Runtime is implemented or qualified."
+  ],
+  "expected_file_locations": [
+    "config/product_outcome.json",
+    "plans/_traceability",
+    "jira",
+    "src/project_pipeline/validation"
+  ],
+  "expected_implementation_artifacts": [
+    "config/product_outcome.json",
+    "src/project_pipeline/validation/product_outcome.py"
+  ],
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "issue_type": "STORY",
+  "labels": [
+    "autonomy-runtime",
+    "in-progress",
+    "model-realignment",
+    "vertical-slice"
+  ],
+  "last_observed_remote_state": null,
+  "local_id": "PP-STORY-000138",
+  "objective": "Realign the complete source-to-control product model",
+  "observability_impact": "Expose model drift and reconciliation debt explicitly.",
+  "owner_required_capability": "requirements_traceability_and_control_authority",
+  "parent": "PP-EPIC-000036",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
+      "end_line": 13,
+      "line_numbered_path": "plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt",
+      "line_reference": "PLAN-CTRL-003:SEC-01:L000008-L000013",
+      "plan_id": "PLAN-CTRL-003",
+      "section_id": "PLAN-CTRL-003:SEC-01",
+      "start_line": 8
+    }
+  ],
+  "rationale": "Normal Control selection is unsafe until the central outcome and stale implementation projections are repaired.",
+  "relationships": [
+    {
+      "target": "PP-EPIC-000036",
+      "type": "CHILD_OF"
+    },
+    {
+      "target": "PP-TASK-000380",
+      "type": "PARENT_OF"
+    }
+  ],
+  "remote_jira_key": null,
+  "required_tests": [],
+  "requirement_ids": [
+    "REQ-PDEF-0011"
+  ],
+  "risk_classification": "CRITICAL",
+  "rollback_recovery_consideration": "Restore the verified pre-realignment bundle and database snapshot.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Source coverage",
+    "requirements",
+    "plans",
+    "Jira",
+    "Control",
+    "Completion Gate"
+  ],
+  "security_impact": "Prevents autonomous execution against a false critical path.",
+  "source_references": [
+    "SRC-014:L000001-L000086",
+    "SRC-015:L000001-L000112"
+  ],
+  "state": "IN_PROGRESS",
+  "title": "Source-to-control product outcome realignment",
+  "upstream_dependencies": []
+}

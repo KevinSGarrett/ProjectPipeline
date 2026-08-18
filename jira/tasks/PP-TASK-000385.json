@@ -1,0 +1,100 @@
+{
+  "acceptance_criteria": [
+    {
+      "criterion_id": "AC-PP-000385-01",
+      "statement": "The released runtime passes recovery, a real uninterrupted 24-hour run, a subsequent real uninterrupted 72-hour run, post-release verification, and the deterministic Completion Gate with no hidden blocker.",
+      "verification": {
+        "command": "PYTHONPATH=src python -m project_pipeline completion --root .",
+        "method": "unattended_release_completion_qualification",
+        "path": "evidence/autonomy_runtime/unattended",
+        "status": "PLANNED"
+      }
+    }
+  ],
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "Recovery drills pass.",
+    "24-hour qualification passes before 72-hour admission.",
+    "72-hour qualification passes without simulated duration.",
+    "Released post-release verification passes.",
+    "Completion Gate reports COMPLETE."
+  ],
+  "dependencies": [
+    "PP-TASK-000384"
+  ],
+  "description": "Execute the final ordered recovery, 24-hour, 72-hour, release, post-release, and Completion Gate qualification without substituting mocks or shortened durations.",
+  "evidence_required": [],
+  "exclusions": [
+    "No simulated elapsed time.",
+    "No completion with unavailable external blockers."
+  ],
+  "expected_file_locations": [
+    "evidence/autonomy_runtime/unattended",
+    "release",
+    "runbooks/autonomy_runtime"
+  ],
+  "expected_implementation_artifacts": [
+    "scripts/run_autonomy_qualification.py",
+    "runbooks/autonomy_runtime/unattended_operation.md"
+  ],
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "issue_type": "TASK",
+  "labels": [
+    "autonomy-runtime",
+    "unattended",
+    "release",
+    "cohesive-slice"
+  ],
+  "last_observed_remote_state": null,
+  "local_id": "PP-TASK-000385",
+  "objective": "Pass unattended operation, release, and terminal Completion qualification",
+  "observability_impact": "Captures continuous cycle, health, incident, recovery, cost, release, and completion evidence.",
+  "owner_required_capability": "unattended_release_and_completion_assurance",
+  "parent": "PP-STORY-000143",
+  "plan_references": [
+    {
+      "authoritative_path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
+      "end_line": 37,
+      "line_numbered_path": "plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt",
+      "line_reference": "PLAN-CTRL-003:SEC-06:L000034-L000037",
+      "plan_id": "PLAN-CTRL-003",
+      "section_id": "PLAN-CTRL-003:SEC-06",
+      "start_line": 34
+    }
+  ],
+  "rationale": "A continuously operating product requires real-duration operational proof and released-state verification.",
+  "relationships": [
+    {
+      "target": "PP-STORY-000143",
+      "type": "CHILD_OF"
+    },
+    {
+      "target": "PP-TASK-000384",
+      "type": "DEPENDS_ON"
+    }
+  ],
+  "remote_jira_key": null,
+  "required_tests": [],
+  "requirement_ids": [
+    "REQ-PDEF-0011"
+  ],
+  "risk_classification": "CRITICAL",
+  "rollback_recovery_consideration": "Checkpoint continuously and stop safely on integrity, safety, budget, recovery, or external-state uncertainty.",
+  "schema_version": "1.0.0",
+  "scope": [
+    "Recovery",
+    "24-hour",
+    "72-hour",
+    "release",
+    "post-release Completion Gate"
+  ],
+  "security_impact": "Requires long-lived lease rotation, revocation, budget controls, monitoring, and incident response.",
+  "source_references": [
+    "SRC-014:L000001-L000086",
+    "SRC-015:L000001-L000112"
+  ],
+  "state": "BACKLOG",
+  "title": "Pass unattended operation, release, and terminal Completion qualification",
+  "upstream_dependencies": []
+}

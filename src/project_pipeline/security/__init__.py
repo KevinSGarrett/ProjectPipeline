@@ -1,3 +1,4 @@
+from project_pipeline.security.artifact_binding import ArtifactBindingStore, artifact_digest
 from project_pipeline.security.backends import (
     EnvFileSecretBackend,
     OpenBaoSecretBackend,
@@ -16,6 +17,7 @@ from project_pipeline.security.supply_chain import (
 from project_pipeline.security.validation import validate_security_foundation
 
 __all__ = [
+    "ArtifactBindingStore",
     "EnvFileSecretBackend",
     "EphemeralSecret",
     "IdentityAuthority",
@@ -25,6 +27,7 @@ __all__ = [
     "SecurityPolicyEngine",
     "SecurityStore",
     "SopsSecretBackend",
+    "artifact_digest",
     "build_repository_sbom",
     "classify_action_capability",
     "default_roles",

@@ -88,6 +88,8 @@ class BuildSequencer:
                     "environment_available": item.environment_available,
                     "human_required": item.human_required,
                     "external_blocked": item.external_blocked,
+                    "reconciliation_required": item.reconciliation_required,
+                    "product_scope_allowed": item.product_scope_allowed,
                 }
                 for item in self.facts
             ],
@@ -112,6 +114,17 @@ class BuildSequencer:
                 eligible=False,
                 reasons=(f"task is terminal: {fact.state.value}",),
             )
+        if fact.reconciliation_required:
+            return TaskEligibility(
+                task_id=fact.task_id,
+                state=EligibilityState.RECONCILIATION_REQUIRED,
+                eligible=False,
+                reasons=(
+                    "issue-specific artifacts, tests, criteria, or evidence indicate existing "
+                    "delivery; audit and batch-reconcile this item instead of opening a fresh "
+                    "implementation lane",
+                ),
+            )
         if fact.state in _ACTIVE:
             return TaskEligibility(
                 task_id=fact.task_id,
@@ -132,6 +145,16 @@ class BuildSequencer:
                 state=EligibilityState.EXTERNAL_BLOCKED,
                 eligible=False,
                 reasons=("task is blocked by an unavailable external dependency",),
+            )
+        if not fact.product_scope_allowed:
+            return TaskEligibility(
+                task_id=fact.task_id,
+                state=EligibilityState.PRODUCT_SCOPE_PAUSED,
+                eligible=False,
+                reasons=(
+                    "ordinary backlog selection is paused by the product-outcome correction; "
+                    "only the bounded autonomous-runtime critical-path slices may be admitted",
+                ),
             )
         if not fact.accepted or not fact.policy_eligible:
             if not fact.accepted:

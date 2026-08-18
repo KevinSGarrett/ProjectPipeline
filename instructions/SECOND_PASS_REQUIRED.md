@@ -23,7 +23,7 @@ The repository-local instruction system is implemented in this pack. This regist
 
 **Status:** `UNKNOWN` pending durable evidence-ledger and applicable Jira-reference registration. The read, plan, bounded write, readback, and recovery observations below were made on 2026-08-16.
 
-**Observed state:** the local Jira mirror validates at 378 issues and 605 dependency/relationship edges. Authenticated read-only snapshots of the live `PP` project were captured. The READY and IN_PROGRESS reconciliations were applied with receipts and complete readbacks. The REVIEW reconciliation produced a deterministic partial receipt, `JREC-072E9A714667ACFF42C5`: its field update applied, its unsupported `Code Review` transition failed with no unknown outcome, and snapshot `JSNAP-BB122CAF17909D8EE034` confirmed PP-318 remained remotely `In Progress`. The policy was then corrected to project rich local lifecycle states onto the live three-state Jira workflow (`To Do`, `In Progress`, `Done`) while retaining the human gate for remote `Done`.
+**Observed state:** the local Jira mirror validates at 378 issues and 605 dependency/relationship edges. Authenticated read-only snapshots of the live `PP` project were captured. The READY and IN_PROGRESS reconciliations were applied with receipts and complete readbacks. The REVIEW reconciliation produced a deterministic partial receipt, `JREC-072E9A714667ACFF42C5`: its field update applied, its unsupported `Code Review` transition failed with no unknown outcome, and snapshot `JSNAP-BB122CAF17909D8EE034` confirmed PP-318 remained remotely `In Progress`. The policy projects rich local lifecycle states onto the live three-state Jira workflow (`To Do`, `In Progress`, `Done`); the former human gate for remote `Done` is superseded by evidence-backed autonomous reconciliation.
 
 **Observed actions pending evidence registration:**
 
@@ -32,7 +32,7 @@ The repository-local instruction system is implemented in this pack. This regist
 3. compared issue identities, statuses, hierarchy, dependencies, and governed fields against the local mirror;
 4. generated immutable reconciliation plans before every write;
 5. applied only explicitly authorized operations and preserved receipts, readbacks, idempotency keys, and deterministic failure evidence without retrying an unchanged failed operation;
-6. preserved the rule that remote `Done` requires the configured human gate.
+6. require evidence-backed local `DONE`, integrated-main verification, credential availability, idempotent intent, and remote readback before the autonomous remote `Done` transition.
 
 **Authority:** `06`, `15`, `17`, and `config/jira/sync_policy.json`.
 
