@@ -229,7 +229,7 @@ def qualify_cursor_cli_provider(
 
     public_attestation = repository_root / PUBLIC_ATTESTATION_REF
     public_qualification = repository_root / PUBLIC_QUALIFICATION_REF
-    discovery = {
+    discovery: dict[str, Any] = {
         "public_attestation_found": public_attestation.is_file(),
         "public_qualification_found": public_qualification.is_file(),
         "recoverable_source_present": source_root is not None

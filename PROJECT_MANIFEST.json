@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "8bc5b31c165983955bc90a0e25484523a1dcd4524fb63b1caba35fd13d554861",
+  "aggregate_sha256": "e428f6a788e1ab75b8f05ae638c988d2ba0c2ef61ca6f886822ec048f884aa76",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12027,8 +12027,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/cursor_cli_qualification.py",
-      "sha256": "d5eb39b8045b1725eeeb1387e406cafb5bd57f5eee88102d4416c3fc1ace4e72",
-      "size_bytes": 17601
+      "sha256": "601c47734b358f80804e566ccb3dedf2461537ddc19e2ae4a1b9a71a78520cac",
+      "size_bytes": 17617
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/golden.py",
@@ -14321,7 +14321,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T18:09:52.450455+00:00",
+  "generated_at_utc": "2026-08-18T18:11:57.564204+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14330,5 +14330,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25320395
+  "total_bytes": 25320411
 }
