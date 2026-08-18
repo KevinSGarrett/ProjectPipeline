@@ -1,0 +1,10 @@
+{
+  "evidence_fingerprint": "99b41e93da8c59d111a77ddd02784da1904cbfaa95c99cb95d4b0573cc0ae00a",
+  "evidence_ref": "evidence/pp379_writer_provider_qualification_evidence.json",
+  "fingerprint": "9cec7a8e1482d824a76a19bdb2d36ad5be83bc121843c46a95b67b5f27e96679",
+  "project_id": "PROJECT-PIPELINE",
+  "provider_id": "provider:cursor-cli",
+  "qualified": true,
+  "scope": "local-governed-phase1",
+  "verified_at_utc": "2026-08-16T22:00:00+00:00"
+}

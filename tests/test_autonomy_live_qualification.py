@@ -53,11 +53,12 @@ def test_live_qualification_passes_local_stages_and_blocks_cursor_cli(tmp_path: 
     assert governance["observations"]["write_readback_ok"] is False
 
     cursor_cli = by_id["cursor_cli_provider_dispatch"]
-    assert cursor_cli["outcome"] == StageOutcome.HUMAN_REQUIRED.value
-    assert (
-        "pp379_writer_attestation_evidence.json"
-        in cursor_cli["observations"]["missing_evidence"][0]
-    )
+    assert cursor_cli["outcome"] == StageOutcome.FAILED.value
+    encoded = json.dumps(report)
+    assert "HUMAN_REQUIRED" not in encoded
+    assert "operator session" not in encoded
+    assert "await human" not in encoded
+    assert cursor_cli["observations"]["outcome"] == StageOutcome.FAILED.value
 
 
 def test_write_live_qualification_evidence(tmp_path: Path) -> None:

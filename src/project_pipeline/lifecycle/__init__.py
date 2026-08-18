@@ -1,4 +1,11 @@
 from project_pipeline.lifecycle.adoption import assess_adoption_maturity
+from project_pipeline.lifecycle.attestation_recovery import (
+    CurrentAttestationPolicy,
+    RecoveryDisposition,
+    RecoveryError,
+    evaluate_attestation_recovery,
+    recover_and_restore,
+)
 from project_pipeline.lifecycle.contracts import ContractEvolutionManager
 from project_pipeline.lifecycle.environments import EnvironmentManager, TestDataLifecycleManager
 from project_pipeline.lifecycle.portfolio import PortfolioGovernor
@@ -57,6 +64,7 @@ __all__ = [
     "AttestationValidation",
     "CheckpointDecision",
     "ContractEvolutionManager",
+    "CurrentAttestationPolicy",
     "DurableAttestation",
     "DurableProviderQualificationEvidence",
     "EnvironmentManager",
@@ -69,15 +77,19 @@ __all__ = [
     "ProviderQualificationState",
     "ProviderQualificationValidation",
     "ReadinessEvidence",
+    "RecoveryDisposition",
+    "RecoveryError",
     "SessionIdentity",
     "TestDataLifecycleManager",
     "VersionQualificationManager",
     "assess_adoption_maturity",
     "claim_is_admissible",
+    "evaluate_attestation_recovery",
     "global_stop_required",
     "local_integration_allowed",
     "pp327_collision",
     "provider_dispatch_blocked",
+    "recover_and_restore",
     "scoped_lane_state",
     "should_request_human_attestation",
     "simulate_scenario",

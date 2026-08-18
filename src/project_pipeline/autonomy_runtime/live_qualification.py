@@ -12,6 +12,9 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
+    qualify_cursor_cli_provider,
+)
 from project_pipeline.autonomy_runtime.lanes import LaneRegistry
 from project_pipeline.autonomy_runtime.providers import (
     AutonomyProviderRuntime,
@@ -30,8 +33,8 @@ from project_pipeline.command_center.autonomy import project_autonomy_runtime
 class StageOutcome(StrEnum):
     PASSED = "PASSED"
     BLOCKED_EXTERNAL = "BLOCKED_EXTERNAL"
-    HUMAN_REQUIRED = "HUMAN_REQUIRED"
     FAILED = "FAILED"
+    HUMAN_REQUIRED = "HUMAN_REQUIRED"  # compatibility storage only; never projected live
 
 
 @dataclass(frozen=True)
@@ -41,10 +44,15 @@ class StageResult:
     observations: dict[str, Any]
     reasons: tuple[str, ...] = ()
 
+    def projected_outcome(self) -> StageOutcome:
+        if self.outcome is StageOutcome.HUMAN_REQUIRED:
+            return StageOutcome.BLOCKED_EXTERNAL
+        return self.outcome
+
     def as_dict(self) -> dict[str, Any]:
         return {
             "stage_id": self.stage_id,
-            "outcome": self.outcome.value,
+            "outcome": self.projected_outcome().value,
             "observations": self.observations,
             "reasons": list(self.reasons),
         }
@@ -655,33 +663,27 @@ def _qualify_github_jira_governance(repository_root: Path) -> StageResult:
     )
 
 
-def _qualify_cursor_cli_provider(repository_root: Path) -> StageResult:
-    attestation_path = repository_root / CURSOR_CLI_ATTESTATION_REF
-    qualification_path = repository_root / CURSOR_CLI_QUALIFICATION_REF
-    missing = []
-    if not attestation_path.is_file():
-        missing.append(CURSOR_CLI_ATTESTATION_REF)
-    if not qualification_path.is_file():
-        missing.append(CURSOR_CLI_QUALIFICATION_REF)
-    if missing:
-        return StageResult(
-            stage_id="cursor_cli_provider_dispatch",
-            outcome=StageOutcome.HUMAN_REQUIRED,
-            observations={
-                "provider_id": "provider:cursor-cli",
-                "missing_evidence": missing,
-                "attestation_reference": CURSOR_CLI_ATTESTATION_REF,
-                "qualification_reference": CURSOR_CLI_QUALIFICATION_REF,
-            },
-            reasons=tuple(f"missing evidence artifact: {item}" for item in missing),
-        )
+def _qualify_cursor_cli_provider(
+    repository_root: Path,
+    disposable_root: Path,
+    *,
+    runner: Any | None = None,
+    source_root: Path | None = None,
+    durable_dir: Path | None = None,
+) -> StageResult:
+    report = qualify_cursor_cli_provider(
+        repository_root=repository_root,
+        disposable_root=disposable_root,
+        source_root=source_root,
+        durable_dir=durable_dir,
+        runner=runner,
+    )
+    outcome = StageOutcome(report["outcome"])
     return StageResult(
         stage_id="cursor_cli_provider_dispatch",
-        outcome=StageOutcome.BLOCKED_EXTERNAL,
-        observations={"provider_id": "provider:cursor-cli", "evidence_present": True},
-        reasons=(
-            "evidence artifacts exist; live dispatch qualification still requires operator session",
-        ),
+        outcome=outcome,
+        observations=report,
+        reasons=tuple(report.get("reasons") or ()),
     )
 
 
@@ -689,6 +691,9 @@ def run_live_qualification(
     *,
     repository_root: Path,
     disposable_root: Path | None = None,
+    cursor_cli_runner: Any | None = None,
+    attestation_source_root: Path | None = None,
+    durable_dir: Path | None = None,
 ) -> dict[str, Any]:
     repository_root = repository_root.resolve()
     default_root = repository_root / ".local" / "live_qualification_runtime"
@@ -701,7 +706,13 @@ def run_live_qualification(
         _qualify_command_center(disposable_root=root),
         _qualify_local_provider(root),
         _qualify_github_jira_governance(repository_root),
-        _qualify_cursor_cli_provider(repository_root),
+        _qualify_cursor_cli_provider(
+            repository_root,
+            root,
+            runner=cursor_cli_runner,
+            source_root=attestation_source_root,
+            durable_dir=durable_dir,
+        ),
     )
     body = {
         "schema_version": "1.0.0",
@@ -719,9 +730,16 @@ def write_live_qualification_evidence(
     repository_root: Path,
     evidence_dir: Path | None = None,
     disposable_root: Path | None = None,
+    cursor_cli_runner: Any | None = None,
+    attestation_source_root: Path | None = None,
+    durable_dir: Path | None = None,
 ) -> Path:
     report = run_live_qualification(
-        repository_root=repository_root, disposable_root=disposable_root
+        repository_root=repository_root,
+        disposable_root=disposable_root,
+        cursor_cli_runner=cursor_cli_runner,
+        attestation_source_root=attestation_source_root,
+        durable_dir=durable_dir,
     )
     target = evidence_dir or (
         repository_root / "evidence" / "autonomy_runtime" / "live_qualification"
