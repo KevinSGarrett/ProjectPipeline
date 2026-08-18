@@ -6831,7 +6831,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "111e2b866fa7a74b25715cc6ef651ddca7716b05058ca179d1732366f2cc3bb8",
+      "sha256": "b6412e06d233f01284f26b58f16a47b6a51775571596f27f7ff510a3a0575f3c",
       "size_bytes": 328517,
       "top_level": "_root"
     },
@@ -14048,7 +14048,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "7fa99914458a179a4d639cf3dfd165e0e173f34257bfa1ca566c379373498270",
+      "sha256": "2df7139766d30fecc957a9b42147de98a6001e4b687c226bb5a8e7c5d89ada3a",
       "size_bytes": 537983,
       "top_level": "_root"
     },
@@ -18570,8 +18570,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/validation/autonomy_language.py",
-      "sha256": "450fb9a717714ac72729ff625b1d3ecda9c294aaa5a588da5b79e4d12bfcf30d",
-      "size_bytes": 2220,
+      "sha256": "9fd3d3cd4e096f2270fd4a2e738c03961de2f88493f8bce677faeee5402303bd",
+      "size_bytes": 2206,
       "top_level": "src"
     },
     {
@@ -18976,8 +18976,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_language_gate.py",
-      "sha256": "fb3d8f861ef58d62f1c72222c57cb821799d05cb9ac290f80dbf367a51890e5f",
-      "size_bytes": 1191,
+      "sha256": "b595a9d728bedc16b3e7b06bce467f8e09fe985f8bd5fb9315965866393db528",
+      "size_bytes": 1180,
       "top_level": "tests"
     },
     {
@@ -20185,7 +20185,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-18T22:19:34.330065+00:00",
+  "generated_at_utc": "2026-08-18T22:50:39.382698+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

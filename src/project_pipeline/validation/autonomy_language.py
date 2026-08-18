@@ -26,9 +26,7 @@ _ACTIVE_GLOBS = (
 )
 _EXCLUDED_PARTS = frozenset({"00_source", "_line_numbered", "reconciliation"})
 _LEGACY_STORAGE_ALLOWLIST = {
-    Path("src/project_pipeline/jira_steward/persistence.py"): {
-        "requires_" + "human_approval"
-    }
+    Path("src/project_pipeline/jira_steward/persistence.py"): {"requires_" + "human_approval"}
 }
 
 

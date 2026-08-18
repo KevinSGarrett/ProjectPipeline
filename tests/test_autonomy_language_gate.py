@@ -23,8 +23,7 @@ def test_gate_rejects_retired_incident_and_approval_apis(tmp_path: Path) -> None
     source = tmp_path / "src" / "project_pipeline" / "runtime.py"
     source.parent.mkdir(parents=True)
     source.write_text(
-        "class Human" + "RequiredIncident:\n"
-        "    requires_" + "human_approval = True\n",
+        "class Human" + "RequiredIncident:\n    requires_" + "human_approval = True\n",
         encoding="utf-8",
     )
     errors = validate_autonomous_external_preconditions(tmp_path)
