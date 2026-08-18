@@ -182,7 +182,7 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
             if token.strip():
                 return token, "config"
     except Exception:
-        pass
+        return None, "none"
     return None, "none"
 
 
