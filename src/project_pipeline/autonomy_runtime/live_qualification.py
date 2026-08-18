@@ -715,7 +715,7 @@ def run_live_qualification(
             durable_dir=durable_dir,
         ),
     )
-    body = {
+    body: dict[str, Any] = {
         "schema_version": "1.0.0",
         "task_id": "PP-TASK-000384",
         "generated_at_utc": _utc_now(),
