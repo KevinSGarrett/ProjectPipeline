@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "2476209f0fa6ed21eea1ec05294c9660ce9ee57ee13fe8d3b079db661bf3cadd",
+  "aggregate_sha256": "7f98db505c38ae3ec1f89ae6c619b97922266bf573975ee340df19738c60b035",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -62,8 +62,8 @@
     },
     {
       "path": ".cursor/hooks.json",
-      "sha256": "58ed37b2817b825af0a0d6259f573ad9075e84557b239d9ac4bd5812c54c0832",
-      "size_bytes": 421
+      "sha256": "871821521c50d04faf816d1d8c8cd80aba0e0aea7fb71bceeb04fbe3d49b3a6f",
+      "size_bytes": 361
     },
     {
       "path": ".cursor/hooks/continue-cycle.py",
@@ -72,8 +72,8 @@
     },
     {
       "path": ".cursor/hooks/guard_shell.py",
-      "sha256": "61d4d903e797cf98c4cc02f33bb0039f9d13bfbe4ee7c26a053406ff438204bd",
-      "size_bytes": 2004
+      "sha256": "e3a7709b30f79202038dc6d19952c3fe249d61cb19f2699e4b37b409f4108b26",
+      "size_bytes": 2020
     },
     {
       "path": ".cursor/mcp.example.json",
@@ -82,8 +82,8 @@
     },
     {
       "path": ".cursor/rules/00-authority-and-product-goal.mdc",
-      "sha256": "b2023ac8bb9f356b2143731f3512f33aa4a8a178ab0d7f91d2061c3ca577265f",
-      "size_bytes": 1208
+      "sha256": "5599f2d34141041eb0bd46f5f791149be40ee9bc85c7cfb689d948e6de51fd03",
+      "size_bytes": 1248
     },
     {
       "path": ".cursor/rules/10-cold-start-and-control.mdc",
@@ -107,8 +107,8 @@
     },
     {
       "path": ".cursor/rules/50-verification-and-completion.mdc",
-      "sha256": "6eb1fd8b98c8d37224530402d0f3675a291f370b5784c3b8d9d6b60913d849a7",
-      "size_bytes": 941
+      "sha256": "7bb3e3746c6cab5615013c9216df0434e02245541be0f36969ae263b3dceb411",
+      "size_bytes": 943
     },
     {
       "path": ".cursorignore",
@@ -5377,7 +5377,7 @@
     },
     {
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "385857c7b00515d1b51b3243a21d0d59ae35dc79c1e47e79da1dd2fef4cfcacf",
+      "sha256": "3d6cb04932a7544850ee94b25e7e67a2d6d68c3173492ca7e492c8b2cdd34215",
       "size_bytes": 1915
     },
     {
@@ -9287,13 +9287,13 @@
     },
     {
       "path": "plans/01_requirements/glossary.json",
-      "sha256": "9610f535cb9f654f78ae1f6ef6d5802f50a47cc2355e79ca3edc80d45fefb425",
-      "size_bytes": 15433
+      "sha256": "32e8d94335b873f4d3f75bc934117ee1c07f8b25b688d675cf938d2729defc34",
+      "size_bytes": 15569
     },
     {
       "path": "plans/01_requirements/GLOSSARY.md",
-      "sha256": "91adc0011bcb8f369fbe47c27b07c6a056388c96d54f95c568ff93e9bc0c256a",
-      "size_bytes": 9753
+      "sha256": "9f79766191842af6aead5377e9f54aed979ffe827333ca46a3a261465b5e34de",
+      "size_bytes": 9881
     },
     {
       "path": "plans/01_requirements/open_decisions.jsonl",
@@ -10527,8 +10527,8 @@
     },
     {
       "path": "runbooks/human_required_recovery.md",
-      "sha256": "6fb45509075ceaf5a5ac6d30b8914aeffd68ebe26561d4c21f52f849dc22a215",
-      "size_bytes": 684
+      "sha256": "3baff6e09916e05d39e3044f50f9c6a4cc668ec7f3a042e1f272116eaafc7394",
+      "size_bytes": 784
     },
     {
       "path": "runbooks/jira_unknown_outcome_reconciliation.md",
@@ -12077,8 +12077,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "ea950d2106741f3c138967c67c21baaa242a99eaef3d636348131bd0669d7ef8",
-      "size_bytes": 144687
+      "sha256": "1f35de5d153dbd56954d28a5af40b803cf023becb7be553e784dd86b68d1bd30",
+      "size_bytes": 145243
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12462,8 +12462,8 @@
     },
     {
       "path": "src/project_pipeline/github_steward/consolidation.py",
-      "sha256": "caea9fa663bafc544b7beb0ad9b2738bcb375ccd480df4dde61bdd1e4432fa6e",
-      "size_bytes": 2046
+      "sha256": "3ec7079f684ea7f3763428ef00009ca90afc5dc2e023e14076d548d7fcf18009",
+      "size_bytes": 2116
     },
     {
       "path": "src/project_pipeline/github_steward/errors.py",
@@ -12472,8 +12472,8 @@
     },
     {
       "path": "src/project_pipeline/github_steward/lifecycle.py",
-      "sha256": "ee250c301eae97a3e5b3838c2dd6cdd8842d21408ad24b65615b161a17311a6d",
-      "size_bytes": 12821
+      "sha256": "649855d2df2d20f626a4e1292702488835c5ca076f2435ee6ad064a129452cc8",
+      "size_bytes": 14426
     },
     {
       "path": "src/project_pipeline/github_steward/local_git.py",
@@ -12507,13 +12507,13 @@
     },
     {
       "path": "src/project_pipeline/github_steward/protection_drift.py",
-      "sha256": "92e99a08580e9d0690564e9ace792b515dc70e27bf9a5805b27627e2865144d5",
-      "size_bytes": 3144
+      "sha256": "84e3bfeed69bc8e4916b645d5f7d846e1a0d812fe44fb25d9925b7c47f728972",
+      "size_bytes": 4232
     },
     {
       "path": "src/project_pipeline/github_steward/service.py",
-      "sha256": "ebcafb33fa49ad6d450f49368383748c1b060d45f7aa225b9b7e6f8cbcdee299",
-      "size_bytes": 12412
+      "sha256": "9763b88f23719dc74bddb48b7f0b51fbe791a17063e800602385e3ba343b217f",
+      "size_bytes": 13330
     },
     {
       "path": "src/project_pipeline/github_steward/validation.py",
@@ -13157,8 +13157,8 @@
     },
     {
       "path": "src/project_pipeline/validation/pp380_dispositions.py",
-      "sha256": "e18b126a628dddc0654e3b9438808bb23c19900ed50315527a2f93f4db53cd44",
-      "size_bytes": 31009
+      "sha256": "7ce527a4faed072e09f5f7f5df37d2bf0744bca26b8825de942835baf7798060",
+      "size_bytes": 31395
     },
     {
       "path": "src/project_pipeline/validation/product_model_audit.py",
@@ -13637,8 +13637,8 @@
     },
     {
       "path": "tests/test_cursor_shell_hook.py",
-      "sha256": "a43e71f1f86694127339bf2d1d305a6557bb2f11857c6cfca40b42f613e99766",
-      "size_bytes": 1468
+      "sha256": "34c611b0c8da9aa4a213e895b05f1df522d6e0a174affc746593a706b4605c32",
+      "size_bytes": 1586
     },
     {
       "path": "tests/test_cursor_takeover.py",
@@ -13697,8 +13697,8 @@
     },
     {
       "path": "tests/test_github_steward_lifecycle.py",
-      "sha256": "f3d1c9d43ebb0ffda1131f4b6847ed75a071bdc07115ca5c66d26b9d0927228c",
-      "size_bytes": 12418
+      "sha256": "900716995bba2c91350e157e5460bb41b8b2dcb0ae113b66876956d172f996c2",
+      "size_bytes": 17463
     },
     {
       "path": "tests/test_github_steward_persistence.py",
@@ -14251,7 +14251,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-18T03:53:40.733519+00:00",
+  "generated_at_utc": "2026-08-18T05:11:03.507747+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14260,5 +14260,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25211934
+  "total_bytes": 25222082
 }
