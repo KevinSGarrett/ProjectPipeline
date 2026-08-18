@@ -14,7 +14,7 @@ Private chain-of-thought/scratchpad data is excluded from the authorized Directo
 
 ## Incident Manager
 
-`IncidentManager` wraps canonical `HumanRequiredIncident` records with an operator lifecycle:
+`IncidentManager` wraps canonical `ExternalPreconditionIncident` records with an operator lifecycle:
 
 `OPEN -> ACKNOWLEDGED -> RECOVERING -> VERIFIED -> RESOLVED`
 

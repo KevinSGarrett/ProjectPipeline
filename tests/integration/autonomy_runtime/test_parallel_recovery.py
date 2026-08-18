@@ -308,7 +308,7 @@ def test_stale_and_replacement_result_race_has_one_winner(tmp_path: Path) -> Non
     restarted.close()
 
 
-def test_unsolvable_lane_is_human_required_while_other_completes(tmp_path: Path) -> None:
+def test_unsolvable_lane_is_blocked_external_while_other_completes(tmp_path: Path) -> None:
     db_path = tmp_path / "lanes.sqlite3"
     registry = LaneRegistry(db_path)
     blocked = registry.claim(
@@ -331,7 +331,7 @@ def test_unsolvable_lane_is_human_required_while_other_completes(tmp_path: Path)
         stale_fencing_token="not-the-live-token",
         stale_worker_id="unknown-owner",
     )
-    assert incident.state == "HUMAN_REQUIRED"
+    assert incident.state == "BLOCKED_EXTERNAL"
     assert incident.reason == "UNSOLVABLE_LIVE_LEASE_WITHOUT_MATCHING_FENCE"
     assert registry.record_result(
         lane_id="lane-healthy",
@@ -340,20 +340,20 @@ def test_unsolvable_lane_is_human_required_while_other_completes(tmp_path: Path)
         result_fingerprint="healthy-complete",
     )
     persisted = registry.list_incidents("lane-blocked")
-    assert persisted[-1].disposition == "HUMAN_REQUIRED"
+    assert persisted[-1].disposition == "BLOCKED_EXTERNAL"
     assert persisted[-1].failure_fingerprint
     registry.close()
 
     restarted = DurableRecoveryService.open(db_path)
     incidents = restarted.incidents("lane-blocked")
-    assert incidents[-1].state == "HUMAN_REQUIRED"
+    assert incidents[-1].state == "BLOCKED_EXTERNAL"
     assert restarted.registry.result_for_attempt(healthy.attempt_id)["result_fingerprint"] == (
         "healthy-complete"
     )
     restarted.close()
 
 
-def test_retry_exhaustion_persists_human_required(tmp_path: Path) -> None:
+def test_retry_exhaustion_persists_autonomous_external_block(tmp_path: Path) -> None:
     clock = FakeClock()
     registry = LaneRegistry(tmp_path / "lanes.sqlite3", clock=clock, max_attempts=2)
     first = registry.claim(
@@ -391,10 +391,10 @@ def test_retry_exhaustion_persists_human_required(tmp_path: Path) -> None:
     assert third is None
     incidents = registry.list_incidents("lane-retry")
     assert any(
-        item.disposition == "HUMAN_REQUIRED" and item.reason == "RETRY_EXHAUSTED"
+        item.disposition == "BLOCKED_EXTERNAL" and item.reason == "RETRY_EXHAUSTED"
         for item in incidents
     )
-    assert incidents[-1].disposition == "HUMAN_REQUIRED"
+    assert incidents[-1].disposition == "BLOCKED_EXTERNAL"
     assert incidents[-1].reason == "RETRY_EXHAUSTED"
     assert incidents[-1].retry_decision == "DENY"
     registry.close()

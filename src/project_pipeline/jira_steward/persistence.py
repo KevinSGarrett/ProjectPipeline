@@ -168,7 +168,7 @@ class JiraSyncStore:
                         operation.request_fingerprint,
                         operation.state.value,
                         int(operation.requires_remote_write),
-                        int(operation.requires_human_approval),
+                        int(operation.requires_independent_verification),
                         _json(operation.model_dump(mode="json")),
                         timestamp,
                         timestamp,

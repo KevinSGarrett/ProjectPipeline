@@ -23,10 +23,10 @@ Cursor CLI phases:
 6. `REPLAY`
 7. `CLEANUP`
 
-Allowed live outcomes are `PASSED`, `BLOCKED_EXTERNAL`, and `FAILED`. Legacy
-`HUMAN_REQUIRED` is a compatibility storage alias only and is projected as
-`BLOCKED_EXTERNAL`. Live reports must not contain `operator session`,
-`await human`, or user-visible `HUMAN_REQUIRED`.
+Allowed live outcomes are `PASSED`, `BLOCKED_EXTERNAL`, and `FAILED`. Startup
+migrates the retired human-work storage value to `BLOCKED_EXTERNAL`; no current
+report, schema, plan, Jira projection, or evidence may emit it. Live reports
+must not assign any routine project action outside the autonomy runtime.
 
 Exact PP-379 public bytes are recovered only through
 `python -m project_pipeline attestation recover --root . --apply`. Arbitrary JSON

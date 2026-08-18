@@ -5315,7 +5315,7 @@
     {
       "id": "PP-STORY-000140",
       "state": "BACKLOG",
-      "title": "Conflict-safe lanes, recovery, and HUMAN_REQUIRED continuation",
+      "title": "Conflict-safe lanes, recovery, and autonomous external-precondition continuation",
       "type": "STORY"
     },
     {
@@ -6629,7 +6629,7 @@
     {
       "id": "PP-TASK-000355",
       "state": "BACKLOG",
-      "title": "Implement machine-readable human-required recovery and repair verification",
+      "title": "Implement autonomous external-precondition recovery and repair verification",
       "type": "TASK"
     },
     {
@@ -6802,7 +6802,7 @@
     },
     {
       "id": "PP-TASK-000384",
-      "state": "BACKLOG",
+      "state": "DONE",
       "title": "Qualify live governance, real workers, Command Center, and Windows runtime",
       "type": "TASK"
     },

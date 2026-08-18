@@ -21,7 +21,7 @@
     "The deterministic Completion Gate reports COMPLETE without mocks or lower-environment substitution."
   ],
   "dependencies": [],
-  "description": "Deliver and qualify the continuously operating local-first Autonomy Runtime from intake through next-work continuation, including HUMAN_REQUIRED partial continuation and truthful Command Center operation.",
+  "description": "Deliver and qualify the continuously operating local-first Autonomy Runtime from intake through next-work continuation, including autonomous BLOCKED_EXTERNAL rechecks, partial continuation, and truthful Command Center operation.",
   "evidence_required": [],
   "exclusions": [
     "No lifecycle-label tickets or PRs.",

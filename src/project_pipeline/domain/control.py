@@ -36,8 +36,7 @@ class EligibilityState(StrEnum):
     ALREADY_ACTIVE = "ALREADY_ACTIVE"
     TERMINAL = "TERMINAL"
     BLOCKED = "BLOCKED"
-    HUMAN_REQUIRED = "HUMAN_REQUIRED"
-    EXTERNAL_BLOCKED = "EXTERNAL_BLOCKED"
+    BLOCKED_EXTERNAL = "BLOCKED_EXTERNAL"
     RECONCILIATION_REQUIRED = "RECONCILIATION_REQUIRED"
     PRODUCT_SCOPE_PAUSED = "PRODUCT_SCOPE_PAUSED"
     POLICY_DENIED = "POLICY_DENIED"
@@ -92,7 +91,6 @@ class TaskControlFact(DomainModel):
     context_satisfied: bool = True
     resources_available: bool = True
     environment_available: bool = True
-    human_required: bool = False
     external_blocked: bool = False
     reconciliation_required: bool = False
     product_scope_allowed: bool = True

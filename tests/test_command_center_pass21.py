@@ -25,7 +25,7 @@ from project_pipeline.command_center.notifications import (
 from project_pipeline.command_center.persistence import CommandCenterStore
 from project_pipeline.command_center.projections import CommandCenterProjectionService
 from project_pipeline.command_center.realtime import RealtimeEventBroker
-from project_pipeline.domain.resilience import FailureDomain, HumanRequiredIncident
+from project_pipeline.domain.resilience import ExternalPreconditionIncident, FailureDomain
 from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 
 
@@ -49,11 +49,11 @@ def snapshot():
 
 
 def incident():
-    return HumanRequiredIncident(
+    return ExternalPreconditionIncident(
         incident_id="INCIDENT-AAAAAAAAAAAAAAAAAAAA",
         failure_domain=FailureDomain.API,
         summary="Remote provider credentials require human repair",
-        exact_human_action="Rotate the provider credential and confirm the health check succeeds.",
+        autonomous_resolution_action="Rotate the provider credential and confirm the health check succeeds.",
         unaffected_work=("local deterministic validation",),
         blocked_work=("remote provider execution", "provider-backed review"),
         verification_steps=("credential validates", "provider health check passes"),
@@ -124,7 +124,7 @@ def test_director_incident_scope_requires_canonical_incident_context():
         ),
         actor_id="actor:test",
     )
-    assert case.incident.exact_human_action in result.response_message.content
+    assert case.incident.autonomous_resolution_action in result.response_message.content
     assert result.context.facts["incident"]["state"] == "OPEN"
     assert result.context.incident_id == case.incident.incident_id
 
@@ -135,7 +135,7 @@ def test_incident_lifecycle_requires_verified_repair_before_resolution():
     case = manager.open(incident(), project_id="PROJ-TEST", evidence_ids=("EVID-TEST-INC",))
     assert case.state is IncidentState.OPEN
     inbox = broker.list_open()[0]
-    assert inbox.exact_action == f"Autonomous recheck: {incident().exact_human_action}"
+    assert inbox.exact_action == f"Autonomous recheck: {incident().autonomous_resolution_action}"
     assert "credential validates" in inbox.post_action_verification
     assert inbox.blocked_tasks == 2
 

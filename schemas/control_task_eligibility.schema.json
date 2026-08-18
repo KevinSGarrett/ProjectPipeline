@@ -6,8 +6,7 @@
         "ALREADY_ACTIVE",
         "TERMINAL",
         "BLOCKED",
-        "HUMAN_REQUIRED",
-        "EXTERNAL_BLOCKED",
+        "BLOCKED_EXTERNAL",
         "RECONCILIATION_REQUIRED",
         "PRODUCT_SCOPE_PAUSED",
         "POLICY_DENIED"

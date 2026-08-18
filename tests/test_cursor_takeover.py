@@ -14,12 +14,13 @@ from project_pipeline.cursor_takeover import (
 )
 
 
-def test_cursor_control_package_is_complete_and_fail_closed_before_live_qualification():
+def test_cursor_control_package_uses_live_qualification_without_human_gate():
     root = Path(__file__).parents[1]
     report = validate_cursor_takeover(root)
     assert report.configuration_ready is True, report.errors
-    assert report.activation_ready is False
-    assert any("Privacy Mode" in blocker for blocker in report.activation_blockers)
+    assert report.activation_ready is True, report.activation_blockers
+    assert report.unattended_ready is False
+    assert not any("operator" in blocker.lower() for blocker in report.activation_blockers)
 
 
 def test_issue_audit_selects_missing_issue_specific_implementation(tmp_path: Path):

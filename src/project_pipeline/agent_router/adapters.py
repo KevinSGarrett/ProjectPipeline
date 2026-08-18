@@ -6,7 +6,7 @@ import shutil
 import subprocess
 import urllib.error
 import urllib.request
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any, Protocol, cast
 
@@ -419,6 +419,7 @@ class CursorCliProviderAdapter:
         workspace: str,
         *,
         executable: str | None = None,
+        command_prefix: Sequence[str] = (),
         allow_write: bool = False,
         timeout_seconds: float = 3600.0,
         runner: Callable[..., subprocess.CompletedProcess[bytes]] = subprocess.run,
@@ -427,16 +428,21 @@ class CursorCliProviderAdapter:
             raise ValueError("workspace must be non-empty")
         self.workspace = os.path.abspath(workspace)
         self.executable = executable or ("agent" if shutil.which("agent") else "cursor-agent")
+        self.command_prefix = tuple(str(item) for item in command_prefix)
+        if any(not item.strip() for item in self.command_prefix):
+            raise ValueError("command_prefix entries must be non-empty")
         self.allow_write = allow_write
         self.timeout_seconds = timeout_seconds
         self.runner = runner
 
     def health(self) -> Mapping[str, Any]:
         resolved = shutil.which(self.executable)
+        launcher = shutil.which(self.command_prefix[0]) if self.command_prefix else resolved
         return {
             "adapter_id": self.adapter_id,
-            "configured": resolved is not None and os.path.isdir(self.workspace),
+            "configured": launcher is not None and os.path.isdir(self.workspace),
             "executable": resolved,
+            "launch_mode": "PREFIXED" if self.command_prefix else "NATIVE",
             "workspace": self.workspace,
             "allow_write": self.allow_write,
         }
@@ -448,17 +454,19 @@ class CursorCliProviderAdapter:
         return {
             "operation_id": operation_id,
             "checkpoint_supported": True,
-            "resume_command": f"{self.executable} --resume={operation_id}",
+            "resume_argv": [*self.command_prefix, self.executable, f"--resume={operation_id}"],
         }
 
     def execute(
         self, contract: ExecutionTaskContract, *, model_name: str
     ) -> ProviderInvocationResult:
         argv = [
+            *self.command_prefix,
             self.executable,
             "--print",
             "--output-format",
             "json",
+            "--trust",
             "--model",
             model_name,
         ]
@@ -473,11 +481,14 @@ class CursorCliProviderAdapter:
                 ),
             },
             sort_keys=True,
-        ).encode("utf-8")
+        )
+        # Cursor's documented headless interface accepts the prompt as a
+        # positional argument. Supplying it only on stdin can start a session
+        # without a task and falsely appear successful while doing no work.
+        argv.append(prompt)
         try:
             result = self.runner(
                 argv,
-                input=prompt,
                 capture_output=True,
                 cwd=self.workspace,
                 timeout=self.timeout_seconds,

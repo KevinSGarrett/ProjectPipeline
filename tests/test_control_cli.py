@@ -27,7 +27,7 @@ def test_ready_plan_is_dry_run(tmp_path: Path, capsys) -> None:
     assert result["dry_run"] is True
     operations = result["operations"]
     assert isinstance(operations, list)
-    assert {item["task_id"] for item in operations} == {"PP-TASK-000384"}
+    assert {item["task_id"] for item in operations} == {"PP-TASK-000385"}
     assert all(item["next_state"] == "READY" for item in operations)
 
 
@@ -71,7 +71,7 @@ def test_ready_apply_can_target_one_task(tmp_path: Path, capsys) -> None:
     )
     result = json.loads(capsys.readouterr().out)
     assert result["applied_transition_count"] == 1
-    assert {item["task_id"] for item in result["applied_transitions"]} == {"PP-TASK-000384"}
+    assert {item["task_id"] for item in result["applied_transitions"]} == {"PP-TASK-000385"}
 
 
 def test_ready_apply_requires_explicit_apply_and_approval(tmp_path: Path, capsys) -> None:
@@ -100,7 +100,7 @@ def test_ready_apply_transitions_only_currently_ready_backlog(tmp_path: Path, ca
     result = json.loads(capsys.readouterr().out)
     assert code == 0
     assert result["applied_transition_count"] == 1
-    assert {item["task_id"] for item in result["applied_transitions"]} == {"PP-TASK-000384"}
+    assert {item["task_id"] for item in result["applied_transitions"]} == {"PP-TASK-000385"}
 
 
 def test_cli_has_no_takeover_writer_command() -> None:

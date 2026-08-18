@@ -245,7 +245,7 @@
 {"implementation_paths": ["schemas/requirement.schema.json", "schemas/requirement_record.schema.json", "src/project_pipeline/contracts/schema_export.py", "src/project_pipeline/domain/requirements.py", "src/project_pipeline/validation/registries.py"], "requirement_id": "REQ-REQ-0016"}
 {"implementation_paths": ["plans/01_requirements/GLOSSARY.md", "plans/01_requirements/OPEN_DECISIONS.md", "plans/01_requirements/REQUIREMENT_CATALOG_STATUS.md", "plans/01_requirements/SOURCE_EVOLUTION.md", "plans/_traceability/requirement_registry_summary.json", "src/project_pipeline/requirement_views.py", "src/project_pipeline/traceability.py"], "requirement_id": "REQ-REQ-0017"}
 {"implementation_paths": ["config/resilience_policy.json", "src/project_pipeline/domain/resilience.py", "src/project_pipeline/resilience/failover.py"], "requirement_id": "REQ-RES-0001"}
-{"implementation_paths": ["config/recovery_runbooks.json", "runbooks/human_required_recovery.md", "src/project_pipeline/domain/resilience.py", "src/project_pipeline/resilience/failover.py"], "requirement_id": "REQ-RES-0002"}
+{"implementation_paths": ["config/recovery_runbooks.json", "runbooks/external_precondition_recovery.md", "src/project_pipeline/domain/resilience.py", "src/project_pipeline/resilience/failover.py"], "requirement_id": "REQ-RES-0002"}
 {"implementation_paths": ["config/resilience_policy.json", "runbooks/backup_restore_verification.md", "src/project_pipeline/resilience/backup.py"], "requirement_id": "REQ-RES-0003"}
 {"implementation_paths": ["src/project_pipeline/resilience/failover.py", "src/project_pipeline/resilience/local_models.py"], "requirement_id": "REQ-RES-0004"}
 {"implementation_paths": [], "requirement_id": "REQ-RES-0005"}
@@ -265,8 +265,8 @@
 {"implementation_paths": ["evidence/verification/fault_scenarios.json", "src/project_pipeline/verification/faults.py", "src/project_pipeline/verification/harness.py"], "requirement_id": "REQ-RES-0019"}
 {"implementation_paths": ["config/resilience_policy.json", "src/project_pipeline/resilience/backup.py"], "requirement_id": "REQ-RES-0020"}
 {"implementation_paths": ["runbooks/backup_restore_verification.md", "src/project_pipeline/domain/resilience.py", "src/project_pipeline/resilience/backup.py"], "requirement_id": "REQ-RES-0021"}
-{"implementation_paths": ["config/recovery_runbooks.json", "runbooks/backup_restore_verification.md", "runbooks/control_machine_failover.md", "runbooks/human_required_recovery.md"], "requirement_id": "REQ-RES-0022"}
-{"implementation_paths": ["runbooks/human_required_recovery.md", "src/project_pipeline/resilience/failover.py"], "requirement_id": "REQ-RES-0023"}
+{"implementation_paths": ["config/recovery_runbooks.json", "runbooks/backup_restore_verification.md", "runbooks/control_machine_failover.md", "runbooks/external_precondition_recovery.md"], "requirement_id": "REQ-RES-0022"}
+{"implementation_paths": ["runbooks/external_precondition_recovery.md", "src/project_pipeline/resilience/failover.py"], "requirement_id": "REQ-RES-0023"}
 {"implementation_paths": ["infrastructure/aws/terraform/main.tf", "runbooks/control_machine_failover.md", "src/project_pipeline/resilience/aws.py"], "requirement_id": "REQ-RES-0024"}
 {"implementation_paths": ["config/resilience_policy.json", "src/project_pipeline/resilience/aws.py"], "requirement_id": "REQ-RES-0025"}
 {"implementation_paths": ["src/project_pipeline/control/graph.py", "src/project_pipeline/domain/control.py"], "requirement_id": "REQ-SCHED-0001"}

@@ -61,6 +61,6 @@ def test_pp384_provider_state_machine_is_bound_and_not_human_stop() -> None:
     ).is_file()
     assert (ROOT / "src" / "project_pipeline" / "autonomy_runtime" / "projection.py").is_file()
     assert (ROOT / "src" / "project_pipeline" / "lifecycle" / "attestation_recovery.py").is_file()
-    assert StageOutcome.HUMAN_REQUIRED.value == "HUMAN_REQUIRED"
-    encoded = json.dumps(StageOutcome.HUMAN_REQUIRED.name)
-    assert "operator session" not in encoded
+    assert {item.value for item in StageOutcome} == {"PASSED", "BLOCKED_EXTERNAL", "FAILED"}
+    encoded = json.dumps(sorted(item.name for item in StageOutcome))
+    assert "HUMAN_REQUIRED" not in encoded

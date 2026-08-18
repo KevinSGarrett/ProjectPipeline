@@ -232,7 +232,7 @@ class QualificationStore:
     def fail(self, run_id: str, *, reason: str) -> dict[str, Any]:
         return self._halt(run_id, "FAILED", f"FAIL:{reason}")
 
-    def stop(self, run_id: str, *, reason: str = "operator-stop") -> dict[str, Any]:
+    def stop(self, run_id: str, *, reason: str = "autonomy-stop") -> dict[str, Any]:
         return self._halt(run_id, "STOPPED", f"STOP:{reason}")
 
     def complete(self, run_id: str) -> dict[str, Any]:

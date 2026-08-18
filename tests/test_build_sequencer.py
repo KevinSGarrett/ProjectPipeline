@@ -92,12 +92,11 @@ def test_approval_context_resource_and_environment_predicates() -> None:
         assert BuildSequencer((item,)).readiness(item).state is expected
 
 
-def test_human_and_external_blocks_are_ineligible() -> None:
-    human = fact("PP-TASK-000001", human_required=True)
-    external = fact("PP-TASK-000002", external_blocked=True)
-    seq = BuildSequencer((human, external))
-    assert seq.eligibility(human).state is EligibilityState.HUMAN_REQUIRED
-    assert seq.eligibility(external).state is EligibilityState.EXTERNAL_BLOCKED
+def test_external_blocks_are_ineligible_and_autonomously_owned() -> None:
+    external = fact("PP-TASK-000001", external_blocked=True)
+    seq = BuildSequencer((external,))
+    assert seq.eligibility(external).state is EligibilityState.BLOCKED_EXTERNAL
+    assert "autonomous recovery" in " ".join(seq.eligibility(external).reasons)
 
 
 def test_declared_duration_critical_path_is_deterministic() -> None:

@@ -6,7 +6,7 @@ from project_pipeline.command_center.models import InboxItem, NotificationLevel,
 from project_pipeline.command_center.notifications import NotificationDeliveryService
 from project_pipeline.command_center.realtime import RealtimeEventBroker
 from project_pipeline.contracts import EventEnvelope
-from project_pipeline.domain.resilience import FailureDomain, HumanRequiredIncident
+from project_pipeline.domain.resilience import ExternalPreconditionIncident, FailureDomain
 
 
 def _event(n: int) -> EventEnvelope:
@@ -50,11 +50,11 @@ def run_command_center_simulations() -> dict[str, bool]:
     quiet = attention.route(second, local_hour=23)
     quiet_ok = quiet.suppressed and "windows_notification" not in quiet.channels
     incident_manager = IncidentManager(attention)
-    incident = HumanRequiredIncident(
+    incident = ExternalPreconditionIncident(
         incident_id="INCIDENT-BBBBBBBBBBBBBBBBBBBB",
         failure_domain=FailureDomain.API,
         summary="simulation repair required",
-        exact_human_action="repair the simulated dependency",
+        autonomous_resolution_action="repair the simulated dependency",
         blocked_work=("work:blocked",),
         unaffected_work=("work:safe",),
         verification_steps=("dependency healthy",),

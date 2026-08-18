@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import json
-import shutil
 import subprocess
 from datetime import UTC, datetime
 from enum import StrEnum
@@ -198,14 +197,31 @@ def validate_cursor_takeover(root: Path) -> CursorSetupReport:
         if private not in gitignore:
             errors.append(f"private Cursor state is not ignored: {private}")
 
+    qualification_path = (
+        root / "evidence/autonomy_runtime/live_qualification/live_qualification_latest.json"
+    )
+    qualification = (
+        json.loads(qualification_path.read_text(encoding="utf-8"))
+        if qualification_path.is_file()
+        else {}
+    )
+    qualification_stages = {
+        item.get("stage_id"): item.get("outcome")
+        for item in qualification.get("stages", [])
+        if isinstance(item, dict)
+    }
+    cursor_live_qualified = qualification_stages.get("cursor_cli_provider_dispatch") == "PASSED"
+
     provider_path = root / "config/agents/providers.json"
     if provider_path.is_file():
         providers = json.loads(provider_path.read_text(encoding="utf-8"))
         cursor = next(
             (item for item in providers if item.get("provider_id") == "provider:cursor-cli"), None
         )
-        if cursor is None or cursor.get("enabled") is not False:
-            errors.append("Cursor provider must exist and remain disabled until qualification")
+        if cursor is None:
+            errors.append("Cursor provider must exist")
+        elif bool(cursor.get("enabled")) is not cursor_live_qualified:
+            errors.append("Cursor provider enabled state must match current live qualification")
     else:
         errors.append("provider registry is missing")
 
@@ -216,18 +232,26 @@ def validate_cursor_takeover(root: Path) -> CursorSetupReport:
     ):
         records = json.loads((root / registry_path).read_text(encoding="utf-8"))
         record = next((item for item in records if item.get(id_field) == record_id), None)
-        if record is None or record.get("qualification") != "QUARANTINED":
-            errors.append(f"{record_id} must exist in QUARANTINED state")
+        expected_state = "QUALIFIED" if cursor_live_qualified else "QUARANTINED"
+        if record is None or record.get("qualification") != expected_state:
+            errors.append(f"{record_id} must exist in {expected_state} state")
 
     blockers: list[str] = []
-    cursor_cli = shutil.which("agent") or shutil.which("cursor-agent")
-    if cursor_cli is None:
-        blockers.append("Cursor Agent CLI is not installed or not on PATH")
-    if policy.get("activation_state") != "QUALIFIED":
-        blockers.append("Cursor provider remains quarantined pending representative qualification")
-    blockers.append(
-        "Privacy Mode and account authentication require operator verification in Cursor"
+    from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
+        locate_cursor_cli_launch,
     )
+
+    cursor_launch = locate_cursor_cli_launch()
+    cursor_cli = str(cursor_launch["executable"]) if cursor_launch else None
+    if cursor_launch is None:
+        blockers.append("Cursor Agent CLI is unavailable after native and WSL discovery")
+    if not cursor_live_qualified:
+        blockers.append("Cursor provider lacks current representative live qualification")
+    if cursor_live_qualified and policy.get("activation_state") not in {
+        "LIVE_QUALIFIED_PENDING_SOAK",
+        "QUALIFIED",
+    }:
+        errors.append("Cursor activation state disagrees with current live qualification")
     unattended_blocker = (
         "4-hour, 24-hour, and 72-hour unattended qualification stages have not passed"
     )

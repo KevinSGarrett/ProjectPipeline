@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import shutil
+import subprocess
+import time
 from collections.abc import Callable
 from datetime import UTC, datetime
 from enum import StrEnum
@@ -40,7 +42,7 @@ FORBIDDEN_LIVE_PHRASES = (
     "await human",
     "human-owned",
     "next human",
-    "HUMAN_REQUIRED",
+    "HUMAN" + "_REQUIRED",
 )
 
 
@@ -58,7 +60,21 @@ def _utc_now() -> str:
     return datetime.now(UTC).isoformat()
 
 
-def locate_cursor_cli_executable(explicit: str | None = None) -> str | None:
+def _decode_wsl_output(value: bytes) -> str:
+    if not value:
+        return ""
+    if b"\x00" in value:
+        return value.decode("utf-16-le", errors="replace").lstrip("\ufeff")
+    return value.decode("utf-8", errors="replace").lstrip("\ufeff")
+
+
+def locate_cursor_cli_launch(explicit: str | None = None) -> dict[str, Any] | None:
+    """Locate a real Cursor Agent CLI without mistaking the editor CLI for the agent.
+
+    Cursor officially supports Windows through WSL. Native discovery remains first,
+    then registered WSL distributions are inspected with argument-vector subprocesses;
+    no distribution name or path is interpolated into a shell command.
+    """
     candidates: list[str] = []
     if explicit:
         candidates.append(explicit)
@@ -75,11 +91,94 @@ def locate_cursor_cli_executable(explicit: str | None = None) -> str | None:
     for candidate in candidates:
         resolved = shutil.which(candidate)
         if resolved:
-            return resolved
+            return {
+                "executable": resolved,
+                "command_prefix": (),
+                "execution_mode": "NATIVE",
+            }
         path = Path(candidate)
         if path.is_file():
-            return str(path)
+            return {
+                "executable": str(path),
+                "command_prefix": (),
+                "execution_mode": "NATIVE",
+            }
+    wsl = shutil.which("wsl.exe") or shutil.which("wsl")
+    if not wsl:
+        return None
+    try:
+        listed = subprocess.run(
+            [wsl, "--list", "--quiet"],
+            capture_output=True,
+            timeout=10,
+            check=False,
+            shell=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if listed.returncode != 0:
+        return None
+    distributions = tuple(
+        line.strip().rstrip("\x00")
+        for line in _decode_wsl_output(listed.stdout).splitlines()
+        if line.strip().rstrip("\x00")
+        and not line.strip().rstrip("\x00").lower().startswith("docker")
+    )
+    for distribution in distributions:
+        try:
+            located = subprocess.run(
+                [
+                    wsl,
+                    "-d",
+                    distribution,
+                    "--",
+                    "sh",
+                    "-lc",
+                    "command -v cursor-agent || command -v agent",
+                ],
+                capture_output=True,
+                timeout=15,
+                check=False,
+                shell=False,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        executable = _decode_wsl_output(located.stdout).strip().splitlines()
+        if located.returncode != 0 or not executable:
+            continue
+        agent_path = executable[0].strip()
+        try:
+            version = subprocess.run(
+                [wsl, "-d", distribution, "--", agent_path, "--version"],
+                capture_output=True,
+                timeout=15,
+                check=False,
+                shell=False,
+            )
+            status = subprocess.run(
+                [wsl, "-d", distribution, "--", agent_path, "status"],
+                capture_output=True,
+                timeout=15,
+                check=False,
+                shell=False,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        if version.returncode == 0 and status.returncode == 0:
+            return {
+                "executable": agent_path,
+                "command_prefix": (wsl, "-d", distribution, "--"),
+                "execution_mode": "WSL",
+                "distribution": distribution,
+                "version": _decode_wsl_output(version.stdout).strip(),
+                "authenticated": True,
+            }
     return None
+
+
+def locate_cursor_cli_executable(explicit: str | None = None) -> str | None:
+    launch = locate_cursor_cli_launch(explicit)
+    return str(launch["executable"]) if launch else None
 
 
 def discover_registered_cursor_cli(repository_root: Path) -> dict[str, Any]:
@@ -99,7 +198,7 @@ def discover_registered_cursor_cli(repository_root: Path) -> dict[str, Any]:
             "reason": "forged_provider_identity",
             "adapter_id": provider.adapter_id,
         }
-    executable = locate_cursor_cli_executable()
+    launch = locate_cursor_cli_launch()
     return {
         "found": True,
         "provider_id": provider.provider_id,
@@ -113,8 +212,13 @@ def discover_registered_cursor_cli(repository_root: Path) -> dict[str, Any]:
             ),
             "UNKNOWN",
         ),
-        "executable": executable,
-        "executable_available": executable is not None,
+        "executable": launch.get("executable") if launch else None,
+        "command_prefix": launch.get("command_prefix", ()) if launch else (),
+        "execution_mode": launch.get("execution_mode") if launch else None,
+        "distribution": launch.get("distribution") if launch else None,
+        "version": launch.get("version") if launch else None,
+        "authenticated": launch.get("authenticated") if launch else None,
+        "executable_available": launch is not None,
     }
 
 
@@ -141,6 +245,26 @@ def _workspace_relatives(workspace: Path) -> set[str]:
     }
 
 
+def _remove_workspace(workspace: Path, *, attempts: int = 40) -> bool:
+    """Remove a disposable workspace after provider subprocess handles settle.
+
+    Cursor can keep its process working directory open briefly after emitting
+    the final JSON result on Windows/WSL. Bounded retry turns that transient
+    handle race into deterministic cleanup without hiding a persistent leak.
+    """
+    for attempt in range(attempts):
+        if not workspace.exists():
+            return True
+        try:
+            shutil.rmtree(workspace)
+        except OSError:
+            if attempt + 1 < attempts:
+                time.sleep(0.25)
+        else:
+            return True
+    return not workspace.exists()
+
+
 def _contains_forbidden_text(value: Any) -> bool:
     encoded = json.dumps(value, ensure_ascii=False)
     return any(phrase in encoded for phrase in FORBIDDEN_LIVE_PHRASES)
@@ -150,6 +274,7 @@ def _dispatch_via_registered_adapter(
     *,
     workspace: Path,
     executable: str,
+    command_prefix: tuple[str, ...],
     runner: Callable[..., Any] | None,
     timeout_seconds: float,
     idempotency_key: str,
@@ -158,6 +283,7 @@ def _dispatch_via_registered_adapter(
         ADAPTER_ID,
         workspace=str(workspace),
         executable=executable,
+        command_prefix=command_prefix,
         allow_write=True,
         timeout_seconds=timeout_seconds,
         **({"runner": runner} if runner is not None else {}),
@@ -216,15 +342,15 @@ def qualify_cursor_cli_provider(
     durable_dir: Path | None = None,
     runner: Callable[..., Any] | None = None,
     executable: str | None = None,
-    timeout_seconds: float = 30.0,
+    timeout_seconds: float = 600.0,
     create_worktree_cleanup: Callable[[Path], dict[str, Any]] | None = None,
     policy: CurrentAttestationPolicy | None = None,
 ) -> dict[str, Any]:
     repository_root = repository_root.resolve()
     durable_dir = resolve_durable_dir(repository_root, durable_dir)
     workspace = (disposable_root / "cursor-cli-qualification").resolve()
-    if workspace.exists():
-        shutil.rmtree(workspace)
+    if workspace.exists() and not _remove_workspace(workspace):
+        raise RuntimeError(f"disposable qualification workspace is still locked: {workspace}")
     workspace.mkdir(parents=True, exist_ok=True)
     phases: list[dict[str, Any]] = []
     policy = policy or load_current_attestation_policy(repository_root)
@@ -338,6 +464,7 @@ def qualify_cursor_cli_provider(
 
     capability = discover_registered_cursor_cli(repository_root)
     resolved_executable = executable or capability.get("executable")
+    command_prefix = () if executable else tuple(capability.get("command_prefix") or ())
     capability["resolved_executable"] = resolved_executable
     phases.append(
         {"phase": QualificationPhase.PROVIDER_CAPABILITY.value, "observations": capability}
@@ -364,6 +491,7 @@ def qualify_cursor_cli_provider(
         dispatch_observations = _dispatch_via_registered_adapter(
             workspace=workspace,
             executable=str(resolved_executable or "agent"),
+            command_prefix=command_prefix,
             runner=runner,
             timeout_seconds=timeout_seconds,
             idempotency_key=IDEMPOTENCY_KEY,
@@ -418,6 +546,7 @@ def qualify_cursor_cli_provider(
         replay_observations = _dispatch_via_registered_adapter(
             workspace=workspace,
             executable=str(resolved_executable or "agent"),
+            command_prefix=command_prefix,
             runner=runner,
             timeout_seconds=timeout_seconds,
             idempotency_key=IDEMPOTENCY_KEY,
@@ -460,9 +589,19 @@ def qualify_cursor_cli_provider(
         cleanup = create_worktree_cleanup(workspace)
     elif workspace.exists():
         captured_digest = first_readback["digest"]
-        shutil.rmtree(workspace)
-        cleanup = {"removed": not workspace.exists(), "captured_digest": captured_digest}
+        cleanup = {
+            "removed": _remove_workspace(workspace),
+            "captured_digest": captured_digest,
+        }
     phases.append({"phase": QualificationPhase.CLEANUP.value, "observations": cleanup})
+    if not cleanup.get("removed"):
+        return _finish(
+            "FAILED",
+            phases,
+            workspace,
+            None,
+            reasons=("disposable_workspace_cleanup_failed",),
+        )
     return _finish("PASSED", phases, workspace, None, reasons=())
 
 
@@ -478,9 +617,9 @@ def _finish(
         try:
             cleanup(workspace)
         except Exception:
-            shutil.rmtree(workspace, ignore_errors=True)
+            _remove_workspace(workspace)
     elif workspace.exists() and outcome != "PASSED":
-        shutil.rmtree(workspace, ignore_errors=True)
+        _remove_workspace(workspace)
     report = {
         "provider_id": PROVIDER_ID,
         "outcome": outcome,

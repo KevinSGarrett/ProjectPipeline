@@ -5,6 +5,7 @@ import json
 import shutil
 import subprocess
 import sys
+from contextlib import suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from enum import StrEnum
@@ -35,7 +36,6 @@ class StageOutcome(StrEnum):
     PASSED = "PASSED"
     BLOCKED_EXTERNAL = "BLOCKED_EXTERNAL"
     FAILED = "FAILED"
-    HUMAN_REQUIRED = "HUMAN_REQUIRED"  # compatibility storage only; never projected live
 
 
 @dataclass(frozen=True)
@@ -46,8 +46,6 @@ class StageResult:
     reasons: tuple[str, ...] = ()
 
     def projected_outcome(self) -> StageOutcome:
-        if self.outcome is StageOutcome.HUMAN_REQUIRED:
-            return StageOutcome.BLOCKED_EXTERNAL
         return self.outcome
 
     def as_dict(self) -> dict[str, Any]:
@@ -195,7 +193,7 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
     return None, "none"
 
 
-def _build_jira_adapter(repository_root: Path):
+def _build_jira_adapter(repository_root: Path) -> Any:
     from project_pipeline.configuration.loader import load_runtime_configuration
     from project_pipeline.configuration.secrets import SecretResolver
     from project_pipeline.jira_steward.adapter import AtlassianJiraCloudAdapter
@@ -233,7 +231,7 @@ def _resolve_jira_remote_key(adapter: Any, repository_root: Path) -> str | None:
     for issue in adapter.iter_issues("PP", page_size=100, fields=("summary", "description")):
         description = issue.description_text or ""
         if f"Local ID: {_LIVE_QUAL_JIRA_LOCAL_ID}" in description:
-            return issue.remote_key
+            return str(issue.remote_key)
     return None
 
 
@@ -679,6 +677,9 @@ def _qualify_cursor_cli_provider(
         durable_dir=durable_dir,
         runner=runner,
     )
+    if runner is None and disposable_root.name == ".pp384_cursor_cli_runtime":
+        with suppress(OSError):
+            shutil.rmtree(disposable_root)
     outcome = StageOutcome(report["outcome"])
     return StageResult(
         stage_id="cursor_cli_provider_dispatch",
@@ -686,6 +687,17 @@ def _qualify_cursor_cli_provider(
         observations=report,
         reasons=tuple(report.get("reasons") or ()),
     )
+
+
+def _cursor_cli_disposable_root(repository_root: Path, live_root: Path, runner: Any | None) -> Path:
+    # A real Cursor Agent must operate inside the governed checkout so shared
+    # rules and shell hooks are active. The repository's .local directory is
+    # intentionally .cursorignore-protected, so use an allowlisted tests path
+    # and remove it immediately after qualification. Injected test runners keep
+    # using the caller's disposable root.
+    if runner is not None:
+        return live_root
+    return repository_root / "tests" / ".pp384_cursor_cli_runtime"
 
 
 def run_live_qualification(
@@ -709,7 +721,7 @@ def run_live_qualification(
         _qualify_github_jira_governance(repository_root),
         _qualify_cursor_cli_provider(
             repository_root,
-            root,
+            _cursor_cli_disposable_root(repository_root, root, cursor_cli_runner),
             runner=cursor_cli_runner,
             source_root=attestation_source_root,
             durable_dir=durable_dir,

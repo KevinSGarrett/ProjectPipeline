@@ -109,7 +109,7 @@ class DeterministicGroundedDirectorResponder:
                 "summary", "Incident details are unavailable from the authorized projection."
             )
             exact_action = raw.get(
-                "exact_human_action",
+                "autonomous_resolution_action",
                 "Schedule an autonomous recheck of the blocked external capability.",
             )
             verification = raw.get("verification_steps", [])

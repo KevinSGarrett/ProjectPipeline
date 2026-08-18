@@ -11,7 +11,7 @@ from project_pipeline.command_center.models import (
     IncidentState,
     NotificationLevel,
 )
-from project_pipeline.domain.resilience import HumanRequiredIncident
+from project_pipeline.domain.resilience import ExternalPreconditionIncident
 from project_pipeline.resilience.failover import verify_human_repair
 
 
@@ -30,7 +30,7 @@ class IncidentManager:
 
     def open(
         self,
-        incident: HumanRequiredIncident,
+        incident: ExternalPreconditionIncident,
         *,
         project_id: str,
         severity: NotificationLevel = NotificationLevel.URGENT,
@@ -48,7 +48,7 @@ class IncidentManager:
                 level=severity,
                 title=incident.summary,
                 impact=self._impact(incident),
-                exact_action=f"Autonomous recheck: {incident.exact_human_action}",
+                exact_action=f"Autonomous recheck: {incident.autonomous_resolution_action}",
                 post_action_verification="; ".join(incident.verification_steps),
                 critical_path=bool(incident.blocked_work),
                 blocked_tasks=len(incident.blocked_work),
@@ -141,7 +141,7 @@ class IncidentManager:
         return case
 
     @staticmethod
-    def _impact(incident: HumanRequiredIncident) -> str:
+    def _impact(incident: ExternalPreconditionIncident) -> str:
         blocked = (
             ", ".join(incident.blocked_work)
             if incident.blocked_work

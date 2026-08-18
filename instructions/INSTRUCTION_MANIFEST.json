@@ -354,8 +354,8 @@
       "instruction_id": "PP-INST-18",
       "kind": "INSTRUCTION",
       "path": "instructions/18_HUMAN_ESCALATION_PROTOCOL.md",
-      "sha256": "6c3f995a01c57d361564e78fd4d6a8f0749c91a8cea217b892105c07a75d06c8",
-      "size_bytes": 3835
+      "sha256": "8f89c8b75bc20187e6643de0bef3d00455bb4f04f15f7aa10489ecb63f5cccd0",
+      "size_bytes": 5743
     },
     {
       "instruction_id": "PP-INST-19",
@@ -438,8 +438,8 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-ESCALATION-CLASSIFICATIONS-JSON",
       "kind": "MACHINE_POLICY",
       "path": "instructions/policies/ESCALATION_CLASSIFICATIONS.json",
-      "sha256": "a2790cd7b98a2d4b702c8e8e28981c3e85070a122edbad0cef6f2d9a9b9afadc",
-      "size_bytes": 1837
+      "sha256": "bd99863c2c79eb0c965cd73767a4571defa579d3df574d46a8826c75726022cf",
+      "size_bytes": 1831
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-EXTERNAL-MUTATION-AUTHORITY-JSON",
@@ -508,8 +508,8 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-TEMPLATES-HUMAN-INTERVENTION-REQUEST-MD",
       "kind": "TEMPLATE",
       "path": "instructions/templates/HUMAN_INTERVENTION_REQUEST.md",
-      "sha256": "b19b6c544958c3dd35fe396e79d0c79ac56aca61086bc8b873d6a8559c624541",
-      "size_bytes": 1546
+      "sha256": "2f7f5a01d3f114eda21e5368dbdbc1e857fb7f8aa361107830977d658724dcb5",
+      "size_bytes": 1570
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-TEMPLATES-PULL-REQUEST-BODY-MD",
@@ -599,8 +599,8 @@
       "instruction_id": "PP-ASSET-SRC-PROJECT-PIPELINE-VALIDATION-REPOSITORY-PY",
       "kind": "IMPLEMENTATION_SUPPORT",
       "path": "src/project_pipeline/validation/repository.py",
-      "sha256": "ccebe20fd710d03c08d502f4c1fe528d492bee2280ba1c4165a877d866ce3f90",
-      "size_bytes": 16137
+      "sha256": "364eb247a2123ff992025bee5cb9c55c045f49b200d9b5ed371f320570ebb45c",
+      "size_bytes": 16649
     },
     {
       "instruction_id": "PP-ASSET-TESTS-TEST-DOMAIN-MODELS-PY",

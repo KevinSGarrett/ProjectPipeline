@@ -256,12 +256,11 @@
         "SRC-008:L000956-L000985"
       ]
     },
-    "human_required": {
+    "external_precondition": {
       "aliases": [
-        "HUMAN_REQUIRED",
         "BLOCKED_EXTERNAL"
       ],
-      "definition": "Compatibility alias for BLOCKED_EXTERNAL: dependent work cannot continue until an external precondition is autonomously rechecked. This does not assign operator work and does not stop unaffected lanes.",
+      "definition": "A capability or external condition that remains objectively unavailable after safe autonomous resolution attempts; the autonomy runtime owns deterministic rechecks while unaffected lanes continue.",
       "source_references": [
         "SRC-015:L000031-L000150"
       ]
@@ -317,7 +316,7 @@
     },
     "operator_inbox": {
       "aliases": [],
-      "definition": "Prioritized queue of human-required decisions and actions with impact and verification instructions.",
+      "definition": "Prioritized queue of autonomous incident owners, unavailable capabilities, recheck schedules, impact, and recovery verification.",
       "source_references": [
         "SRC-015:L000031-L000150"
       ]

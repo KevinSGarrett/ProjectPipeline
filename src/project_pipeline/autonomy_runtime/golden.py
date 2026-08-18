@@ -12,7 +12,7 @@ from typing import Any
 
 from project_pipeline.autonomy_runtime.lanes import LaneRegistry
 from project_pipeline.autonomy_runtime.projection import (
-    is_compatibility_human_required,
+    is_external_precondition,
     project_runtime_state,
 )
 from project_pipeline.autonomy_runtime.recovery import DurableRecoveryService
@@ -41,7 +41,7 @@ BEHAVIOR_KEYS = (
     "12_jira_reconciliation",
     "13_restart_continuation",
     "14_worker_loss_recovery",
-    "15_human_required_and_unaffected",
+    "15_external_precondition_and_unaffected",
     "16_next_eligible_selection",
 )
 
@@ -146,13 +146,13 @@ def project_command_center(
                 owner="lane-registry",
                 current_stage=incident.reason,
                 blocked_by=(incident.logical_lane_id,)
-                if is_compatibility_human_required(incident.disposition)
+                if is_external_precondition(incident.disposition)
                 else (),
             )
         )
     health_state = (
         HealthState.DEGRADED
-        if any(is_compatibility_human_required(item.disposition) for item in incidents)
+        if any(is_external_precondition(item.disposition) for item in incidents)
         else HealthState.HEALTHY
     )
     snapshot = CommandCenterProjectionService().build_snapshot(
@@ -168,9 +168,7 @@ def project_command_center(
         ),
         live_work=tuple(live_work),
         active_incident_ids=tuple(
-            item.incident_id
-            for item in incidents
-            if is_compatibility_human_required(item.disposition)
+            item.incident_id for item in incidents if is_external_precondition(item.disposition)
         ),
         context_summary={
             "next_eligible_task_id": next_task_id,
@@ -383,7 +381,7 @@ class GoldenJourneyHarness:
             lease_seconds=30,
         )
         assert blocked is not None and healthy is not None
-        human = DurableRecoveryService(registry).recover_lost_worker(
+        external_block = DurableRecoveryService(registry).recover_lost_worker(
             lane_id="lane-blocked",
             stale_fencing_token="not-the-token",
             stale_worker_id="unknown",
@@ -399,9 +397,9 @@ class GoldenJourneyHarness:
             "recovery_state": recovery.state,
             "stale_rejected": stale_rejected,
             "replacement_accepted": replacement_accepted,
-            "human_required": human.state,
+            "external_precondition": external_block.state,
             "unaffected_completed": healthy_done,
-            "human_incident_id": human.incident_id,
+            "external_incident_id": external_block.incident_id,
             "healthy_lane_id": "lane-healthy",
         }
 
@@ -504,8 +502,8 @@ class GoldenJourneyHarness:
                 "stale_rejected": recovery["stale_rejected"],
                 "replacement_accepted": recovery["replacement_accepted"],
             },
-            "15_human_required_and_unaffected": {
-                "human_required": recovery["human_required"],
+            "15_external_precondition_and_unaffected": {
+                "external_precondition": recovery["external_precondition"],
                 "unaffected_completed": recovery["unaffected_completed"],
                 "command_center_incident_ids": snapshot["active_incident_ids"],
                 "command_center_live_states": [item["state"] for item in snapshot["live_work"]],

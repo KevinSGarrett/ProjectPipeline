@@ -15,7 +15,7 @@
     "raw_archive_policy": "REFERENCE_ONLY_NOT_AGENT_INSTRUCTION"
   },
   "provider_id": "provider:cursor-cli",
-  "activation_state": "QUARANTINED",
+  "activation_state": "LIVE_QUALIFIED_PENDING_SOAK",
   "maximum_implementation_lanes": 2,
   "maximum_progressless_cycles": 2,
   "expensive_gate_boundary": "COHESIVE_VERTICAL_SLICE",

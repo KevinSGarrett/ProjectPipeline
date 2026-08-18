@@ -2,7 +2,7 @@
   "acceptance_criteria": [
     {
       "criterion_id": "AC-PP-900140-01",
-      "statement": "Compatible lanes execute with atomic claims, leases, fencing, recovery, and bounded retries while a HUMAN_REQUIRED incident blocks only its dependent subgraph.",
+      "statement": "Compatible lanes execute with atomic claims, leases, fencing, recovery, and bounded retries while a BLOCKED_EXTERNAL incident blocks only its dependent subgraph and remains owned by autonomous recheck.",
       "verification": {
         "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_parallel_recovery.py",
         "method": "real_concurrency_and_recovery",
@@ -16,7 +16,7 @@
   "definition_of_done": [
     "Conflicting resources never run concurrently.",
     "Worker loss and restart recover deterministically.",
-    "An unaffected lane continues during HUMAN_REQUIRED."
+    "An unaffected lane continues while autonomous recheck owns BLOCKED_EXTERNAL."
   ],
   "dependencies": [
     "PP-STORY-000139"
@@ -59,7 +59,7 @@
       "start_line": 20
     }
   ],
-  "rationale": "The perpetual loop must remain productive when a worker or one lane requires a human.",
+  "rationale": "The perpetual loop remains productive through automated incident ownership, recovery, and recheck without assigning work outside ProjectPipeline.",
   "relationships": [
     {
       "target": "PP-EPIC-000036",
@@ -92,6 +92,6 @@
     "SRC-015:L000001-L000112"
   ],
   "state": "BACKLOG",
-  "title": "Conflict-safe lanes, recovery, and HUMAN_REQUIRED continuation",
+  "title": "Conflict-safe lanes, recovery, and autonomous external-precondition continuation",
   "upstream_dependencies": []
 }

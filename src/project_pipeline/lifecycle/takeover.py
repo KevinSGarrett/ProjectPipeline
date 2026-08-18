@@ -18,7 +18,7 @@ PP327_BLOCKED_PATHS = frozenset(
 
 
 class SessionIdentity(StrEnum):
-    OPERATOR_LAUNCHED_COORDINATOR = "OPERATOR_LAUNCHED_COORDINATOR"
+    AUTONOMY_COORDINATOR = "AUTONOMY_COORDINATOR"
     PROGRAMMATIC_CURSOR_CLI_WORKER = "PROGRAMMATIC_CURSOR_CLI_WORKER"
     CURSOR_CLOUD_WORKER = "CURSOR_CLOUD_WORKER"
 
@@ -26,7 +26,7 @@ class SessionIdentity(StrEnum):
 class LaneState(StrEnum):
     ACTIVE = "ACTIVE"
     BLOCKED = "BLOCKED"
-    HUMAN_REQUIRED = "HUMAN_REQUIRED"
+    BLOCKED_EXTERNAL = "BLOCKED_EXTERNAL"
 
 
 class AttestationState(StrEnum):
@@ -171,11 +171,8 @@ def provider_dispatch_blocked(
     provider_id: str,
     provider_qualified: bool,
 ) -> bool:
-    if provider_qualified:
-        return False
-    if provider_id != "provider:cursor-cli":
-        return True
-    return session_identity is SessionIdentity.PROGRAMMATIC_CURSOR_CLI_WORKER
+    del session_identity, provider_id
+    return not provider_qualified
 
 
 def local_integration_allowed(
@@ -190,7 +187,7 @@ def local_integration_allowed(
         provider_qualified=provider_qualified,
     ):
         return False
-    return session_identity is SessionIdentity.OPERATOR_LAUNCHED_COORDINATOR
+    return session_identity is SessionIdentity.AUTONOMY_COORDINATOR
 
 
 def scoped_lane_state(
@@ -206,14 +203,14 @@ def scoped_lane_state(
     if missing_external_credentials and depends_on_external_credentials:
         return LaneState.BLOCKED
     if requires_privacy_attestation and not has_privacy_attestation:
-        return LaneState.HUMAN_REQUIRED
+        return LaneState.BLOCKED_EXTERNAL
     return LaneState.ACTIVE
 
 
 def global_stop_required(lane_states: tuple[LaneState, ...]) -> bool:
     if not lane_states:
         return True
-    return all(state in {LaneState.BLOCKED, LaneState.HUMAN_REQUIRED} for state in lane_states)
+    return all(state in {LaneState.BLOCKED, LaneState.BLOCKED_EXTERNAL} for state in lane_states)
 
 
 def _parse_utc_timestamp(value: str | None) -> datetime | None:
@@ -317,7 +314,7 @@ def validate_durable_attestation(
     )
 
 
-def should_request_human_attestation(
+def attestation_recheck_required(
     *,
     prior: DurableAttestation | None,
     attestation_inputs: dict[str, object],

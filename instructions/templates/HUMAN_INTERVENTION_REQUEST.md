@@ -52,6 +52,8 @@ Expected result: `[specific result]`
 
 `[eligible work that continues, or exact reason for global pause]`
 
-## Operator work assignment
+## Autonomous owner
 
-`NONE` — ProjectPipeline continues autonomously and rechecks the condition through the scheduler.
+- Owner: `autonomy-runtime`
+- Recheck schedule/lease: `[durable ID and next time]`
+- No action is assigned outside ProjectPipeline.

@@ -2,7 +2,7 @@
   "acceptance_criteria": [
     {
       "criterion_id": "AC-PP-000383-01",
-      "statement": "A fixture project completes all sixteen required local-real journey behaviors with actual implementation, tests, isolated Git worktrees, independent verification, governed integration, Jira reconciliation, restart/worker loss, HUMAN_REQUIRED partial continuation, Command Center truth, and automatic next selection.",
+      "statement": "A fixture project completes all sixteen required local-real journey behaviors with actual implementation, tests, isolated Git worktrees, automated independent verification, governed integration, Jira reconciliation, restart/worker loss, autonomous external-precondition continuation, Command Center truth, and automatic next selection.",
       "verification": {
         "command": "PYTHONPATH=src python -m pytest -q tests/integration/autonomy_runtime/test_golden_journey.py",
         "method": "local_real_product_journey",
@@ -50,7 +50,7 @@
     "implemented"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
+    "observed_at_utc": "2026-08-18T12:48:28.022032-05:00",
     "remote_id": "25361",
     "remote_key": "PP-387",
     "snapshot_id": "C11-LIVE-PP387",

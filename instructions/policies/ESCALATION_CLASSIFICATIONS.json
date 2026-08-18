@@ -54,7 +54,7 @@
     "resume_point",
     "preserved_state",
     "unaffected_work_continuation",
-    "operator_work_assigned"
+    "autonomous_owner"
   ],
   "schema_version": "1.0.0"
 }

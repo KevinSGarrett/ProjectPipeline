@@ -4,20 +4,20 @@
   "board_id": "138",
   "board_name": "PP board",
   "board_type": "scrum",
-  "final_remote_snapshot_id": "JSNAP-FCCC226A19FE2C4AD0CA",
-  "final_remote_issue_count": 378,
+  "final_remote_snapshot_id": "JSNAP-18D9051AFE54099E5313",
+  "final_remote_issue_count": 393,
   "final_status_counts": {
-    "To Do": 371,
-    "In Progress": 7,
-    "Done": 0
+    "To Do": 360,
+    "In Progress": 13,
+    "Done": 20
   },
   "final_type_counts": {
-    "Epic": 18,
-    "Story": 107,
-    "Task": 237,
+    "Epic": 20,
+    "Story": 113,
+    "Task": 244,
     "Sub-task": 16
   },
-  "native_parent_binding_count": 123,
+  "native_parent_binding_count": 129,
   "unique_remote_link_count": 365,
   "hierarchy_link_count": 237,
   "dependency_link_count": 128,
@@ -26,7 +26,7 @@
     "confirmed_done_count": 0,
     "rejected_done_count": 266,
     "authoritative_reason": "TARGET_IMPLEMENTATION_REPOSITORY_NOT_ESTABLISHED",
-    "human_review_required": false
+    "independent_verification_required": false
   },
   "authoritative_final_state": {
     "BACKLOG": 378
@@ -62,18 +62,13 @@
     "board and issue-type visual verification",
     "final readback and idempotency verification"
   ],
-  "readback_verified_at_utc": "2026-08-16T23:05:27.382728+00:00",
-  "readback_source": "MCP:plugin-atlassian-atlassian",
+  "readback_verified_at_utc": "2026-08-18T22:08:55.063Z",
+  "readback_source": "project_pipeline jira snapshot --provider atlassian",
   "readback_remote_counts": {
-    "parent_not_empty": 123,
-    "issueLinkType_not_empty": 328,
-    "comment_not_empty": 0,
-    "labels_not_empty": 378
+    "parent_not_empty": 129,
+    "issueLinkType_not_empty": 341,
+    "comment_not_empty": 7,
+    "labels_not_empty": 393
   },
-  "human_required": [
-    {
-      "step": "HUMAN_REQUIRED_JIRA_API_TOKEN_FOR_GOVERNED_ADAPTER",
-      "reason": "project_pipeline jira snapshot/plan/sync with --provider atlassian requires env://JIRA_API_TOKEN; currently unavailable for governed write path."
-    }
-  ]
+  "autonomous_rechecks": []
 }

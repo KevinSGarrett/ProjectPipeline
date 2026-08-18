@@ -205,3 +205,27 @@ def test_cursor_cli_adapter_requires_explicit_mutation_admission(tmp_path: Path)
         contract(), model_name="auto"
     )
     assert "--force" in observed["argv"]
+
+
+def test_cursor_cli_adapter_supports_shell_free_wsl_prefix(tmp_path: Path):
+    observed = {}
+
+    def runner(argv, **kwargs):
+        observed.update(argv=argv, kwargs=kwargs)
+        return subprocess.CompletedProcess(argv, 0, b'{"type":"result","result":"ok"}', b"")
+
+    adapter = CursorCliProviderAdapter(
+        str(tmp_path),
+        executable="/home/kevin/.local/bin/cursor-agent",
+        command_prefix=("wsl.exe", "-d", "Cursor-Agent-WSL1", "--"),
+        runner=runner,
+    )
+    adapter.execute(contract(), model_name="auto")
+    assert observed["argv"][:5] == [
+        "wsl.exe",
+        "-d",
+        "Cursor-Agent-WSL1",
+        "--",
+        "/home/kevin/.local/bin/cursor-agent",
+    ]
+    assert observed["kwargs"]["shell"] is False

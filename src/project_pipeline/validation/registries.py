@@ -882,11 +882,14 @@ def check_evidence_ledger(root: Path, report: ValidationReport) -> None:
                 for row in rows
             ),
             "live_external_verification_count": sum(
-                row.get("environment") == "live_external_environment"
+                (
+                    row.get("environment") == "live_external_environment"
+                    or str(row.get("environment", "")).endswith("live_qualification")
+                )
                 and row.get("verification_status") == "VERIFIED"
                 for row in rows
             ),
-            "note": "Live external integrations remain unverified. Archive integrity and extracted-copy verification are recorded in the separate continuation package.",
+            "note": "Verified live external qualifications are counted only when their evidence artifact and digest are current; unavailable capabilities remain explicit.",
         }
         if observed != expected:
             report.add(

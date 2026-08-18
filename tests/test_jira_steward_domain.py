@@ -411,7 +411,7 @@ class JiraStewardDomainTests(unittest.TestCase):
             require_completion_evidence_for_remote_done=True,
         )
         plan = JiraReconciler(policy).plan(local, remote)
-        self.assertFalse(any(item.requires_human_approval for item in plan.operations))
+        self.assertFalse(any(item.requires_independent_verification for item in plan.operations))
         self.assertTrue(
             any(
                 item.kind is JiraConflictKind.EVIDENCE_RECONCILIATION_REQUIRED

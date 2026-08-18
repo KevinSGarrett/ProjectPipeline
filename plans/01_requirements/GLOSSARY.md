@@ -202,6 +202,13 @@ Append-only registry of evidence records and supersession history.
 
 Sources: `SRC-008:L000595-L000647`
 
+## External Precondition
+
+A capability or external condition that remains objectively unavailable after safe autonomous resolution attempts; the autonomy runtime owns deterministic rechecks while unaffected lanes continue.
+
+Aliases: `BLOCKED_EXTERNAL`
+Sources: `SRC-015:L000031-L000150`
+
 ## Fencing Token
 
 Monotonic or unique lease identity used to reject actions from stale owners.
@@ -213,13 +220,6 @@ Sources: `SRC-005:L000406-L000441`
 Stable critical end-to-end scenario that must pass for release readiness.
 
 Sources: `SRC-008:L000956-L000985`
-
-## Human Required
-
-Compatibility alias for BLOCKED_EXTERNAL: dependent work cannot continue until an external precondition is autonomously rechecked. This does not assign operator work and does not stop unaffected lanes.
-
-Aliases: `HUMAN_REQUIRED`, `BLOCKED_EXTERNAL`
-Sources: `SRC-015:L000031-L000150`
 
 ## Idempotency Key
 
@@ -265,7 +265,7 @@ Sources: `GOV-001:L000110-L000119`
 
 ## Operator Inbox
 
-Prioritized queue of human-required decisions and actions with impact and verification instructions.
+Prioritized queue of autonomous incident owners, unavailable capabilities, recheck schedules, impact, and recovery verification.
 
 Sources: `SRC-015:L000031-L000150`
 

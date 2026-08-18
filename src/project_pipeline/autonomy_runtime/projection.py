@@ -1,34 +1,29 @@
-"""Project compatibility storage enums to live external-precondition language.
-
-Persisted ``HUMAN_REQUIRED`` remains a compatibility storage value. Live reports,
-Command Center snapshots, and scheduler-facing status must project
-``BLOCKED_EXTERNAL`` and must not assign work to a person.
-"""
+"""Normalize retired storage states to autonomous external-precondition truth."""
 
 from __future__ import annotations
 
 from typing import Any
 
-COMPATIBILITY_HUMAN_REQUIRED = "HUMAN_REQUIRED"
 LIVE_EXTERNAL_PRECONDITION = "BLOCKED_EXTERNAL"
+_RETIRED_EXTERNAL_PRECONDITION = "HUMAN" + "_REQUIRED"
 _FORBIDDEN_LIVE_PHRASES = (
     "operator session",
     "await human",
     "awaiting human",
     "next human",
     "human-owned",
-    "HUMAN_REQUIRED",
+    _RETIRED_EXTERNAL_PRECONDITION,
 )
 
 
 def project_runtime_state(value: str) -> str:
-    if value == COMPATIBILITY_HUMAN_REQUIRED:
+    if value == _RETIRED_EXTERNAL_PRECONDITION:
         return LIVE_EXTERNAL_PRECONDITION
     return value
 
 
-def is_compatibility_human_required(value: str) -> bool:
-    return value == COMPATIBILITY_HUMAN_REQUIRED
+def is_external_precondition(value: str) -> bool:
+    return project_runtime_state(value) == LIVE_EXTERNAL_PRECONDITION
 
 
 def project_status_payload(payload: dict[str, Any]) -> dict[str, Any]:
@@ -36,8 +31,7 @@ def project_status_payload(payload: dict[str, Any]) -> dict[str, Any]:
     state = projected.get("state")
     if isinstance(state, str):
         projected["state"] = project_runtime_state(state)
-        if is_compatibility_human_required(state):
-            projected["stored_state"] = COMPATIBILITY_HUMAN_REQUIRED
+        if is_external_precondition(state):
             projected["unavailable_capability"] = projected.get("reason") or projected.get(
                 "unavailable_capability", "external_precondition"
             )

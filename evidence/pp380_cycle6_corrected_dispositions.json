@@ -21,9 +21,9 @@
     "receipt_kind": "content_addressed_source_bound_not_signed",
     "source_map_sha256": "f9055cdf3b9aaa30c089f5fb796449692784e314db04b52233d06c682cc9bcbc",
     "source_ledger_sha256": "1031df5316e123497384e5f0516f7620ebeb181746b7ca19137ba9fd9373ad07",
-    "rows_sha256": "4077ef247fc40cab595ae8f42d6227038aa43b7094f753a144d2574693dc5277",
-    "self_consistent_hash_sha256": "b5b691a0b42eb32f072fedc0c7dfef2b4d325f34dbb37c4ee6c663e5f4872d3e",
-    "content_addressed_receipt_sha256": "68848add7fad0fc053f11732b33ed3c7aa59b19294c8766708f4a4db8bcaf36c",
+    "rows_sha256": "2b5bd6219699e9e7dff65ee21aa99bf71b75f9138cadffa870cfda35ed899f6e",
+    "self_consistent_hash_sha256": "c93e622fd459c81f32be2ad38ffc34f6ab827eacc52b68bf90b43bfa8b47a48d",
+    "content_addressed_receipt_sha256": "949d0180a7b47641bdc2b82d14c4f2458996e91df7d852c0da7024b8ce3c8aca",
     "git_ref_receipts": {
       "pr44": {
         "requested_ref": "2a82fc53f6422fd13aaf308f7024bf6850f49b01",
@@ -5139,7 +5139,7 @@
       "workspace": "pp380",
       "status_code": "??",
       "path": "docs/product/",
-      "original_source_sha256": "TREE_SHA256:d062bb90b61a9883f9faf63f866738b5d51b0727c6201632341d345aa93d6ff1",
+      "original_source_sha256": "TREE_SHA256:ab8f78a653be1849181341a8dbfd3131a1e68df937bfb50ad1bfa05424701788",
       "original_category": "UNIQUE_ACCEPTANCE_WORK",
       "owner_task": "PP-TASK-000380",
       "authority_classification": "AUXILIARY",

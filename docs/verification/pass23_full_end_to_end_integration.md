@@ -2,7 +2,7 @@
 
 Pass 23 binds the existing Project Pipeline subsystems into realistic operator journeys without creating a second control plane.
 
-The canonical journey covers project intake, requirement loading, Jira reconciliation in dry-run mode, deterministic sequencing and scheduling, typed human-required gating, delegation/context compilation, provider failover, recommendation-authority conflict handling, independent review, local Git plus a mocked protected PR gate, durable unknown-outcome/restart recovery, incident/human repair, the independent Completion Gate, and Command Center projection.
+The canonical journey covers project intake, requirement loading, Jira reconciliation in dry-run mode, deterministic sequencing and scheduling, typed external-precondition gating, delegation/context compilation, provider failover, recommendation-authority conflict handling, independent review, local Git plus a mocked protected PR gate, durable unknown-outcome/restart recovery, incident/autonomous repair, the independent Completion Gate, and Command Center projection.
 
 `config/pass23_e2e_journey_matrix.json` is the declared acceptance matrix. `src/project_pipeline/verification/e2e.py` executes it and `scripts/run_pass23_e2e.py` persists `evidence/verification/pass23_full_e2e_report.json`.
 

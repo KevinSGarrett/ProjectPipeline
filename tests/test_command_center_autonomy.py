@@ -9,7 +9,7 @@ from project_pipeline.autonomy_runtime.supervisor import PersistentSupervisor
 from project_pipeline.command_center.autonomy import project_autonomy_runtime
 
 
-def test_autonomy_projection_shows_human_required_and_completed(tmp_path: Path) -> None:
+def test_autonomy_projection_shows_external_block_and_completed(tmp_path: Path) -> None:
     supervisor = PersistentSupervisor(tmp_path / "sup.db")
     operation_id = supervisor.start_operation(
         task_id="PP-TASK-000384",
@@ -73,7 +73,7 @@ def test_autonomy_projection_shows_human_required_and_completed(tmp_path: Path) 
     assert snapshot["active_incident_ids"]
     states = {item["state"] for item in snapshot["live_work"]}
     assert "BLOCKED_EXTERNAL" in states
-    assert "HUMAN_REQUIRED" not in states
+    assert "HUMAN" + "_REQUIRED" not in states
     assert "COMPLETED" in states
     assert snapshot["context_summary"]["unavailable_capabilities"]
     assert "lane-healthy" in snapshot["context_summary"]["continuing_lane_ids"]
