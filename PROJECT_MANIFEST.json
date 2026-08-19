@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "5c0716c4315a199cc1c4f9b4f8bfefe49410b882d9f8d405bac3f80a2ba253df",
+  "aggregate_sha256": "f8202a7ad37bced7eaad45c705c9a9e7b8baa0da4498417cb300c8357e6c45a9",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11747,8 +11747,8 @@
     },
     {
       "path": "scripts/autonomy_campaign_recovery_probe.py",
-      "sha256": "5a678894205d472e50152ca9d7f548c2b60b5b290472e898882e11882f2bfd34",
-      "size_bytes": 10629
+      "sha256": "98ff4f8ff98ab8d65fd1504d940392e844a0384f5980243b673308991ace6551",
+      "size_bytes": 11142
     },
     {
       "path": "scripts/bootstrap_dev.ps1",
@@ -12142,8 +12142,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/campaign.py",
-      "sha256": "318f95f6873e36cd45db38b03cf5f99b8824b4249cc12bfcc56febacade99f93",
-      "size_bytes": 43928
+      "sha256": "c99d7cc5d8d88ccba41321fdb734a2341ca31b3a1974dc4da66b29b2d9752a6c",
+      "size_bytes": 53426
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/campaign_status.py",
@@ -13667,8 +13667,8 @@
     },
     {
       "path": "tests/test_autonomy_campaign.py",
-      "sha256": "4b4696e73cf22c9dac623bd5256f4f1099b892e8e56d5ad49838692a5ff98af5",
-      "size_bytes": 35043
+      "sha256": "bdbc7c799107a881c8a60273765730ae496f18137e1f208d74cefb31e57621c3",
+      "size_bytes": 43702
     },
     {
       "path": "tests/test_autonomy_campaign_windows.py",
@@ -13762,8 +13762,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "c23189a36101eac380dc1af5a2cf1da62575ac415b3d4e344d054a894209e102",
-      "size_bytes": 107592
+      "sha256": "a2ff81c53439cb136fcbd0a4220f7f10075c1f68bbaef2fc56cd51b27812a240",
+      "size_bytes": 108474
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -14576,7 +14576,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T07:34:27.751103+00:00",
+  "generated_at_utc": "2026-08-19T07:43:59.957060+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14585,5 +14585,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25747016
+  "total_bytes": 25766568
 }
