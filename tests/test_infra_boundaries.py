@@ -35,6 +35,18 @@ def test_overlay_rejects_unauthenticated_and_public_exposure() -> None:
     assert decision.ok is False
     assert "public" in decision.rejected
     assert decision.peers[0].peer_id == "cpu-01"
+    ipv6 = evaluate_overlay(
+        [
+            {
+                "peer_id": "v6",
+                "endpoint": "[::]:80",
+                "authenticated": True,
+                "exposure": "loopback",
+            }
+        ]
+    )
+    assert ipv6.ok is False
+    assert "v6" in ipv6.rejected
 
 
 def test_ephemeral_provision_is_idempotent_and_destroyed(tmp_path: Path) -> None:
@@ -43,6 +55,11 @@ def test_ephemeral_provision_is_idempotent_and_destroyed(tmp_path: Path) -> None
     assert first.provisioned is True
     assert second.receipt_id == first.receipt_id
     assert (tmp_path / ".local/state/infra_ephemeral/db-1/ephemeral.sqlite3").is_file()
+    try:
+        provision_ephemeral(tmp_path, "queue", "db-1")
+        raise AssertionError("kind mismatch must fail closed")
+    except ValueError as error:
+        assert "already provisioned" in str(error)
     destroyed = destroy_ephemeral(tmp_path, "db-1", "database")
     assert destroyed.destroyed is True
     assert not (tmp_path / ".local/state/infra_ephemeral/db-1").exists()
@@ -88,6 +105,15 @@ def test_ingress_authenticates_dedupes_and_never_grants_control(tmp_path: Path) 
     assert first.grants_control_authority is False
     assert second.deduplicated is True
     assert forged.accepted is False
+    empty = ingest_event(
+        store,
+        payload=payload,
+        secret=secret,
+        signature=signature,
+        source="github",
+        event_id="",
+    )
+    assert empty.accepted is False
 
 
 def test_capacity_denies_missing_checks_and_live_spend() -> None:

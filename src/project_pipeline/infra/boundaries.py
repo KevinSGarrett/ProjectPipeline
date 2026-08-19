@@ -2,12 +2,14 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import ipaddress
 import json
 import shutil
 import sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
+from urllib.parse import urlparse
 
 from project_pipeline.domain.base import DomainModel
 
@@ -28,6 +30,33 @@ def _digest(*parts: str) -> str:
 
 def _now() -> datetime:
     return datetime.now(UTC)
+
+
+def _endpoint_host(endpoint: str) -> str:
+    raw = endpoint.strip()
+    if "://" in raw:
+        return (urlparse(raw).hostname or "").strip("[]")
+    if raw.startswith("["):
+        return raw.split("]", 1)[0][1:]
+    if raw.count(":") > 1:
+        return raw.rsplit("]", 1)[0].strip("[]")
+    return raw.rsplit(":", 1)[0]
+
+
+def _restricted_host(host: str, exposure: str) -> bool:
+    if not host or host in {"0.0.0.0", "::", "*"}:
+        return False
+    if host in {"localhost", "host.docker.internal"}:
+        return True
+    try:
+        address = ipaddress.ip_address(host)
+    except ValueError:
+        return False
+    if address.is_unspecified or address.is_multicast or address.is_global:
+        return False
+    if exposure == "loopback":
+        return address.is_loopback
+    return address.is_loopback or address.is_private
 
 
 class OverlayPeer(DomainModel):
@@ -91,7 +120,7 @@ def evaluate_overlay(peers: list[dict[str, Any]]) -> OverlayDecision:
         if not peer_id or not authenticated or exposure not in ALLOWED_EXPOSURES:
             rejected.append(peer_id or endpoint or "unknown-peer")
             continue
-        if endpoint.startswith("0.0.0.0") or exposure == "public":
+        if exposure == "public" or not _restricted_host(_endpoint_host(endpoint), exposure):
             rejected.append(peer_id)
             continue
         accepted.append(
@@ -114,7 +143,13 @@ def provision_ephemeral(root: Path, kind: str, resource_id: str) -> EphemeralRes
     if not kind or not resource_id:
         raise ValueError("ephemeral provision requires kind and resource_id")
     base = root / ".local" / "state" / "infra_ephemeral" / resource_id
+    marker = base / "kind"
     if base.exists():
+        recorded = marker.read_text(encoding="utf-8").strip() if marker.is_file() else ""
+        if recorded != kind:
+            raise ValueError(
+                f"ephemeral resource {resource_id} already provisioned as {recorded or 'unknown'}"
+            )
         return EphemeralResource(
             resource_id=resource_id,
             kind=kind,
@@ -123,15 +158,16 @@ def provision_ephemeral(root: Path, kind: str, resource_id: str) -> EphemeralRes
             destroyed=False,
             receipt_id=_digest("provision", resource_id, kind),
         )
+    if kind not in {"database", "queue", "browser", "service"}:
+        raise ValueError(f"unsupported ephemeral kind: {kind}")
     base.mkdir(parents=True, exist_ok=True)
+    marker.write_text(kind, encoding="utf-8")
     if kind == "database":
         sqlite3.connect(base / "ephemeral.sqlite3").close()
     elif kind == "queue":
         (base / "queue.jsonl").write_text("", encoding="utf-8")
-    elif kind in {"browser", "service"}:
-        (base / "ready").write_text(kind, encoding="utf-8")
     else:
-        raise ValueError(f"unsupported ephemeral kind: {kind}")
+        (base / "ready").write_text(kind, encoding="utf-8")
     return EphemeralResource(
         resource_id=resource_id,
         kind=kind,
@@ -182,6 +218,15 @@ def ingest_event(
     source: str,
     event_id: str,
 ) -> IngressEvent:
+    if not event_id.strip():
+        return IngressEvent(
+            event_id=event_id,
+            source=source,
+            accepted=False,
+            deduplicated=False,
+            delivered_to_director=False,
+            reason="event_id required",
+        )
     store.parent.mkdir(parents=True, exist_ok=True)
     expected = hmac.new(secret, payload, hashlib.sha256).hexdigest()
     if not hmac.compare_digest(expected, signature.lower()):
