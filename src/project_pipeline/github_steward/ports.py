@@ -51,6 +51,9 @@ class GitHubRemotePort(Protocol):
     def create_branch(
         self, repository_slug: str, *, branch: str, sha: str, context: GitHubWriteContext
     ) -> GitBranch: ...
+    def find_open_pull(
+        self, repository_slug: str, *, head: str, base: str
+    ) -> PullRequestSnapshot | None: ...
     def create_pull_request(
         self,
         repository_slug: str,

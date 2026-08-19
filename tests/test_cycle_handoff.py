@@ -132,6 +132,17 @@ def test_cli_validate_rejects_missing_packet(tmp_path: Path) -> None:
     assert code == 1
 
 
+def test_rejects_ascii_control_characters() -> None:
+    result = validate_cycle_handoff(
+        handoff_text=REQUIRED_BODY + "\nHidden\x01marker\n",
+        meter={"cycle": 12},
+        proof={"baseline_sha": "a"},
+        packet=_packet(),
+    )
+    assert result["valid"] is False
+    assert any("ASCII control characters" in item for item in result["findings"])
+
+
 def test_rejects_user_visible_human_required_phrase() -> None:
     result = validate_cycle_handoff(
         handoff_text=REQUIRED_BODY + "\nRoute is HUMAN_REQUIRED\n",

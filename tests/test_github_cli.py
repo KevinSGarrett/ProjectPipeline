@@ -95,6 +95,86 @@ def test_local_mutation_requires_approval(tmp_path, capsys):
     assert "requires both --apply and --approve" in payload["message"]
 
 
+def test_publish_branch_defaults_to_dry_run_and_rejects_main(tmp_path, capsys):
+    repo = make_repo(tmp_path)
+    subprocess.run(
+        ["git", "-C", str(repo), "branch", "feature/publish"],
+        check=True,
+        capture_output=True,
+    )
+    code = main(
+        [
+            "repository",
+            "publish-branch",
+            "--root",
+            str(Path.cwd()),
+            "--repository-root",
+            str(repo),
+            "--database",
+            str(tmp_path / "state.db"),
+            "--branch",
+            "feature/publish",
+        ]
+    )
+    assert code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["mode"] == "DRY_RUN"
+    assert payload["force"] is False
+    assert payload["refspec"] == "refs/heads/feature/publish:refs/heads/feature/publish"
+    denied = main(
+        [
+            "repository",
+            "publish-branch",
+            "--root",
+            str(Path.cwd()),
+            "--repository-root",
+            str(repo),
+            "--database",
+            str(tmp_path / "state2.db"),
+            "--branch",
+            "main",
+            "--apply",
+            "--approve",
+        ]
+    )
+    assert denied == 2
+
+
+def test_github_open_defaults_to_dry_run(tmp_path, capsys):
+    repo = make_repo(tmp_path)
+    subprocess.run(
+        ["git", "-C", str(repo), "checkout", "-b", "feature/open"],
+        check=True,
+        capture_output=True,
+    )
+    code = main(
+        [
+            "github",
+            "open",
+            "--root",
+            str(Path.cwd()),
+            "--repository-root",
+            str(repo),
+            "--database",
+            str(tmp_path / "state.db"),
+            "--repository-slug",
+            "owner/repo",
+            "--provider",
+            "mock",
+            "--head",
+            "feature/open",
+            "--title",
+            "Test PR",
+            "--body",
+            "Body",
+        ]
+    )
+    assert code == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["mode"] == "DRY_RUN"
+    assert payload["pull"]["head"] == "feature/open"
+
+
 def test_github_status_with_mock_provider_has_no_remote_write(tmp_path, capsys):
     repo = make_repo(tmp_path)
     code = main(

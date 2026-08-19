@@ -24,6 +24,8 @@ def main() -> int:
             "stop",
             "execute",
             "finalize",
+            "claim-runner",
+            "project-status",
         ),
     )
     parser.add_argument("--database", type=Path, required=True)
@@ -39,6 +41,7 @@ def main() -> int:
     parser.add_argument("--service-identity")
     parser.add_argument("--command-json", help="JSON argument list for execute")
     parser.add_argument("--repository-root", type=Path)
+    parser.add_argument("--status-path", type=Path)
     args = parser.parse_args()
     root = (args.repository_root or Path.cwd()).resolve()
     controller = CampaignController(
@@ -89,6 +92,12 @@ def _dispatch(controller: CampaignController, args: argparse.Namespace) -> dict:
         return controller.execute(campaign_id, [str(item) for item in command])
     if args.action == "finalize":
         return controller.finalize(campaign_id)
+    if args.action == "claim-runner":
+        return controller.claim_runner_ownership(campaign_id)
+    if args.action == "project-status":
+        if args.status_path is None:
+            raise SystemExit("project-status requires --status-path")
+        return controller.project_status(campaign_id, status_path=args.status_path)
     return controller.health(campaign_id)
 
 

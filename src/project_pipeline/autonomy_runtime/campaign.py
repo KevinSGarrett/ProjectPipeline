@@ -11,12 +11,23 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
 
-from project_pipeline.autonomy_runtime.command_execution import execute_allowlisted_command
+from project_pipeline.autonomy_runtime.campaign_status import (
+    build_status_projection,
+    write_status_projection,
+)
+from project_pipeline.autonomy_runtime.command_execution import (
+    command_kind,
+    execute_allowlisted_command,
+)
+from project_pipeline.autonomy_runtime.process_identity import (
+    current_process_identity,
+    identities_match,
+    inspect_process,
+)
 from project_pipeline.autonomy_runtime.qualification import (
     ACTIVE,
     QualificationStore,
     SystemClock,
-    _pid_alive,
 )
 from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 
@@ -42,6 +53,7 @@ REQUIRED_TABLES = (
     "campaign_events",
     "campaign_command_receipts",
     "campaign_locks",
+    "campaign_owner_bindings",
 )
 TIMED_STAGES = {"UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR"}
 IdentityInspector = Callable[[Path], dict[str, Any]]
@@ -204,11 +216,25 @@ class CampaignController:
                 """,
                 (campaign_id, pid, fence, now.isoformat()),
             )
+            owner = current_process_identity(service_identity=service_identity)
+            owner["process_id"] = pid
+            self._upsert_owner_binding(
+                campaign_id,
+                owner,
+                {
+                    "qualification_run_id": None,
+                    "fence": fence,
+                    "lease_id": lease_id,
+                    "service_identity": service_identity,
+                },
+                now,
+                reason="bootstrap",
+            )
             self._append_event(
                 campaign_id,
                 "START",
                 "RUNNING",
-                {"stage": "RECOVERY", "admission": admission},
+                {"stage": "RECOVERY", "admission": admission, "bootstrap_pid": pid},
                 now,
             )
         attested = self.qualification.recovery_drill(state_path=state_path)
@@ -317,6 +343,7 @@ class CampaignController:
         if fence is not None and fence != str(row["fence"]):
             self._disqualify(campaign_id, "fence-mismatch")
             raise ValueError("campaign fence mismatch")
+        self._assert_live_ownership(row, require_current_process=True)
         self._assert_identity(row)
         now = datetime.now(UTC)
         last = datetime.fromisoformat(str(row["last_heartbeat_utc"]))
@@ -379,8 +406,25 @@ class CampaignController:
         lock = self._db.execute(
             "SELECT * FROM campaign_locks WHERE lock_name = 'active-campaign'"
         ).fetchone()
-        if lock is not None and _pid_alive(int(lock["process_id"])):
-            raise ValueError("concurrent campaign runner is already active")
+        if lock is not None:
+            live = inspect_process(int(lock["process_id"]))
+            binding = self._owner_binding()
+            bound = {
+                "process_id": lock["process_id"],
+                "executable": None if binding is None else binding.get("executable_identity"),
+                "started_at_utc": None
+                if binding is None
+                else binding.get("process_started_at_utc"),
+            }
+            if (
+                live is not None
+                and self._binding_complete(binding)
+                and identities_match(bound, live)
+            ):
+                raise ValueError("concurrent campaign runner is already active")
+            # Missing/incomplete binding or a live mismatched PID is reuse:
+            # this recover path is the governed takeover. claim_runner refuses it.
+        self._assert_identity(row)
         if str(row["stage"]) in TIMED_STAGES:
             run_id = str(row["qualification_run_id"] or "")
             if run_id:
@@ -391,7 +435,7 @@ class CampaignController:
             budget = int(preserved["retry_budget"])
             if budget <= 0:
                 return preserved
-            return self.start(
+            started = self.start(
                 state_path=Path(str(preserved["state_path"])),
                 evidence_path=Path(str(preserved["evidence_path"])),
                 pp384_evidence=Path(str(preserved["pp384_evidence_path"])),
@@ -399,22 +443,22 @@ class CampaignController:
                 service_identity=preserved.get("service_identity"),
                 prior_campaign_id=campaign_id,
             )
+            return started
+        owner = current_process_identity(service_identity=row["service_identity"])
         now = datetime.now(UTC)
-        pid = os.getpid()
         with self._db:
-            self._db.execute("DELETE FROM campaign_locks WHERE lock_name = 'active-campaign'")
-            self._db.execute(
-                """
-                INSERT INTO campaign_locks (lock_name, campaign_id, process_id, fence, acquired_at_utc)
-                VALUES ('active-campaign', ?, ?, ?, ?)
-                """,
-                (campaign_id, pid, str(row["fence"]), now.isoformat()),
-            )
+            self._upsert_owner_binding(campaign_id, owner, row, now, reason="governed-recover")
             self._db.execute(
                 "UPDATE campaign_runs SET process_id = ?, last_heartbeat_utc = ? WHERE campaign_id = ?",
-                (pid, now.isoformat(), campaign_id),
+                (owner["process_id"], now.isoformat(), campaign_id),
             )
-            self._append_event(campaign_id, "RECOVER", str(row["status"]), {"pid": pid}, now)
+            self._append_event(
+                campaign_id,
+                "RECOVER",
+                str(row["status"]),
+                {"pid": owner["process_id"], "campaign_id": campaign_id},
+                now,
+            )
         return self.get(campaign_id)
 
     def execute(
@@ -425,13 +469,30 @@ class CampaignController:
         idempotency_key: str | None = None,
         evidence_links: list[str] | None = None,
     ) -> dict[str, Any]:
-        self._require(campaign_id)
+        row = self._require(campaign_id)
+        if idempotency_key:
+            existing = self._db.execute(
+                """
+                SELECT * FROM campaign_command_receipts
+                WHERE campaign_id = ? AND idempotency_key = ?
+                ORDER BY created_at_utc
+                """,
+                (campaign_id, idempotency_key),
+            ).fetchone()
+            if existing is not None:
+                stored = dict(existing)
+                stored["command"] = json.loads(str(stored["command_json"]))
+                stored["executed"] = bool(stored["executed"])
+                return stored
+        self._assert_live_ownership(row, require_current_process=True)
         receipt = execute_allowlisted_command(
             argv,
             cwd=self.repository_root,
             repository_root=self.repository_root,
             idempotency_key=idempotency_key,
             evidence_links=evidence_links,
+            expected_sha=str(row["integrated_sha"]),
+            expected_tree=str(row["integrated_tree"]),
         )
         now = datetime.now(UTC)
         body = {
@@ -469,7 +530,21 @@ class CampaignController:
                     receipt["result"],
                     receipt["idempotency_key"],
                     receipt["retry_disposition"],
-                    json.dumps(receipt["evidence_links"], sort_keys=True),
+                    json.dumps(
+                        {
+                            "links": receipt["evidence_links"],
+                            "environment_class": receipt.get("environment_class"),
+                            "integrated_sha": receipt.get("integrated_sha"),
+                            "integrated_tree": receipt.get("integrated_tree"),
+                            "result_semantics": receipt.get("result_semantics"),
+                            "semantic_state": receipt.get("semantic_state"),
+                            "final_completion_gate_satisfied": receipt.get(
+                                "final_completion_gate_satisfied"
+                            ),
+                            "parsed_result": receipt.get("parsed_result"),
+                        },
+                        sort_keys=True,
+                    ),
                     now.isoformat(),
                 ),
             )
@@ -486,13 +561,17 @@ class CampaignController:
         row = self._require(campaign_id)
         if str(row["stage"]) != "RELEASE" or str(row["status"]) != "READY_TO_FINALIZE":
             raise ValueError("finalize requires an attested 72-hour campaign ready for release")
-        planned = commands or self._finalize_commands or self._default_finalize_commands()
+        self._assert_live_ownership(row, require_current_process=True)
+        self._assert_identity(row)
+        explicit = commands is not None or self._finalize_commands is not None
+        planned = commands or self._finalize_commands or self._default_finalize_commands(row)
         receipts = []
         for argv in planned:
             receipts.append(self.execute(campaign_id, argv))
         now = datetime.now(UTC)
         failed = [item for item in receipts if item.get("result") != "PASSED"]
-        if failed:
+        gate_ok = self._finalization_gate_satisfied(receipts, explicit=explicit)
+        if failed or not gate_ok:
             with self._db:
                 self._db.execute(
                     """
@@ -507,8 +586,9 @@ class CampaignController:
                     "FINALIZE_FAILED",
                     "FAILED",
                     {
-                        "receipts": [item["receipt_id"] for item in receipts],
-                        "failed": [item["receipt_id"] for item in failed],
+                        "receipts": [item.get("receipt_id") for item in receipts],
+                        "failed": [item.get("receipt_id") for item in failed],
+                        "gate_ok": gate_ok,
                     },
                     now,
                 )
@@ -529,7 +609,7 @@ class CampaignController:
                 campaign_id,
                 "FINALIZE",
                 "FINALIZED",
-                {"receipts": [item["receipt_id"] for item in receipts]},
+                {"receipts": [item.get("receipt_id") for item in receipts]},
                 now,
             )
         result = self.get(campaign_id)
@@ -543,6 +623,7 @@ class CampaignController:
         cycles: int = 0,
         stop_path: Path | None = None,
     ) -> dict[str, Any]:
+        self.claim_runner_ownership(campaign_id)
         last = self.get(campaign_id)
         count = 0
         while True:
@@ -569,6 +650,9 @@ class CampaignController:
                 (now.isoformat(), campaign_id),
             )
             self._db.execute("DELETE FROM campaign_locks WHERE campaign_id = ?", (campaign_id,))
+            self._db.execute(
+                "DELETE FROM campaign_owner_bindings WHERE campaign_id = ?", (campaign_id,)
+            )
             self._append_event(campaign_id, f"STOP:{reason}", "STOPPED", {"reason": reason}, now)
         return self.get(campaign_id)
 
@@ -664,6 +748,9 @@ class CampaignController:
                 (now.isoformat(), f"disqualify:{reason}", campaign_id),
             )
             self._db.execute("DELETE FROM campaign_locks WHERE campaign_id = ?", (campaign_id,))
+            self._db.execute(
+                "DELETE FROM campaign_owner_bindings WHERE campaign_id = ?", (campaign_id,)
+            )
             self._append_event(
                 campaign_id, f"DISQUALIFY:{reason}", "DISQUALIFIED", {"reason": reason}, now
             )
@@ -675,10 +762,10 @@ class CampaignController:
         ).fetchone()
         if lock is None:
             return
-        if _pid_alive(int(lock["process_id"])):
+        live = inspect_process(int(lock["process_id"]))
+        if live is not None:
             raise ValueError("concurrent campaign runner is already active")
-        with self._db:
-            self._db.execute("DELETE FROM campaign_locks WHERE lock_name = 'active-campaign'")
+        raise ValueError("stale campaign lock requires recover")
 
     def _require(self, campaign_id: str) -> sqlite3.Row:
         row = self._db.execute(
@@ -692,15 +779,255 @@ class CampaignController:
     def _python(self) -> str:
         return str(Path(__import__("sys").executable))
 
-    def _default_finalize_commands(self) -> list[list[str]]:
+    def _default_finalize_commands(
+        self, row: sqlite3.Row | dict[str, Any] | None = None
+    ) -> list[list[str]]:
         python = self._python()
         root = str(self.repository_root)
+        evidence = (
+            Path(str(row["evidence_path"]))
+            if row is not None and row["evidence_path"]
+            else self.repository_root / ".local" / "release"
+        )
+        identity = (
+            str(row["release_identity"])
+            if row is not None and row["release_identity"]
+            else "REL-local"
+        )
+        archive = evidence / f"{identity}.zip"
         return [
-            [python, "-m", "project_pipeline", "completion", "--root", root],
+            [python, "-m", "project_pipeline", "archive", "--root", root, "--output", str(archive)],
+            [python, "-m", "project_pipeline", "verify-archive", "--archive", str(archive)],
+            [python, "-m", "project_pipeline", "security", "sbom", "--root", root],
+            [python, "-m", "project_pipeline", "security", "supply-chain", "--root", root],
+            [python, "-m", "project_pipeline", "resilience", "status", "--root", root],
             [python, "-m", "project_pipeline", "validate", "--root", root],
             [python, "-m", "project_pipeline", "jira", "validate", "--root", root],
-            [python, "-m", "project_pipeline", "control", "evaluate", "--root", root],
+            [python, "-m", "project_pipeline", "control", "completion", "--root", root],
+            [python, "-m", "project_pipeline", "assurance", "completion-gate", "--root", root],
         ]
+
+    def claim_runner_ownership(self, campaign_id: str) -> dict[str, Any]:
+        row = self._require(campaign_id)
+        owner = current_process_identity(service_identity=row["service_identity"])
+        lock = self._db.execute(
+            "SELECT * FROM campaign_locks WHERE lock_name = 'active-campaign'"
+        ).fetchone()
+        if lock is not None and str(lock["campaign_id"]) != campaign_id:
+            raise ValueError("active-campaign lock belongs to a different campaign")
+        if lock is not None:
+            live = inspect_process(int(lock["process_id"]))
+            binding = self._owner_binding()
+            if live is not None and int(lock["process_id"]) != int(owner["process_id"]):
+                bound = binding or {}
+                if self._binding_complete(bound) and identities_match(
+                    {
+                        "process_id": lock["process_id"],
+                        "executable": bound.get("executable_identity"),
+                        "started_at_utc": bound.get("process_started_at_utc"),
+                    },
+                    live,
+                ):
+                    raise ValueError("concurrent campaign runner is already active")
+                raise ValueError("active-campaign lock PID was reused; recover is required")
+        now = datetime.now(UTC)
+        with self._db:
+            self._upsert_owner_binding(campaign_id, owner, row, now, reason="runner-claim")
+            self._db.execute(
+                "UPDATE campaign_runs SET process_id = ?, last_heartbeat_utc = ? WHERE campaign_id = ?",
+                (owner["process_id"], now.isoformat(), campaign_id),
+            )
+            self._append_event(
+                campaign_id,
+                "CLAIM_RUNNER",
+                str(row["status"]),
+                {"pid": owner["process_id"], "executable": owner.get("executable")},
+                now,
+            )
+        return self.get(campaign_id)
+
+    def project_status(
+        self,
+        campaign_id: str,
+        *,
+        status_path: Path,
+        task_health: dict[str, Any] | None = None,
+        is_final_release_candidate: bool = False,
+    ) -> dict[str, Any]:
+        row = self.get(campaign_id)
+        lock = self._db.execute(
+            "SELECT * FROM campaign_locks WHERE lock_name = 'active-campaign'"
+        ).fetchone()
+        binding = self._owner_binding()
+        runner = None
+        if lock is not None:
+            live = inspect_process(int(lock["process_id"]))
+            bound = {
+                "process_id": lock["process_id"],
+                "executable": None if binding is None else binding.get("executable_identity"),
+                "started_at_utc": None
+                if binding is None
+                else binding.get("process_started_at_utc"),
+            }
+            matched = live is not None and identities_match(bound, live)
+            runner = (live if matched else None) or {
+                "process_id": int(lock["process_id"]),
+                "alive": False,
+                "executable": bound["executable"],
+                "started_at_utc": bound["started_at_utc"],
+                "identity_match": False,
+            }
+            if matched:
+                runner["alive"] = True
+                runner["identity_match"] = True
+        payload = build_status_projection(
+            campaign=row,
+            runner_owner=runner,
+            lock=None if lock is None else dict(lock),
+            task_health=task_health,
+            is_final_release_candidate=is_final_release_candidate,
+        )
+        return write_status_projection(status_path, payload)
+
+    def current_running_campaigns(self) -> list[dict[str, Any]]:
+        rows = self._db.execute(
+            "SELECT * FROM campaign_runs WHERE status = 'RUNNING' ORDER BY started_at_utc"
+        ).fetchall()
+        return [dict(row) for row in rows]
+
+    def _finalization_gate_satisfied(
+        self, receipts: list[dict[str, Any]], *, explicit: bool
+    ) -> bool:
+        if not receipts:
+            return False
+        last = receipts[-1]
+        argv = last.get("command") or json.loads(str(last.get("command_json") or "[]"))
+        kind = command_kind([str(item) for item in argv])
+        if kind == "assurance.completion-gate":
+            return (
+                last.get("result") == "PASSED"
+                and str(last.get("semantic_state") or "") == "COMPLETE"
+                and last.get("final_completion_gate_satisfied") is True
+            )
+        if kind == "control.completion":
+            return (
+                str(
+                    last.get("semantic_state")
+                    or last.get("parsed_result", {}).get("completion", {}).get("state")
+                    or ""
+                )
+                == "COMPLETE"
+                and last.get("final_completion_gate_satisfied") is True
+            )
+        return explicit and last.get("result") == "PASSED"
+
+    def _owner_binding(self) -> dict[str, Any] | None:
+        row = self._db.execute(
+            "SELECT * FROM campaign_owner_bindings WHERE lock_name = 'active-campaign'"
+        ).fetchone()
+        return None if row is None else dict(row)
+
+    @staticmethod
+    def _binding_complete(binding: dict[str, Any] | None) -> bool:
+        if binding is None:
+            return False
+        return bool(str(binding.get("executable_identity") or "").strip()) and bool(
+            str(binding.get("process_started_at_utc") or "").strip()
+        )
+
+    def _upsert_owner_binding(
+        self,
+        campaign_id: str,
+        owner: dict[str, Any],
+        row: sqlite3.Row | dict[str, Any],
+        now: datetime,
+        *,
+        reason: str,
+    ) -> None:
+        if not reason:
+            raise ValueError("owner binding reason is required")
+        payload = dict(row)
+        self._db.execute(
+            """
+            INSERT INTO campaign_locks (lock_name, campaign_id, process_id, fence, acquired_at_utc)
+            VALUES ('active-campaign', ?, ?, ?, ?)
+            ON CONFLICT(lock_name) DO UPDATE SET
+                campaign_id = excluded.campaign_id,
+                process_id = excluded.process_id,
+                fence = excluded.fence,
+                acquired_at_utc = excluded.acquired_at_utc
+            """,
+            (
+                campaign_id,
+                int(owner["process_id"]),
+                str(payload["fence"]),
+                now.isoformat(),
+            ),
+        )
+        self._db.execute(
+            """
+            INSERT INTO campaign_owner_bindings (
+                lock_name, campaign_id, qualification_run_id, fence, lease_id, process_id,
+                executable_identity, process_started_at_utc, service_identity, claimed_at_utc
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(lock_name) DO UPDATE SET
+                campaign_id = excluded.campaign_id,
+                qualification_run_id = excluded.qualification_run_id,
+                fence = excluded.fence,
+                lease_id = excluded.lease_id,
+                process_id = excluded.process_id,
+                executable_identity = excluded.executable_identity,
+                process_started_at_utc = excluded.process_started_at_utc,
+                service_identity = excluded.service_identity,
+                claimed_at_utc = excluded.claimed_at_utc
+            """,
+            (
+                "active-campaign",
+                campaign_id,
+                payload.get("qualification_run_id"),
+                str(payload["fence"]),
+                str(payload["lease_id"]),
+                int(owner["process_id"]),
+                str(owner.get("executable") or ""),
+                str(owner.get("started_at_utc") or now.isoformat()),
+                owner.get("service_identity") or payload.get("service_identity"),
+                now.isoformat(),
+            ),
+        )
+
+    def _assert_live_ownership(
+        self, row: sqlite3.Row | dict[str, Any], *, require_current_process: bool
+    ) -> None:
+        lock = self._db.execute(
+            "SELECT * FROM campaign_locks WHERE lock_name = 'active-campaign'"
+        ).fetchone()
+        if lock is None:
+            raise ValueError("campaign lock is missing; recover is required")
+        if str(lock["campaign_id"]) != str(row["campaign_id"]) or str(lock["fence"]) != str(
+            row["fence"]
+        ):
+            self._disqualify(str(row["campaign_id"]), "split-brain-lock")
+            raise ValueError("campaign lock does not match the campaign fence")
+        binding = self._owner_binding()
+        bound = {
+            "process_id": lock["process_id"],
+            "executable": None if binding is None else binding.get("executable_identity"),
+            "started_at_utc": None if binding is None else binding.get("process_started_at_utc"),
+        }
+        current = current_process_identity(service_identity=dict(row).get("service_identity"))
+        if not self._binding_complete(binding):
+            raise ValueError("stale campaign owner requires recover")
+        if int(lock["process_id"]) == os.getpid():
+            if not identities_match(bound, current):
+                raise ValueError("stale campaign owner requires recover")
+            return
+        live = inspect_process(int(lock["process_id"]))
+        if live is None:
+            raise ValueError("stale campaign owner requires recover")
+        if identities_match(bound, live) and require_current_process:
+            raise ValueError("second runner cannot mutate under the first runner fence")
+        if require_current_process:
+            raise ValueError("stale campaign owner requires recover")
 
     def _append_event(
         self,

@@ -1,9 +1,10 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import time
 from collections.abc import Iterable, Mapping
-from typing import Any
+from typing import Any, cast
 from urllib import error as urllib_error
 from urllib import parse as urllib_parse
 from urllib import request as urllib_request
@@ -107,54 +108,15 @@ class GitHubRestAdapter(GitHubRemotePort):
                 return GitHubBranchProtection(
                     repository_slug=repository_slug, branch=branch, protected=False
                 )
-            raise
-        status_checks = payload.get("required_status_checks") or {}
-        check_bindings = [
-            item for item in (status_checks.get("checks") or ()) if isinstance(item, dict)
-        ]
-        contexts = tuple(
-            sorted(str(item) for item in (status_checks.get("contexts") or ()) if str(item).strip())
-        )
-        if check_bindings:
-            names = tuple(str(item.get("context") or "").strip() for item in check_bindings)
-            app_ids = tuple(
-                int(item["app_id"]) if item.get("app_id") is not None else None
-                for item in check_bindings
-            )
-            contexts_only = False
-        else:
-            names = contexts
-            app_ids = tuple(None for _ in names)
-            contexts_only = bool(contexts)
-        reviews_raw = payload.get("required_pull_request_reviews")
-        reviews = reviews_raw or {}
-        return GitHubBranchProtection(
-            repository_slug=repository_slug,
-            branch=branch,
-            protected=True,
-            required_status_checks=names,
-            required_status_check_app_ids=app_ids,
-            contexts_only_required_checks=contexts_only,
-            required_status_checks_strict=bool(status_checks.get("strict", False)),
-            reviews_object_present=reviews_raw is not None,
-            required_approving_review_count=int(
-                reviews.get("required_approving_review_count") or 0
-            ),
-            dismiss_stale_reviews=bool(reviews.get("dismiss_stale_reviews", False)),
-            require_code_owner_reviews=bool(reviews.get("require_code_owner_reviews", False)),
-            require_last_push_approval=bool(reviews.get("require_last_push_approval", False)),
-            enforce_admins=bool((payload.get("enforce_admins") or {}).get("enabled", False)),
-            require_linear_history=bool(
-                (payload.get("required_linear_history") or {}).get("enabled", False)
-            ),
-            require_conversation_resolution=bool(
-                (payload.get("required_conversation_resolution") or {}).get("enabled", False)
-            ),
-            allow_force_pushes=bool(
-                (payload.get("allow_force_pushes") or {}).get("enabled", False)
-            ),
-            allow_deletions=bool((payload.get("allow_deletions") or {}).get("enabled", False)),
-        )
+            if exc.payload.category is AdapterErrorCategory.AUTHORIZATION:
+                payload = self._provisioned_api_json(
+                    "GET",
+                    f"repos/{self._repo_path(repository_slug)}/branches/{branch}/protection",
+                    operation="github.branch.protection.read",
+                )
+            else:
+                raise
+        return self._protection_from_payload(repository_slug, branch, payload)
 
     def get_pull_request(self, repository_slug: str, number: int) -> PullRequestSnapshot | None:
         try:
@@ -258,6 +220,23 @@ class GitHubRestAdapter(GitHubRemotePort):
             role=BranchRole.FEATURE,
         )
 
+    def find_open_pull(
+        self, repository_slug: str, *, head: str, base: str
+    ) -> PullRequestSnapshot | None:
+        owner = repository_slug.split("/", 1)[0]
+        query = urllib_parse.urlencode(
+            {"state": "open", "head": f"{owner}:{head}", "base": base, "per_page": "10"}
+        )
+        rows = self._request_json(
+            "GET",
+            f"/repos/{self._repo_path(repository_slug)}/pulls?{query}",
+            operation="github.pull.find",
+            correlation_id="corr:github-pull-find",
+        )
+        if not isinstance(rows, list) or not rows:
+            return None
+        return self._parse_pull(repository_slug, rows[0])
+
     def create_pull_request(
         self,
         repository_slug: str,
@@ -269,15 +248,88 @@ class GitHubRestAdapter(GitHubRemotePort):
         draft: bool,
         context: GitHubWriteContext,
     ) -> PullRequestSnapshot:
-        payload = self._request_json(
-            "POST",
-            f"/repos/{self._repo_path(repository_slug)}/pulls",
-            body={"head": head, "base": base, "title": title, "body": body, "draft": draft},
-            operation="github.pull.create",
-            correlation_id=context.correlation_id,
-            is_write=True,
+        try:
+            payload = self._request_json(
+                "POST",
+                f"/repos/{self._repo_path(repository_slug)}/pulls",
+                body={"head": head, "base": base, "title": title, "body": body, "draft": draft},
+                operation="github.pull.create",
+                correlation_id=context.correlation_id,
+                is_write=True,
+            )
+            return self._parse_pull(repository_slug, payload)
+        except GitHubAdapterError as exc:
+            if exc.payload.category is not AdapterErrorCategory.AUTHORIZATION:
+                raise
+            return self._create_pull_via_provisioned_cli(
+                repository_slug,
+                head=head,
+                base=base,
+                title=title,
+                body=body,
+                draft=draft,
+                context=context,
+            )
+
+    def _create_pull_via_provisioned_cli(
+        self,
+        repository_slug: str,
+        *,
+        head: str,
+        base: str,
+        title: str,
+        body: str,
+        draft: bool,
+        context: GitHubWriteContext,
+    ) -> PullRequestSnapshot:
+        del context
+        args = [
+            "gh",
+            "pr",
+            "create",
+            "--repo",
+            repository_slug,
+            "--head",
+            head,
+            "--base",
+            base,
+            "--title",
+            title,
+            "--body",
+            body,
+        ]
+        if draft:
+            args.append("--draft")
+        completed = subprocess.run(
+            args,
+            capture_output=True,
+            text=True,
+            check=False,
+            shell=False,
+            timeout=60,
         )
-        return self._parse_pull(repository_slug, payload)
+        if completed.returncode != 0:
+            raise self._error(
+                AdapterErrorCategory.AUTHORIZATION,
+                "GITHUB_CLI_CREATE_DENIED",
+                "provisioned GitHub CLI could not create the pull request",
+                "corr:github-pull-create-cli",
+                "github.pull.create",
+                retryable=False,
+            )
+        url = (completed.stdout or "").strip().splitlines()[-1] if completed.stdout else ""
+        number = int(url.rstrip("/").rsplit("/", 1)[-1])
+        pull = self.get_pull_request(repository_slug, number)
+        if pull is None:
+            raise self._error(
+                AdapterErrorCategory.NOT_FOUND,
+                "GITHUB_CLI_CREATE_UNREADABLE",
+                "created pull request could not be read back",
+                "corr:github-pull-create-cli",
+                "github.pull.create",
+                retryable=False,
+            )
+        return pull
 
     def update_pull_request(
         self,
@@ -311,26 +363,53 @@ class GitHubRestAdapter(GitHubRemotePort):
     ) -> Mapping[str, Any]:
         if method not in {"merge", "squash", "rebase"}:
             raise ValueError("merge method must be merge, squash, or rebase")
-        return self._request_json(
-            "PUT",
-            f"/repos/{self._repo_path(repository_slug)}/pulls/{number}/merge",
-            body={"sha": head_sha, "merge_method": method},
-            operation="github.pull.merge",
-            correlation_id=context.correlation_id,
-            is_write=True,
-        )
+        body = {"sha": head_sha, "merge_method": method}
+        try:
+            return cast(
+                Mapping[str, Any],
+                self._request_json(
+                    "PUT",
+                    f"/repos/{self._repo_path(repository_slug)}/pulls/{number}/merge",
+                    body=body,
+                    operation="github.pull.merge",
+                    correlation_id=context.correlation_id,
+                    is_write=True,
+                ),
+            )
+        except GitHubAdapterError as exc:
+            if exc.payload.category is not AdapterErrorCategory.AUTHORIZATION:
+                raise
+            return cast(
+                Mapping[str, Any],
+                self._provisioned_api_json(
+                    "PUT",
+                    f"repos/{self._repo_path(repository_slug)}/pulls/{number}/merge",
+                    body=body,
+                    operation="github.pull.merge",
+                ),
+            )
 
     def delete_branch(
         self, repository_slug: str, *, branch: str, context: GitHubWriteContext
     ) -> None:
-        self._request_json(
-            "DELETE",
-            f"/repos/{self._repo_path(repository_slug)}/git/refs/heads/{urllib_parse.quote(branch, safe='')}",
-            operation="github.branch.delete",
-            correlation_id=context.correlation_id,
-            is_write=True,
-            allow_empty=True,
-        )
+        try:
+            self._request_json(
+                "DELETE",
+                f"/repos/{self._repo_path(repository_slug)}/git/refs/heads/{urllib_parse.quote(branch, safe='')}",
+                operation="github.branch.delete",
+                correlation_id=context.correlation_id,
+                is_write=True,
+                allow_empty=True,
+            )
+        except GitHubAdapterError as exc:
+            if exc.payload.category is not AdapterErrorCategory.AUTHORIZATION:
+                raise
+            self._provisioned_api_json(
+                "DELETE",
+                f"repos/{self._repo_path(repository_slug)}/git/refs/heads/{branch}",
+                operation="github.branch.delete",
+                allow_empty=True,
+            )
 
     def _iter_pages(self, path: str, *, page_size: int, operation: str) -> Iterable[dict[str, Any]]:
         if page_size < 1 or page_size > 100:
@@ -485,6 +564,104 @@ class GitHubRestAdapter(GitHubRemotePort):
                 correlation_id=correlation_id,
                 details=details or {},
             )
+        )
+
+    def _provisioned_api_json(
+        self,
+        method: str,
+        path: str,
+        *,
+        operation: str,
+        body: Any | None = None,
+        allow_empty: bool = False,
+    ) -> Any:
+        args = ["gh", "api", "-X", method, path]
+        if body is not None:
+            args.extend(["--input", "-"])
+        completed = subprocess.run(
+            args,
+            input=None if body is None else json.dumps(body),
+            capture_output=True,
+            text=True,
+            check=False,
+            shell=False,
+            timeout=60,
+        )
+        if completed.returncode != 0:
+            raise self._error(
+                AdapterErrorCategory.AUTHORIZATION,
+                "GITHUB_CLI_API_DENIED",
+                (
+                    completed.stderr or completed.stdout or "provisioned GitHub CLI API denied"
+                ).strip(),
+                f"corr:{operation.replace('.', '-')}",
+                operation,
+                retryable=False,
+            )
+        raw = (completed.stdout or "").strip()
+        if not raw:
+            if allow_empty:
+                return {}
+            raise self._error(
+                AdapterErrorCategory.NOT_FOUND,
+                "GITHUB_CLI_API_EMPTY",
+                "provisioned GitHub CLI API returned empty output",
+                f"corr:{operation.replace('.', '-')}",
+                operation,
+                retryable=False,
+            )
+        return json.loads(raw)
+
+    @staticmethod
+    def _protection_from_payload(
+        repository_slug: str, branch: str, payload: Mapping[str, Any]
+    ) -> GitHubBranchProtection:
+        status_checks = payload.get("required_status_checks") or {}
+        check_bindings = [
+            item for item in (status_checks.get("checks") or ()) if isinstance(item, dict)
+        ]
+        contexts = tuple(
+            sorted(str(item) for item in (status_checks.get("contexts") or ()) if str(item).strip())
+        )
+        if check_bindings:
+            names = tuple(str(item.get("context") or "").strip() for item in check_bindings)
+            app_ids = tuple(
+                int(item["app_id"]) if item.get("app_id") is not None else None
+                for item in check_bindings
+            )
+            contexts_only = False
+        else:
+            names = contexts
+            app_ids = tuple(None for _ in names)
+            contexts_only = bool(contexts)
+        reviews_raw = payload.get("required_pull_request_reviews")
+        reviews = reviews_raw or {}
+        return GitHubBranchProtection(
+            repository_slug=repository_slug,
+            branch=branch,
+            protected=True,
+            required_status_checks=names,
+            required_status_check_app_ids=app_ids,
+            contexts_only_required_checks=contexts_only,
+            required_status_checks_strict=bool(status_checks.get("strict", False)),
+            reviews_object_present=reviews_raw is not None,
+            required_approving_review_count=int(
+                reviews.get("required_approving_review_count") or 0
+            ),
+            dismiss_stale_reviews=bool(reviews.get("dismiss_stale_reviews", False)),
+            require_code_owner_reviews=bool(reviews.get("require_code_owner_reviews", False)),
+            require_last_push_approval=bool(reviews.get("require_last_push_approval", False)),
+            enforce_admins=bool((payload.get("enforce_admins") or {}).get("enabled", False)),
+            require_linear_history=bool(
+                (payload.get("required_linear_history") or {}).get("enabled", False)
+            ),
+            require_conversation_resolution=bool(
+                (payload.get("required_conversation_resolution") or {}).get("enabled", False)
+            ),
+            allow_force_pushes=bool(
+                (payload.get("allow_force_pushes") or {}).get("enabled", False)
+            ),
+            allow_deletions=bool((payload.get("allow_deletions") or {}).get("enabled", False)),
         )
 
     @staticmethod

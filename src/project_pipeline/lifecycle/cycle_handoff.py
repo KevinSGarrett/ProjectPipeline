@@ -74,6 +74,8 @@ def validate_cycle_handoff(
     floor_script_ran: bool = False,
 ) -> dict[str, Any]:
     findings: list[str] = []
+    if any(ord(char) < 32 and char not in "\n\r\t" for char in handoff_text):
+        findings.append("handoff contains ASCII control characters")
     normalized = _normalize(handoff_text)
     combined = _normalize(handoff_text + "\n" + _as_text(meter) + "\n" + _as_text(packet))
 

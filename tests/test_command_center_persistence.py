@@ -9,7 +9,9 @@ def test_command_center_migration_is_latest_and_reversible(tmp_path, project_roo
     with CommandCenterStore(tmp_path / "cc.db", project_root) as store:
         runner = SQLiteMigrationRunner(store.db, project_root)
         status = runner.status()
-        assert status.latest_applied == "PPDB-0022"
+        assert status.latest_applied == "PPDB-0023"
+        runner.rollback_last()
+        assert runner.status().latest_applied == "PPDB-0022"
         runner.rollback_last()
         assert runner.status().latest_applied == "PPDB-0021"
         runner.rollback_last()

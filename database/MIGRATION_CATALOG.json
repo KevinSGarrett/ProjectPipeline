@@ -416,6 +416,25 @@
       "sqlite_down_sha256": "de12c7b10c56946d20d3f39f73506cff941ef4753935cd4f70d765888103e339",
       "sqlite_up_path": "database/migrations/sqlite/PPDB-0022_autonomy_campaign.up.sql",
       "sqlite_up_sha256": "240f30cdab7e64cb0c7cdb0a87eb90caac4cfa24f6b1b4614e0fb45cfd721210"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0022"
+      ],
+      "migration_id": "PPDB-0023",
+      "name": "campaign_owner_and_receipt_semantics",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0023_campaign_owner_and_receipt_semantics.down.sql",
+      "postgresql_down_sha256": "d22d04bf6acc63185d3b5089353b1281997888c63d836fe0ab88796950902b0b",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0023_campaign_owner_and_receipt_semantics.up.sql",
+      "postgresql_up_sha256": "e8d76cca713b3ec81ee5634303be441a4a148a7546d4c089ced843eaf5e7295c",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 23,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0023_campaign_owner_and_receipt_semantics.down.sql",
+      "sqlite_down_sha256": "d22d04bf6acc63185d3b5089353b1281997888c63d836fe0ab88796950902b0b",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0023_campaign_owner_and_receipt_semantics.up.sql",
+      "sqlite_up_sha256": "e8d76cca713b3ec81ee5634303be441a4a148a7546d4c089ced843eaf5e7295c"
     }
   ],
   "schema_version": "1.0.0"
