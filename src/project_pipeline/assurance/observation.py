@@ -254,15 +254,20 @@ def generate_observation(
     if not scope_map:
         raise ValueError(f"evidence {evidence_id} is not linked to a requirement")
     pytest_ids = _pytest_test_ids(root, test_ids)
+    node_ids = _node_test_ids(root, test_ids)
     catalog: list[str] = []
     results: dict[str, str] = {}
     if pytest_ids:
         catalog = _catalog_paths(root, pytest_ids)
-        results = (runner or _pytest_runner(root))(pytest_ids, catalog)
+        results.update((runner or _pytest_runner(root))(pytest_ids, catalog))
+    node_catalog = _catalog_paths(root, node_ids) if node_ids else []
+    if node_ids:
+        results.update(_node_runner(root)(node_ids, node_catalog))
     test_outcomes = {test_id: "MISSING" for test_id in test_ids}
     test_outcomes.update({str(test_id): str(outcome) for test_id, outcome in results.items()})
-    failed = [test_id for test_id in pytest_ids if test_outcomes.get(test_id) != "PASS"]
-    result = ObservationResult.FAIL if failed or not pytest_ids else ObservationResult.PASS
+    runnable = [*pytest_ids, *node_ids]
+    failed = [test_id for test_id in runnable if test_outcomes.get(test_id) != "PASS"]
+    result = ObservationResult.FAIL if failed or not runnable else ObservationResult.PASS
     artifact = str(definition.get("artifact_path") or "")
     digest = str(definition.get("sha256") or "")
     if artifact and (root / artifact).is_file():
@@ -283,10 +288,10 @@ def generate_observation(
         requirement_scope_fingerprints=scope_map,
         test_outcomes=test_outcomes,
         artifact_digest=digest,
-        command_identity=("pytest", *catalog) if catalog else ("pytest", *test_ids),
+        command_identity=_command_identity(catalog, node_catalog, test_ids),
         environment_class=classify_environment(str(definition.get("environment") or "local")),
         result=result,
-        independent_verification_receipt="local-pytest:" + ",".join(test_ids),
+        independent_verification_receipt=_verification_receipt(pytest_ids, node_ids, test_ids),
         now=now,
     )
 
@@ -447,6 +452,35 @@ def _pytest_test_ids(root: Path, test_ids: list[str]) -> list[str]:
     return selected
 
 
+def _node_test_ids(root: Path, test_ids: list[str]) -> list[str]:
+    catalog = _test_catalog_map(root)
+    selected: list[str] = []
+    for test_id in test_ids:
+        path = str((catalog.get(test_id) or {}).get("path") or "").replace("\\", "/")
+        if path.endswith(".mjs") or path.endswith(".js"):
+            selected.append(test_id)
+    return selected
+
+
+def _command_identity(
+    pytest_paths: list[str], node_paths: list[str], test_ids: list[str]
+) -> tuple[str, ...]:
+    parts: list[str] = []
+    if pytest_paths:
+        parts.extend(("pytest", *pytest_paths))
+    if node_paths:
+        parts.extend(("node", "--test", *node_paths))
+    return tuple(parts) if parts else ("pytest", *test_ids)
+
+
+def _verification_receipt(pytest_ids: list[str], node_ids: list[str], test_ids: list[str]) -> str:
+    if pytest_ids and node_ids:
+        return "local-pytest+node:" + ",".join(test_ids)
+    if node_ids:
+        return "local-node:" + ",".join(node_ids)
+    return "local-pytest:" + ",".join(test_ids)
+
+
 def _test_catalog_map(root: Path) -> dict[str, dict[str, Any]]:
     path = root / "tests" / "TEST_CATALOG.json"
     if not path.is_file():
@@ -483,5 +517,46 @@ def _pytest_runner(root: Path) -> TestRunner:
         )
         outcome = "PASS" if completed.returncode == 0 else "FAIL"
         return {test_id: outcome for test_id in test_ids}
+
+    return run
+
+
+def _parse_node_tap(text: str) -> dict[str, str]:
+    outcomes: dict[str, str] = {}
+    for line in text.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("ok ") and " - " in stripped:
+            title = stripped.split(" - ", 1)[1].strip()
+            outcomes[title] = "PASS"
+        elif stripped.startswith("not ok ") and " - " in stripped:
+            title = stripped.split(" - ", 1)[1].strip()
+            outcomes[title] = "FAIL"
+    return outcomes
+
+
+def _node_runner(root: Path) -> TestRunner:
+    def run(test_ids: list[str], paths: list[str]) -> dict[str, str]:
+        catalog = _test_catalog_map(root)
+        if not paths:
+            return {test_id: "MISSING" for test_id in test_ids}
+        node = "node"
+        completed = subprocess.run(
+            [node, "--test", "--test-reporter=tap", *paths],
+            cwd=str(root),
+            check=False,
+            capture_output=True,
+            text=True,
+            shell=False,
+        )
+        if completed.returncode == 127 or (
+            completed.returncode != 0 and not (completed.stdout or completed.stderr)
+        ):
+            return {test_id: "MISSING" for test_id in test_ids}
+        parsed = _parse_node_tap(completed.stdout + "\n" + completed.stderr)
+        results: dict[str, str] = {}
+        for test_id in test_ids:
+            title = str((catalog.get(test_id) or {}).get("callable") or "")
+            results[test_id] = parsed.get(title, "MISSING")
+        return results
 
     return run

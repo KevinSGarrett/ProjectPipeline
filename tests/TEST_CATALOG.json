@@ -843,7 +843,7 @@
       "test_id": "TEST-CC-REALTIME-004"
     },
     {
-      "callable": "navigation contains all Pass 20 operator surfaces",
+      "callable": "navigation contains all Pass 21 operator surfaces",
       "path": "apps/command_center/tests/appModel.test.mjs",
       "test_id": "TEST-CC-UI-001"
     },
@@ -858,7 +858,7 @@
       "test_id": "TEST-CC-UI-003"
     },
     {
-      "callable": "typed control command carries actor project correlation and idempotency",
+      "callable": "typed control command carries actor, project, correlation, and idempotency",
       "path": "apps/command_center/tests/appModel.test.mjs",
       "test_id": "TEST-CC-UI-004"
     },
