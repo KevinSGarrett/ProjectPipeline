@@ -230,8 +230,8 @@
     {
       "extension": "[none]",
       "path": ".git",
-      "sha256": "b13bdcae3dfc41eaf7ca47ea1e19562d85948c172479e667217ba1792412b441",
-      "size_bytes": 58,
+      "sha256": "934cfb85b8a1d6f0339c2e03f62d6ffb94b7d4dea0cb7e5829ab57b77d8ac2db",
+      "size_bytes": 65,
       "top_level": "_root"
     },
     {
@@ -14013,8 +14013,8 @@
     {
       "extension": ".jsonl",
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "904527297dfb596b55e2a57c834b9b0da110e7979009496b009640b1b4dcab16",
-      "size_bytes": 742874,
+      "sha256": "ff0362b581cf5c0214ba1e9bb717a3425f6a7440e8c2c90cf9b286b31e696cad",
+      "size_bytes": 741734,
       "top_level": "plans"
     },
     {
@@ -17030,8 +17030,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/assurance/observation.py",
-      "sha256": "6bb50b4033fa3fe2d5ca38266999dd0bb4d111e0d1dacddad1e442c6db7731de",
-      "size_bytes": 22236,
+      "sha256": "864384aec2e57bd7b469cf8613e254f770f0903eead94f722941ebbe8ba32861",
+      "size_bytes": 22379,
       "top_level": "src"
     },
     {
@@ -17065,8 +17065,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/assurance/requirement_reconciliation.py",
-      "sha256": "3265f52b2e0ebeed550278220f19f4c648433d3a9dc68513385b3d9684a572bb",
-      "size_bytes": 19343,
+      "sha256": "e9b0aaf47cf38665854963c62b81848f9cabf60f7d89bd01f2c4994045b2034c",
+      "size_bytes": 22239,
       "top_level": "src"
     },
     {
@@ -19781,8 +19781,8 @@
     {
       "extension": ".py",
       "path": "tests/test_evidence_observations.py",
-      "sha256": "1cf922fa7e61b9146d4b5d93dd842cedd598f929ced577aa53d77e2510fa136a",
-      "size_bytes": 12348,
+      "sha256": "2674380143d52b0738fe57118c6fd294ed9849581ed32ab9d592fbe3932d5ce6",
+      "size_bytes": 12818,
       "top_level": "tests"
     },
     {
@@ -20187,8 +20187,8 @@
     {
       "extension": ".py",
       "path": "tests/test_requirement_reconciliation.py",
-      "sha256": "73d684ae16b46db01d56963040b3a34d327cee500d329f5adcc44813e7fb7ada",
-      "size_bytes": 16370,
+      "sha256": "768de718e499a8acc0edbab3ea2274ac94bc0baa9f9b158cc785022f09b29381",
+      "size_bytes": 19501,
       "top_level": "tests"
     },
     {
@@ -20640,7 +20640,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-19T20:45:52.226426+00:00",
+  "generated_at_utc": "2026-08-19T21:01:55.200177+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "026bfbd8f0c7d22b76a71e777195f8fc278f8870bf5df32e08cc82e483f9fb9a",
+  "aggregate_sha256": "f1944b57e0bf1e7a04936d8b77e7056452a50ee1396281428757a642835ffb67",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -9962,8 +9962,8 @@
     },
     {
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "904527297dfb596b55e2a57c834b9b0da110e7979009496b009640b1b4dcab16",
-      "size_bytes": 742874
+      "sha256": "ff0362b581cf5c0214ba1e9bb717a3425f6a7440e8c2c90cf9b286b31e696cad",
+      "size_bytes": 741734
     },
     {
       "path": "plans/_traceability/requirements_by_domain.json",
@@ -9972,8 +9972,8 @@
     },
     {
       "path": "plans/_traceability/requirements_by_id.json",
-      "sha256": "3273004626d1cb54c473a3486b127769d14ae04ebea3d68afa76144d45b65d98",
-      "size_bytes": 869246
+      "sha256": "bbd86c4301cc2572c01c41b896f575d35a8fdd73cacd60cd092fdb65ab7f46dd",
+      "size_bytes": 867650
     },
     {
       "path": "plans/_traceability/requirements_by_source.json",
@@ -9987,8 +9987,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_evidence.jsonl",
-      "sha256": "4622beb3c1c0dca256e703064fe8988ccbcbb594adb2bcc5704e0866c99412f4",
-      "size_bytes": 37815
+      "sha256": "d5fdb2c1207e2f4c4891cd98e3191fd88ae4479c2b19bc5f296bcff546b4d769",
+      "size_bytes": 36675
     },
     {
       "path": "plans/_traceability/requirements_to_evolution.jsonl",
@@ -12112,8 +12112,8 @@
     },
     {
       "path": "src/project_pipeline/assurance/observation.py",
-      "sha256": "6bb50b4033fa3fe2d5ca38266999dd0bb4d111e0d1dacddad1e442c6db7731de",
-      "size_bytes": 22236
+      "sha256": "864384aec2e57bd7b469cf8613e254f770f0903eead94f722941ebbe8ba32861",
+      "size_bytes": 22379
     },
     {
       "path": "src/project_pipeline/assurance/observation_store.py",
@@ -12137,8 +12137,8 @@
     },
     {
       "path": "src/project_pipeline/assurance/requirement_reconciliation.py",
-      "sha256": "3265f52b2e0ebeed550278220f19f4c648433d3a9dc68513385b3d9684a572bb",
-      "size_bytes": 19343
+      "sha256": "e9b0aaf47cf38665854963c62b81848f9cabf60f7d89bd01f2c4994045b2034c",
+      "size_bytes": 22239
     },
     {
       "path": "src/project_pipeline/assurance/requirement_truth_ledger.py",
@@ -14077,8 +14077,8 @@
     },
     {
       "path": "tests/test_evidence_observations.py",
-      "sha256": "1cf922fa7e61b9146d4b5d93dd842cedd598f929ced577aa53d77e2510fa136a",
-      "size_bytes": 12348
+      "sha256": "2674380143d52b0738fe57118c6fd294ed9849581ed32ab9d592fbe3932d5ce6",
+      "size_bytes": 12818
     },
     {
       "path": "tests/test_evidence_reconciliation_convergence.py",
@@ -14367,8 +14367,8 @@
     },
     {
       "path": "tests/test_requirement_reconciliation.py",
-      "sha256": "73d684ae16b46db01d56963040b3a34d327cee500d329f5adcc44813e7fb7ada",
-      "size_bytes": 16370
+      "sha256": "768de718e499a8acc0edbab3ea2274ac94bc0baa9f9b158cc785022f09b29381",
+      "size_bytes": 19501
     },
     {
       "path": "tests/test_requirement_registries.py",
@@ -14691,7 +14691,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T20:45:49.540622+00:00",
+  "generated_at_utc": "2026-08-19T21:02:47.475517+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14700,5 +14700,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25998096
+  "total_bytes": 26000860
 }

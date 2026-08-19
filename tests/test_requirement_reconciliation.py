@@ -13,7 +13,9 @@ from project_pipeline.assurance.requirement_reconciliation import (
     contains_external_marker,
     evaluate_requirement_reconciliation,
     propose_evidence_bound_requirement_states,
+    prune_unusable_requirement_evidence_links,
     reconcile_linked_story_implementation,
+    unusable_evidence_link_reason,
 )
 from project_pipeline.cli import main
 from project_pipeline.domain.evidence_observation import EnvironmentClass, ObservationResult
@@ -394,3 +396,88 @@ def test_linked_story_becomes_partial_when_only_some_requirements_are_implemente
     assert payload["implementation_state"] == "PARTIALLY_IMPLEMENTED"
     assert "partially-implemented" in payload["labels"]
     assert "planned" not in payload["labels"]
+
+
+def test_unusable_evidence_link_reason_classifies_unbound_and_generated_only() -> None:
+    assert unusable_evidence_link_reason("REQ-GOV-0014", None) == "missing_from_ledger"
+    assert (
+        unusable_evidence_link_reason(
+            "REQ-GOV-0004",
+            {"requirement_ids": ["REQ-GOV-0014"], "method": "pytest"},
+        )
+        == "unbound"
+    )
+    assert (
+        unusable_evidence_link_reason(
+            "REQ-GOV-0014",
+            {
+                "requirement_ids": ["REQ-GOV-0014"],
+                "method": "deterministic generated-schema currentness validation",
+            },
+        )
+        == "generated_only"
+    )
+    assert (
+        unusable_evidence_link_reason(
+            "REQ-GOV-0014",
+            {"requirement_ids": ["REQ-GOV-0014"], "method": "focused steward pytest"},
+        )
+        is None
+    )
+
+
+def test_prune_drops_unusable_links_but_refuses_to_empty_evidence_ids(tmp_path: Path) -> None:
+    (tmp_path / "plans/_traceability").mkdir(parents=True)
+    (tmp_path / "evidence").mkdir(parents=True)
+    write_jsonl(
+        tmp_path / "plans/_traceability/requirements.jsonl",
+        [
+            {
+                "requirement_id": "REQ-GOV-0014",
+                "implementation_state": "PARTIALLY_IMPLEMENTED",
+                "evidence_ids": ["EVID-BEHAVE", "EVID-GENERATED"],
+            },
+            {
+                "requirement_id": "REQ-SCHED-0016",
+                "implementation_state": "PARTIALLY_IMPLEMENTED",
+                "evidence_ids": ["EVID-UNBOUND"],
+            },
+            {
+                "requirement_id": "REQ-GOV-0001",
+                "implementation_state": "IMPLEMENTED",
+                "evidence_ids": ["EVID-GENERATED"],
+            },
+        ],
+    )
+    write_jsonl(
+        tmp_path / "evidence/EVIDENCE_LEDGER.jsonl",
+        [
+            {
+                "evidence_id": "EVID-BEHAVE",
+                "requirement_ids": ["REQ-GOV-0014"],
+                "method": "focused steward pytest",
+            },
+            {
+                "evidence_id": "EVID-GENERATED",
+                "requirement_ids": ["REQ-GOV-0014"],
+                "method": "deterministic generated-schema currentness validation",
+            },
+            {
+                "evidence_id": "EVID-UNBOUND",
+                "requirement_ids": ["REQ-OTHER"],
+                "method": "pytest",
+            },
+        ],
+    )
+    changed = prune_unusable_requirement_evidence_links(tmp_path)
+    by_id = {item["requirement_id"]: item for item in changed}
+    assert by_id["REQ-GOV-0014"]["applied"] is True
+    assert by_id["REQ-GOV-0014"]["kept"] == ["EVID-BEHAVE"]
+    assert by_id["REQ-SCHED-0016"]["applied"] is False
+    rows = {
+        row["requirement_id"]: row
+        for row in read_jsonl(tmp_path / "plans/_traceability/requirements.jsonl")
+    }
+    assert rows["REQ-GOV-0014"]["evidence_ids"] == ["EVID-BEHAVE"]
+    assert rows["REQ-SCHED-0016"]["evidence_ids"] == ["EVID-UNBOUND"]
+    assert rows["REQ-GOV-0001"]["evidence_ids"] == ["EVID-GENERATED"]

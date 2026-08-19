@@ -6445,8 +6445,7 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "CTRL",
     "evidence_ids": [
-      "EVID-000055",
-      "EVID-000058"
+      "EVID-000055"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -6971,8 +6970,7 @@
     "domain": "CTRL",
     "evidence_ids": [
       "EVID-000055",
-      "EVID-000058",
-      "EVID-000060"
+      "EVID-000058"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -8252,8 +8250,6 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "CTX",
     "evidence_ids": [
-      "EVID-000089",
-      "EVID-000091",
       "EVID-000093",
       "EVID-000094"
     ],
@@ -8577,9 +8573,6 @@
       "EVID-000005",
       "EVID-000006",
       "EVID-000049",
-      "EVID-000050",
-      "EVID-000051",
-      "EVID-000052",
       "EVID-000053"
     ],
     "evolution_ids": [],
@@ -8641,7 +8634,6 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "GOV",
     "evidence_ids": [
-      "EVID-000022",
       "EVID-000027"
     ],
     "evolution_ids": [],
@@ -9248,12 +9240,9 @@
     "domain": "GOV",
     "evidence_ids": [
       "EVID-000049",
-      "EVID-000050",
       "EVID-000051",
-      "EVID-000052",
       "EVID-000053",
-      "EVID-000075",
-      "EVID-000076"
+      "EVID-000075"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -9326,9 +9315,6 @@
     "domain": "GOV",
     "evidence_ids": [
       "EVID-000049",
-      "EVID-000050",
-      "EVID-000051",
-      "EVID-000052",
       "EVID-000053"
     ],
     "evolution_ids": [],
@@ -9391,9 +9377,6 @@
     "domain": "GOV",
     "evidence_ids": [
       "EVID-000049",
-      "EVID-000050",
-      "EVID-000051",
-      "EVID-000052",
       "EVID-000053"
     ],
     "evolution_ids": [],
@@ -9454,9 +9437,6 @@
     "domain": "GOV",
     "evidence_ids": [
       "EVID-000049",
-      "EVID-000050",
-      "EVID-000051",
-      "EVID-000052",
       "EVID-000053"
     ],
     "evolution_ids": [],
@@ -9518,11 +9498,7 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "GOV",
     "evidence_ids": [
-      "EVID-000049",
-      "EVID-000050",
-      "EVID-000051",
-      "EVID-000052",
-      "EVID-000053"
+      "EVID-000049"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -9580,11 +9556,7 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "GOV",
     "evidence_ids": [
-      "EVID-000049",
-      "EVID-000050",
-      "EVID-000051",
-      "EVID-000052",
-      "EVID-000053"
+      "EVID-000049"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -9703,11 +9675,7 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "GOV",
     "evidence_ids": [
-      "EVID-000049",
-      "EVID-000050",
-      "EVID-000051",
-      "EVID-000052",
-      "EVID-000053"
+      "EVID-000049"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -9824,11 +9792,7 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "GOV",
     "evidence_ids": [
-      "EVID-000049",
-      "EVID-000050",
-      "EVID-000051",
-      "EVID-000052",
-      "EVID-000053"
+      "EVID-000049"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -9895,12 +9859,8 @@
       "EVID-000047",
       "EVID-000048",
       "EVID-000049",
-      "EVID-000050",
       "EVID-000051",
-      "EVID-000052",
-      "EVID-000053",
-      "EVID-000075",
-      "EVID-000076"
+      "EVID-000052"
     ],
     "evolution_ids": [
       "SOURCE-EVOLUTION-0006"
@@ -10129,9 +10089,7 @@
       "EVID-000005",
       "EVID-000006",
       "EVID-000008",
-      "EVID-000022",
       "EVID-000024",
-      "EVID-000026",
       "EVID-000027",
       "EVID-000164"
     ],
@@ -10406,8 +10364,7 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "INFRA",
     "evidence_ids": [
-      "EVID-000075",
-      "EVID-000076"
+      "EVID-000075"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -11309,7 +11266,6 @@
     "domain": "LIFE",
     "evidence_ids": [
       "EVID-000022",
-      "EVID-000027",
       "EVID-000029",
       "EVID-000153"
     ],
@@ -11603,8 +11559,6 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "LIFE",
     "evidence_ids": [
-      "EVID-000022",
-      "EVID-000027",
       "EVID-000029",
       "EVID-000153"
     ],
@@ -12293,7 +12247,6 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "LIFE",
     "evidence_ids": [
-      "EVID-000022",
       "EVID-000027",
       "EVID-000153"
     ],
@@ -12491,9 +12444,7 @@
     "evidence_ids": [
       "EVID-000005",
       "EVID-000006",
-      "EVID-000024",
-      "EVID-000026",
-      "EVID-000027"
+      "EVID-000026"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -12685,7 +12636,6 @@
     "evidence_ids": [
       "EVID-000096",
       "EVID-000098",
-      "EVID-000099",
       "EVID-000100",
       "EVID-000101"
     ],
@@ -13402,9 +13352,7 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "OPS",
     "evidence_ids": [
-      "EVID-000024",
-      "EVID-000026",
-      "EVID-000027"
+      "EVID-000026"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -13467,9 +13415,7 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "OPS",
     "evidence_ids": [
-      "EVID-000022",
-      "EVID-000024",
-      "EVID-000026"
+      "EVID-000024"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -16799,11 +16745,7 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "RES",
     "evidence_ids": [
-      "EVID-000049",
-      "EVID-000050",
-      "EVID-000051",
-      "EVID-000052",
-      "EVID-000053"
+      "EVID-000049"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -17165,10 +17107,8 @@
     "domain": "RES",
     "evidence_ids": [
       "EVID-000049",
-      "EVID-000050",
       "EVID-000051",
-      "EVID-000052",
-      "EVID-000053"
+      "EVID-000052"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -18023,9 +17963,7 @@
     "domain": "SCHED",
     "evidence_ids": [
       "EVID-000055",
-      "EVID-000058",
-      "EVID-000061",
-      "EVID-000063"
+      "EVID-000058"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -18160,7 +18098,6 @@
     "evidence_ids": [
       "EVID-000055",
       "EVID-000059",
-      "EVID-000061",
       "EVID-000065"
     ],
     "evolution_ids": [],
@@ -18429,12 +18366,7 @@
     "domain": "SCHED",
     "evidence_ids": [
       "EVID-000049",
-      "EVID-000050",
-      "EVID-000051",
-      "EVID-000052",
-      "EVID-000053",
-      "EVID-000061",
-      "EVID-000062"
+      "EVID-000053"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -19012,14 +18944,11 @@
     "disposition_reason": "Accepted because the cited authoritative source establishes this obligation.",
     "domain": "SEC",
     "evidence_ids": [
-      "EVID-000003",
       "EVID-000005",
       "EVID-000006",
       "EVID-000023",
-      "EVID-000025",
       "EVID-000027",
       "EVID-000123",
-      "EVID-000124",
       "EVID-000126",
       "EVID-000127",
       "EVID-000128",
@@ -19942,9 +19871,7 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "SEC",
     "evidence_ids": [
-      "EVID-000023",
       "EVID-000025",
-      "EVID-000027",
       "EVID-000123",
       "EVID-000124",
       "EVID-000126",
@@ -20230,7 +20157,6 @@
     "domain": "SEC",
     "evidence_ids": [
       "EVID-000025",
-      "EVID-000027",
       "EVID-000123",
       "EVID-000124",
       "EVID-000126",
@@ -21796,7 +21722,6 @@
     "evidence_ids": [
       "EVID-000017",
       "EVID-000018",
-      "EVID-000019",
       "EVID-000020",
       "EVID-000083",
       "EVID-000084",
@@ -23206,8 +23131,7 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "UX",
     "evidence_ids": [
-      "EVID-000136",
-      "EVID-000141"
+      "EVID-000136"
     ],
     "evolution_ids": [],
     "implementation_paths": [
