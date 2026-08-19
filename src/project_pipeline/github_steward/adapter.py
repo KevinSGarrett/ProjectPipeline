@@ -258,6 +258,23 @@ class GitHubRestAdapter(GitHubRemotePort):
             role=BranchRole.FEATURE,
         )
 
+    def find_open_pull(
+        self, repository_slug: str, *, head: str, base: str
+    ) -> PullRequestSnapshot | None:
+        owner = repository_slug.split("/", 1)[0]
+        query = urllib_parse.urlencode(
+            {"state": "open", "head": f"{owner}:{head}", "base": base, "per_page": "10"}
+        )
+        rows = self._request_json(
+            "GET",
+            f"/repos/{self._repo_path(repository_slug)}/pulls?{query}",
+            operation="github.pull.find",
+            correlation_id="corr:github-pull-find",
+        )
+        if not isinstance(rows, list) or not rows:
+            return None
+        return self._parse_pull(repository_slug, rows[0])
+
     def create_pull_request(
         self,
         repository_slug: str,

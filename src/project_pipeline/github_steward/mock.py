@@ -141,6 +141,19 @@ class MockGitHubAdapter(GitHubRemotePort):
         self._idempotency[context.idempotency_key] = item
         return item
 
+    def find_open_pull(
+        self, repository_slug: str, *, head: str, base: str
+    ) -> PullRequestSnapshot | None:
+        del repository_slug
+        for item in self._pulls.values():
+            if (
+                item.head_branch == head
+                and item.base_branch == base
+                and item.state is PullRequestState.OPEN
+            ):
+                return item
+        return None
+
     def create_pull_request(
         self,
         repository_slug: str,

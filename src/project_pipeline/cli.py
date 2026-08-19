@@ -134,6 +134,7 @@ from project_pipeline.github_steward import (
     GitHubRestAdapter,
     GitHubStewardError,
     GitHubStewardStore,
+    GitHubWriteContext,
     LocalGitError,
     LocalGitRepository,
     MockGitHubAdapter,
@@ -575,6 +576,7 @@ def build_parser() -> argparse.ArgumentParser:
             "create-branch",
             "create-worktree",
             "remove-worktree",
+            "publish-branch",
             "cleanup",
         ),
     )
@@ -611,6 +613,7 @@ def build_parser() -> argparse.ArgumentParser:
             "protection-drift",
             "lifecycle",
             "consolidate",
+            "open",
         ),
     )
     github.add_argument("--root", type=_root, default=Path.cwd())
@@ -632,6 +635,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="Evaluate protection-drift on merge-gate, plan, and lifecycle (default: on).",
     )
     github.add_argument("--merge-method", choices=("merge", "squash", "rebase"), default="squash")
+    github.add_argument("--title")
+    github.add_argument("--body")
+    github.add_argument("--head")
+    github.add_argument("--base", default="main")
     github.add_argument("--apply", action="store_true")
     github.add_argument("--approve", action="store_true")
     github.add_argument("--authorization-id")
@@ -1317,6 +1324,9 @@ def _run_repository_command(args: argparse.Namespace) -> tuple[dict[str, Any], i
                 str(_require_argument(args, "branch")), args.start_point, apply=args.apply
             )
             return result, 0
+        if args.action == "publish-branch":
+            result = local.publish_branch(str(_require_argument(args, "branch")), apply=args.apply)
+            return result, 0
         if args.action == "create-worktree":
             result = local.create_worktree(
                 Path(_require_argument(args, "worktree_path")),
@@ -1353,6 +1363,60 @@ def _run_github_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             protection = adapter.get_branch_protection(repository_slug, local.default_branch())
             decision = evaluate_protection_drift(protection)
             return decision.model_dump(mode="json"), 0 if decision.aligned else 1
+        if args.action == "open":
+            snapshot = local.snapshot()
+            head = str(args.head or snapshot.current_branch or "")
+            base = str(args.base or snapshot.default_branch)
+            title = str(args.title or "")
+            body = str(args.body or "")
+            if not head or head in {snapshot.default_branch, "main", "master", "HEAD"}:
+                raise ConfigurationError("github open requires a non-protected --head branch")
+            if not title or not body:
+                raise ConfigurationError("github open requires --title and --body")
+            existing = adapter.find_open_pull(repository_slug, head=head, base=base)
+            if existing is not None:
+                return {
+                    "mode": "EXISTING",
+                    "pull": existing.model_dump(mode="json"),
+                }, 0
+            planned = {
+                "repository_slug": repository_slug,
+                "head": head,
+                "base": base,
+                "title": title,
+                "head_sha": snapshot.head_sha,
+            }
+            if not args.apply:
+                return {"mode": "DRY_RUN", "pull": planned}, 0
+            if not args.approve or not args.authorization_id:
+                raise ConfigurationError(
+                    "GitHub open requires --apply, --approve, and --authorization-id"
+                )
+            if (
+                args.provider == "github"
+                and configuration.settings.security.external_writes_default
+                is not ExternalWriteMode.REQUIRE_APPROVAL
+            ):
+                raise ConfigurationError(
+                    "live GitHub writes require security.external_writes_default=REQUIRE_APPROVAL"
+                )
+            context = GitHubWriteContext(
+                actor_id=args.actor_id,
+                correlation_id=args.correlation_id,
+                idempotency_key=f"github.open:{repository_slug}:{head}:{base}:{snapshot.head_sha}",
+                authorization_id=args.authorization_id,
+                expected_head_sha=snapshot.head_sha,
+            )
+            created = adapter.create_pull_request(
+                repository_slug,
+                head=head,
+                base=base,
+                title=title,
+                body=body,
+                draft=False,
+                context=context,
+            )
+            return {"mode": "APPLY", "pull": created.model_dump(mode="json")}, 0
         if args.action == "consolidate":
             proof = prove_consolidation(
                 local.root,

@@ -45,13 +45,15 @@ class LocalGitRepository:
             if probe.returncode != 0 or probe.stdout.strip() != "true":
                 raise LocalGitError(f"not a Git work tree: {self.root}")
 
-    def _run(self, *args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
+    def _run(
+        self, *args: str, check: bool = True, timeout: float = 30
+    ) -> subprocess.CompletedProcess[str]:
         result = subprocess.run(
             ["git", "-C", str(self.root), *args],
             text=True,
             capture_output=True,
             shell=False,
-            timeout=30,
+            timeout=timeout,
         )
         if check and result.returncode != 0:
             raise LocalGitError(result.stderr.strip() or f"git command failed: {args!r}")
@@ -253,6 +255,37 @@ class LocalGitRepository:
             }
         self._run("branch", branch, start_point)
         return {"mode": "APPLY", "branch": branch, "start_point": start_point, "applied": True}
+
+    def publish_branch(
+        self, branch: str, *, remote: str = "origin", apply: bool = False
+    ) -> dict[str, str | bool]:
+        name = branch.strip()
+        protected = {self.default_branch(), "main", "master", "HEAD"}
+        if not name or name.startswith("-") or name in protected:
+            raise LocalGitError("cannot publish a protected, symbolic, or invalid branch")
+        check = self._run("check-ref-format", "--branch", name, check=False)
+        if check.returncode != 0:
+            raise LocalGitError("invalid branch name")
+        sha = self._run("rev-parse", name).stdout.strip().lower()
+        tree = self._run("rev-parse", f"{name}^{{tree}}").stdout.strip().lower()
+        spec = f"refs/heads/{name}:refs/heads/{name}"
+        payload = {
+            "remote": remote,
+            "branch": name,
+            "sha": sha,
+            "tree": tree,
+            "refspec": spec,
+            "force": False,
+        }
+        if not apply:
+            return {"mode": "DRY_RUN", "applied": False, **payload}
+        pushed = self._run("push", "-u", remote, spec, timeout=180)
+        return {
+            "mode": "APPLY",
+            "applied": True,
+            "stdout_tail": (pushed.stdout or "")[-512:],
+            **payload,
+        }
 
     def create_worktree(
         self, path: Path, branch: str, *, apply: bool = False
