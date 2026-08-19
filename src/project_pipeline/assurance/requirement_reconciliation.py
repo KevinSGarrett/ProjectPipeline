@@ -358,6 +358,7 @@ def _evidence_rejection(
         current_sha=current_sha,
         current_tree=current_tree,
         acceptance_fingerprint=acceptance_fingerprint,
+        requirement_id=requirement_id,
     )
     return observation_rejection(
         observation,

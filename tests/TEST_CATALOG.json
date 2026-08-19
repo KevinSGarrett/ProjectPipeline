@@ -258,7 +258,7 @@
       "test_id": "TEST-ASSURE-EVIDENCE-002"
     },
     {
-      "callable": "test_all_fifteen_questions_are_required_for_complete",
+      "callable": "test_all_sixteen_questions_are_required_for_complete",
       "path": "tests/test_assurance_completion.py",
       "test_id": "TEST-ASSURE-GATE-001"
     },
@@ -1068,7 +1068,7 @@
       "test_id": "TEST-CONV-P25-001"
     },
     {
-      "callable": "test_ppdb_0019_is_latest_and_reversible_without_removing_ppdb_0018",
+      "callable": "test_ppdb_0020_is_latest_and_reversible_without_removing_ppdb_0019",
       "path": "tests/test_pass25_final_convergence.py",
       "test_id": "TEST-CONV-P25-002"
     },
@@ -1783,7 +1783,7 @@
       "test_id": "TEST-JIRA-DOMAIN-007"
     },
     {
-      "callable": "JiraStewardDomainTests.test_collaborative_mode_never_silently_accepts_remote_done",
+      "callable": "JiraStewardDomainTests.test_collaborative_remote_done_requires_evidence_reconciliation_not_human_review",
       "path": "tests/test_jira_steward_domain.py",
       "test_id": "TEST-JIRA-DOMAIN-008"
     },
@@ -2708,7 +2708,7 @@
       "test_id": "TEST-UPSTREAM-002"
     },
     {
-      "callable": "UpstreamReviewTests.test_every_entry_has_one_disposition_rationale_and_no_copied_source",
+      "callable": "UpstreamReviewTests.test_every_entry_has_disposition_and_bounded_copies_have_reviews",
       "path": "tests/test_upstream_reviews.py",
       "test_id": "TEST-UPSTREAM-003"
     },
