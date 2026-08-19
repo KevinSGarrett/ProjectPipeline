@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -14,10 +15,17 @@ from project_pipeline.autonomy_runtime.campaign import (
     CampaignController,
     evaluate_pp384_admission,
 )
+from project_pipeline.autonomy_runtime.campaign_status import (
+    CampaignStatusError,
+    validate_status_projection,
+)
 from project_pipeline.autonomy_runtime.command_execution import (
     command_is_allowlisted,
+    command_kind,
+    evaluate_command_semantics,
     execute_allowlisted_command,
 )
+from project_pipeline.autonomy_runtime.process_identity import current_process_identity
 from project_pipeline.autonomy_runtime.qualification import QualificationStore
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -308,15 +316,20 @@ def test_schema_comes_from_catalog(tmp_path: Path):
         for row in controller._db.execute("SELECT migration_id FROM schema_migrations").fetchall()
     }
     assert "PPDB-0022" in applied
+    assert "PPDB-0023" in applied
     tables = {
         str(row[0])
         for row in controller._db.execute(
             "SELECT name FROM sqlite_master WHERE type='table'"
         ).fetchall()
     }
-    assert {"campaign_runs", "campaign_events", "campaign_command_receipts", "campaign_locks"} <= (
-        tables
-    )
+    assert {
+        "campaign_runs",
+        "campaign_events",
+        "campaign_command_receipts",
+        "campaign_locks",
+        "campaign_owner_bindings",
+    } <= tables
     source = (ROOT / "src/project_pipeline/autonomy_runtime/campaign.py").read_text(
         encoding="utf-8"
     )
@@ -418,6 +431,368 @@ def test_inspect_worktree_identity_reports_git_fields():
     assert identity["ok"] is True
     assert len(identity["sha"]) == 40
     assert len(identity["tree"]) == 40
+
+
+def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        commands = controller._default_finalize_commands()
+    finally:
+        controller.close()
+    rendered = [" ".join(item) for item in commands]
+    assert any(" -m project_pipeline control completion --root " in row for row in rendered)
+    assert any(" -m project_pipeline assurance completion-gate --root " in row for row in rendered)
+    assert all(" project_pipeline completion " not in row for row in rendered)
+    assert command_kind(commands[-1]) == "assurance.completion-gate"
+    assert command_is_allowlisted(commands[-1], repository_root=ROOT) is True
+    assert (
+        command_is_allowlisted(
+            [sys.executable, "-m", "project_pipeline", "completion", "--root", str(ROOT)],
+            repository_root=ROOT,
+        )
+        is False
+    )
+    missing = subprocess.run(
+        [sys.executable, "-m", "project_pipeline", "completion", "--root", str(ROOT)],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert missing.returncode != 0
+
+
+def test_production_defaults_incomplete_cannot_finalize(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    def fake_execute(argv, **_kwargs):
+        kind = command_kind(argv)
+        if kind == "assurance.completion-gate":
+            stdout = json.dumps(
+                {
+                    "schema_version": "1.0.0",
+                    "completion_gate": {
+                        "state": "NOT_COMPLETE",
+                        "final_complete": False,
+                        "final_completion_gate_satisfied": False,
+                    },
+                }
+            )
+        elif kind == "control.completion":
+            stdout = json.dumps(
+                {
+                    "completion": {
+                        "schema_version": "1.0.0",
+                        "state": "INCOMPLETE",
+                        "final_completion_gate_satisfied": False,
+                    }
+                }
+            )
+        else:
+            stdout = json.dumps({"schema_version": "1.0.0", "ok": True, "errors": []})
+        from project_pipeline.autonomy_runtime.command_execution import evaluate_command_semantics
+
+        semantics = evaluate_command_semantics(
+            argv, exit_code=0 if kind != "assurance.completion-gate" else 1, stdout=stdout
+        )
+        result = "FAILED" if semantics["result"] == "FAILED" else "PASSED"
+        digest = hashlib.sha256(json.dumps(argv, sort_keys=True).encode()).hexdigest()
+        return {
+            "command": list(argv),
+            "command_sha256": digest,
+            "cwd": str(ROOT),
+            "environment_class": "test",
+            "integrated_sha": "a" * 40,
+            "integrated_tree": "b" * 40,
+            "started_at_utc": datetime.now(UTC).isoformat(),
+            "ended_at_utc": datetime.now(UTC).isoformat(),
+            "exit_code": 0 if result == "PASSED" else 1,
+            "stdout_sha256": "b" * 64,
+            "stderr_sha256": "c" * 64,
+            "stdout_tail": stdout,
+            "stderr_tail": "",
+            "result": result,
+            "result_semantics": semantics["reason"],
+            "semantic_state": semantics["state"],
+            "final_completion_gate_satisfied": semantics["final_completion_gate_satisfied"],
+            "parsed_result": semantics["parsed"],
+            "idempotency_key": f"CIDEMP-{digest[:16]}",
+            "retry_disposition": "not-retried",
+            "evidence_links": [],
+            "executed": True,
+        }
+
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.campaign.execute_allowlisted_command",
+        fake_execute,
+    )
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=0.05,
+        inspect_identity=lambda _root: _identity(),
+    )
+    ready = _ready_after_72h(controller, tmp_path)
+    finalized = controller.finalize(ready["campaign_id"])
+    assert finalized["status"] == "FAILED"
+    assert finalized["stage"] == "RELEASE"
+    kinds = [command_kind(item["command"]) for item in finalized["finalization_receipts"]]
+    assert kinds[-1] == "assurance.completion-gate"
+    assert "control.completion" in kinds
+    controller.close()
+
+
+def test_stale_lock_requires_recover_not_silent_delete(tmp_path: Path):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    controller._db.execute(
+        "UPDATE campaign_locks SET process_id = 2147000000 WHERE lock_name = 'active-campaign'"
+    )
+    controller._db.commit()
+    second = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    with pytest.raises(ValueError, match="requires recover"):
+        second.start(
+            state_path=tmp_path / "other",
+            evidence_path=tmp_path / "evidence",
+            pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+        )
+    recovered = controller.recover(started["campaign_id"])
+    assert recovered["campaign_id"] == started["campaign_id"]
+    second.close()
+    controller.close()
+
+
+def test_claim_runner_rejects_second_live_owner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    claimed = controller.claim_runner_ownership(started["campaign_id"])
+    assert int(claimed["process_id"]) == os.getpid()
+    binding = controller._owner_binding()
+    assert binding is not None
+    foreign = {
+        "process_id": 424242,
+        "executable": str(binding.get("executable_identity") or "python.exe"),
+        "started_at_utc": str(binding.get("process_started_at_utc")),
+        "alive": True,
+    }
+
+    def fake_inspect(pid: int):
+        if int(pid) == 424242:
+            return foreign
+        return current_process_identity() if int(pid) == os.getpid() else None
+
+    monkeypatch.setattr("project_pipeline.autonomy_runtime.campaign.inspect_process", fake_inspect)
+    controller._db.execute(
+        "UPDATE campaign_locks SET process_id = 424242 WHERE lock_name = 'active-campaign'"
+    )
+    controller._db.execute(
+        "UPDATE campaign_owner_bindings SET process_id = 424242 WHERE lock_name = 'active-campaign'"
+    )
+    controller._db.commit()
+    other = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        with pytest.raises(ValueError, match="concurrent campaign runner"):
+            other.claim_runner_ownership(started["campaign_id"])
+    finally:
+        other.close()
+    controller.close()
+
+
+def test_claim_runner_transfers_from_dead_bootstrap_pid(tmp_path: Path):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+        process_id=2147000000,
+    )
+    claimed = controller.claim_runner_ownership(started["campaign_id"])
+    assert int(claimed["process_id"]) == os.getpid()
+    lock = controller._db.execute(
+        "SELECT process_id FROM campaign_locks WHERE lock_name = 'active-campaign'"
+    ).fetchone()
+    assert int(lock["process_id"]) == os.getpid()
+    controller.close()
+
+
+def test_concurrent_start_is_rejected_while_lock_owner_is_alive(tmp_path: Path):
+    first = _controller(tmp_path)
+    first.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    second = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        with pytest.raises(ValueError, match="concurrent campaign runner"):
+            second.start(
+                state_path=tmp_path / "other",
+                evidence_path=tmp_path / "evidence",
+                pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+            )
+    finally:
+        second.close()
+        first.close()
+
+
+def test_heartbeat_rejects_second_runner_under_live_foreign_fence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.campaign.inspect_process",
+        lambda pid: (
+            {
+                "process_id": 424242,
+                "executable": "python.exe",
+                "started_at_utc": "2026-01-01T00:00:00+00:00",
+                "alive": True,
+            }
+            if int(pid) == 424242
+            else None
+        ),
+    )
+    controller._db.execute(
+        "UPDATE campaign_locks SET process_id = 424242 WHERE lock_name = 'active-campaign'"
+    )
+    controller._db.commit()
+    with pytest.raises(ValueError, match="second runner cannot mutate"):
+        controller.heartbeat(started["campaign_id"])
+    controller.close()
+
+
+def test_status_projection_rejects_abbreviated_and_control_chars(tmp_path: Path):
+    findings = validate_status_projection(
+        {
+            "integrated_sha": "9b467c8",
+            "integrated_tree": "36e79ba",
+            "status": "RUNNING",
+            "heartbeat_fresh": True,
+            "runner_owner": {"process_id": 1, "alive": False, "note": "bad\x01pid"},
+            "lock_process_id": 2,
+            "user_action_required": True,
+            "pull_requests": [{"number": 1, "open": True, "merged": True}],
+        }
+    )
+    assert any("abbreviated" in item for item in findings)
+    assert any("ASCII control characters" in item for item in findings)
+    assert any("user_action_required" in item for item in findings)
+    assert any("mismatched lock PID" in item for item in findings)
+    assert any("contradictory PR state" in item for item in findings)
+    assert any("stale heartbeat" in item for item in findings)
+    with pytest.raises(CampaignStatusError):
+        from project_pipeline.autonomy_runtime.campaign_status import write_status_projection
+
+        write_status_projection(tmp_path / "bad.json", {"integrated_sha": "short"})
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    payload = controller.project_status(
+        started["campaign_id"],
+        status_path=tmp_path / "status.json",
+    )
+    assert payload["user_action_required"] is False
+    assert payload["campaign_id"] == started["campaign_id"]
+    assert (tmp_path / "status.json").is_file()
+    controller.close()
+
+
+def test_control_completion_and_missing_completion_cli_semantics():
+    missing = subprocess.run(
+        [sys.executable, "-m", "project_pipeline", "completion", "--root", str(ROOT)],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert missing.returncode != 0
+    assert (
+        command_is_allowlisted(
+            [sys.executable, "-m", "project_pipeline", "completion", "--root", str(ROOT)],
+            repository_root=ROOT,
+        )
+        is False
+    )
+    control = [
+        sys.executable,
+        "-m",
+        "project_pipeline",
+        "control",
+        "completion",
+        "--root",
+        str(ROOT),
+    ]
+    assert command_is_allowlisted(control, repository_root=ROOT) is True
+    completed = subprocess.run(
+        control,
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        check=False,
+        env={**os.environ, "PYTHONPATH": str(ROOT / "src"), "PYTHONUTF8": "1"},
+    )
+    semantics = evaluate_command_semantics(
+        control, exit_code=completed.returncode, stdout=completed.stdout or ""
+    )
+    assert semantics["kind"] == "control.completion"
+    if semantics["result"] != "FAILED":
+        assert semantics["result"] == "PARSED"
+        assert semantics["state"] in {"INCOMPLETE", "COMPLETE", "BLOCKED"}
+    incomplete = evaluate_command_semantics(
+        [
+            sys.executable,
+            "-m",
+            "project_pipeline",
+            "assurance",
+            "completion-gate",
+            "--root",
+            str(ROOT),
+        ],
+        exit_code=0,
+        stdout=json.dumps(
+            {
+                "completion_gate": {
+                    "state": "INCOMPLETE",
+                    "final_complete": False,
+                    "final_completion_gate_satisfied": False,
+                }
+            }
+        ),
+    )
+    assert incomplete["result"] == "FAILED"
+    assert incomplete["state"] == "INCOMPLETE"
 
 
 def test_orchestrate_executes_allowlisted_probe(tmp_path: Path):

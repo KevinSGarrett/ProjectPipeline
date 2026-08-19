@@ -1,0 +1,298 @@
+"""Campaign-aware scheduled recovery probe. Does not embed secrets or mutate elapsed time."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import subprocess
+import time
+from datetime import UTC, datetime
+from pathlib import Path
+
+from project_pipeline.autonomy_runtime.campaign import CampaignController
+from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusError
+from project_pipeline.autonomy_runtime.process_identity import inspect_process
+
+
+def _load_config(path: Path) -> dict:
+    payload = json.loads(path.read_text(encoding="utf-8-sig"))
+    if not isinstance(payload, dict):
+        raise SystemExit("recovery config must be a JSON object")
+    return payload
+
+
+def _pid_file_identity(path: Path) -> dict | None:
+    if not path.is_file():
+        return None
+    raw = path.read_text(encoding="utf-8").strip()
+    if not raw:
+        return None
+    if raw.startswith("{"):
+        payload = json.loads(raw)
+        return payload if isinstance(payload, dict) else None
+    try:
+        return {"process_id": int(raw)}
+    except ValueError:
+        return None
+
+
+def _heartbeat_fresh(campaign: dict, max_age: float) -> bool:
+    last = campaign.get("last_heartbeat_utc")
+    if not last:
+        return False
+    stamp = datetime.fromisoformat(str(last))
+    if stamp.tzinfo is None:
+        stamp = stamp.replace(tzinfo=UTC)
+    return (datetime.now(UTC) - stamp).total_seconds() <= max_age
+
+
+def _healthy(campaign: dict, pid_identity: dict | None, max_age: float) -> bool:
+    if str(campaign.get("status")) not in {"RUNNING", "ATTESTED", "READY_TO_FINALIZE"}:
+        return False
+    if not _heartbeat_fresh(campaign, max_age):
+        return False
+    if pid_identity is None or not pid_identity.get("process_id"):
+        return False
+    live = inspect_process(int(pid_identity["process_id"]))
+    if live is None:
+        return False
+    claimed = int(campaign.get("process_id") or 0)
+    return not (claimed and claimed != int(pid_identity["process_id"]))
+
+
+def _parse_campaign_id(text: str) -> str:
+    try:
+        payload = json.loads(text)
+    except json.JSONDecodeError:
+        payload = None
+    if isinstance(payload, dict) and payload.get("campaign_id"):
+        return str(payload["campaign_id"])
+    marker = '"campaign_id"'
+    index = text.find(marker)
+    if index < 0:
+        return ""
+    fragment = text[index:]
+    try:
+        start = fragment.find(":")
+        quote = fragment.find('"', start)
+        end = fragment.find('"', quote + 1)
+        return fragment[quote + 1 : end]
+    except ValueError:
+        return ""
+
+
+def _run_controller(
+    python: str,
+    script: Path,
+    action: str,
+    database: Path,
+    root: Path,
+    campaign_id: str,
+    heartbeat_seconds: float,
+    extra: list[str] | None = None,
+    *,
+    wait: bool,
+    stdout_path: Path,
+    stderr_path: Path,
+) -> subprocess.Popen[str] | subprocess.CompletedProcess[str]:
+    args = [
+        python,
+        str(script),
+        action,
+        "--database",
+        str(database),
+        "--campaign-id",
+        campaign_id,
+        "--repository-root",
+        str(root),
+        "--heartbeat-seconds",
+        str(heartbeat_seconds),
+    ]
+    if extra:
+        args.extend(extra)
+    env = {**os.environ, "PYTHONPATH": str(root / "src"), "PYTHONUTF8": "1"}
+    stdout_path.parent.mkdir(parents=True, exist_ok=True)
+    if wait:
+        return subprocess.run(
+            args,
+            cwd=str(root),
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            shell=False,
+        )
+    stdout_handle = stdout_path.open("a", encoding="utf-8")
+    stderr_handle = stderr_path.open("a", encoding="utf-8")
+    return subprocess.Popen(
+        args,
+        cwd=str(root),
+        env=env,
+        stdout=stdout_handle,
+        stderr=stderr_handle,
+        text=True,
+        shell=False,
+    )
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Governed campaign recovery probe")
+    parser.add_argument("--config", type=Path, required=True)
+    args = parser.parse_args()
+    config = _load_config(args.config)
+    root = Path(str(config["repository_root"])).resolve()
+    database = Path(str(config["database"]))
+    python = str(config["python_exe"])
+    campaign_id = str(config.get("campaign_id") or "")
+    status_path = Path(str(config["status_path"]))
+    pid_path = Path(str(config["pid_path"]))
+    log_dir = Path(str(config.get("log_directory") or pid_path.parent))
+    max_age = float(config.get("heartbeat_max_age_seconds") or 90)
+    heartbeat_seconds = float(config.get("heartbeat_seconds") or 30)
+    script = root / "scripts" / "run_autonomy_campaign.py"
+    controller = CampaignController(
+        database,
+        repository_root=root,
+        heartbeat_seconds=heartbeat_seconds,
+    )
+    try:
+        if not campaign_id:
+            running = controller.current_running_campaigns()
+            if len(running) > 1:
+                raise SystemExit("multiple RUNNING campaigns present")
+            if running:
+                campaign_id = str(running[0]["campaign_id"])
+        if not campaign_id:
+            status_path.parent.mkdir(parents=True, exist_ok=True)
+            status_path.write_text(
+                json.dumps(
+                    {
+                        "healthy": False,
+                        "action": "no-campaign",
+                        "user_action_required": False,
+                    },
+                    indent=2,
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            return 0
+        campaign = controller.get(campaign_id)
+        expected_sha = str(config.get("expected_sha") or "")
+        expected_tree = str(config.get("expected_tree") or "")
+        if expected_sha and campaign["integrated_sha"] != expected_sha:
+            raise SystemExit("campaign SHA does not match bound expected SHA")
+        if expected_tree and campaign["integrated_tree"] != expected_tree:
+            raise SystemExit("campaign tree does not match bound expected tree")
+        fence = str(config.get("fence") or "")
+        if fence and campaign["fence"] != fence:
+            raise SystemExit("campaign fence does not match bound fence")
+        pid_identity = _pid_file_identity(pid_path)
+        if _healthy(campaign, pid_identity, max_age):
+            controller.project_status(
+                campaign_id,
+                status_path=status_path,
+                task_health={"registered": True, "probe": "healthy"},
+            )
+            print(json.dumps({"action": "healthy", "campaign_id": campaign_id}, sort_keys=True))
+            return 0
+        recovered = _run_controller(
+            python,
+            script,
+            "recover",
+            database,
+            root,
+            campaign_id,
+            heartbeat_seconds,
+            wait=True,
+            stdout_path=log_dir / "campaign.recover.stdout.log",
+            stderr_path=log_dir / "campaign.recover.stderr.log",
+        )
+        assert isinstance(recovered, subprocess.CompletedProcess)
+        (log_dir / "campaign.recover.stdout.log").write_text(
+            recovered.stdout or "", encoding="utf-8"
+        )
+        (log_dir / "campaign.recover.stderr.log").write_text(
+            recovered.stderr or "", encoding="utf-8"
+        )
+        if recovered.returncode != 0:
+            raise SystemExit(recovered.stderr or "recover failed")
+        resume_id = _parse_campaign_id(recovered.stdout or "") or campaign_id
+        extra: list[str] = []
+        if int(config.get("cycles") or 0) > 0:
+            extra.extend(["--cycles", str(int(config["cycles"]))])
+        creation = _run_controller(
+            python,
+            script,
+            "run",
+            database,
+            root,
+            resume_id,
+            heartbeat_seconds,
+            extra,
+            wait=False,
+            stdout_path=log_dir / "campaign.stdout.log",
+            stderr_path=log_dir / "campaign.stderr.log",
+        )
+        assert isinstance(creation, subprocess.Popen)
+        pid_path.write_text(
+            json.dumps(
+                {
+                    "process_id": creation.pid,
+                    "campaign_id": resume_id,
+                    "executable": python,
+                },
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        deadline = time.time() + 15
+        while time.time() < deadline:
+            lock = controller._db.execute(
+                "SELECT process_id FROM campaign_locks WHERE lock_name = 'active-campaign'"
+            ).fetchone()
+            if lock is not None and int(lock["process_id"]) == int(creation.pid):
+                break
+            time.sleep(0.2)
+        try:
+            controller.project_status(
+                resume_id,
+                status_path=status_path,
+                task_health={"registered": True, "probe": "recovered"},
+            )
+        except (CampaignStatusError, KeyError):
+            status_path.parent.mkdir(parents=True, exist_ok=True)
+            status_path.write_text(
+                json.dumps(
+                    {
+                        "action": "recovered",
+                        "campaign_id": resume_id,
+                        "user_action_required": False,
+                        "runner_pid": creation.pid,
+                    },
+                    indent=2,
+                    sort_keys=True,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+        print(
+            json.dumps(
+                {
+                    "action": "recovered",
+                    "campaign_id": resume_id,
+                    "user_action_required": False,
+                },
+                sort_keys=True,
+            )
+        )
+        return 0
+    finally:
+        controller.close()
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

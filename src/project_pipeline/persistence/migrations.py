@@ -348,6 +348,15 @@ def write_migration_catalog(root: Path) -> MigrationCatalog:
                 reversible=True,
                 compatibility_phase="EXPAND",
             ),
+            _record(
+                root,
+                migration_id="PPDB-0023",
+                sequence=23,
+                name="campaign_owner_and_receipt_semantics",
+                depends_on=("PPDB-0022",),
+                reversible=True,
+                compatibility_phase="EXPAND",
+            ),
         )
     )
     write_json(_catalog_path(root), catalog.model_dump(mode="json"))

@@ -1,4 +1,4 @@
-# Launch the autonomous campaign controller in a hidden Windows process.
+# Launch or recover the autonomous campaign controller in a hidden Windows process.
 # Does not fabricate elapsed time. 24/72-hour attestation remains wall-clock only.
 [CmdletBinding()]
 param(
@@ -16,6 +16,10 @@ param(
     [string]$EvidencePath,
     [Parameter(Mandatory = $true)]
     [string]$Pp384Evidence,
+    [string]$CampaignId = "",
+    [string]$ExpectedSha = "",
+    [string]$ExpectedTree = "",
+    [string]$StatusPath = "",
     [double]$HeartbeatSeconds = 30,
     [int]$Cycles = 0,
     [string]$StopFile = "",
@@ -35,10 +39,14 @@ if (-not (Test-Path -LiteralPath $script)) {
 New-Item -ItemType Directory -Force -Path $LogDirectory | Out-Null
 New-Item -ItemType Directory -Force -Path (Split-Path -Parent $Database) | Out-Null
 New-Item -ItemType Directory -Force -Path $StatePath | Out-Null
+if (-not $StatusPath) {
+    $StatusPath = Join-Path -Path $LogDirectory -ChildPath "pp385_campaign_status.json"
+}
 
 $stdout = Join-Path -Path $LogDirectory -ChildPath "campaign.stdout.log"
 $stderr = Join-Path -Path $LogDirectory -ChildPath "campaign.stderr.log"
 $pidFile = Join-Path -Path $LogDirectory -ChildPath "campaign.pid"
+$env:PYTHONPATH = Join-Path -Path $root -ChildPath "src"
 
 $startArgs = @(
     $script,
@@ -51,38 +59,68 @@ $startArgs = @(
     "--heartbeat-seconds", ([string]$HeartbeatSeconds),
     "--service-identity", $ServiceIdentity
 )
+$recoverArgs = $null
+if ($CampaignId) {
+    $recoverArgs = @(
+        $script,
+        "recover",
+        "--database", $Database,
+        "--campaign-id", $CampaignId,
+        "--repository-root", $root,
+        "--heartbeat-seconds", ([string]$HeartbeatSeconds)
+    )
+}
 
 $payload = [ordered]@{
     working_directory = $root
     python_exe = $python
     window_style = "Hidden"
-    argument_list = $startArgs
+    argument_list = $(if ($recoverArgs) { $recoverArgs } else { $startArgs })
     stdout_log = $stdout
     stderr_log = $stderr
     pid_file = $pidFile
+    status_path = $StatusPath
     simulated_elapsed = $false
     service_identity = $ServiceIdentity
+    campaign_id = $CampaignId
+    expected_sha = $ExpectedSha
+    expected_tree = $ExpectedTree
 }
 if ($DryRun) {
     $payload | ConvertTo-Json -Depth 6
     exit 0
 }
 
-$env:PYTHONPATH = Join-Path -Path $root -ChildPath "src"
-$started = Start-Process -FilePath $python -ArgumentList $startArgs -WorkingDirectory $root -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru
-Wait-Process -Id $started.Id -Timeout 120 -ErrorAction SilentlyContinue
-$campaignId = $null
-if (Test-Path -LiteralPath $stdout) {
-    $raw = Get-Content -LiteralPath $stdout -Raw
-    if ($raw -match '"campaign_id"\s*:\s*"([^"]+)"') {
-        $campaignId = $Matches[1]
+function Invoke-CampaignJson {
+    param([string[]]$ArgumentList)
+    $started = Start-Process -FilePath $python -ArgumentList $ArgumentList -WorkingDirectory $root -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru
+    Wait-Process -Id $started.Id -Timeout 180 -ErrorAction SilentlyContinue
+    $raw = ""
+    if (Test-Path -LiteralPath $stdout) {
+        $raw = Get-Content -LiteralPath $stdout -Raw
     }
+    $id = $null
+    if ($raw -match '"campaign_id"\s*:\s*"([^"]+)"') {
+        $id = $Matches[1]
+    }
+    return $id
 }
+
+$resolvedId = $CampaignId
+if ($recoverArgs) {
+    $resolvedId = Invoke-CampaignJson -ArgumentList $recoverArgs
+} else {
+    $resolvedId = Invoke-CampaignJson -ArgumentList $startArgs
+}
+if (-not $resolvedId) {
+    throw "campaign launcher could not read a campaign_id from controller output"
+}
+
 $runArgs = @(
     $script,
     "run",
     "--database", $Database,
-    "--campaign-id", $campaignId,
+    "--campaign-id", $resolvedId,
     "--repository-root", $root,
     "--heartbeat-seconds", ([string]$HeartbeatSeconds)
 )
@@ -93,20 +131,28 @@ if ($StopFile) {
     $runArgs += @("--stop-file", $StopFile)
 }
 $process = Start-Process -FilePath $python -ArgumentList $runArgs -WorkingDirectory $root -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru
-[System.IO.File]::WriteAllText($pidFile, [string]$process.Id)
+$pidPayload = [ordered]@{
+    process_id = $process.Id
+    campaign_id = $resolvedId
+    executable = $python
+}
+$pidPayload | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $pidFile -Encoding utf8
+& $python $script "project-status" --database $Database --campaign-id $resolvedId --repository-root $root --status-path $StatusPath | Out-Null
 [ordered]@{
     pid = $process.Id
     pid_file = $pidFile
     stdout_log = $stdout
     stderr_log = $stderr
     working_directory = $root
-    campaign_id = $campaignId
+    campaign_id = $resolvedId
+    status_path = $StatusPath
+    user_action_required = $false
     stop_command = @(
         $python,
         $script,
         "stop",
         "--database", $Database,
         "--repository-root", $root,
-        "--campaign-id", $campaignId
+        "--campaign-id", $resolvedId
     )
 } | ConvertTo-Json -Depth 6
