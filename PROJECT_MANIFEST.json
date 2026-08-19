@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "e611dd5366d89b05e5b8744b48887b43182644f5afb6893baa44dd8784999665",
+  "aggregate_sha256": "c92ec4dce4ab9768be8a6fbce36c32f351a9f3061d1d2291b9123957e331dfb5",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12047,8 +12047,8 @@
     },
     {
       "path": "src/project_pipeline/assurance/jira_implementation_reconciliation.py",
-      "sha256": "c1265f75f34d56e2803398fedb717a5fa354e8fbdcc7c66a49ad8ebd14414897",
-      "size_bytes": 13355
+      "sha256": "05dbf9233590faafdc008c2c57b415a5bc43f66490e34841bf01b097f7885f9f",
+      "size_bytes": 13284
     },
     {
       "path": "src/project_pipeline/assurance/loop_guard.py",
@@ -12067,8 +12067,8 @@
     },
     {
       "path": "src/project_pipeline/assurance/requirement_reconciliation.py",
-      "sha256": "88a0cdfcc3b989fb08e744c3d1230cde80124a7e9d649cebbc69281db7316ced",
-      "size_bytes": 17435
+      "sha256": "4d2453642f712767212dad5768f459418110afd1db6b6c2f80fa19a2299aab62",
+      "size_bytes": 17437
     },
     {
       "path": "src/project_pipeline/assurance/requirement_truth_ledger.py",
@@ -14506,7 +14506,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T05:35:06.902396+00:00",
+  "generated_at_utc": "2026-08-19T05:43:18.433925+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14515,5 +14515,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25653973
+  "total_bytes": 25653904
 }

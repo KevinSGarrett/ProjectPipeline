@@ -38,6 +38,8 @@ EXTERNAL_MARKERS = (
     "completion gate",
     "final completion",
 )
+
+
 def text_contains_whole_markers(text: str, markers: tuple[str, ...]) -> bool:
     """True only for whole-token markers. 'deliver' must not match 'live'."""
 

@@ -206,11 +206,7 @@ def _evaluate_issue(
     live_wording = contains_external_marker(_text_blob(issue))
     protected = any(item.get("requirement_id") in PROTECTED_REQUIREMENT_IDS for item in linked)
     if not complete_linked:
-        if (
-            projected_impl == "PARTIALLY_IMPLEMENTED"
-            and not live_wording
-            and not protected
-        ):
+        if projected_impl == "PARTIALLY_IMPLEMENTED" and not live_wording and not protected:
             return {
                 **base,
                 "accepted": True,
@@ -296,8 +292,7 @@ def _evaluate_issue(
             return {
                 **base,
                 "reason": (
-                    "live or protected item already projected; "
-                    "lifecycle stays short of DONE"
+                    "live or protected item already projected; lifecycle stays short of DONE"
                 ),
             }
         return {
