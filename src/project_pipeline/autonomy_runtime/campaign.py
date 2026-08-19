@@ -1174,6 +1174,13 @@ class CampaignController:
         return (datetime.now(UTC) - last).total_seconds() <= max_age
 
     def _live_qualification_owner_blocks_recover(self, row: sqlite3.Row | dict[str, Any]) -> bool:
+        """Block recover only for a distinct live child or identity-matched owner.
+
+        A qualification lock that shares a PID with the campaign lock is not an
+        owner when the live process identity does not match the stored binding.
+        That is PID reuse: recover is the governed takeover.
+        """
+
         lock = self._db.execute(
             "SELECT * FROM qualification_locks WHERE lock_name = 'active-qualification'"
         ).fetchone()
@@ -1183,7 +1190,25 @@ class CampaignController:
         if owner_pid <= 0 or owner_pid == os.getpid():
             return False
         live = inspect_process(owner_pid)
-        return live is not None and self._heartbeat_fresh(row)
+        if live is None or not self._heartbeat_fresh(row):
+            return False
+        campaign_lock = self._db.execute(
+            "SELECT * FROM campaign_locks WHERE lock_name = 'active-campaign'"
+        ).fetchone()
+        campaign_pid = 0 if campaign_lock is None else int(campaign_lock["process_id"])
+        if campaign_pid > 0 and owner_pid != campaign_pid:
+            return True
+        binding = self._owner_binding()
+        if not self._binding_complete(binding):
+            return False
+        bound = {
+            "process_id": owner_pid,
+            "executable": None if binding is None else binding.get("executable_identity"),
+            "started_at_utc": None
+            if binding is None
+            else binding.get("process_started_at_utc"),
+        }
+        return identities_match(bound, live)
 
     def _upsert_owner_binding(
         self,

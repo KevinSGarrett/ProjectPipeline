@@ -1103,6 +1103,47 @@ def test_recover_refuses_live_foreign_qualification_owner(
     controller.close()
 
 
+def test_recover_takes_over_reused_shared_qualification_pid(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+        retry_budget=2,
+    )
+    started = controller.admit_24h(started["campaign_id"])
+    reused = {
+        "process_id": 424242,
+        "executable": "other.exe",
+        "started_at_utc": "1999-01-01T00:00:00+00:00",
+        "alive": True,
+    }
+
+    def fake_inspect(pid: int):
+        if int(pid) == 424242:
+            return reused
+        return inspect_process(int(pid))
+
+    monkeypatch.setattr("project_pipeline.autonomy_runtime.campaign.inspect_process", fake_inspect)
+    controller._db.execute(
+        "UPDATE campaign_locks SET process_id = 424242 WHERE lock_name = 'active-campaign'"
+    )
+    controller._db.execute(
+        "UPDATE campaign_owner_bindings SET process_id = 424242 WHERE lock_name = 'active-campaign'"
+    )
+    controller._db.execute(
+        "UPDATE qualification_locks SET process_id = 424242 WHERE lock_name = 'active-qualification'"
+    )
+    controller._db.commit()
+    recovered = controller.recover(started["campaign_id"])
+    assert recovered["campaign_id"] != started["campaign_id"]
+    assert recovered["status"] == "ATTESTED"
+    assert controller.get(started["campaign_id"])["status"] == "DISQUALIFIED"
+    controller.close()
+
+
 def test_campaign_aware_health_requires_identity_not_pid_only():
     from project_pipeline.autonomy_runtime.campaign import evaluate_campaign_aware_health
 

@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 588,
+  "test_count": 589,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -571,6 +571,11 @@
       "callable": "test_recover_refuses_live_foreign_qualification_owner",
       "path": "tests/test_autonomy_campaign.py",
       "test_id": "TEST-CAMP-025"
+    },
+    {
+      "callable": "test_recover_takes_over_reused_shared_qualification_pid",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-028"
     },
     {
       "callable": "test_campaign_aware_health_requires_identity_not_pid_only",
