@@ -9,13 +9,24 @@ from pathlib import Path
 
 import pytest
 
-from project_pipeline.autonomy_runtime.campaign import REQUIRED_PP384_STAGES, CampaignController
+from project_pipeline.autonomy_runtime.campaign import (
+    REQUIRED_PP384_STAGES,
+    CampaignController,
+    inspect_worktree_identity,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
 def _identity() -> dict:
     return {"sha": "a" * 40, "tree": "b" * 40, "dirty": False, "ok": True}
+
+
+def _live_identity() -> dict:
+    identity = inspect_worktree_identity(ROOT)
+    if not identity.get("ok") or identity.get("dirty"):
+        pytest.skip("disposable recovery task requires a clean worktree identity")
+    return identity
 
 
 def _pp384_evidence(path: Path) -> Path:
@@ -119,7 +130,15 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
     assert "autonomy_campaign_recovery_probe.py" in RECOVERY.read_text(encoding="utf-8")
 
 
-def _register(action: str, tmp_path: Path, task_name: str, campaign_id: str = "") -> dict:
+def _register(
+    action: str,
+    tmp_path: Path,
+    task_name: str,
+    campaign_id: str = "",
+    *,
+    expected_sha: str = "a" * 40,
+    expected_tree: str = "b" * 40,
+) -> dict:
     completed = subprocess.run(
         [
             "powershell",
@@ -141,9 +160,9 @@ def _register(action: str, tmp_path: Path, task_name: str, campaign_id: str = ""
             "-CampaignId",
             campaign_id,
             "-ExpectedSha",
-            "a" * 40,
+            expected_sha,
             "-ExpectedTree",
-            "b" * 40,
+            expected_tree,
             "-RepetitionDays",
             "1",
             "-Cycles",
@@ -166,11 +185,12 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
         pytest.skip("Windows scheduled-task integration")
     task_name = f"ProjectPipelineAutonomyCampaign-C13Disp-{uuid.uuid4().hex[:10]}"
     assert task_name != LIVE_TASK
+    identity = _live_identity()
     controller = CampaignController(
         tmp_path / "campaign.sqlite3",
         repository_root=ROOT,
         heartbeat_seconds=0.2,
-        inspect_identity=lambda _root: _identity(),
+        inspect_identity=lambda _root: identity,
         finalize_commands=[],
     )
     started = controller.start(
@@ -191,16 +211,37 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
     )
     controller._db.commit()
     controller.close()
-    planned = _register("plan", tmp_path, task_name, campaign_id)
+    planned = _register(
+        "plan",
+        tmp_path,
+        task_name,
+        campaign_id,
+        expected_sha=str(identity["sha"]),
+        expected_tree=str(identity["tree"]),
+    )
     assert planned["task_name"] == task_name
     assert planned["campaign_id"] == campaign_id
-    assert planned["expected_sha"] == "a" * 40
+    assert planned["expected_sha"] == identity["sha"]
     assert planned["window_style"] == "Hidden"
     spawned = None
     try:
-        installed = _register("install", tmp_path, task_name, campaign_id)
+        installed = _register(
+            "install",
+            tmp_path,
+            task_name,
+            campaign_id,
+            expected_sha=str(identity["sha"]),
+            expected_tree=str(identity["tree"]),
+        )
         assert installed["registered"] is True
-        status = _register("status", tmp_path, task_name, campaign_id)
+        status = _register(
+            "status",
+            tmp_path,
+            task_name,
+            campaign_id,
+            expected_sha=str(identity["sha"]),
+            expected_tree=str(identity["tree"]),
+        )
         assert status["registered"] is True
         assert status["hidden"] is True
         assert status["user_action_required"] is False
@@ -220,11 +261,18 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
         assert payload["action"] == "recovered"
         assert payload["user_action_required"] is False
         if pid_path.is_file():
-            identity = json.loads(pid_path.read_text(encoding="utf-8"))
-            spawned = identity.get("process_id")
+            pid_payload = json.loads(pid_path.read_text(encoding="utf-8"))
+            spawned = pid_payload.get("process_id")
         status_path = tmp_path / "logs" / "pp385_campaign_status.json"
         assert status_path.is_file()
-        after = _register("status", tmp_path, task_name, campaign_id)
+        after = _register(
+            "status",
+            tmp_path,
+            task_name,
+            campaign_id,
+            expected_sha=str(identity["sha"]),
+            expected_tree=str(identity["tree"]),
+        )
         assert after["registered"] is True
     finally:
         if spawned:
@@ -252,7 +300,14 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
                 text=True,
                 check=False,
             )
-        removed = _register("uninstall", tmp_path, task_name, campaign_id)
+        removed = _register(
+            "uninstall",
+            tmp_path,
+            task_name,
+            campaign_id,
+            expected_sha=str(identity["sha"]),
+            expected_tree=str(identity["tree"]),
+        )
         assert removed["registered"] is False
         leftover = subprocess.run(
             [

@@ -113,8 +113,8 @@ def build_status_projection(
     if last_dt is not None and last_dt.tzinfo is None:
         last_dt = last_dt.replace(tzinfo=UTC)
     age = (now - last_dt).total_seconds() if last_dt else None
-    fresh = age is not None and age <= float(heartbeat_max_age_seconds)
     owner = runner_owner or {}
+    fresh = age is not None and age <= float(heartbeat_max_age_seconds) and bool(owner.get("alive"))
     return {
         "schema_version": "1.0.0",
         "generated_at_utc": now.isoformat(),

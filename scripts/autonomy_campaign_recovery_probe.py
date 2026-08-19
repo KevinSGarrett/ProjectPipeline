@@ -12,7 +12,7 @@ from pathlib import Path
 
 from project_pipeline.autonomy_runtime.campaign import CampaignController
 from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusError
-from project_pipeline.autonomy_runtime.process_identity import inspect_process
+from project_pipeline.autonomy_runtime.process_identity import identities_match, inspect_process
 
 
 def _load_config(path: Path) -> dict:
@@ -47,7 +47,12 @@ def _heartbeat_fresh(campaign: dict, max_age: float) -> bool:
     return (datetime.now(UTC) - stamp).total_seconds() <= max_age
 
 
-def _healthy(campaign: dict, pid_identity: dict | None, max_age: float) -> bool:
+def _healthy(
+    campaign: dict,
+    pid_identity: dict | None,
+    max_age: float,
+    binding: dict | None = None,
+) -> bool:
     if str(campaign.get("status")) not in {"RUNNING", "ATTESTED", "READY_TO_FINALIZE"}:
         return False
     if not _heartbeat_fresh(campaign, max_age):
@@ -58,7 +63,18 @@ def _healthy(campaign: dict, pid_identity: dict | None, max_age: float) -> bool:
     if live is None:
         return False
     claimed = int(campaign.get("process_id") or 0)
-    return not (claimed and claimed != int(pid_identity["process_id"]))
+    if claimed and claimed != int(pid_identity["process_id"]):
+        return False
+    owner = binding or {}
+    return identities_match(
+        {
+            "process_id": pid_identity.get("process_id") or campaign.get("process_id"),
+            "executable": owner.get("executable_identity") or pid_identity.get("executable"),
+            "started_at_utc": owner.get("process_started_at_utc")
+            or pid_identity.get("started_at_utc"),
+        },
+        live,
+    )
 
 
 def _parse_campaign_id(text: str) -> str:
@@ -190,7 +206,7 @@ def main() -> int:
         if fence and campaign["fence"] != fence:
             raise SystemExit("campaign fence does not match bound fence")
         pid_identity = _pid_file_identity(pid_path)
-        if _healthy(campaign, pid_identity, max_age):
+        if _healthy(campaign, pid_identity, max_age, controller._owner_binding()):
             controller.project_status(
                 campaign_id,
                 status_path=status_path,

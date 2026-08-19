@@ -25,7 +25,10 @@ from project_pipeline.autonomy_runtime.command_execution import (
     evaluate_command_semantics,
     execute_allowlisted_command,
 )
-from project_pipeline.autonomy_runtime.process_identity import current_process_identity
+from project_pipeline.autonomy_runtime.process_identity import (
+    current_process_identity,
+    inspect_process,
+)
 from project_pipeline.autonomy_runtime.qualification import QualificationStore
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -496,9 +499,7 @@ def test_production_defaults_incomplete_cannot_finalize(
             stdout = json.dumps({"schema_version": "1.0.0", "ok": True, "errors": []})
         from project_pipeline.autonomy_runtime.command_execution import evaluate_command_semantics
 
-        semantics = evaluate_command_semantics(
-            argv, exit_code=0 if kind != "assurance.completion-gate" else 1, stdout=stdout
-        )
+        semantics = evaluate_command_semantics(argv, exit_code=0, stdout=stdout)
         result = "FAILED" if semantics["result"] == "FAILED" else "PASSED"
         digest = hashlib.sha256(json.dumps(argv, sort_keys=True).encode()).hexdigest()
         return {
@@ -510,7 +511,7 @@ def test_production_defaults_incomplete_cannot_finalize(
             "integrated_tree": "b" * 40,
             "started_at_utc": datetime.now(UTC).isoformat(),
             "ended_at_utc": datetime.now(UTC).isoformat(),
-            "exit_code": 0 if result == "PASSED" else 1,
+            "exit_code": 0,
             "stdout_sha256": "b" * 64,
             "stderr_sha256": "c" * 64,
             "stdout_tail": stdout,
@@ -543,6 +544,10 @@ def test_production_defaults_incomplete_cannot_finalize(
     kinds = [command_kind(item["command"]) for item in finalized["finalization_receipts"]]
     assert kinds[-1] == "assurance.completion-gate"
     assert "control.completion" in kinds
+    last = finalized["finalization_receipts"][-1]
+    assert last["exit_code"] == 0
+    assert last["result"] == "FAILED"
+    assert last["semantic_state"] != "COMPLETE"
     controller.close()
 
 
@@ -618,6 +623,98 @@ def test_claim_runner_rejects_second_live_owner(tmp_path: Path, monkeypatch: pyt
     controller.close()
 
 
+def test_claim_runner_rejects_reused_pid_and_recover_takes_over(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    reused = {
+        "process_id": 424242,
+        "executable": "other.exe",
+        "started_at_utc": "1999-01-01T00:00:00+00:00",
+        "alive": True,
+    }
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.campaign.inspect_process",
+        lambda pid: reused if int(pid) == 424242 else inspect_process(int(pid)),
+    )
+    controller._db.execute(
+        "UPDATE campaign_locks SET process_id = 424242 WHERE lock_name = 'active-campaign'"
+    )
+    controller._db.commit()
+    other = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        with pytest.raises(ValueError, match="PID was reused"):
+            other.claim_runner_ownership(started["campaign_id"])
+        recovered = other.recover(started["campaign_id"])
+        assert recovered["campaign_id"] == started["campaign_id"]
+        assert int(recovered["process_id"]) == os.getpid()
+    finally:
+        other.close()
+        controller.close()
+
+
+def test_identities_match_fails_closed_without_live_executable():
+    from project_pipeline.autonomy_runtime.process_identity import identities_match
+
+    assert (
+        identities_match(
+            {
+                "process_id": 8,
+                "executable": "C:\\Python\\python.exe",
+                "started_at_utc": "2026-01-01T00:00:00+00:00",
+            },
+            {"process_id": 8, "executable": "", "started_at_utc": "2026-01-01T00:00:00+00:00"},
+        )
+        is False
+    )
+
+
+def test_recovery_probe_rejects_reused_pid_as_unhealthy(monkeypatch: pytest.MonkeyPatch):
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location(
+        "autonomy_campaign_recovery_probe",
+        ROOT / "scripts" / "autonomy_campaign_recovery_probe.py",
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    monkeypatch.setattr(
+        module,
+        "inspect_process",
+        lambda pid: {
+            "process_id": int(pid),
+            "executable": "other.exe",
+            "started_at_utc": "1999-01-01T00:00:00+00:00",
+            "alive": True,
+        },
+    )
+    campaign = {
+        "status": "RUNNING",
+        "process_id": 424242,
+        "last_heartbeat_utc": datetime.now(UTC).isoformat(),
+    }
+    pid_identity = {
+        "process_id": 424242,
+        "executable": "python.exe",
+        "started_at_utc": "2026-01-01T00:00:00+00:00",
+    }
+    binding = {
+        "executable_identity": "python.exe",
+        "process_started_at_utc": "2026-01-01T00:00:00+00:00",
+    }
+    assert module._healthy(campaign, pid_identity, 90.0, binding) is False
+
+
 def test_claim_runner_transfers_from_dead_bootstrap_pid(tmp_path: Path):
     controller = _controller(tmp_path)
     started = controller.start(
@@ -668,13 +765,15 @@ def test_heartbeat_rejects_second_runner_under_live_foreign_fence(
         evidence_path=tmp_path / "evidence",
         pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
     )
+    binding = controller._owner_binding()
+    assert binding is not None
     monkeypatch.setattr(
         "project_pipeline.autonomy_runtime.campaign.inspect_process",
         lambda pid: (
             {
                 "process_id": 424242,
-                "executable": "python.exe",
-                "started_at_utc": "2026-01-01T00:00:00+00:00",
+                "executable": str(binding.get("executable_identity") or "python.exe"),
+                "started_at_utc": str(binding.get("process_started_at_utc")),
                 "alive": True,
             }
             if int(pid) == 424242

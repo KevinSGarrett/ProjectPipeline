@@ -46,6 +46,8 @@ def identities_match(bound: dict[str, Any] | None, live: dict[str, Any] | None) 
         return False
     bound_exe = str(bound.get("executable") or "").casefold()
     live_exe = str(live.get("executable") or "").casefold()
+    if bound_exe and not live_exe:
+        return False
     if (
         bound_exe
         and live_exe

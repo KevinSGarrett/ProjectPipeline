@@ -409,19 +409,20 @@ class CampaignController:
         if lock is not None:
             live = inspect_process(int(lock["process_id"]))
             binding = self._owner_binding()
-            if live is not None and identities_match(
-                {
-                    "process_id": lock["process_id"],
-                    "executable": None if binding is None else binding.get("executable_identity"),
-                    "started_at_utc": None
-                    if binding is None
-                    else binding.get("process_started_at_utc"),
-                },
-                live,
-            ):
+            bound = {
+                "process_id": lock["process_id"],
+                "executable": None if binding is None else binding.get("executable_identity"),
+                "started_at_utc": None
+                if binding is None
+                else binding.get("process_started_at_utc"),
+            }
+            if live is not None and identities_match(bound, live):
                 raise ValueError("concurrent campaign runner is already active")
             if live is not None and binding is None:
                 raise ValueError("concurrent campaign runner is already active")
+            # Live PID with a mismatched binding is PID reuse: this recover path
+            # is the governed takeover. claim_runner_ownership refuses that case.
+        self._assert_identity(row)
         if str(row["stage"]) in TIMED_STAGES:
             run_id = str(row["qualification_run_id"] or "")
             if run_id:
@@ -557,6 +558,7 @@ class CampaignController:
         row = self._require(campaign_id)
         if str(row["stage"]) != "RELEASE" or str(row["status"]) != "READY_TO_FINALIZE":
             raise ValueError("finalize requires an attested 72-hour campaign ready for release")
+        self._assert_identity(row)
         explicit = commands is not None or self._finalize_commands is not None
         planned = commands or self._finalize_commands or self._default_finalize_commands(row)
         receipts = []
@@ -859,16 +861,24 @@ class CampaignController:
         runner = None
         if lock is not None:
             live = inspect_process(int(lock["process_id"]))
-            runner = live or {
-                "process_id": int(lock["process_id"]),
-                "alive": False,
+            bound = {
+                "process_id": lock["process_id"],
                 "executable": None if binding is None else binding.get("executable_identity"),
                 "started_at_utc": None
                 if binding is None
                 else binding.get("process_started_at_utc"),
             }
-            if live is not None:
+            matched = live is not None and identities_match(bound, live)
+            runner = (live if matched else None) or {
+                "process_id": int(lock["process_id"]),
+                "alive": False,
+                "executable": bound["executable"],
+                "started_at_utc": bound["started_at_utc"],
+                "identity_match": False,
+            }
+            if matched:
                 runner["alive"] = True
+                runner["identity_match"] = True
         payload = build_status_projection(
             campaign=row,
             runner_owner=runner,
@@ -989,13 +999,24 @@ class CampaignController:
         ):
             self._disqualify(str(row["campaign_id"]), "split-brain-lock")
             raise ValueError("campaign lock does not match the campaign fence")
+        binding = self._owner_binding()
+        bound = {
+            "process_id": lock["process_id"],
+            "executable": None if binding is None else binding.get("executable_identity"),
+            "started_at_utc": None if binding is None else binding.get("process_started_at_utc"),
+        }
+        current = current_process_identity(service_identity=dict(row).get("service_identity"))
         if int(lock["process_id"]) == os.getpid():
+            if binding is not None and not identities_match(bound, current):
+                raise ValueError("stale campaign owner requires recover")
             return
         live = inspect_process(int(lock["process_id"]))
         if live is None:
             raise ValueError("stale campaign owner requires recover")
-        if require_current_process:
+        if identities_match(bound, live) and require_current_process:
             raise ValueError("second runner cannot mutate under the first runner fence")
+        if require_current_process:
+            raise ValueError("stale campaign owner requires recover")
 
     def _append_event(
         self,
