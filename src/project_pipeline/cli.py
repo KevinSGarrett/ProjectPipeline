@@ -184,6 +184,11 @@ from project_pipeline.orchestration.simulation import (
 from project_pipeline.persistence import PersistenceError, SQLiteStateStore
 from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 from project_pipeline.quality import run_quality, write_quality_report
+from project_pipeline.release_hardening import (
+    build_continuation_package,
+    build_release_candidate,
+    execute_local_post_deployment,
+)
 from project_pipeline.repository_map import write_repository_map
 from project_pipeline.requirement_views import write_requirement_views
 from project_pipeline.requirements import (
@@ -207,6 +212,7 @@ from project_pipeline.resilience import (
 from project_pipeline.resilience.aws import aws_safety_plan
 from project_pipeline.resilience.backup import build_integrity_manifest
 from project_pipeline.resilience.restore import RestoreIntentStore, RestoreTargetPolicy
+from project_pipeline.resilience.wip_preserve import preserve_uncommitted_work
 from project_pipeline.runtime import run_bootstrap, run_foundation_smoke
 from project_pipeline.scheduler import (
     DynamicLaneScheduler,
@@ -363,6 +369,17 @@ def build_parser() -> argparse.ArgumentParser:
     quality.add_argument("--strict-tools", action="store_true")
     quality.add_argument("--coverage", action="store_true")
     quality.add_argument("--json-output", type=Path)
+
+    release_hardening = commands.add_parser(
+        "release-hardening",
+        help="Build release-candidate identity, continuation packages, and post-deploy checks",
+    )
+    release_hardening.add_argument("action", choices=("candidate", "continuation", "post-deploy"))
+    release_hardening.add_argument("--root", type=_root, default=Path.cwd())
+    release_hardening.add_argument("--environment", default="local-worktree")
+    release_hardening.add_argument("--live-target", action="store_true")
+    release_hardening.add_argument("--evidence-id", action="append", default=[])
+    release_hardening.add_argument("--json-output", type=Path)
 
     validate = commands.add_parser("validate", help="Run repository-contract validation")
     validate.add_argument("--root", type=_root, default=Path.cwd())
@@ -995,6 +1012,7 @@ def build_parser() -> argparse.ArgumentParser:
             "restore-verify",
             "restore-reconcile",
             "aws-plan",
+            "preserve-wip",
         ),
     )
     resilience.add_argument("--root", type=_root, default=Path.cwd())
@@ -1010,6 +1028,7 @@ def build_parser() -> argparse.ArgumentParser:
     resilience.add_argument("--manifest", type=Path)
     resilience.add_argument("--capability", action="append", default=[])
     resilience.add_argument("--json-output", type=Path)
+    resilience.add_argument("--output", type=Path)
     resilience.add_argument("--apply", action="store_true")
     resilience.add_argument("--approve", action="store_true")
     _add_configuration_arguments(resilience)
@@ -2896,6 +2915,27 @@ def _run_restore_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]
         store.close()
 
 
+def _run_release_hardening_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    if args.action == "candidate":
+        candidate = build_release_candidate(args.root)
+        return {"release_candidate": candidate.model_dump(mode="json")}, 0
+    if args.action == "continuation":
+        package = build_continuation_package(args.root)
+        return {"continuation_package": package}, 0
+    observation, decision = execute_local_post_deployment(
+        args.root,
+        target_environment=str(args.environment),
+        live_target=bool(args.live_target),
+        evidence_ids=tuple(str(item) for item in args.evidence_id),
+    )
+    return {
+        "post_deployment": {
+            "observation": observation.model_dump(mode="json"),
+            "decision": decision.model_dump(mode="json"),
+        }
+    }, 0 if decision.state != "FAIL" else 1
+
+
 def _run_resilience_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     if args.action == "simulate":
         result = simulate_resilience_scenario(args.root, str(_require_argument(args, "scenario")))
@@ -2943,6 +2983,12 @@ def _run_resilience_command(args: argparse.Namespace) -> tuple[dict[str, Any], i
         return _run_restore_command(args)
     if args.action == "aws-plan":
         return {"aws_plan": aws_safety_plan(args.root)}, 0
+    if args.action == "preserve-wip":
+        destination = Path(_require_argument(args, "output"))
+        if args.apply and not args.approve:
+            raise ConfigurationError("resilience preserve-wip --apply requires --approve")
+        payload = preserve_uncommitted_work(args.root, destination, apply=bool(args.apply))
+        return {"wip_preserve": payload}, 0
     if args.action == "status":
         database = _resilience_database(args)
         with ResilienceStore(database, args.root) as store:
@@ -3135,6 +3181,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 write_quality_report(report, args.json_output)
             _write_json_output(report.as_dict(), None)
             return 0 if report.ok else 1
+        if args.command == "release-hardening":
+            result, code = _run_release_hardening_command(args)
+            _write_json_output(result, args.json_output)
+            return code
         if args.command == "validate":
             report = RepositoryValidator(args.root).validate()
             print(report.render())

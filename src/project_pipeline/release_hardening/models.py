@@ -56,12 +56,17 @@ class ReleaseCandidateSnapshot(ContractModel):
     project_id: Literal["PROJECT-PIPELINE"] = "PROJECT-PIPELINE"
     project_version: str
     candidate_label: str
+    source_sha: str = Field(pattern=r"^[a-f0-9]{40}$")
+    source_tree: str = Field(pattern=r"^[a-f0-9]{40}$")
     input_fingerprint_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     dependency_environment_fingerprint: str = Field(pattern=r"^[a-f0-9]{64}$")
+    project_manifest_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    file_manifest_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
     resolver_lock_state: str
     migration_ids: tuple[str, ...]
     configuration_paths: tuple[str, ...]
     packaging_target_states: dict[str, str]
+    evidence_ids: tuple[str, ...] = ()
     completion_gate_state: str
     readiness: Literal["LOCAL_HARDENING_CANDIDATE_NOT_PRODUCTION_READY"] = (
         "LOCAL_HARDENING_CANDIDATE_NOT_PRODUCTION_READY"

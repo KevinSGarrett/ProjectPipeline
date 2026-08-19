@@ -132,10 +132,19 @@ def test_release_input_fingerprint_is_deterministic_and_ignores_evidence_outputs
 
 def test_release_candidate_is_truthful_not_production_ready():
     candidate = build_release_candidate(ROOT)
+    head = subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True).strip()
+    tree = subprocess.check_output(
+        ["git", "-C", str(ROOT), "rev-parse", "HEAD^{tree}"], text=True
+    ).strip()
     assert candidate.readiness == "LOCAL_HARDENING_CANDIDATE_NOT_PRODUCTION_READY"
     assert candidate.external_live_qualification_claimed is False
     assert candidate.completion_gate_state != "COMPLETE"
     assert candidate.blockers
+    assert candidate.source_sha == head.lower()
+    assert candidate.source_tree == tree.lower()
+    assert len(candidate.source_sha) == 40
+    assert len(candidate.project_manifest_sha256) == 64
+    assert len(candidate.file_manifest_sha256) == 64
 
 
 def test_hardening_report_carries_resolver_and_target_blockers():
