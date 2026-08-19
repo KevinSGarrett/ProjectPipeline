@@ -150,6 +150,7 @@ def record_observation(
             acceptance_scope_fingerprint,
             result.value,
             recorded.isoformat(),
+            "|".join(str(item) for item in command_identity) or "command",
         ),
         evidence_id=evidence_id,
         test_ids=tuple(test_ids),

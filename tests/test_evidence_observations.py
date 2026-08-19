@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import threading
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from project_pipeline.assurance.observation import (
@@ -115,8 +115,16 @@ def test_crash_recovery_replays_journal(tmp_path: Path) -> None:
 
 def test_retention_keeps_current_and_drops_superseded(tmp_path: Path) -> None:
     store = EvidenceObservationStore.open(tmp_path)
-    first = _record(store, "EVID-000010", "e" * 64)
-    second = _record(store, "EVID-000010", "e" * 64, command_identity=("pytest", "retry"))
+    first_at = datetime(2026, 1, 1, tzinfo=UTC)
+    first = _record(store, "EVID-000010", "e" * 64, now=first_at)
+    second = _record(
+        store,
+        "EVID-000010",
+        "e" * 64,
+        command_identity=("pytest", "retry"),
+        now=first_at + timedelta(seconds=1),
+    )
+    assert second.observation_id != first.observation_id
     assert second.supersedes == first.observation_id
     removed = store.retain(keep_current=True, max_age_seconds=0)
     assert removed == 1
