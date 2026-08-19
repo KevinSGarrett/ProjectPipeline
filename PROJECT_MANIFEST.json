@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "9d5b2fc0cabfff818a9371725c5396fbb788cda07225a2e770d1cb8ad4de0c9f",
+  "aggregate_sha256": "36ebf5364894176594c9018016b1ad89c86645027cfe91d4ac4531b601b7adde",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12537,7 +12537,7 @@
     },
     {
       "path": "src/project_pipeline/domain/__init__.py",
-      "sha256": "6abeadbc9721ff396da15d6916cedcfb276888ef42206e1c2cbd391467267fcf",
+      "sha256": "01a97747ebcfd2b2fb57c872a3d427d3f5a0a0e60d307071e2918c4ab1e58dfb",
       "size_bytes": 14338
     },
     {
@@ -14576,7 +14576,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T07:02:44.894865+00:00",
+  "generated_at_utc": "2026-08-19T07:14:09.582613+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
