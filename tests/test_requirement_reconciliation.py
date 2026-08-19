@@ -50,7 +50,7 @@ def test_catalog_callable_present_accepts_unittest_class_methods() -> None:
     source = (
         "class RepositoryContractTests:\n"
         "    def test_repository_contract_has_no_errors(self) -> None:\n"
-        "        assert True\n"
+        "        assert 1 == 1\n"
     )
     assert catalog_callable_present(
         source, "RepositoryContractTests.test_repository_contract_has_no_errors"
