@@ -13,6 +13,7 @@ from project_pipeline.autonomy_runtime.campaign import (
     REQUIRED_PP384_STAGES,
     CampaignController,
     inspect_worktree_identity,
+    observe_windows_scheduled_task,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -45,21 +46,6 @@ LAUNCHER = ROOT / "scripts" / "start_autonomy_campaign_hidden.ps1"
 RECOVERY = ROOT / "scripts" / "register_autonomy_campaign_recovery.ps1"
 PROBE = ROOT / "scripts" / "autonomy_campaign_recovery_probe.py"
 LIVE_TASK = "ProjectPipelineAutonomyCampaign"
-
-
-def _scheduled_task_name(task_name: str) -> str:
-    completed = subprocess.run(
-        [
-            "powershell",
-            "-NoProfile",
-            "-Command",
-            f"(Get-ScheduledTask -TaskName '{task_name}' -ErrorAction SilentlyContinue).TaskName",
-        ],
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    return (completed.stdout or "").strip()
 
 
 def test_hidden_campaign_launcher_declares_windows_contract():
@@ -200,7 +186,7 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
         pytest.skip("Windows scheduled-task integration")
     task_name = f"ProjectPipelineAutonomyCampaign-C13Disp-{uuid.uuid4().hex[:10]}"
     assert task_name != LIVE_TASK
-    live_before = _scheduled_task_name(LIVE_TASK)
+    live_before = observe_windows_scheduled_task(LIVE_TASK)
     identity = _live_identity()
     controller = CampaignController(
         tmp_path / "campaign.sqlite3",
@@ -337,6 +323,7 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
             check=False,
         )
         assert leftover.stdout.strip() == ""
-        live_after = _scheduled_task_name(LIVE_TASK)
-        assert live_after == live_before
-        assert task_name not in live_after
+        live_after = observe_windows_scheduled_task(LIVE_TASK)
+        assert live_after["present"] == live_before["present"]
+        assert live_after["user_action_required"] is False
+        assert live_after["task_name"] == LIVE_TASK

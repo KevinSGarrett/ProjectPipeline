@@ -15,6 +15,7 @@ from project_pipeline.autonomy_runtime.campaign import (
     REQUIRED_PP384_STAGES,
     CampaignController,
     evaluate_pp384_admission,
+    observe_windows_scheduled_task,
 )
 from project_pipeline.autonomy_runtime.campaign_status import (
     CampaignStatusError,
@@ -1235,3 +1236,21 @@ def test_campaign_aware_health_treats_stale_lock_and_live_child_as_one_owner():
     )
     assert mismatched["healthy"] is False
     assert "sha_mismatch" in mismatched["reasons"]
+
+
+def test_missing_live_scheduled_task_is_not_user_action() -> None:
+    class _Result:
+        stdout = ""
+        stderr = ""
+        returncode = 0
+
+    def _runner(*_args: object, **_kwargs: object) -> _Result:
+        return _Result()
+
+    payload = observe_windows_scheduled_task(
+        "ProjectPipelineAutonomyCampaign",
+        runner=_runner,
+    )
+    assert payload["present"] is False
+    assert payload["user_action_required"] is False
+    assert payload["next_action"] == "defer_register_until_release_candidate"
