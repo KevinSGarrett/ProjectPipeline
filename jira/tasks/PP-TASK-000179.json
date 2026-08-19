@@ -46,7 +46,7 @@
     "deploy/windows/",
     "tests/packaging/test_windows_service.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "backlog",

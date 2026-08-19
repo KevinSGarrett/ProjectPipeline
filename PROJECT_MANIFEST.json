@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "564306f230e94e0faa82fdee21d69e5832e66ea6a700b354ed4d5955e632b5d4",
+  "aggregate_sha256": "1fc544ad6e29dd50c3a607af7eb8a9707e91f3988a7bcd894ba39ed677d02b2f",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2933,
+  "file_count": 2936,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -1559,6 +1559,11 @@
       "path": "docs/REQUIREMENT_CATALOG.md",
       "sha256": "4b1c01e0ef4570e745054d1a40434907019bf0ea3efaa0e5861a9d91a97437a1",
       "size_bytes": 4092
+    },
+    {
+      "path": "docs/resilience/gaps.md",
+      "sha256": "9652265e3bb9cc55dcd275ca8f33e880b41046fc75d90cbdd3b3a22f29ed3a92",
+      "size_bytes": 562
     },
     {
       "path": "docs/scheduling/dynamic_lane_scheduler.md",
@@ -4087,12 +4092,12 @@
     },
     {
       "path": "evidence/EVIDENCE_LEDGER.jsonl",
-      "sha256": "c8fe5c656dbe5cf109bba3a9fa1feb0e35273a90bc9ab8fb9c243820cb69f283",
-      "size_bytes": 157799
+      "sha256": "5a057a15fe9c10a9b3fc2e6caeb59db6568eae15bf81a67e403d6a92753fb703",
+      "size_bytes": 159503
     },
     {
       "path": "evidence/EVIDENCE_SUMMARY.json",
-      "sha256": "a035ba8ef3c6a206c847f97eaf2a9224c680660bbf26065054e1f523da2c182c",
+      "sha256": "e3a35da4a61d39cd8231e6a816f4fad28e6ac77229e9acea1058d8a7780d9ba0",
       "size_bytes": 289
     },
     {
@@ -5452,13 +5457,13 @@
     },
     {
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "39067cfed47616f1dcbc93db8b9ce87d4ecd0f45cae86f94c37c254f5855308c",
-      "size_bytes": 1673082
+      "sha256": "edf1d28d1b35d99a4a78e202d070a48d4f60b70bcfb3d333e56f9c29bee57c02",
+      "size_bytes": 1673108
     },
     {
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "0677bcf200fa4848ba087f889ab2e0a97738fea89639a1893c55e93dbea1ad3f",
-      "size_bytes": 1981389
+      "sha256": "f6c6f9a26e4a6d6c34a6072ee39df276cbc78bd45505ed6020e6e6704cf07baa",
+      "size_bytes": 1981415
     },
     {
       "path": "jira/README.md",
@@ -5487,7 +5492,7 @@
     },
     {
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "0aa668957a00b949fa0cda30b6e74ec6b5054d84403ceebdfd18848e0ddb3418",
+      "sha256": "5d32f64f078e88e1726b6b99ef7e579d12ba710ebf254f880d4f25555dc402c1",
       "size_bytes": 2013
     },
     {
@@ -7852,8 +7857,8 @@
     },
     {
       "path": "jira/stories/PP-STORY-000104.json",
-      "sha256": "701b8ae48e5e116ba6971d908c43dcc3878cfb65864addc0956740bd69f12a92",
-      "size_bytes": 4930
+      "sha256": "757deb6e135b0033f313c29ba1ce8387b1582e10c60138bca62cb62b7b8292e4",
+      "size_bytes": 4936
     },
     {
       "path": "jira/stories/PP-STORY-000105.json",
@@ -7867,8 +7872,8 @@
     },
     {
       "path": "jira/stories/PP-STORY-000107.json",
-      "sha256": "7a047d7e1f1b1fbd9956327973b77054e9c5e0afb874d0917bf50eeeea6d7082",
-      "size_bytes": 4523
+      "sha256": "84c4bcd1752e196cf3aaee687f24d20882193606e0ffb0ad30503049e5d913af",
+      "size_bytes": 4529
     },
     {
       "path": "jira/stories/PP-STORY-000108.json",
@@ -7877,8 +7882,8 @@
     },
     {
       "path": "jira/stories/PP-STORY-000109.json",
-      "sha256": "c25da2cbc4ca973cf9b9ed71e004fbaa2bcdcf4b0fc46ec976b94c147e259786",
-      "size_bytes": 4145
+      "sha256": "82d378f0bf6d42d19345aef381551632acaea3903194184e841de48a6c819ef6",
+      "size_bytes": 4141
     },
     {
       "path": "jira/stories/PP-STORY-000110.json",
@@ -8347,8 +8352,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000179.json",
-      "sha256": "3c7a29c4826aa8cefbcc0566b083e46f1188bd83577423d5ca2003926594e4c8",
-      "size_bytes": 4123
+      "sha256": "5a4cbbd8432f404df91bbc43236a782fb8ced9ea4a76d26f6fd9d5f59838a549",
+      "size_bytes": 4132
     },
     {
       "path": "jira/tasks/PP-TASK-000180.json",
@@ -9432,7 +9437,7 @@
     },
     {
       "path": "plans/01_requirements/REQUIREMENT_CATALOG_STATUS.md",
-      "sha256": "5b17412ebc725932aa51202f8a29cc331e17c595b25a394d3ad76a32519e1d73",
+      "sha256": "2fe7ce2a94c85a2680bf8aaf13272c89243d7225cc4d6f5c3b0dac3dc5bbd440",
       "size_bytes": 799
     },
     {
@@ -9937,12 +9942,12 @@
     },
     {
       "path": "plans/_traceability/coverage_report.json",
-      "sha256": "0618937de01a07842de38fd71abd31fb4444c9ae6603c558f0969e487ddcc639",
+      "sha256": "e318679fc3c04ad9f6f6ea7c005b86279a838d95cc4a42436c4b357af0a21acd",
       "size_bytes": 2472
     },
     {
       "path": "plans/_traceability/coverage_report.md",
-      "sha256": "51998edc8a19f170ba934a1409197fc2935c7fd1d885484417a6fd058e30a3bd",
+      "sha256": "ab81787c15eebcae1effa34da845bc4006e55bc1f04be0acdd1321e132abc0d1",
       "size_bytes": 752
     },
     {
@@ -9952,13 +9957,13 @@
     },
     {
       "path": "plans/_traceability/requirement_registry_summary.json",
-      "sha256": "a2e3a9a8b4b9d88a248ce5ea59ddf834c05bcf7cc0ed845d2cfa73f144be9a64",
+      "sha256": "0049d9d348f22b3f8dd4faa87fb1c2d5b78f1c462f5b413ffc97434f5e713cf4",
       "size_bytes": 910
     },
     {
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "e1a8a9442b995486b15a595eaa17f03d7a66888adbe7d3c8539006cd826a58c5",
-      "size_bytes": 714927
+      "sha256": "25429504ae3f906f3ef0ef094b1d6e6d35942954fdd89809b06045bb2238fd18",
+      "size_bytes": 715214
     },
     {
       "path": "plans/_traceability/requirements_by_domain.json",
@@ -9967,8 +9972,8 @@
     },
     {
       "path": "plans/_traceability/requirements_by_id.json",
-      "sha256": "c467b2a459f313092a2940746f46f1b571a4a72795b9af8a97d2a3d7f3cea8c4",
-      "size_bytes": 869387
+      "sha256": "903f5b4c1589e20bef661b7bebd6c0eef548d76b1223b96e343fcc5a048e2e84",
+      "size_bytes": 869796
     },
     {
       "path": "plans/_traceability/requirements_by_source.json",
@@ -9982,8 +9987,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_evidence.jsonl",
-      "sha256": "c9449ea19ca643f4584cbfce41b370f1de3447571b8d1aefce9f4d707403bfba",
-      "size_bytes": 37698
+      "sha256": "4622beb3c1c0dca256e703064fe8988ccbcbb594adb2bcc5704e0866c99412f4",
+      "size_bytes": 37815
     },
     {
       "path": "plans/_traceability/requirements_to_evolution.jsonl",
@@ -9992,8 +9997,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_implementation.jsonl",
-      "sha256": "86d858ae88b6e54e21446586e32ba120f9cf3f27f65c46902bb1ec587c539393",
-      "size_bytes": 90158
+      "sha256": "533a7799a0f13686c67980ed447c9e5e11f96731211897d4858b365782eb4790",
+      "size_bytes": 90375
     },
     {
       "path": "plans/_traceability/requirements_to_jira.jsonl",
@@ -10012,8 +10017,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_tests.jsonl",
-      "sha256": "0829764f2f6a92a2c26a812b56afc8d1083152e974418b760d1c880c50da29f3",
-      "size_bytes": 52255
+      "sha256": "7cd580362c7943713d17b463193b184bef0f44a0eb3d174525f59b762ab15b1d",
+      "size_bytes": 52474
     },
     {
       "path": "plans/_traceability/source_section_coverage.md",
@@ -12292,8 +12297,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "acd52eefb49eb3e0e4e7d8af0a41b4130462f5f7b132941c7bac4e23791516bf",
-      "size_bytes": 167753
+      "sha256": "0317bac5610ab8cf3b87f423533eead265d97d9f8c2438dcadeff05473870314",
+      "size_bytes": 169823
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -13196,6 +13201,11 @@
       "size_bytes": 6389
     },
     {
+      "path": "src/project_pipeline/resilience/gaps.py",
+      "sha256": "bffba5e5714d1f27ba2d3c3f7f7bad872ac6db524b3f578606cfaebf568cb677",
+      "size_bytes": 2818
+    },
+    {
       "path": "src/project_pipeline/resilience/local_models.py",
       "sha256": "bbb4dfcb7d0208797c58de5ae528b9ff4835ce5a7cde677d81bd4b9dcb2988b8",
       "size_bytes": 3625
@@ -13227,8 +13237,8 @@
     },
     {
       "path": "src/project_pipeline/resilience/wip_preserve.py",
-      "sha256": "03e5c65aa4d43b430ebd075ac61277f873c529ca1fb6dbdf7221f5f85ca49961",
-      "size_bytes": 4816
+      "sha256": "ed32cf5a6922c95973e3b07e866dabdcbb7187a78f3a9c79bffe1ce1f2c2b6a5",
+      "size_bytes": 7671
     },
     {
       "path": "src/project_pipeline/runtime/__init__.py",
@@ -13847,8 +13857,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "e1b81db58c60f8f12c63decfba38e137c45b52372ad2006e6b718b1e0c4db187",
-      "size_bytes": 114652
+      "sha256": "6b76c37128097f061bbb2ed51b3575c4e08af53a3e6b5db45d0cb57a1a413175",
+      "size_bytes": 115505
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -14406,6 +14416,11 @@
       "size_bytes": 2338
     },
     {
+      "path": "tests/test_resilience_gaps.py",
+      "sha256": "9cd4b274bba40126d8df2cbbbc31d8a65ac45e77ed93ca50cd6419724b9a70ec",
+      "size_bytes": 6497
+    },
+    {
       "path": "tests/test_resilience_local_models.py",
       "sha256": "c328b34eaee6071656e6e2478e9dbf7ced732a61208626deaf1c41993b44aa90",
       "size_bytes": 947
@@ -14676,7 +14691,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T10:12:08.559236+00:00",
+  "generated_at_utc": "2026-08-19T15:03:35.617786+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14685,5 +14700,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25908400
+  "total_bytes": 25927077
 }

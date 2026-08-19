@@ -27,9 +27,9 @@
     "UX": 26
   },
   "by_implementation_state": {
-    "IMPLEMENTED": 235,
+    "IMPLEMENTED": 238,
     "PARTIALLY_IMPLEMENTED": 113,
-    "PLANNED_ONLY": 4
+    "PLANNED_ONLY": 1
   },
   "by_priority": {
     "P0": 238,
@@ -49,18 +49,18 @@
     "testing": 3
   },
   "mapped_counts": {
-    "evidence": 348,
-    "implementation": 348,
+    "evidence": 351,
+    "implementation": 351,
     "jira": 352,
     "plan": 352,
-    "tests": 348
+    "tests": 351
   },
   "mapped_percent": {
-    "evidence": 98.86,
-    "implementation": 98.86,
+    "evidence": 99.72,
+    "implementation": 99.72,
     "jira": 100.0,
     "plan": 100.0,
-    "tests": 98.86
+    "tests": 99.72
   },
   "requirement_count": 352,
   "requirements_by_source": {

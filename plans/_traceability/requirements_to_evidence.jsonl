@@ -10,13 +10,13 @@
 {"evidence_ids": ["EVID-000069", "EVID-000072"], "requirement_id": "REQ-AGENT-0010"}
 {"evidence_ids": ["EVID-000069", "EVID-000072"], "requirement_id": "REQ-AGENT-0011"}
 {"evidence_ids": ["EVID-000069", "EVID-000070", "EVID-000072", "EVID-000129", "EVID-000130", "EVID-000131"], "requirement_id": "REQ-AGENT-0012"}
-{"evidence_ids":["EVID-000200"],"requirement_id":"REQ-AGENT-0013"}
+{"evidence_ids": ["EVID-000200"], "requirement_id": "REQ-AGENT-0013"}
 {"evidence_ids": ["EVID-000069", "EVID-000072"], "requirement_id": "REQ-AGENT-0014"}
 {"evidence_ids": ["EVID-000069", "EVID-000070", "EVID-000071", "EVID-000072"], "requirement_id": "REQ-AGENT-0015"}
 {"evidence_ids": ["EVID-000069", "EVID-000072"], "requirement_id": "REQ-AGENT-0016"}
 {"evidence_ids": ["EVID-000069", "EVID-000072"], "requirement_id": "REQ-AGENT-0017"}
 {"evidence_ids": ["EVID-000062", "EVID-000069", "EVID-000072"], "requirement_id": "REQ-AGENT-0018"}
-{"evidence_ids":["EVID-000201"],"requirement_id":"REQ-AGENT-0019"}
+{"evidence_ids": ["EVID-000201"], "requirement_id": "REQ-AGENT-0019"}
 {"evidence_ids": ["EVID-000005", "EVID-000006", "EVID-000016", "EVID-000018", "EVID-000019", "EVID-000020"], "requirement_id": "REQ-ARCH-0001"}
 {"evidence_ids": ["EVID-000016", "EVID-000018", "EVID-000019", "EVID-000020", "EVID-000022", "EVID-000024"], "requirement_id": "REQ-ARCH-0002"}
 {"evidence_ids": ["EVID-000005", "EVID-000006", "EVID-000016", "EVID-000018", "EVID-000019", "EVID-000020"], "requirement_id": "REQ-ARCH-0003"}
@@ -92,8 +92,8 @@
 {"evidence_ids": ["EVID-000029", "EVID-000030", "EVID-000096", "EVID-000098", "EVID-000099", "EVID-000100", "EVID-000101"], "requirement_id": "REQ-CTRL-0003"}
 {"evidence_ids": ["EVID-000169"], "requirement_id": "REQ-CTRL-0004"}
 {"evidence_ids": ["EVID-000055", "EVID-000058"], "requirement_id": "REQ-CTRL-0005"}
-{"evidence_ids":["EVID-000202"],"requirement_id":"REQ-CTRL-0006"}
-{"evidence_ids":["EVID-000203"],"requirement_id":"REQ-CTRL-0007"}
+{"evidence_ids": ["EVID-000202"], "requirement_id": "REQ-CTRL-0006"}
+{"evidence_ids": ["EVID-000203"], "requirement_id": "REQ-CTRL-0007"}
 {"evidence_ids": ["EVID-000159"], "requirement_id": "REQ-CTRL-0008"}
 {"evidence_ids": ["EVID-000055", "EVID-000058"], "requirement_id": "REQ-CTRL-0009"}
 {"evidence_ids": ["EVID-000095", "EVID-000096", "EVID-000097", "EVID-000098", "EVID-000100", "EVID-000101"], "requirement_id": "REQ-CTRL-0010"}
@@ -126,7 +126,7 @@
 {"evidence_ids": ["EVID-000004", "EVID-000005", "EVID-000006", "EVID-000011"], "requirement_id": "REQ-GOV-0003"}
 {"evidence_ids": ["EVID-000005", "EVID-000006", "EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0004"}
 {"evidence_ids": ["EVID-000022", "EVID-000027"], "requirement_id": "REQ-GOV-0005"}
-{"evidence_ids":["EVID-000179"],"requirement_id":"REQ-GOV-0006"}
+{"evidence_ids": ["EVID-000179"], "requirement_id": "REQ-GOV-0006"}
 {"evidence_ids": ["EVID-000169"], "requirement_id": "REQ-GOV-0007"}
 {"evidence_ids": ["EVID-000043", "EVID-000045", "EVID-000046", "EVID-000047", "EVID-000048"], "requirement_id": "REQ-GOV-0008"}
 {"evidence_ids": ["EVID-000043"], "requirement_id": "REQ-GOV-0009"}
@@ -140,28 +140,28 @@
 {"evidence_ids": ["EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0017"}
 {"evidence_ids": ["EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0018"}
 {"evidence_ids": ["EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0019"}
-{"evidence_ids":["EVID-000180"],"requirement_id":"REQ-GOV-0020"}
+{"evidence_ids": ["EVID-000180"], "requirement_id": "REQ-GOV-0020"}
 {"evidence_ids": ["EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0021"}
-{"evidence_ids":["EVID-000181"],"requirement_id":"REQ-GOV-0022"}
+{"evidence_ids": ["EVID-000181"], "requirement_id": "REQ-GOV-0022"}
 {"evidence_ids": ["EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0023"}
 {"evidence_ids": ["EVID-000043", "EVID-000046", "EVID-000047", "EVID-000048", "EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053", "EVID-000075", "EVID-000076"], "requirement_id": "REQ-GOV-0024"}
-{"evidence_ids":["EVID-000182"],"requirement_id":"REQ-GOV-0025"}
+{"evidence_ids": ["EVID-000182"], "requirement_id": "REQ-GOV-0025"}
 {"evidence_ids": ["EVID-000129", "EVID-000132", "EVID-000164"], "requirement_id": "REQ-INFRA-0001"}
 {"evidence_ids": ["EVID-000005", "EVID-000006", "EVID-000008", "EVID-000022", "EVID-000024", "EVID-000026", "EVID-000027", "EVID-000164"], "requirement_id": "REQ-INFRA-0002"}
 {"evidence_ids": ["EVID-000005", "EVID-000006", "EVID-000007", "EVID-000022", "EVID-000024", "EVID-000027"], "requirement_id": "REQ-INFRA-0003"}
 {"evidence_ids": ["EVID-000129", "EVID-000132"], "requirement_id": "REQ-INFRA-0004"}
-{"evidence_ids":["EVID-000195"],"requirement_id":"REQ-INFRA-0005"}
+{"evidence_ids": ["EVID-000195"], "requirement_id": "REQ-INFRA-0005"}
 {"evidence_ids": ["EVID-000075", "EVID-000076"], "requirement_id": "REQ-INFRA-0006"}
 {"evidence_ids": ["EVID-000022", "EVID-000023", "EVID-000164"], "requirement_id": "REQ-INFRA-0007"}
-{"evidence_ids":["EVID-000196"],"requirement_id":"REQ-INFRA-0008"}
-{"evidence_ids":["EVID-000197"],"requirement_id":"REQ-INFRA-0009"}
+{"evidence_ids": ["EVID-000196"], "requirement_id": "REQ-INFRA-0008"}
+{"evidence_ids": ["EVID-000197"], "requirement_id": "REQ-INFRA-0009"}
 {"evidence_ids": ["EVID-000164"], "requirement_id": "REQ-INFRA-0010"}
 {"evidence_ids": ["EVID-000164"], "requirement_id": "REQ-INFRA-0011"}
 {"evidence_ids": ["EVID-000129", "EVID-000132", "EVID-000164"], "requirement_id": "REQ-INFRA-0012"}
 {"evidence_ids": ["EVID-000129", "EVID-000132"], "requirement_id": "REQ-INFRA-0013"}
-{"evidence_ids":["EVID-000198"],"requirement_id":"REQ-INFRA-0014"}
+{"evidence_ids": ["EVID-000198"], "requirement_id": "REQ-INFRA-0014"}
 {"evidence_ids": ["EVID-000129", "EVID-000132"], "requirement_id": "REQ-INFRA-0015"}
-{"evidence_ids":["EVID-000199"],"requirement_id":"REQ-INFRA-0016"}
+{"evidence_ids": ["EVID-000199"], "requirement_id": "REQ-INFRA-0016"}
 {"evidence_ids": ["EVID-000129", "EVID-000132"], "requirement_id": "REQ-INFRA-0017"}
 {"evidence_ids": ["EVID-000164"], "requirement_id": "REQ-INFRA-0018"}
 {"evidence_ids": ["EVID-000129"], "requirement_id": "REQ-INFRA-0019"}
@@ -184,20 +184,20 @@
 {"evidence_ids": ["EVID-000153"], "requirement_id": "REQ-LIFE-0017"}
 {"evidence_ids": ["EVID-000022", "EVID-000027", "EVID-000153"], "requirement_id": "REQ-LIFE-0018"}
 {"evidence_ids": ["EVID-000022", "EVID-000024", "EVID-000075", "EVID-000076"], "requirement_id": "REQ-OPS-0001"}
-{"evidence_ids":["EVID-000187"],"requirement_id":"REQ-OPS-0002"}
+{"evidence_ids": ["EVID-000187"], "requirement_id": "REQ-OPS-0002"}
 {"evidence_ids": ["EVID-000005", "EVID-000006", "EVID-000024", "EVID-000026", "EVID-000027"], "requirement_id": "REQ-OPS-0003"}
 {"evidence_ids": ["EVID-000022", "EVID-000024"], "requirement_id": "REQ-OPS-0004"}
-{"evidence_ids":["EVID-000188"],"requirement_id":"REQ-OPS-0005"}
+{"evidence_ids": ["EVID-000188"], "requirement_id": "REQ-OPS-0005"}
 {"evidence_ids": ["EVID-000096", "EVID-000098", "EVID-000099", "EVID-000100", "EVID-000101"], "requirement_id": "REQ-OPS-0006"}
-{"evidence_ids":["EVID-000189"],"requirement_id":"REQ-OPS-0007"}
+{"evidence_ids": ["EVID-000189"], "requirement_id": "REQ-OPS-0007"}
 {"evidence_ids": ["EVID-000089", "EVID-000092", "EVID-000093", "EVID-000094"], "requirement_id": "REQ-OPS-0008"}
-{"evidence_ids":["EVID-000190"],"requirement_id":"REQ-OPS-0009"}
+{"evidence_ids": ["EVID-000190"], "requirement_id": "REQ-OPS-0009"}
 {"evidence_ids": ["EVID-000169"], "requirement_id": "REQ-OPS-0010"}
-{"evidence_ids":["EVID-000191"],"requirement_id":"REQ-OPS-0011"}
+{"evidence_ids": ["EVID-000191"], "requirement_id": "REQ-OPS-0011"}
 {"evidence_ids": ["EVID-000169"], "requirement_id": "REQ-OPS-0012"}
-{"evidence_ids":["EVID-000192"],"requirement_id":"REQ-OPS-0013"}
-{"evidence_ids":["EVID-000193"],"requirement_id":"REQ-OPS-0014"}
-{"evidence_ids":["EVID-000194"],"requirement_id":"REQ-OPS-0015"}
+{"evidence_ids": ["EVID-000192"], "requirement_id": "REQ-OPS-0013"}
+{"evidence_ids": ["EVID-000193"], "requirement_id": "REQ-OPS-0014"}
+{"evidence_ids": ["EVID-000194"], "requirement_id": "REQ-OPS-0015"}
 {"evidence_ids": ["EVID-000169"], "requirement_id": "REQ-OPS-0016"}
 {"evidence_ids": ["EVID-000136", "EVID-000138", "EVID-000147", "EVID-000149", "EVID-000150"], "requirement_id": "REQ-OPS-0017"}
 {"evidence_ids": ["EVID-000024", "EVID-000026", "EVID-000027"], "requirement_id": "REQ-OPS-0018"}
@@ -208,10 +208,10 @@
 {"evidence_ids": ["EVID-000036", "EVID-000037"], "requirement_id": "REQ-PDEF-0004"}
 {"evidence_ids": ["EVID-000036", "EVID-000039", "EVID-000041", "EVID-000042"], "requirement_id": "REQ-PDEF-0005"}
 {"evidence_ids": ["EVID-000035", "EVID-000036", "EVID-000037", "EVID-000038", "EVID-000039", "EVID-000040", "EVID-000041", "EVID-000042"], "requirement_id": "REQ-PDEF-0006"}
-{"evidence_ids":["EVID-000185"],"requirement_id":"REQ-PDEF-0007"}
-{"evidence_ids":["EVID-000185"],"requirement_id":"REQ-PDEF-0008"}
+{"evidence_ids": ["EVID-000185"], "requirement_id": "REQ-PDEF-0007"}
+{"evidence_ids": ["EVID-000185"], "requirement_id": "REQ-PDEF-0008"}
 {"evidence_ids": ["EVID-000022", "EVID-000027"], "requirement_id": "REQ-PDEF-0009"}
-{"evidence_ids":["EVID-000186"],"requirement_id":"REQ-PDEF-0010"}
+{"evidence_ids": ["EVID-000186"], "requirement_id": "REQ-PDEF-0010"}
 {"evidence_ids": [], "requirement_id": "REQ-PDEF-0011"}
 {"evidence_ids": ["EVID-000005", "EVID-000006", "EVID-000008"], "requirement_id": "REQ-REL-0001"}
 {"evidence_ids": ["EVID-000005", "EVID-000006"], "requirement_id": "REQ-REL-0002"}
@@ -221,8 +221,8 @@
 {"evidence_ids": ["EVID-000169", "EVID-000170"], "requirement_id": "REQ-REL-0006"}
 {"evidence_ids": ["EVID-000164", "EVID-000165"], "requirement_id": "REQ-REL-0007"}
 {"evidence_ids": ["EVID-000164"], "requirement_id": "REQ-REL-0008"}
-{"evidence_ids":["EVID-000183"],"requirement_id":"REQ-REL-0009"}
-{"evidence_ids":["EVID-000184"],"requirement_id":"REQ-REL-0010"}
+{"evidence_ids": ["EVID-000183"], "requirement_id": "REQ-REL-0009"}
+{"evidence_ids": ["EVID-000184"], "requirement_id": "REQ-REL-0010"}
 {"evidence_ids": ["EVID-000164"], "requirement_id": "REQ-REL-0011"}
 {"evidence_ids": ["EVID-000164"], "requirement_id": "REQ-REL-0012"}
 {"evidence_ids": ["EVID-000171"], "requirement_id": "REQ-REL-0013"}
@@ -248,15 +248,15 @@
 {"evidence_ids": ["EVID-000129", "EVID-000130"], "requirement_id": "REQ-RES-0002"}
 {"evidence_ids": ["EVID-000129", "EVID-000130", "EVID-000131"], "requirement_id": "REQ-RES-0003"}
 {"evidence_ids": ["EVID-000129", "EVID-000130"], "requirement_id": "REQ-RES-0004"}
-{"evidence_ids": [], "requirement_id": "REQ-RES-0005"}
+{"evidence_ids": ["EVID-000204"], "requirement_id": "REQ-RES-0005"}
 {"evidence_ids": ["EVID-000062", "EVID-000096", "EVID-000097", "EVID-000100", "EVID-000101"], "requirement_id": "REQ-RES-0006"}
 {"evidence_ids": ["EVID-000129", "EVID-000130"], "requirement_id": "REQ-RES-0007"}
 {"evidence_ids": ["EVID-000129", "EVID-000130"], "requirement_id": "REQ-RES-0008"}
 {"evidence_ids": ["EVID-000096", "EVID-000097", "EVID-000100", "EVID-000101", "EVID-000129", "EVID-000130"], "requirement_id": "REQ-RES-0009"}
 {"evidence_ids": ["EVID-000096", "EVID-000097", "EVID-000100", "EVID-000101"], "requirement_id": "REQ-RES-0010"}
 {"evidence_ids": ["EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-RES-0011"}
-{"evidence_ids": [], "requirement_id": "REQ-RES-0012"}
-{"evidence_ids": [], "requirement_id": "REQ-RES-0013"}
+{"evidence_ids": ["EVID-000205"], "requirement_id": "REQ-RES-0012"}
+{"evidence_ids": ["EVID-000206"], "requirement_id": "REQ-RES-0013"}
 {"evidence_ids": ["EVID-000129", "EVID-000130"], "requirement_id": "REQ-RES-0014"}
 {"evidence_ids": ["EVID-000129", "EVID-000130", "EVID-000132"], "requirement_id": "REQ-RES-0015"}
 {"evidence_ids": ["EVID-000043"], "requirement_id": "REQ-RES-0016"}
