@@ -416,12 +416,14 @@ class CampaignController:
                 if binding is None
                 else binding.get("process_started_at_utc"),
             }
-            if live is not None and identities_match(bound, live):
+            if (
+                live is not None
+                and self._binding_complete(binding)
+                and identities_match(bound, live)
+            ):
                 raise ValueError("concurrent campaign runner is already active")
-            if live is not None and binding is None:
-                raise ValueError("concurrent campaign runner is already active")
-            # Live PID with a mismatched binding is PID reuse: this recover path
-            # is the governed takeover. claim_runner_ownership refuses that case.
+            # Missing/incomplete binding or a live mismatched PID is reuse:
+            # this recover path is the governed takeover. claim_runner refuses it.
         self._assert_identity(row)
         if str(row["stage"]) in TIMED_STAGES:
             run_id = str(row["qualification_run_id"] or "")
@@ -482,6 +484,7 @@ class CampaignController:
                 stored["command"] = json.loads(str(stored["command_json"]))
                 stored["executed"] = bool(stored["executed"])
                 return stored
+        self._assert_live_ownership(row, require_current_process=True)
         receipt = execute_allowlisted_command(
             argv,
             cwd=self.repository_root,
@@ -558,6 +561,7 @@ class CampaignController:
         row = self._require(campaign_id)
         if str(row["stage"]) != "RELEASE" or str(row["status"]) != "READY_TO_FINALIZE":
             raise ValueError("finalize requires an attested 72-hour campaign ready for release")
+        self._assert_live_ownership(row, require_current_process=True)
         self._assert_identity(row)
         explicit = commands is not None or self._finalize_commands is not None
         planned = commands or self._finalize_commands or self._default_finalize_commands(row)
@@ -815,15 +819,12 @@ class CampaignController:
             live = inspect_process(int(lock["process_id"]))
             binding = self._owner_binding()
             if live is not None and int(lock["process_id"]) != int(owner["process_id"]):
-                if identities_match(
+                bound = binding or {}
+                if self._binding_complete(bound) and identities_match(
                     {
                         "process_id": lock["process_id"],
-                        "executable": None
-                        if binding is None
-                        else binding.get("executable_identity"),
-                        "started_at_utc": None
-                        if binding is None
-                        else binding.get("process_started_at_utc"),
+                        "executable": bound.get("executable_identity"),
+                        "started_at_utc": bound.get("process_started_at_utc"),
                     },
                     live,
                 ):
@@ -926,6 +927,14 @@ class CampaignController:
         ).fetchone()
         return None if row is None else dict(row)
 
+    @staticmethod
+    def _binding_complete(binding: dict[str, Any] | None) -> bool:
+        if binding is None:
+            return False
+        return bool(str(binding.get("executable_identity") or "").strip()) and bool(
+            str(binding.get("process_started_at_utc") or "").strip()
+        )
+
     def _upsert_owner_binding(
         self,
         campaign_id: str,
@@ -1006,8 +1015,10 @@ class CampaignController:
             "started_at_utc": None if binding is None else binding.get("process_started_at_utc"),
         }
         current = current_process_identity(service_identity=dict(row).get("service_identity"))
+        if not self._binding_complete(binding):
+            raise ValueError("stale campaign owner requires recover")
         if int(lock["process_id"]) == os.getpid():
-            if binding is not None and not identities_match(bound, current):
+            if not identities_match(bound, current):
                 raise ValueError("stale campaign owner requires recover")
             return
         live = inspect_process(int(lock["process_id"]))

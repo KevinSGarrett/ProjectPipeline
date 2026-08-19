@@ -1105,7 +1105,7 @@
     {
       "extension": ".json",
       "path": "database/MIGRATION_CATALOG.json",
-      "sha256": "63b0e8637b652fe3c7fcb6b5d112fc73eca6d6c7b8c9d8ec5e0d010aa7b28a4b",
+      "sha256": "278d3bf6479be3ebc42eebf35843a8b90ad46087ba60d3aee8486c9d22fc5d03",
       "size_bytes": 24527,
       "top_level": "database"
     },
@@ -1427,8 +1427,8 @@
     {
       "extension": ".sql",
       "path": "database/migrations/postgresql/PPDB-0023_campaign_owner_and_receipt_semantics.up.sql",
-      "sha256": "ef8f12ff7a8168d9e7501fa345e6ba263296f7055f3fd381c01ddae4bfbd72cf",
-      "size_bytes": 446,
+      "sha256": "e8d76cca713b3ec81ee5634303be441a4a148a7546d4c089ced843eaf5e7295c",
+      "size_bytes": 1033,
       "top_level": "database"
     },
     {
@@ -1749,8 +1749,8 @@
     {
       "extension": ".sql",
       "path": "database/migrations/sqlite/PPDB-0023_campaign_owner_and_receipt_semantics.up.sql",
-      "sha256": "ef8f12ff7a8168d9e7501fa345e6ba263296f7055f3fd381c01ddae4bfbd72cf",
-      "size_bytes": 446,
+      "sha256": "e8d76cca713b3ec81ee5634303be441a4a148a7546d4c089ced843eaf5e7295c",
+      "size_bytes": 1033,
       "top_level": "database"
     },
     {
@@ -6887,7 +6887,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "ac99434b2cefdd35d819157a351b298228cc1ba59694b01ef145a7c84552c767",
+      "sha256": "85924644f47291bac0ab7b0a027392139fa45907d7f669e284c531d60489f29a",
       "size_bytes": 330857,
       "top_level": "_root"
     },
@@ -14104,7 +14104,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "044bf8814ba632bc0222e1b06c2e01121923c4117ac025a9914d6f352930b1ae",
+      "sha256": "6f34dbdecb631c03bf1767f842f6f6cd505fb36930de80c42b654364943452f0",
       "size_bytes": 541706,
       "top_level": "_root"
     },
@@ -16484,8 +16484,8 @@
     {
       "extension": ".py",
       "path": "scripts/autonomy_campaign_recovery_probe.py",
-      "sha256": "386f39f6b36c41183ebe8219c8279c5d631cf68cbb40378e4b5730dac5c8cab3",
-      "size_bytes": 10030,
+      "sha256": "5a678894205d472e50152ca9d7f548c2b60b5b290472e898882e11882f2bfd34",
+      "size_bytes": 10629,
       "top_level": "scripts"
     },
     {
@@ -17002,15 +17002,15 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/campaign.py",
-      "sha256": "c87d51827b4de24ce7ec71e33618f950950c68181f4acae18798ef079b31e5ab",
-      "size_bytes": 42264,
+      "sha256": "318f95f6873e36cd45db38b03cf5f99b8824b4249cc12bfcc56febacade99f93",
+      "size_bytes": 43928,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/campaign_status.py",
-      "sha256": "7e908e2c56152a1f0f6edbc1c0d9a8d414d86b61b46ecdbf3af540744b993f91",
-      "size_bytes": 5644,
+      "sha256": "d1acf188393bb8df51c8668dfe2e6e298ec4196109dae7e7084a4563d257fe8d",
+      "size_bytes": 5673,
       "top_level": "src"
     },
     {
@@ -17051,8 +17051,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/process_identity.py",
-      "sha256": "4a00d6a65d70ba68f8abbd7bcd3939a1e36ac6b5f646a89ac51a2c9b0e323108",
-      "size_bytes": 4273,
+      "sha256": "9f0afa6acdcffdad3da19a75d7d11408e98a271571929c1e0713f56d8f535f1a",
+      "size_bytes": 4329,
       "top_level": "src"
     },
     {
@@ -19095,15 +19095,15 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_campaign.py",
-      "sha256": "b2280345f0f93f8fa6d3f95355025da48f2e09fbb57adaf9e31a683a540329fb",
-      "size_bytes": 29370,
+      "sha256": "4b4696e73cf22c9dac623bd5256f4f1099b892e8e56d5ad49838692a5ff98af5",
+      "size_bytes": 35043,
       "top_level": "tests"
     },
     {
       "extension": ".py",
       "path": "tests/test_autonomy_campaign_windows.py",
-      "sha256": "41a6e53e88c3bb9723ef463d65e30f610ac9233e1145e5a4df0a30dda83d0810",
-      "size_bytes": 9349,
+      "sha256": "dd694ecf52e97208656da0dff9184824f2832df7ade000a9c025d08e7b77bf72",
+      "size_bytes": 10524,
       "top_level": "tests"
     },
     {
@@ -20318,7 +20318,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-19T01:36:03.357055+00:00",
+  "generated_at_utc": "2026-08-19T02:06:57.032601+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

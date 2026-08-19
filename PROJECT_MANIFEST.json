@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "a6190f44db258901cac01bcdabb44b7d5506e263c36708630dbfd16e2c71bc77",
+  "aggregate_sha256": "9a7d3a20eb2beaebdd2b874e1c8c34ffc3dd7364ad3c1ecd30c53ca56e261ed1",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -747,7 +747,7 @@
     },
     {
       "path": "database/MIGRATION_CATALOG.json",
-      "sha256": "63b0e8637b652fe3c7fcb6b5d112fc73eca6d6c7b8c9d8ec5e0d010aa7b28a4b",
+      "sha256": "278d3bf6479be3ebc42eebf35843a8b90ad46087ba60d3aee8486c9d22fc5d03",
       "size_bytes": 24527
     },
     {
@@ -977,8 +977,8 @@
     },
     {
       "path": "database/migrations/postgresql/PPDB-0023_campaign_owner_and_receipt_semantics.up.sql",
-      "sha256": "ef8f12ff7a8168d9e7501fa345e6ba263296f7055f3fd381c01ddae4bfbd72cf",
-      "size_bytes": 446
+      "sha256": "e8d76cca713b3ec81ee5634303be441a4a148a7546d4c089ced843eaf5e7295c",
+      "size_bytes": 1033
     },
     {
       "path": "database/migrations/sqlite/PPDB-0001_core_state.down.sql",
@@ -1207,8 +1207,8 @@
     },
     {
       "path": "database/migrations/sqlite/PPDB-0023_campaign_owner_and_receipt_semantics.up.sql",
-      "sha256": "ef8f12ff7a8168d9e7501fa345e6ba263296f7055f3fd381c01ddae4bfbd72cf",
-      "size_bytes": 446
+      "sha256": "e8d76cca713b3ec81ee5634303be441a4a148a7546d4c089ced843eaf5e7295c",
+      "size_bytes": 1033
     },
     {
       "path": "database/README.md",
@@ -11722,8 +11722,8 @@
     },
     {
       "path": "scripts/autonomy_campaign_recovery_probe.py",
-      "sha256": "386f39f6b36c41183ebe8219c8279c5d631cf68cbb40378e4b5730dac5c8cab3",
-      "size_bytes": 10030
+      "sha256": "5a678894205d472e50152ca9d7f548c2b60b5b290472e898882e11882f2bfd34",
+      "size_bytes": 10629
     },
     {
       "path": "scripts/bootstrap_dev.ps1",
@@ -12092,13 +12092,13 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/campaign.py",
-      "sha256": "c87d51827b4de24ce7ec71e33618f950950c68181f4acae18798ef079b31e5ab",
-      "size_bytes": 42264
+      "sha256": "318f95f6873e36cd45db38b03cf5f99b8824b4249cc12bfcc56febacade99f93",
+      "size_bytes": 43928
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/campaign_status.py",
-      "sha256": "7e908e2c56152a1f0f6edbc1c0d9a8d414d86b61b46ecdbf3af540744b993f91",
-      "size_bytes": 5644
+      "sha256": "d1acf188393bb8df51c8668dfe2e6e298ec4196109dae7e7084a4563d257fe8d",
+      "size_bytes": 5673
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/command_execution.py",
@@ -12127,8 +12127,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/process_identity.py",
-      "sha256": "4a00d6a65d70ba68f8abbd7bcd3939a1e36ac6b5f646a89ac51a2c9b0e323108",
-      "size_bytes": 4273
+      "sha256": "9f0afa6acdcffdad3da19a75d7d11408e98a271571929c1e0713f56d8f535f1a",
+      "size_bytes": 4329
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/projection.py",
@@ -13587,13 +13587,13 @@
     },
     {
       "path": "tests/test_autonomy_campaign.py",
-      "sha256": "b2280345f0f93f8fa6d3f95355025da48f2e09fbb57adaf9e31a683a540329fb",
-      "size_bytes": 29370
+      "sha256": "4b4696e73cf22c9dac623bd5256f4f1099b892e8e56d5ad49838692a5ff98af5",
+      "size_bytes": 35043
     },
     {
       "path": "tests/test_autonomy_campaign_windows.py",
-      "sha256": "41a6e53e88c3bb9723ef463d65e30f610ac9233e1145e5a4df0a30dda83d0810",
-      "size_bytes": 9349
+      "sha256": "dd694ecf52e97208656da0dff9184824f2832df7ade000a9c025d08e7b77bf72",
+      "size_bytes": 10524
     },
     {
       "path": "tests/test_autonomy_language_gate.py",
@@ -14461,7 +14461,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T01:36:03.935197+00:00",
+  "generated_at_utc": "2026-08-19T02:06:57.528928+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14470,5 +14470,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25545615
+  "total_bytes": 25555985
 }

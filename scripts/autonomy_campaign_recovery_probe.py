@@ -66,12 +66,15 @@ def _healthy(
     if claimed and claimed != int(pid_identity["process_id"]):
         return False
     owner = binding or {}
+    executable = owner.get("executable_identity") or pid_identity.get("executable")
+    started = owner.get("process_started_at_utc") or pid_identity.get("started_at_utc")
+    if not executable or not started:
+        return False
     return identities_match(
         {
             "process_id": pid_identity.get("process_id") or campaign.get("process_id"),
-            "executable": owner.get("executable_identity") or pid_identity.get("executable"),
-            "started_at_utc": owner.get("process_started_at_utc")
-            or pid_identity.get("started_at_utc"),
+            "executable": executable,
+            "started_at_utc": started,
         },
         live,
     )

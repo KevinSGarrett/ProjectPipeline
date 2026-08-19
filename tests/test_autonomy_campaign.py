@@ -713,6 +713,64 @@ def test_recovery_probe_rejects_reused_pid_as_unhealthy(monkeypatch: pytest.Monk
         "process_started_at_utc": "2026-01-01T00:00:00+00:00",
     }
     assert module._healthy(campaign, pid_identity, 90.0, binding) is False
+    assert module._healthy(campaign, {"process_id": 424242}, 90.0, None) is False
+    assert (
+        module._healthy(
+            campaign,
+            {"process_id": 424242},
+            90.0,
+            {"executable_identity": "", "process_started_at_utc": ""},
+        )
+        is False
+    )
+
+
+def test_missing_owner_binding_blocks_heartbeat_and_recover_takes_over(tmp_path: Path):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    controller._db.execute("DELETE FROM campaign_owner_bindings")
+    controller._db.commit()
+    with pytest.raises(ValueError, match="requires recover"):
+        controller.heartbeat(started["campaign_id"])
+    recovered = controller.recover(started["campaign_id"])
+    assert recovered["campaign_id"] == started["campaign_id"]
+    assert controller._binding_complete(controller._owner_binding()) is True
+    heartbeat = controller.heartbeat(started["campaign_id"])
+    assert heartbeat["campaign_id"] == started["campaign_id"]
+    controller.close()
+
+
+def test_execute_and_finalize_require_live_owner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    controller = _controller(tmp_path)
+    ready = _ready_after_72h(controller, tmp_path)
+    binding = controller._owner_binding()
+    assert binding is not None
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.campaign.inspect_process",
+        lambda pid: (
+            {
+                "process_id": 424242,
+                "executable": str(binding.get("executable_identity") or "python.exe"),
+                "started_at_utc": str(binding.get("process_started_at_utc")),
+                "alive": True,
+            }
+            if int(pid) == 424242
+            else None
+        ),
+    )
+    controller._db.execute(
+        "UPDATE campaign_locks SET process_id = 424242 WHERE lock_name = 'active-campaign'"
+    )
+    controller._db.commit()
+    with pytest.raises(ValueError, match="second runner cannot mutate"):
+        controller.execute(ready["campaign_id"], _probe_command())
+    with pytest.raises(ValueError, match="second runner cannot mutate"):
+        controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    controller.close()
 
 
 def test_claim_runner_transfers_from_dead_bootstrap_pid(tmp_path: Path):
