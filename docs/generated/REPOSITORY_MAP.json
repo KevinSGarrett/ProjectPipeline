@@ -230,8 +230,8 @@
     {
       "extension": "[none]",
       "path": ".git",
-      "sha256": "934cfb85b8a1d6f0339c2e03f62d6ffb94b7d4dea0cb7e5829ab57b77d8ac2db",
-      "size_bytes": 65,
+      "sha256": "b7ac5fadd426f50cf339e8e4e489cf53a96aa4e4e2866338e9eb670f0742d5c7",
+      "size_bytes": 63,
       "top_level": "_root"
     },
     {
@@ -6957,7 +6957,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "719b89a7e5bc75b90d0593b6c1301e6a2125009b138e7e30de4128790acbefc8",
+      "sha256": "d9c6e5319569d9eff528895f6abd68ebe34fece8b1f5fd4956c0a8c7b9948e0b",
       "size_bytes": 336030,
       "top_level": "_root"
     },
@@ -14174,7 +14174,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "db16233bc9f3dd455397cc46944aa1b13a2fe8f2f2686f664c1c19fd56580a24",
+      "sha256": "455267d1c466835c3a1f221fe97a289fd3b5aa154ad743ea72457f0a0454db85",
       "size_bytes": 550240,
       "top_level": "_root"
     },
@@ -18997,8 +18997,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/verification/browser.py",
-      "sha256": "e46e4bd2b8b7151d60d4691e5fe1e319a76601b6171c1b603401fe93da9840d4",
-      "size_bytes": 9923,
+      "sha256": "0a90c8ddb34c38ea6dd0bc5b7f5a2588cb18fd5caf86da630b8b118c993cf857",
+      "size_bytes": 11151,
       "top_level": "src"
     },
     {
@@ -20530,8 +20530,8 @@
     {
       "extension": ".py",
       "path": "tests/test_verification_browser.py",
-      "sha256": "870d1e696f988c99f64a5084df97c7d4b37699f3ccf535dcf2cce3bae9e33fc2",
-      "size_bytes": 675,
+      "sha256": "66967fa8ef37d0b79e706dccd2005e0fba51af17b16fe1a8656af355a70ff664",
+      "size_bytes": 884,
       "top_level": "tests"
     },
     {
@@ -20640,7 +20640,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-19T21:25:39.483107+00:00",
+  "generated_at_utc": "2026-08-19T21:36:37.402891+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {
