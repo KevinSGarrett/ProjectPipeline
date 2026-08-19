@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "500ac37cfb689588caddc8d05ff1167d82475249a8f271789193e00b7a22f33d",
+  "aggregate_sha256": "3b02b07f0188a100b37a1eec98bc04eb5277e26f3be9906fcdc5283c413d6d6a",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -5442,8 +5442,8 @@
     },
     {
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "d0450b6add0a8121d35cdbdc7c7d2a68ee14476eaacbf661198ed892748bbecb",
-      "size_bytes": 2060
+      "sha256": "cb16b59b8365c4d9827d801b8ce2c78216ccb311485b2172f90b05fc537ca87f",
+      "size_bytes": 2075
     },
     {
       "path": "jira/reports/live_jira_sync_report.json",
@@ -12782,8 +12782,8 @@
     },
     {
       "path": "src/project_pipeline/jira_steward/sync_guard.py",
-      "sha256": "a2fa3d0d1882940140e3cdc048b906d692b4e701368c1d20dea249e071813777",
-      "size_bytes": 3890
+      "sha256": "1e07c317cb141ff6007b4479b3c34653d1c963de13a69e7eda0103840de91bc0",
+      "size_bytes": 4344
     },
     {
       "path": "src/project_pipeline/jira_steward/validation.py",
@@ -13687,8 +13687,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "cbe2d601a99080dc3e0b6c0f38b59bdbc4690b48cfc8564085e79468fe5bdd3f",
-      "size_bytes": 101371
+      "sha256": "38ac828a2baf7f1868eaf700890e3c2f597dd203320cdcb991f990ddc62571e3",
+      "size_bytes": 102301
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -14002,8 +14002,8 @@
     },
     {
       "path": "tests/test_jira_sync_guard.py",
-      "sha256": "1c0cd947861fe5d391fae58e5a462abbe0388402885f6c9729ffb3ff2efa9f75",
-      "size_bytes": 1290
+      "sha256": "f0dbac7bf240e9cd43d2b1db72fe66c524cdc667f59d4a21a65d2ad2bbc113a3",
+      "size_bytes": 2767
     },
     {
       "path": "tests/test_line_numbering.py",
@@ -14471,7 +14471,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T03:20:23.737783+00:00",
+  "generated_at_utc": "2026-08-19T03:30:17.324245+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14480,5 +14480,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25645152
+  "total_bytes": 25648028
 }

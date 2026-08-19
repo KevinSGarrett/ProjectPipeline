@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 550,
+  "test_count": 555,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -1696,6 +1696,31 @@
       "callable": "test_full_repository_jira_ledger_covers_every_issue",
       "path": "tests/test_jira_implementation_reconciliation.py",
       "test_id": "TEST-JIRA-RECONCILE-005"
+    },
+    {
+      "callable": "test_jira_sync_guard_blocks_pending_remote_on_current_repository",
+      "path": "tests/test_jira_sync_guard.py",
+      "test_id": "TEST-JIRA-SYNC-GUARD-001"
+    },
+    {
+      "callable": "test_jira_sync_guard_blocks_when_artifact_missing",
+      "path": "tests/test_jira_sync_guard.py",
+      "test_id": "TEST-JIRA-SYNC-GUARD-002"
+    },
+    {
+      "callable": "test_jira_sync_guard_blocks_when_fingerprint_stale",
+      "path": "tests/test_jira_sync_guard.py",
+      "test_id": "TEST-JIRA-SYNC-GUARD-003"
+    },
+    {
+      "callable": "test_jira_sync_guard_passes_when_parity_confirmed_without_pending_remote",
+      "path": "tests/test_jira_sync_guard.py",
+      "test_id": "TEST-JIRA-SYNC-GUARD-004"
+    },
+    {
+      "callable": "test_jira_sync_guard_blocks_parity_confirmed_while_pending_remote",
+      "path": "tests/test_jira_sync_guard.py",
+      "test_id": "TEST-JIRA-SYNC-GUARD-005"
     },
     {
       "callable": "JiraStewardMockAndServiceTests.test_dry_run_persists_plan_without_remote_writes",
