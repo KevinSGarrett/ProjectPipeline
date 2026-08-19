@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 538,
+  "test_count": 540,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -541,6 +541,16 @@
       "callable": "test_recovery_task_plan_is_hidden_and_non_interactive",
       "path": "tests/test_autonomy_campaign_windows.py",
       "test_id": "TEST-CAMP-020"
+    },
+    {
+      "callable": "test_advance_auto_finalizes_after_ready",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-021"
+    },
+    {
+      "callable": "test_failed_finalize_does_not_claim_complete",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-022"
     },
     {
       "callable": "test_agui_run_requires_lifecycle_bookends",

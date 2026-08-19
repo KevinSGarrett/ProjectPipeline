@@ -41,13 +41,44 @@ def _identity(sha: str = "a" * 40, tree: str = "b" * 40, dirty: bool = False) ->
     return {"sha": sha, "tree": tree, "dirty": dirty, "ok": True}
 
 
+def _probe_command() -> list[str]:
+    return [sys.executable, str(ROOT / "scripts" / "campaign_probe.py")]
+
+
 def _controller(tmp_path: Path, inspect=None) -> CampaignController:
     return CampaignController(
         tmp_path / "campaign.sqlite3",
         repository_root=ROOT,
         heartbeat_seconds=0.05,
         inspect_identity=inspect or (lambda _root: _identity()),
+        finalize_commands=[_probe_command()],
     )
+
+
+def _seed_attested(controller: CampaignController, run_id: str, hours: int) -> None:
+    controller.qualification._db.execute(
+        """
+        UPDATE qualification_runs
+        SET status = 'ATTESTED', window_broken = 0, attested_elapsed_seconds = ?,
+            last_heartbeat_utc = ?
+        WHERE run_id = ?
+        """,
+        (hours * 3600, datetime.now(UTC).isoformat(), run_id),
+    )
+    controller.qualification._db.commit()
+
+
+def _ready_after_72h(controller: CampaignController, tmp_path: Path) -> dict:
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_24h(started["campaign_id"])
+    _seed_attested(controller, admitted["qualification_run_id"], 24)
+    hour72 = controller.admit_72h(started["campaign_id"])
+    _seed_attested(controller, hour72["qualification_run_id"], 72)
+    return controller._mark_ready_to_finalize(started["campaign_id"])
 
 
 def test_pp384_admission_requires_all_five_stages(tmp_path: Path):
@@ -124,18 +155,7 @@ def test_seeded_attested_24h_auto_admits_72h(tmp_path: Path):
         pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
     )
     admitted = controller.admit_24h(started["campaign_id"])
-    run_id = admitted["qualification_run_id"]
-    now = datetime.now(UTC)
-    controller.qualification._db.execute(
-        """
-        UPDATE qualification_runs
-        SET status = 'ATTESTED', window_broken = 0, attested_elapsed_seconds = ?,
-            last_heartbeat_utc = ?
-        WHERE run_id = ?
-        """,
-        (24 * 3600, now.isoformat(), run_id),
-    )
-    controller.qualification._db.commit()
+    _seed_attested(controller, admitted["qualification_run_id"], 24)
     advanced = controller.admit_72h(started["campaign_id"])
     assert advanced["stage"] == "UNATTENDED_72_HOUR"
     controller.close()
@@ -237,10 +257,7 @@ def test_campaign_execute_persists_truthful_receipt(tmp_path: Path):
         evidence_path=tmp_path / "evidence",
         pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
     )
-    receipt = controller.execute(
-        started["campaign_id"],
-        [sys.executable, str(ROOT / "scripts" / "campaign_probe.py")],
-    )
+    receipt = controller.execute(started["campaign_id"], _probe_command())
     assert receipt["executed"] is True
     stored = controller.receipts(started["campaign_id"])
     assert stored[0]["exit_code"] == 0
@@ -252,40 +269,35 @@ def test_campaign_execute_persists_truthful_receipt(tmp_path: Path):
 
 def test_finalize_after_seeded_72h(tmp_path: Path):
     controller = _controller(tmp_path)
-    started = controller.start(
-        state_path=tmp_path / "state",
-        evidence_path=tmp_path / "evidence",
-        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
-    )
-    admitted = controller.admit_24h(started["campaign_id"])
-    controller.qualification._db.execute(
-        """
-        UPDATE qualification_runs
-        SET status = 'ATTESTED', window_broken = 0, attested_elapsed_seconds = ?
-        WHERE run_id = ?
-        """,
-        (24 * 3600, admitted["qualification_run_id"]),
-    )
-    controller.qualification._db.commit()
-    hour72 = controller.admit_72h(started["campaign_id"])
-    controller.qualification._db.execute(
-        """
-        UPDATE qualification_runs
-        SET status = 'ATTESTED', window_broken = 0, attested_elapsed_seconds = ?
-        WHERE run_id = ?
-        """,
-        (72 * 3600, hour72["qualification_run_id"]),
-    )
-    controller.qualification._db.commit()
-    ready = controller._mark_ready_to_finalize(started["campaign_id"])
+    ready = _ready_after_72h(controller, tmp_path)
     assert ready["stage"] == "RELEASE"
-    finalized = controller.finalize(
-        started["campaign_id"],
-        commands=[[sys.executable, str(ROOT / "scripts" / "campaign_probe.py")]],
-    )
+    finalized = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
     assert finalized["status"] == "FINALIZED"
     assert finalized["stage"] == "COMPLETE"
     assert finalized["finalization_receipts"][0]["executed"] is True
+    controller.close()
+
+
+def test_advance_auto_finalizes_after_ready(tmp_path: Path):
+    controller = _controller(tmp_path)
+    ready = _ready_after_72h(controller, tmp_path)
+    finalized = controller.advance(ready["campaign_id"])
+    assert finalized["status"] == "FINALIZED"
+    assert finalized["stage"] == "COMPLETE"
+    assert finalized["finalization_receipts"][0]["result"] == "PASSED"
+    controller.close()
+
+
+def test_failed_finalize_does_not_claim_complete(tmp_path: Path):
+    controller = _controller(tmp_path)
+    ready = _ready_after_72h(controller, tmp_path)
+    failed = controller.finalize(
+        ready["campaign_id"],
+        commands=[[sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]],
+    )
+    assert failed["status"] == "FAILED"
+    assert failed["stage"] == "RELEASE"
+    assert failed["finalization_receipts"][0]["result"] == "FAILED"
     controller.close()
 
 
@@ -411,10 +423,7 @@ def test_inspect_worktree_identity_reports_git_fields():
 def test_orchestrate_executes_allowlisted_probe(tmp_path: Path):
     store = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
     run = store.start("RECOVERY", state_path=tmp_path / "state")
-    orch = store.orchestrate(
-        run["run_id"],
-        [[sys.executable, str(ROOT / "scripts" / "campaign_probe.py")]],
-    )
+    orch = store.orchestrate(run["run_id"], [_probe_command()])
     assert orch["orchestration_receipts"][0]["executed"] is True
     assert orch["orchestration_receipts"][0]["exit_code"] == 0
     store.close()

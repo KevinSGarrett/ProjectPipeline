@@ -98,6 +98,7 @@ class CampaignController:
         clock: Any | None = None,
         heartbeat_seconds: float = 30.0,
         inspect_identity: IdentityInspector | None = None,
+        finalize_commands: list[list[str]] | None = None,
     ) -> None:
         self.path = path
         self.repository_root = repository_root.resolve()
@@ -106,6 +107,7 @@ class CampaignController:
         if self.heartbeat_seconds <= 0:
             raise ValueError("heartbeat cadence must be positive")
         self._inspect_identity = inspect_identity or inspect_worktree_identity
+        self._finalize_commands = finalize_commands
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.qualification = QualificationStore(
             path,
@@ -353,8 +355,10 @@ class CampaignController:
         row = self.get(campaign_id)
         stage = str(row["stage"])
         status = str(row["status"])
-        if status in {"DISQUALIFIED", "FAILED", "STOPPED"}:
+        if status in {"DISQUALIFIED", "FAILED", "STOPPED", "FINALIZED"}:
             return row
+        if status == "READY_TO_FINALIZE":
+            return self.finalize(campaign_id)
         if stage == "RECOVERY" and status == "ATTESTED":
             return self.admit_24h(campaign_id)
         if stage in TIMED_STAGES and row["qualification_run_id"]:
@@ -366,7 +370,8 @@ class CampaignController:
             if attested["status"] == "ATTESTED" and stage == "UNATTENDED_24_HOUR":
                 return self.admit_72h(campaign_id)
             if attested["status"] == "ATTESTED" and stage == "UNATTENDED_72_HOUR":
-                return self._mark_ready_to_finalize(campaign_id)
+                self._mark_ready_to_finalize(campaign_id)
+                return self.finalize(campaign_id)
         return self.heartbeat(campaign_id)
 
     def recover(self, campaign_id: str) -> dict[str, Any]:
@@ -481,28 +486,35 @@ class CampaignController:
         row = self._require(campaign_id)
         if str(row["stage"]) != "RELEASE" or str(row["status"]) != "READY_TO_FINALIZE":
             raise ValueError("finalize requires an attested 72-hour campaign ready for release")
-        planned = commands or [
-            [
-                self._python(),
-                "-m",
-                "project_pipeline",
-                "completion",
-                "--root",
-                str(self.repository_root),
-            ],
-            [
-                self._python(),
-                "-m",
-                "project_pipeline",
-                "validate",
-                "--root",
-                str(self.repository_root),
-            ],
-        ]
+        planned = commands or self._finalize_commands or self._default_finalize_commands()
         receipts = []
         for argv in planned:
             receipts.append(self.execute(campaign_id, argv))
         now = datetime.now(UTC)
+        failed = [item for item in receipts if item.get("result") != "PASSED"]
+        if failed:
+            with self._db:
+                self._db.execute(
+                    """
+                    UPDATE campaign_runs
+                    SET status = 'FAILED', last_heartbeat_utc = ?, last_probe = ?
+                    WHERE campaign_id = ?
+                    """,
+                    (now.isoformat(), "finalize-command-failed", campaign_id),
+                )
+                self._append_event(
+                    campaign_id,
+                    "FINALIZE_FAILED",
+                    "FAILED",
+                    {
+                        "receipts": [item["receipt_id"] for item in receipts],
+                        "failed": [item["receipt_id"] for item in failed],
+                    },
+                    now,
+                )
+            result = self.get(campaign_id)
+            result["finalization_receipts"] = receipts
+            return result
         with self._db:
             self._db.execute(
                 """
@@ -679,6 +691,16 @@ class CampaignController:
 
     def _python(self) -> str:
         return str(Path(__import__("sys").executable))
+
+    def _default_finalize_commands(self) -> list[list[str]]:
+        python = self._python()
+        root = str(self.repository_root)
+        return [
+            [python, "-m", "project_pipeline", "completion", "--root", root],
+            [python, "-m", "project_pipeline", "validate", "--root", root],
+            [python, "-m", "project_pipeline", "jira", "validate", "--root", root],
+            [python, "-m", "project_pipeline", "control", "evaluate", "--root", root],
+        ]
 
     def _append_event(
         self,
