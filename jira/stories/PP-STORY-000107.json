@@ -43,12 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-machine-failure",
-    "domain-res"
+    "domain-res",
+    "cluster-machine-failure"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -117,6 +117,6 @@
     "SRC-012:L000380-L000495"
   ],
   "state": "BACKLOG",
-  "title": "Machine Failure — Resilience, Recovery, and Disaster Readiness",
+  "title": "Machine Failure \u2014 Resilience, Recovery, and Disaster Readiness",
   "upstream_dependencies": []
 }

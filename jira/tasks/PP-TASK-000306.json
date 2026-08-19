@@ -89,7 +89,6 @@
   "issue_type": "TASK",
   "labels": [
     "bulk-reconciled",
-    "done",
     "durability",
     "implemented",
     "orchestration",
@@ -151,7 +150,7 @@
     "SRC-017:L000281-L000359",
     "SRC-016:L001748-L001756"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement Hatchet adapter and fallback backend boundaries",
   "upstream_dependencies": [
     "UPSTREAM-050",

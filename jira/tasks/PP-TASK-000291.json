@@ -51,7 +51,7 @@
   "expected_implementation_artifacts": [
     "src/project_pipeline/domain/context.py"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
     "context",

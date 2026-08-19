@@ -62,11 +62,11 @@
     "docs/control/project_control_kernel.md",
     "runbooks/control_reconciliation.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
-    "build-sequencer",
     "control-kernel",
+    "build-sequencer",
     "deterministic",
     "project-control"
   ],

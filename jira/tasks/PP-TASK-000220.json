@@ -75,13 +75,13 @@
     "docs/jira",
     "runbooks/jira_unknown_outcome_reconciliation.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
-    "deterministic",
-    "dry-run-default",
     "jira-steward",
-    "jira-sync"
+    "jira-sync",
+    "deterministic",
+    "dry-run-default"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

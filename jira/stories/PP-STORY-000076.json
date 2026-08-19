@@ -49,13 +49,12 @@
   "expected_implementation_artifacts": [
     "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-delegation",
     "domain-ctx",
-    "implemented"
+    "cluster-delegation"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -107,6 +106,6 @@
     "SRC-002:L000794-L000884"
   ],
   "state": "BACKLOG",
-  "title": "Delegation — Context and Knowledge",
+  "title": "Delegation \u2014 Context and Knowledge",
   "upstream_dependencies": []
 }

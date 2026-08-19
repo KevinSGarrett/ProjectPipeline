@@ -40,12 +40,12 @@
   "expected_implementation_artifacts": [
     "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",
-    "pass-22",
-    "plan-life-001"
+    "plan-life-001",
+    "pass-22"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

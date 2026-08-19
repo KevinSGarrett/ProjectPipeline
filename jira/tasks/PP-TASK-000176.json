@@ -44,7 +44,7 @@
   "expected_implementation_artifacts": [
     "provenance/license_exceptions.json"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
     "backlog",

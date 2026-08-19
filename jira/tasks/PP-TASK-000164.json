@@ -52,7 +52,7 @@
     "src/project_pipeline/command_center/models.py",
     "tests/test_command_center_api.py"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
     "architecture",

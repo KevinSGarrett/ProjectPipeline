@@ -46,7 +46,7 @@
     "src/project_pipeline/tools/docker_mcp_gateway.py",
     "tests/integration/test_governed_tool_gateway.py"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
     "backlog",

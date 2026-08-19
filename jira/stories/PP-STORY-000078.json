@@ -49,13 +49,12 @@
   "expected_implementation_artifacts": [
     "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-trust",
     "domain-ctx",
-    "implemented"
+    "cluster-trust"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -113,6 +112,6 @@
     "SRC-017:L000009-L000071"
   ],
   "state": "BACKLOG",
-  "title": "Trust — Context and Knowledge",
+  "title": "Trust \u2014 Context and Knowledge",
   "upstream_dependencies": []
 }

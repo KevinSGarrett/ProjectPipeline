@@ -35,7 +35,7 @@
   "expected_implementation_artifacts": [
     "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",

@@ -67,12 +67,12 @@
     "database/migrations/postgresql/PPDB-0004_jira_steward_sync.up.sql",
     "docs/jira"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-jira",
-    "domain-gov"
+    "domain-gov",
+    "cluster-jira"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -285,6 +285,6 @@
     "SRC-007:L001098-L001128"
   ],
   "state": "BACKLOG",
-  "title": "Jira — Jira and Repository Governance",
+  "title": "Jira \u2014 Jira and Repository Governance",
   "upstream_dependencies": []
 }

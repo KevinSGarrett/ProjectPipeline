@@ -35,7 +35,7 @@
   "expected_implementation_artifacts": [
     "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",

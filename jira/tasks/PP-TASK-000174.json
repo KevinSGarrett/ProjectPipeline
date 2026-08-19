@@ -56,7 +56,7 @@
     "provenance/reviews/",
     "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-003_high_value_reviews.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
     "platform",

@@ -4684,37 +4684,37 @@
     },
     {
       "id": "PP-TASK-000037",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Validate the supplied knowledge corpus",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000038",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Reconcile governing prompt aliases",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000039",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Inventory the upstream repository catalog",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000040",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Establish the professional repository foundation",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000041",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Establish requirements and plan traceability",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000042",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Establish the structured local Jira mirror",
       "type": "TASK"
     },
@@ -4732,7 +4732,7 @@
     },
     {
       "id": "PP-SUBTASK-000045",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement manifest and repository-map generation",
       "type": "SUBTASK"
     },
@@ -4744,7 +4744,7 @@
     },
     {
       "id": "PP-SUBTASK-000047",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement deterministic archive creation and verification",
       "type": "SUBTASK"
     },
@@ -5296,7 +5296,7 @@
     },
     {
       "id": "PP-TASK-000138",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Generate the detailed requirement catalog",
       "type": "TASK"
     },
@@ -5308,7 +5308,7 @@
     },
     {
       "id": "PP-SUBTASK-000139",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Verify generate the detailed requirement catalog",
       "type": "SUBTASK"
     },
@@ -5320,7 +5320,7 @@
     },
     {
       "id": "PP-TASK-000140",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement source-reference validation",
       "type": "TASK"
     },
@@ -5332,7 +5332,7 @@
     },
     {
       "id": "PP-SUBTASK-000141",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Verify implement source-reference validation",
       "type": "SUBTASK"
     },
@@ -5344,7 +5344,7 @@
     },
     {
       "id": "PP-TASK-000142",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Generate canonical source-section dispositions",
       "type": "TASK"
     },
@@ -5356,67 +5356,67 @@
     },
     {
       "id": "PP-SUBTASK-000143",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Verify generate canonical source-section dispositions",
       "type": "SUBTASK"
     },
     {
       "id": "PP-TASK-000144",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement requirement query and summary interfaces",
       "type": "TASK"
     },
     {
       "id": "PP-SUBTASK-000145",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Verify implement requirement query and summary interfaces",
       "type": "SUBTASK"
     },
     {
       "id": "PP-TASK-000146",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement deterministic Jira index and graph rebuilding",
       "type": "TASK"
     },
     {
       "id": "PP-SUBTASK-000147",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Verify implement deterministic jira index and graph rebuilding",
       "type": "SUBTASK"
     },
     {
       "id": "PP-TASK-000148",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Build glossary, source evolution, and open-decision registries",
       "type": "TASK"
     },
     {
       "id": "PP-SUBTASK-000149",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Verify build glossary, source evolution, and open-decision registries",
       "type": "SUBTASK"
     },
     {
       "id": "PP-TASK-000150",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Expand self-validation for detailed registries",
       "type": "TASK"
     },
     {
       "id": "PP-SUBTASK-000151",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Verify expand self-validation for detailed registries",
       "type": "SUBTASK"
     },
     {
       "id": "PP-TASK-000152",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Add behavior-specific catalog, source, and Jira tests",
       "type": "TASK"
     },
     {
       "id": "PP-SUBTASK-000153",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Verify add behavior-specific catalog, source, and jira tests",
       "type": "SUBTASK"
     },
@@ -5638,7 +5638,7 @@
     },
     {
       "id": "PP-TASK-000190",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement correlation-aware structured logging and telemetry boundary",
       "type": "TASK"
     },
@@ -5662,19 +5662,19 @@
     },
     {
       "id": "PP-TASK-000194",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement stable domain identifiers and strict requirement entities",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000195",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement the domain project manifest and repository identity boundary",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000196",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement versioned project and task lifecycle state",
       "type": "TASK"
     },
@@ -5692,7 +5692,7 @@
     },
     {
       "id": "PP-TASK-000199",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement transactional bidirectional requirement traceability",
       "type": "TASK"
     },
@@ -5710,19 +5710,19 @@
     },
     {
       "id": "PP-TASK-000202",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Define strict project-intake and compilation contracts",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000203",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement safe read-only repository discovery",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000204",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Discover project authorities and operating surfaces",
       "type": "TASK"
     },
@@ -5734,31 +5734,31 @@
     },
     {
       "id": "PP-TASK-000206",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Compile an enriched deterministic repository map",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000207",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Compile project manifests and structured gap analysis",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000208",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement controlled idempotent non-destructive bootstrap",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000209",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Persist compilations and bootstrap receipts through migration PPDB-0003",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000210",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Integrate intake CLI, schemas, fixtures, self-validation, and evidence",
       "type": "TASK"
     },
@@ -5890,7 +5890,7 @@
     },
     {
       "id": "PP-TASK-000232",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Validated dependency DAG and graph analysis",
       "type": "TASK"
     },
@@ -5902,7 +5902,7 @@
     },
     {
       "id": "PP-TASK-000234",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Critical path and deterministic priority sequencing",
       "type": "TASK"
     },
@@ -6238,7 +6238,7 @@
     },
     {
       "id": "PP-TASK-000290",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Apply upstream gate to Context implementation",
       "type": "TASK"
     },
@@ -6250,13 +6250,13 @@
     },
     {
       "id": "PP-TASK-000292",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement deterministic Context Broker minimality",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000293",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement content-addressed Context Compiler",
       "type": "TASK"
     },
@@ -6280,13 +6280,13 @@
     },
     {
       "id": "PP-TASK-000297",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Persist context packs and add PPDB-0009",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000298",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Integrate bounded document normalization for context",
       "type": "TASK"
     },
@@ -6298,13 +6298,13 @@
     },
     {
       "id": "PP-TASK-000300",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Complete Pass 13 orchestration upstream gate",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000301",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement durable orchestration domain and stable port",
       "type": "TASK"
     },
@@ -6322,7 +6322,7 @@
     },
     {
       "id": "PP-TASK-000304",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement durable signal and timer waits",
       "type": "TASK"
     },
@@ -6334,13 +6334,13 @@
     },
     {
       "id": "PP-TASK-000306",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement Hatchet adapter and fallback backend boundaries",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000307",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Persist PPDB-0010 durable workflow and recovery state",
       "type": "TASK"
     },
@@ -6358,79 +6358,79 @@
     },
     {
       "id": "PP-TASK-000310",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Complete Pass 14 budget upstream gate",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000311",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement immutable unified cost and quota ledger",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000312",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement hierarchy soft allocation protected reserve and quotas",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000313",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement atomic spend leases settlement and uncertain outcome reconciliation",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000314",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement pressure hard stop admission and runaway anomaly policy",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000315",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement historical forecasts burn runway and outcome economics",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000316",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement deterministic budget change impact and allocation analysis",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000317",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Couple budget admission to scheduler router context and verification economics",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000318",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement upstream cost evidence and Infracost preflight boundary",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000319",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Integrate PPDB-0011 CLI schemas simulations documentation and validation",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000320",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Complete Pass 15 verification upstream gate",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000321",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement Acceptance Criteria Compiler and executable Definition of Done",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000322",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement Truth Registry evidence sufficiency and freshness",
       "type": "TASK"
     },
@@ -6442,13 +6442,13 @@
     },
     {
       "id": "PP-TASK-000324",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement Scope Governor acceptance freeze and change budget",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000325",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement independent review identity and evidence multiplicity",
       "type": "TASK"
     },
@@ -6466,13 +6466,13 @@
     },
     {
       "id": "PP-TASK-000328",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement completion failure localization and rework routing",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000329",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Integrate PPDB-0012 CLI schemas documentation and assurance validation",
       "type": "TASK"
     },
@@ -6598,13 +6598,13 @@
     },
     {
       "id": "PP-TASK-000350",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement explicit failure domains and deterministic operating modes",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000351",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement capability-preserving provider substitution",
       "type": "TASK"
     },
@@ -6628,7 +6628,7 @@
     },
     {
       "id": "PP-TASK-000355",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement autonomous external-precondition recovery and repair verification",
       "type": "TASK"
     },

@@ -35,7 +35,7 @@
   "expected_implementation_artifacts": [
     "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",

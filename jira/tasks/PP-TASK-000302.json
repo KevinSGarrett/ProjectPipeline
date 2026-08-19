@@ -63,11 +63,11 @@
     "src/project_pipeline/orchestration/service.py",
     "src/project_pipeline/orchestration/recovery.py"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
-    "durability",
     "orchestration",
+    "durability",
     "pass-13"
   ],
   "last_observed_remote_state": {

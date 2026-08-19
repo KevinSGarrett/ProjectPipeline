@@ -44,11 +44,10 @@
     "plans/08_execution_assurance_and_testing/PLAN-ASSURE-001_execution_assurance.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "domain-story",
-    "implemented",
     "plan-assure-001"
   ],
   "last_observed_remote_state": {

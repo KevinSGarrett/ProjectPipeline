@@ -43,13 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-audit",
     "domain-ops",
-    "implemented"
+    "cluster-audit"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -98,6 +97,6 @@
     "SRC-015:L000359-L000488"
   ],
   "state": "BACKLOG",
-  "title": "Audit — Observability and Operations",
+  "title": "Audit \u2014 Observability and Operations",
   "upstream_dependencies": []
 }

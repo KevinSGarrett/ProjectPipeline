@@ -35,11 +35,10 @@
   "expected_implementation_artifacts": [
     "plans/08_execution_assurance_and_testing/PLAN-ASSURE-001_execution_assurance.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",
-    "implemented",
     "plan-assure-001"
   ],
   "last_observed_remote_state": {

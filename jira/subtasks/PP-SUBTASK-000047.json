@@ -44,7 +44,6 @@
   "issue_type": "SUBTASK",
   "labels": [
     "bulk-reconciled",
-    "done",
     "foundation",
     "implemented",
     "verification"
@@ -91,7 +90,7 @@
   "source_references": [
     "GOV-001:L001884-L001992"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement deterministic archive creation and verification",
   "upstream_dependencies": []
 }

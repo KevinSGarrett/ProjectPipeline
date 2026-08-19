@@ -49,13 +49,12 @@
     "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md",
     "src/project_pipeline/persistence/sqlite.py"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-data",
     "domain-arch",
-    "implemented"
+    "cluster-data"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -124,6 +123,6 @@
     "SRC-017:L000823-L000906"
   ],
   "state": "BACKLOG",
-  "title": "Data — System Architecture",
+  "title": "Data \u2014 System Architecture",
   "upstream_dependencies": []
 }

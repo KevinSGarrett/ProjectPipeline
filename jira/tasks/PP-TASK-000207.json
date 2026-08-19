@@ -23,23 +23,7 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000016",
-    "EVID-000018",
-    "EVID-000019",
-    "EVID-000020",
-    "EVID-000028",
-    "EVID-000030",
-    "EVID-000035",
-    "EVID-000036",
-    "EVID-000037",
-    "EVID-000038",
-    "EVID-000039",
-    "EVID-000040",
-    "EVID-000041",
-    "EVID-000042",
-    "EVID-000089",
-    "EVID-000093",
-    "EVID-000094"
+    "EVID-000036"
   ],
   "definition_of_done": [
     "Implementation for the bounded intake objective is complete.",
@@ -77,11 +61,10 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "deterministic",
-    "done",
-    "non-destructive",
+    "project-intake",
     "project-compiler",
-    "project-intake"
+    "deterministic",
+    "non-destructive"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -162,7 +145,7 @@
     "SRC-014:L000005-L000125",
     "SRC-017:L001122-L001175"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Compile project manifests and structured gap analysis",
   "upstream_dependencies": []
 }

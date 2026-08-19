@@ -46,7 +46,7 @@
     "observability/telemetry.py",
     "tests/test_telemetry.py"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
     "backlog",

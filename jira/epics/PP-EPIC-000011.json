@@ -40,7 +40,7 @@
   "expected_implementation_artifacts": [
     "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",

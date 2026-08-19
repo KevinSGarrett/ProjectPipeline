@@ -1698,7 +1698,7 @@
       "test_id": "TEST-JIRA-RECONCILE-005"
     },
     {
-      "callable": "test_jira_sync_guard_blocks_pending_remote_on_current_repository",
+      "callable": "test_jira_sync_guard_passes_for_repository_state",
       "path": "tests/test_jira_sync_guard.py",
       "test_id": "TEST-JIRA-SYNC-GUARD-001"
     },

@@ -69,7 +69,6 @@
     "assurance",
     "bulk-reconciled",
     "completion-gate",
-    "done",
     "implemented",
     "pass-15"
   ],
@@ -138,7 +137,7 @@
     "SRC-008:L001196-L001241",
     "SRC-008:L001248-L001270"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Integrate PPDB-0012 CLI schemas documentation and assurance validation",
   "upstream_dependencies": []
 }

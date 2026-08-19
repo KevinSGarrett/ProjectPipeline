@@ -44,11 +44,10 @@
     "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "domain-story",
-    "implemented",
     "plan-ctrl-001"
   ],
   "last_observed_remote_state": {

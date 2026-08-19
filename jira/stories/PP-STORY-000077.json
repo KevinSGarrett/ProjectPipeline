@@ -49,12 +49,12 @@
   "expected_implementation_artifacts": [
     "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-freshness",
-    "domain-ctx"
+    "domain-ctx",
+    "cluster-freshness"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -106,6 +106,6 @@
     "SRC-002:L001158-L001234"
   ],
   "state": "BACKLOG",
-  "title": "Freshness — Context and Knowledge",
+  "title": "Freshness \u2014 Context and Knowledge",
   "upstream_dependencies": []
 }

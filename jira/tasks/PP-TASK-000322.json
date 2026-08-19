@@ -23,14 +23,7 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000005",
-    "EVID-000006",
-    "EVID-000108",
-    "EVID-000112",
-    "EVID-000113",
-    "EVID-000116",
-    "EVID-000121",
-    "EVID-000122"
+    "EVID-000108"
   ],
   "definition_of_done": [
     "Implementation is present and locally behaviorally verified.",
@@ -63,7 +56,6 @@
   "labels": [
     "assurance",
     "completion-gate",
-    "done",
     "pass-15"
   ],
   "last_observed_remote_state": {
@@ -127,7 +119,7 @@
     "SRC-008:L000715-L000770",
     "SRC-008:L001042-L001066"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement Truth Registry evidence sufficiency and freshness",
   "upstream_dependencies": []
 }

@@ -44,7 +44,7 @@
     "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "domain-story",

@@ -58,13 +58,13 @@
     "src/project_pipeline/cli.py",
     "database/migrations/PPDB-0008_agent_router_provider_state.sqlite.up.sql"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
     "agent-router",
+    "provider-abstraction",
     "capability-routing",
-    "deterministic",
-    "provider-abstraction"
+    "deterministic"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

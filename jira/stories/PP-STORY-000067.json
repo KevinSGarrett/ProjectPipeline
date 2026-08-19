@@ -43,13 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-guardrails",
     "domain-ctrl",
-    "implemented"
+    "cluster-guardrails"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -98,6 +97,6 @@
     "SRC-014:L001748-L001810"
   ],
   "state": "BACKLOG",
-  "title": "Guardrails — Control Plane and Orchestration",
+  "title": "Guardrails \u2014 Control Plane and Orchestration",
   "upstream_dependencies": []
 }

@@ -62,7 +62,6 @@
     "budget",
     "bulk-reconciled",
     "cost-governance",
-    "done",
     "implemented",
     "pass-14"
   ],
@@ -121,7 +120,7 @@
     "SRC-004:L000937-L000977",
     "SRC-012:L000780-L000816"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement pressure hard stop admission and runaway anomaly policy",
   "upstream_dependencies": []
 }

@@ -35,7 +35,7 @@
   "expected_implementation_artifacts": [
     "plans/17_release_and_handoff/PLAN-REL-001_release_handoff.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",

@@ -44,7 +44,7 @@
     "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "domain-story",

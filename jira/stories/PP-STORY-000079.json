@@ -43,13 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-adapters",
     "domain-agent",
-    "implemented"
+    "cluster-adapters"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -100,6 +99,6 @@
     "SRC-009:L000019-L000019"
   ],
   "state": "BACKLOG",
-  "title": "Adapters — Agents, Models, Providers, and Tools",
+  "title": "Adapters \u2014 Agents, Models, Providers, and Tools",
   "upstream_dependencies": []
 }

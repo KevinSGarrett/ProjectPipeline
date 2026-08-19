@@ -35,7 +35,7 @@
   "expected_implementation_artifacts": [
     "evidence/EVIDENCE_LEDGER.jsonl"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "SUBTASK",
   "labels": [
     "foundation",

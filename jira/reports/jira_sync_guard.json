@@ -20,9 +20,8 @@
   ],
   "local_edge_count": 890,
   "local_issue_count": 393,
-  "local_mirror_fingerprint": "9ee25afca7ccea95261c9608c8067e9c9d0daa05413b8d30ee2dd8e2e4e34cf5",
-  "local_reconciliation_pending_remote": true,
-  "parity_status": "LOCAL_RECONCILED_PENDING_REMOTE",
+  "local_mirror_fingerprint": "9282ab328ac6c753ae7913d57f65b88476431a0a77faecb6f4d79f9849ba91e5",
+  "parity_status": "PARITY_CONFIRMED",
   "plan_id": "JPLAN-3618FC1CD42B00FA927F",
   "project_key": "PP",
   "readback": {

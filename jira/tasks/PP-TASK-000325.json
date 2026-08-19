@@ -58,7 +58,6 @@
     "assurance",
     "bulk-reconciled",
     "completion-gate",
-    "done",
     "implemented",
     "pass-15"
   ],
@@ -115,7 +114,7 @@
     "SRC-008:L001109-L001167",
     "SRC-008:L001168-L001195"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement independent review identity and evidence multiplicity",
   "upstream_dependencies": []
 }

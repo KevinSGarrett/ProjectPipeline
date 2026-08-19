@@ -55,7 +55,7 @@
     "src/project_pipeline/context_engine/firewall.py",
     "src/project_pipeline/context_engine/trust.py"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
     "context",

@@ -9,10 +9,9 @@ from project_pipeline.jira_steward.sync_guard import evaluate_jira_sync_guard
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def test_jira_sync_guard_blocks_pending_remote_on_current_repository() -> None:
+def test_jira_sync_guard_passes_for_repository_state() -> None:
     result = evaluate_jira_sync_guard(ROOT)
-    assert result.passes is False
-    assert any("pending remote apply" in reason for reason in result.reasons)
+    assert result.passes is True, result.reasons
 
 
 def test_jira_sync_guard_blocks_when_artifact_missing(tmp_path: Path) -> None:

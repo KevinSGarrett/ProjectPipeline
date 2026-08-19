@@ -55,7 +55,6 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
-    "done",
     "implemented",
     "verification"
   ],
@@ -111,7 +110,7 @@
     "GOV-001:L001162-L001200",
     "GOV-001:L001202-L001215"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Verify generate the detailed requirement catalog",
   "upstream_dependencies": []
 }

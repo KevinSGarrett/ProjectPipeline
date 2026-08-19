@@ -46,7 +46,7 @@
     "src/project_pipeline/persistence/",
     "migrations/"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
     "architecture",

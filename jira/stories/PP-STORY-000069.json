@@ -43,13 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-parallelism",
     "domain-sched",
-    "implemented"
+    "cluster-parallelism"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -101,6 +100,6 @@
     "SRC-014:L000378-L000748"
   ],
   "state": "BACKLOG",
-  "title": "Parallelism — Scheduling and Parallel Execution",
+  "title": "Parallelism \u2014 Scheduling and Parallel Execution",
   "upstream_dependencies": []
 }

@@ -36,7 +36,7 @@
     "expected_implementation_artifacts": [
       "plans/00_project_definition/PLAN-PDEF-001_project_definition.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -304,11 +304,10 @@
     "expected_implementation_artifacts": [
       "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "implemented",
       "plan-arch-001"
     ],
     "last_observed_remote_state": {
@@ -438,7 +437,7 @@
     "expected_implementation_artifacts": [
       "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -563,7 +562,7 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -698,7 +697,7 @@
     "expected_implementation_artifacts": [
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -829,7 +828,7 @@
     "expected_implementation_artifacts": [
       "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -965,7 +964,7 @@
     "expected_implementation_artifacts": [
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1099,11 +1098,10 @@
     "expected_implementation_artifacts": [
       "plans/08_execution_assurance_and_testing/PLAN-ASSURE-001_execution_assurance.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "implemented",
       "plan-assure-001"
     ],
     "last_observed_remote_state": {
@@ -1252,7 +1250,7 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1389,11 +1387,10 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "implemented",
       "plan-budget-001"
     ],
     "last_observed_remote_state": {
@@ -1518,7 +1515,7 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1664,7 +1661,7 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1803,7 +1800,7 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1935,7 +1932,7 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -2068,12 +2065,12 @@
     "expected_implementation_artifacts": [
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "pass-22",
-      "plan-life-001"
+      "plan-life-001",
+      "pass-22"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -2200,7 +2197,7 @@
     "expected_implementation_artifacts": [
       "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -2323,7 +2320,7 @@
     "expected_implementation_artifacts": [
       "plans/17_release_and_handoff/PLAN-REL-001_release_handoff.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -2558,12 +2555,12 @@
       "src/project_pipeline/assurance/completion.py",
       "docs/operations/cursor_autonomous_takeover.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "EPIC",
     "labels": [
+      "domain-epic",
       "autonomous-runtime",
       "cursor-takeover",
-      "domain-epic",
       "superseded-by-PP-EPIC-000036"
     ],
     "last_observed_remote_state": null,
@@ -2661,7 +2658,7 @@
       "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -2890,11 +2887,10 @@
       "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
-      "implemented",
       "plan-arch-001"
     ],
     "last_observed_remote_state": {
@@ -2994,11 +2990,10 @@
       "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
-      "implemented",
       "plan-ctrl-001"
     ],
     "last_observed_remote_state": {
@@ -3098,11 +3093,10 @@
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
-      "implemented",
       "plan-sched-001"
     ],
     "last_observed_remote_state": {
@@ -3208,7 +3202,7 @@
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -3426,7 +3420,7 @@
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -3530,11 +3524,10 @@
       "plans/08_execution_assurance_and_testing/PLAN-ASSURE-001_execution_assurance.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
-      "implemented",
       "plan-assure-001"
     ],
     "last_observed_remote_state": {
@@ -3637,7 +3630,7 @@
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -3862,7 +3855,7 @@
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -3971,7 +3964,7 @@
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -4074,7 +4067,7 @@
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -4177,7 +4170,7 @@
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -4390,11 +4383,10 @@
       "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
-      "implemented",
       "plan-upstream-001"
     ],
     "last_observed_remote_state": {
@@ -4494,7 +4486,7 @@
       "plans/17_release_and_handoff/PLAN-REL-001_release_handoff.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -5380,13 +5372,12 @@
     "expected_implementation_artifacts": [
       "plans/01_requirements/PLAN-REQ-002_requirement_catalog_and_coverage.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-decisions",
       "domain-req",
-      "implemented"
+      "cluster-decisions"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -6005,13 +5996,12 @@
       "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md",
       "src/project_pipeline/persistence/sqlite.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-data",
       "domain-arch",
-      "implemented"
+      "cluster-data"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -6598,12 +6588,12 @@
     "expected_implementation_artifacts": [
       "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-authority",
-      "domain-ctrl"
+      "domain-ctrl",
+      "cluster-authority"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -6837,13 +6827,12 @@
     "expected_implementation_artifacts": [
       "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-guardrails",
       "domain-ctrl",
-      "implemented"
+      "cluster-guardrails"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7046,13 +7035,12 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-parallelism",
       "domain-sched",
-      "implemented"
+      "cluster-parallelism"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7152,12 +7140,12 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-resources",
-      "domain-sched"
+      "domain-sched",
+      "cluster-resources"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7262,12 +7250,12 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-sequencing",
-      "domain-sched"
+      "domain-sched",
+      "cluster-sequencing"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7372,13 +7360,12 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-verification",
       "domain-sched",
-      "implemented"
+      "cluster-verification"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7475,13 +7462,12 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-work-graph",
       "domain-sched",
-      "implemented"
+      "cluster-work-graph"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7587,13 +7573,12 @@
     "expected_implementation_artifacts": [
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-broker",
       "domain-ctx",
-      "implemented"
+      "cluster-broker"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7835,13 +7820,12 @@
     "expected_implementation_artifacts": [
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-delegation",
       "domain-ctx",
-      "implemented"
+      "cluster-delegation"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7947,12 +7931,12 @@
     "expected_implementation_artifacts": [
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-freshness",
-      "domain-ctx"
+      "domain-ctx",
+      "cluster-freshness"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -8058,13 +8042,12 @@
     "expected_implementation_artifacts": [
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-trust",
       "domain-ctx",
-      "implemented"
+      "cluster-trust"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -8170,13 +8153,12 @@
     "expected_implementation_artifacts": [
       "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-adapters",
       "domain-agent",
-      "implemented"
+      "cluster-adapters"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -8392,12 +8374,12 @@
     "expected_implementation_artifacts": [
       "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-local-models",
-      "domain-agent"
+      "domain-agent",
+      "cluster-local-models"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -8508,13 +8490,12 @@
     "expected_implementation_artifacts": [
       "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-qualification",
       "domain-agent",
-      "implemented"
+      "cluster-qualification"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -8617,13 +8598,12 @@
     "expected_implementation_artifacts": [
       "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-registry",
       "domain-agent",
-      "implemented"
+      "cluster-registry"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -8974,12 +8954,12 @@
       "database/migrations/postgresql/PPDB-0004_jira_steward_sync.up.sql",
       "docs/jira"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-jira",
-      "domain-gov"
+      "domain-gov",
+      "cluster-jira"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -9347,12 +9327,12 @@
     "expected_implementation_artifacts": [
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-structure",
-      "domain-gov"
+      "domain-gov",
+      "cluster-structure"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -9823,13 +9803,12 @@
     "expected_implementation_artifacts": [
       "plans/08_execution_assurance_and_testing/PLAN-ASSURE-001_execution_assurance.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-scope",
       "domain-assure",
-      "implemented"
+      "cluster-scope"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -9959,13 +9938,12 @@
     "expected_implementation_artifacts": [
       "plans/08_execution_assurance_and_testing/PLAN-ASSURE-001_execution_assurance.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-testing",
       "domain-assure",
-      "implemented"
+      "cluster-testing"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10093,13 +10071,12 @@
     "expected_implementation_artifacts": [
       "plans/08_execution_assurance_and_testing/PLAN-ASSURE-001_execution_assurance.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-truth",
       "domain-assure",
-      "implemented"
+      "cluster-truth"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10205,12 +10182,12 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-egress",
-      "domain-sec"
+      "domain-sec",
+      "cluster-egress"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10311,12 +10288,12 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-identity",
-      "domain-sec"
+      "domain-sec",
+      "cluster-identity"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10418,12 +10395,12 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-policy",
-      "domain-sec"
+      "domain-sec",
+      "cluster-policy"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10529,13 +10506,12 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-secrets",
       "domain-sec",
-      "implemented"
+      "cluster-secrets"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10639,12 +10615,12 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-supply-chain",
-      "domain-sec"
+      "domain-sec",
+      "cluster-supply-chain"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10761,13 +10737,12 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-forecast",
       "domain-budget",
-      "implemented"
+      "cluster-forecast"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10887,13 +10862,12 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-leases",
       "domain-budget",
-      "implemented"
+      "cluster-leases"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11008,13 +10982,12 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-ledger",
       "domain-budget",
-      "implemented"
+      "cluster-ledger"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11132,13 +11105,12 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-pressure",
       "domain-budget",
-      "implemented"
+      "cluster-pressure"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11255,12 +11227,12 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-durable-state",
-      "domain-res"
+      "domain-res",
+      "cluster-durable-state"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11384,12 +11356,12 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-external-systems",
-      "domain-res"
+      "domain-res",
+      "cluster-external-systems"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11616,12 +11588,12 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-machine-failure",
-      "domain-res"
+      "domain-res",
+      "cluster-machine-failure"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11851,12 +11823,12 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-provider-failure",
-      "domain-res"
+      "domain-res",
+      "cluster-provider-failure"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11959,12 +11931,12 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-recovery-verification",
-      "domain-res"
+      "domain-res",
+      "cluster-recovery-verification"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -12182,12 +12154,12 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-director",
       "domain-ux",
+      "cluster-director",
       "pass-21"
     ],
     "last_observed_remote_state": {
@@ -12295,7 +12267,7 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
@@ -12639,13 +12611,12 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-audit",
       "domain-ops",
-      "implemented"
+      "cluster-audit"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -12845,12 +12816,12 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-intelligence",
-      "domain-ops"
+      "domain-ops",
+      "cluster-intelligence"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -12948,12 +12919,12 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-operations",
-      "domain-ops"
+      "domain-ops",
+      "cluster-operations"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13060,12 +13031,12 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-telemetry",
-      "domain-ops"
+      "domain-ops",
+      "cluster-telemetry"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13395,12 +13366,12 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-local",
-      "domain-infra"
+      "domain-infra",
+      "cluster-local"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -14598,12 +14569,12 @@
     "expected_implementation_artifacts": [
       "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-review",
-      "domain-upstream"
+      "domain-upstream",
+      "cluster-review"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -14909,12 +14880,12 @@
     "expected_implementation_artifacts": [
       "plans/17_release_and_handoff/PLAN-REL-001_release_handoff.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-handoff",
-      "domain-rel"
+      "domain-rel",
+      "cluster-handoff"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -15301,7 +15272,7 @@
       "src/project_pipeline/autonomy_runtime/lanes.py",
       "src/project_pipeline/autonomy_runtime/recovery.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "autonomy-runtime",
@@ -15702,7 +15673,6 @@
     "issue_type": "SUBTASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "foundation",
       "implemented",
       "verification"
@@ -15749,7 +15719,7 @@
     "source_references": [
       "SRC-008:L000540-L000760"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement manifest and repository-map generation",
     "upstream_dependencies": []
   },
@@ -15795,7 +15765,7 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/validation/repository.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "SUBTASK",
     "labels": [
       "foundation",
@@ -15896,7 +15866,6 @@
     "issue_type": "SUBTASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "foundation",
       "implemented",
       "verification"
@@ -15943,7 +15912,7 @@
     "source_references": [
       "GOV-001:L001884-L001992"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement deterministic archive creation and verification",
     "upstream_dependencies": []
   },
@@ -15984,7 +15953,7 @@
     "expected_implementation_artifacts": [
       "evidence/EVIDENCE_LEDGER.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "SUBTASK",
     "labels": [
       "foundation",
@@ -16094,7 +16063,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented",
       "verification"
     ],
@@ -16150,7 +16118,7 @@
       "GOV-001:L001162-L001200",
       "GOV-001:L001202-L001215"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Verify generate the detailed requirement catalog",
     "upstream_dependencies": []
   },
@@ -16208,7 +16176,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented",
       "verification"
     ],
@@ -16262,7 +16229,7 @@
       "GOV-001:L000173-L000183",
       "SRC-017:L000490-L000596"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Verify implement source-reference validation",
     "upstream_dependencies": []
   },
@@ -16326,7 +16293,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented",
       "verification"
     ],
@@ -16382,7 +16348,7 @@
       "GOV-001:L001200-L001215",
       "SRC-017:L000490-L000596"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Verify generate canonical source-section dispositions",
     "upstream_dependencies": []
   },
@@ -16460,7 +16426,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented",
       "verification"
     ],
@@ -16519,7 +16484,7 @@
       "GOV-001:L002200-L002231",
       "SRC-017:L000490-L000596"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Verify implement requirement query and summary interfaces",
     "upstream_dependencies": []
   },
@@ -16584,7 +16549,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented",
       "verification"
     ],
@@ -16635,7 +16599,7 @@
     "source_references": [
       "GOV-001:L000949-L001158"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Verify implement deterministic jira index and graph rebuilding",
     "upstream_dependencies": []
   },
@@ -16697,7 +16661,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented",
       "verification"
     ],
@@ -16754,7 +16717,7 @@
       "GOV-001:L001998-L002024",
       "SRC-017:L000490-L000596"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Verify build glossary, source evolution, and open-decision registries",
     "upstream_dependencies": []
   },
@@ -16817,7 +16780,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented",
       "verification"
     ],
@@ -16872,7 +16834,7 @@
       "GOV-001:L001200-L001215",
       "GOV-001:L002200-L002231"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Verify expand self-validation for detailed registries",
     "upstream_dependencies": []
   },
@@ -16943,7 +16905,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented",
       "verification"
     ],
@@ -16998,7 +16959,7 @@
     "source_references": [
       "SRC-008:L000540-L000760"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Verify add behavior-specific catalog, source, and jira tests",
     "upstream_dependencies": []
   },
@@ -17191,12 +17152,12 @@
       "plans/01_requirements/open_decisions.jsonl",
       "plans/01_requirements/source_evolution.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "SUBTASK",
     "labels": [
       "architecture",
-      "evidence-backed",
-      "provenance"
+      "provenance",
+      "evidence-backed"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -17462,12 +17423,12 @@
       "tests/test_upstream_reviews.py",
       "tests/test_decision_resolution.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "SUBTASK",
     "labels": [
       "architecture",
-      "evidence-backed",
-      "provenance"
+      "provenance",
+      "evidence-backed"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -17603,7 +17564,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "executable",
       "foundation",
       "implemented"
@@ -17651,7 +17611,7 @@
     "source_references": [
       "GOV-001:L000123-L000221"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Validate the supplied knowledge corpus",
     "upstream_dependencies": []
   },
@@ -17711,7 +17671,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "executable",
       "foundation",
       "implemented"
@@ -17758,7 +17717,7 @@
     "source_references": [
       "GOV-001:L000052-L000119"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Reconcile governing prompt aliases",
     "upstream_dependencies": []
   },
@@ -17828,7 +17787,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "executable",
       "foundation",
       "implemented"
@@ -17876,7 +17834,7 @@
     "source_references": [
       "GOV-001:L000797-L000876"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Inventory the upstream repository catalog",
     "upstream_dependencies": []
   },
@@ -17949,7 +17907,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "executable",
       "foundation",
       "implemented"
@@ -18002,7 +17959,7 @@
       "GOV-001:L000748-L000764",
       "GOV-001:L001364-L001385"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Establish the professional repository foundation",
     "upstream_dependencies": []
   },
@@ -18076,7 +18033,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "executable",
       "foundation",
       "implemented"
@@ -18132,7 +18088,7 @@
       "GOV-001:L000123-L000221",
       "SRC-008:L000540-L000760"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Establish requirements and plan traceability",
     "upstream_dependencies": []
   },
@@ -18199,7 +18155,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "executable",
       "foundation",
       "implemented"
@@ -18253,7 +18208,7 @@
     "source_references": [
       "GOV-001:L000949-L001158"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Establish the structured local Jira mirror",
     "upstream_dependencies": []
   },
@@ -18315,11 +18270,11 @@
       "scripts/validate_repository.py",
       "tests/"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "executable",
-      "foundation"
+      "foundation",
+      "executable"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -18426,11 +18381,11 @@
       "Project_Pipeline_Project_Pack_r01.zip",
       "Project_Pipeline_Rehydration_Pack_r01.zip"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "executable",
-      "foundation"
+      "foundation",
+      "executable"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -18543,7 +18498,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -18602,7 +18556,7 @@
       "GOV-001:L001162-L001200",
       "GOV-001:L001202-L001215"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Generate the detailed requirement catalog",
     "upstream_dependencies": []
   },
@@ -18660,7 +18614,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -18717,7 +18670,7 @@
       "GOV-001:L000173-L000183",
       "SRC-017:L000490-L000596"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement source-reference validation",
     "upstream_dependencies": []
   },
@@ -18781,7 +18734,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -18840,7 +18792,7 @@
       "GOV-001:L001200-L001215",
       "SRC-017:L000490-L000596"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Generate canonical source-section dispositions",
     "upstream_dependencies": []
   },
@@ -18918,7 +18870,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -18980,7 +18931,7 @@
       "GOV-001:L002200-L002231",
       "SRC-017:L000490-L000596"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement requirement query and summary interfaces",
     "upstream_dependencies": []
   },
@@ -19045,7 +18996,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -19099,7 +19049,7 @@
     "source_references": [
       "GOV-001:L000949-L001158"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement deterministic Jira index and graph rebuilding",
     "upstream_dependencies": []
   },
@@ -19161,7 +19111,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -19221,7 +19170,7 @@
       "GOV-001:L001998-L002024",
       "SRC-017:L000490-L000596"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Build glossary, source evolution, and open-decision registries",
     "upstream_dependencies": []
   },
@@ -19284,7 +19233,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -19342,7 +19290,7 @@
       "GOV-001:L001200-L001215",
       "GOV-001:L002200-L002231"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Expand self-validation for detailed registries",
     "upstream_dependencies": []
   },
@@ -19413,7 +19361,6 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
-      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -19471,7 +19418,7 @@
     "source_references": [
       "SRC-008:L000540-L000760"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Add behavior-specific catalog, source, and Jira tests",
     "upstream_dependencies": []
   },
@@ -20067,7 +20014,7 @@
       "architecture/diagrams/deployment_profiles.mmd",
       "architecture/diagrams/traceability_flow.mmd"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -20465,7 +20412,7 @@
       "src/project_pipeline/persistence/",
       "migrations/"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -20580,12 +20527,11 @@
       "src/project_pipeline/orchestration/adapters.py",
       "src/project_pipeline/orchestration/ports.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "backlog",
       "implementation",
-      "implemented",
       "platform"
     ],
     "last_observed_remote_state": {
@@ -20695,7 +20641,7 @@
       "src/project_pipeline/control/command_ledger.py",
       "src/project_pipeline/persistence/outbox.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -20811,7 +20757,7 @@
       "src/project_pipeline/command_center/models.py",
       "tests/test_command_center_api.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -20927,7 +20873,7 @@
       "src/project_pipeline/scheduling/",
       "tests/test_scheduling.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "backlog",
@@ -21193,7 +21139,7 @@
       "src/project_pipeline/tools/docker_mcp_gateway.py",
       "tests/integration/test_governed_tool_gateway.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "backlog",
@@ -21415,7 +21361,7 @@
       "scripts/secrets/",
       "runbooks/provision_secrets.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "backlog",
@@ -21524,7 +21470,7 @@
       "observability/telemetry.py",
       "tests/test_telemetry.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "backlog",
@@ -21765,7 +21711,7 @@
       "tests/e2e/",
       "tests/integration/"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "backlog",
@@ -22030,7 +21976,7 @@
       "provenance/reviews/",
       "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-003_high_value_reviews.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "platform",
@@ -22285,7 +22231,7 @@
     "expected_implementation_artifacts": [
       "provenance/license_exceptions.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "backlog",
@@ -22512,7 +22458,7 @@
       "src/project_pipeline/persistence/artifacts.py",
       "integrations/object_storage/s3.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -22726,7 +22672,7 @@
       "benchmarks/retrieval/",
       "docs/retrieval_benchmark.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -22844,11 +22790,10 @@
       "src/project_pipeline/orchestration/adapters.py",
       "src/project_pipeline/orchestration/ports.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "backlog",
-      "implemented",
       "platform",
       "upstream"
     ],
@@ -22969,13 +22914,13 @@
       "src/project_pipeline/",
       "docs/development/source_layout.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "architecture",
-      "evidence-backed",
+      "repository",
       "python",
-      "repository"
+      "architecture",
+      "evidence-backed"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23233,13 +23178,13 @@
       "schemas/runtime_configuration.schema.json",
       "schemas/secret_reference.schema.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "configuration",
-      "evidence-backed",
+      "secrets",
       "runtime",
-      "secrets"
+      "evidence-backed"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23502,7 +23447,6 @@
     "labels": [
       "bulk-reconciled",
       "correlation",
-      "done",
       "evidence-backed",
       "implemented",
       "logging",
@@ -23562,7 +23506,7 @@
       "GOV-001:L000695-L000710",
       "SRC-001:L001058-L001092"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement correlation-aware structured logging and telemetry boundary",
     "upstream_dependencies": []
   },
@@ -23760,14 +23704,14 @@
       "src/project_pipeline/quality.py",
       "docs/development/quality_and_ci.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "ci",
-      "evidence-backed",
       "quality",
+      "ci",
       "security",
-      "testing"
+      "testing",
+      "evidence-backed"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23892,13 +23836,13 @@
       "docs/development/README.md",
       "docs/development/setup.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "bootstrap",
       "developer-experience",
-      "evidence-backed",
-      "operations"
+      "operations",
+      "bootstrap",
+      "evidence-backed"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23992,25 +23936,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000005",
-      "EVID-000006",
-      "EVID-000009",
-      "EVID-000014",
-      "EVID-000015",
-      "EVID-000016",
-      "EVID-000018",
-      "EVID-000019",
-      "EVID-000020",
-      "EVID-000022",
-      "EVID-000027",
-      "EVID-000028",
-      "EVID-000029",
-      "EVID-000030",
-      "EVID-000031",
-      "EVID-000035",
-      "EVID-000036",
-      "EVID-000038",
-      "EVID-000039"
+      "EVID-000028"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -24043,11 +23969,10 @@
     "issue_type": "TASK",
     "labels": [
       "domain-model",
-      "done",
-      "evidence-backed",
       "identifiers",
       "requirements",
-      "schema"
+      "schema",
+      "evidence-backed"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -24116,7 +24041,7 @@
       "GOV-001:L001477-L001488",
       "SRC-017:L000490-L000596"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement stable domain identifiers and strict requirement entities",
     "upstream_dependencies": []
   },
@@ -24145,17 +24070,8 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000016",
-      "EVID-000018",
-      "EVID-000019",
-      "EVID-000020",
       "EVID-000028",
-      "EVID-000030",
-      "EVID-000031",
-      "EVID-000032",
-      "EVID-000035",
-      "EVID-000036",
-      "EVID-000038"
+      "EVID-000030"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -24192,11 +24108,10 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "domain-model",
-      "done",
-      "evidence-backed",
       "project-manifest",
-      "state"
+      "domain-model",
+      "state",
+      "evidence-backed"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -24262,7 +24177,7 @@
       "GOV-001:L000711-L000731",
       "SRC-003:L000962-L001001"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement the domain project manifest and repository identity boundary",
     "upstream_dependencies": []
   },
@@ -24291,26 +24206,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000016",
-      "EVID-000018",
-      "EVID-000019",
-      "EVID-000020",
-      "EVID-000028",
-      "EVID-000029",
-      "EVID-000030",
-      "EVID-000032",
-      "EVID-000035",
-      "EVID-000036",
-      "EVID-000043",
-      "EVID-000055",
-      "EVID-000056",
-      "EVID-000059",
-      "EVID-000060",
-      "EVID-000096",
-      "EVID-000098",
-      "EVID-000099",
-      "EVID-000100",
-      "EVID-000101"
+      "EVID-000030"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -24349,12 +24245,11 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "audit",
       "control-state",
-      "done",
-      "evidence-backed",
+      "task-state",
       "optimistic-concurrency",
-      "task-state"
+      "audit",
+      "evidence-backed"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -24431,7 +24326,7 @@
       "SRC-003:L000852-L001000",
       "SRC-017:L000281-L000359"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement versioned project and task lifecycle state",
     "upstream_dependencies": []
   },
@@ -24767,21 +24662,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000005",
-      "EVID-000006",
-      "EVID-000009",
-      "EVID-000010",
-      "EVID-000014",
-      "EVID-000015",
-      "EVID-000016",
-      "EVID-000018",
-      "EVID-000019",
-      "EVID-000020",
-      "EVID-000028",
-      "EVID-000030",
-      "EVID-000031",
-      "EVID-000032",
-      "EVID-000038"
+      "EVID-000031"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -24823,12 +24704,11 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "bidirectional",
-      "done",
-      "evidence-backed",
-      "requirements",
       "traceability",
-      "transactions"
+      "requirements",
+      "transactions",
+      "bidirectional",
+      "evidence-backed"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -24909,7 +24789,7 @@
       "GOV-001:L001162-L001215",
       "SRC-017:L000490-L000596"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement transactional bidirectional requirement traceability",
     "upstream_dependencies": []
   },
@@ -25265,20 +25145,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000016",
-      "EVID-000018",
-      "EVID-000019",
-      "EVID-000020",
-      "EVID-000028",
-      "EVID-000030",
-      "EVID-000035",
-      "EVID-000036",
-      "EVID-000037",
-      "EVID-000038",
-      "EVID-000039",
-      "EVID-000040",
-      "EVID-000041",
-      "EVID-000042"
+      "EVID-000035"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -25313,11 +25180,10 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
-      "done",
-      "non-destructive",
+      "project-intake",
       "project-compiler",
-      "project-intake"
+      "deterministic",
+      "non-destructive"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -25377,7 +25243,7 @@
       "SRC-014:L000005-L000125",
       "SRC-017:L001122-L001175"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Define strict project-intake and compilation contracts",
     "upstream_dependencies": []
   },
@@ -25446,7 +25312,6 @@
     "labels": [
       "bulk-reconciled",
       "deterministic",
-      "done",
       "implemented",
       "non-destructive",
       "project-compiler",
@@ -25511,7 +25376,7 @@
       "SRC-014:L000005-L000125",
       "SRC-017:L001122-L001175"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement safe read-only repository discovery",
     "upstream_dependencies": []
   },
@@ -25582,7 +25447,6 @@
     "labels": [
       "bulk-reconciled",
       "deterministic",
-      "done",
       "implemented",
       "non-destructive",
       "project-compiler",
@@ -25645,7 +25509,7 @@
       "SRC-014:L000005-L000125",
       "SRC-017:L001122-L001175"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Discover project authorities and operating surfaces",
     "upstream_dependencies": []
   },
@@ -25706,13 +25570,13 @@
       "schemas/project_profile_detection.schema.json",
       "fixtures/intake/polyglot_application"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
-      "non-destructive",
+      "project-intake",
       "project-compiler",
-      "project-intake"
+      "deterministic",
+      "non-destructive"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -25839,7 +25703,6 @@
     "labels": [
       "bulk-reconciled",
       "deterministic",
-      "done",
       "implemented",
       "non-destructive",
       "project-compiler",
@@ -25897,7 +25760,7 @@
     "source_references": [
       "SRC-002:L000479-L000515"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Compile an enriched deterministic repository map",
     "upstream_dependencies": []
   },
@@ -25926,23 +25789,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000016",
-      "EVID-000018",
-      "EVID-000019",
-      "EVID-000020",
-      "EVID-000028",
-      "EVID-000030",
-      "EVID-000035",
-      "EVID-000036",
-      "EVID-000037",
-      "EVID-000038",
-      "EVID-000039",
-      "EVID-000040",
-      "EVID-000041",
-      "EVID-000042",
-      "EVID-000089",
-      "EVID-000093",
-      "EVID-000094"
+      "EVID-000036"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -25980,11 +25827,10 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
-      "done",
-      "non-destructive",
+      "project-intake",
       "project-compiler",
-      "project-intake"
+      "deterministic",
+      "non-destructive"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -26065,7 +25911,7 @@
       "SRC-014:L000005-L000125",
       "SRC-017:L001122-L001175"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Compile project manifests and structured gap analysis",
     "upstream_dependencies": []
   },
@@ -26138,7 +25984,6 @@
     "labels": [
       "bulk-reconciled",
       "deterministic",
-      "done",
       "implemented",
       "non-destructive",
       "project-compiler",
@@ -26201,7 +26046,7 @@
     "source_references": [
       "SRC-017:L001122-L001175"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement controlled idempotent non-destructive bootstrap",
     "upstream_dependencies": []
   },
@@ -26230,24 +26075,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000016",
-      "EVID-000018",
-      "EVID-000019",
-      "EVID-000020",
-      "EVID-000022",
-      "EVID-000027",
-      "EVID-000029",
-      "EVID-000030",
-      "EVID-000031",
-      "EVID-000032",
-      "EVID-000035",
-      "EVID-000036",
-      "EVID-000037",
-      "EVID-000038",
-      "EVID-000039",
-      "EVID-000040",
-      "EVID-000041",
-      "EVID-000042"
+      "EVID-000038"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -26286,11 +26114,10 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
-      "done",
-      "non-destructive",
+      "project-intake",
       "project-compiler",
-      "project-intake"
+      "deterministic",
+      "non-destructive"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -26350,7 +26177,7 @@
       "GOV-001:L001477-L001488",
       "SRC-017:L001122-L001175"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Persist compilations and bootstrap receipts through migration PPDB-0003",
     "upstream_dependencies": []
   },
@@ -26379,33 +26206,10 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000016",
-      "EVID-000018",
-      "EVID-000019",
-      "EVID-000020",
-      "EVID-000022",
-      "EVID-000026",
-      "EVID-000027",
-      "EVID-000029",
-      "EVID-000035",
-      "EVID-000036",
-      "EVID-000037",
-      "EVID-000038",
       "EVID-000039",
       "EVID-000040",
       "EVID-000041",
-      "EVID-000042",
-      "EVID-000089",
-      "EVID-000093",
-      "EVID-000094",
-      "EVID-000108",
-      "EVID-000112",
-      "EVID-000113",
-      "EVID-000115",
-      "EVID-000116",
-      "EVID-000118",
-      "EVID-000121",
-      "EVID-000122"
+      "EVID-000042"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -26456,11 +26260,10 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
-      "done",
-      "non-destructive",
+      "project-intake",
       "project-compiler",
-      "project-intake"
+      "deterministic",
+      "non-destructive"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -26556,7 +26359,7 @@
       "SRC-017:L000823-L000906",
       "SRC-017:L001122-L001175"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Integrate intake CLI, schemas, fixtures, self-validation, and evidence",
     "upstream_dependencies": []
   },
@@ -26613,13 +26416,13 @@
       "src/project_pipeline/domain/jira.py",
       "src/project_pipeline/jira_steward/repository.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
-      "dry-run-default",
       "jira-steward",
-      "jira-sync"
+      "jira-sync",
+      "deterministic",
+      "dry-run-default"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -26750,13 +26553,13 @@
       "src/project_pipeline/jira_steward/repository.py",
       "src/project_pipeline/jira_steward/validation.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
-      "dry-run-default",
       "jira-steward",
-      "jira-sync"
+      "jira-sync",
+      "deterministic",
+      "dry-run-default"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -26880,13 +26683,13 @@
       "src/project_pipeline/jira_steward/ports.py",
       "src/project_pipeline/domain/jira.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
-      "dry-run-default",
       "jira-steward",
-      "jira-sync"
+      "jira-sync",
+      "deterministic",
+      "dry-run-default"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -27275,13 +27078,13 @@
       "config/jira/sync_policy.json",
       "config/jira/status_mapping.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
-      "dry-run-default",
       "jira-steward",
-      "jira-sync"
+      "jira-sync",
+      "deterministic",
+      "dry-run-default"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -27856,13 +27659,13 @@
       "docs/jira",
       "runbooks/jira_unknown_outcome_reconciliation.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
-      "dry-run-default",
       "jira-steward",
-      "jira-sync"
+      "jira-sync",
+      "deterministic",
+      "dry-run-default"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -28738,7 +28541,7 @@
       "tests/test_github_steward_lifecycle.py",
       "docs/operations/github_steward_lifecycle.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "deterministic",
@@ -29608,7 +29411,6 @@
       "bulk-reconciled",
       "control-kernel",
       "deterministic",
-      "done",
       "implemented",
       "project-control"
     ],
@@ -29662,7 +29464,7 @@
       "GOV-001:L001114-L001158",
       "SRC-003:L000225-L000278"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Validated dependency DAG and graph analysis",
     "upstream_dependencies": [
       "https://github.com/networkx/networkx"
@@ -29724,11 +29526,11 @@
       "src/project_pipeline/control/graph.py",
       "src/project_pipeline/domain/control.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "build-sequencer",
       "control-kernel",
+      "build-sequencer",
       "deterministic",
       "project-control"
     ],
@@ -29852,7 +29654,6 @@
       "bulk-reconciled",
       "control-kernel",
       "deterministic",
-      "done",
       "implemented",
       "project-control"
     ],
@@ -29909,7 +29710,7 @@
       "SRC-003:L000225-L000371",
       "SRC-014:L000859-L000946"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Critical path and deterministic priority sequencing",
     "upstream_dependencies": [
       "https://github.com/networkx/networkx"
@@ -30473,11 +30274,11 @@
       "docs/control/project_control_kernel.md",
       "runbooks/control_reconciliation.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "build-sequencer",
       "control-kernel",
+      "build-sequencer",
       "deterministic",
       "project-control"
     ],
@@ -31043,13 +30844,13 @@
       "src/project_pipeline/scheduler/resources.py",
       "src/project_pipeline/domain/scheduler.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
       "dynamic-scheduler",
+      "resource-governance",
       "parallel-execution",
-      "resource-governance"
+      "deterministic"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -31158,13 +30959,13 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/scheduler/persistence.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "deterministic",
       "dynamic-scheduler",
+      "resource-governance",
       "parallel-execution",
-      "resource-governance"
+      "deterministic"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -33082,13 +32883,13 @@
       "src/project_pipeline/cli.py",
       "database/migrations/PPDB-0008_agent_router_provider_state.sqlite.up.sql"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "agent-router",
+      "provider-abstraction",
       "capability-routing",
-      "deterministic",
-      "provider-abstraction"
+      "deterministic"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -33643,12 +33444,12 @@
       "src/project_pipeline/github_steward/worktrunk.py",
       "tests/test_worktrunk_adapter.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "integration",
+      "upstream-reuse",
       "provenance",
-      "upstream-reuse"
+      "integration"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -35008,12 +34809,12 @@
       "provenance/adoption_queue.json",
       "provenance/review_program.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "adoption-gate",
+      "upstream-reuse",
       "provenance",
-      "upstream-reuse"
+      "adoption-gate"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -37693,7 +37494,6 @@
       "bulk-reconciled",
       "context",
       "delegation",
-      "done",
       "implemented",
       "pass-12"
     ],
@@ -37761,7 +37561,7 @@
       "GOV-001:L000797-L000876",
       "GOV-001:L000797-L000854"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Apply upstream gate to Context implementation",
     "upstream_dependencies": [
       "UPSTREAM-115",
@@ -37824,7 +37624,7 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/domain/context.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "context",
@@ -37955,7 +37755,6 @@
       "bulk-reconciled",
       "context",
       "delegation",
-      "done",
       "implemented",
       "pass-12"
     ],
@@ -38013,7 +37812,7 @@
       "SRC-002:L000261-L000315",
       "SRC-002:L000479-L000515"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement deterministic Context Broker minimality",
     "upstream_dependencies": [
       "UPSTREAM-115",
@@ -38085,7 +37884,6 @@
       "bulk-reconciled",
       "context",
       "delegation",
-      "done",
       "implemented",
       "pass-12"
     ],
@@ -38144,7 +37942,7 @@
       "SRC-002:L000213-L000260",
       "SRC-002:L000959-L001014"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement content-addressed Context Compiler",
     "upstream_dependencies": []
   },
@@ -38205,7 +38003,7 @@
       "src/project_pipeline/context_engine/firewall.py",
       "src/project_pipeline/context_engine/trust.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "context",
@@ -38340,7 +38138,7 @@
       "src/project_pipeline/context_engine/compiler.py",
       "config/context_policy.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "context",
@@ -38464,7 +38262,7 @@
       "src/project_pipeline/context_engine/compiler.py",
       "src/project_pipeline/context_engine/service.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "context",
@@ -38602,7 +38400,6 @@
       "bulk-reconciled",
       "context",
       "delegation",
-      "done",
       "implemented",
       "pass-12"
     ],
@@ -38663,7 +38460,7 @@
       "SRC-002:L000959-L001014",
       "SRC-002:L000359-L000386"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Persist context packs and add PPDB-0009",
     "upstream_dependencies": []
   },
@@ -38731,7 +38528,6 @@
       "bulk-reconciled",
       "context",
       "delegation",
-      "done",
       "implemented",
       "pass-12"
     ],
@@ -38792,7 +38588,7 @@
       "SRC-002:L000681-L000793",
       "SRC-002:L000889-L000958"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Integrate bounded document normalization for context",
     "upstream_dependencies": [
       "UPSTREAM-062",
@@ -38860,7 +38656,7 @@
       "docs/architecture/context_and_delegation.md",
       "runbooks/context_pack_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "context",
@@ -39021,7 +38817,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "durability",
       "implemented",
       "orchestration",
@@ -39084,7 +38879,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Complete Pass 13 orchestration upstream gate",
     "upstream_dependencies": [
       "UPSTREAM-050",
@@ -39165,7 +38960,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "durability",
       "implemented",
       "orchestration",
@@ -39228,7 +39022,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement durable orchestration domain and stable port",
     "upstream_dependencies": []
   },
@@ -39297,11 +39091,11 @@
       "src/project_pipeline/orchestration/service.py",
       "src/project_pipeline/orchestration/recovery.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "durability",
       "orchestration",
+      "durability",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -39428,11 +39222,11 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/orchestration/runtime.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "durability",
       "orchestration",
+      "durability",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -39562,7 +39356,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "durability",
       "implemented",
       "orchestration",
@@ -39624,7 +39417,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement durable signal and timer waits",
     "upstream_dependencies": []
   },
@@ -39691,11 +39484,11 @@
       "src/project_pipeline/orchestration/runtime.py",
       "src/project_pipeline/orchestration/recovery.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "durability",
       "orchestration",
+      "durability",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -39851,7 +39644,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "durability",
       "implemented",
       "orchestration",
@@ -39913,7 +39705,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement Hatchet adapter and fallback backend boundaries",
     "upstream_dependencies": [
       "UPSTREAM-050",
@@ -39992,7 +39784,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "durability",
       "implemented",
       "orchestration",
@@ -40057,7 +39848,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Persist PPDB-0010 durable workflow and recovery state",
     "upstream_dependencies": []
   },
@@ -40263,11 +40054,11 @@
       "tests/test_orchestration_recovery.py",
       "tests/test_orchestration_adapters.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "durability",
       "orchestration",
+      "durability",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -40431,7 +40222,6 @@
       "budget",
       "bulk-reconciled",
       "cost-governance",
-      "done",
       "implemented",
       "pass-14"
     ],
@@ -40490,7 +40280,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Complete Pass 14 budget upstream gate",
     "upstream_dependencies": [
       "UPSTREAM-012",
@@ -40564,7 +40354,6 @@
       "budget",
       "bulk-reconciled",
       "cost-governance",
-      "done",
       "implemented",
       "pass-14"
     ],
@@ -40623,7 +40412,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement immutable unified cost and quota ledger",
     "upstream_dependencies": []
   },
@@ -40691,7 +40480,6 @@
     "labels": [
       "budget",
       "cost-governance",
-      "done",
       "pass-14"
     ],
     "last_observed_remote_state": {
@@ -40751,7 +40539,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement hierarchy soft allocation protected reserve and quotas",
     "upstream_dependencies": []
   },
@@ -40819,7 +40607,6 @@
       "budget",
       "bulk-reconciled",
       "cost-governance",
-      "done",
       "implemented",
       "pass-14"
     ],
@@ -40877,7 +40664,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement atomic spend leases settlement and uncertain outcome reconciliation",
     "upstream_dependencies": []
   },
@@ -40945,7 +40732,6 @@
       "budget",
       "bulk-reconciled",
       "cost-governance",
-      "done",
       "implemented",
       "pass-14"
     ],
@@ -41004,7 +40790,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement pressure hard stop admission and runaway anomaly policy",
     "upstream_dependencies": []
   },
@@ -41072,7 +40858,6 @@
     "labels": [
       "budget",
       "cost-governance",
-      "done",
       "pass-14"
     ],
     "last_observed_remote_state": {
@@ -41131,7 +40916,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement historical forecasts burn runway and outcome economics",
     "upstream_dependencies": []
   },
@@ -41199,7 +40984,6 @@
     "labels": [
       "budget",
       "cost-governance",
-      "done",
       "pass-14"
     ],
     "last_observed_remote_state": {
@@ -41256,7 +41040,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement deterministic budget change impact and allocation analysis",
     "upstream_dependencies": []
   },
@@ -41285,8 +41069,6 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000061",
-      "EVID-000065",
       "EVID-000102",
       "EVID-000103",
       "EVID-000104",
@@ -41326,7 +41108,6 @@
     "labels": [
       "budget",
       "cost-governance",
-      "done",
       "pass-14"
     ],
     "last_observed_remote_state": {
@@ -41385,7 +41166,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Couple budget admission to scheduler router context and verification economics",
     "upstream_dependencies": []
   },
@@ -41453,7 +41234,6 @@
     "labels": [
       "budget",
       "cost-governance",
-      "done",
       "pass-14"
     ],
     "last_observed_remote_state": {
@@ -41510,7 +41290,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement upstream cost evidence and Infracost preflight boundary",
     "upstream_dependencies": [
       "UPSTREAM-012",
@@ -41587,7 +41367,6 @@
       "budget",
       "bulk-reconciled",
       "cost-governance",
-      "done",
       "implemented",
       "pass-14"
     ],
@@ -41649,7 +41428,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Integrate PPDB-0011 CLI schemas simulations documentation and validation",
     "upstream_dependencies": []
   },
@@ -41741,7 +41520,6 @@
       "assurance",
       "bulk-reconciled",
       "completion-gate",
-      "done",
       "implemented",
       "pass-15"
     ],
@@ -41796,7 +41574,7 @@
       "SRC-008:L000771-L000839",
       "SRC-011:L001212-L001345"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Complete Pass 15 verification upstream gate",
     "upstream_dependencies": [
       "UPSTREAM-015",
@@ -41882,7 +41660,6 @@
       "assurance",
       "bulk-reconciled",
       "completion-gate",
-      "done",
       "implemented",
       "pass-15"
     ],
@@ -41944,7 +41721,7 @@
       "SRC-008:L000540-L000760",
       "SRC-008:L001168-L001195"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement Acceptance Criteria Compiler and executable Definition of Done",
     "upstream_dependencies": []
   },
@@ -41973,14 +41750,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000005",
-      "EVID-000006",
-      "EVID-000108",
-      "EVID-000112",
-      "EVID-000113",
-      "EVID-000116",
-      "EVID-000121",
-      "EVID-000122"
+      "EVID-000108"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -42013,7 +41783,6 @@
     "labels": [
       "assurance",
       "completion-gate",
-      "done",
       "pass-15"
     ],
     "last_observed_remote_state": {
@@ -42077,7 +41846,7 @@
       "SRC-008:L000715-L000770",
       "SRC-008:L001042-L001066"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement Truth Registry evidence sufficiency and freshness",
     "upstream_dependencies": []
   },
@@ -42249,9 +42018,7 @@
     "blockers": [],
     "completion_evidence": [
       "EVID-000108",
-      "EVID-000111",
-      "EVID-000112",
-      "EVID-000113"
+      "EVID-000111"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -42283,7 +42050,6 @@
     "labels": [
       "assurance",
       "completion-gate",
-      "done",
       "pass-15"
     ],
     "last_observed_remote_state": {
@@ -42342,7 +42108,7 @@
       "SRC-008:L001222-L001247",
       "SRC-008:L001248-L001270"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement Scope Governor acceptance freeze and change budget",
     "upstream_dependencies": []
   },
@@ -42406,7 +42172,6 @@
       "assurance",
       "bulk-reconciled",
       "completion-gate",
-      "done",
       "implemented",
       "pass-15"
     ],
@@ -42463,7 +42228,7 @@
       "SRC-008:L001109-L001167",
       "SRC-008:L001168-L001195"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement independent review identity and evidence multiplicity",
     "upstream_dependencies": []
   },
@@ -42787,7 +42552,6 @@
       "assurance",
       "bulk-reconciled",
       "completion-gate",
-      "done",
       "implemented",
       "pass-15"
     ],
@@ -42844,7 +42608,7 @@
       "SRC-008:L001016-L001066",
       "SRC-008:L001168-L001195"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement completion failure localization and rework routing",
     "upstream_dependencies": []
   },
@@ -42919,7 +42683,6 @@
       "assurance",
       "bulk-reconciled",
       "completion-gate",
-      "done",
       "implemented",
       "pass-15"
     ],
@@ -42988,7 +42751,7 @@
       "SRC-008:L001196-L001241",
       "SRC-008:L001248-L001270"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Integrate PPDB-0012 CLI schemas documentation and assurance validation",
     "upstream_dependencies": []
   },
@@ -45525,11 +45288,11 @@
       "src/project_pipeline/cli.py",
       "database/migrations/sqlite/PPDB-0014_security_identity_policy_secrets_supply_chain.up.sql"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "identity",
       "security",
+      "identity",
       "supply-chain"
     ],
     "last_observed_remote_state": {
@@ -45653,7 +45416,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "implemented",
       "recovery",
       "resilience"
@@ -45710,7 +45472,7 @@
       "GOV-001:L000621-L000641",
       "SRC-006:L000767-L000824"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement explicit failure domains and deterministic operating modes",
     "upstream_dependencies": []
   },
@@ -45773,7 +45535,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "implemented",
       "recovery",
       "resilience"
@@ -45827,7 +45588,7 @@
     "source_references": [
       "SRC-006:L000011-L000197"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement capability-preserving provider substitution",
     "upstream_dependencies": []
   },
@@ -45891,11 +45652,11 @@
       "runbooks/control_machine_failover.md",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "recovery",
-      "resilience"
+      "resilience",
+      "recovery"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46018,11 +45779,11 @@
       "src/project_pipeline/upstream_integrations/resilience.py",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "recovery",
-      "resilience"
+      "resilience",
+      "recovery"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46147,11 +45908,11 @@
       "runbooks/backup_restore_verification.md",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "recovery",
-      "resilience"
+      "resilience",
+      "recovery"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46279,7 +46040,6 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
-      "done",
       "implemented",
       "recovery",
       "resilience"
@@ -46338,7 +46098,7 @@
       "SRC-009:L000026-L000026",
       "SRC-015:L000589-L000661"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement autonomous external-precondition recovery and repair verification",
     "upstream_dependencies": []
   },
@@ -46406,11 +46166,11 @@
       "infrastructure/aws/terraform/variables.tf",
       "infrastructure/aws/README.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "recovery",
-      "resilience"
+      "resilience",
+      "recovery"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46541,11 +46301,11 @@
       "provenance/upstream_usage.jsonl",
       "provenance/upstream_registry.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "recovery",
-      "resilience"
+      "resilience",
+      "recovery"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46676,11 +46436,11 @@
       "src/project_pipeline/cli.py",
       "src/project_pipeline/resilience/validation.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "recovery",
-      "resilience"
+      "resilience",
+      "recovery"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -48486,11 +48246,11 @@
       "docs/architecture/FINAL_ARCHITECTURE.md",
       "runbooks/release_upgrade_and_rollback.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "hardening",
-      "pass-24"
+      "pass-24",
+      "hardening"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",

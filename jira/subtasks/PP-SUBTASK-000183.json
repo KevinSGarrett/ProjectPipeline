@@ -53,12 +53,12 @@
     "plans/01_requirements/open_decisions.jsonl",
     "plans/01_requirements/source_evolution.jsonl"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "SUBTASK",
   "labels": [
     "architecture",
-    "evidence-backed",
-    "provenance"
+    "provenance",
+    "evidence-backed"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

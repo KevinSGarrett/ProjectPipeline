@@ -54,11 +54,11 @@
     "src/project_pipeline/control/graph.py",
     "src/project_pipeline/domain/control.py"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
-    "build-sequencer",
     "control-kernel",
+    "build-sequencer",
     "deterministic",
     "project-control"
   ],

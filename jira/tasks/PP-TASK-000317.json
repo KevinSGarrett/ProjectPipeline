@@ -23,8 +23,6 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000061",
-    "EVID-000065",
     "EVID-000102",
     "EVID-000103",
     "EVID-000104",
@@ -64,7 +62,6 @@
   "labels": [
     "budget",
     "cost-governance",
-    "done",
     "pass-14"
   ],
   "last_observed_remote_state": {
@@ -123,7 +120,7 @@
     "SRC-004:L000937-L000977",
     "SRC-012:L000780-L000816"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Couple budget admission to scheduler router context and verification economics",
   "upstream_dependencies": []
 }

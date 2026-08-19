@@ -44,11 +44,10 @@
     "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "domain-story",
-    "implemented",
     "plan-upstream-001"
   ],
   "last_observed_remote_state": {

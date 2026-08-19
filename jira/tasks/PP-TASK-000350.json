@@ -59,7 +59,6 @@
   "issue_type": "TASK",
   "labels": [
     "bulk-reconciled",
-    "done",
     "implemented",
     "recovery",
     "resilience"
@@ -116,7 +115,7 @@
     "GOV-001:L000621-L000641",
     "SRC-006:L000767-L000824"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement explicit failure domains and deterministic operating modes",
   "upstream_dependencies": []
 }

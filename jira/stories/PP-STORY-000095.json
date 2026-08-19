@@ -45,12 +45,12 @@
   "expected_implementation_artifacts": [
     "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-egress",
-    "domain-sec"
+    "domain-sec",
+    "cluster-egress"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -101,6 +101,6 @@
     "SRC-017:L000009-L000071"
   ],
   "state": "BACKLOG",
-  "title": "Egress — Security, Identity, and Policy",
+  "title": "Egress \u2014 Security, Identity, and Policy",
   "upstream_dependencies": []
 }

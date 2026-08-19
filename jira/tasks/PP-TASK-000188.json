@@ -60,13 +60,13 @@
     "schemas/runtime_configuration.schema.json",
     "schemas/secret_reference.schema.json"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
     "configuration",
-    "evidence-backed",
+    "secrets",
     "runtime",
-    "secrets"
+    "evidence-backed"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

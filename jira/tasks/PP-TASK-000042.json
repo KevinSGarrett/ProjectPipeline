@@ -61,7 +61,6 @@
   "issue_type": "TASK",
   "labels": [
     "bulk-reconciled",
-    "done",
     "executable",
     "foundation",
     "implemented"
@@ -115,7 +114,7 @@
   "source_references": [
     "GOV-001:L000949-L001158"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Establish the structured local Jira mirror",
   "upstream_dependencies": []
 }
