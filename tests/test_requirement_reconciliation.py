@@ -9,6 +9,7 @@ from project_pipeline.assurance.observation import record_observation
 from project_pipeline.assurance.observation_store import EvidenceObservationStore
 from project_pipeline.assurance.requirement_reconciliation import (
     apply_evidence_bound_requirement_states,
+    catalog_callable_present,
     contains_external_marker,
     evaluate_requirement_reconciliation,
     propose_evidence_bound_requirement_states,
@@ -43,6 +44,22 @@ def test_deliver_is_not_an_external_live_marker() -> None:
     assert contains_external_marker("final Completion Gate")
     assert not contains_external_marker("Deliver the accepted requirements")
     assert not contains_external_marker("delivery progress and olive-colored UI")
+
+
+def test_catalog_callable_present_accepts_unittest_class_methods() -> None:
+    source = (
+        "class RepositoryContractTests:\n"
+        "    def test_repository_contract_has_no_errors(self) -> None:\n"
+        "        assert True\n"
+    )
+    assert catalog_callable_present(
+        source, "RepositoryContractTests.test_repository_contract_has_no_errors"
+    )
+    assert catalog_callable_present(source, "test_repository_contract_has_no_errors")
+    assert catalog_callable_present("def test_foo():\n    return 1\n", "test_foo")
+    assert not catalog_callable_present(
+        source, "MissingClass.test_repository_contract_has_no_errors"
+    )
 
 
 def _seed_valid(

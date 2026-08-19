@@ -46,6 +46,22 @@ EXTERNAL_MARKERS = (
 )
 
 
+def catalog_callable_present(source: str, callable_name: str) -> bool:
+    """True when a TEST_CATALOG callable is declared in the cataloged test file."""
+
+    text = callable_name.strip()
+    if not text:
+        return False
+    if text in source:
+        return True
+    if "." in text:
+        class_name, method_name = text.rsplit(".", 1)
+        if not class_name.isidentifier() or not method_name.isidentifier():
+            return False
+        return f"class {class_name}" in source and f"def {method_name}" in source
+    return f"def {text}(" in source
+
+
 def text_contains_whole_markers(text: str, markers: tuple[str, ...]) -> bool:
     """True only for whole-token markers. 'deliver' must not match 'live'."""
 
@@ -266,7 +282,9 @@ def _evaluate_requirement(
         callable_name = str(entry.get("callable") or "")
         if not test_path or not (root / test_path).is_file():
             return {**base, "reason": f"cataloged test path is missing: {test_id}"}
-        if callable_name and callable_name not in (root / test_path).read_text(encoding="utf-8"):
+        if callable_name and not catalog_callable_present(
+            (root / test_path).read_text(encoding="utf-8"), callable_name
+        ):
             return {**base, "reason": f"cataloged test callable is absent from path: {test_id}"}
     evidence_ids = [str(evidence_id) for evidence_id in item.get("evidence_ids", [])]
     if not evidence_ids:
