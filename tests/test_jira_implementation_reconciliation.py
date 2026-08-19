@@ -135,7 +135,7 @@ def test_jira_reconciliation_rejects_missing_catalog_and_live_wording(tmp_path: 
     write_json(tmp_path / "jira/tasks/PP-TASK-000999.json", issue)
     reason = evaluate_jira_implementation_reconciliation(tmp_path)[1]["reason"]
     assert "TEST_CATALOG" in reason
-    issue["required_tests"] = ["TEST-JIRA-RECON-001"]
+    issue["required_tests"] = []
     issue["title"] = "Qualify live unattended Windows service"
     write_json(tmp_path / "jira/tasks/PP-TASK-000999.json", issue)
     row = next(
@@ -143,9 +143,27 @@ def test_jira_reconciliation_rejects_missing_catalog_and_live_wording(tmp_path: 
         for item in evaluate_jira_implementation_reconciliation(tmp_path)
         if item["issue_id"] == "PP-TASK-000999"
     )
-    assert row["accepted"] is True
-    assert row["next_lifecycle_state"] is None
-    assert row["next_implementation_state"] == "IMPLEMENTED"
+    assert row["accepted"] is False
+    assert row["next_implementation_state"] is None
+    assert "required tests are missing" in row["reason"]
+
+
+def test_jira_reconciliation_does_not_treat_deliver_as_live_or_skip_tests(
+    tmp_path: Path,
+) -> None:
+    _seed(tmp_path)
+    issue = read_json(tmp_path / "jira/tasks/PP-TASK-000999.json")
+    issue["title"] = "Deliver the accepted requirements"
+    issue["required_tests"] = []
+    write_json(tmp_path / "jira/tasks/PP-TASK-000999.json", issue)
+    row = next(
+        item
+        for item in evaluate_jira_implementation_reconciliation(tmp_path)
+        if item["issue_id"] == "PP-TASK-000999"
+    )
+    assert row["accepted"] is False
+    assert row["next_implementation_state"] is None
+    assert "required tests are missing" in row["reason"]
 
 
 def test_jira_implementation_reconcile_cli_requires_approve(tmp_path: Path, capsys) -> None:
