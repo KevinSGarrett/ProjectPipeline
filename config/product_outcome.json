@@ -61,7 +61,7 @@
       "PP-TASK-000385"
     ],
     "mode": "PRODUCT_OUTCOME_CRITICAL_PATH_ONLY",
-    "resume_rule": "Independent product-model audit confirmed that the highest-ranked bounded work is still genuinely missing product-critical behavior. Normal backlog selection remains denied. Selection stays bounded to these integrated-runtime slices until the core outcome is qualified."
+    "resume_rule": "Independent product-model audit confirmed that the highest-ranked bounded work is still genuinely missing product-critical behavior. Fresh unrelated implementation remains denied by the bounded pause. After PP-TASK-000380 through PP-TASK-000384 are integrated and accepted, Control admits the exact remaining accepted requirements and work items required by the Completion Gate and PP-TASK-000385 as a completion-convergence lane. Evidence-backed reconciliation is immediately batchable and is never hidden by ready_count."
   },
   "core_requirement_id": "REQ-PDEF-0011",
   "core_statement": "ProjectPipeline shall continuously take a project from intake through verified modeling, autonomous selection, conflict-safe parallel execution, verification, governed repository integration, Jira reconciliation, project-state recomputation, and next-work selection without requiring a human to drive each development session.",

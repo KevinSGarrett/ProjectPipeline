@@ -56,6 +56,7 @@ def evaluate_jira_sync_guard(root: Path) -> JiraSyncGuardResult:
     plan_id = str(payload.get("plan_id", "")).strip()
     generated_at = str(payload.get("generated_at_utc", "")).strip()
 
+    pending_remote = bool(payload.get("local_reconciliation_pending_remote", False))
     observed_fingerprint = JiraMirrorRepository(root).bundle().fingerprint
 
     if not expected_fingerprint:
@@ -63,6 +64,15 @@ def evaluate_jira_sync_guard(root: Path) -> JiraSyncGuardResult:
     elif expected_fingerprint != observed_fingerprint:
         reasons.append(
             "jira sync guard artifact is stale for current local Jira mirror fingerprint"
+        )
+
+    if pending_remote:
+        reasons.append(
+            "jira sync guard cannot confirm remote/local parity while local reconciliation is pending remote apply"
+        )
+    if pending_remote and parity_status == "PARITY_CONFIRMED":
+        reasons.append(
+            "PARITY_CONFIRMED is contradictory while local_reconciliation_pending_remote is true"
         )
 
     token_parked = any(

@@ -243,6 +243,10 @@ def test_implemented_requirement_with_only_planned_jira_requires_finding(
     )
     rows.append(fabricated)
     write_jsonl(requirements_path, rows)
+    issue_path = product_root / "jira/tasks/PP-TASK-000168.json"
+    issue = read_json(issue_path)
+    issue["implementation_state"] = "PLANNED_ONLY"
+    write_json(issue_path, issue)
 
     errors = validate_product_outcome(product_root)
     assert any("REQ-PDEF-9999" in error and "PLANNED_ONLY" in error for error in errors)

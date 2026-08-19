@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "1d5532984d5ddd6d8af76952556823c25827e4db18f97d99a1a62f6d1186f523",
+  "aggregate_sha256": "e18d2749313a35fbb72863569ee5e3268a44a0205e06c13b23407f12145e516e",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2890,
+  "file_count": 2892,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -607,8 +607,8 @@
     },
     {
       "path": "config/product_outcome.json",
-      "sha256": "71458139a67269aa435e4c3c11b80dda959381bff4b7802cab89bf4cda3fc61b",
-      "size_bytes": 7829
+      "sha256": "c8b336613f63b28e895ee98aeb09fce901ca79288ab36e3620e552a48c8f5321",
+      "size_bytes": 8082
     },
     {
       "path": "config/project.json",
@@ -11737,8 +11737,8 @@
     },
     {
       "path": "scripts/bulk_reconcile_implemented_jira.py",
-      "sha256": "544df28dedf510d9d1c1f14a1c6aad6f6095ea1faf2edf5a45efacca44173148",
-      "size_bytes": 7983
+      "sha256": "d9e41064f5d0a4afbf4468ebb3a9d4053bfd90851b626d8df216b3904ae1695d",
+      "size_bytes": 2426
     },
     {
       "path": "scripts/campaign_probe.py",
@@ -12046,6 +12046,11 @@
       "size_bytes": 6634
     },
     {
+      "path": "src/project_pipeline/assurance/jira_implementation_reconciliation.py",
+      "sha256": "1ac91b3819b918b37a8e51ede586b1e939f5c589c59fa5a949e7719c99441542",
+      "size_bytes": 12983
+    },
+    {
       "path": "src/project_pipeline/assurance/loop_guard.py",
       "sha256": "79f6cde994c5bbe932fe825c919f576bcbb921758eee4eacaf9367fd2a38ea25",
       "size_bytes": 4171
@@ -12062,8 +12067,8 @@
     },
     {
       "path": "src/project_pipeline/assurance/requirement_reconciliation.py",
-      "sha256": "828d5bd80947f981b8a05505c58d18f829b39009ea5310962961b0d7dc0bd825",
-      "size_bytes": 5956
+      "sha256": "4362b7d701c54fa85f2575f5194b0b9a79dfb4710822b799772334cfc4a824dc",
+      "size_bytes": 16852
     },
     {
       "path": "src/project_pipeline/assurance/requirement_truth_ledger.py",
@@ -12222,8 +12227,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "34070c921d1f0e5d69d126115053f03830b62a61e69924a1a1d569ce925a51ab",
-      "size_bytes": 148950
+      "sha256": "94fb576430c8bc5b693f8f8d661330fc5010ba58575b7a4afa53232988cf7fbf",
+      "size_bytes": 151761
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12242,8 +12247,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/application.py",
-      "sha256": "8ffaa845ba59aeefdc13812b385e2e907881f72062e23bb232dce36147375b59",
-      "size_bytes": 12390
+      "sha256": "27df02130133e6ea0158830d97d24327d35ce180fd070efcd423f1125e0677b9",
+      "size_bytes": 13582
     },
     {
       "path": "src/project_pipeline/command_center/application_validation.py",
@@ -12417,8 +12422,8 @@
     },
     {
       "path": "src/project_pipeline/control/kernel.py",
-      "sha256": "1687de1d21bfe75f34d7fb36135b75b9c46de7f1b10aa2767b418841215ece7f",
-      "size_bytes": 19518
+      "sha256": "01b5e512c6ef0640dd294a365e1bc39a9b39789f39f52be0b76b1acf21657d37",
+      "size_bytes": 22036
     },
     {
       "path": "src/project_pipeline/control/persistence.py",
@@ -12777,8 +12782,8 @@
     },
     {
       "path": "src/project_pipeline/jira_steward/sync_guard.py",
-      "sha256": "a2fa3d0d1882940140e3cdc048b906d692b4e701368c1d20dea249e071813777",
-      "size_bytes": 3890
+      "sha256": "1e07c317cb141ff6007b4479b3c34653d1c963de13a69e7eda0103840de91bc0",
+      "size_bytes": 4344
     },
     {
       "path": "src/project_pipeline/jira_steward/validation.py",
@@ -13682,8 +13687,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "fe884d9b7912627155994ceed33693afe13758ce5463590635c86b47f357cc32",
-      "size_bytes": 99406
+      "sha256": "d8075fb0f02328b9a24f7953b68dd97a9ec4d9e092730b4594b22a3074025872",
+      "size_bytes": 102285
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -13807,8 +13812,8 @@
     },
     {
       "path": "tests/test_control_cli.py",
-      "sha256": "2b4abd32337ff685c12eb322e3ad246617e200ebd56a8222b94b1d80a70d134d",
-      "size_bytes": 4061
+      "sha256": "eeca3f906c47c8655ad1473bb50873a92dce94fd3855e14160e1a235e5a761dd",
+      "size_bytes": 4472
     },
     {
       "path": "tests/test_control_domain.py",
@@ -13817,8 +13822,8 @@
     },
     {
       "path": "tests/test_control_kernel.py",
-      "sha256": "5c7219aba7acc20ee285669df67aa8a94aec363fdfcfeb23f882853a13c46d10",
-      "size_bytes": 12132
+      "sha256": "f1bec748b82b24a370cb956614826116318ab81152ec1c53639751031a73eef7",
+      "size_bytes": 12828
     },
     {
       "path": "tests/test_control_persistence.py",
@@ -13832,7 +13837,7 @@
     },
     {
       "path": "tests/test_core_state_store.py",
-      "sha256": "1f813944168cc46634809432532efea57a77910c79a4938f3d7a3c70bdf84abc",
+      "sha256": "3eac7243daf42794fb338f35273f5426bdafe2d3472dbf59e23495cd14557655",
       "size_bytes": 4324
     },
     {
@@ -13961,6 +13966,11 @@
       "size_bytes": 1830
     },
     {
+      "path": "tests/test_jira_implementation_reconciliation.py",
+      "sha256": "4cdd72cebeb29570d2c42e7886b789664454aab9253caeed50fd9b0050520d19",
+      "size_bytes": 7435
+    },
+    {
       "path": "tests/test_jira_operational_alignment.py",
       "sha256": "0d6f187f44eb25685397b6de944bb7149c63b15ed523ca7fc2619674a1d26672",
       "size_bytes": 5854
@@ -13992,8 +14002,8 @@
     },
     {
       "path": "tests/test_jira_sync_guard.py",
-      "sha256": "1c0cd947861fe5d391fae58e5a462abbe0388402885f6c9729ffb3ff2efa9f75",
-      "size_bytes": 1290
+      "sha256": "01d6b5eb87958b909170c2f50e7227c441c5abaadeb0437be644fcd14b502c4e",
+      "size_bytes": 2688
     },
     {
       "path": "tests/test_line_numbering.py",
@@ -14097,8 +14107,8 @@
     },
     {
       "path": "tests/test_product_outcome_contract.py",
-      "sha256": "096725e61f5590fde8e925dc2688a15a618a8c2515e1c1479df17ea3a08fa6f5",
-      "size_bytes": 12820
+      "sha256": "bf3594203efdb91231fd8ed08cc6dbe2f7c07f4f01177a9b51183ca7b9cb33b4",
+      "size_bytes": 13004
     },
     {
       "path": "tests/test_product_outcome_reconciliation.py",
@@ -14147,8 +14157,8 @@
     },
     {
       "path": "tests/test_requirement_reconciliation.py",
-      "sha256": "d730b1827037d69a2462a56380ab092218e12b382e5606c50db14104d1c40291",
-      "size_bytes": 2299
+      "sha256": "7f18ce57ae1f2512af8270e440c0a55aec9a0b4e9167f0145804e71d941f2711",
+      "size_bytes": 8618
     },
     {
       "path": "tests/test_requirement_registries.py",
@@ -14461,7 +14471,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T02:16:48.196983+00:00",
+  "generated_at_utc": "2026-08-19T04:01:16.448553+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14470,5 +14480,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25561972
+  "total_bytes": 25606844
 }

@@ -42,6 +42,12 @@ _PRODUCT_SELECTION_BOUNDED_MODES = {
     "PAUSED_PENDING_INDEPENDENT_PRODUCT_MODEL_AUDIT",
     "PRODUCT_OUTCOME_CRITICAL_PATH_ONLY",
 }
+_CRITICAL_PATH_PREDECESSORS = frozenset({f"PP-TASK-{value:06d}" for value in range(380, 385)})
+_COMPLETE_ISSUE_IMPLEMENTATION_STATES = {
+    ImplementationState.IMPLEMENTED.value,
+    ImplementationState.MOCK_VERIFIED.value,
+    ImplementationState.LIVE_VERIFIED.value,
+}
 _RECONCILABLE_ISSUE_IMPLEMENTATION_STATES = {
     ImplementationState.IMPLEMENTED.value,
     ImplementationState.MOCK_VERIFIED.value,
@@ -125,6 +131,33 @@ class ProjectControlKernel:
             return mode, frozenset(), True
         return mode, allowed, False
 
+    def _predecessors_accepted(self, issues: dict[str, dict[str, Any]]) -> bool:
+        return all(
+            issues.get(task_id, {}).get("implementation_state")
+            in _COMPLETE_ISSUE_IMPLEMENTATION_STATES
+            for task_id in _CRITICAL_PATH_PREDECESSORS
+        )
+
+    def _completion_convergence_allowed(
+        self,
+        issue: dict[str, Any],
+        requirements: dict[str, dict[str, Any]],
+        *,
+        predecessors_accepted: bool,
+    ) -> bool:
+        """Admit remaining incomplete accepted work after PP-380 through PP-384."""
+
+        if not predecessors_accepted:
+            return False
+        linked = [
+            requirements[item] for item in issue.get("requirement_ids", []) if item in requirements
+        ]
+        return any(
+            item.get("disposition") == RequirementDisposition.ACCEPTED.value
+            and item.get("implementation_state") not in _COMPLETE_REQUIREMENT_STATES
+            for item in linked
+        )
+
     def task_facts(self) -> tuple[TaskControlFact, ...]:
         issues = {item["local_id"]: item for item in load_issues(self.root)}
         requirements = {
@@ -132,7 +165,8 @@ class ProjectControlKernel:
         }
         states = self.store.list_task_states(self.project_id)
         quarantined = reconciliation_quarantine_ids(self.root)
-        _, selection_scope, _ = self._selection_scope()
+        _, selection_scope, fail_closed = self._selection_scope()
+        predecessors_accepted = self._predecessors_accepted(issues) and not fail_closed
         facts: list[TaskControlFact] = []
         for state in states:
             issue = issues.get(state.task_id)
@@ -168,7 +202,17 @@ class ProjectControlKernel:
                         issue_has_reconciliation_evidence(self.root, issue)
                         or state.task_id in quarantined
                     ),
-                    product_scope_allowed=state.task_id in selection_scope,
+                    product_scope_allowed=(
+                        not fail_closed
+                        and (
+                            state.task_id in selection_scope
+                            or self._completion_convergence_allowed(
+                                issue,
+                                requirements,
+                                predecessors_accepted=predecessors_accepted,
+                            )
+                        )
+                    ),
                 )
             )
         return tuple(sorted(facts, key=lambda item: item.task_id))
@@ -299,6 +343,12 @@ class ProjectControlKernel:
             item.get("implementation_state") in _COMPLETE_REQUIREMENT_STATES
             for item in requirements
         )
+        reconciliation_count = sum(
+            1
+            for fact in self.task_facts()
+            if fact.reconciliation_required and fact.state not in _TERMINAL_WORK
+        )
+        incomplete_requirement_count = len(requirements) - req_complete
         reasons: list[str] = []
         all_work_terminal = completed == total
         all_requirements_complete = req_complete == len(requirements)
@@ -319,7 +369,7 @@ class ProjectControlKernel:
         elif failed:
             state = CompletionProjectionState.FAILED
             reasons.append(f"{failed} work items are in FAILED state")
-        elif blocked and sequence.ready_count == 0 and active == 0:
+        elif blocked and sequence.ready_count == 0 and active == 0 and reconciliation_count == 0:
             state = CompletionProjectionState.BLOCKED
             reasons.append("no independent ready or active work remains while blocked work exists")
         elif all_work_terminal and all_requirements_complete:
@@ -339,6 +389,14 @@ class ProjectControlKernel:
             if sequence.ready_count:
                 reasons.append(
                     f"{sequence.ready_count} independent work items are ready to continue"
+                )
+            if reconciliation_count:
+                reasons.append(
+                    f"{reconciliation_count} work items are RECONCILIATION_REQUIRED and are immediately batchable"
+                )
+            if sequence.ready_count <= 1 and (reconciliation_count or incomplete_requirement_count):
+                reasons.append(
+                    "a single ready item is not a stop signal while reconciliation or incomplete requirements remain"
                 )
         return CompletionProjection(
             projection_id=control_identifier(
