@@ -112,6 +112,7 @@ class TaskControlFact(DomainModel):
     environment_available: bool = True
     external_blocked: bool = False
     reconciliation_required: bool = False
+    remote_readback_required: bool = False
     product_scope_allowed: bool = True
     expected_duration_minutes: int | None = Field(default=None, ge=1, le=525_600)
     deadline_utc: datetime | None = None

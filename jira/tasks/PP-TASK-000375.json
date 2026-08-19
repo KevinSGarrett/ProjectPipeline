@@ -42,15 +42,16 @@
   "labels": [
     "bulk-reconciled",
     "convergence",
+    "done",
     "implemented",
     "pass-25"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "observed_at_utc": "2026-08-19T22:28:01Z",
     "remote_id": "25191",
     "remote_key": "PP-222",
-    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
-    "status_name": "To Do"
+    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+    "status_name": "Done"
   },
   "local_id": "PP-TASK-000375",
   "objective": "Implement approved versioned recovery runbook executor",
@@ -94,7 +95,7 @@
   "source_references": [
     "SRC-009:L000026-L000026"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement approved versioned recovery runbook executor",
   "upstream_dependencies": []
 }

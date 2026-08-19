@@ -193,6 +193,55 @@ def test_jira_reconciliation_does_not_treat_deliver_as_live_or_skip_tests(
     assert "required tests are missing" in row["reason"]
 
 
+def test_pp385_unbound_row_binds_in_progress_without_done(tmp_path: Path) -> None:
+    _seed(tmp_path)
+    issue = {
+        "acceptance_criteria": [
+            {
+                "criterion_id": "AC-PP-000385-01",
+                "statement": "Unattended qualification remains incomplete.",
+                "verification": {
+                    "command": "completion",
+                    "method": "unattended",
+                    "path": "tests/test_module.py",
+                    "status": "PLANNED",
+                },
+            }
+        ],
+        "blockers": [],
+        "completion_evidence": [],
+        "definition_of_done": ["24-hour and 72-hour qualification."],
+        "expected_implementation_artifacts": ["src/module.py"],
+        "implementation_state": "PARTIALLY_IMPLEMENTED",
+        "issue_type": "TASK",
+        "labels": ["planned"],
+        "local_id": "PP-TASK-000385",
+        "required_tests": ["TEST-JIRA-RECON-001"],
+        "requirement_ids": ["REQ-TEST-0001"],
+        "remote_jira_key": None,
+        "last_observed_remote_state": None,
+        "state": "BACKLOG",
+        "title": "Pass unattended operation",
+    }
+    write_json(tmp_path / "jira/tasks/PP-TASK-000385.json", issue)
+    row = next(
+        item
+        for item in evaluate_jira_implementation_reconciliation(tmp_path)
+        if item["issue_id"] == "PP-TASK-000385"
+    )
+    assert row["accepted"] is True
+    assert row["disposition"] == "APPLY"
+    assert row["next_lifecycle_state"] == "IN_PROGRESS"
+    assert row["remote_jira_key"] == "PP-391"
+    assert row["next_implementation_state"] is None
+    apply_jira_implementation_reconciliation(tmp_path)
+    updated = read_json(tmp_path / "jira/tasks/PP-TASK-000385.json")
+    assert updated["state"] == "IN_PROGRESS"
+    assert updated["remote_jira_key"] == "PP-391"
+    assert updated["last_observed_remote_state"]["status_name"] == "In Progress"
+    assert updated["implementation_state"] == "PARTIALLY_IMPLEMENTED"
+
+
 def test_jira_implementation_reconcile_cli_requires_approve(tmp_path: Path, capsys) -> None:
     _seed(tmp_path)
     assert main(["jira-implementation-reconcile", "--root", str(tmp_path), "--apply"]) == 2
@@ -229,3 +278,8 @@ def test_full_repository_jira_ledger_covers_every_issue() -> None:
     }
     assert {item["issue_id"] for item in ledger} == issue_ids
     assert all("reason" in item and "accepted" in item for item in ledger)
+    assert all(item.get("disposition") in {"APPLY", "NO_CHANGE", "REJECT"} for item in ledger)
+    by_id = {item["issue_id"]: item for item in ledger}
+    assert by_id["PP-TASK-000385"]["disposition"] == "NO_CHANGE"
+    assert "PP-391" in by_id["PP-TASK-000385"]["reason"]
+    assert by_id["PP-TASK-000384"]["disposition"] == "NO_CHANGE"

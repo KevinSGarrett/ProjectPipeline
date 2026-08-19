@@ -91,6 +91,20 @@ def issue_has_reconciliation_evidence(root: Path, issue: dict[str, Any]) -> bool
     return bool(issue.get("required_tests")) and bool(issue.get("completion_evidence"))
 
 
+def issue_waits_for_remote_readback(issue: dict[str, Any]) -> bool:
+    """True when local DoD is projected implemented and only live To Do remains."""
+
+    if issue.get("implementation_state") != ImplementationState.IMPLEMENTED.value:
+        return False
+    if issue.get("state") in {"DONE", "CANCELLED"}:
+        return False
+    observed = issue.get("last_observed_remote_state")
+    if not isinstance(observed, dict):
+        return False
+    status = str(observed.get("status_name") or "").strip().casefold()
+    return bool(status) and status not in {"done", "in progress"}
+
+
 def reconciliation_quarantine_ids(root: Path) -> frozenset[str]:
     path = root / "plans/reconciliation/IMPLEMENTED_REQUIREMENT_JIRA_AUDIT.json"
     if not path.exists():
@@ -205,9 +219,13 @@ class ProjectControlKernel:
                     accepted=accepted,
                     external_blocked=external_blocked,
                     reconciliation_required=(
-                        issue_has_reconciliation_evidence(self.root, issue)
-                        or state.task_id in quarantined
+                        (
+                            issue_has_reconciliation_evidence(self.root, issue)
+                            or state.task_id in quarantined
+                        )
+                        and not issue_waits_for_remote_readback(issue)
                     ),
+                    remote_readback_required=issue_waits_for_remote_readback(issue),
                     product_scope_allowed=(
                         not fail_closed
                         and (

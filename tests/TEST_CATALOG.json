@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 631,
+  "test_count": 652,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -573,11 +573,6 @@
       "test_id": "TEST-CAMP-025"
     },
     {
-      "callable": "test_recover_takes_over_reused_shared_qualification_pid",
-      "path": "tests/test_autonomy_campaign.py",
-      "test_id": "TEST-CAMP-028"
-    },
-    {
       "callable": "test_campaign_aware_health_requires_identity_not_pid_only",
       "path": "tests/test_autonomy_campaign.py",
       "test_id": "TEST-CAMP-026"
@@ -586,6 +581,16 @@
       "callable": "test_campaign_aware_health_treats_stale_lock_and_live_child_as_one_owner",
       "path": "tests/test_autonomy_campaign.py",
       "test_id": "TEST-CAMP-027"
+    },
+    {
+      "callable": "test_recover_takes_over_reused_shared_qualification_pid",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-028"
+    },
+    {
+      "callable": "test_missing_live_scheduled_task_is_not_user_action",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-029"
     },
     {
       "callable": "test_agui_run_requires_lifecycle_bookends",
@@ -1278,6 +1283,46 @@
       "test_id": "TEST-CURSOR-TAKEOVER-001"
     },
     {
+      "callable": "test_atomic_packet_from_one_observation_passes",
+      "path": "tests/test_cycle_packet_integrity.py",
+      "test_id": "TEST-CYCLE-PACKET-001"
+    },
+    {
+      "callable": "test_packet_main_differs_from_fetched_remote_fails",
+      "path": "tests/test_cycle_packet_integrity.py",
+      "test_id": "TEST-CYCLE-PACKET-002"
+    },
+    {
+      "callable": "test_packet_timestamp_before_later_write_fails",
+      "path": "tests/test_cycle_packet_integrity.py",
+      "test_id": "TEST-CYCLE-PACKET-003"
+    },
+    {
+      "callable": "test_sidecar_bytes_mismatch_fails",
+      "path": "tests/test_cycle_packet_integrity.py",
+      "test_id": "TEST-CYCLE-PACKET-004"
+    },
+    {
+      "callable": "test_ledgers_naming_different_heads_fail",
+      "path": "tests/test_cycle_packet_integrity.py",
+      "test_id": "TEST-CYCLE-PACKET-005"
+    },
+    {
+      "callable": "test_empty_ledgers_despite_observed_movements_fail",
+      "path": "tests/test_cycle_packet_integrity.py",
+      "test_id": "TEST-CYCLE-PACKET-006"
+    },
+    {
+      "callable": "test_listed_pr_contradicts_github_fails",
+      "path": "tests/test_cycle_packet_integrity.py",
+      "test_id": "TEST-CYCLE-PACKET-007"
+    },
+    {
+      "callable": "test_live_jira_fact_contradicts_readback_fails",
+      "path": "tests/test_cycle_packet_integrity.py",
+      "test_id": "TEST-CYCLE-PACKET-008"
+    },
+    {
       "callable": "DecisionResolutionTests.test_accepted_adrs_link_sources_requirements_components_and_tradeoffs",
       "path": "tests/test_decision_resolution.py",
       "test_id": "TEST-DECISION-001"
@@ -1301,6 +1346,36 @@
       "callable": "DependencyTests.test_missing_active_dependency_is_reported",
       "path": "tests/test_dependencies.py",
       "test_id": "TEST-DEPEND-003"
+    },
+    {
+      "callable": "test_architecture_authority_rejects_untrusted_or_stale_changes",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-ARCH-001"
+    },
+    {
+      "callable": "test_cli_status_is_machine_readable_and_advisory",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-CLI-001"
+    },
+    {
+      "callable": "test_local_context_bounds_and_fails_closed_on_stale_required",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-CONTEXT-001"
+    },
+    {
+      "callable": "test_manager_recommendations_require_durable_citations",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-PM-001"
+    },
+    {
+      "callable": "test_portfolio_assigns_roles_from_machine_resources",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-PORTFOLIO-001"
+    },
+    {
+      "callable": "test_store_idempotent_put_and_conflicting_replay",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-STORE-001"
     },
     {
       "callable": "DomainIdentifierTests.test_project_identifier_normalizes_without_duplicate_prefix",
@@ -1473,6 +1548,16 @@
       "test_id": "TEST-GITHUB-STEWARDSHIP-002"
     },
     {
+      "callable": "test_instruction_system_covers_required_modules",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-GOV-INSTR-001"
+    },
+    {
+      "callable": "test_instruction_system_fails_closed_when_primary_missing",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-GOV-INSTR-002"
+    },
+    {
       "callable": "test_post_merge_refresh_preserves_dirty_pinned_and_root",
       "path": "tests/test_governance_post_merge_refresh.py",
       "test_id": "TEST-GOV-POSTMERGE-001"
@@ -1488,14 +1573,9 @@
       "test_id": "TEST-GOV-POSTMERGE-003"
     },
     {
-      "callable": "test_instruction_system_covers_required_modules",
+      "callable": "test_post_merge_refresh_classifies_local_jira_mirror",
       "path": "tests/test_autonomous_governance.py",
-      "test_id": "TEST-GOV-INSTR-001"
-    },
-    {
-      "callable": "test_instruction_system_fails_closed_when_primary_missing",
-      "path": "tests/test_autonomous_governance.py",
-      "test_id": "TEST-GOV-INSTR-002"
+      "test_id": "TEST-GOV-POSTMERGE-004"
     },
     {
       "callable": "test_review_director_rejects_self_review",
@@ -1518,21 +1598,6 @@
       "test_id": "TEST-GOV-VER-002"
     },
     {
-      "callable": "test_product_profile_is_local_first_without_paid_or_chat_dependency",
-      "path": "tests/test_autonomous_governance.py",
-      "test_id": "TEST-PDEF-PROFILE-001"
-    },
-    {
-      "callable": "test_product_profile_rejects_paid_default",
-      "path": "tests/test_autonomous_governance.py",
-      "test_id": "TEST-PDEF-PROFILE-002"
-    },
-    {
-      "callable": "test_post_merge_refresh_classifies_local_jira_mirror",
-      "path": "tests/test_autonomous_governance.py",
-      "test_id": "TEST-GOV-POSTMERGE-004"
-    },
-    {
       "callable": "IdentifierTests.test_valid_identifiers_match",
       "path": "tests/test_ids.py",
       "test_id": "TEST-IDS-001"
@@ -1541,6 +1606,36 @@
       "callable": "IdentifierTests.test_invalid_identifiers_do_not_match",
       "path": "tests/test_ids.py",
       "test_id": "TEST-IDS-002"
+    },
+    {
+      "callable": "test_capacity_denies_missing_checks_and_live_spend",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-CAP-001"
+    },
+    {
+      "callable": "test_cli_status_is_local_and_machine_readable",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-CLI-001"
+    },
+    {
+      "callable": "test_emulation_cannot_substitute_for_live",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-EMU-001"
+    },
+    {
+      "callable": "test_ephemeral_provision_is_idempotent_and_destroyed",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-EPH-001"
+    },
+    {
+      "callable": "test_ingress_authenticates_dedupes_and_never_grants_control",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-INGRESS-001"
+    },
+    {
+      "callable": "test_overlay_rejects_unauthenticated_and_public_exposure",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-OVERLAY-001"
     },
     {
       "callable": "ProjectBootstrapTests.test_greenfield_dry_run_does_not_create_target",
@@ -1803,6 +1898,66 @@
       "test_id": "TEST-JIRA-GRAPH-002"
     },
     {
+      "callable": "test_derive_unique_local_id_from_label_and_description",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-001"
+    },
+    {
+      "callable": "test_derive_fails_closed_on_duplicate_local_ids",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-002"
+    },
+    {
+      "callable": "test_missing_mapping_with_unique_remote_match_is_reconciliation_required",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-003"
+    },
+    {
+      "callable": "test_legacy_key_only_match_misses_unique_label_identity",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-004"
+    },
+    {
+      "callable": "test_duplicate_remote_mapping_fails_closed_and_does_not_write",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-005"
+    },
+    {
+      "callable": "test_conflicting_declared_and_derived_identity_fails_closed",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-006"
+    },
+    {
+      "callable": "test_status_parity_requires_the_same_complete_snapshot",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-007"
+    },
+    {
+      "callable": "test_adapter_extracts_local_id_from_description_when_label_prefix_absent",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-008"
+    },
+    {
+      "callable": "test_stale_guard_is_rejected_by_fingerprint_time_and_remote_version",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-009"
+    },
+    {
+      "callable": "test_count_drift_and_unknown_write_fail_closed",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-010"
+    },
+    {
+      "callable": "test_pp385_split_brain_fixture_requires_reconciliation",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-011"
+    },
+    {
+      "callable": "test_read_before_retry_unknown_outcome_is_reconciliation_required",
+      "path": "tests/test_jira_identity_parity.py",
+      "test_id": "TEST-JIRA-IDENTITY-012"
+    },
+    {
       "callable": "JiraStewardMockAndServiceTests.test_mock_pagination_reads_every_issue_exactly_once",
       "path": "tests/test_jira_steward_mock_and_service.py",
       "test_id": "TEST-JIRA-MOCK-001"
@@ -1861,6 +2016,11 @@
       "callable": "test_jira_reconciliation_does_not_treat_deliver_as_live_or_skip_tests",
       "path": "tests/test_jira_implementation_reconciliation.py",
       "test_id": "TEST-JIRA-RECONCILE-006"
+    },
+    {
+      "callable": "test_pp385_unbound_row_binds_in_progress_without_done",
+      "path": "tests/test_jira_implementation_reconciliation.py",
+      "test_id": "TEST-JIRA-RECONCILE-007"
     },
     {
       "callable": "JiraStewardMockAndServiceTests.test_dry_run_persists_plan_without_remote_writes",
@@ -1981,6 +2141,71 @@
       "callable": "ObservabilityTests.test_context_attribute_serialization_omits_unset_values",
       "path": "tests/test_observability.py",
       "test_id": "TEST-OBS-005"
+    },
+    {
+      "callable": "test_missing_store_does_not_rewrite_command_center_health",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-CC-001"
+    },
+    {
+      "callable": "test_empty_ops_store_does_not_rewrite_command_center_health",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-CC-002"
+    },
+    {
+      "callable": "test_cli_health_and_index",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-CLI-001"
+    },
+    {
+      "callable": "test_health_is_unknown_when_required_layers_are_missing",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-HEALTH-001"
+    },
+    {
+      "callable": "test_stale_observation_fails_closed",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-HEALTH-002"
+    },
+    {
+      "callable": "test_contradictory_layer_is_unhealthy",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-HEALTH-003"
+    },
+    {
+      "callable": "test_failed_worker_and_quota_breach_are_unhealthy",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-HEALTH-004"
+    },
+    {
+      "callable": "test_complete_fresh_layers_are_healthy",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-HEALTH-005"
+    },
+    {
+      "callable": "test_code_index_and_dependency_classification_are_local",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-INDEX-001"
+    },
+    {
+      "callable": "test_cache_and_distilled_memory",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-MEM-001"
+    },
+    {
+      "callable": "test_conflicting_replay_and_journal_recovery",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-STORE-001"
+    },
+    {
+      "callable": "test_retention_and_concurrent_writers",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-STORE-002"
+    },
+    {
+      "callable": "test_retention_survives_reopen",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-STORE-003"
     },
     {
       "callable": "test_hatchet_bridge_uses_nonblocking_run_and_metadata",
@@ -2131,6 +2356,16 @@
       "callable": "test_plan_catalog_must_match_authoritative_plan_status",
       "path": "tests/test_product_outcome_contract.py",
       "test_id": "TEST-PDEF-OUTCOME-008"
+    },
+    {
+      "callable": "test_product_profile_is_local_first_without_paid_or_chat_dependency",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-PDEF-PROFILE-001"
+    },
+    {
+      "callable": "test_product_profile_rejects_paid_default",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-PDEF-PROFILE-002"
     },
     {
       "callable": "ProvenanceTests.test_knowledge_pack_registry_preserves_source_relations",
@@ -2293,6 +2528,11 @@
       "test_id": "TEST-REQ-RECONCILE-005"
     },
     {
+      "callable": "test_catalog_callable_present_accepts_unittest_class_methods",
+      "path": "tests/test_requirement_reconciliation.py",
+      "test_id": "TEST-REQ-RECONCILE-006"
+    },
+    {
       "callable": "RequirementQueryTests.test_query_filters_are_composable_and_case_normalized",
       "path": "tests/test_requirement_query.py",
       "test_id": "TEST-REQUIREMENT-QUERY-001"
@@ -2413,6 +2653,11 @@
       "test_id": "TEST-RES-FAILOVER-005"
     },
     {
+      "callable": "test_gpu_wait_does_not_block_independent_lanes",
+      "path": "tests/test_resilience_gaps.py",
+      "test_id": "TEST-RES-GPUWAIT-001"
+    },
+    {
       "callable": "test_local_runtime_config_is_private_and_advisory",
       "path": "tests/test_resilience_local_models.py",
       "test_id": "TEST-RES-LOCAL-001"
@@ -2436,6 +2681,11 @@
       "callable": "test_ppdb_0015_rollback_preserves_0014",
       "path": "tests/test_resilience_persistence.py",
       "test_id": "TEST-RES-PERSIST-002"
+    },
+    {
+      "callable": "test_provider_removal_is_isolated_and_substitutes_local",
+      "path": "tests/test_resilience_gaps.py",
+      "test_id": "TEST-RES-REMOVE-001"
     },
     {
       "callable": "test_all_resilience_scenarios_preserve_authority",
@@ -2466,6 +2716,21 @@
       "callable": "test_preserve_uncommitted_work_is_noop_when_clean",
       "path": "tests/test_resilience_wip_preserve.py",
       "test_id": "TEST-RES-WIP-003"
+    },
+    {
+      "callable": "test_wip_preserve_and_restore_round_trip",
+      "path": "tests/test_resilience_gaps.py",
+      "test_id": "TEST-RES-WIPRESTORE-001"
+    },
+    {
+      "callable": "test_wip_restore_refuses_secret_and_digest_mismatch",
+      "path": "tests/test_resilience_gaps.py",
+      "test_id": "TEST-RES-WIPRESTORE-002"
+    },
+    {
+      "callable": "test_wip_restore_rejects_unsafe_destination",
+      "path": "tests/test_resilience_gaps.py",
+      "test_id": "TEST-RES-WIPRESTORE-003"
     },
     {
       "callable": "RuntimeFoundationTests.test_bootstrap_reports_required_foundation_ready",
@@ -2996,166 +3261,6 @@
       "callable": "test_verification_foundation_is_registered",
       "path": "tests/test_verification_validation.py",
       "test_id": "TEST-VERIFY-VALIDATION-001"
-    },
-    {
-      "callable": "test_health_is_unknown_when_required_layers_are_missing",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-HEALTH-001"
-    },
-    {
-      "callable": "test_stale_observation_fails_closed",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-HEALTH-002"
-    },
-    {
-      "callable": "test_contradictory_layer_is_unhealthy",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-HEALTH-003"
-    },
-    {
-      "callable": "test_failed_worker_and_quota_breach_are_unhealthy",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-HEALTH-004"
-    },
-    {
-      "callable": "test_complete_fresh_layers_are_healthy",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-HEALTH-005"
-    },
-    {
-      "callable": "test_code_index_and_dependency_classification_are_local",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-INDEX-001"
-    },
-    {
-      "callable": "test_cache_and_distilled_memory",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-MEM-001"
-    },
-    {
-      "callable": "test_conflicting_replay_and_journal_recovery",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-STORE-001"
-    },
-    {
-      "callable": "test_retention_and_concurrent_writers",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-STORE-002"
-    },
-    {
-      "callable": "test_missing_store_does_not_rewrite_command_center_health",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-CC-001"
-    },
-    {
-      "callable": "test_cli_health_and_index",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-CLI-001"
-    },
-    {
-      "callable": "test_retention_survives_reopen",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-STORE-003"
-    },
-    {
-      "callable": "test_empty_ops_store_does_not_rewrite_command_center_health",
-      "path": "tests/test_ops_intelligence.py",
-      "test_id": "TEST-OPS-CC-002"
-    },
-    {
-      "callable": "test_overlay_rejects_unauthenticated_and_public_exposure",
-      "path": "tests/test_infra_boundaries.py",
-      "test_id": "TEST-INFRA-OVERLAY-001"
-    },
-    {
-      "callable": "test_ephemeral_provision_is_idempotent_and_destroyed",
-      "path": "tests/test_infra_boundaries.py",
-      "test_id": "TEST-INFRA-EPH-001"
-    },
-    {
-      "callable": "test_emulation_cannot_substitute_for_live",
-      "path": "tests/test_infra_boundaries.py",
-      "test_id": "TEST-INFRA-EMU-001"
-    },
-    {
-      "callable": "test_ingress_authenticates_dedupes_and_never_grants_control",
-      "path": "tests/test_infra_boundaries.py",
-      "test_id": "TEST-INFRA-INGRESS-001"
-    },
-    {
-      "callable": "test_capacity_denies_missing_checks_and_live_spend",
-      "path": "tests/test_infra_boundaries.py",
-      "test_id": "TEST-INFRA-CAP-001"
-    },
-    {
-      "callable": "test_cli_status_is_local_and_machine_readable",
-      "path": "tests/test_infra_boundaries.py",
-      "test_id": "TEST-INFRA-CLI-001"
-    },
-    {
-      "callable": "test_portfolio_assigns_roles_from_machine_resources",
-      "path": "tests/test_director_intelligence.py",
-      "test_id": "TEST-DIR-PORTFOLIO-001"
-    },
-    {
-      "callable": "test_local_context_bounds_and_fails_closed_on_stale_required",
-      "path": "tests/test_director_intelligence.py",
-      "test_id": "TEST-DIR-CONTEXT-001"
-    },
-    {
-      "callable": "test_manager_recommendations_require_durable_citations",
-      "path": "tests/test_director_intelligence.py",
-      "test_id": "TEST-DIR-PM-001"
-    },
-    {
-      "callable": "test_architecture_authority_rejects_untrusted_or_stale_changes",
-      "path": "tests/test_director_intelligence.py",
-      "test_id": "TEST-DIR-ARCH-001"
-    },
-    {
-      "callable": "test_store_idempotent_put_and_conflicting_replay",
-      "path": "tests/test_director_intelligence.py",
-      "test_id": "TEST-DIR-STORE-001"
-    },
-    {
-      "callable": "test_cli_status_is_machine_readable_and_advisory",
-      "path": "tests/test_director_intelligence.py",
-      "test_id": "TEST-DIR-CLI-001"
-    },
-    {
-      "callable": "test_provider_removal_is_isolated_and_substitutes_local",
-      "path": "tests/test_resilience_gaps.py",
-      "test_id": "TEST-RES-REMOVE-001"
-    },
-    {
-      "callable": "test_gpu_wait_does_not_block_independent_lanes",
-      "path": "tests/test_resilience_gaps.py",
-      "test_id": "TEST-RES-GPUWAIT-001"
-    },
-    {
-      "callable": "test_wip_preserve_and_restore_round_trip",
-      "path": "tests/test_resilience_gaps.py",
-      "test_id": "TEST-RES-WIPRESTORE-001"
-    },
-    {
-      "callable": "test_wip_restore_refuses_secret_and_digest_mismatch",
-      "path": "tests/test_resilience_gaps.py",
-      "test_id": "TEST-RES-WIPRESTORE-002"
-    },
-    {
-      "callable": "test_wip_restore_rejects_unsafe_destination",
-      "path": "tests/test_resilience_gaps.py",
-      "test_id": "TEST-RES-WIPRESTORE-003"
-    },
-    {
-      "callable": "test_missing_live_scheduled_task_is_not_user_action",
-      "path": "tests/test_autonomy_campaign.py",
-      "test_id": "TEST-CAMP-029"
-    },
-    {
-      "callable": "test_catalog_callable_present_accepts_unittest_class_methods",
-      "path": "tests/test_requirement_reconciliation.py",
-      "test_id": "TEST-REQ-RECONCILE-006"
     }
   ]
 }

@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
         "method": "automated_behavior_validation",
         "path": "src/project_pipeline/orchestration/validation.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,19 +17,24 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000029",
+    "EVID-000030",
+    "EVID-000062",
     "EVID-000095",
     "EVID-000096",
     "EVID-000097",
     "EVID-000098",
     "EVID-000099",
     "EVID-000100",
-    "EVID-000101"
+    "EVID-000101",
+    "EVID-000129",
+    "EVID-000130"
   ],
   "definition_of_done": [
     "Implementation is present and locally behaviorally verified.",
@@ -63,10 +68,11 @@
     "tests/test_orchestration_recovery.py",
     "tests/test_orchestration_adapters.py"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "durability",
+    "implemented",
     "orchestration",
     "pass-13"
   ],

@@ -73,6 +73,7 @@
   "issue_type": "TASK",
   "labels": [
     "deterministic",
+    "done",
     "dry-run-default",
     "git",
     "github",
@@ -80,11 +81,11 @@
     "repository-steward"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "observed_at_utc": "2026-08-19T22:28:01Z",
     "remote_id": "25320",
     "remote_key": "PP-351",
-    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
-    "status_name": "To Do"
+    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+    "status_name": "Done"
   },
   "local_id": "PP-TASK-000229",
   "objective": "Implement cleanup classification that protects default, active-worktree, dirty, and unmerged branches and separates local from remote deletion authority.",
@@ -148,7 +149,7 @@
     "SRC-006:L000479-L000518",
     "SRC-006:L000695-L000735"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Stale-branch cleanup and reconciliation",
   "upstream_dependencies": [
     "https://github.com/github/github-mcp-server"

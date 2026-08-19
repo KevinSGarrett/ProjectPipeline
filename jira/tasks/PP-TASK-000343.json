@@ -60,15 +60,16 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "security",
+    "done",
     "identity",
+    "security",
     "supply-chain"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-16T15:12:13.006985Z",
+    "observed_at_utc": "2026-08-19T22:28:01Z",
     "remote_id": "25150",
     "remote_key": "PP-181",
-    "snapshot_id": "JSNAP-F81F8DAB101ABA028D1A",
+    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
     "status_name": "In Progress"
   },
   "local_id": "PP-TASK-000343",
@@ -116,7 +117,7 @@
     "SRC-009:L000009-L000009",
     "SRC-017:L000009-L000071"
   ],
-  "state": "MERGE_READY",
+  "state": "DONE",
   "title": "Implement data classification, egress, and instruction-trust controls",
   "upstream_dependencies": []
 }

@@ -136,6 +136,11 @@
       "title": "Reconciliation Required",
       "type": "boolean"
     },
+    "remote_readback_required": {
+      "default": false,
+      "title": "Remote Readback Required",
+      "type": "boolean"
+    },
     "requirement_ids": {
       "default": [],
       "items": {

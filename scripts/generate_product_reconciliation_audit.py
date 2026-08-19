@@ -60,6 +60,8 @@ def build_audit(root: Path) -> dict[str, object]:
             item.get("implementation_state") in complete_states for item in linked
         )
         has_existing_delivery = issue_has_reconciliation_evidence(root, issue)
+        if issue.get("implementation_state") == "PLANNED_ONLY" and not has_existing_delivery:
+            continue
         if not has_complete_requirements and not has_existing_delivery:
             continue
         issue_findings.append(

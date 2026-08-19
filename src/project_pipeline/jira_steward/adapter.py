@@ -23,9 +23,12 @@ from project_pipeline.domain.jira import (
     RemoteJiraIssue,
     RemoteJiraLink,
 )
+from project_pipeline.jira_steward.identity import (
+    LOCAL_ID_LABEL_PREFIX,
+    derive_remote_local_id,
+)
 from project_pipeline.jira_steward.ports import JiraRemotePort, JiraWriteContext
 
-_LOCAL_ID_LABEL_PREFIX = "pp-local-id:"
 _DEFAULT_FIELDS = (
     "summary",
     "description",
@@ -566,7 +569,7 @@ class AtlassianJiraCloudAdapter(JiraRemotePort):
         local_id = str(source.get("local_id", "")).strip()
         labels = list(dict.fromkeys(str(item) for item in source.get("labels", []) if str(item)))
         if local_id:
-            marker = f"{_LOCAL_ID_LABEL_PREFIX}{local_id}"
+            marker = f"{LOCAL_ID_LABEL_PREFIX}{local_id}"
             if marker not in labels:
                 labels.append(marker)
         fields: dict[str, Any] = {
@@ -643,7 +646,14 @@ class AtlassianJiraCloudAdapter(JiraRemotePort):
     def _parse_issue(self, payload: Mapping[str, Any]) -> RemoteJiraIssue:
         fields = payload.get("fields", {}) if isinstance(payload.get("fields"), dict) else {}
         labels = tuple(sorted(str(item) for item in fields.get("labels", []) if str(item)))
-        local_id = self._local_id(fields, labels)
+        description_text = self._adf_to_text(fields.get("description"))
+        derivation = derive_remote_local_id(
+            labels=labels,
+            description=description_text,
+            fields=fields,
+            local_id_field=self.local_id_field,
+        )
+        local_id = None if derivation.fail_closed() else derivation.local_id
         issue_type_name = str((fields.get("issuetype") or {}).get("name", "Unknown"))
         normalized_type = self._normalize_issue_type(issue_type_name)
         status_name = str((fields.get("status") or {}).get("name", "Unknown"))
@@ -657,7 +667,7 @@ class AtlassianJiraCloudAdapter(JiraRemotePort):
             issue_type_name=issue_type_name,
             normalized_issue_type=normalized_type,
             summary=str(fields.get("summary", "")),
-            description_text=self._adf_to_text(fields.get("description")),
+            description_text=description_text,
             status_name=status_name,
             normalized_state=None,
             parent_remote_key=(
@@ -730,20 +740,6 @@ class AtlassianJiraCloudAdapter(JiraRemotePort):
             outward_key=outward_key,
             inward_key=inward_key,
         )
-
-    def _local_id(self, fields: Mapping[str, Any], labels: tuple[str, ...]) -> str | None:
-        if self.local_id_field:
-            value = fields.get(self.local_id_field)
-            if value:
-                return str(value)
-        for label in labels:
-            if label.casefold().startswith(_LOCAL_ID_LABEL_PREFIX):
-                return label[len(_LOCAL_ID_LABEL_PREFIX) :]
-        for label in labels:
-            candidate = label.upper().replace("_", "-")
-            if candidate.startswith("PP-"):
-                return candidate
-        return None
 
     @staticmethod
     def _normalize_issue_type(value: str) -> JiraIssueType | None:

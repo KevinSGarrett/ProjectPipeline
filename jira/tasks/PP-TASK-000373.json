@@ -66,11 +66,11 @@
     "hardening"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "observed_at_utc": "2026-08-19T22:28:01Z",
     "remote_id": "25140",
     "remote_key": "PP-171",
-    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
-    "status_name": "To Do"
+    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+    "status_name": "Done"
   },
   "local_id": "PP-TASK-000373",
   "objective": "Implement release candidate identity, operator handoff, cleanup, rollback, and release procedures",

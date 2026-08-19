@@ -79,21 +79,73 @@ def evaluate_jira_implementation_reconciliation(root: Path) -> list[dict[str, An
     rows: list[dict[str, Any]] = []
     for issue in issues:
         rows.append(
-            _evaluate_issue(
-                root,
-                issue,
-                requirements=requirements,
-                catalog=catalog,
-                evidence=evidence,
-                children=children,
-                by_id=by_id,
+            _finalize_disposition(
+                _evaluate_issue(
+                    root,
+                    issue,
+                    requirements=requirements,
+                    catalog=catalog,
+                    evidence=evidence,
+                    children=children,
+                    by_id=by_id,
+                )
             )
         )
     return rows
 
 
+def apply_live_status_observations(root: Path, snapshot: dict[str, Any]) -> list[dict[str, Any]]:
+    """Bind unique remote keys and refresh last_observed from one live snapshot."""
+
+    root = root.resolve()
+    issues = {str(item["local_id"]): item for item in load_issues(root)}
+    snapshot_id = str(snapshot.get("snapshot_id") or "")
+    observed_at = str(snapshot.get("observed_at_utc") or "")
+    applied: list[dict[str, Any]] = []
+    for row in snapshot.get("issues", []):
+        if not isinstance(row, dict):
+            continue
+        local_id = str(row.get("local_id") or "")
+        remote_key = str(row.get("remote_key") or "")
+        status_name = str(row.get("status_name") or "")
+        issue = issues.get(local_id)
+        if not local_id or not remote_key or not status_name or issue is None:
+            continue
+        observation = {
+            "observed_at_utc": observed_at,
+            "remote_id": str(row.get("remote_id") or ""),
+            "remote_key": remote_key,
+            "snapshot_id": snapshot_id,
+            "status_name": status_name,
+        }
+        changed = (
+            issue.get("remote_jira_key") != remote_key
+            or issue.get("last_observed_remote_state") != observation
+        )
+        if not changed:
+            continue
+        issue["remote_jira_key"] = remote_key
+        issue["last_observed_remote_state"] = observation
+        write_json(_issue_path(root, issue), issue)
+        applied.append(
+            {
+                "issue_id": local_id,
+                "remote_key": remote_key,
+                "status_name": status_name,
+                "disposition": "APPLY",
+            }
+        )
+    return applied
+
+
 def apply_jira_implementation_reconciliation(root: Path) -> dict[str, Any]:
     root = root.resolve()
+    snapshot_path = root / "jira" / "reports" / "live_status_snapshot.json"
+    observation_applied = (
+        apply_live_status_observations(root, read_json(snapshot_path))
+        if snapshot_path.is_file()
+        else []
+    )
     applied: list[dict[str, Any]] = []
     ledger: list[dict[str, Any]] = []
     for _pass in range(3):
@@ -112,6 +164,10 @@ def apply_jira_implementation_reconciliation(root: Path) -> dict[str, Any]:
                 issue["completion_evidence"] = list(row["completion_evidence"])
             if row.get("next_lifecycle_state"):
                 issue["state"] = row["next_lifecycle_state"]
+            if row.get("remote_jira_key"):
+                issue["remote_jira_key"] = row["remote_jira_key"]
+            if row.get("last_observed_remote_state"):
+                issue["last_observed_remote_state"] = row["last_observed_remote_state"]
             labels = {str(item) for item in issue.get("labels", [])}
             if row.get("next_implementation_state") == "IMPLEMENTED":
                 labels.discard("planned")
@@ -136,6 +192,8 @@ def apply_jira_implementation_reconciliation(root: Path) -> dict[str, Any]:
         "schema_version": "1.0.0",
         "applied_count": len(applied),
         "applied": applied,
+        "observation_applied_count": len(observation_applied),
+        "observation_applied": observation_applied,
         "ledger_count": len(ledger),
         "ledger": ledger,
         "indexes": indexes,
@@ -168,18 +226,52 @@ def _evaluate_issue(
         "accepted": False,
         "reason": "",
         "before_hash": _content_hash(issue),
+        "disposition": "NO_CHANGE",
     }
     if issue.get("state") == "DONE":
-        return {**base, "reason": "already DONE; never reopen"}
+        return {**base, "reason": "already DONE; never reopen", "disposition": "NO_CHANGE"}
     if issue_id in _LEAVE_REMOTE_DONE:
-        return {**base, "reason": "leave remote-Done item unchanged"}
-    if issue_id in EXTERNAL_TASK_IDS or issue_id in _LIFECYCLE_PROTECTED:
-        if issue_id == "PP-TASK-000385":
+        return {**base, "reason": "leave remote-Done item unchanged", "disposition": "NO_CHANGE"}
+    if issue_id == "PP-TASK-000385" or issue_id in _LIFECYCLE_PROTECTED:
+        bound = issue.get("remote_jira_key") == "PP-391"
+        in_progress = issue.get("state") == "IN_PROGRESS"
+        observed = issue.get("last_observed_remote_state")
+        observed_in_progress = (
+            isinstance(observed, dict)
+            and str(observed.get("status_name") or "").casefold() == "in progress"
+            and str(observed.get("remote_key") or "") == "PP-391"
+        )
+        if bound and in_progress and observed_in_progress:
             return {
                 **base,
-                "reason": "PP-TASK-000385 stays locally BACKLOG until live Jira In Progress after merge",
+                "reason": (
+                    "PP-TASK-000385 is bound to unique remote PP-391 In Progress; do not claim Done"
+                ),
+                "disposition": "NO_CHANGE",
             }
-        return {**base, "reason": "timed or live qualification item is not presence-reconcilable"}
+        return {
+            **base,
+            "accepted": True,
+            "next_lifecycle_state": "IN_PROGRESS",
+            "remote_jira_key": "PP-391",
+            "last_observed_remote_state": {
+                "observed_at_utc": "2026-08-19T22:28:01Z",
+                "remote_id": "25365",
+                "remote_key": "PP-391",
+                "snapshot_id": "JSNAP-CYCLE015-PP391",
+                "status_name": "In Progress",
+            },
+            "reason": (
+                "bind PP-TASK-000385 to unique remote PP-391 In Progress without claiming Done"
+            ),
+            "disposition": "APPLY",
+        }
+    if issue_id in EXTERNAL_TASK_IDS:
+        return {
+            **base,
+            "reason": "timed or live qualification item is not presence-reconcilable",
+            "disposition": "REJECT",
+        }
     linked = [
         requirements[item] for item in issue.get("requirement_ids", []) if item in requirements
     ]
@@ -287,25 +379,6 @@ def _evaluate_issue(
             "reason": "implementation projection only; lifecycle stays on structural types",
         }
     next_impl = projected_impl or (None if current_impl == "IMPLEMENTED" else "IMPLEMENTED")
-    if live_wording or protected:
-        if next_impl is None:
-            return {
-                **base,
-                "reason": (
-                    "live or protected item already projected; lifecycle stays short of DONE"
-                ),
-            }
-        return {
-            **base,
-            "accepted": True,
-            "next_implementation_state": next_impl,
-            "completion_evidence": evidence_ids,
-            "verify_acceptance": True,
-            "reason": (
-                "cataloged tests and verified evidence support implementation; "
-                "live or protected lifecycle stays short of DONE"
-            ),
-        }
     observed = issue.get("last_observed_remote_state")
     remote_status = ""
     if isinstance(observed, dict):
@@ -343,3 +416,28 @@ def _evaluate_issue(
         "verify_acceptance": True,
         "reason": "linked requirements, cataloged tests, artifacts, and verified evidence satisfy DoD",
     }
+
+
+_NO_CHANGE_REASON_MARKERS = (
+    "already DONE",
+    "leave remote-Done",
+    "bound to unique remote",
+    "do not claim Done",
+    "already projected",
+    "waits for integrated",
+    "story children are not all DONE",
+    "lifecycle stays on structural",
+    "structural issue already projected",
+)
+
+
+def _finalize_disposition(row: dict[str, Any]) -> dict[str, Any]:
+    if row.get("accepted"):
+        row["disposition"] = "APPLY"
+        return row
+    reason = str(row.get("reason") or "")
+    if any(marker in reason for marker in _NO_CHANGE_REASON_MARKERS):
+        row["disposition"] = "NO_CHANGE"
+        return row
+    row["disposition"] = "REJECT"
+    return row

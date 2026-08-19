@@ -47,7 +47,10 @@ def test_ready_plan_is_read_only_and_versioned(tmp_path: Path) -> None:
         before = {item.task_id: item.version for item in store.list_task_states("PROJECT-PIPELINE")}
         plan = kernel.readiness_transition_plan()
         after = {item.task_id: item.version for item in store.list_task_states("PROJECT-PIPELINE")}
-        assert "PP-TASK-000385" in {item["task_id"] for item in plan}
+        facts = {item.task_id: item for item in kernel.task_facts()}
+        assert facts["PP-TASK-000385"].state is TaskLifecycleState.IN_PROGRESS
+        assert "PP-TASK-000385" not in {item["task_id"] for item in plan}
+        assert plan
         assert before == after
 
 
@@ -67,15 +70,19 @@ def test_targeted_readiness_apply_preserves_other_ready_backlog_items(tmp_path: 
     with initialized_store(tmp_path / "control.db") as store:
         kernel = ProjectControlKernel(ROOT, store, "PROJECT-PIPELINE")
         plan = kernel.readiness_transition_plan()
-        assert "PP-TASK-000385" in {item["task_id"] for item in plan}
+        assert plan
+        target = plan[0]["task_id"]
+        facts = {item.task_id: item for item in kernel.task_facts()}
+        assert facts["PP-TASK-000385"].state is TaskLifecycleState.IN_PROGRESS
+        assert "PP-TASK-000385" not in {item["task_id"] for item in plan}
         results = kernel.apply_readiness_transitions(
             actor_id="actor:test-control",
             correlation_id="corr:test-control-targeted",
-            task_ids=frozenset({"PP-TASK-000385"}),
+            task_ids=frozenset({target}),
         )
-        assert {item["task_id"] for item in results} == {"PP-TASK-000385"}
+        assert {item["task_id"] for item in results} == {target}
         remaining = {item["task_id"] for item in kernel.readiness_transition_plan()}
-        assert "PP-TASK-000385" not in remaining
+        assert target not in remaining
 
 
 def test_targeted_readiness_plan_rejects_unknown_task(tmp_path: Path) -> None:
@@ -243,11 +250,15 @@ def test_existing_delivery_footprints_are_not_ranked_as_fresh_implementation(
             if facts[task_id].state is TaskLifecycleState.DONE:
                 assert sequencer.eligibility(facts[task_id]).state is EligibilityState.TERMINAL
                 continue
+            eligibility = sequencer.eligibility(facts[task_id])
+            assert eligibility.eligible is False
+            assert eligibility.state is not EligibilityState.ELIGIBLE
+            if facts[task_id].remote_readback_required:
+                assert eligibility.state is EligibilityState.POLICY_DENIED
+                assert "remote readback beyond To Do" in " ".join(eligibility.reasons)
+                continue
             assert facts[task_id].reconciliation_required
-            assert (
-                sequencer.eligibility(facts[task_id]).state
-                is EligibilityState.RECONCILIATION_REQUIRED
-            )
+            assert eligibility.state is EligibilityState.RECONCILIATION_REQUIRED
 
 
 def test_runtime_predecessors_admit_completion_convergence_work(

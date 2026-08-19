@@ -88,6 +88,7 @@ class BuildSequencer:
                     "environment_available": item.environment_available,
                     "external_blocked": item.external_blocked,
                     "reconciliation_required": item.reconciliation_required,
+                    "remote_readback_required": item.remote_readback_required,
                     "product_scope_allowed": item.product_scope_allowed,
                 }
                 for item in self.facts
@@ -112,6 +113,16 @@ class BuildSequencer:
                 state=EligibilityState.TERMINAL,
                 eligible=False,
                 reasons=(f"task is terminal: {fact.state.value}",),
+            )
+        if fact.remote_readback_required:
+            return TaskEligibility(
+                task_id=fact.task_id,
+                state=EligibilityState.POLICY_DENIED,
+                eligible=False,
+                reasons=(
+                    "implementation already projected; local DONE waits for integrated "
+                    "main and remote readback beyond To Do",
+                ),
             )
         if fact.reconciliation_required:
             return TaskEligibility(
