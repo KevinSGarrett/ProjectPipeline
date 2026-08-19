@@ -62,6 +62,7 @@
     "bulk-reconciled",
     "context",
     "delegation",
+    "done",
     "implemented",
     "pass-12"
   ],
@@ -122,7 +123,7 @@
     "SRC-002:L000681-L000793",
     "SRC-002:L000889-L000958"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Integrate bounded document normalization for context",
   "upstream_dependencies": [
     "UPSTREAM-062",

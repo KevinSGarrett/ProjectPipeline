@@ -63,6 +63,7 @@
     "capability-story",
     "cluster-profiles",
     "domain-pdef",
+    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -123,7 +124,7 @@
     "SRC-001:L001255-L001301",
     "SRC-007:L000213-L000249"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Profiles — Project Definition and Scope",
   "upstream_dependencies": []
 }

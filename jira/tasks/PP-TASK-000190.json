@@ -59,6 +59,7 @@
   "labels": [
     "bulk-reconciled",
     "correlation",
+    "done",
     "evidence-backed",
     "implemented",
     "logging",
@@ -118,7 +119,7 @@
     "GOV-001:L000695-L000710",
     "SRC-001:L001058-L001092"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement correlation-aware structured logging and telemetry boundary",
   "upstream_dependencies": []
 }

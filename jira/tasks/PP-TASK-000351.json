@@ -57,6 +57,7 @@
   "issue_type": "TASK",
   "labels": [
     "bulk-reconciled",
+    "done",
     "implemented",
     "recovery",
     "resilience"
@@ -110,7 +111,7 @@
   "source_references": [
     "SRC-006:L000011-L000197"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement capability-preserving provider substitution",
   "upstream_dependencies": []
 }

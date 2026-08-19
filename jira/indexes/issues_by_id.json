@@ -36,7 +36,7 @@
     "expected_implementation_artifacts": [
       "plans/00_project_definition/PLAN-PDEF-001_project_definition.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -276,12 +276,31 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000022",
+      "EVID-000024",
+      "EVID-000027",
+      "EVID-000028",
+      "EVID-000029",
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000032",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000038",
+      "EVID-000039"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -304,10 +323,11 @@
     "expected_implementation_artifacts": [
       "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
+      "implemented",
       "plan-arch-001"
     ],
     "last_observed_remote_state": {
@@ -562,7 +582,7 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -697,7 +717,7 @@
     "expected_implementation_artifacts": [
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -800,12 +820,25 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000062",
+      "EVID-000069",
+      "EVID-000070",
+      "EVID-000071",
+      "EVID-000072",
+      "EVID-000075",
+      "EVID-000076",
+      "EVID-000129",
+      "EVID-000130",
+      "EVID-000131",
+      "EVID-000200",
+      "EVID-000201"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -828,10 +861,11 @@
     "expected_implementation_artifacts": [
       "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
+      "implemented",
       "plan-agent-001"
     ],
     "last_observed_remote_state": {
@@ -964,7 +998,7 @@
     "expected_implementation_artifacts": [
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1250,7 +1284,7 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1359,12 +1393,22 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000061",
+      "EVID-000065",
+      "EVID-000102",
+      "EVID-000103",
+      "EVID-000104",
+      "EVID-000105",
+      "EVID-000106",
+      "EVID-000169",
+      "EVID-000170"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -1387,10 +1431,11 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
+      "implemented",
       "plan-budget-001"
     ],
     "last_observed_remote_state": {
@@ -1515,7 +1560,7 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1800,7 +1845,7 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1932,7 +1977,7 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -2065,12 +2110,12 @@
     "expected_implementation_artifacts": [
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "plan-life-001",
-      "pass-22"
+      "pass-22",
+      "plan-life-001"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -2197,7 +2242,7 @@
     "expected_implementation_artifacts": [
       "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -2784,6 +2829,7 @@
     "labels": [
       "bulk-reconciled",
       "domain-story",
+      "done",
       "implemented",
       "plan-req-001"
     ],
@@ -2837,7 +2883,7 @@
     "source_references": [
       "GOV-001:L000123-L000221"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement and verify Requirements Engineering and Traceability",
     "upstream_dependencies": []
   },
@@ -3420,7 +3466,7 @@
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -3630,7 +3676,7 @@
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -3751,6 +3797,7 @@
     "labels": [
       "bulk-reconciled",
       "domain-story",
+      "done",
       "implemented",
       "plan-budget-001"
     ],
@@ -3805,7 +3852,7 @@
     "source_references": [
       "GOV-001:L000607-L000619"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement and verify Budget and Resource Governance",
     "upstream_dependencies": []
   },
@@ -3818,7 +3865,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline coverage --root .",
           "method": "traceability_check",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -3828,12 +3875,16 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "completion_gate_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000129",
+      "EVID-000130",
+      "EVID-000131"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -3855,10 +3906,12 @@
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
+      "done",
+      "implemented",
       "plan-res-001"
     ],
     "last_observed_remote_state": {
@@ -3914,7 +3967,7 @@
     "source_references": [
       "GOV-001:L000621-L000641"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement and verify Resilience, Recovery, and Disaster Readiness",
     "upstream_dependencies": []
   },
@@ -4170,7 +4223,7 @@
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -4279,12 +4332,12 @@
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
-      "plan-life-001",
-      "pass-22"
+      "pass-22",
+      "plan-life-001"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -4722,6 +4775,7 @@
       "capability-story",
       "cluster-intake",
       "domain-pdef",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -4827,7 +4881,7 @@
       "SRC-014:L000005-L000209",
       "SRC-017:L001122-L001217"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Intake — Project Definition and Scope",
     "upstream_dependencies": []
   },
@@ -4840,7 +4894,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -4850,12 +4904,16 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000185"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -4882,12 +4940,14 @@
       "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
       "src/project_pipeline/intake/profiles.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-mission",
-      "domain-pdef"
+      "domain-pdef",
+      "done",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -4949,7 +5009,7 @@
       "SRC-001:L000021-L000061",
       "SRC-012:L000001-L000113"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Mission — Project Definition and Scope",
     "upstream_dependencies": []
   },
@@ -5018,6 +5078,7 @@
       "capability-story",
       "cluster-profiles",
       "domain-pdef",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -5078,7 +5139,7 @@
       "SRC-001:L001255-L001301",
       "SRC-007:L000213-L000249"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Profiles — Project Definition and Scope",
     "upstream_dependencies": []
   },
@@ -5141,6 +5202,7 @@
       "capability-story",
       "cluster-catalog",
       "domain-req",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -5199,7 +5261,7 @@
       "GOV-001:L001162-L001200",
       "GOV-001:L001202-L001215"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Catalog — Requirements Engineering and Traceability",
     "upstream_dependencies": []
   },
@@ -5265,6 +5327,7 @@
       "capability-story",
       "cluster-coverage",
       "domain-req",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -5323,7 +5386,7 @@
       "GOV-001:L001200-L001215",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Coverage — Requirements Engineering and Traceability",
     "upstream_dependencies": []
   },
@@ -5638,6 +5701,7 @@
       "capability-story",
       "cluster-provenance",
       "domain-req",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -5696,7 +5760,7 @@
       "GOV-001:L000177-L000183",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Provenance — Requirements Engineering and Traceability",
     "upstream_dependencies": []
   },
@@ -5760,6 +5824,7 @@
       "capability-story",
       "cluster-terminology",
       "domain-req",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -5814,7 +5879,7 @@
       "GOV-001:L001998-L002024",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Terminology — Requirements Engineering and Traceability",
     "upstream_dependencies": []
   },
@@ -5954,7 +6019,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -5964,12 +6029,29 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000022",
+      "EVID-000024",
+      "EVID-000027",
+      "EVID-000028",
+      "EVID-000029",
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000032",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000038",
+      "EVID-000039"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -5996,12 +6078,13 @@
       "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md",
       "src/project_pipeline/persistence/sqlite.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-data",
       "domain-arch",
-      "cluster-data"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7140,12 +7223,12 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-sched",
-      "cluster-resources"
+      "cluster-resources",
+      "domain-sched"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7250,12 +7333,12 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-sched",
-      "cluster-sequencing"
+      "cluster-sequencing",
+      "domain-sched"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7699,6 +7782,7 @@
       "capability-story",
       "cluster-compiler",
       "domain-ctx",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -7765,7 +7849,7 @@
       "SRC-002:L000479-L000515",
       "SRC-002:L000959-L001014"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Compiler — Context and Knowledge",
     "upstream_dependencies": []
   },
@@ -7931,12 +8015,12 @@
     "expected_implementation_artifacts": [
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-ctx",
-      "cluster-freshness"
+      "cluster-freshness",
+      "domain-ctx"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -8954,12 +9038,12 @@
       "database/migrations/postgresql/PPDB-0004_jira_steward_sync.up.sql",
       "docs/jira"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-gov",
-      "cluster-jira"
+      "cluster-jira",
+      "domain-gov"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -9581,6 +9665,7 @@
       "capability-story",
       "cluster-guardrails",
       "domain-assure",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -9637,7 +9722,7 @@
       "SRC-008:L000131-L000155",
       "SRC-008:L000156-L000196"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Guardrails — Execution Assurance and Testing",
     "upstream_dependencies": []
   },
@@ -9700,6 +9785,7 @@
       "capability-story",
       "cluster-review",
       "domain-assure",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -9754,7 +9840,7 @@
       "SRC-008:L001109-L001167",
       "SRC-008:L001168-L001195"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Review — Execution Assurance and Testing",
     "upstream_dependencies": []
   },
@@ -10615,12 +10701,12 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-sec",
-      "cluster-supply-chain"
+      "cluster-supply-chain",
+      "domain-sec"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10689,7 +10775,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -10699,7 +10785,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -10737,12 +10823,14 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-forecast",
       "domain-budget",
-      "cluster-forecast"
+      "done",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10801,7 +10889,7 @@
       "SRC-004:L000651-L000718",
       "SRC-004:L000735-L000811"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Forecast — Budget and Resource Governance",
     "upstream_dependencies": []
   },
@@ -10814,7 +10902,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -10824,12 +10912,14 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000061",
+      "EVID-000065",
       "EVID-000102",
       "EVID-000103",
       "EVID-000104",
@@ -10862,12 +10952,14 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-leases",
       "domain-budget",
-      "cluster-leases"
+      "done",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10921,7 +11013,7 @@
       "SRC-004:L000937-L000977",
       "SRC-009:L000022-L000022"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Leases — Budget and Resource Governance",
     "upstream_dependencies": []
   },
@@ -10934,7 +11026,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -10944,7 +11036,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -10982,12 +11074,14 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-ledger",
       "domain-budget",
-      "cluster-ledger"
+      "done",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11044,7 +11138,7 @@
       "SRC-004:L000148-L000251",
       "SRC-004:L000607-L000650"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Ledger — Budget and Resource Governance",
     "upstream_dependencies": []
   },
@@ -11057,7 +11151,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -11067,7 +11161,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -11077,7 +11171,9 @@
       "EVID-000103",
       "EVID-000104",
       "EVID-000105",
-      "EVID-000106"
+      "EVID-000106",
+      "EVID-000169",
+      "EVID-000170"
     ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
@@ -11105,12 +11201,13 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-pressure",
       "domain-budget",
-      "cluster-pressure"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11356,12 +11453,12 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-res",
-      "cluster-external-systems"
+      "cluster-external-systems",
+      "domain-res"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11487,6 +11584,7 @@
       "capability-story",
       "cluster-human-recovery",
       "domain-res",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -11539,7 +11637,7 @@
       "SRC-009:L000026-L000026",
       "SRC-015:L000589-L000661"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Human Recovery — Resilience, Recovery, and Disaster Readiness",
     "upstream_dependencies": []
   },
@@ -11552,7 +11650,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -11562,12 +11660,22 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000062",
+      "EVID-000096",
+      "EVID-000097",
+      "EVID-000100",
+      "EVID-000101",
+      "EVID-000129",
+      "EVID-000130",
+      "EVID-000132",
+      "EVID-000206"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -11588,12 +11696,14 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-machine-failure",
       "domain-res",
-      "cluster-machine-failure"
+      "done",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11661,7 +11771,7 @@
       "SRC-006:L000567-L000603",
       "SRC-012:L000380-L000495"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Machine Failure — Resilience, Recovery, and Disaster Readiness",
     "upstream_dependencies": []
   },
@@ -11723,6 +11833,7 @@
       "capability-story",
       "cluster-operating-modes",
       "domain-res",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -11774,7 +11885,7 @@
       "SRC-005:L000767-L000824",
       "SRC-006:L000767-L000824"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Operating Modes — Resilience, Recovery, and Disaster Readiness",
     "upstream_dependencies": []
   },
@@ -11787,7 +11898,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -11797,12 +11908,16 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000129",
+      "EVID-000130",
+      "EVID-000204"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -11827,8 +11942,9 @@
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-provider-failure",
       "domain-res",
-      "cluster-provider-failure"
+      "done"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11882,7 +11998,7 @@
       "SRC-006:L000011-L000197",
       "SRC-006:L000825-L000938"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Provider Failure — Resilience, Recovery, and Disaster Readiness",
     "upstream_dependencies": []
   },
@@ -11895,7 +12011,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -11905,12 +12021,21 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000115",
+      "EVID-000116",
+      "EVID-000118",
+      "EVID-000121",
+      "EVID-000122",
+      "EVID-000129",
+      "EVID-000130",
+      "EVID-000131"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -11931,12 +12056,13 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-recovery-verification",
       "domain-res",
-      "cluster-recovery-verification"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -12154,12 +12280,13 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-ux",
       "cluster-director",
+      "domain-ux",
+      "partially-implemented",
       "pass-21"
     ],
     "last_observed_remote_state": {
@@ -12377,12 +12504,13 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-project-intelligence",
       "domain-ux",
+      "partially-implemented",
       "pass-20"
     ],
     "last_observed_remote_state": {
@@ -12502,12 +12630,13 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-surfaces",
       "domain-ux",
+      "partially-implemented",
       "pass-20"
     ],
     "last_observed_remote_state": {
@@ -13104,7 +13233,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -13114,12 +13243,18 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000129",
+      "EVID-000132",
+      "EVID-000164",
+      "EVID-000198",
+      "EVID-000199"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -13140,12 +13275,14 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-aws",
       "domain-infra",
-      "cluster-aws"
+      "done",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13207,7 +13344,7 @@
       "SRC-012:L000734-L000779",
       "SRC-012:L000817-L001036"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Aws — Deployment and Infrastructure",
     "upstream_dependencies": []
   },
@@ -13471,12 +13608,12 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-infra",
-      "cluster-packaging"
+      "cluster-packaging",
+      "domain-infra"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13598,6 +13735,7 @@
       "capability-story",
       "cluster-adoption",
       "domain-life",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -13678,7 +13816,7 @@
     "source_references": [
       "SRC-017:L001122-L001217"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Adoption — Platform Lifecycle",
     "upstream_dependencies": []
   },
@@ -13733,12 +13871,12 @@
     "expected_implementation_artifacts": [
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-life",
       "cluster-contracts",
+      "domain-life",
       "pass-22"
     ],
     "last_observed_remote_state": {
@@ -14569,12 +14707,12 @@
     "expected_implementation_artifacts": [
       "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-upstream",
-      "cluster-review"
+      "cluster-review",
+      "domain-upstream"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -15673,6 +15811,7 @@
     "issue_type": "SUBTASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "foundation",
       "implemented",
       "verification"
@@ -15719,7 +15858,7 @@
     "source_references": [
       "SRC-008:L000540-L000760"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement manifest and repository-map generation",
     "upstream_dependencies": []
   },
@@ -15732,15 +15871,19 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "unit_and_contract_test",
           "path": "src/project_pipeline/validation/repository.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000004",
       "EVID-000005",
       "EVID-000006",
-      "EVID-000007"
+      "EVID-000007",
+      "EVID-000108",
+      "EVID-000112",
+      "EVID-000113"
     ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
@@ -15765,10 +15908,12 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/validation/repository.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "SUBTASK",
     "labels": [
+      "done",
       "foundation",
+      "implemented",
       "verification"
     ],
     "last_observed_remote_state": {
@@ -15816,7 +15961,7 @@
       "GOV-001:L001364-L001385",
       "SRC-008:L000540-L000760"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement repository policy and traceability validation",
     "upstream_dependencies": []
   },
@@ -15866,6 +16011,7 @@
     "issue_type": "SUBTASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "foundation",
       "implemented",
       "verification"
@@ -15912,7 +16058,7 @@
     "source_references": [
       "GOV-001:L001884-L001992"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement deterministic archive creation and verification",
     "upstream_dependencies": []
   },
@@ -15925,12 +16071,16 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "unit_and_contract_test",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000008"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -15953,10 +16103,12 @@
     "expected_implementation_artifacts": [
       "evidence/EVIDENCE_LEDGER.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "SUBTASK",
     "labels": [
+      "done",
       "foundation",
+      "implemented",
       "verification"
     ],
     "last_observed_remote_state": {
@@ -16002,7 +16154,7 @@
     "source_references": [
       "GOV-001:L001884-L001992"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Record final test, validation, and archive evidence",
     "upstream_dependencies": []
   },
@@ -16063,6 +16215,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented",
       "verification"
     ],
@@ -16118,7 +16271,7 @@
       "GOV-001:L001162-L001200",
       "GOV-001:L001202-L001215"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Verify generate the detailed requirement catalog",
     "upstream_dependencies": []
   },
@@ -16176,6 +16329,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented",
       "verification"
     ],
@@ -16229,7 +16383,7 @@
       "GOV-001:L000173-L000183",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Verify implement source-reference validation",
     "upstream_dependencies": []
   },
@@ -16293,6 +16447,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented",
       "verification"
     ],
@@ -16348,7 +16503,7 @@
       "GOV-001:L001200-L001215",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Verify generate canonical source-section dispositions",
     "upstream_dependencies": []
   },
@@ -16426,6 +16581,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented",
       "verification"
     ],
@@ -16484,7 +16640,7 @@
       "GOV-001:L002200-L002231",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Verify implement requirement query and summary interfaces",
     "upstream_dependencies": []
   },
@@ -16549,6 +16705,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented",
       "verification"
     ],
@@ -16599,7 +16756,7 @@
     "source_references": [
       "GOV-001:L000949-L001158"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Verify implement deterministic jira index and graph rebuilding",
     "upstream_dependencies": []
   },
@@ -16661,6 +16818,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented",
       "verification"
     ],
@@ -16717,7 +16875,7 @@
       "GOV-001:L001998-L002024",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Verify build glossary, source evolution, and open-decision registries",
     "upstream_dependencies": []
   },
@@ -16780,6 +16938,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented",
       "verification"
     ],
@@ -16834,7 +16993,7 @@
       "GOV-001:L001200-L001215",
       "GOV-001:L002200-L002231"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Verify expand self-validation for detailed registries",
     "upstream_dependencies": []
   },
@@ -16905,6 +17064,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented",
       "verification"
     ],
@@ -16959,7 +17119,7 @@
     "source_references": [
       "SRC-008:L000540-L000760"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Verify add behavior-specific catalog, source, and jira tests",
     "upstream_dependencies": []
   },
@@ -17152,12 +17312,12 @@
       "plans/01_requirements/open_decisions.jsonl",
       "plans/01_requirements/source_evolution.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "SUBTASK",
     "labels": [
       "architecture",
-      "provenance",
-      "evidence-backed"
+      "evidence-backed",
+      "provenance"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -17423,12 +17583,12 @@
       "tests/test_upstream_reviews.py",
       "tests/test_decision_resolution.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "SUBTASK",
     "labels": [
       "architecture",
-      "provenance",
-      "evidence-backed"
+      "evidence-backed",
+      "provenance"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -17564,6 +17724,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "executable",
       "foundation",
       "implemented"
@@ -17611,7 +17772,7 @@
     "source_references": [
       "GOV-001:L000123-L000221"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Validate the supplied knowledge corpus",
     "upstream_dependencies": []
   },
@@ -17671,6 +17832,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "executable",
       "foundation",
       "implemented"
@@ -17717,7 +17879,7 @@
     "source_references": [
       "GOV-001:L000052-L000119"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Reconcile governing prompt aliases",
     "upstream_dependencies": []
   },
@@ -17787,6 +17949,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "executable",
       "foundation",
       "implemented"
@@ -17834,7 +17997,7 @@
     "source_references": [
       "GOV-001:L000797-L000876"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Inventory the upstream repository catalog",
     "upstream_dependencies": []
   },
@@ -17907,6 +18070,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "executable",
       "foundation",
       "implemented"
@@ -17959,7 +18123,7 @@
       "GOV-001:L000748-L000764",
       "GOV-001:L001364-L001385"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Establish the professional repository foundation",
     "upstream_dependencies": []
   },
@@ -18033,6 +18197,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "executable",
       "foundation",
       "implemented"
@@ -18088,7 +18253,7 @@
       "GOV-001:L000123-L000221",
       "SRC-008:L000540-L000760"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Establish requirements and plan traceability",
     "upstream_dependencies": []
   },
@@ -18155,6 +18320,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "executable",
       "foundation",
       "implemented"
@@ -18208,7 +18374,7 @@
     "source_references": [
       "GOV-001:L000949-L001158"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Establish the structured local Jira mirror",
     "upstream_dependencies": []
   },
@@ -18270,11 +18436,11 @@
       "scripts/validate_repository.py",
       "tests/"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "foundation",
-      "executable"
+      "executable",
+      "foundation"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -18381,11 +18547,11 @@
       "Project_Pipeline_Project_Pack_r01.zip",
       "Project_Pipeline_Rehydration_Pack_r01.zip"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "foundation",
-      "executable"
+      "executable",
+      "foundation"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -18498,6 +18664,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -18556,7 +18723,7 @@
       "GOV-001:L001162-L001200",
       "GOV-001:L001202-L001215"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Generate the detailed requirement catalog",
     "upstream_dependencies": []
   },
@@ -18614,6 +18781,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -18670,7 +18838,7 @@
       "GOV-001:L000173-L000183",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement source-reference validation",
     "upstream_dependencies": []
   },
@@ -18734,6 +18902,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -18792,7 +18961,7 @@
       "GOV-001:L001200-L001215",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Generate canonical source-section dispositions",
     "upstream_dependencies": []
   },
@@ -18870,6 +19039,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -18931,7 +19101,7 @@
       "GOV-001:L002200-L002231",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement requirement query and summary interfaces",
     "upstream_dependencies": []
   },
@@ -18996,6 +19166,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -19049,7 +19220,7 @@
     "source_references": [
       "GOV-001:L000949-L001158"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement deterministic Jira index and graph rebuilding",
     "upstream_dependencies": []
   },
@@ -19111,6 +19282,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -19170,7 +19342,7 @@
       "GOV-001:L001998-L002024",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Build glossary, source evolution, and open-decision registries",
     "upstream_dependencies": []
   },
@@ -19233,6 +19405,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -19290,7 +19463,7 @@
       "GOV-001:L001200-L001215",
       "GOV-001:L002200-L002231"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Expand self-validation for detailed registries",
     "upstream_dependencies": []
   },
@@ -19361,6 +19534,7 @@
     "labels": [
       "bulk-reconciled",
       "catalog-foundation",
+      "done",
       "implemented"
     ],
     "last_observed_remote_state": {
@@ -19418,7 +19592,7 @@
     "source_references": [
       "SRC-008:L000540-L000760"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Add behavior-specific catalog, source, and Jira tests",
     "upstream_dependencies": []
   },
@@ -22914,13 +23088,13 @@
       "src/project_pipeline/",
       "docs/development/source_layout.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "repository",
-      "python",
       "architecture",
-      "evidence-backed"
+      "evidence-backed",
+      "python",
+      "repository"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23178,13 +23352,13 @@
       "schemas/runtime_configuration.schema.json",
       "schemas/secret_reference.schema.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "configuration",
-      "secrets",
+      "evidence-backed",
       "runtime",
-      "evidence-backed"
+      "secrets"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23447,6 +23621,7 @@
     "labels": [
       "bulk-reconciled",
       "correlation",
+      "done",
       "evidence-backed",
       "implemented",
       "logging",
@@ -23506,7 +23681,7 @@
       "GOV-001:L000695-L000710",
       "SRC-001:L001058-L001092"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement correlation-aware structured logging and telemetry boundary",
     "upstream_dependencies": []
   },
@@ -23704,14 +23879,14 @@
       "src/project_pipeline/quality.py",
       "docs/development/quality_and_ci.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "quality",
       "ci",
+      "evidence-backed",
+      "quality",
       "security",
-      "testing",
-      "evidence-backed"
+      "testing"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23836,13 +24011,13 @@
       "docs/development/README.md",
       "docs/development/setup.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "developer-experience",
-      "operations",
       "bootstrap",
-      "evidence-backed"
+      "developer-experience",
+      "evidence-backed",
+      "operations"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23936,7 +24111,25 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000028"
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000009",
+      "EVID-000014",
+      "EVID-000015",
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000022",
+      "EVID-000027",
+      "EVID-000028",
+      "EVID-000029",
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000038",
+      "EVID-000039"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -23969,10 +24162,11 @@
     "issue_type": "TASK",
     "labels": [
       "domain-model",
+      "done",
+      "evidence-backed",
       "identifiers",
       "requirements",
-      "schema",
-      "evidence-backed"
+      "schema"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -24041,7 +24235,7 @@
       "GOV-001:L001477-L001488",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement stable domain identifiers and strict requirement entities",
     "upstream_dependencies": []
   },
@@ -24070,8 +24264,17 @@
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
       "EVID-000028",
-      "EVID-000030"
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000032",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000038"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -24108,10 +24311,11 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-manifest",
       "domain-model",
-      "state",
-      "evidence-backed"
+      "done",
+      "evidence-backed",
+      "project-manifest",
+      "state"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -24177,7 +24381,7 @@
       "GOV-001:L000711-L000731",
       "SRC-003:L000962-L001001"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement the domain project manifest and repository identity boundary",
     "upstream_dependencies": []
   },
@@ -24206,7 +24410,26 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000030"
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000028",
+      "EVID-000029",
+      "EVID-000030",
+      "EVID-000032",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000043",
+      "EVID-000055",
+      "EVID-000056",
+      "EVID-000059",
+      "EVID-000060",
+      "EVID-000096",
+      "EVID-000098",
+      "EVID-000099",
+      "EVID-000100",
+      "EVID-000101"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -24245,11 +24468,12 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "control-state",
-      "task-state",
-      "optimistic-concurrency",
       "audit",
-      "evidence-backed"
+      "control-state",
+      "done",
+      "evidence-backed",
+      "optimistic-concurrency",
+      "task-state"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -24326,7 +24550,7 @@
       "SRC-003:L000852-L001000",
       "SRC-017:L000281-L000359"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement versioned project and task lifecycle state",
     "upstream_dependencies": []
   },
@@ -24662,7 +24886,21 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000031"
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000009",
+      "EVID-000010",
+      "EVID-000014",
+      "EVID-000015",
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000028",
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000032",
+      "EVID-000038"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -24704,11 +24942,12 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "traceability",
-      "requirements",
-      "transactions",
       "bidirectional",
-      "evidence-backed"
+      "done",
+      "evidence-backed",
+      "requirements",
+      "traceability",
+      "transactions"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -24789,7 +25028,7 @@
       "GOV-001:L001162-L001215",
       "SRC-017:L000490-L000596"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement transactional bidirectional requirement traceability",
     "upstream_dependencies": []
   },
@@ -25145,7 +25384,20 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000035"
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000028",
+      "EVID-000030",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000038",
+      "EVID-000039",
+      "EVID-000040",
+      "EVID-000041",
+      "EVID-000042"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -25180,10 +25432,11 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-intake",
-      "project-compiler",
       "deterministic",
-      "non-destructive"
+      "done",
+      "non-destructive",
+      "project-compiler",
+      "project-intake"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -25243,7 +25496,7 @@
       "SRC-014:L000005-L000125",
       "SRC-017:L001122-L001175"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Define strict project-intake and compilation contracts",
     "upstream_dependencies": []
   },
@@ -25312,6 +25565,7 @@
     "labels": [
       "bulk-reconciled",
       "deterministic",
+      "done",
       "implemented",
       "non-destructive",
       "project-compiler",
@@ -25376,7 +25630,7 @@
       "SRC-014:L000005-L000125",
       "SRC-017:L001122-L001175"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement safe read-only repository discovery",
     "upstream_dependencies": []
   },
@@ -25447,6 +25701,7 @@
     "labels": [
       "bulk-reconciled",
       "deterministic",
+      "done",
       "implemented",
       "non-destructive",
       "project-compiler",
@@ -25509,7 +25764,7 @@
       "SRC-014:L000005-L000125",
       "SRC-017:L001122-L001175"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Discover project authorities and operating surfaces",
     "upstream_dependencies": []
   },
@@ -25522,7 +25777,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_intake_models.py tests/test_project_discovery.py tests/test_project_compiler.py tests/test_project_bootstrap.py tests/test_intake_persistence.py tests/test_intake_cli.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/intake/profiles.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -25532,13 +25787,17 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000036"
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000039",
+      "EVID-000041",
+      "EVID-000042"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -25570,13 +25829,15 @@
       "schemas/project_profile_detection.schema.json",
       "fixtures/intake/polyglot_application"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-intake",
-      "project-compiler",
       "deterministic",
-      "non-destructive"
+      "done",
+      "implemented",
+      "non-destructive",
+      "project-compiler",
+      "project-intake"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -25633,7 +25894,7 @@
       "SRC-001:L001255-L001301",
       "SRC-007:L000213-L000249"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Detect project profiles and activate bounded policies",
     "upstream_dependencies": []
   },
@@ -25703,6 +25964,7 @@
     "labels": [
       "bulk-reconciled",
       "deterministic",
+      "done",
       "implemented",
       "non-destructive",
       "project-compiler",
@@ -25760,7 +26022,7 @@
     "source_references": [
       "SRC-002:L000479-L000515"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Compile an enriched deterministic repository map",
     "upstream_dependencies": []
   },
@@ -25789,7 +26051,23 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000036"
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000028",
+      "EVID-000030",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000038",
+      "EVID-000039",
+      "EVID-000040",
+      "EVID-000041",
+      "EVID-000042",
+      "EVID-000089",
+      "EVID-000093",
+      "EVID-000094"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -25827,10 +26105,11 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-intake",
-      "project-compiler",
       "deterministic",
-      "non-destructive"
+      "done",
+      "non-destructive",
+      "project-compiler",
+      "project-intake"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -25911,7 +26190,7 @@
       "SRC-014:L000005-L000125",
       "SRC-017:L001122-L001175"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Compile project manifests and structured gap analysis",
     "upstream_dependencies": []
   },
@@ -25984,6 +26263,7 @@
     "labels": [
       "bulk-reconciled",
       "deterministic",
+      "done",
       "implemented",
       "non-destructive",
       "project-compiler",
@@ -26046,7 +26326,7 @@
     "source_references": [
       "SRC-017:L001122-L001175"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement controlled idempotent non-destructive bootstrap",
     "upstream_dependencies": []
   },
@@ -26075,7 +26355,24 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000038"
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000022",
+      "EVID-000027",
+      "EVID-000029",
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000032",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000038",
+      "EVID-000039",
+      "EVID-000040",
+      "EVID-000041",
+      "EVID-000042"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -26114,10 +26411,11 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-intake",
-      "project-compiler",
       "deterministic",
-      "non-destructive"
+      "done",
+      "non-destructive",
+      "project-compiler",
+      "project-intake"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -26177,7 +26475,7 @@
       "GOV-001:L001477-L001488",
       "SRC-017:L001122-L001175"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Persist compilations and bootstrap receipts through migration PPDB-0003",
     "upstream_dependencies": []
   },
@@ -26206,10 +26504,33 @@
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000022",
+      "EVID-000026",
+      "EVID-000027",
+      "EVID-000029",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000038",
       "EVID-000039",
       "EVID-000040",
       "EVID-000041",
-      "EVID-000042"
+      "EVID-000042",
+      "EVID-000089",
+      "EVID-000093",
+      "EVID-000094",
+      "EVID-000108",
+      "EVID-000112",
+      "EVID-000113",
+      "EVID-000115",
+      "EVID-000116",
+      "EVID-000118",
+      "EVID-000121",
+      "EVID-000122"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -26260,10 +26581,11 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-intake",
-      "project-compiler",
       "deterministic",
-      "non-destructive"
+      "done",
+      "non-destructive",
+      "project-compiler",
+      "project-intake"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -26359,7 +26681,7 @@
       "SRC-017:L000823-L000906",
       "SRC-017:L001122-L001175"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Integrate intake CLI, schemas, fixtures, self-validation, and evidence",
     "upstream_dependencies": []
   },
@@ -29411,6 +29733,7 @@
       "bulk-reconciled",
       "control-kernel",
       "deterministic",
+      "done",
       "implemented",
       "project-control"
     ],
@@ -29464,7 +29787,7 @@
       "GOV-001:L001114-L001158",
       "SRC-003:L000225-L000278"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Validated dependency DAG and graph analysis",
     "upstream_dependencies": [
       "https://github.com/networkx/networkx"
@@ -29526,11 +29849,11 @@
       "src/project_pipeline/control/graph.py",
       "src/project_pipeline/domain/control.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "control-kernel",
       "build-sequencer",
+      "control-kernel",
       "deterministic",
       "project-control"
     ],
@@ -29654,6 +29977,7 @@
       "bulk-reconciled",
       "control-kernel",
       "deterministic",
+      "done",
       "implemented",
       "project-control"
     ],
@@ -29710,7 +30034,7 @@
       "SRC-003:L000225-L000371",
       "SRC-014:L000859-L000946"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Critical path and deterministic priority sequencing",
     "upstream_dependencies": [
       "https://github.com/networkx/networkx"
@@ -29969,7 +30293,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_control_domain.py tests/test_build_sequencer.py tests/test_control_kernel.py tests/test_control_persistence.py tests/test_control_cli.py tests/test_control_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/control/kernel.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -29979,7 +30303,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -30017,12 +30341,13 @@
       "src/project_pipeline/control/kernel.py",
       "src/project_pipeline/domain/control.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "control-kernel",
       "build-sequencer",
+      "control-kernel",
       "deterministic",
+      "implemented",
       "project-control"
     ],
     "last_observed_remote_state": {
@@ -30274,11 +30599,11 @@
       "docs/control/project_control_kernel.md",
       "runbooks/control_reconciliation.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "control-kernel",
       "build-sequencer",
+      "control-kernel",
       "deterministic",
       "project-control"
     ],
@@ -30799,7 +31124,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_scheduler_domain.py tests/test_scheduler_conflicts.py tests/test_scheduler_engine.py tests/test_scheduler_persistence.py tests/test_scheduler_backpressure.py tests/test_scheduler_cli.py tests/test_scheduler_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/scheduler/resources.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -30809,14 +31134,18 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
       "EVID-000061",
-      "EVID-000062"
+      "EVID-000062",
+      "EVID-000096",
+      "EVID-000097",
+      "EVID-000100",
+      "EVID-000101"
     ],
     "definition_of_done": [
       "The bounded scheduler/resource objective is implemented.",
@@ -30844,13 +31173,14 @@
       "src/project_pipeline/scheduler/resources.py",
       "src/project_pipeline/domain/scheduler.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
+      "deterministic",
       "dynamic-scheduler",
-      "resource-governance",
+      "implemented",
       "parallel-execution",
-      "deterministic"
+      "resource-governance"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -30918,7 +31248,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_scheduler_domain.py tests/test_scheduler_conflicts.py tests/test_scheduler_engine.py tests/test_scheduler_persistence.py tests/test_scheduler_backpressure.py tests/test_scheduler_cli.py tests/test_scheduler_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/scheduler/persistence.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -30928,13 +31258,18 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000062"
+      "EVID-000062",
+      "EVID-000065",
+      "EVID-000096",
+      "EVID-000097",
+      "EVID-000100",
+      "EVID-000101"
     ],
     "definition_of_done": [
       "The bounded scheduler/resource objective is implemented.",
@@ -30959,13 +31294,14 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/scheduler/persistence.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
+      "deterministic",
       "dynamic-scheduler",
-      "resource-governance",
+      "implemented",
       "parallel-execution",
-      "deterministic"
+      "resource-governance"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -37494,6 +37830,7 @@
       "bulk-reconciled",
       "context",
       "delegation",
+      "done",
       "implemented",
       "pass-12"
     ],
@@ -37561,7 +37898,7 @@
       "GOV-001:L000797-L000876",
       "GOV-001:L000797-L000854"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Apply upstream gate to Context implementation",
     "upstream_dependencies": [
       "UPSTREAM-115",
@@ -37580,7 +37917,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/domain/context.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -37590,13 +37927,15 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
       "EVID-000089",
+      "EVID-000090",
+      "EVID-000092",
       "EVID-000093",
       "EVID-000094"
     ],
@@ -37624,11 +37963,13 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/domain/context.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
+      "done",
+      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -37686,7 +38027,7 @@
       "SRC-002:L000213-L000260",
       "SRC-002:L000959-L001014"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement immutable delegation envelope and context domain",
     "upstream_dependencies": []
   },
@@ -37755,6 +38096,7 @@
       "bulk-reconciled",
       "context",
       "delegation",
+      "done",
       "implemented",
       "pass-12"
     ],
@@ -37812,7 +38154,7 @@
       "SRC-002:L000261-L000315",
       "SRC-002:L000479-L000515"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement deterministic Context Broker minimality",
     "upstream_dependencies": [
       "UPSTREAM-115",
@@ -37884,6 +38226,7 @@
       "bulk-reconciled",
       "context",
       "delegation",
+      "done",
       "implemented",
       "pass-12"
     ],
@@ -37942,7 +38285,7 @@
       "SRC-002:L000213-L000260",
       "SRC-002:L000959-L001014"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement content-addressed Context Compiler",
     "upstream_dependencies": []
   },
@@ -37955,7 +38298,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/context_engine/firewall.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -37965,12 +38308,13 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000088",
       "EVID-000089",
       "EVID-000091",
       "EVID-000093",
@@ -38003,11 +38347,13 @@
       "src/project_pipeline/context_engine/firewall.py",
       "src/project_pipeline/context_engine/trust.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
+      "done",
+      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -38077,7 +38423,7 @@
       "SRC-002:L000889-L000958",
       "SRC-002:L001015-L001156"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement context trust classification and firewall",
     "upstream_dependencies": []
   },
@@ -38090,7 +38436,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/context_engine/compiler.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -38100,7 +38446,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -38138,11 +38484,13 @@
       "src/project_pipeline/context_engine/compiler.py",
       "config/context_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
+      "done",
+      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -38199,7 +38547,7 @@
       "SRC-002:L000959-L001014",
       "SRC-002:L001158-L001234"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement context freshness and required coverage",
     "upstream_dependencies": []
   },
@@ -38262,7 +38610,7 @@
       "src/project_pipeline/context_engine/compiler.py",
       "src/project_pipeline/context_engine/service.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
@@ -38400,6 +38748,7 @@
       "bulk-reconciled",
       "context",
       "delegation",
+      "done",
       "implemented",
       "pass-12"
     ],
@@ -38460,7 +38809,7 @@
       "SRC-002:L000959-L001014",
       "SRC-002:L000359-L000386"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Persist context packs and add PPDB-0009",
     "upstream_dependencies": []
   },
@@ -38528,6 +38877,7 @@
       "bulk-reconciled",
       "context",
       "delegation",
+      "done",
       "implemented",
       "pass-12"
     ],
@@ -38588,7 +38938,7 @@
       "SRC-002:L000681-L000793",
       "SRC-002:L000889-L000958"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Integrate bounded document normalization for context",
     "upstream_dependencies": [
       "UPSTREAM-062",
@@ -38604,7 +38954,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/cli.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -38614,12 +38964,16 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000088",
+      "EVID-000089",
+      "EVID-000090",
+      "EVID-000091",
       "EVID-000092",
       "EVID-000093",
       "EVID-000094"
@@ -38656,11 +39010,13 @@
       "docs/architecture/context_and_delegation.md",
       "runbooks/context_pack_recovery.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
+      "done",
+      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -38720,7 +39076,7 @@
       "GOV-001:L000695-L000710",
       "SRC-002:L001158-L001234"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Integrate Context CLI schemas documentation and validation",
     "upstream_dependencies": []
   },
@@ -38817,6 +39173,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "durability",
       "implemented",
       "orchestration",
@@ -38879,7 +39236,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Complete Pass 13 orchestration upstream gate",
     "upstream_dependencies": [
       "UPSTREAM-050",
@@ -38960,6 +39317,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "durability",
       "implemented",
       "orchestration",
@@ -39022,7 +39380,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement durable orchestration domain and stable port",
     "upstream_dependencies": []
   },
@@ -39091,11 +39449,11 @@
       "src/project_pipeline/orchestration/service.py",
       "src/project_pipeline/orchestration/recovery.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "orchestration",
       "durability",
+      "orchestration",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -39170,7 +39528,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/orchestration/runtime.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -39180,12 +39538,14 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000029",
+      "EVID-000030",
       "EVID-000095",
       "EVID-000096",
       "EVID-000097",
@@ -39222,11 +39582,13 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/orchestration/runtime.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "orchestration",
+      "done",
       "durability",
+      "implemented",
+      "orchestration",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -39285,7 +39647,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement deterministic retries timeouts and checkpoints",
     "upstream_dependencies": []
   },
@@ -39356,6 +39718,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "durability",
       "implemented",
       "orchestration",
@@ -39417,7 +39780,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement durable signal and timer waits",
     "upstream_dependencies": []
   },
@@ -39430,7 +39793,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/orchestration/runtime.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -39440,19 +39803,22 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000062",
       "EVID-000095",
       "EVID-000096",
       "EVID-000097",
       "EVID-000098",
       "EVID-000099",
       "EVID-000100",
-      "EVID-000101"
+      "EVID-000101",
+      "EVID-000129",
+      "EVID-000130"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -39484,11 +39850,13 @@
       "src/project_pipeline/orchestration/runtime.py",
       "src/project_pipeline/orchestration/recovery.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "orchestration",
+      "done",
       "durability",
+      "implemented",
+      "orchestration",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -39549,7 +39917,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement worker heartbeat fencing and loss recovery",
     "upstream_dependencies": []
   },
@@ -39644,6 +40012,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "durability",
       "implemented",
       "orchestration",
@@ -39705,7 +40074,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement Hatchet adapter and fallback backend boundaries",
     "upstream_dependencies": [
       "UPSTREAM-050",
@@ -39784,6 +40153,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "durability",
       "implemented",
       "orchestration",
@@ -39848,7 +40218,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Persist PPDB-0010 durable workflow and recovery state",
     "upstream_dependencies": []
   },
@@ -40054,11 +40424,11 @@
       "tests/test_orchestration_recovery.py",
       "tests/test_orchestration_adapters.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "orchestration",
       "durability",
+      "orchestration",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -40222,6 +40592,7 @@
       "budget",
       "bulk-reconciled",
       "cost-governance",
+      "done",
       "implemented",
       "pass-14"
     ],
@@ -40280,7 +40651,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Complete Pass 14 budget upstream gate",
     "upstream_dependencies": [
       "UPSTREAM-012",
@@ -40354,6 +40725,7 @@
       "budget",
       "bulk-reconciled",
       "cost-governance",
+      "done",
       "implemented",
       "pass-14"
     ],
@@ -40412,7 +40784,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement immutable unified cost and quota ledger",
     "upstream_dependencies": []
   },
@@ -40480,6 +40852,7 @@
     "labels": [
       "budget",
       "cost-governance",
+      "done",
       "pass-14"
     ],
     "last_observed_remote_state": {
@@ -40539,7 +40912,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement hierarchy soft allocation protected reserve and quotas",
     "upstream_dependencies": []
   },
@@ -40607,6 +40980,7 @@
       "budget",
       "bulk-reconciled",
       "cost-governance",
+      "done",
       "implemented",
       "pass-14"
     ],
@@ -40664,7 +41038,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement atomic spend leases settlement and uncertain outcome reconciliation",
     "upstream_dependencies": []
   },
@@ -40732,6 +41106,7 @@
       "budget",
       "bulk-reconciled",
       "cost-governance",
+      "done",
       "implemented",
       "pass-14"
     ],
@@ -40790,7 +41165,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement pressure hard stop admission and runaway anomaly policy",
     "upstream_dependencies": []
   },
@@ -40858,6 +41233,7 @@
     "labels": [
       "budget",
       "cost-governance",
+      "done",
       "pass-14"
     ],
     "last_observed_remote_state": {
@@ -40916,7 +41292,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement historical forecasts burn runway and outcome economics",
     "upstream_dependencies": []
   },
@@ -40984,6 +41360,7 @@
     "labels": [
       "budget",
       "cost-governance",
+      "done",
       "pass-14"
     ],
     "last_observed_remote_state": {
@@ -41040,7 +41417,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement deterministic budget change impact and allocation analysis",
     "upstream_dependencies": []
   },
@@ -41069,6 +41446,8 @@
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000061",
+      "EVID-000065",
       "EVID-000102",
       "EVID-000103",
       "EVID-000104",
@@ -41108,6 +41487,7 @@
     "labels": [
       "budget",
       "cost-governance",
+      "done",
       "pass-14"
     ],
     "last_observed_remote_state": {
@@ -41166,7 +41546,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Couple budget admission to scheduler router context and verification economics",
     "upstream_dependencies": []
   },
@@ -41234,6 +41614,7 @@
     "labels": [
       "budget",
       "cost-governance",
+      "done",
       "pass-14"
     ],
     "last_observed_remote_state": {
@@ -41290,7 +41671,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement upstream cost evidence and Infracost preflight boundary",
     "upstream_dependencies": [
       "UPSTREAM-012",
@@ -41367,6 +41748,7 @@
       "budget",
       "bulk-reconciled",
       "cost-governance",
+      "done",
       "implemented",
       "pass-14"
     ],
@@ -41428,7 +41810,7 @@
       "SRC-004:L000937-L000977",
       "SRC-012:L000780-L000816"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Integrate PPDB-0011 CLI schemas simulations documentation and validation",
     "upstream_dependencies": []
   },
@@ -41520,6 +41902,7 @@
       "assurance",
       "bulk-reconciled",
       "completion-gate",
+      "done",
       "implemented",
       "pass-15"
     ],
@@ -41574,7 +41957,7 @@
       "SRC-008:L000771-L000839",
       "SRC-011:L001212-L001345"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Complete Pass 15 verification upstream gate",
     "upstream_dependencies": [
       "UPSTREAM-015",
@@ -41660,6 +42043,7 @@
       "assurance",
       "bulk-reconciled",
       "completion-gate",
+      "done",
       "implemented",
       "pass-15"
     ],
@@ -41721,7 +42105,7 @@
       "SRC-008:L000540-L000760",
       "SRC-008:L001168-L001195"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement Acceptance Criteria Compiler and executable Definition of Done",
     "upstream_dependencies": []
   },
@@ -41750,7 +42134,14 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000108"
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000108",
+      "EVID-000112",
+      "EVID-000113",
+      "EVID-000116",
+      "EVID-000121",
+      "EVID-000122"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -41783,6 +42174,7 @@
     "labels": [
       "assurance",
       "completion-gate",
+      "done",
       "pass-15"
     ],
     "last_observed_remote_state": {
@@ -41846,7 +42238,7 @@
       "SRC-008:L000715-L000770",
       "SRC-008:L001042-L001066"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement Truth Registry evidence sufficiency and freshness",
     "upstream_dependencies": []
   },
@@ -41877,6 +42269,8 @@
     "completion_evidence": [
       "EVID-000108",
       "EVID-000110",
+      "EVID-000112",
+      "EVID-000113",
       "EVID-000176"
     ],
     "definition_of_done": [
@@ -41917,6 +42311,7 @@
       "assurance",
       "completion-gate",
       "delivery-progress",
+      "done",
       "implemented",
       "pass-15"
     ],
@@ -41988,7 +42383,7 @@
       "SRC-008:L000156-L000196",
       "SRC-008:L000295-L000368"
     ],
-    "state": "MERGE_READY",
+    "state": "DONE",
     "title": "Enforce objective delivery progress and lifecycle batching",
     "upstream_dependencies": []
   },
@@ -42018,7 +42413,9 @@
     "blockers": [],
     "completion_evidence": [
       "EVID-000108",
-      "EVID-000111"
+      "EVID-000111",
+      "EVID-000112",
+      "EVID-000113"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -42050,6 +42447,7 @@
     "labels": [
       "assurance",
       "completion-gate",
+      "done",
       "pass-15"
     ],
     "last_observed_remote_state": {
@@ -42108,7 +42506,7 @@
       "SRC-008:L001222-L001247",
       "SRC-008:L001248-L001270"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement Scope Governor acceptance freeze and change budget",
     "upstream_dependencies": []
   },
@@ -42172,6 +42570,7 @@
       "assurance",
       "bulk-reconciled",
       "completion-gate",
+      "done",
       "implemented",
       "pass-15"
     ],
@@ -42228,7 +42627,7 @@
       "SRC-008:L001109-L001167",
       "SRC-008:L001168-L001195"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement independent review identity and evidence multiplicity",
     "upstream_dependencies": []
   },
@@ -42552,6 +42951,7 @@
       "assurance",
       "bulk-reconciled",
       "completion-gate",
+      "done",
       "implemented",
       "pass-15"
     ],
@@ -42608,7 +43008,7 @@
       "SRC-008:L001016-L001066",
       "SRC-008:L001168-L001195"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement completion failure localization and rework routing",
     "upstream_dependencies": []
   },
@@ -42683,6 +43083,7 @@
       "assurance",
       "bulk-reconciled",
       "completion-gate",
+      "done",
       "implemented",
       "pass-15"
     ],
@@ -42751,7 +43152,7 @@
       "SRC-008:L001196-L001241",
       "SRC-008:L001248-L001270"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Integrate PPDB-0012 CLI schemas documentation and assurance validation",
     "upstream_dependencies": []
   },
@@ -44992,7 +45393,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_security_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/security/supply_chain.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -45002,15 +45403,18 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000123",
       "EVID-000124",
       "EVID-000127",
-      "EVID-000128"
+      "EVID-000128",
+      "EVID-000163",
+      "EVID-000164"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -45041,11 +45445,12 @@
       "src/project_pipeline/security/supply_chain.py",
       "provenance/license_policy.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "security",
       "identity",
+      "implemented",
+      "security",
       "supply-chain"
     ],
     "last_observed_remote_state": {
@@ -45416,6 +45821,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "implemented",
       "recovery",
       "resilience"
@@ -45472,7 +45878,7 @@
       "GOV-001:L000621-L000641",
       "SRC-006:L000767-L000824"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement explicit failure domains and deterministic operating modes",
     "upstream_dependencies": []
   },
@@ -45535,6 +45941,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "implemented",
       "recovery",
       "resilience"
@@ -45588,7 +45995,7 @@
     "source_references": [
       "SRC-006:L000011-L000197"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement capability-preserving provider substitution",
     "upstream_dependencies": []
   },
@@ -45601,7 +46008,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/failover.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -45611,15 +46018,20 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000096",
+      "EVID-000097",
+      "EVID-000100",
+      "EVID-000101",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
+      "EVID-000132",
       "EVID-000133",
       "EVID-000134"
     ],
@@ -45652,11 +46064,13 @@
       "runbooks/control_machine_failover.md",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "done",
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -45715,7 +46129,7 @@
       "SRC-006:L000406-L000441",
       "SRC-006:L000567-L000603"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement fenced control-machine failover and recovery roles",
     "upstream_dependencies": []
   },
@@ -45728,7 +46142,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/local_models.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -45738,17 +46152,22 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000069",
+      "EVID-000070",
+      "EVID-000072",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
+      "EVID-000132",
       "EVID-000133",
-      "EVID-000134"
+      "EVID-000134",
+      "EVID-000164"
     ],
     "definition_of_done": [
       "Implementation is present and behaviorally verified.",
@@ -45779,11 +46198,13 @@
       "src/project_pipeline/upstream_integrations/resilience.py",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "done",
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -45839,7 +46260,7 @@
       "GOV-001:L000748-L000764",
       "SRC-013:L000420-L000529"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement provider-neutral local model outage gateway",
     "upstream_dependencies": [
       "UPSTREAM-040",
@@ -45857,7 +46278,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/backup.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -45867,7 +46288,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -45908,11 +46329,13 @@
       "runbooks/backup_restore_verification.md",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "done",
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -45972,7 +46395,7 @@
       "SRC-009:L000025-L000025",
       "SRC-017:L000439-L000489"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement recovery objectives and backup restore planning",
     "upstream_dependencies": [
       "UPSTREAM-082",
@@ -46040,6 +46463,7 @@
     "issue_type": "TASK",
     "labels": [
       "bulk-reconciled",
+      "done",
       "implemented",
       "recovery",
       "resilience"
@@ -46098,7 +46522,7 @@
       "SRC-009:L000026-L000026",
       "SRC-015:L000589-L000661"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement autonomous external-precondition recovery and repair verification",
     "upstream_dependencies": []
   },
@@ -46111,7 +46535,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/aws.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46121,7 +46545,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -46132,7 +46556,8 @@
       "EVID-000131",
       "EVID-000132",
       "EVID-000133",
-      "EVID-000134"
+      "EVID-000134",
+      "EVID-000164"
     ],
     "definition_of_done": [
       "Implementation is present and behaviorally verified.",
@@ -46166,11 +46591,13 @@
       "infrastructure/aws/terraform/variables.tf",
       "infrastructure/aws/README.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "done",
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46237,7 +46664,7 @@
       "SRC-012:L000734-L000779",
       "SRC-012:L000817-L001036"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement optional local-primary AWS recovery spine blueprint",
     "upstream_dependencies": []
   },
@@ -46250,7 +46677,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "provenance/reviews/resilience_local_runtime_backup_review.md",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46260,12 +46687,20 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000069",
+      "EVID-000070",
+      "EVID-000072",
+      "EVID-000115",
+      "EVID-000116",
+      "EVID-000118",
+      "EVID-000121",
+      "EVID-000122",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
@@ -46301,11 +46736,13 @@
       "provenance/upstream_usage.jsonl",
       "provenance/upstream_registry.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "done",
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46362,7 +46799,7 @@
       "SRC-009:L000015-L000015",
       "SRC-013:L000420-L000529"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Complete resilience local-runtime and backup upstream adoption review",
     "upstream_dependencies": [
       "UPSTREAM-040",
@@ -46383,7 +46820,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/persistence.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46393,12 +46830,17 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000115",
+      "EVID-000116",
+      "EVID-000118",
+      "EVID-000121",
+      "EVID-000122",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
@@ -46436,11 +46878,13 @@
       "src/project_pipeline/cli.py",
       "src/project_pipeline/resilience/validation.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "done",
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46504,7 +46948,7 @@
       "SRC-009:L000015-L000015",
       "SRC-017:L000439-L000489"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Integrate resilience persistence migration CLI simulations and repository validation",
     "upstream_dependencies": []
   },
@@ -46517,7 +46961,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/portfolio.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46527,7 +46971,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -46562,11 +47006,13 @@
       "src/project_pipeline/lifecycle/repositories.py",
       "src/project_pipeline/domain/lifecycle.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "done",
+      "implemented",
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46620,7 +47066,7 @@
     "source_references": [
       "SRC-017:L000671-L000822"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement portfolio and multi-repository lifecycle coordination",
     "upstream_dependencies": []
   },
@@ -46633,7 +47079,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/environments.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46643,7 +47089,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -46678,11 +47124,13 @@
       "config/platform_lifecycle_policy.json",
       "src/project_pipeline/domain/lifecycle.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "done",
+      "implemented",
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46734,7 +47182,7 @@
     "source_references": [
       "SRC-017:L000597-L000670"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement environment and test-data lifecycle safety",
     "upstream_dependencies": []
   },
@@ -46792,11 +47240,11 @@
       "adr/ADR-0027_keep_project_native_locks_canonical_with_optional_mise_and_devcontainer_profiles.md",
       "src/project_pipeline/domain/lifecycle.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46863,7 +47311,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/retention.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46873,7 +47321,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -46908,11 +47356,13 @@
       "runbooks/project_closure_and_archive.md",
       "config/platform_lifecycle_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "done",
+      "implemented",
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46964,7 +47414,7 @@
     "source_references": [
       "SRC-017:L000907-L001001"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement reference-aware retention and project closure planning",
     "upstream_dependencies": []
   },
@@ -47022,11 +47472,11 @@
       "runbooks/platform_upgrade_qualification.md",
       "config/platform_lifecycle_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -47142,11 +47592,11 @@
       "src/project_pipeline/lifecycle/validation.py",
       "database/migrations/sqlite/PPDB-0018_advanced_platform_lifecycle.up.sql"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -47834,7 +48284,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass24_release_hardening.py",
           "method": "automated_behavior_validation",
           "path": "evidence/pass24_focused_suite.txt",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -47844,7 +48294,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "provenance/pass_24_upstream_hardening_gate.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -47880,7 +48330,7 @@
       "release/hardening_report_r24.json",
       "evidence/verification/pass24_performance.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "pass-24",
@@ -48194,7 +48644,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass24_release_hardening.py",
           "method": "automated_behavior_validation",
           "path": "evidence/pass24_focused_suite.txt",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -48204,7 +48654,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "provenance/pass_24_upstream_hardening_gate.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -48246,7 +48696,7 @@
       "docs/architecture/FINAL_ARCHITECTURE.md",
       "runbooks/release_upgrade_and_rollback.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "pass-24",

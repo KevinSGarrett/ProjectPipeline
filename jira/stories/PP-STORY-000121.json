@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,12 +17,18 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "EVID-000129",
+    "EVID-000132",
+    "EVID-000164",
+    "EVID-000198",
+    "EVID-000199"
+  ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
     "Acceptance criteria have current verification evidence.",
@@ -43,12 +49,14 @@
   "expected_implementation_artifacts": [
     "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
+    "cluster-aws",
     "domain-infra",
-    "cluster-aws"
+    "done",
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -110,7 +118,7 @@
     "SRC-012:L000734-L000779",
     "SRC-012:L000817-L001036"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Aws — Deployment and Infrastructure",
   "upstream_dependencies": []
 }

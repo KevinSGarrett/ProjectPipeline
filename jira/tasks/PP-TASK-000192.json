@@ -60,14 +60,14 @@
     "src/project_pipeline/quality.py",
     "docs/development/quality_and_ci.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "quality",
     "ci",
+    "evidence-backed",
+    "quality",
     "security",
-    "testing",
-    "evidence-backed"
+    "testing"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

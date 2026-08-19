@@ -57,6 +57,7 @@
     "capability-story",
     "cluster-catalog",
     "domain-req",
+    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -115,7 +116,7 @@
     "GOV-001:L001162-L001200",
     "GOV-001:L001202-L001215"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Catalog — Requirements Engineering and Traceability",
   "upstream_dependencies": []
 }

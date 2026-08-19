@@ -56,6 +56,7 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
+    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -115,7 +116,7 @@
     "GOV-001:L001998-L002024",
     "SRC-017:L000490-L000596"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Build glossary, source evolution, and open-decision registries",
   "upstream_dependencies": []
 }

@@ -24,7 +24,9 @@
   "blockers": [],
   "completion_evidence": [
     "EVID-000108",
-    "EVID-000111"
+    "EVID-000111",
+    "EVID-000112",
+    "EVID-000113"
   ],
   "definition_of_done": [
     "Implementation is present and locally behaviorally verified.",
@@ -56,6 +58,7 @@
   "labels": [
     "assurance",
     "completion-gate",
+    "done",
     "pass-15"
   ],
   "last_observed_remote_state": {
@@ -114,7 +117,7 @@
     "SRC-008:L001222-L001247",
     "SRC-008:L001248-L001270"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement Scope Governor acceptance freeze and change budget",
   "upstream_dependencies": []
 }

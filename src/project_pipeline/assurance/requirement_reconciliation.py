@@ -210,6 +210,9 @@ def apply_evidence_bound_requirement_states(
         applied.append(proposal)
     if applied:
         write_jsonl(root / "plans/_traceability/requirements.jsonl", rows)
+        applied_ids = [str(item["requirement_id"]) for item in applied]
+        reconcile_linked_task_implementation(root, applied_ids)
+        reconcile_linked_story_implementation(root, applied_ids)
     return applied
 
 
@@ -454,6 +457,49 @@ def reconcile_linked_task_implementation(root: Path, requirement_ids: Iterable[s
                     verification["status"] = "VERIFIED"
             write_json(path, issue)
             updated.append(local_id)
+    return updated
+
+
+def reconcile_linked_story_implementation(root: Path, requirement_ids: Iterable[str]) -> list[str]:
+    """Set linked stories to IMPLEMENTED or PARTIALLY_IMPLEMENTED from requirement truth."""
+
+    root = root.resolve()
+    wanted = set(requirement_ids)
+    requirements = {
+        str(item.get("requirement_id")): item
+        for item in read_jsonl(root / "plans/_traceability/requirements.jsonl")
+    }
+    updated: list[str] = []
+    folder = root / "jira" / "stories"
+    if not folder.is_dir():
+        return updated
+    for path in sorted(folder.glob("PP-STORY-*.json")):
+        issue = read_json(path)
+        local_id = str(issue.get("local_id", path.stem))
+        linked = [str(item) for item in issue.get("requirement_ids", [])]
+        if wanted.isdisjoint(linked):
+            continue
+        states = [
+            str((requirements.get(requirement_id) or {}).get("implementation_state") or "")
+            for requirement_id in linked
+        ]
+        if not any(state == "IMPLEMENTED" for state in states):
+            continue
+        next_state = (
+            "IMPLEMENTED"
+            if states and all(state == "IMPLEMENTED" for state in states)
+            else "PARTIALLY_IMPLEMENTED"
+        )
+        if issue.get("implementation_state") == next_state:
+            continue
+        issue["implementation_state"] = next_state
+        labels = [
+            label for label in issue.get("labels", []) if label not in {"planned", "implemented"}
+        ]
+        labels.append("implemented" if next_state == "IMPLEMENTED" else "partially-implemented")
+        issue["labels"] = sorted(set(labels))
+        write_json(path, issue)
+        updated.append(local_id)
     return updated
 
 

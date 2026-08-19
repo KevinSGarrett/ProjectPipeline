@@ -61,6 +61,7 @@
   "labels": [
     "bulk-reconciled",
     "domain-story",
+    "done",
     "implemented",
     "plan-budget-001"
   ],
@@ -115,7 +116,7 @@
   "source_references": [
     "GOV-001:L000607-L000619"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement and verify Budget and Resource Governance",
   "upstream_dependencies": []
 }

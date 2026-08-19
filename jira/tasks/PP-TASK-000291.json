@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
         "method": "automated_behavior_validation",
         "path": "src/project_pipeline/domain/context.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,13 +17,15 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
     "EVID-000089",
+    "EVID-000090",
+    "EVID-000092",
     "EVID-000093",
     "EVID-000094"
   ],
@@ -51,11 +53,13 @@
   "expected_implementation_artifacts": [
     "src/project_pipeline/domain/context.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "context",
     "delegation",
+    "done",
+    "implemented",
     "pass-12"
   ],
   "last_observed_remote_state": {
@@ -113,7 +117,7 @@
     "SRC-002:L000213-L000260",
     "SRC-002:L000959-L001014"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement immutable delegation envelope and context domain",
   "upstream_dependencies": []
 }

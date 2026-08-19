@@ -66,6 +66,7 @@
     "capability-story",
     "cluster-adoption",
     "domain-life",
+    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -146,7 +147,7 @@
   "source_references": [
     "SRC-017:L001122-L001217"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Adoption — Platform Lifecycle",
   "upstream_dependencies": []
 }

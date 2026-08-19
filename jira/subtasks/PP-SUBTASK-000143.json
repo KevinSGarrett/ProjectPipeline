@@ -58,6 +58,7 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
+    "done",
     "implemented",
     "verification"
   ],
@@ -113,7 +114,7 @@
     "GOV-001:L001200-L001215",
     "SRC-017:L000490-L000596"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Verify generate canonical source-section dispositions",
   "upstream_dependencies": []
 }

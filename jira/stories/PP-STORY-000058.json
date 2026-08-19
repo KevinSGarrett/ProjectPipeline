@@ -58,6 +58,7 @@
     "capability-story",
     "cluster-terminology",
     "domain-req",
+    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -112,7 +113,7 @@
     "GOV-001:L001998-L002024",
     "SRC-017:L000490-L000596"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Terminology — Requirements Engineering and Traceability",
   "upstream_dependencies": []
 }

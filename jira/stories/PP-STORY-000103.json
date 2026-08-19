@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -27,7 +27,9 @@
     "EVID-000103",
     "EVID-000104",
     "EVID-000105",
-    "EVID-000106"
+    "EVID-000106",
+    "EVID-000169",
+    "EVID-000170"
   ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
@@ -55,12 +57,13 @@
   "expected_implementation_artifacts": [
     "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
+    "cluster-pressure",
     "domain-budget",
-    "cluster-pressure"
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -117,6 +120,6 @@
     "SRC-012:L000780-L000816"
   ],
   "state": "BACKLOG",
-  "title": "Pressure \u2014 Budget and Resource Governance",
+  "title": "Pressure — Budget and Resource Governance",
   "upstream_dependencies": []
 }

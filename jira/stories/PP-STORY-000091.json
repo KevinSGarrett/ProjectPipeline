@@ -57,6 +57,7 @@
     "capability-story",
     "cluster-review",
     "domain-assure",
+    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -111,7 +112,7 @@
     "SRC-008:L001109-L001167",
     "SRC-008:L001168-L001195"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Review — Execution Assurance and Testing",
   "upstream_dependencies": []
 }

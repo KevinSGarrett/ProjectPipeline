@@ -23,7 +23,25 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000028"
+    "EVID-000005",
+    "EVID-000006",
+    "EVID-000009",
+    "EVID-000014",
+    "EVID-000015",
+    "EVID-000016",
+    "EVID-000018",
+    "EVID-000019",
+    "EVID-000020",
+    "EVID-000022",
+    "EVID-000027",
+    "EVID-000028",
+    "EVID-000029",
+    "EVID-000030",
+    "EVID-000031",
+    "EVID-000035",
+    "EVID-000036",
+    "EVID-000038",
+    "EVID-000039"
   ],
   "definition_of_done": [
     "Implementation and configuration for the bounded objective are complete.",
@@ -56,10 +74,11 @@
   "issue_type": "TASK",
   "labels": [
     "domain-model",
+    "done",
+    "evidence-backed",
     "identifiers",
     "requirements",
-    "schema",
-    "evidence-backed"
+    "schema"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -128,7 +147,7 @@
     "GOV-001:L001477-L001488",
     "SRC-017:L000490-L000596"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement stable domain identifiers and strict requirement entities",
   "upstream_dependencies": []
 }

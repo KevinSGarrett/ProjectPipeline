@@ -52,11 +52,11 @@
     "adr/ADR-0027_keep_project_native_locks_canonical_with_optional_mise_and_devcontainer_profiles.md",
     "src/project_pipeline/domain/lifecycle.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "platform-lifecycle",
-    "pass-22"
+    "pass-22",
+    "platform-lifecycle"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

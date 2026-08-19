@@ -57,6 +57,7 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
+    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -114,7 +115,7 @@
     "GOV-001:L001200-L001215",
     "GOV-001:L002200-L002231"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Expand self-validation for detailed registries",
   "upstream_dependencies": []
 }

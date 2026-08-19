@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,12 +17,14 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000061",
+    "EVID-000065",
     "EVID-000102",
     "EVID-000103",
     "EVID-000104",
@@ -55,12 +57,14 @@
   "expected_implementation_artifacts": [
     "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
+    "cluster-leases",
     "domain-budget",
-    "cluster-leases"
+    "done",
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -114,7 +118,7 @@
     "SRC-004:L000937-L000977",
     "SRC-009:L000022-L000022"
   ],
-  "state": "BACKLOG",
-  "title": "Leases \u2014 Budget and Resource Governance",
+  "state": "DONE",
+  "title": "Leases — Budget and Resource Governance",
   "upstream_dependencies": []
 }

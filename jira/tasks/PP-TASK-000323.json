@@ -25,6 +25,8 @@
   "completion_evidence": [
     "EVID-000108",
     "EVID-000110",
+    "EVID-000112",
+    "EVID-000113",
     "EVID-000176"
   ],
   "definition_of_done": [
@@ -65,6 +67,7 @@
     "assurance",
     "completion-gate",
     "delivery-progress",
+    "done",
     "implemented",
     "pass-15"
   ],
@@ -136,7 +139,7 @@
     "SRC-008:L000156-L000196",
     "SRC-008:L000295-L000368"
   ],
-  "state": "MERGE_READY",
+  "state": "DONE",
   "title": "Enforce objective delivery progress and lifecycle batching",
   "upstream_dependencies": []
 }

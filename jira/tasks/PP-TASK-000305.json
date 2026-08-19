@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
         "method": "automated_behavior_validation",
         "path": "src/project_pipeline/orchestration/runtime.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,19 +17,22 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000062",
     "EVID-000095",
     "EVID-000096",
     "EVID-000097",
     "EVID-000098",
     "EVID-000099",
     "EVID-000100",
-    "EVID-000101"
+    "EVID-000101",
+    "EVID-000129",
+    "EVID-000130"
   ],
   "definition_of_done": [
     "Implementation is present and locally behaviorally verified.",
@@ -61,11 +64,13 @@
     "src/project_pipeline/orchestration/runtime.py",
     "src/project_pipeline/orchestration/recovery.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "orchestration",
+    "done",
     "durability",
+    "implemented",
+    "orchestration",
     "pass-13"
   ],
   "last_observed_remote_state": {
@@ -126,7 +131,7 @@
     "SRC-017:L000281-L000359",
     "SRC-016:L001748-L001756"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement worker heartbeat fencing and loss recovery",
   "upstream_dependencies": []
 }

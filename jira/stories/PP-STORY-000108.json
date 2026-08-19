@@ -56,6 +56,7 @@
     "capability-story",
     "cluster-operating-modes",
     "domain-res",
+    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -107,7 +108,7 @@
     "SRC-005:L000767-L000824",
     "SRC-006:L000767-L000824"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Operating Modes — Resilience, Recovery, and Disaster Readiness",
   "upstream_dependencies": []
 }

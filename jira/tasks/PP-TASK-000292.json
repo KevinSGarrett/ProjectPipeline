@@ -63,6 +63,7 @@
     "bulk-reconciled",
     "context",
     "delegation",
+    "done",
     "implemented",
     "pass-12"
   ],
@@ -120,7 +121,7 @@
     "SRC-002:L000261-L000315",
     "SRC-002:L000479-L000515"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement deterministic Context Broker minimality",
   "upstream_dependencies": [
     "UPSTREAM-115",

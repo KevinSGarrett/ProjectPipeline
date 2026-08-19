@@ -52,6 +52,7 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
+    "done",
     "implemented",
     "verification"
   ],
@@ -105,7 +106,7 @@
     "GOV-001:L000173-L000183",
     "SRC-017:L000490-L000596"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Verify implement source-reference validation",
   "upstream_dependencies": []
 }

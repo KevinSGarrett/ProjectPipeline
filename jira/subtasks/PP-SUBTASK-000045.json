@@ -48,6 +48,7 @@
   "issue_type": "SUBTASK",
   "labels": [
     "bulk-reconciled",
+    "done",
     "foundation",
     "implemented",
     "verification"
@@ -94,7 +95,7 @@
   "source_references": [
     "SRC-008:L000540-L000760"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement manifest and repository-map generation",
   "upstream_dependencies": []
 }

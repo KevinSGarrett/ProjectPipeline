@@ -23,7 +23,24 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000038"
+    "EVID-000016",
+    "EVID-000018",
+    "EVID-000019",
+    "EVID-000020",
+    "EVID-000022",
+    "EVID-000027",
+    "EVID-000029",
+    "EVID-000030",
+    "EVID-000031",
+    "EVID-000032",
+    "EVID-000035",
+    "EVID-000036",
+    "EVID-000037",
+    "EVID-000038",
+    "EVID-000039",
+    "EVID-000040",
+    "EVID-000041",
+    "EVID-000042"
   ],
   "definition_of_done": [
     "Implementation for the bounded intake objective is complete.",
@@ -62,10 +79,11 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "project-intake",
-    "project-compiler",
     "deterministic",
-    "non-destructive"
+    "done",
+    "non-destructive",
+    "project-compiler",
+    "project-intake"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -125,7 +143,7 @@
     "GOV-001:L001477-L001488",
     "SRC-017:L001122-L001175"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Persist compilations and bootstrap receipts through migration PPDB-0003",
   "upstream_dependencies": []
 }

@@ -65,6 +65,7 @@
   "issue_type": "TASK",
   "labels": [
     "bulk-reconciled",
+    "done",
     "durability",
     "implemented",
     "orchestration",
@@ -126,7 +127,7 @@
     "SRC-017:L000281-L000359",
     "SRC-016:L001748-L001756"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement durable signal and timer waits",
   "upstream_dependencies": []
 }

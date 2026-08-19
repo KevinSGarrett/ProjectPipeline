@@ -67,6 +67,7 @@
     "capability-story",
     "cluster-compiler",
     "domain-ctx",
+    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -133,7 +134,7 @@
     "SRC-002:L000479-L000515",
     "SRC-002:L000959-L001014"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Compiler — Context and Knowledge",
   "upstream_dependencies": []
 }

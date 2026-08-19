@@ -66,6 +66,7 @@
     "assurance",
     "bulk-reconciled",
     "completion-gate",
+    "done",
     "implemented",
     "pass-15"
   ],
@@ -127,7 +128,7 @@
     "SRC-008:L000540-L000760",
     "SRC-008:L001168-L001195"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement Acceptance Criteria Compiler and executable Definition of Done",
   "upstream_dependencies": []
 }
