@@ -23,7 +23,21 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000031"
+    "EVID-000005",
+    "EVID-000006",
+    "EVID-000009",
+    "EVID-000010",
+    "EVID-000014",
+    "EVID-000015",
+    "EVID-000016",
+    "EVID-000018",
+    "EVID-000019",
+    "EVID-000020",
+    "EVID-000028",
+    "EVID-000030",
+    "EVID-000031",
+    "EVID-000032",
+    "EVID-000038"
   ],
   "definition_of_done": [
     "Implementation and configuration for the bounded objective are complete.",
@@ -65,11 +79,11 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "traceability",
-    "requirements",
-    "transactions",
     "bidirectional",
-    "evidence-backed"
+    "evidence-backed",
+    "requirements",
+    "traceability",
+    "transactions"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

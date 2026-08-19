@@ -62,13 +62,13 @@
     "docs/development/README.md",
     "docs/development/setup.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "developer-experience",
-    "operations",
     "bootstrap",
-    "evidence-backed"
+    "developer-experience",
+    "evidence-backed",
+    "operations"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

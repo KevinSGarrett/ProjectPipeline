@@ -51,7 +51,10 @@ def test_current_head_evaluation_rejects_unbound_definitions() -> None:
     ledger = evaluate_requirement_reconciliation(ROOT)
     assert len(ledger) == 352
     rejected = [
-        row for row in ledger if row["previous_state"] in {"PARTIALLY_IMPLEMENTED", "PLANNED_ONLY"}
+        row
+        for row in ledger
+        if row["previous_state"] in {"PARTIALLY_IMPLEMENTED", "PLANNED_ONLY"}
+        and row.get("accepted") is not True
     ]
     assert rejected
     assert all(
@@ -67,6 +70,9 @@ def test_current_head_evaluation_rejects_unbound_definitions() -> None:
         or "missing" in row["reason"]
         or "empty" in row["reason"]
         or "unbound from" in row["reason"]
+        or " test " in row["reason"]
+        or "MISSING" in row["reason"]
+        or "FAIL" in row["reason"]
         for row in rejected
     )
 

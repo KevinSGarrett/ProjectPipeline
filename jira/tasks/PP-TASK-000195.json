@@ -23,8 +23,17 @@
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000016",
+    "EVID-000018",
+    "EVID-000019",
+    "EVID-000020",
     "EVID-000028",
-    "EVID-000030"
+    "EVID-000030",
+    "EVID-000031",
+    "EVID-000032",
+    "EVID-000035",
+    "EVID-000036",
+    "EVID-000038"
   ],
   "definition_of_done": [
     "Implementation and configuration for the bounded objective are complete.",
@@ -61,10 +70,10 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "project-manifest",
     "domain-model",
-    "state",
-    "evidence-backed"
+    "evidence-backed",
+    "project-manifest",
+    "state"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

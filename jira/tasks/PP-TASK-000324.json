@@ -24,7 +24,9 @@
   "blockers": [],
   "completion_evidence": [
     "EVID-000108",
-    "EVID-000111"
+    "EVID-000111",
+    "EVID-000112",
+    "EVID-000113"
   ],
   "definition_of_done": [
     "Implementation is present and locally behaviorally verified.",

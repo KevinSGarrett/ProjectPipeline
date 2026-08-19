@@ -46,11 +46,11 @@
     "Project_Pipeline_Project_Pack_r01.zip",
     "Project_Pipeline_Rehydration_Pack_r01.zip"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "foundation",
-    "executable"
+    "executable",
+    "foundation"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

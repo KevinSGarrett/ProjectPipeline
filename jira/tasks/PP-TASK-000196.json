@@ -23,7 +23,26 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000030"
+    "EVID-000016",
+    "EVID-000018",
+    "EVID-000019",
+    "EVID-000020",
+    "EVID-000028",
+    "EVID-000029",
+    "EVID-000030",
+    "EVID-000032",
+    "EVID-000035",
+    "EVID-000036",
+    "EVID-000043",
+    "EVID-000055",
+    "EVID-000056",
+    "EVID-000059",
+    "EVID-000060",
+    "EVID-000096",
+    "EVID-000098",
+    "EVID-000099",
+    "EVID-000100",
+    "EVID-000101"
   ],
   "definition_of_done": [
     "Implementation and configuration for the bounded objective are complete.",
@@ -62,11 +81,11 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "control-state",
-    "task-state",
-    "optimistic-concurrency",
     "audit",
-    "evidence-backed"
+    "control-state",
+    "evidence-backed",
+    "optimistic-concurrency",
+    "task-state"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

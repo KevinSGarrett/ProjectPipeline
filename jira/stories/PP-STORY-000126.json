@@ -49,12 +49,12 @@
   "expected_implementation_artifacts": [
     "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "domain-life",
     "cluster-contracts",
+    "domain-life",
     "pass-22"
   ],
   "last_observed_remote_state": {
@@ -109,6 +109,6 @@
     "SRC-017:L000823-L000906"
   ],
   "state": "BACKLOG",
-  "title": "Contracts \u2014 Platform Lifecycle",
+  "title": "Contracts — Platform Lifecycle",
   "upstream_dependencies": []
 }

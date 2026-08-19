@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,12 +17,29 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "EVID-000016",
+    "EVID-000018",
+    "EVID-000019",
+    "EVID-000020",
+    "EVID-000022",
+    "EVID-000024",
+    "EVID-000027",
+    "EVID-000028",
+    "EVID-000029",
+    "EVID-000030",
+    "EVID-000031",
+    "EVID-000032",
+    "EVID-000035",
+    "EVID-000036",
+    "EVID-000038",
+    "EVID-000039"
+  ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
     "Acceptance criteria have current verification evidence.",
@@ -49,12 +66,13 @@
     "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md",
     "src/project_pipeline/persistence/sqlite.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
+    "cluster-data",
     "domain-arch",
-    "cluster-data"
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -123,6 +141,6 @@
     "SRC-017:L000823-L000906"
   ],
   "state": "BACKLOG",
-  "title": "Data \u2014 System Architecture",
+  "title": "Data — System Architecture",
   "upstream_dependencies": []
 }

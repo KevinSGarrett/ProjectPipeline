@@ -13,6 +13,7 @@ from project_pipeline.assurance.requirement_reconciliation import (
     contains_external_marker,
     evaluate_requirement_reconciliation,
     propose_evidence_bound_requirement_states,
+    reconcile_linked_story_implementation,
 )
 from project_pipeline.cli import main
 from project_pipeline.domain.evidence_observation import EnvironmentClass, ObservationResult
@@ -335,3 +336,33 @@ def test_requirement_reconcile_cli_requires_approve_and_dry_runs(tmp_path, capsy
     dry = json.loads(capsys.readouterr().out)
     assert dry["mode"] == "DRY_RUN"
     assert dry["ledger_count"] == 1
+
+
+def test_linked_story_becomes_partial_when_only_some_requirements_are_implemented(
+    tmp_path: Path,
+) -> None:
+    (tmp_path / "plans/_traceability").mkdir(parents=True)
+    (tmp_path / "jira" / "stories").mkdir(parents=True)
+    write_jsonl(
+        tmp_path / "plans/_traceability/requirements.jsonl",
+        [
+            {"requirement_id": "REQ-UX-0005", "implementation_state": "IMPLEMENTED"},
+            {"requirement_id": "REQ-UX-0004", "implementation_state": "PARTIALLY_IMPLEMENTED"},
+        ],
+    )
+    story = tmp_path / "jira" / "stories" / "PP-STORY-000115.json"
+    write_json(
+        story,
+        {
+            "local_id": "PP-STORY-000115",
+            "implementation_state": "PLANNED_ONLY",
+            "labels": ["planned"],
+            "requirement_ids": ["REQ-UX-0005", "REQ-UX-0004"],
+        },
+    )
+    updated = reconcile_linked_story_implementation(tmp_path, ["REQ-UX-0005"])
+    assert updated == ["PP-STORY-000115"]
+    payload = json.loads(story.read_text(encoding="utf-8"))
+    assert payload["implementation_state"] == "PARTIALLY_IMPLEMENTED"
+    assert "partially-implemented" in payload["labels"]
+    assert "planned" not in payload["labels"]

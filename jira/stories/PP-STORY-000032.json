@@ -50,12 +50,12 @@
     "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "domain-story",
-    "plan-life-001",
-    "pass-22"
+    "pass-22",
+    "plan-life-001"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

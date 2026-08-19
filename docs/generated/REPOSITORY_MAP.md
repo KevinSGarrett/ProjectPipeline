@@ -1,7 +1,7 @@
 # Generated Repository Map
 
 - Files: `2939`
-- Generated: `2026-08-19T17:36:01.584668+00:00`
+- Generated: `2026-08-19T20:28:10.061290+00:00`
 
 ## Top-level counts
 

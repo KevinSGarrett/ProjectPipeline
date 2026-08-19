@@ -7,12 +7,16 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "unit_and_contract_test",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "EVID-000005",
+    "EVID-000006",
+    "EVID-000008"
+  ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
     "Acceptance criteria have current verification evidence.",
@@ -35,10 +39,11 @@
   "expected_implementation_artifacts": [
     "evidence/EVIDENCE_LEDGER.jsonl"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "SUBTASK",
   "labels": [
     "foundation",
+    "implemented",
     "verification"
   ],
   "last_observed_remote_state": {

@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,12 +17,22 @@
         "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "EVID-000062",
+    "EVID-000096",
+    "EVID-000097",
+    "EVID-000100",
+    "EVID-000101",
+    "EVID-000129",
+    "EVID-000130",
+    "EVID-000132",
+    "EVID-000206"
+  ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
     "Acceptance criteria have current verification evidence.",
@@ -43,12 +53,13 @@
   "expected_implementation_artifacts": [
     "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
+    "cluster-machine-failure",
     "domain-res",
-    "cluster-machine-failure"
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

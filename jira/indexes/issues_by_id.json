@@ -36,7 +36,7 @@
     "expected_implementation_artifacts": [
       "plans/00_project_definition/PLAN-PDEF-001_project_definition.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -276,12 +276,31 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000022",
+      "EVID-000024",
+      "EVID-000027",
+      "EVID-000028",
+      "EVID-000029",
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000032",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000038",
+      "EVID-000039"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -304,10 +323,11 @@
     "expected_implementation_artifacts": [
       "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
+      "implemented",
       "plan-arch-001"
     ],
     "last_observed_remote_state": {
@@ -562,7 +582,7 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -697,7 +717,7 @@
     "expected_implementation_artifacts": [
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -800,12 +820,25 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000062",
+      "EVID-000069",
+      "EVID-000070",
+      "EVID-000071",
+      "EVID-000072",
+      "EVID-000075",
+      "EVID-000076",
+      "EVID-000129",
+      "EVID-000130",
+      "EVID-000131",
+      "EVID-000200",
+      "EVID-000201"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -828,10 +861,11 @@
     "expected_implementation_artifacts": [
       "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
+      "implemented",
       "plan-agent-001"
     ],
     "last_observed_remote_state": {
@@ -964,7 +998,7 @@
     "expected_implementation_artifacts": [
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1250,7 +1284,7 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1359,12 +1393,22 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000061",
+      "EVID-000065",
+      "EVID-000102",
+      "EVID-000103",
+      "EVID-000104",
+      "EVID-000105",
+      "EVID-000106",
+      "EVID-000169",
+      "EVID-000170"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -1387,10 +1431,11 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
+      "implemented",
       "plan-budget-001"
     ],
     "last_observed_remote_state": {
@@ -1515,7 +1560,7 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1800,7 +1845,7 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -1932,7 +1977,7 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -2065,12 +2110,12 @@
     "expected_implementation_artifacts": [
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "plan-life-001",
-      "pass-22"
+      "pass-22",
+      "plan-life-001"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -2197,7 +2242,7 @@
     "expected_implementation_artifacts": [
       "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -3420,7 +3465,7 @@
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -3630,7 +3675,7 @@
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -3818,7 +3863,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline coverage --root .",
           "method": "traceability_check",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -3828,12 +3873,16 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "completion_gate_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000129",
+      "EVID-000130",
+      "EVID-000131"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -3855,10 +3904,11 @@
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
+      "implemented",
       "plan-res-001"
     ],
     "last_observed_remote_state": {
@@ -4170,7 +4220,7 @@
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -4279,12 +4329,12 @@
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
-      "plan-life-001",
-      "pass-22"
+      "pass-22",
+      "plan-life-001"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -4840,7 +4890,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -4850,12 +4900,16 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000185"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -4882,12 +4936,13 @@
       "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
       "src/project_pipeline/intake/profiles.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-mission",
-      "domain-pdef"
+      "domain-pdef",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -5954,7 +6009,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -5964,12 +6019,29 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000022",
+      "EVID-000024",
+      "EVID-000027",
+      "EVID-000028",
+      "EVID-000029",
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000032",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000038",
+      "EVID-000039"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -5996,12 +6068,13 @@
       "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md",
       "src/project_pipeline/persistence/sqlite.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-data",
       "domain-arch",
-      "cluster-data"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7140,12 +7213,12 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-sched",
-      "cluster-resources"
+      "cluster-resources",
+      "domain-sched"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7250,12 +7323,12 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-sched",
-      "cluster-sequencing"
+      "cluster-sequencing",
+      "domain-sched"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7931,12 +8004,12 @@
     "expected_implementation_artifacts": [
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-ctx",
-      "cluster-freshness"
+      "cluster-freshness",
+      "domain-ctx"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -8954,12 +9027,12 @@
       "database/migrations/postgresql/PPDB-0004_jira_steward_sync.up.sql",
       "docs/jira"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-gov",
-      "cluster-jira"
+      "cluster-jira",
+      "domain-gov"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10615,12 +10688,12 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-sec",
-      "cluster-supply-chain"
+      "cluster-supply-chain",
+      "domain-sec"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10689,7 +10762,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -10699,7 +10772,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -10737,12 +10810,13 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-forecast",
       "domain-budget",
-      "cluster-forecast"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10814,7 +10888,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -10824,12 +10898,14 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000061",
+      "EVID-000065",
       "EVID-000102",
       "EVID-000103",
       "EVID-000104",
@@ -10862,12 +10938,13 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-leases",
       "domain-budget",
-      "cluster-leases"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10934,7 +11011,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -10944,7 +11021,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -10982,12 +11059,13 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-ledger",
       "domain-budget",
-      "cluster-ledger"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11057,7 +11135,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -11067,7 +11145,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -11077,7 +11155,9 @@
       "EVID-000103",
       "EVID-000104",
       "EVID-000105",
-      "EVID-000106"
+      "EVID-000106",
+      "EVID-000169",
+      "EVID-000170"
     ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
@@ -11105,12 +11185,13 @@
     "expected_implementation_artifacts": [
       "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-pressure",
       "domain-budget",
-      "cluster-pressure"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11356,12 +11437,12 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-res",
-      "cluster-external-systems"
+      "cluster-external-systems",
+      "domain-res"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11552,7 +11633,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -11562,12 +11643,22 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000062",
+      "EVID-000096",
+      "EVID-000097",
+      "EVID-000100",
+      "EVID-000101",
+      "EVID-000129",
+      "EVID-000130",
+      "EVID-000132",
+      "EVID-000206"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -11588,12 +11679,13 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-machine-failure",
       "domain-res",
-      "cluster-machine-failure"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11787,7 +11879,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -11797,12 +11889,16 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000129",
+      "EVID-000130",
+      "EVID-000204"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -11827,8 +11923,8 @@
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-res",
-      "cluster-provider-failure"
+      "cluster-provider-failure",
+      "domain-res"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11895,7 +11991,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -11905,12 +12001,21 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000115",
+      "EVID-000116",
+      "EVID-000118",
+      "EVID-000121",
+      "EVID-000122",
+      "EVID-000129",
+      "EVID-000130",
+      "EVID-000131"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -11931,12 +12036,13 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-recovery-verification",
       "domain-res",
-      "cluster-recovery-verification"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -12154,12 +12260,13 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-ux",
       "cluster-director",
+      "domain-ux",
+      "partially-implemented",
       "pass-21"
     ],
     "last_observed_remote_state": {
@@ -12377,12 +12484,13 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-project-intelligence",
       "domain-ux",
+      "partially-implemented",
       "pass-20"
     ],
     "last_observed_remote_state": {
@@ -12502,12 +12610,13 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-surfaces",
       "domain-ux",
+      "partially-implemented",
       "pass-20"
     ],
     "last_observed_remote_state": {
@@ -13104,7 +13213,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -13114,12 +13223,18 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000129",
+      "EVID-000132",
+      "EVID-000164",
+      "EVID-000198",
+      "EVID-000199"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -13140,12 +13255,13 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-aws",
       "domain-infra",
-      "cluster-aws"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13471,12 +13587,12 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-infra",
-      "cluster-packaging"
+      "cluster-packaging",
+      "domain-infra"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13733,12 +13849,12 @@
     "expected_implementation_artifacts": [
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-life",
       "cluster-contracts",
+      "domain-life",
       "pass-22"
     ],
     "last_observed_remote_state": {
@@ -14569,12 +14685,12 @@
     "expected_implementation_artifacts": [
       "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-upstream",
-      "cluster-review"
+      "cluster-review",
+      "domain-upstream"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -15732,15 +15848,19 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "unit_and_contract_test",
           "path": "src/project_pipeline/validation/repository.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000004",
       "EVID-000005",
       "EVID-000006",
-      "EVID-000007"
+      "EVID-000007",
+      "EVID-000108",
+      "EVID-000112",
+      "EVID-000113"
     ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
@@ -15765,10 +15885,11 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/validation/repository.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "SUBTASK",
     "labels": [
       "foundation",
+      "implemented",
       "verification"
     ],
     "last_observed_remote_state": {
@@ -15925,12 +16046,16 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "unit_and_contract_test",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000008"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -15953,10 +16078,11 @@
     "expected_implementation_artifacts": [
       "evidence/EVIDENCE_LEDGER.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "SUBTASK",
     "labels": [
       "foundation",
+      "implemented",
       "verification"
     ],
     "last_observed_remote_state": {
@@ -17152,12 +17278,12 @@
       "plans/01_requirements/open_decisions.jsonl",
       "plans/01_requirements/source_evolution.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "SUBTASK",
     "labels": [
       "architecture",
-      "provenance",
-      "evidence-backed"
+      "evidence-backed",
+      "provenance"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -17423,12 +17549,12 @@
       "tests/test_upstream_reviews.py",
       "tests/test_decision_resolution.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "SUBTASK",
     "labels": [
       "architecture",
-      "provenance",
-      "evidence-backed"
+      "evidence-backed",
+      "provenance"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -18270,11 +18396,11 @@
       "scripts/validate_repository.py",
       "tests/"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "foundation",
-      "executable"
+      "executable",
+      "foundation"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -18381,11 +18507,11 @@
       "Project_Pipeline_Project_Pack_r01.zip",
       "Project_Pipeline_Rehydration_Pack_r01.zip"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "foundation",
-      "executable"
+      "executable",
+      "foundation"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -22914,13 +23040,13 @@
       "src/project_pipeline/",
       "docs/development/source_layout.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "repository",
-      "python",
       "architecture",
-      "evidence-backed"
+      "evidence-backed",
+      "python",
+      "repository"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23178,13 +23304,13 @@
       "schemas/runtime_configuration.schema.json",
       "schemas/secret_reference.schema.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "configuration",
-      "secrets",
+      "evidence-backed",
       "runtime",
-      "evidence-backed"
+      "secrets"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23704,14 +23830,14 @@
       "src/project_pipeline/quality.py",
       "docs/development/quality_and_ci.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "quality",
       "ci",
+      "evidence-backed",
+      "quality",
       "security",
-      "testing",
-      "evidence-backed"
+      "testing"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23836,13 +23962,13 @@
       "docs/development/README.md",
       "docs/development/setup.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "developer-experience",
-      "operations",
       "bootstrap",
-      "evidence-backed"
+      "developer-experience",
+      "evidence-backed",
+      "operations"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23936,7 +24062,25 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000028"
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000009",
+      "EVID-000014",
+      "EVID-000015",
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000022",
+      "EVID-000027",
+      "EVID-000028",
+      "EVID-000029",
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000038",
+      "EVID-000039"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -23969,10 +24113,10 @@
     "issue_type": "TASK",
     "labels": [
       "domain-model",
+      "evidence-backed",
       "identifiers",
       "requirements",
-      "schema",
-      "evidence-backed"
+      "schema"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -24070,8 +24214,17 @@
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
       "EVID-000028",
-      "EVID-000030"
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000032",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000038"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -24108,10 +24261,10 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-manifest",
       "domain-model",
-      "state",
-      "evidence-backed"
+      "evidence-backed",
+      "project-manifest",
+      "state"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -24206,7 +24359,26 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000030"
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000028",
+      "EVID-000029",
+      "EVID-000030",
+      "EVID-000032",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000043",
+      "EVID-000055",
+      "EVID-000056",
+      "EVID-000059",
+      "EVID-000060",
+      "EVID-000096",
+      "EVID-000098",
+      "EVID-000099",
+      "EVID-000100",
+      "EVID-000101"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -24245,11 +24417,11 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "control-state",
-      "task-state",
-      "optimistic-concurrency",
       "audit",
-      "evidence-backed"
+      "control-state",
+      "evidence-backed",
+      "optimistic-concurrency",
+      "task-state"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -24662,7 +24834,21 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000031"
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000009",
+      "EVID-000010",
+      "EVID-000014",
+      "EVID-000015",
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000028",
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000032",
+      "EVID-000038"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -24704,11 +24890,11 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "traceability",
-      "requirements",
-      "transactions",
       "bidirectional",
-      "evidence-backed"
+      "evidence-backed",
+      "requirements",
+      "traceability",
+      "transactions"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -25145,7 +25331,20 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000035"
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000028",
+      "EVID-000030",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000038",
+      "EVID-000039",
+      "EVID-000040",
+      "EVID-000041",
+      "EVID-000042"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -25180,10 +25379,10 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-intake",
-      "project-compiler",
       "deterministic",
-      "non-destructive"
+      "non-destructive",
+      "project-compiler",
+      "project-intake"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -25522,7 +25721,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_intake_models.py tests/test_project_discovery.py tests/test_project_compiler.py tests/test_project_bootstrap.py tests/test_intake_persistence.py tests/test_intake_cli.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "src/project_pipeline/intake/profiles.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -25532,13 +25731,17 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000036"
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000039",
+      "EVID-000041",
+      "EVID-000042"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -25570,13 +25773,14 @@
       "schemas/project_profile_detection.schema.json",
       "fixtures/intake/polyglot_application"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-intake",
-      "project-compiler",
       "deterministic",
-      "non-destructive"
+      "implemented",
+      "non-destructive",
+      "project-compiler",
+      "project-intake"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -25789,7 +25993,23 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000036"
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000028",
+      "EVID-000030",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000038",
+      "EVID-000039",
+      "EVID-000040",
+      "EVID-000041",
+      "EVID-000042",
+      "EVID-000089",
+      "EVID-000093",
+      "EVID-000094"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -25827,10 +26047,10 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-intake",
-      "project-compiler",
       "deterministic",
-      "non-destructive"
+      "non-destructive",
+      "project-compiler",
+      "project-intake"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -26075,7 +26295,24 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000038"
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000022",
+      "EVID-000027",
+      "EVID-000029",
+      "EVID-000030",
+      "EVID-000031",
+      "EVID-000032",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000038",
+      "EVID-000039",
+      "EVID-000040",
+      "EVID-000041",
+      "EVID-000042"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -26114,10 +26351,10 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-intake",
-      "project-compiler",
       "deterministic",
-      "non-destructive"
+      "non-destructive",
+      "project-compiler",
+      "project-intake"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -26206,10 +26443,33 @@
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000016",
+      "EVID-000018",
+      "EVID-000019",
+      "EVID-000020",
+      "EVID-000022",
+      "EVID-000026",
+      "EVID-000027",
+      "EVID-000029",
+      "EVID-000035",
+      "EVID-000036",
+      "EVID-000037",
+      "EVID-000038",
       "EVID-000039",
       "EVID-000040",
       "EVID-000041",
-      "EVID-000042"
+      "EVID-000042",
+      "EVID-000089",
+      "EVID-000093",
+      "EVID-000094",
+      "EVID-000108",
+      "EVID-000112",
+      "EVID-000113",
+      "EVID-000115",
+      "EVID-000116",
+      "EVID-000118",
+      "EVID-000121",
+      "EVID-000122"
     ],
     "definition_of_done": [
       "Implementation for the bounded intake objective is complete.",
@@ -26260,10 +26520,10 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "project-intake",
-      "project-compiler",
       "deterministic",
-      "non-destructive"
+      "non-destructive",
+      "project-compiler",
+      "project-intake"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -29526,11 +29786,11 @@
       "src/project_pipeline/control/graph.py",
       "src/project_pipeline/domain/control.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "control-kernel",
       "build-sequencer",
+      "control-kernel",
       "deterministic",
       "project-control"
     ],
@@ -29969,7 +30229,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_control_domain.py tests/test_build_sequencer.py tests/test_control_kernel.py tests/test_control_persistence.py tests/test_control_cli.py tests/test_control_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/control/kernel.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -29979,7 +30239,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -30017,12 +30277,13 @@
       "src/project_pipeline/control/kernel.py",
       "src/project_pipeline/domain/control.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "control-kernel",
       "build-sequencer",
+      "control-kernel",
       "deterministic",
+      "implemented",
       "project-control"
     ],
     "last_observed_remote_state": {
@@ -30274,11 +30535,11 @@
       "docs/control/project_control_kernel.md",
       "runbooks/control_reconciliation.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "control-kernel",
       "build-sequencer",
+      "control-kernel",
       "deterministic",
       "project-control"
     ],
@@ -30799,7 +31060,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_scheduler_domain.py tests/test_scheduler_conflicts.py tests/test_scheduler_engine.py tests/test_scheduler_persistence.py tests/test_scheduler_backpressure.py tests/test_scheduler_cli.py tests/test_scheduler_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/scheduler/resources.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -30809,14 +31070,18 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
       "EVID-000061",
-      "EVID-000062"
+      "EVID-000062",
+      "EVID-000096",
+      "EVID-000097",
+      "EVID-000100",
+      "EVID-000101"
     ],
     "definition_of_done": [
       "The bounded scheduler/resource objective is implemented.",
@@ -30844,13 +31109,14 @@
       "src/project_pipeline/scheduler/resources.py",
       "src/project_pipeline/domain/scheduler.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
+      "deterministic",
       "dynamic-scheduler",
-      "resource-governance",
+      "implemented",
       "parallel-execution",
-      "deterministic"
+      "resource-governance"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -30918,7 +31184,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_scheduler_domain.py tests/test_scheduler_conflicts.py tests/test_scheduler_engine.py tests/test_scheduler_persistence.py tests/test_scheduler_backpressure.py tests/test_scheduler_cli.py tests/test_scheduler_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/scheduler/persistence.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -30928,13 +31194,18 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000062"
+      "EVID-000062",
+      "EVID-000065",
+      "EVID-000096",
+      "EVID-000097",
+      "EVID-000100",
+      "EVID-000101"
     ],
     "definition_of_done": [
       "The bounded scheduler/resource objective is implemented.",
@@ -30959,13 +31230,14 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/scheduler/persistence.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
+      "deterministic",
       "dynamic-scheduler",
-      "resource-governance",
+      "implemented",
       "parallel-execution",
-      "deterministic"
+      "resource-governance"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -37580,7 +37852,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/domain/context.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -37590,13 +37862,15 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
       "EVID-000089",
+      "EVID-000090",
+      "EVID-000092",
       "EVID-000093",
       "EVID-000094"
     ],
@@ -37624,11 +37898,12 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/domain/context.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
+      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -37955,7 +38230,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/context_engine/firewall.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -37965,12 +38240,13 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000088",
       "EVID-000089",
       "EVID-000091",
       "EVID-000093",
@@ -38003,11 +38279,12 @@
       "src/project_pipeline/context_engine/firewall.py",
       "src/project_pipeline/context_engine/trust.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
+      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -38090,7 +38367,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/context_engine/compiler.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -38100,7 +38377,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -38138,11 +38415,12 @@
       "src/project_pipeline/context_engine/compiler.py",
       "config/context_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
+      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -38262,7 +38540,7 @@
       "src/project_pipeline/context_engine/compiler.py",
       "src/project_pipeline/context_engine/service.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
@@ -38604,7 +38882,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/cli.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -38614,12 +38892,16 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000088",
+      "EVID-000089",
+      "EVID-000090",
+      "EVID-000091",
       "EVID-000092",
       "EVID-000093",
       "EVID-000094"
@@ -38656,11 +38938,12 @@
       "docs/architecture/context_and_delegation.md",
       "runbooks/context_pack_recovery.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
+      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -39091,11 +39374,11 @@
       "src/project_pipeline/orchestration/service.py",
       "src/project_pipeline/orchestration/recovery.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "orchestration",
       "durability",
+      "orchestration",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -39170,7 +39453,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/orchestration/runtime.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -39180,12 +39463,14 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000029",
+      "EVID-000030",
       "EVID-000095",
       "EVID-000096",
       "EVID-000097",
@@ -39222,11 +39507,12 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/orchestration/runtime.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "orchestration",
       "durability",
+      "implemented",
+      "orchestration",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -39430,7 +39716,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/orchestration/runtime.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -39440,19 +39726,22 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000062",
       "EVID-000095",
       "EVID-000096",
       "EVID-000097",
       "EVID-000098",
       "EVID-000099",
       "EVID-000100",
-      "EVID-000101"
+      "EVID-000101",
+      "EVID-000129",
+      "EVID-000130"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -39484,11 +39773,12 @@
       "src/project_pipeline/orchestration/runtime.py",
       "src/project_pipeline/orchestration/recovery.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "orchestration",
       "durability",
+      "implemented",
+      "orchestration",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -40054,11 +40344,11 @@
       "tests/test_orchestration_recovery.py",
       "tests/test_orchestration_adapters.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "orchestration",
       "durability",
+      "orchestration",
       "pass-13"
     ],
     "last_observed_remote_state": {
@@ -41069,6 +41359,8 @@
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000061",
+      "EVID-000065",
       "EVID-000102",
       "EVID-000103",
       "EVID-000104",
@@ -41750,7 +42042,14 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000108"
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000108",
+      "EVID-000112",
+      "EVID-000113",
+      "EVID-000116",
+      "EVID-000121",
+      "EVID-000122"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -41877,6 +42176,8 @@
     "completion_evidence": [
       "EVID-000108",
       "EVID-000110",
+      "EVID-000112",
+      "EVID-000113",
       "EVID-000176"
     ],
     "definition_of_done": [
@@ -42018,7 +42319,9 @@
     "blockers": [],
     "completion_evidence": [
       "EVID-000108",
-      "EVID-000111"
+      "EVID-000111",
+      "EVID-000112",
+      "EVID-000113"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -44992,7 +45295,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_security_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/security/supply_chain.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -45002,15 +45305,18 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000123",
       "EVID-000124",
       "EVID-000127",
-      "EVID-000128"
+      "EVID-000128",
+      "EVID-000163",
+      "EVID-000164"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -45041,11 +45347,12 @@
       "src/project_pipeline/security/supply_chain.py",
       "provenance/license_policy.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "security",
       "identity",
+      "implemented",
+      "security",
       "supply-chain"
     ],
     "last_observed_remote_state": {
@@ -45601,7 +45908,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/failover.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -45611,15 +45918,20 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000096",
+      "EVID-000097",
+      "EVID-000100",
+      "EVID-000101",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
+      "EVID-000132",
       "EVID-000133",
       "EVID-000134"
     ],
@@ -45652,11 +45964,12 @@
       "runbooks/control_machine_failover.md",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -45728,7 +46041,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/local_models.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -45738,17 +46051,22 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000069",
+      "EVID-000070",
+      "EVID-000072",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
+      "EVID-000132",
       "EVID-000133",
-      "EVID-000134"
+      "EVID-000134",
+      "EVID-000164"
     ],
     "definition_of_done": [
       "Implementation is present and behaviorally verified.",
@@ -45779,11 +46097,12 @@
       "src/project_pipeline/upstream_integrations/resilience.py",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -45857,7 +46176,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/backup.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -45867,7 +46186,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -45908,11 +46227,12 @@
       "runbooks/backup_restore_verification.md",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46111,7 +46431,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/aws.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46121,7 +46441,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -46132,7 +46452,8 @@
       "EVID-000131",
       "EVID-000132",
       "EVID-000133",
-      "EVID-000134"
+      "EVID-000134",
+      "EVID-000164"
     ],
     "definition_of_done": [
       "Implementation is present and behaviorally verified.",
@@ -46166,11 +46487,12 @@
       "infrastructure/aws/terraform/variables.tf",
       "infrastructure/aws/README.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46250,7 +46572,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "provenance/reviews/resilience_local_runtime_backup_review.md",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46260,12 +46582,20 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000069",
+      "EVID-000070",
+      "EVID-000072",
+      "EVID-000115",
+      "EVID-000116",
+      "EVID-000118",
+      "EVID-000121",
+      "EVID-000122",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
@@ -46301,11 +46631,12 @@
       "provenance/upstream_usage.jsonl",
       "provenance/upstream_registry.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46383,7 +46714,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/persistence.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46393,12 +46724,17 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000115",
+      "EVID-000116",
+      "EVID-000118",
+      "EVID-000121",
+      "EVID-000122",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
@@ -46436,11 +46772,12 @@
       "src/project_pipeline/cli.py",
       "src/project_pipeline/resilience/validation.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "resilience",
-      "recovery"
+      "implemented",
+      "recovery",
+      "resilience"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46517,7 +46854,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/portfolio.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46527,7 +46864,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -46562,11 +46899,12 @@
       "src/project_pipeline/lifecycle/repositories.py",
       "src/project_pipeline/domain/lifecycle.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "implemented",
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46633,7 +46971,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/environments.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46643,7 +46981,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -46678,11 +47016,12 @@
       "config/platform_lifecycle_policy.json",
       "src/project_pipeline/domain/lifecycle.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "implemented",
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46792,11 +47131,11 @@
       "adr/ADR-0027_keep_project_native_locks_canonical_with_optional_mise_and_devcontainer_profiles.md",
       "src/project_pipeline/domain/lifecycle.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46863,7 +47202,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/retention.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -46873,7 +47212,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -46908,11 +47247,12 @@
       "runbooks/project_closure_and_archive.md",
       "config/platform_lifecycle_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "implemented",
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -47022,11 +47362,11 @@
       "runbooks/platform_upgrade_qualification.md",
       "config/platform_lifecycle_policy.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -47142,11 +47482,11 @@
       "src/project_pipeline/lifecycle/validation.py",
       "database/migrations/sqlite/PPDB-0018_advanced_platform_lifecycle.up.sql"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "platform-lifecycle",
-      "pass-22"
+      "pass-22",
+      "platform-lifecycle"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -47834,7 +48174,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass24_release_hardening.py",
           "method": "automated_behavior_validation",
           "path": "evidence/pass24_focused_suite.txt",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -47844,7 +48184,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "provenance/pass_24_upstream_hardening_gate.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -47880,7 +48220,7 @@
       "release/hardening_report_r24.json",
       "evidence/verification/pass24_performance.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "pass-24",
@@ -48194,7 +48534,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass24_release_hardening.py",
           "method": "automated_behavior_validation",
           "path": "evidence/pass24_focused_suite.txt",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -48204,7 +48544,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "provenance/pass_24_upstream_hardening_gate.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -48246,7 +48586,7 @@
       "docs/architecture/FINAL_ARCHITECTURE.md",
       "runbooks/release_upgrade_and_rollback.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "pass-24",

@@ -43,12 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "domain-sched",
-    "cluster-resources"
+    "cluster-resources",
+    "domain-sched"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -105,6 +105,6 @@
     "SRC-017:L000360-L000438"
   ],
   "state": "BACKLOG",
-  "title": "Resources \u2014 Scheduling and Parallel Execution",
+  "title": "Resources — Scheduling and Parallel Execution",
   "upstream_dependencies": []
 }
