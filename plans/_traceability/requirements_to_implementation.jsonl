@@ -150,18 +150,18 @@
 {"implementation_paths": ["config/runtime/base.json", "config/runtime/profiles/local.json", "docs/development/setup.md", "runbooks/create_release_archive.md", "runbooks/release_upgrade_and_rollback.md", "scripts/bootstrap_dev.ps1", "scripts/bootstrap_dev.py", "scripts/create_project_archive.py", "scripts/windows/rollback.ps1", "scripts/windows/upgrade.ps1", "src/project_pipeline/archive.py", "src/project_pipeline/configuration", "src/project_pipeline/release_hardening"], "requirement_id": "REQ-INFRA-0002"}
 {"implementation_paths": [".env.example", ".gitignore", "SECURITY.md", "config/runtime/base.json", "src/project_pipeline/configuration/secrets.py", "docs/development/configuration.md"], "requirement_id": "REQ-INFRA-0003"}
 {"implementation_paths": ["config/resilience_policy.json", "runbooks/control_machine_failover.md"], "requirement_id": "REQ-INFRA-0004"}
-{"implementation_paths": [], "requirement_id": "REQ-INFRA-0005"}
+{"implementation_paths":["src/project_pipeline/infra/boundaries.py"],"requirement_id":"REQ-INFRA-0005"}
 {"implementation_paths": ["src/project_pipeline/agent_router/docker_mcp_gateway.py", "src/project_pipeline/upstream_data/docker_mcp_gateway_security_defaults.json"], "requirement_id": "REQ-INFRA-0006"}
 {"implementation_paths": ["config/dependency_policy.json", "config/runtime/profiles/development.json", "config/runtime/profiles/production.json", "config/runtime/profiles/recovery.json", "config/runtime/profiles/staging.json", "config/runtime/profiles/synthetic.json", "config/runtime/profiles/test.json", "docs/development/dependency_management.md", "pyproject.toml", "requirements/development.txt", "requirements/environment.lock.json", "requirements/runtime.txt", "src/project_pipeline/dependencies.py"], "requirement_id": "REQ-INFRA-0007"}
-{"implementation_paths": [], "requirement_id": "REQ-INFRA-0008"}
-{"implementation_paths": [], "requirement_id": "REQ-INFRA-0009"}
+{"implementation_paths":["src/project_pipeline/infra/boundaries.py"],"requirement_id":"REQ-INFRA-0008"}
+{"implementation_paths":["src/project_pipeline/infra/boundaries.py"],"requirement_id":"REQ-INFRA-0009"}
 {"implementation_paths": ["infrastructure/windows/ProjectPipelineService.xml", "infrastructure/windows/README.md", "scripts/run_command_center_service.py", "scripts/windows/install.ps1", "scripts/windows/uninstall.ps1", "scripts/windows/verify.ps1"], "requirement_id": "REQ-INFRA-0010"}
 {"implementation_paths": ["infrastructure/docker/Dockerfile", "infrastructure/docker/README.md", "infrastructure/docker/compose.yaml"], "requirement_id": "REQ-INFRA-0011"}
 {"implementation_paths": ["config/pass24_hardening_matrix.json", "config/resilience_policy.json", "docs/operations/INSTALLATION_AND_OPERATIONS.md", "infrastructure/aws/terraform/main.tf", "src/project_pipeline/resilience/aws.py"], "requirement_id": "REQ-INFRA-0012"}
 {"implementation_paths": ["infrastructure/aws/terraform/main.tf", "src/project_pipeline/resilience/failover.py"], "requirement_id": "REQ-INFRA-0013"}
-{"implementation_paths": [], "requirement_id": "REQ-INFRA-0014"}
+{"implementation_paths":["src/project_pipeline/infra/boundaries.py"],"requirement_id":"REQ-INFRA-0014"}
 {"implementation_paths": ["config/resilience_policy.json", "infrastructure/aws/README.md"], "requirement_id": "REQ-INFRA-0015"}
-{"implementation_paths": [], "requirement_id": "REQ-INFRA-0016"}
+{"implementation_paths":["src/project_pipeline/infra/boundaries.py"],"requirement_id":"REQ-INFRA-0016"}
 {"implementation_paths": ["config/resilience_policy.json", "docs/operations/resilience_and_recovery.md"], "requirement_id": "REQ-INFRA-0017"}
 {"implementation_paths": ["config/runtime/profiles/development.json", "config/runtime/profiles/production.json", "config/runtime/profiles/recovery.json", "config/runtime/profiles/staging.json", "config/runtime/profiles/synthetic.json", "config/runtime/profiles/test.json", "src/project_pipeline/configuration/models.py"], "requirement_id": "REQ-INFRA-0018"}
 {"implementation_paths": ["config/resilience_policy.json", "src/project_pipeline/resilience/backup.py"], "requirement_id": "REQ-INFRA-0019"}

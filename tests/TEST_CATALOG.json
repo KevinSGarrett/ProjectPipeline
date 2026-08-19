@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 612,
+  "test_count": 618,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3061,6 +3061,36 @@
       "callable": "test_empty_ops_store_does_not_rewrite_command_center_health",
       "path": "tests/test_ops_intelligence.py",
       "test_id": "TEST-OPS-CC-002"
+    },
+    {
+      "callable": "test_overlay_rejects_unauthenticated_and_public_exposure",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-OVERLAY-001"
+    },
+    {
+      "callable": "test_ephemeral_provision_is_idempotent_and_destroyed",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-EPH-001"
+    },
+    {
+      "callable": "test_emulation_cannot_substitute_for_live",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-EMU-001"
+    },
+    {
+      "callable": "test_ingress_authenticates_dedupes_and_never_grants_control",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-INGRESS-001"
+    },
+    {
+      "callable": "test_capacity_denies_missing_checks_and_live_spend",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-CAP-001"
+    },
+    {
+      "callable": "test_cli_status_is_local_and_machine_readable",
+      "path": "tests/test_infra_boundaries.py",
+      "test_id": "TEST-INFRA-CLI-001"
     }
   ]
 }

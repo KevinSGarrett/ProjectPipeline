@@ -43,7 +43,7 @@
   "expected_implementation_artifacts": [
     "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
@@ -111,6 +111,6 @@
     "SRC-012:L000817-L001036"
   ],
   "state": "BACKLOG",
-  "title": "Aws \u2014 Deployment and Infrastructure",
+  "title": "Aws — Deployment and Infrastructure",
   "upstream_dependencies": []
 }
