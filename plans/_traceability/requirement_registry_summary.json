@@ -32,9 +32,9 @@
     "P2": 5
   },
   "by_state": {
-    "IMPLEMENTED": 235,
+    "IMPLEMENTED": 238,
     "PARTIALLY_IMPLEMENTED": 113,
-    "PLANNED_ONLY": 4
+    "PLANNED_ONLY": 1
   },
   "by_type": {
     "architecture": 5,

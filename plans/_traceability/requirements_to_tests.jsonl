@@ -248,15 +248,15 @@
 {"requirement_id": "REQ-RES-0002", "test_ids": ["TEST-RES-FAILOVER-005"]}
 {"requirement_id": "REQ-RES-0003", "test_ids": ["TEST-RES-BACKUP-001", "TEST-RES-BACKUP-003", "TEST-RES-SIM-001"]}
 {"requirement_id": "REQ-RES-0004", "test_ids": ["TEST-RES-FAILOVER-004", "TEST-RES-SIM-001"]}
-{"requirement_id": "REQ-RES-0005", "test_ids": []}
+{"requirement_id":"REQ-RES-0005","test_ids":["TEST-RES-REMOVE-001"]}
 {"requirement_id": "REQ-RES-0006", "test_ids": ["TEST-ORCH-RECOVERY-001", "TEST-ORCH-RUNTIME-002", "TEST-SCHED-FENCING-001", "TEST-SCHED-LEASE-001"]}
 {"requirement_id": "REQ-RES-0007", "test_ids": ["TEST-RES-FAILOVER-001", "TEST-RES-FAILOVER-002"]}
 {"requirement_id": "REQ-RES-0008", "test_ids": ["TEST-RES-BACKUP-001", "TEST-RES-PERSIST-001"]}
 {"requirement_id": "REQ-RES-0009", "test_ids": ["TEST-ORCH-ADAPTER-004", "TEST-ORCH-RECOVERY-001", "TEST-ORCH-RUNTIME-002", "TEST-RES-FAILOVER-001", "TEST-RES-FAILOVER-002", "TEST-RES-SIM-001"]}
 {"requirement_id": "REQ-RES-0010", "test_ids": ["TEST-ORCH-RECOVERY-001", "TEST-ORCH-RUNTIME-004"]}
 {"requirement_id": "REQ-RES-0011", "test_ids": ["TEST-GITHUB-STEWARDSHIP-001", "TEST-GITHUB-STEWARDSHIP-002"]}
-{"requirement_id": "REQ-RES-0012", "test_ids": []}
-{"requirement_id": "REQ-RES-0013", "test_ids": []}
+{"requirement_id":"REQ-RES-0012","test_ids":["TEST-RES-WIPRESTORE-001"]}
+{"requirement_id":"REQ-RES-0013","test_ids":["TEST-RES-GPUWAIT-001"]}
 {"requirement_id": "REQ-RES-0014", "test_ids": ["TEST-RES-FAILOVER-002", "TEST-RES-SIM-001"]}
 {"requirement_id": "REQ-RES-0015", "test_ids": ["TEST-RES-AWS-001", "TEST-RES-FAILOVER-003", "TEST-RES-SIM-001"]}
 {"requirement_id": "REQ-RES-0016", "test_ids": ["TEST-JIRA-PERSIST-002", "TEST-JIRA-SYNC-004"]}

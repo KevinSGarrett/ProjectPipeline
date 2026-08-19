@@ -229,8 +229,12 @@ from project_pipeline.resilience import (
 )
 from project_pipeline.resilience.aws import aws_safety_plan
 from project_pipeline.resilience.backup import build_integrity_manifest
+from project_pipeline.resilience.gaps import evaluate_gpu_wait, simulate_provider_removal
 from project_pipeline.resilience.restore import RestoreIntentStore, RestoreTargetPolicy
-from project_pipeline.resilience.wip_preserve import preserve_uncommitted_work
+from project_pipeline.resilience.wip_preserve import (
+    preserve_uncommitted_work,
+    restore_uncommitted_work,
+)
 from project_pipeline.runtime import run_bootstrap, run_foundation_smoke
 from project_pipeline.scheduler import (
     DynamicLaneScheduler,
@@ -1118,6 +1122,9 @@ def build_parser() -> argparse.ArgumentParser:
             "restore-reconcile",
             "aws-plan",
             "preserve-wip",
+            "restore-wip",
+            "provider-removal",
+            "gpu-wait",
         ),
     )
     resilience.add_argument("--root", type=_root, default=Path.cwd())
@@ -3143,6 +3150,36 @@ def _run_resilience_command(args: argparse.Namespace) -> tuple[dict[str, Any], i
             raise ConfigurationError("resilience preserve-wip --apply requires --approve")
         payload = preserve_uncommitted_work(args.root, destination, apply=bool(args.apply))
         return {"wip_preserve": payload}, 0
+    if args.action == "restore-wip":
+        bundle = Path(_require_argument(args, "source"))
+        destination = Path(_require_argument(args, "output"))
+        if args.apply and not args.approve:
+            raise ConfigurationError("resilience restore-wip --apply requires --approve")
+        payload = restore_uncommitted_work(bundle, destination, apply=bool(args.apply))
+        return {"wip_restore": payload}, 0
+    if args.action == "provider-removal":
+        payload = simulate_provider_removal(
+            provider_id="cloud-a",
+            required_capabilities=tuple(args.capability or ["reasoning"]),
+            providers=(
+                {"provider_id": "cloud-a", "available": False, "capabilities": ["reasoning"]},
+                {
+                    "provider_id": "local",
+                    "available": True,
+                    "capabilities": ["reasoning"],
+                    "cost_score": 0.0,
+                },
+            ),
+        )
+        return {"provider_removal": payload.model_dump(mode="json")}, 0
+    if args.action == "gpu-wait":
+        decision = evaluate_gpu_wait(
+            [
+                {"task_id": "gpu-render", "gpu_required": True},
+                {"task_id": "cpu-control", "gpu_required": False},
+            ]
+        )
+        return {"gpu_wait": decision.model_dump(mode="json")}, 0
     if args.action == "status":
         database = _resilience_database(args)
         with ResilienceStore(database, args.root) as store:

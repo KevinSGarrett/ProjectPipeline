@@ -248,15 +248,15 @@
 {"implementation_paths": ["config/recovery_runbooks.json", "runbooks/external_precondition_recovery.md", "src/project_pipeline/domain/resilience.py", "src/project_pipeline/resilience/failover.py"], "requirement_id": "REQ-RES-0002"}
 {"implementation_paths": ["config/resilience_policy.json", "runbooks/backup_restore_verification.md", "src/project_pipeline/resilience/backup.py"], "requirement_id": "REQ-RES-0003"}
 {"implementation_paths": ["src/project_pipeline/resilience/failover.py", "src/project_pipeline/resilience/local_models.py"], "requirement_id": "REQ-RES-0004"}
-{"implementation_paths": [], "requirement_id": "REQ-RES-0005"}
+{"implementation_paths":["src/project_pipeline/resilience/gaps.py"],"requirement_id":"REQ-RES-0005"}
 {"implementation_paths": ["src/project_pipeline/orchestration/persistence.py", "src/project_pipeline/orchestration/runtime.py", "src/project_pipeline/scheduler/persistence.py", "src/project_pipeline/scheduler/resources.py"], "requirement_id": "REQ-RES-0006"}
 {"implementation_paths": ["config/resilience_policy.json", "runbooks/control_machine_failover.md"], "requirement_id": "REQ-RES-0007"}
 {"implementation_paths": ["config/resilience_policy.json", "src/project_pipeline/resilience/backup.py"], "requirement_id": "REQ-RES-0008"}
 {"implementation_paths": ["runbooks/control_machine_failover.md", "src/project_pipeline/orchestration/recovery.py", "src/project_pipeline/orchestration/runtime.py", "src/project_pipeline/resilience/failover.py"], "requirement_id": "REQ-RES-0009"}
 {"implementation_paths": ["src/project_pipeline/domain/orchestration.py", "src/project_pipeline/orchestration/persistence.py", "src/project_pipeline/orchestration/runtime.py"], "requirement_id": "REQ-RES-0010"}
 {"implementation_paths": ["src/project_pipeline/github_steward/local_git.py", "src/project_pipeline/github_steward/service.py"], "requirement_id": "REQ-RES-0011"}
-{"implementation_paths": [], "requirement_id": "REQ-RES-0012"}
-{"implementation_paths": [], "requirement_id": "REQ-RES-0013"}
+{"implementation_paths":["src/project_pipeline/resilience/wip_preserve.py"],"requirement_id":"REQ-RES-0012"}
+{"implementation_paths":["src/project_pipeline/resilience/gaps.py"],"requirement_id":"REQ-RES-0013"}
 {"implementation_paths": ["runbooks/control_machine_failover.md", "src/project_pipeline/resilience/failover.py"], "requirement_id": "REQ-RES-0014"}
 {"implementation_paths": ["config/resilience_policy.json", "src/project_pipeline/resilience/aws.py", "src/project_pipeline/resilience/failover.py"], "requirement_id": "REQ-RES-0015"}
 {"implementation_paths": ["database/migrations/sqlite/PPDB-0004_jira_steward_sync.up.sql", "src/project_pipeline/jira_steward/persistence.py", "src/project_pipeline/jira_steward/service.py"], "requirement_id": "REQ-RES-0016"}

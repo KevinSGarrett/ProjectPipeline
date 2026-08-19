@@ -16414,10 +16414,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "RES",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000204"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/resilience/gaps.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000109"
@@ -16449,7 +16453,9 @@
       "removal-simulation",
       "res"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-RES-REMOVE-001"
+    ],
     "title": "Provider removal simulation",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -16857,10 +16863,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "RES",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000205"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/resilience/wip_preserve.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000104",
@@ -16893,7 +16903,9 @@
       "res",
       "uncommitted-work"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-RES-WIPRESTORE-001"
+    ],
     "title": "Uncommitted work preservation",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -16905,10 +16917,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "RES",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000206"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/resilience/gaps.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000107"
@@ -16940,7 +16956,9 @@
       "machine-failure",
       "res"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-RES-GPUWAIT-001"
+    ],
     "title": "GPU capability wait state",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."

@@ -134,3 +134,60 @@ def preserve_uncommitted_work(
         }
     )
     return payload
+
+
+def restore_uncommitted_work(
+    bundle: Path,
+    destination: Path,
+    *,
+    apply: bool = False,
+) -> dict[str, Any]:
+    """Restore a preservation bundle into an isolated destination. Never deletes secrets."""
+
+    bundle = bundle.expanduser().resolve(strict=False)
+    dest = destination.expanduser().resolve(strict=False)
+    manifest_path = bundle / "manifest.json"
+    if not manifest_path.is_file():
+        raise WipPreserveError("WIP bundle manifest is missing")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    entries = list(manifest.get("entries") or [])
+    payload: dict[str, Any] = {
+        "schema_version": "1.0.0",
+        "bundle": str(bundle),
+        "destination": str(dest),
+        "head_sha": manifest.get("head_sha"),
+        "file_count": len(entries),
+        "applied": False,
+        "restored": False,
+        "verified": False,
+        "user_action_required": False,
+    }
+    if not apply:
+        payload["reason"] = "dry-run; pass apply to write restored files"
+        return payload
+    dest.mkdir(parents=True, exist_ok=True)
+    restored = []
+    for entry in entries:
+        relative = str(entry["path"]).replace("\\", "/")
+        if _is_secret_path(relative) or has_traversal(relative):
+            raise WipPreserveError(f"WIP restore refused secret or traversal path: {relative}")
+        source = bundle / "files" / relative
+        target = dest / relative
+        if not source.is_file():
+            raise WipPreserveError(f"WIP bundle file missing: {relative}")
+        digest = sha256_file(source)
+        if digest != entry.get("sha256"):
+            raise WipPreserveError(f"WIP bundle digest mismatch: {relative}")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, target)
+        restored.append({"path": relative, "sha256": digest})
+    payload.update(
+        {
+            "applied": True,
+            "restored": True,
+            "verified": True,
+            "restored_paths": [item["path"] for item in restored],
+            "reason": "WIP bundle restored with digest proof",
+        }
+    )
+    return payload
