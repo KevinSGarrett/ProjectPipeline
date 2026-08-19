@@ -38,6 +38,25 @@ def _is_pinned(path: Path, extra_pinned: tuple[str, ...]) -> bool:
     return any(marker.casefold() in text for marker in markers if marker.strip())
 
 
+def _classify_jira_refresh(root: Path, *, apply: bool) -> dict[str, Any]:
+    board = root / "jira" / "BOARD_MANIFEST.json"
+    issues = root / "jira" / "indexes" / "issues.jsonl"
+    present = board.is_file() and issues.is_file()
+    return {
+        "planned": True,
+        "applied": False,
+        "local_mirror_present": present,
+        "board_manifest": str(board) if board.is_file() else None,
+        "next_action": "jira.steward.snapshot_readback" if apply else "none",
+        "reason": (
+            "live Jira write remains steward-owned; local mirror is classified for readback"
+            if present
+            else "local Jira mirror is missing"
+        ),
+        "user_action_required": False,
+    }
+
+
 def _integrated_verification(root: Path) -> dict[str, Any]:
     required = (
         root / "PROJECT_MANIFEST.json",
@@ -138,11 +157,7 @@ def plan_post_merge_refresh(
         "workspaces": workspaces,
         "closed_worktrees": closed,
         "integrated_verification": _integrated_verification(root),
-        "jira_refresh": {
-            "planned": True,
-            "applied": False,
-            "reason": "live Jira refresh remains a separate steward snapshot/apply",
-        },
+        "jira_refresh": _classify_jira_refresh(root, apply=apply),
         "user_action_required": False,
     }
     if identity_errors:

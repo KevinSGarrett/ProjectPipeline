@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -19,6 +20,20 @@ _HUMAN_MARKERS = (
     "PM review proposed",
     "nothing else to implement",
 )
+
+
+def _rev_parse(root: Path, argument: str) -> str | None:
+    completed = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", argument],
+        check=False,
+        capture_output=True,
+        text=True,
+        shell=False,
+    )
+    value = (completed.stdout or "").strip().lower()
+    if completed.returncode != 0 or len(value) != 40:
+        return None
+    return value
 
 
 def _session_handoff_fields(root: Path) -> dict[str, Any]:
@@ -91,6 +106,32 @@ def _has_control_characters(value: Any) -> bool:
     return False
 
 
+def evaluate_continuation_freshness(
+    package: dict[str, Any],
+    *,
+    origin_sha: str | None,
+    origin_tree: str | None,
+) -> dict[str, Any]:
+    """Reject a packet whose subject identity is no longer the integrated head."""
+
+    if origin_sha is None or origin_tree is None:
+        stale = False
+    else:
+        stale = (
+            str(package.get("source_sha") or "").lower() != origin_sha.lower()
+            or str(package.get("source_tree") or "").lower() != origin_tree.lower()
+        )
+    dirty = bool(package.get("dirty"))
+    return {
+        "fresh": not stale and not dirty,
+        "stale_after_merge": stale,
+        "origin_sha": origin_sha,
+        "origin_tree": origin_tree,
+        "user_action_required": False,
+        "next_action": "rebuild_continuation_package" if stale or dirty else "none",
+    }
+
+
 def build_continuation_package(root: Path) -> dict[str, Any]:
     """Record current repository identity, completion reasons, and next autonomous work."""
 
@@ -127,6 +168,11 @@ def build_continuation_package(root: Path) -> dict[str, Any]:
         "depends_on_chat_history": False,
         "final_release_candidate": False,
     }
+    origin_sha = _rev_parse(root, "origin/main") or source_sha
+    origin_tree = _rev_parse(root, "origin/main^{tree}") or source_tree
+    package["freshness"] = evaluate_continuation_freshness(
+        package, origin_sha=origin_sha, origin_tree=origin_tree
+    )
     errors = validate_continuation_package(package)
     if errors:
         raise ValueError("; ".join(errors))
@@ -151,6 +197,9 @@ def validate_continuation_package(package: dict[str, Any]) -> list[str]:
     for key in ("artifacts", "tests", "coverage", "decisions", "blockers", "next_autonomous_work"):
         if key not in package:
             errors.append(f"continuation package missing session handoff field: {key}")
+    freshness = package.get("freshness")
+    if isinstance(freshness, dict) and freshness.get("stale_after_merge"):
+        errors.append("continuation package is stale after a later integrated merge")
     blob = serialized.casefold()
     for marker in _HUMAN_MARKERS:
         if marker.casefold() in blob:
