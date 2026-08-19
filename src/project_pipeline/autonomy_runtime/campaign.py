@@ -1204,9 +1204,7 @@ class CampaignController:
         bound = {
             "process_id": owner_pid,
             "executable": None if binding is None else binding.get("executable_identity"),
-            "started_at_utc": None
-            if binding is None
-            else binding.get("process_started_at_utc"),
+            "started_at_utc": None if binding is None else binding.get("process_started_at_utc"),
         }
         return identities_match(bound, live)
 
