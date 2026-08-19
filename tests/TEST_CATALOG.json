@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 618,
+  "test_count": 624,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3091,6 +3091,36 @@
       "callable": "test_cli_status_is_local_and_machine_readable",
       "path": "tests/test_infra_boundaries.py",
       "test_id": "TEST-INFRA-CLI-001"
+    },
+    {
+      "callable": "test_portfolio_assigns_roles_from_machine_resources",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-PORTFOLIO-001"
+    },
+    {
+      "callable": "test_local_context_bounds_and_fails_closed_on_stale_required",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-CONTEXT-001"
+    },
+    {
+      "callable": "test_manager_recommendations_require_durable_citations",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-PM-001"
+    },
+    {
+      "callable": "test_architecture_authority_rejects_untrusted_or_stale_changes",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-ARCH-001"
+    },
+    {
+      "callable": "test_store_idempotent_put_and_conflicting_replay",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-STORE-001"
+    },
+    {
+      "callable": "test_cli_status_is_machine_readable_and_advisory",
+      "path": "tests/test_director_intelligence.py",
+      "test_id": "TEST-DIR-CLI-001"
     }
   ]
 }

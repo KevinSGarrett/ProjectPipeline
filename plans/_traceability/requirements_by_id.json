@@ -803,10 +803,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "AGENT",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000200"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/intelligence/director.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000013",
       "PP-STORY-000081"
@@ -843,7 +847,9 @@
       "local-models",
       "model-portfolio"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-DIR-PORTFOLIO-001"
+    ],
     "title": "Local model capability portfolio",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -1168,10 +1174,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "AGENT",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000201"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/intelligence/director.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000013",
       "PP-STORY-000081"
@@ -1205,7 +1215,9 @@
       "context-limit",
       "local-models"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-DIR-CONTEXT-001"
+    ],
     "title": "Constrained local context",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -6492,10 +6504,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "CTRL",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000202"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/intelligence/director.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000007",
       "PP-STORY-000068"
@@ -6527,7 +6543,9 @@
       "intelligence",
       "project-manager"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-DIR-PM-001"
+    ],
     "title": "Project manager intelligence",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -6539,10 +6557,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "CTRL",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000203"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/intelligence/director.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000007",
       "PP-STORY-000068"
@@ -6574,7 +6596,9 @@
       "ctrl",
       "intelligence"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-DIR-ARCH-001"
+    ],
     "title": "Architectural authority",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."

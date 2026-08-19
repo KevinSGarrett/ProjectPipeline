@@ -132,6 +132,7 @@ files = [
   "src/project_pipeline/dependencies.py",
   "src/project_pipeline/domain",
   "src/project_pipeline/infra",
+  "src/project_pipeline/intelligence",
   "src/project_pipeline/intake",
   "src/project_pipeline/jira_steward",
   "src/project_pipeline/persistence",
