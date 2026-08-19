@@ -169,7 +169,15 @@ def test_metadata_only_merge_refresh_converges_without_self_sha_commit(tmp_path:
     assert ledger[0]["accepted"] is True
     applied = apply_evidence_bound_requirement_states(root, current_sha=sha, current_tree=tree)
     assert applied[0]["next_state"] == "IMPLEMENTED"
-    _git(root, "add", "plans/_traceability/requirements.jsonl")
+    (root / "FILE_MANIFEST.sha256").write_text("reconcile\n", encoding="utf-8")
+    (root / "PROJECT_MANIFEST.json").write_text('{"file_count": 1}\n', encoding="utf-8")
+    _git(
+        root,
+        "add",
+        "plans/_traceability/requirements.jsonl",
+        "FILE_MANIFEST.sha256",
+        "PROJECT_MANIFEST.json",
+    )
     _git(root, "commit", "-m", "metadata-only reconcile")
     merged_sha = _git(root, "rev-parse", "HEAD")
     merged_tree = _git(root, "rev-parse", "HEAD^{tree}")
@@ -233,3 +241,53 @@ def test_metadata_only_merge_refresh_converges_without_self_sha_commit(tmp_path:
     assert reason is not None
     assert "acceptance-scope fingerprint" in reason or "no valid current-head observation" in reason
     assert requirement["requirement_id"] == "REQ-GOV-0006"
+
+
+def test_generate_and_evaluate_share_fingerprint_for_multi_evidence_requirement(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "repo"
+    root.mkdir()
+    requirement = _seed_repo(root)
+    requirement["evidence_ids"] = ["EVID-000001", "EVID-000002"]
+    write_jsonl(root / "plans/_traceability/requirements.jsonl", [requirement])
+    artifact = root / "evidence" / "receipt.txt"
+    second = {
+        "artifact_path": "evidence/receipt.txt",
+        "claim": "mod-2",
+        "criterion_ids": ["AC-2"],
+        "environment": "local_build_environment",
+        "evidence_id": "EVID-000002",
+        "method": "pytest",
+        "observed_at_utc": "2026-08-19T00:00:00+00:00",
+        "requirement_ids": ["REQ-GOV-0006"],
+        "result": "PASS",
+        "schema_version": "1.0.0",
+        "sha256": sha256_canonical_file(artifact),
+        "test_ids": ["TEST-MOD"],
+        "verification_status": "VERIFIED",
+    }
+    ledger = root / "evidence" / "EVIDENCE_LEDGER.jsonl"
+    ledger.write_text(
+        ledger.read_text(encoding="utf-8") + json.dumps(second) + "\n", encoding="utf-8"
+    )
+    sha = "a" * 40
+    tree = "b" * 40
+
+    def runner(test_ids, paths):
+        return {test_id: "PASS" for test_id in test_ids}
+
+    first = generate_observation(
+        root, "EVID-000001", runner=runner, current_sha=sha, current_tree=tree
+    )
+    second_obs = generate_observation(
+        root, "EVID-000002", runner=runner, current_sha=sha, current_tree=tree
+    )
+    expected = acceptance_scope_fingerprint(
+        root, read_jsonl(root / "plans/_traceability/requirements.jsonl")[0]
+    )
+    assert first.acceptance_scope_fingerprint == expected
+    assert second_obs.acceptance_scope_fingerprint == expected
+    rows = evaluate_requirement_reconciliation(root, current_sha=sha, current_tree=tree)
+    assert rows[0]["accepted"] is True
+    assert rows[0]["acceptance_scope_fingerprint"] == expected

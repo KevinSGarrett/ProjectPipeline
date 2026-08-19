@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 582,
+  "test_count": 583,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -1366,6 +1366,11 @@
       "callable": "test_metadata_only_merge_refresh_converges_without_self_sha_commit",
       "path": "tests/test_evidence_reconciliation_convergence.py",
       "test_id": "TEST-EVIDENCE-CONV-004"
+    },
+    {
+      "callable": "test_generate_and_evaluate_share_fingerprint_for_multi_evidence_requirement",
+      "path": "tests/test_evidence_reconciliation_convergence.py",
+      "test_id": "TEST-EVIDENCE-CONV-005"
     },
     {
       "callable": "test_windows_paths_and_lf_hashing",

@@ -210,7 +210,7 @@ def generate_observation(
         item = requirements.get(requirement_id)
         if item is None:
             continue
-        scopes.append(acceptance_scope_fingerprint(root, item, evidence_ids=[evidence_id]))
+        scopes.append(acceptance_scope_fingerprint(root, item))
         for relative in item.get("implementation_paths", []):
             path = root / str(relative)
             if path.is_file():
@@ -278,9 +278,7 @@ def refresh_post_merge_observations(
         )
         if requirement_id is None:
             continue
-        fingerprint = acceptance_scope_fingerprint(
-            root, by_id[requirement_id], evidence_ids=[evidence_id]
-        )
+        fingerprint = acceptance_scope_fingerprint(root, by_id[requirement_id])
         if fingerprint != inherited.acceptance_scope_fingerprint:
             continue
         prior_sha = previous_sha or inherited.integrated_sha
@@ -294,7 +292,11 @@ def refresh_post_merge_observations(
             acceptance_scope_unchanged=True,
         )
         tree_equivalent = inherited.integrated_tree == tree
-        if not proof.allowlisted and not tree_equivalent:
+        if tree_equivalent and not proof.allowlisted:
+            proof = proof.model_copy(
+                update={"allowlisted": True, "reason": "proven identical integrated tree"}
+            )
+        if not proof.allowlisted:
             continue
         refreshed.append(
             record_observation(
@@ -315,7 +317,7 @@ def refresh_post_merge_observations(
                 independent_verification_receipt=inherited.independent_verification_receipt,
                 branch_head_sha=inherited.integrated_sha,
                 merge_kind=merge_kind,
-                metadata_only_diff_proof=proof if proof.allowlisted else None,
+                metadata_only_diff_proof=proof,
                 now=now,
             )
         )

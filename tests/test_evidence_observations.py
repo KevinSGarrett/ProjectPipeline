@@ -116,6 +116,11 @@ def test_retention_keeps_current_and_drops_superseded(tmp_path: Path) -> None:
     assert removed == 1
     assert store.get(second.observation_id) is not None
     assert store.get(first.observation_id) is None
+    store.close()
+    reopened = EvidenceObservationStore.open(tmp_path)
+    assert reopened.get(second.observation_id) is not None
+    assert reopened.get(first.observation_id) is None
+    reopened.close()
 
 
 def test_evidence_cli_list_get_status(tmp_path: Path, capsys) -> None:

@@ -240,6 +240,10 @@ class EvidenceObservationStore:
                     "DELETE FROM evidence_observations WHERE observation_id = ?",
                     (row["observation_id"],),
                 )
+                self._db.execute(
+                    "DELETE FROM evidence_observation_journal WHERE observation_id = ?",
+                    (row["observation_id"],),
+                )
                 archive = self.archive_dir / f"{row['observation_id']}.json"
                 if archive.exists():
                     archive.unlink()

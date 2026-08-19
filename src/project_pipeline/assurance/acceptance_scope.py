@@ -10,7 +10,7 @@ from project_pipeline.domain.evidence_observation import (
     MetadataOnlyDiffProof,
     canonical_fingerprint,
 )
-from project_pipeline.io import read_jsonl, sha256_canonical_file
+from project_pipeline.io import sha256_canonical_file
 
 METADATA_PATH_PREFIXES = (
     "jira/",
@@ -25,6 +25,8 @@ METADATA_EXACT_PATHS = {
     "jira/indexes/issues.jsonl",
     "jira/indexes/issues_by_id.json",
     "jira/relationships/graph.json",
+    "FILE_MANIFEST.sha256",
+    "PROJECT_MANIFEST.json",
 }
 METADATA_REQUIREMENT_FIELDS = {"implementation_state"}
 
@@ -150,10 +152,7 @@ def _show_jsonl(root: Path, sha: str, relative: str) -> list[dict[str, Any]] | N
         shell=False,
     )
     if completed.returncode != 0:
-        path = root / relative
-        if not path.is_file():
-            return None
-        return list(read_jsonl(path))
+        return None
     rows: list[dict[str, Any]] = []
     for line in completed.stdout.splitlines():
         if line.strip():
