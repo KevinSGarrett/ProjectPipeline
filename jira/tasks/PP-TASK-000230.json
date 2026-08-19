@@ -23,17 +23,12 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000043",
-    "EVID-000046",
-    "EVID-000047",
-    "EVID-000048",
     "EVID-000049",
     "EVID-000050",
     "EVID-000051",
     "EVID-000052",
     "EVID-000053",
-    "EVID-000054",
-    "EVID-000075"
+    "EVID-000054"
   ],
   "definition_of_done": [
     "The bounded Repository Steward objective is implemented.",
@@ -90,7 +85,6 @@
   "issue_type": "TASK",
   "labels": [
     "deterministic",
-    "done",
     "dry-run-default",
     "git",
     "github",
@@ -98,11 +92,11 @@
     "repository-steward"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-19T22:28:01Z",
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
     "remote_id": "25177",
     "remote_key": "PP-208",
-    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-    "status_name": "Done"
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
   },
   "local_id": "PP-TASK-000230",
   "objective": "Expose machine-readable stewardship commands, generated schemas, self-validation, operator documentation, and evidence without claiming unavailable live GitHub verification.",
@@ -188,7 +182,7 @@
     "SRC-007:L001098-L001128",
     "SRC-007:L000822-L000888"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Repository and GitHub CLI, schemas, tests, and operations",
   "upstream_dependencies": [
     "https://github.com/github/github-mcp-server"

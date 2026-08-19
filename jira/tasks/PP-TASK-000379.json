@@ -1,4 +1,25 @@
 {
+  "schema_version": "1.0.0",
+  "blockers": [],
+  "completion_evidence": [],
+  "definition_of_done": [
+    "The complete source-derived autonomous operating loop is represented by enforceable requirements and Completion Gate facts.",
+    "Cursor operates only through the governed provider and bounded supervisor contracts.",
+    "A real fixture golden journey and staged unattended qualification are required before activation or completion.",
+    "Traceability, tests, documentation, security, rollback, and durable handoff state agree."
+  ],
+  "dependencies": [],
+  "evidence_required": [],
+  "exclusions": [
+    "No claim that Cursor authentication, Privacy Mode, cloud execution, Windows behavior, or unattended qualification has passed before durable evidence exists.",
+    "No lifecycle-only PRs, one-transition deliverables, direct secret exposure, direct external writes, or mock-only completion claims."
+  ],
+  "last_observed_remote_state": null,
+  "remote_jira_key": null,
+  "upstream_dependencies": [],
+  "observability_impact": "Persist Cursor run IDs, prompt and context digests, base/head SHAs, files, tests, cost, duration, outcomes, checkpoints, receipts, and readbacks without secret values.",
+  "rollback_recovery_consideration": "Disable provider:cursor-cli, preserve durable checkpoints and branches, restore the verified pre-change backup, and continue through another qualified provider without changing canonical project truth.",
+  "security_impact": "Keep Cursor quarantined until authentication, Privacy Mode, representative qualification, Windows verification, rollback, and external-write isolation are evidenced.",
   "acceptance_criteria": [
     {
       "criterion_id": "AC-PP-000379-01",
@@ -31,21 +52,7 @@
       }
     }
   ],
-  "blockers": [],
-  "completion_evidence": [],
-  "definition_of_done": [
-    "The complete source-derived autonomous operating loop is represented by enforceable requirements and Completion Gate facts.",
-    "Cursor operates only through the governed provider and bounded supervisor contracts.",
-    "A real fixture golden journey and staged unattended qualification are required before activation or completion.",
-    "Traceability, tests, documentation, security, rollback, and durable handoff state agree."
-  ],
-  "dependencies": [],
   "description": "Create the complete governed Cursor control package, restore the autonomous operating-loop outcome, and provide an evidence-honest activation and handoff boundary.",
-  "evidence_required": [],
-  "exclusions": [
-    "No claim that Cursor authentication, Privacy Mode, cloud execution, Windows behavior, or unattended qualification has passed before durable evidence exists.",
-    "No lifecycle-only PRs, one-transition deliverables, direct secret exposure, direct external writes, or mock-only completion claims."
-  ],
   "expected_file_locations": [
     ".cursor/rules/00-authority-and-product-goal.mdc",
     ".cursor/cli.json",
@@ -76,16 +83,8 @@
     "cursor-takeover",
     "product-model-repair"
   ],
-  "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-19T22:28:01Z",
-    "remote_id": "25362",
-    "remote_key": "PP-388",
-    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-    "status_name": "In Progress"
-  },
   "local_id": "PP-TASK-000379",
   "objective": "Install and verify the governed Cursor takeover and permanent autonomous product outcome.",
-  "observability_impact": "Persist Cursor run IDs, prompt and context digests, base/head SHAs, files, tests, cost, duration, outcomes, checkpoints, receipts, and readbacks without secret values.",
   "owner_required_capability": "systems_architecture_and_implementation",
   "parent": "PP-STORY-000138",
   "plan_references": [
@@ -115,7 +114,6 @@
       "type": "CHILD_OF"
     }
   ],
-  "remote_jira_key": "PP-388",
   "required_tests": [
     "TEST-CURSOR-TAKEOVER-001",
     "TEST-AGENT-ADAPTER-007",
@@ -127,8 +125,6 @@
     "REQ-CTRL-0015"
   ],
   "risk_classification": "CRITICAL",
-  "rollback_recovery_consideration": "Disable provider:cursor-cli, preserve durable checkpoints and branches, restore the verified pre-change backup, and continue through another qualified provider without changing canonical project truth.",
-  "schema_version": "1.0.0",
   "scope": [
     "Tracked Cursor rules and hooks",
     "Cursor provider adapter and registry",
@@ -138,12 +134,10 @@
     "Completion Gate question 16",
     "Runbook and takeover prompt"
   ],
-  "security_impact": "Keep Cursor quarantined until authentication, Privacy Mode, representative qualification, Windows verification, rollback, and external-write isolation are evidenced.",
   "source_references": [
     "SRC-014:L000001-L000087",
     "SRC-015:L000031-L000150"
   ],
   "state": "IN_PROGRESS",
-  "title": "Install governed Cursor takeover and autonomous runtime outcome",
-  "upstream_dependencies": []
+  "title": "Install governed Cursor takeover and autonomous runtime outcome"
 }

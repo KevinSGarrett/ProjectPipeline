@@ -684,22 +684,13 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000036",
-      "EVID-000040",
-      "EVID-000041",
-      "EVID-000042",
-      "EVID-000088",
       "EVID-000089",
-      "EVID-000090",
-      "EVID-000091",
-      "EVID-000092",
-      "EVID-000093",
       "EVID-000094"
     ],
     "definition_of_done": [
@@ -726,11 +717,10 @@
     "expected_implementation_artifacts": [
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "implemented",
       "plan-ctx-001"
     ],
     "last_observed_remote_state": {
@@ -980,34 +970,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [
-      "EVID-000004",
-      "EVID-000005",
-      "EVID-000006",
-      "EVID-000011",
-      "EVID-000027",
-      "EVID-000030",
-      "EVID-000043",
-      "EVID-000045",
-      "EVID-000046",
-      "EVID-000047",
-      "EVID-000048",
-      "EVID-000049",
-      "EVID-000051",
-      "EVID-000052",
-      "EVID-000053",
-      "EVID-000075",
-      "EVID-000169",
-      "EVID-000179",
-      "EVID-000180",
-      "EVID-000181",
-      "EVID-000182"
-    ],
+    "completion_evidence": [],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -1030,11 +998,10 @@
     "expected_implementation_artifacts": [
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "implemented",
       "plan-gov-001"
     ],
     "last_observed_remote_state": {
@@ -1565,34 +1532,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [
-      "EVID-000043",
-      "EVID-000049",
-      "EVID-000051",
-      "EVID-000052",
-      "EVID-000062",
-      "EVID-000096",
-      "EVID-000097",
-      "EVID-000100",
-      "EVID-000101",
-      "EVID-000115",
-      "EVID-000116",
-      "EVID-000118",
-      "EVID-000121",
-      "EVID-000122",
-      "EVID-000129",
-      "EVID-000130",
-      "EVID-000131",
-      "EVID-000132",
-      "EVID-000204",
-      "EVID-000205",
-      "EVID-000206"
-    ],
+    "completion_evidence": [],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -1615,11 +1560,10 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "implemented",
       "plan-res-001"
     ],
     "last_observed_remote_state": {
@@ -1873,42 +1817,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [
-      "EVID-000005",
-      "EVID-000006",
-      "EVID-000022",
-      "EVID-000024",
-      "EVID-000026",
-      "EVID-000075",
-      "EVID-000076",
-      "EVID-000089",
-      "EVID-000092",
-      "EVID-000093",
-      "EVID-000094",
-      "EVID-000096",
-      "EVID-000098",
-      "EVID-000100",
-      "EVID-000101",
-      "EVID-000136",
-      "EVID-000138",
-      "EVID-000147",
-      "EVID-000149",
-      "EVID-000150",
-      "EVID-000169",
-      "EVID-000187",
-      "EVID-000188",
-      "EVID-000189",
-      "EVID-000190",
-      "EVID-000191",
-      "EVID-000192",
-      "EVID-000193",
-      "EVID-000194"
-    ],
+    "completion_evidence": [],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -1931,11 +1845,10 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "implemented",
       "plan-ops-001"
     ],
     "last_observed_remote_state": {
@@ -2164,21 +2077,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000022",
-      "EVID-000027",
-      "EVID-000029",
-      "EVID-000035",
-      "EVID-000036",
-      "EVID-000037",
-      "EVID-000040",
-      "EVID-000041",
-      "EVID-000042",
       "EVID-000153",
       "EVID-000154"
     ],
@@ -2206,11 +2110,10 @@
     "expected_implementation_artifacts": [
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "implemented",
       "pass-22",
       "plan-life-001"
     ],
@@ -2311,46 +2214,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [
-      "EVID-000003",
-      "EVID-000005",
-      "EVID-000006",
-      "EVID-000016",
-      "EVID-000017",
-      "EVID-000018",
-      "EVID-000019",
-      "EVID-000020",
-      "EVID-000075",
-      "EVID-000076",
-      "EVID-000077",
-      "EVID-000078",
-      "EVID-000083",
-      "EVID-000084",
-      "EVID-000085",
-      "EVID-000086",
-      "EVID-000087",
-      "EVID-000095",
-      "EVID-000097",
-      "EVID-000100",
-      "EVID-000101",
-      "EVID-000107",
-      "EVID-000112",
-      "EVID-000113",
-      "EVID-000114",
-      "EVID-000116",
-      "EVID-000121",
-      "EVID-000122",
-      "EVID-000127",
-      "EVID-000128",
-      "EVID-000131",
-      "EVID-000137",
-      "EVID-000143"
-    ],
+    "completion_evidence": [],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -2373,11 +2242,10 @@
     "expected_implementation_artifacts": [
       "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
-      "implemented",
       "plan-upstream-001"
     ],
     "last_observed_remote_state": {
@@ -2630,13 +2498,7 @@
       "product-outcome",
       "vertical-slices-only"
     ],
-    "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
-      "remote_id": "25353",
-      "remote_key": "PP-379",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "In Progress"
-    },
+    "last_observed_remote_state": null,
     "local_id": "PP-EPIC-000036",
     "objective": "Autonomous Runtime Integration and Unattended Qualification",
     "observability_impact": "Expose durable loop, lane, incident, integration, budget, qualification, and Completion Gate state.",
@@ -2680,7 +2542,7 @@
         "type": "PARENT_OF"
       }
     ],
-    "remote_jira_key": "PP-379",
+    "remote_jira_key": null,
     "required_tests": [],
     "requirement_ids": [
       "REQ-PDEF-0011",
@@ -15370,13 +15232,7 @@
       "model-realignment",
       "vertical-slice"
     ],
-    "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
-      "remote_id": "25355",
-      "remote_key": "PP-381",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "In Progress"
-    },
+    "last_observed_remote_state": null,
     "local_id": "PP-STORY-000138",
     "objective": "Realign the complete source-to-control product model",
     "observability_impact": "Expose model drift and reconciliation debt explicitly.",
@@ -15404,7 +15260,7 @@
         "type": "PARENT_OF"
       }
     ],
-    "remote_jira_key": "PP-381",
+    "remote_jira_key": null,
     "required_tests": [],
     "requirement_ids": [
       "REQ-PDEF-0011"
@@ -18515,7 +18371,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "command_and_artifact_inspection",
           "path": "src/project_pipeline/",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -18525,27 +18381,15 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "registry_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000004",
       "EVID-000005",
       "EVID-000006",
-      "EVID-000007",
-      "EVID-000023",
-      "EVID-000027",
-      "EVID-000108",
-      "EVID-000112",
-      "EVID-000113",
-      "EVID-000123",
-      "EVID-000126",
-      "EVID-000127",
-      "EVID-000128",
-      "EVID-000163",
-      "EVID-000164"
+      "EVID-000007"
     ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
@@ -18576,12 +18420,11 @@
       "scripts/validate_repository.py",
       "tests/"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "executable",
-      "foundation",
-      "implemented"
+      "foundation"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -23432,7 +23275,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_configuration.py",
           "method": "automated_behavior_and_evidence_validation",
           "path": "tests/test_configuration.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -23442,21 +23285,14 @@
           "command": "PYTHONPATH=src python -m project_pipeline smoke --root .",
           "method": "automated_behavior_and_evidence_validation",
           "path": "evidence/repository_foundation_smoke.json",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000005",
-      "EVID-000006",
-      "EVID-000007",
-      "EVID-000008",
       "EVID-000022",
-      "EVID-000024",
-      "EVID-000027",
-      "EVID-000153",
-      "EVID-000164"
+      "EVID-000024"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -23492,12 +23328,11 @@
       "schemas/runtime_configuration.schema.json",
       "schemas/secret_reference.schema.json"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "configuration",
       "evidence-backed",
-      "implemented",
       "runtime",
       "secrets"
     ],
@@ -24096,7 +23931,7 @@
           "command": "PYTHONPATH=src python scripts/bootstrap_dev.py --root .",
           "method": "automated_behavior_and_evidence_validation",
           "path": "scripts/bootstrap_dev.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -24106,21 +23941,15 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_behavior_and_evidence_validation",
           "path": "docs/development/README.md",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000005",
-      "EVID-000006",
-      "EVID-000007",
-      "EVID-000008",
-      "EVID-000022",
       "EVID-000024",
       "EVID-000026",
-      "EVID-000027",
-      "EVID-000164"
+      "EVID-000027"
     ],
     "definition_of_done": [
       "Implementation and configuration for the bounded objective are complete.",
@@ -24157,13 +23986,12 @@
       "docs/development/README.md",
       "docs/development/setup.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "bootstrap",
       "developer-experience",
       "evidence-backed",
-      "implemented",
       "operations"
     ],
     "last_observed_remote_state": {
@@ -28255,16 +28083,11 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000043",
-      "EVID-000046",
-      "EVID-000047",
-      "EVID-000048",
       "EVID-000049",
       "EVID-000050",
       "EVID-000051",
       "EVID-000052",
-      "EVID-000053",
-      "EVID-000075"
+      "EVID-000053"
     ],
     "definition_of_done": [
       "The bounded Repository Steward objective is implemented.",
@@ -28306,7 +28129,6 @@
     "issue_type": "TASK",
     "labels": [
       "deterministic",
-      "done",
       "dry-run-default",
       "git",
       "github",
@@ -28314,11 +28136,11 @@
       "repository-steward"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25266",
       "remote_key": "PP-297",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000221",
     "objective": "Implement typed repository, branch, worktree, ownership, pull-request, review, check, and operation models plus safe local Git inspection.",
@@ -28366,7 +28188,7 @@
       "SRC-007:L000649-L000669",
       "SRC-007:L001098-L001128"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Repository Steward domain and local Git authority",
     "upstream_dependencies": [
       "https://github.com/github/github-mcp-server"
@@ -28714,7 +28536,6 @@
     "issue_type": "TASK",
     "labels": [
       "deterministic",
-      "done",
       "dry-run-default",
       "git",
       "github",
@@ -28722,11 +28543,11 @@
       "repository-steward"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25120",
       "remote_key": "PP-151",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000224",
     "objective": "Implement fail-closed detection of default-branch work, detached HEAD, dirty workspaces, upstream divergence, and unsafe cleanup.",
@@ -28788,7 +28609,7 @@
       "SRC-007:L000744-L000798",
       "SRC-006:L000479-L000518"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Branch Guardian safety evaluation",
     "upstream_dependencies": [
       "https://github.com/github/github-mcp-server"
@@ -28867,7 +28688,6 @@
     "issue_type": "TASK",
     "labels": [
       "deterministic",
-      "done",
       "dry-run-default",
       "git",
       "github",
@@ -28875,11 +28695,11 @@
       "repository-steward"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25111",
       "remote_key": "PP-142",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000225",
     "objective": "Implement provider-neutral pull-request, review, check, and branch-protection observations at an immutable head SHA.",
@@ -28931,7 +28751,7 @@
       "SRC-007:L000799-L000848",
       "SRC-007:L000822-L000888"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Pull-request review and check state model",
     "upstream_dependencies": [
       "https://github.com/github/github-mcp-server"
@@ -28966,14 +28786,7 @@
       "EVID-000050",
       "EVID-000051",
       "EVID-000052",
-      "EVID-000053",
-      "EVID-000109",
-      "EVID-000112",
-      "EVID-000113",
-      "EVID-000116",
-      "EVID-000118",
-      "EVID-000121",
-      "EVID-000122"
+      "EVID-000053"
     ],
     "definition_of_done": [
       "The bounded Repository Steward objective is implemented.",
@@ -29016,7 +28829,6 @@
     "issue_type": "TASK",
     "labels": [
       "deterministic",
-      "done",
       "dry-run-default",
       "git",
       "github",
@@ -29024,11 +28836,11 @@
       "repository-steward"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25168",
       "remote_key": "PP-199",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000226",
     "objective": "Implement deterministic merge readiness across draft, mergeability, head SHA, approvals, changes requested, and required checks.",
@@ -29084,7 +28896,7 @@
       "SRC-007:L000939-L000969",
       "SRC-008:L000986-L001015"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Deterministic Merge Gate",
     "upstream_dependencies": [
       "https://github.com/github/github-mcp-server"
@@ -29437,7 +29249,6 @@
     "issue_type": "TASK",
     "labels": [
       "deterministic",
-      "done",
       "dry-run-default",
       "git",
       "github",
@@ -29445,11 +29256,11 @@
       "repository-steward"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25320",
       "remote_key": "PP-351",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000229",
     "objective": "Implement cleanup classification that protects default, active-worktree, dirty, and unmerged branches and separates local from remote deletion authority.",
@@ -29513,7 +29324,7 @@
       "SRC-006:L000479-L000518",
       "SRC-006:L000695-L000735"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Stale-branch cleanup and reconciliation",
     "upstream_dependencies": [
       "https://github.com/github/github-mcp-server"
@@ -29544,17 +29355,12 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000043",
-      "EVID-000046",
-      "EVID-000047",
-      "EVID-000048",
       "EVID-000049",
       "EVID-000050",
       "EVID-000051",
       "EVID-000052",
       "EVID-000053",
-      "EVID-000054",
-      "EVID-000075"
+      "EVID-000054"
     ],
     "definition_of_done": [
       "The bounded Repository Steward objective is implemented.",
@@ -29611,7 +29417,6 @@
     "issue_type": "TASK",
     "labels": [
       "deterministic",
-      "done",
       "dry-run-default",
       "git",
       "github",
@@ -29619,11 +29424,11 @@
       "repository-steward"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25177",
       "remote_key": "PP-208",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000230",
     "objective": "Expose machine-readable stewardship commands, generated schemas, self-validation, operator documentation, and evidence without claiming unavailable live GitHub verification.",
@@ -29709,7 +29514,7 @@
       "SRC-007:L001098-L001128",
       "SRC-007:L000822-L000888"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Repository and GitHub CLI, schemas, tests, and operations",
     "upstream_dependencies": [
       "https://github.com/github/github-mcp-server"
@@ -29958,7 +29763,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_control_domain.py tests/test_build_sequencer.py tests/test_control_kernel.py tests/test_control_persistence.py tests/test_control_cli.py tests/test_control_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/control/graph.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -29968,7 +29773,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
@@ -30005,13 +29810,12 @@
       "src/project_pipeline/control/graph.py",
       "src/project_pipeline/domain/control.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "build-sequencer",
       "control-kernel",
       "deterministic",
-      "implemented",
       "project-control"
     ],
     "last_observed_remote_state": {
@@ -38710,7 +38514,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/domain/context.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -38720,15 +38524,13 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
       "EVID-000089",
-      "EVID-000090",
-      "EVID-000091",
       "EVID-000092",
       "EVID-000093",
       "EVID-000094"
@@ -38762,12 +38564,11 @@
       "src/project_pipeline/context_engine/compiler.py",
       "src/project_pipeline/context_engine/service.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
-      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -39541,7 +39342,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/orchestration/persistence.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -39551,7 +39352,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
@@ -39597,11 +39398,10 @@
       "src/project_pipeline/orchestration/service.py",
       "src/project_pipeline/orchestration/recovery.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "durability",
-      "implemented",
       "orchestration",
       "pass-13"
     ],
@@ -40512,7 +40312,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/orchestration/validation.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -40522,24 +40322,19 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000029",
-      "EVID-000030",
-      "EVID-000062",
       "EVID-000095",
       "EVID-000096",
       "EVID-000097",
       "EVID-000098",
       "EVID-000099",
       "EVID-000100",
-      "EVID-000101",
-      "EVID-000129",
-      "EVID-000130"
+      "EVID-000101"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -40573,11 +40368,10 @@
       "tests/test_orchestration_recovery.py",
       "tests/test_orchestration_adapters.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "durability",
-      "implemented",
       "orchestration",
       "pass-13"
     ],
@@ -42448,16 +42242,15 @@
       "assurance",
       "completion-gate",
       "delivery-progress",
-      "done",
       "implemented",
       "pass-15"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25203",
       "remote_key": "PP-234",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "In Progress"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000323",
     "objective": "Enforce objective delivery progress and prevent lifecycle micro-PR loops",
@@ -42520,7 +42313,7 @@
       "SRC-008:L000156-L000196",
       "SRC-008:L000295-L000368"
     ],
-    "state": "DONE",
+    "state": "MERGE_READY",
     "title": "Enforce objective delivery progress and lifecycle batching",
     "upstream_dependencies": []
   },
@@ -42960,10 +42753,10 @@
       "pass-15"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T10:04:47.176593Z",
       "remote_id": "25287",
       "remote_key": "PP-318",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "snapshot_id": "JSNAP-82AE395F4E0C8D61BF54",
       "status_name": "In Progress"
     },
     "local_id": "PP-TASK-000327",
@@ -44670,43 +44463,9 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000005",
-      "EVID-000006",
-      "EVID-000016",
-      "EVID-000017",
-      "EVID-000019",
-      "EVID-000020",
-      "EVID-000023",
-      "EVID-000027",
-      "EVID-000075",
-      "EVID-000076",
-      "EVID-000077",
-      "EVID-000078",
-      "EVID-000083",
-      "EVID-000084",
-      "EVID-000085",
-      "EVID-000086",
-      "EVID-000087",
-      "EVID-000095",
-      "EVID-000097",
-      "EVID-000100",
-      "EVID-000101",
-      "EVID-000107",
-      "EVID-000112",
-      "EVID-000113",
-      "EVID-000114",
-      "EVID-000116",
-      "EVID-000121",
-      "EVID-000122",
       "EVID-000123",
-      "EVID-000126",
       "EVID-000127",
-      "EVID-000128",
-      "EVID-000131",
-      "EVID-000137",
-      "EVID-000143",
-      "EVID-000163",
-      "EVID-000164"
+      "EVID-000128"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -44739,16 +44498,15 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "identity",
       "security",
+      "identity",
       "supply-chain"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T11:59:09.626239Z",
       "remote_id": "25224",
       "remote_key": "PP-255",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "snapshot_id": "JSNAP-E9609D7C8BD2CB09E4C4",
       "status_name": "In Progress"
     },
     "local_id": "PP-TASK-000340",
@@ -44797,7 +44555,7 @@
       "GOV-001:L001364-L001385",
       "SRC-011:L001212-L001345"
     ],
-    "state": "DONE",
+    "state": "MERGE_READY",
     "title": "Complete security upstream-first review and activation gate",
     "upstream_dependencies": []
   },
@@ -44863,16 +44621,15 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "identity",
       "security",
+      "identity",
       "supply-chain"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T13:10:04.535714Z",
       "remote_id": "25190",
       "remote_key": "PP-221",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "snapshot_id": "JSNAP-2CF44BE831757D9BF4CF",
       "status_name": "In Progress"
     },
     "local_id": "PP-TASK-000341",
@@ -44921,7 +44678,7 @@
       "SRC-017:L000072-L000141",
       "SRC-017:L000142-L000191"
     ],
-    "state": "DONE",
+    "state": "MERGE_READY",
     "title": "Implement distinct identities, least privilege, and root of trust",
     "upstream_dependencies": []
   },
@@ -44950,12 +44707,8 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000022",
-      "EVID-000024",
-      "EVID-000027",
       "EVID-000124",
       "EVID-000125",
-      "EVID-000126",
       "EVID-000127",
       "EVID-000128"
     ],
@@ -44991,16 +44744,15 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "identity",
       "security",
+      "identity",
       "supply-chain"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T14:23:54.971277Z",
       "remote_id": "25309",
       "remote_key": "PP-340",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "snapshot_id": "JSNAP-62AFFAE1A30032C2386E",
       "status_name": "In Progress"
     },
     "local_id": "PP-TASK-000342",
@@ -45052,7 +44804,7 @@
       "SRC-017:L000009-L000071",
       "SRC-017:L000072-L000141"
     ],
-    "state": "DONE",
+    "state": "MERGE_READY",
     "title": "Implement independent approval and deterministic policy authority",
     "upstream_dependencies": []
   },
@@ -45118,16 +44870,15 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "identity",
       "security",
+      "identity",
       "supply-chain"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T15:12:13.006985Z",
       "remote_id": "25150",
       "remote_key": "PP-181",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "snapshot_id": "JSNAP-F81F8DAB101ABA028D1A",
       "status_name": "In Progress"
     },
     "local_id": "PP-TASK-000343",
@@ -45175,7 +44926,7 @@
       "SRC-009:L000009-L000009",
       "SRC-017:L000009-L000071"
     ],
-    "state": "DONE",
+    "state": "MERGE_READY",
     "title": "Implement data classification, egress, and instruction-trust controls",
     "upstream_dependencies": []
   },
@@ -45204,10 +44955,7 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000022",
-      "EVID-000024",
       "EVID-000124",
-      "EVID-000126",
       "EVID-000127",
       "EVID-000128"
     ],
@@ -45242,16 +44990,15 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "identity",
       "security",
+      "identity",
       "supply-chain"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T16:25:40.833467Z",
       "remote_id": "25149",
       "remote_key": "PP-180",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "snapshot_id": "JSNAP-662E2E00444AC53ABB13",
       "status_name": "In Progress"
     },
     "local_id": "PP-TASK-000344",
@@ -45301,7 +45048,7 @@
       "SRC-009:L000008-L000009",
       "SRC-015:L000662-L000702"
     ],
-    "state": "DONE",
+    "state": "MERGE_READY",
     "title": "Implement scoped Secrets Broker leases and runtime-only materialization",
     "upstream_dependencies": []
   },
@@ -45332,7 +45079,6 @@
     "completion_evidence": [
       "EVID-000123",
       "EVID-000124",
-      "EVID-000126",
       "EVID-000127",
       "EVID-000128"
     ],
@@ -45366,17 +45112,16 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "identity",
       "security",
+      "identity",
       "supply-chain"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T17:03:41.035109Z",
       "remote_id": "25139",
       "remote_key": "PP-170",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "In Progress"
+      "snapshot_id": "JSNAP-BF9AE79785CAD5A59DA8",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000345",
     "objective": "Implement SOPS, age, and OpenBao secret-provider boundaries",
@@ -45420,7 +45165,7 @@
     "source_references": [
       "SRC-009:L000008-L000008"
     ],
-    "state": "DONE",
+    "state": "MERGE_READY",
     "title": "Implement SOPS, age, and OpenBao secret-provider boundaries",
     "upstream_dependencies": []
   },
@@ -45500,11 +45245,11 @@
       "supply-chain"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25247",
       "remote_key": "PP-278",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "In Progress"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000346",
     "objective": "Implement supply-chain scanner and policy-conformance adapters",
@@ -45629,18 +45374,17 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
       "identity",
       "implemented",
       "security",
       "supply-chain"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25197",
       "remote_key": "PP-228",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "In Progress"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000347",
     "objective": "Implement SBOM, integrity, provenance, and license gate",
@@ -45690,7 +45434,7 @@
       "SRC-009:L000017-L000017",
       "SRC-017:L001065-L001121"
     ],
-    "state": "DONE",
+    "state": "IN_PROGRESS",
     "title": "Implement SBOM, integrity, provenance, and license gate",
     "upstream_dependencies": []
   },
@@ -47366,7 +47110,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/contracts.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -47376,15 +47120,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000022",
-      "EVID-000027",
-      "EVID-000029",
       "EVID-000153",
       "EVID-000154"
     ],
@@ -47414,10 +47155,9 @@
       "adr/ADR-0027_keep_project_native_locks_canonical_with_optional_mise_and_devcontainer_profiles.md",
       "src/project_pipeline/domain/lifecycle.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "implemented",
       "pass-22",
       "platform-lifecycle"
     ],
@@ -47601,7 +47341,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/qualification.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -47611,13 +47351,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000027",
       "EVID-000153",
       "EVID-000154"
     ],
@@ -47647,10 +47386,9 @@
       "runbooks/platform_upgrade_qualification.md",
       "config/platform_lifecycle_policy.json"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "implemented",
       "pass-22",
       "platform-lifecycle"
     ],
@@ -47721,7 +47459,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/persistence.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -47731,14 +47469,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000022",
-      "EVID-000029",
       "EVID-000153",
       "EVID-000154"
     ],
@@ -47770,10 +47506,9 @@
       "src/project_pipeline/lifecycle/validation.py",
       "database/migrations/sqlite/PPDB-0018_advanced_platform_lifecycle.up.sql"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "implemented",
       "pass-22",
       "platform-lifecycle"
     ],
@@ -48516,11 +48251,11 @@
       "hardening"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25167",
       "remote_key": "PP-198",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000370",
     "objective": "Implement release hardening, security, performance, and truthful readiness gates",
@@ -48640,11 +48375,11 @@
       "hardening"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25285",
       "remote_key": "PP-316",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000371",
     "objective": "Implement bounded Windows-service and Docker packaging sources",
@@ -48724,15 +48459,6 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000005",
-      "EVID-000006",
-      "EVID-000008",
-      "EVID-000022",
-      "EVID-000023",
-      "EVID-000024",
-      "EVID-000027",
-      "EVID-000129",
-      "EVID-000132",
       "EVID-000164"
     ],
     "definition_of_done": [
@@ -48762,16 +48488,15 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "hardening",
-      "pass-24"
+      "pass-24",
+      "hardening"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25198",
       "remote_key": "PP-229",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000372",
     "objective": "Implement separated deployment environment profiles and target qualification",
@@ -48820,7 +48545,7 @@
     "source_references": [
       "SRC-017:L001774-L001792"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement separated deployment environment profiles and target qualification",
     "upstream_dependencies": []
   },
@@ -48892,11 +48617,11 @@
       "hardening"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25140",
       "remote_key": "PP-171",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000373",
     "objective": "Implement release candidate identity, operator handoff, cleanup, rollback, and release procedures",
@@ -49004,16 +48729,15 @@
     "labels": [
       "bulk-reconciled",
       "convergence",
-      "done",
       "implemented",
       "pass-25"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25193",
       "remote_key": "PP-224",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000374",
     "objective": "Enforce database-backed append-only audit integrity",
@@ -49059,7 +48783,7 @@
       "GOV-001:L000695-L000710",
       "SRC-015:L000359-L000488"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Enforce database-backed append-only audit integrity",
     "upstream_dependencies": []
   },
@@ -49107,16 +48831,15 @@
     "labels": [
       "bulk-reconciled",
       "convergence",
-      "done",
       "implemented",
       "pass-25"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25191",
       "remote_key": "PP-222",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000375",
     "objective": "Implement approved versioned recovery runbook executor",
@@ -49160,7 +48883,7 @@
     "source_references": [
       "SRC-009:L000026-L000026"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement approved versioned recovery runbook executor",
     "upstream_dependencies": []
   },
@@ -49210,16 +48933,15 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "convergence",
-      "done",
-      "pass-25"
+      "pass-25",
+      "convergence"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25317",
       "remote_key": "PP-348",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000376",
     "objective": "Implement fail-closed AWS external budget circuit-breaker source",
@@ -49263,7 +48985,7 @@
     "source_references": [
       "SRC-012:L000780-L000816"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement fail-closed AWS external budget circuit-breaker source",
     "upstream_dependencies": []
   },
@@ -49315,11 +49037,11 @@
       "convergence"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25209",
       "remote_key": "PP-240",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000377",
     "objective": "Implement fail-closed post-deployment verification contract",
@@ -49412,16 +49134,15 @@
     "labels": [
       "bulk-reconciled",
       "convergence",
-      "done",
       "implemented",
       "pass-25"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-16T03:25:32.135977Z",
       "remote_id": "25127",
       "remote_key": "PP-158",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "Done"
+      "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+      "status_name": "To Do"
     },
     "local_id": "PP-TASK-000378",
     "objective": "Execute exhaustive final convergence and completion audit",
@@ -49469,7 +49190,7 @@
       "GOV-001:L001794-L001838",
       "GOV-001:L001884-L001992"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Execute exhaustive final convergence and completion audit",
     "upstream_dependencies": []
   },
@@ -49551,13 +49272,7 @@
       "cursor-takeover",
       "product-model-repair"
     ],
-    "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
-      "remote_id": "25362",
-      "remote_key": "PP-388",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-      "status_name": "In Progress"
-    },
+    "last_observed_remote_state": null,
     "local_id": "PP-TASK-000379",
     "objective": "Install and verify the governed Cursor takeover and permanent autonomous product outcome.",
     "observability_impact": "Persist Cursor run IDs, prompt and context digests, base/head SHAs, files, tests, cost, duration, outcomes, checkpoints, receipts, and readbacks without secret values.",
@@ -49590,7 +49305,7 @@
         "type": "CHILD_OF"
       }
     ],
-    "remote_jira_key": "PP-388",
+    "remote_jira_key": null,
     "required_tests": [
       "TEST-CURSOR-TAKEOVER-001",
       "TEST-AGENT-ADAPTER-007",
@@ -49687,10 +49402,10 @@
       "product-outcome"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
       "remote_id": "25366",
       "remote_key": "PP-392",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "snapshot_id": "C11-LIVE-PP392",
       "status_name": "Done"
     },
     "local_id": "PP-TASK-000380",
@@ -49796,10 +49511,10 @@
       "implemented"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-18T17:48:28.022032+00:00",
       "remote_id": "25364",
       "remote_key": "PP-390",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "snapshot_id": "C11-LIVE-PP390",
       "status_name": "Done"
     },
     "local_id": "PP-TASK-000381",
@@ -49907,10 +49622,10 @@
       "implemented"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-18T12:48:28.022032-05:00",
       "remote_id": "25363",
       "remote_key": "PP-389",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "snapshot_id": "C11-LIVE-PP389",
       "status_name": "Done"
     },
     "local_id": "PP-TASK-000382",
@@ -50023,10 +49738,10 @@
       "implemented"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-18T12:48:28.022032-05:00",
       "remote_id": "25361",
       "remote_key": "PP-387",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "snapshot_id": "C11-LIVE-PP387",
       "status_name": "Done"
     },
     "local_id": "PP-TASK-000383",
@@ -50135,10 +49850,10 @@
       "live-qualified"
     ],
     "last_observed_remote_state": {
-      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "observed_at_utc": "2026-08-18T22:08:55.063Z",
       "remote_id": "25367",
       "remote_key": "PP-393",
-      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "snapshot_id": "JSNAP-18D9051AFE54099E5313",
       "status_name": "Done"
     },
     "local_id": "PP-TASK-000384",

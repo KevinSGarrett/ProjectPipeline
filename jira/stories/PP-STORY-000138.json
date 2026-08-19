@@ -42,13 +42,7 @@
     "model-realignment",
     "vertical-slice"
   ],
-  "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-19T22:28:01Z",
-    "remote_id": "25355",
-    "remote_key": "PP-381",
-    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-    "status_name": "In Progress"
-  },
+  "last_observed_remote_state": null,
   "local_id": "PP-STORY-000138",
   "objective": "Realign the complete source-to-control product model",
   "observability_impact": "Expose model drift and reconciliation debt explicitly.",
@@ -76,7 +70,7 @@
       "type": "PARENT_OF"
     }
   ],
-  "remote_jira_key": "PP-381",
+  "remote_jira_key": null,
   "required_tests": [],
   "requirement_ids": [
     "REQ-PDEF-0011"

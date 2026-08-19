@@ -27,14 +27,7 @@
     "EVID-000050",
     "EVID-000051",
     "EVID-000052",
-    "EVID-000053",
-    "EVID-000109",
-    "EVID-000112",
-    "EVID-000113",
-    "EVID-000116",
-    "EVID-000118",
-    "EVID-000121",
-    "EVID-000122"
+    "EVID-000053"
   ],
   "definition_of_done": [
     "The bounded Repository Steward objective is implemented.",
@@ -77,7 +70,6 @@
   "issue_type": "TASK",
   "labels": [
     "deterministic",
-    "done",
     "dry-run-default",
     "git",
     "github",
@@ -85,11 +77,11 @@
     "repository-steward"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-19T22:28:01Z",
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
     "remote_id": "25168",
     "remote_key": "PP-199",
-    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-    "status_name": "Done"
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
   },
   "local_id": "PP-TASK-000226",
   "objective": "Implement deterministic merge readiness across draft, mergeability, head SHA, approvals, changes requested, and required checks.",
@@ -145,7 +137,7 @@
     "SRC-007:L000939-L000969",
     "SRC-008:L000986-L001015"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Deterministic Merge Gate",
   "upstream_dependencies": [
     "https://github.com/github/github-mcp-server"

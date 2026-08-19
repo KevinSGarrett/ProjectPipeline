@@ -5824,7 +5824,7 @@
     },
     {
       "id": "PP-TASK-000221",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Repository Steward domain and local Git authority",
       "type": "TASK"
     },
@@ -5842,19 +5842,19 @@
     },
     {
       "id": "PP-TASK-000224",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Branch Guardian safety evaluation",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000225",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Pull-request review and check state model",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000226",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Deterministic Merge Gate",
       "type": "TASK"
     },
@@ -5872,13 +5872,13 @@
     },
     {
       "id": "PP-TASK-000229",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Stale-branch cleanup and reconciliation",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000230",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Repository and GitHub CLI, schemas, tests, and operations",
       "type": "TASK"
     },
@@ -6436,7 +6436,7 @@
     },
     {
       "id": "PP-TASK-000323",
-      "state": "DONE",
+      "state": "MERGE_READY",
       "title": "Enforce objective delivery progress and lifecycle batching",
       "type": "TASK"
     },
@@ -6538,37 +6538,37 @@
     },
     {
       "id": "PP-TASK-000340",
-      "state": "DONE",
+      "state": "MERGE_READY",
       "title": "Complete security upstream-first review and activation gate",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000341",
-      "state": "DONE",
+      "state": "MERGE_READY",
       "title": "Implement distinct identities, least privilege, and root of trust",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000342",
-      "state": "DONE",
+      "state": "MERGE_READY",
       "title": "Implement independent approval and deterministic policy authority",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000343",
-      "state": "DONE",
+      "state": "MERGE_READY",
       "title": "Implement data classification, egress, and instruction-trust controls",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000344",
-      "state": "DONE",
+      "state": "MERGE_READY",
       "title": "Implement scoped Secrets Broker leases and runtime-only materialization",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000345",
-      "state": "DONE",
+      "state": "MERGE_READY",
       "title": "Implement SOPS, age, and OpenBao secret-provider boundaries",
       "type": "TASK"
     },
@@ -6580,7 +6580,7 @@
     },
     {
       "id": "PP-TASK-000347",
-      "state": "DONE",
+      "state": "IN_PROGRESS",
       "title": "Implement SBOM, integrity, provenance, and license gate",
       "type": "TASK"
     },
@@ -6730,7 +6730,7 @@
     },
     {
       "id": "PP-TASK-000372",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement separated deployment environment profiles and target qualification",
       "type": "TASK"
     },
@@ -6742,19 +6742,19 @@
     },
     {
       "id": "PP-TASK-000374",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Enforce database-backed append-only audit integrity",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000375",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement approved versioned recovery runbook executor",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000376",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement fail-closed AWS external budget circuit-breaker source",
       "type": "TASK"
     },
@@ -6766,7 +6766,7 @@
     },
     {
       "id": "PP-TASK-000378",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Execute exhaustive final convergence and completion audit",
       "type": "TASK"
     },

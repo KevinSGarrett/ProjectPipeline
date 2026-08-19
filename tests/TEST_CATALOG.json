@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 652,
+  "test_count": 654,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -241,6 +241,16 @@
       "callable": "test_single_item_lifecycle_only_delivery_is_blocked",
       "path": "tests/test_delivery_progress.py",
       "test_id": "TEST-ASSURE-DELIVERY-001"
+    },
+    {
+      "callable": "test_remote_in_progress_alignment_does_not_block_material_slice",
+      "path": "tests/test_delivery_progress.py",
+      "test_id": "TEST-ASSURE-DELIVERY-002"
+    },
+    {
+      "callable": "test_remote_done_alignment_is_still_an_implementation_lifecycle",
+      "path": "tests/test_delivery_progress.py",
+      "test_id": "TEST-ASSURE-DELIVERY-003"
     },
     {
       "callable": "test_completion_gate_model_rejects_false_complete_claim",

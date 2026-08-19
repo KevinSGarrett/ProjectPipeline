@@ -7,22 +7,13 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "automated_graph_and_traceability_check",
         "path": "plans/_traceability/requirements_to_jira.jsonl",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000036",
-    "EVID-000040",
-    "EVID-000041",
-    "EVID-000042",
-    "EVID-000088",
     "EVID-000089",
-    "EVID-000090",
-    "EVID-000091",
-    "EVID-000092",
-    "EVID-000093",
     "EVID-000094"
   ],
   "definition_of_done": [
@@ -49,11 +40,10 @@
   "expected_implementation_artifacts": [
     "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",
-    "implemented",
     "plan-ctx-001"
   ],
   "last_observed_remote_state": {

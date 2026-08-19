@@ -51,10 +51,10 @@
     "live-qualified"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-19T22:28:01Z",
+    "observed_at_utc": "2026-08-18T22:08:55.063Z",
     "remote_id": "25367",
     "remote_key": "PP-393",
-    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+    "snapshot_id": "JSNAP-18D9051AFE54099E5313",
     "status_name": "Done"
   },
   "local_id": "PP-TASK-000384",

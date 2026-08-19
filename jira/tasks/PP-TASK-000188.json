@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_configuration.py",
         "method": "automated_behavior_and_evidence_validation",
         "path": "tests/test_configuration.py",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     },
     {
@@ -17,21 +17,14 @@
         "command": "PYTHONPATH=src python -m project_pipeline smoke --root .",
         "method": "automated_behavior_and_evidence_validation",
         "path": "evidence/repository_foundation_smoke.json",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000005",
-    "EVID-000006",
-    "EVID-000007",
-    "EVID-000008",
     "EVID-000022",
-    "EVID-000024",
-    "EVID-000027",
-    "EVID-000153",
-    "EVID-000164"
+    "EVID-000024"
   ],
   "definition_of_done": [
     "Implementation and configuration for the bounded objective are complete.",
@@ -67,12 +60,11 @@
     "schemas/runtime_configuration.schema.json",
     "schemas/secret_reference.schema.json"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "configuration",
     "evidence-backed",
-    "implemented",
     "runtime",
     "secrets"
   ],

@@ -7,34 +7,12 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "automated_graph_and_traceability_check",
         "path": "plans/_traceability/requirements_to_jira.jsonl",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     }
   ],
   "blockers": [],
-  "completion_evidence": [
-    "EVID-000043",
-    "EVID-000049",
-    "EVID-000051",
-    "EVID-000052",
-    "EVID-000062",
-    "EVID-000096",
-    "EVID-000097",
-    "EVID-000100",
-    "EVID-000101",
-    "EVID-000115",
-    "EVID-000116",
-    "EVID-000118",
-    "EVID-000121",
-    "EVID-000122",
-    "EVID-000129",
-    "EVID-000130",
-    "EVID-000131",
-    "EVID-000132",
-    "EVID-000204",
-    "EVID-000205",
-    "EVID-000206"
-  ],
+  "completion_evidence": [],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
     "Acceptance criteria have current verification evidence.",
@@ -57,11 +35,10 @@
   "expected_implementation_artifacts": [
     "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",
-    "implemented",
     "plan-res-001"
   ],
   "last_observed_remote_state": {

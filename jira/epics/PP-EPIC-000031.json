@@ -7,21 +7,12 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "automated_graph_and_traceability_check",
         "path": "plans/_traceability/requirements_to_jira.jsonl",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000022",
-    "EVID-000027",
-    "EVID-000029",
-    "EVID-000035",
-    "EVID-000036",
-    "EVID-000037",
-    "EVID-000040",
-    "EVID-000041",
-    "EVID-000042",
     "EVID-000153",
     "EVID-000154"
   ],
@@ -49,11 +40,10 @@
   "expected_implementation_artifacts": [
     "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",
-    "implemented",
     "pass-22",
     "plan-life-001"
   ],

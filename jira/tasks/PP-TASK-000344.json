@@ -23,10 +23,7 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000022",
-    "EVID-000024",
     "EVID-000124",
-    "EVID-000126",
     "EVID-000127",
     "EVID-000128"
   ],
@@ -61,16 +58,15 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
-    "identity",
     "security",
+    "identity",
     "supply-chain"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-19T22:28:01Z",
+    "observed_at_utc": "2026-08-16T16:25:40.833467Z",
     "remote_id": "25149",
     "remote_key": "PP-180",
-    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+    "snapshot_id": "JSNAP-662E2E00444AC53ABB13",
     "status_name": "In Progress"
   },
   "local_id": "PP-TASK-000344",
@@ -120,7 +116,7 @@
     "SRC-009:L000008-L000009",
     "SRC-015:L000662-L000702"
   ],
-  "state": "DONE",
+  "state": "MERGE_READY",
   "title": "Implement scoped Secrets Broker leases and runtime-only materialization",
   "upstream_dependencies": []
 }

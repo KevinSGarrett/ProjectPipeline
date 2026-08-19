@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python scripts/bootstrap_dev.py --root .",
         "method": "automated_behavior_and_evidence_validation",
         "path": "scripts/bootstrap_dev.py",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     },
     {
@@ -17,21 +17,15 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "automated_behavior_and_evidence_validation",
         "path": "docs/development/README.md",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000005",
-    "EVID-000006",
-    "EVID-000007",
-    "EVID-000008",
-    "EVID-000022",
     "EVID-000024",
     "EVID-000026",
-    "EVID-000027",
-    "EVID-000164"
+    "EVID-000027"
   ],
   "definition_of_done": [
     "Implementation and configuration for the bounded objective are complete.",
@@ -68,13 +62,12 @@
     "docs/development/README.md",
     "docs/development/setup.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "bootstrap",
     "developer-experience",
     "evidence-backed",
-    "implemented",
     "operations"
   ],
   "last_observed_remote_state": {

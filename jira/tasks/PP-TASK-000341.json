@@ -60,16 +60,15 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
-    "identity",
     "security",
+    "identity",
     "supply-chain"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-19T22:28:01Z",
+    "observed_at_utc": "2026-08-16T13:10:04.535714Z",
     "remote_id": "25190",
     "remote_key": "PP-221",
-    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+    "snapshot_id": "JSNAP-2CF44BE831757D9BF4CF",
     "status_name": "In Progress"
   },
   "local_id": "PP-TASK-000341",
@@ -118,7 +117,7 @@
     "SRC-017:L000072-L000141",
     "SRC-017:L000142-L000191"
   ],
-  "state": "DONE",
+  "state": "MERGE_READY",
   "title": "Implement distinct identities, least privilege, and root of trust",
   "upstream_dependencies": []
 }

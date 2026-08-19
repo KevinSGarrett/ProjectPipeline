@@ -23,15 +23,6 @@
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000005",
-    "EVID-000006",
-    "EVID-000008",
-    "EVID-000022",
-    "EVID-000023",
-    "EVID-000024",
-    "EVID-000027",
-    "EVID-000129",
-    "EVID-000132",
     "EVID-000164"
   ],
   "definition_of_done": [
@@ -61,16 +52,15 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
-    "hardening",
-    "pass-24"
+    "pass-24",
+    "hardening"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-19T22:28:01Z",
+    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
     "remote_id": "25198",
     "remote_key": "PP-229",
-    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
-    "status_name": "Done"
+    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
+    "status_name": "To Do"
   },
   "local_id": "PP-TASK-000372",
   "objective": "Implement separated deployment environment profiles and target qualification",
@@ -119,7 +109,7 @@
   "source_references": [
     "SRC-017:L001774-L001792"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement separated deployment environment profiles and target qualification",
   "upstream_dependencies": []
 }
