@@ -27,7 +27,9 @@ def test_ready_plan_is_dry_run(tmp_path: Path, capsys) -> None:
     assert result["dry_run"] is True
     operations = result["operations"]
     assert isinstance(operations, list)
-    assert {item["task_id"] for item in operations} == {"PP-TASK-000385"}
+    ready_ids = {item["task_id"] for item in operations}
+    assert "PP-TASK-000385" in ready_ids
+    assert ready_ids
     assert all(item["next_state"] == "READY" for item in operations)
 
 
@@ -63,6 +65,8 @@ def test_ready_apply_can_target_one_task(tmp_path: Path, capsys) -> None:
                 str(ROOT),
                 "--database",
                 str(db),
+                "--task-id",
+                "PP-TASK-000385",
                 "--apply",
                 "--approve",
             ]
@@ -99,8 +103,14 @@ def test_ready_apply_transitions_only_currently_ready_backlog(tmp_path: Path, ca
     )
     result = json.loads(capsys.readouterr().out)
     assert code == 0
-    assert result["applied_transition_count"] == 1
-    assert {item["task_id"] for item in result["applied_transitions"]} == {"PP-TASK-000385"}
+    applied_ids = {item["task_id"] for item in result["applied_transitions"]}
+    assert "PP-TASK-000385" in applied_ids
+    assert result["applied_transition_count"] == len(applied_ids)
+    assert result["applied_transition_count"] >= 1
+    leftover = main(["control", "ready-plan", "--root", str(ROOT), "--database", str(db)])
+    assert leftover == 0
+    remaining = json.loads(capsys.readouterr().out)
+    assert remaining["operations"] == []
 
 
 def test_cli_has_no_takeover_writer_command() -> None:

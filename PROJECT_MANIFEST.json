@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "98c4d9baa6736645a0c3a6ac6675c86370527de06b476655b312924d4b225e89",
+  "aggregate_sha256": "7047254acea97a15caaee94bbffb03fbacb9fb9def65bea334917397a2747da6",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -5442,8 +5442,8 @@
     },
     {
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "65245a7b2098d03c8ec39afa54ba48ff40c165b540e79b95b3a0459cb11698e4",
-      "size_bytes": 2013
+      "sha256": "d0450b6add0a8121d35cdbdc7c7d2a68ee14476eaacbf661198ed892748bbecb",
+      "size_bytes": 2060
     },
     {
       "path": "jira/reports/live_jira_sync_report.json",
@@ -13812,8 +13812,8 @@
     },
     {
       "path": "tests/test_control_cli.py",
-      "sha256": "2b4abd32337ff685c12eb322e3ad246617e200ebd56a8222b94b1d80a70d134d",
-      "size_bytes": 4061
+      "sha256": "c66d7b1bf0d5bb4cdd53274394b369dbd337b396d718481e0f47469635469d5e",
+      "size_bytes": 4486
     },
     {
       "path": "tests/test_control_domain.py",
@@ -13837,7 +13837,7 @@
     },
     {
       "path": "tests/test_core_state_store.py",
-      "sha256": "1f813944168cc46634809432532efea57a77910c79a4938f3d7a3c70bdf84abc",
+      "sha256": "3eac7243daf42794fb338f35273f5426bdafe2d3472dbf59e23495cd14557655",
       "size_bytes": 4324
     },
     {
@@ -14471,7 +14471,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T02:50:02.780327+00:00",
+  "generated_at_utc": "2026-08-19T03:14:20.705785+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14480,5 +14480,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25644694
+  "total_bytes": 25645166
 }
