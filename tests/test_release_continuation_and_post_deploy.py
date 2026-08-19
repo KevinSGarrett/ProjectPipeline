@@ -87,6 +87,12 @@ def test_continuation_package_rejects_control_characters_and_abbreviated_git_ids
     assert package["depends_on_chat_history"] is False
     assert len(package["source_sha"]) == 40
     assert len(package["source_tree"]) == 40
+    assert "artifacts" in package
+    assert "tests" in package
+    assert "coverage" in package
+    assert "decisions" in package
+    assert "blockers" in package
+    assert package["tests"]["test_catalog_count"] > 0
     assert validate_continuation_package(package) == []
     broken = dict(package)
     broken["source_sha"] = package["source_sha"][:12]

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "cb6701a3d8f37f89c11f088f25625a5dfc7bdadd29af2714d95e122868532770",
+  "aggregate_sha256": "89813fb8f4e7a9b44c00647b7866ad523b3d8799c87780fee3496355049c352b",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2896,
+  "file_count": 2899,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -12012,8 +12012,8 @@
     },
     {
       "path": "src/project_pipeline/archive.py",
-      "sha256": "4445f2be506cb9e9567a69ddff5e087a6f9865d0d2c010e86ae97425719094aa",
-      "size_bytes": 4603
+      "sha256": "98ae802158dcd7bf4ce09e0d779df861aaf52019efca38bec0f56d7d7892f670",
+      "size_bytes": 6255
     },
     {
       "path": "src/project_pipeline/artifacts.py",
@@ -12227,8 +12227,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "0e7398ad35018ba3617dd2c1220663f55bfef21e15a13aa2cb3bc7761f4d6af7",
-      "size_bytes": 154147
+      "sha256": "2a68acd79decd6188125944d633ada756e5327a2e30ab85414ee0538c65a7d9e",
+      "size_bytes": 155188
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12676,6 +12676,16 @@
       "size_bytes": 3114
     },
     {
+      "path": "src/project_pipeline/governance/__init__.py",
+      "sha256": "823e1ce9290393b7443981a39237c7b55f093a768f0ad899df54969d6d79b79a",
+      "size_bytes": 78
+    },
+    {
+      "path": "src/project_pipeline/governance/post_merge_refresh.py",
+      "sha256": "7c774891c71070eb8e0e819daa52d6dc7445fcdceb6f9c4c1e9e0a59565822e8",
+      "size_bytes": 5919
+    },
+    {
       "path": "src/project_pipeline/ids.py",
       "sha256": "e9167a33af3bd010500363d8aa14be4aab3586bb2e25e9663e512de52756f807",
       "size_bytes": 703
@@ -12992,8 +13002,8 @@
     },
     {
       "path": "src/project_pipeline/release_hardening/continuation.py",
-      "sha256": "931c42dc90827d632d0e0585a516557f26328cbecd17d3ddc8d55e79c576e74d",
-      "size_bytes": 3872
+      "sha256": "d03476a46ec3aec2556db2fe40f8b2e65828e7fa13a56e56a32f999217cfa115",
+      "size_bytes": 6874
     },
     {
       "path": "src/project_pipeline/release_hardening/hardening.py",
@@ -13547,8 +13557,8 @@
     },
     {
       "path": "tests/test_archive.py",
-      "sha256": "3662e77941f1169a67671c8080ab811980d2010511bff57d9e2fe530c5d83712",
-      "size_bytes": 1442
+      "sha256": "542a70eb856d6d0e115d914dce78b5af09e50f0e73e45f58aaec2d62408cae96",
+      "size_bytes": 2398
     },
     {
       "path": "tests/test_assurance_cli.py",
@@ -13697,8 +13707,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "ba5086c23677a5367d7818c2e6ac9a7d83dc9d1c23ed779c0a00b418c58a22aa",
-      "size_bytes": 103873
+      "sha256": "2a8448d25ad431d7f63943c2501ef6dd63840e0ad2664e888a0342f29807f1fb",
+      "size_bytes": 104821
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -13936,6 +13946,11 @@
       "size_bytes": 3027
     },
     {
+      "path": "tests/test_governance_post_merge_refresh.py",
+      "sha256": "82b18d614afdfc8b8ce16c430b53b1f25891d86810ecf1f6da36ee40aea6d118",
+      "size_bytes": 2819
+    },
+    {
       "path": "tests/test_ids.py",
       "sha256": "0a05c7cd2c8cdfdc1c6abbac0704632a18c91591822d525f7ddb9100fa4265f6",
       "size_bytes": 860
@@ -14152,8 +14167,8 @@
     },
     {
       "path": "tests/test_release_continuation_and_post_deploy.py",
-      "sha256": "28acfcf643318f2a15dfe42bf24992f9a871f82263128bae44d5d3d9577dac55",
-      "size_bytes": 5618
+      "sha256": "d3242f6e3dd40ce68e50fb8c43d9f7e28ca9838317acb9d356dae27a85af3262",
+      "size_bytes": 5836
     },
     {
       "path": "tests/test_repository_contract.py",
@@ -14491,7 +14506,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T04:42:03.161465+00:00",
+  "generated_at_utc": "2026-08-19T05:13:19.780255+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14500,5 +14515,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25634871
+  "total_bytes": 25651504
 }

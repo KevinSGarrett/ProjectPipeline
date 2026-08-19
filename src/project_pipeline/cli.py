@@ -603,6 +603,7 @@ def build_parser() -> argparse.ArgumentParser:
             "remove-worktree",
             "publish-branch",
             "cleanup",
+            "post-merge-refresh",
         ),
     )
     repository.add_argument("--root", type=_root, default=Path.cwd())
@@ -620,6 +621,9 @@ def build_parser() -> argparse.ArgumentParser:
     repository.add_argument("--actor-id", default="actor:local-repository")
     repository.add_argument("--correlation-id", default="corr:local-repository")
     repository.add_argument("--json-output", type=Path)
+    repository.add_argument("--expected-head-sha")
+    repository.add_argument("--expected-tree-sha")
+    repository.add_argument("--pinned-worktree", action="append", default=[])
     _add_configuration_arguments(repository)
 
     github = commands.add_parser(
@@ -1078,6 +1082,7 @@ def build_parser() -> argparse.ArgumentParser:
     verify = commands.add_parser("verify-archive", help="Verify ZIP integrity and root structure")
     verify.add_argument("--archive", type=Path, required=True)
     verify.add_argument("--expected-root")
+    verify.add_argument("--source-root", type=Path)
     verify.add_argument(
         "--source-bearing",
         action="store_true",
@@ -1342,6 +1347,21 @@ def _run_repository_command(args: argparse.Namespace) -> tuple[dict[str, Any], i
             return claim.model_dump(mode="json"), 0
         if args.action == "cleanup":
             return steward.cleanup_plan(local.repository_slug()), 0
+        if args.action == "post-merge-refresh":
+            from project_pipeline.governance.post_merge_refresh import plan_post_merge_refresh
+
+            if args.apply and not args.approve:
+                raise ConfigurationError(
+                    "post-merge-refresh apply requires both --apply and --approve"
+                )
+            result = plan_post_merge_refresh(
+                _repository_root(args),
+                expected_sha=args.expected_head_sha,
+                expected_tree=args.expected_tree_sha,
+                pinned_worktrees=tuple(args.pinned_worktree or ()),
+                apply=bool(args.apply),
+            )
+            return result, 0 if result.get("ok") else 1
         if args.apply and not args.approve:
             raise ConfigurationError(
                 "local repository mutation requires both --apply and --approve"
@@ -3480,7 +3500,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0 if result["valid"] else 1
         if args.command == "archive":
             output = create_archive(args.root, args.output)
-            report = verify_archive(output, args.root.name)
+            report = verify_archive(output, args.root.name, source_root=args.root)
             _write_json_output(report.as_dict(), None)
             return 0 if report.ok else 1
         if args.command == "verify-archive":
@@ -3488,6 +3508,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 args.archive,
                 args.expected_root,
                 enforce_repository_policy=not args.source_bearing,
+                source_root=args.source_root,
             )
             _write_json_output(report.as_dict(), None)
             return 0 if report.ok else 1
