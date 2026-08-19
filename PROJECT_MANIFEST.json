@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "a94bb899141e1f34c1e6d7f23c07a3e567a6d68cd689c9cc28ef5201df2ca69d",
+  "aggregate_sha256": "d69f64e7806687ca1fb3a5f73f934bb8b75885cb6c26a53f683eac60e663131b",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -13517,8 +13517,8 @@
     },
     {
       "path": "src/project_pipeline/verification/browser.py",
-      "sha256": "e46e4bd2b8b7151d60d4691e5fe1e319a76601b6171c1b603401fe93da9840d4",
-      "size_bytes": 9923
+      "sha256": "0a90c8ddb34c38ea6dd0bc5b7f5a2588cb18fd5caf86da630b8b118c993cf857",
+      "size_bytes": 11151
     },
     {
       "path": "src/project_pipeline/verification/e2e.py",
@@ -14612,8 +14612,8 @@
     },
     {
       "path": "tests/test_verification_browser.py",
-      "sha256": "870d1e696f988c99f64a5084df97c7d4b37699f3ccf535dcf2cce3bae9e33fc2",
-      "size_bytes": 675
+      "sha256": "66967fa8ef37d0b79e706dccd2005e0fba51af17b16fe1a8656af355a70ff664",
+      "size_bytes": 884
     },
     {
       "path": "tests/test_verification_cli.py",
@@ -14691,7 +14691,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T21:25:40.944985+00:00",
+  "generated_at_utc": "2026-08-19T21:36:38.850453+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14700,5 +14700,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 26001012
+  "total_bytes": 26002449
 }

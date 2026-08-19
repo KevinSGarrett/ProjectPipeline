@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import html
+import os
 import shutil
 import time
 from http.server import SimpleHTTPRequestHandler
@@ -82,11 +83,42 @@ code {{ overflow-wrap: anywhere; }}
     return target
 
 
-def find_chromium(candidates: tuple[str, ...]) -> str | None:
-    for candidate in candidates:
-        if Path(candidate).is_file():
+def _platform_chromium_candidates() -> tuple[str, ...]:
+    program_files = os.environ.get("PROGRAMFILES", r"C:\Program Files")
+    program_files_x86 = os.environ.get("PROGRAMFILES(X86)", r"C:\Program Files (x86)")
+    local_app = os.environ.get("LOCALAPPDATA", "")
+    candidates = [
+        "/usr/bin/chromium",
+        "/usr/bin/chromium-browser",
+        "/usr/bin/google-chrome",
+        "/usr/bin/google-chrome-stable",
+        str(Path(program_files) / "Google" / "Chrome" / "Application" / "chrome.exe"),
+        str(Path(program_files_x86) / "Google" / "Chrome" / "Application" / "chrome.exe"),
+        str(Path(program_files) / "Microsoft" / "Edge" / "Application" / "msedge.exe"),
+        str(Path(program_files_x86) / "Microsoft" / "Edge" / "Application" / "msedge.exe"),
+    ]
+    if local_app:
+        candidates.extend(
+            (
+                str(Path(local_app) / "Google" / "Chrome" / "Application" / "chrome.exe"),
+                str(Path(local_app) / "Microsoft" / "Edge" / "Application" / "msedge.exe"),
+            )
+        )
+    return tuple(candidates)
+
+
+def find_chromium(candidates: tuple[str, ...] = ()) -> str | None:
+    for candidate in (*candidates, *_platform_chromium_candidates()):
+        if candidate and Path(candidate).is_file():
             return candidate
-    for name in ("chromium", "chromium-browser", "google-chrome", "google-chrome-stable"):
+    for name in (
+        "chromium",
+        "chromium-browser",
+        "google-chrome",
+        "google-chrome-stable",
+        "chrome",
+        "msedge",
+    ):
         path = shutil.which(name)
         if path:
             return path
