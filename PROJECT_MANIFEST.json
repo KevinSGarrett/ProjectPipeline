@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "4c9fda094d1abc3d98deb3ee82d8854d446dea2a56da741ac526f3bdde449225",
+  "aggregate_sha256": "0f135b3b7467db4e06d6e49ca87541d6e0f966015a2d15f755e01aee358139c1",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -14252,8 +14252,8 @@
     },
     {
       "path": "tests/test_resilience_wip_preserve.py",
-      "sha256": "41ebffcdbeb08ee0418fa667b85d362828dfcb28ccdd5651054ba3de812a101c",
-      "size_bytes": 2998
+      "sha256": "107f3b6b934ca072ab9cb0076a966d7e19107c4b6f7b973c1790a7fca0c3f52a",
+      "size_bytes": 3080
     },
     {
       "path": "tests/test_runtime_foundation.py",
@@ -14491,7 +14491,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T04:27:47.805131+00:00",
+  "generated_at_utc": "2026-08-19T04:35:59.431005+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14500,5 +14500,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25632518
+  "total_bytes": 25632600
 }

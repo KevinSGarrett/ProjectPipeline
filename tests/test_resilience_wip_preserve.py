@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 from pathlib import Path
 
@@ -58,8 +59,9 @@ def test_preserve_uncommitted_work_copies_dirty_files_and_skips_secrets(tmp_path
 def test_preserve_uncommitted_work_rejects_unsafe_destination(tmp_path: Path) -> None:
     root = _init_repo(tmp_path)
     (root / "extra.txt").write_text("x\n", encoding="utf-8")
+    filesystem_root = Path("C:/") if os.name == "nt" else Path("/")
     with pytest.raises(WipPreserveError):
-        preserve_uncommitted_work(root, Path("C:/"), apply=False)
+        preserve_uncommitted_work(root, filesystem_root, apply=False)
     with pytest.raises(WipPreserveError):
         preserve_uncommitted_work(root, root, apply=False)
     with pytest.raises(WipPreserveError):
