@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "e18d2749313a35fbb72863569ee5e3268a44a0205e06c13b23407f12145e516e",
+  "aggregate_sha256": "cb6701a3d8f37f89c11f088f25625a5dfc7bdadd29af2714d95e122868532770",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2892,
+  "file_count": 2896,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -12227,8 +12227,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "94fb576430c8bc5b693f8f8d661330fc5010ba58575b7a4afa53232988cf7fbf",
-      "size_bytes": 151761
+      "sha256": "0e7398ad35018ba3617dd2c1220663f55bfef21e15a13aa2cb3bc7761f4d6af7",
+      "size_bytes": 154147
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12627,8 +12627,8 @@
     },
     {
       "path": "src/project_pipeline/github_steward/local_git.py",
-      "sha256": "afcf0ea9f15bd674e21cd4289328478aa65796538c8026dc7509a17ca92166fe",
-      "size_bytes": 20002
+      "sha256": "40ca72034b90574db0a02a7300e79c4c6c7f7a88769f6f54b8ac416bdd54e4af",
+      "size_bytes": 20116
     },
     {
       "path": "src/project_pipeline/github_steward/merge_gate.py",
@@ -12977,18 +12977,23 @@
     },
     {
       "path": "src/project_pipeline/release_hardening/__init__.py",
-      "sha256": "d04952782b8c8dd9f6d6911fc976f1ab391bcf14ca132591112a893f65a8d019",
-      "size_bytes": 878
+      "sha256": "53ea46f6d645a1025d637914582da007ca7add73b8c119b932750340ba0de232",
+      "size_bytes": 1218
     },
     {
       "path": "src/project_pipeline/release_hardening/candidate.py",
-      "sha256": "d550462b4b26358c2dc846d0b65ebbb143b057939e90632f62cb385ca8f9ffbc",
-      "size_bytes": 2859
+      "sha256": "e8ecb15078cfdd7c45c300310e6265d76c9e727f0eb32770986bb4e74118d89b",
+      "size_bytes": 4960
     },
     {
       "path": "src/project_pipeline/release_hardening/cleanup.py",
       "sha256": "efc9d4317964ca60e08c3cee3246c875fc1f236a2def447fa96b12f8ba92d88c",
       "size_bytes": 1615
+    },
+    {
+      "path": "src/project_pipeline/release_hardening/continuation.py",
+      "sha256": "931c42dc90827d632d0e0585a516557f26328cbecd17d3ddc8d55e79c576e74d",
+      "size_bytes": 3872
     },
     {
       "path": "src/project_pipeline/release_hardening/hardening.py",
@@ -12997,13 +13002,13 @@
     },
     {
       "path": "src/project_pipeline/release_hardening/models.py",
-      "sha256": "f217c12e291812a476e54287b41519b14c517de37a8559a859b18c716eee65a8",
-      "size_bytes": 2422
+      "sha256": "23e6916d15a46be4d0473713d6a8fc350053e862fb99f4d8cacf154a9379cda0",
+      "size_bytes": 2705
     },
     {
       "path": "src/project_pipeline/release_hardening/post_deploy.py",
-      "sha256": "ac6b38fd2da1b8576e22bf9b55a164ca96c931a80a39dbc9d2bf05e0f6a925be",
-      "size_bytes": 2460
+      "sha256": "efdf031df956e7bd60083ce41f2ed202871fb6ac8841e2344aa142972d4fce2d",
+      "size_bytes": 5256
     },
     {
       "path": "src/project_pipeline/release_hardening/validation.py",
@@ -13074,6 +13079,11 @@
       "path": "src/project_pipeline/resilience/validation.py",
       "sha256": "b296713e87f164921f9ccfde16a99e45f83d9d2b15314c39190292db10fbeb72",
       "size_bytes": 3412
+    },
+    {
+      "path": "src/project_pipeline/resilience/wip_preserve.py",
+      "sha256": "03e5c65aa4d43b430ebd075ac61277f873c529ca1fb6dbdf7221f5f85ca49961",
+      "size_bytes": 4816
     },
     {
       "path": "src/project_pipeline/runtime/__init__.py",
@@ -13687,8 +13697,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "d8075fb0f02328b9a24f7953b68dd97a9ec4d9e092730b4594b22a3074025872",
-      "size_bytes": 102285
+      "sha256": "ba5086c23677a5367d7818c2e6ac9a7d83dc9d1c23ed779c0a00b418c58a22aa",
+      "size_bytes": 103873
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -14017,8 +14027,8 @@
     },
     {
       "path": "tests/test_local_git_repository.py",
-      "sha256": "06d2e236a6e5bf33148e730ccd39f0626e2f0e2f1b4790847629717532575516",
-      "size_bytes": 3384
+      "sha256": "7fd3d0b943e38e7c334f691f1a97079897dd1bb09c088794e5a0c95919fd8b3b",
+      "size_bytes": 3945
     },
     {
       "path": "tests/test_manifest.py",
@@ -14092,8 +14102,8 @@
     },
     {
       "path": "tests/test_pass24_release_hardening.py",
-      "sha256": "660e5c69e77e518c7383c1f38502f7f7fbe6606f3285a4d5f99236f20873a064",
-      "size_bytes": 6977
+      "sha256": "edafaa54e80d5f21ff8ea80ac4723b550ba3b5bd64eac223a96df31672c41512",
+      "size_bytes": 7449
     },
     {
       "path": "tests/test_pass25_final_convergence.py",
@@ -14139,6 +14149,11 @@
       "path": "tests/test_pydantic_ai_adapter.py",
       "sha256": "138bdec95362952aa76bbbb2904c35ffd350d85b9c8d33d5f40c3f67c5a400db",
       "size_bytes": 2504
+    },
+    {
+      "path": "tests/test_release_continuation_and_post_deploy.py",
+      "sha256": "28acfcf643318f2a15dfe42bf24992f9a871f82263128bae44d5d3d9577dac55",
+      "size_bytes": 5618
     },
     {
       "path": "tests/test_repository_contract.py",
@@ -14234,6 +14249,11 @@
       "path": "tests/test_resilience_validation.py",
       "sha256": "e3d9e6c53ddbb7b61854b634ead1a3dca5c9e207250166bb09fbfa3faba01a93",
       "size_bytes": 204
+    },
+    {
+      "path": "tests/test_resilience_wip_preserve.py",
+      "sha256": "107f3b6b934ca072ab9cb0076a966d7e19107c4b6f7b973c1790a7fca0c3f52a",
+      "size_bytes": 3080
     },
     {
       "path": "tests/test_runtime_foundation.py",
@@ -14471,7 +14491,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T04:01:16.448553+00:00",
+  "generated_at_utc": "2026-08-19T04:42:03.161465+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14480,5 +14500,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25606844
+  "total_bytes": 25634871
 }

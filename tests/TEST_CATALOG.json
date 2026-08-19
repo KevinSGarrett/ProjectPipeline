@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 555,
+  "test_count": 563,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -2058,6 +2058,31 @@
       "test_id": "TEST-REL-HARDEN-015"
     },
     {
+      "callable": "test_local_post_deployment_pipeline_cannot_finalize_on_incomplete_or_non_live",
+      "path": "tests/test_release_continuation_and_post_deploy.py",
+      "test_id": "TEST-REL-HARDEN-016"
+    },
+    {
+      "callable": "test_post_deployment_incomplete_root_fails_closed",
+      "path": "tests/test_release_continuation_and_post_deploy.py",
+      "test_id": "TEST-REL-HARDEN-017"
+    },
+    {
+      "callable": "test_continuation_package_rejects_control_characters_and_abbreviated_git_ids",
+      "path": "tests/test_release_continuation_and_post_deploy.py",
+      "test_id": "TEST-REL-CONT-001"
+    },
+    {
+      "callable": "test_verify_post_deployment_still_requires_every_named_check",
+      "path": "tests/test_release_continuation_and_post_deploy.py",
+      "test_id": "TEST-REL-HARDEN-018"
+    },
+    {
+      "callable": "test_release_hardening_cli_grammar_emits_candidate_and_continuation",
+      "path": "tests/test_release_continuation_and_post_deploy.py",
+      "test_id": "TEST-REL-HARDEN-019"
+    },
+    {
       "callable": "RepositoryContractTests.test_repository_contract_has_no_errors",
       "path": "tests/test_repository_contract.py",
       "test_id": "TEST-REPOSITORY-001"
@@ -2246,6 +2271,21 @@
       "callable": "test_resilience_foundation_is_coherent",
       "path": "tests/test_resilience_validation.py",
       "test_id": "TEST-RES-VALIDATION-001"
+    },
+    {
+      "callable": "test_preserve_uncommitted_work_copies_dirty_files_and_skips_secrets",
+      "path": "tests/test_resilience_wip_preserve.py",
+      "test_id": "TEST-RES-WIP-001"
+    },
+    {
+      "callable": "test_preserve_uncommitted_work_rejects_unsafe_destination",
+      "path": "tests/test_resilience_wip_preserve.py",
+      "test_id": "TEST-RES-WIP-002"
+    },
+    {
+      "callable": "test_preserve_uncommitted_work_is_noop_when_clean",
+      "path": "tests/test_resilience_wip_preserve.py",
+      "test_id": "TEST-RES-WIP-003"
     },
     {
       "callable": "RuntimeFoundationTests.test_bootstrap_reports_required_foundation_ready",
