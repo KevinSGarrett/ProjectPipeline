@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "e016fa8ef21d374741b83c701e6747cd8037bec2148e7a6499c3c39f0baf2be2",
+  "aggregate_sha256": "3c0fbf3b0e7f701fa12b9e6862dc1bdd668ca553d5c8283ee9945b118f61c3e3",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -13992,8 +13992,8 @@
     },
     {
       "path": "tests/test_control_cli.py",
-      "sha256": "eeca3f906c47c8655ad1473bb50873a92dce94fd3855e14160e1a235e5a761dd",
-      "size_bytes": 4472
+      "sha256": "6b8eef04e8372273fe69804f5efd9bf48af88784551f28d13130a41b64f8f9d1",
+      "size_bytes": 4689
     },
     {
       "path": "tests/test_control_cohort_invariants.py",
@@ -14022,8 +14022,8 @@
     },
     {
       "path": "tests/test_core_state_store.py",
-      "sha256": "3eac7243daf42794fb338f35273f5426bdafe2d3472dbf59e23495cd14557655",
-      "size_bytes": 4324
+      "sha256": "1ecd66ddd6441eafe388d2b79b15b5a8bd7244bba6677fd835309e43e1c7fb9e",
+      "size_bytes": 4586
     },
     {
       "path": "tests/test_cursor_cli_qualification.py",
@@ -14711,7 +14711,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T23:25:55.089845+00:00",
+  "generated_at_utc": "2026-08-19T23:35:28.086010+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14720,5 +14720,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 26067762
+  "total_bytes": 26068241
 }
