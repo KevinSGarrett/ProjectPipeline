@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 630,
+  "test_count": 631,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3151,6 +3151,11 @@
       "callable": "test_missing_live_scheduled_task_is_not_user_action",
       "path": "tests/test_autonomy_campaign.py",
       "test_id": "TEST-CAMP-029"
+    },
+    {
+      "callable": "test_catalog_callable_present_accepts_unittest_class_methods",
+      "path": "tests/test_requirement_reconciliation.py",
+      "test_id": "TEST-REQ-RECONCILE-006"
     }
   ]
 }
