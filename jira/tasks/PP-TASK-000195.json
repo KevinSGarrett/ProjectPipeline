@@ -71,7 +71,6 @@
   "issue_type": "TASK",
   "labels": [
     "domain-model",
-    "done",
     "evidence-backed",
     "project-manifest",
     "state"
@@ -140,7 +139,7 @@
     "GOV-001:L000711-L000731",
     "SRC-003:L000962-L001001"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement the domain project manifest and repository identity boundary",
   "upstream_dependencies": []
 }

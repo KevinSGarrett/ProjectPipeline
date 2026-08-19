@@ -59,7 +59,6 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -113,7 +112,7 @@
   "source_references": [
     "GOV-001:L000949-L001158"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement deterministic Jira index and graph rebuilding",
   "upstream_dependencies": []
 }

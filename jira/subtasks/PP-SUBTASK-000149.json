@@ -56,7 +56,6 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
-    "done",
     "implemented",
     "verification"
   ],
@@ -113,7 +112,7 @@
     "GOV-001:L001998-L002024",
     "SRC-017:L000490-L000596"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Verify build glossary, source evolution, and open-decision registries",
   "upstream_dependencies": []
 }

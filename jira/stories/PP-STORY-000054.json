@@ -60,7 +60,6 @@
     "capability-story",
     "cluster-coverage",
     "domain-req",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -119,7 +118,7 @@
     "GOV-001:L001200-L001215",
     "SRC-017:L000490-L000596"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Coverage — Requirements Engineering and Traceability",
   "upstream_dependencies": []
 }

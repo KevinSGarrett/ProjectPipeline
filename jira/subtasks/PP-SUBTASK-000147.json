@@ -59,7 +59,6 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
-    "done",
     "implemented",
     "verification"
   ],
@@ -110,7 +109,7 @@
   "source_references": [
     "GOV-001:L000949-L001158"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Verify implement deterministic jira index and graph rebuilding",
   "upstream_dependencies": []
 }

@@ -62,7 +62,6 @@
   "labels": [
     "budget",
     "cost-governance",
-    "done",
     "pass-14"
   ],
   "last_observed_remote_state": {
@@ -122,7 +121,7 @@
     "SRC-004:L000937-L000977",
     "SRC-012:L000780-L000816"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement hierarchy soft allocation protected reserve and quotas",
   "upstream_dependencies": []
 }

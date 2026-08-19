@@ -83,7 +83,6 @@
   "labels": [
     "audit",
     "control-state",
-    "done",
     "evidence-backed",
     "optimistic-concurrency",
     "task-state"
@@ -163,7 +162,7 @@
     "SRC-003:L000852-L001000",
     "SRC-017:L000281-L000359"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement versioned project and task lifecycle state",
   "upstream_dependencies": []
 }

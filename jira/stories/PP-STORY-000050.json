@@ -71,7 +71,6 @@
     "capability-story",
     "cluster-intake",
     "domain-pdef",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -177,7 +176,7 @@
     "SRC-014:L000005-L000209",
     "SRC-017:L001122-L001217"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Intake — Project Definition and Scope",
   "upstream_dependencies": []
 }

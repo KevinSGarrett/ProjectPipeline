@@ -59,7 +59,6 @@
     "capability-story",
     "cluster-mission",
     "domain-pdef",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -122,7 +121,7 @@
     "SRC-001:L000021-L000061",
     "SRC-012:L000001-L000113"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Mission — Project Definition and Scope",
   "upstream_dependencies": []
 }

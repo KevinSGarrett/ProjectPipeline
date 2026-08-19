@@ -78,7 +78,6 @@
   "issue_type": "TASK",
   "labels": [
     "deterministic",
-    "done",
     "non-destructive",
     "project-compiler",
     "project-intake"
@@ -162,7 +161,7 @@
     "SRC-014:L000005-L000125",
     "SRC-017:L001122-L001175"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Compile project manifests and structured gap analysis",
   "upstream_dependencies": []
 }

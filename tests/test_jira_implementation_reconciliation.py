@@ -128,6 +128,33 @@ def test_jira_reconciliation_applies_dod_and_never_reopens_done(tmp_path: Path) 
     assert updated["acceptance_criteria"][0]["verification"]["status"] == "VERIFIED"
 
 
+def test_jira_reconciliation_does_not_mark_done_while_remote_is_to_do(
+    tmp_path: Path,
+) -> None:
+    paths = _seed(tmp_path)
+    issue = read_json(paths["task"])
+    issue["last_observed_remote_state"] = {
+        "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+        "remote_key": "PP-999",
+        "status_name": "To Do",
+    }
+    write_json(paths["task"], issue)
+    row = next(
+        item
+        for item in evaluate_jira_implementation_reconciliation(tmp_path)
+        if item["issue_id"] == "PP-TASK-000999"
+    )
+    assert row["accepted"] is True
+    assert row["next_implementation_state"] == "IMPLEMENTED"
+    assert row["next_lifecycle_state"] is None
+    assert "remote readback beyond To Do" in row["reason"]
+    apply_jira_implementation_reconciliation(tmp_path)
+    updated = read_json(paths["task"])
+    assert updated["implementation_state"] == "IMPLEMENTED"
+    assert updated["state"] == "BACKLOG"
+    assert "done" not in updated.get("labels", [])
+
+
 def test_jira_reconciliation_rejects_missing_catalog_and_live_wording(tmp_path: Path) -> None:
     _seed(tmp_path)
     issue = read_json(tmp_path / "jira/tasks/PP-TASK-000999.json")

@@ -57,7 +57,6 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
-    "done",
     "implemented",
     "verification"
   ],
@@ -112,7 +111,7 @@
     "GOV-001:L001200-L001215",
     "GOV-001:L002200-L002231"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Verify expand self-validation for detailed registries",
   "upstream_dependencies": []
 }

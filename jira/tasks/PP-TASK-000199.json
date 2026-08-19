@@ -80,7 +80,6 @@
   "issue_type": "TASK",
   "labels": [
     "bidirectional",
-    "done",
     "evidence-backed",
     "requirements",
     "traceability",
@@ -165,7 +164,7 @@
     "GOV-001:L001162-L001215",
     "SRC-017:L000490-L000596"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement transactional bidirectional requirement traceability",
   "upstream_dependencies": []
 }

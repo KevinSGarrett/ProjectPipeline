@@ -68,7 +68,6 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
     "implemented",
     "recovery",
     "resilience"
@@ -135,7 +134,7 @@
     "SRC-009:L000015-L000015",
     "SRC-017:L000439-L000489"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Integrate resilience persistence migration CLI simulations and repository validation",
   "upstream_dependencies": []
 }

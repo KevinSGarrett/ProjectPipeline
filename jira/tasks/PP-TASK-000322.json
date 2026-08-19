@@ -63,7 +63,6 @@
   "labels": [
     "assurance",
     "completion-gate",
-    "done",
     "pass-15"
   ],
   "last_observed_remote_state": {
@@ -127,7 +126,7 @@
     "SRC-008:L000715-L000770",
     "SRC-008:L001042-L001066"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement Truth Registry evidence sufficiency and freshness",
   "upstream_dependencies": []
 }

@@ -55,7 +55,6 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -114,7 +113,7 @@
     "GOV-001:L001162-L001200",
     "GOV-001:L001202-L001215"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Generate the detailed requirement catalog",
   "upstream_dependencies": []
 }

@@ -63,7 +63,6 @@
     "capability-story",
     "cluster-leases",
     "domain-budget",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -118,7 +117,7 @@
     "SRC-004:L000937-L000977",
     "SRC-009:L000022-L000022"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Leases — Budget and Resource Governance",
   "upstream_dependencies": []
 }

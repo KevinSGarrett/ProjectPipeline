@@ -59,7 +59,6 @@
     "bulk-reconciled",
     "control-kernel",
     "deterministic",
-    "done",
     "implemented",
     "project-control"
   ],
@@ -116,7 +115,7 @@
     "SRC-003:L000225-L000371",
     "SRC-014:L000859-L000946"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Critical path and deterministic priority sequencing",
   "upstream_dependencies": [
     "https://github.com/networkx/networkx"

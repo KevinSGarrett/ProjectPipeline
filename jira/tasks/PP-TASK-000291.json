@@ -58,7 +58,6 @@
   "labels": [
     "context",
     "delegation",
-    "done",
     "implemented",
     "pass-12"
   ],
@@ -117,7 +116,7 @@
     "SRC-002:L000213-L000260",
     "SRC-002:L000959-L001014"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement immutable delegation envelope and context domain",
   "upstream_dependencies": []
 }

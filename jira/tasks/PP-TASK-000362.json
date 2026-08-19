@@ -55,7 +55,6 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
     "implemented",
     "pass-22",
     "platform-lifecycle"
@@ -110,7 +109,7 @@
   "source_references": [
     "SRC-017:L000907-L001001"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement reference-aware retention and project closure planning",
   "upstream_dependencies": []
 }

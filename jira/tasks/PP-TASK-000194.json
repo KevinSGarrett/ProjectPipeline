@@ -74,7 +74,6 @@
   "issue_type": "TASK",
   "labels": [
     "domain-model",
-    "done",
     "evidence-backed",
     "identifiers",
     "requirements",
@@ -147,7 +146,7 @@
     "GOV-001:L001477-L001488",
     "SRC-017:L000490-L000596"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement stable domain identifiers and strict requirement entities",
   "upstream_dependencies": []
 }

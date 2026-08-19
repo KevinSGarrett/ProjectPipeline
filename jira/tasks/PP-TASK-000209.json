@@ -80,7 +80,6 @@
   "issue_type": "TASK",
   "labels": [
     "deterministic",
-    "done",
     "non-destructive",
     "project-compiler",
     "project-intake"
@@ -143,7 +142,7 @@
     "GOV-001:L001477-L001488",
     "SRC-017:L001122-L001175"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Persist compilations and bootstrap receipts through migration PPDB-0003",
   "upstream_dependencies": []
 }

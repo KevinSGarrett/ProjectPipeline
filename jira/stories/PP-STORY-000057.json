@@ -55,7 +55,6 @@
     "capability-story",
     "cluster-provenance",
     "domain-req",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -114,7 +113,7 @@
     "GOV-001:L000177-L000183",
     "SRC-017:L000490-L000596"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Provenance — Requirements Engineering and Traceability",
   "upstream_dependencies": []
 }

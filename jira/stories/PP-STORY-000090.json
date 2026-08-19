@@ -59,7 +59,6 @@
     "capability-story",
     "cluster-guardrails",
     "domain-assure",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -116,7 +115,7 @@
     "SRC-008:L000131-L000155",
     "SRC-008:L000156-L000196"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Guardrails — Execution Assurance and Testing",
   "upstream_dependencies": []
 }

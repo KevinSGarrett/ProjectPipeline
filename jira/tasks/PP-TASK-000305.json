@@ -67,7 +67,6 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
     "durability",
     "implemented",
     "orchestration",
@@ -131,7 +130,7 @@
     "SRC-017:L000281-L000359",
     "SRC-016:L001748-L001756"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement worker heartbeat fencing and loss recovery",
   "upstream_dependencies": []
 }

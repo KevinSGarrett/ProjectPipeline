@@ -61,7 +61,6 @@
     "capability-story",
     "cluster-ledger",
     "domain-budget",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -119,7 +118,7 @@
     "SRC-004:L000148-L000251",
     "SRC-004:L000607-L000650"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Ledger — Budget and Resource Governance",
   "upstream_dependencies": []
 }

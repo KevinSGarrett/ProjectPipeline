@@ -61,7 +61,6 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
     "implemented",
     "recovery",
     "resilience"
@@ -124,7 +123,7 @@
     "SRC-009:L000025-L000025",
     "SRC-017:L000439-L000489"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement recovery objectives and backup restore planning",
   "upstream_dependencies": [
     "UPSTREAM-082",

@@ -59,7 +59,6 @@
   "issue_type": "TASK",
   "labels": [
     "bulk-reconciled",
-    "done",
     "implemented",
     "recovery",
     "resilience"
@@ -118,7 +117,7 @@
     "SRC-009:L000026-L000026",
     "SRC-015:L000589-L000661"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement autonomous external-precondition recovery and repair verification",
   "upstream_dependencies": []
 }

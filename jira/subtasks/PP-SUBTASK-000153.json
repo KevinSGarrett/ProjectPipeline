@@ -65,7 +65,6 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
-    "done",
     "implemented",
     "verification"
   ],
@@ -120,7 +119,7 @@
   "source_references": [
     "SRC-008:L000540-L000760"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Verify add behavior-specific catalog, source, and jira tests",
   "upstream_dependencies": []
 }

@@ -66,7 +66,6 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
     "implemented",
     "recovery",
     "resilience"
@@ -136,7 +135,7 @@
     "SRC-012:L000734-L000779",
     "SRC-012:L000817-L001036"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement optional local-primary AWS recovery spine blueprint",
   "upstream_dependencies": []
 }

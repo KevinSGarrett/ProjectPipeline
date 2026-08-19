@@ -56,7 +56,6 @@
     "capability-story",
     "cluster-human-recovery",
     "domain-res",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -109,7 +108,7 @@
     "SRC-009:L000026-L000026",
     "SRC-015:L000589-L000661"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Human Recovery — Resilience, Recovery, and Disaster Readiness",
   "upstream_dependencies": []
 }

@@ -101,7 +101,6 @@
   "issue_type": "TASK",
   "labels": [
     "deterministic",
-    "done",
     "non-destructive",
     "project-compiler",
     "project-intake"
@@ -200,7 +199,7 @@
     "SRC-017:L000823-L000906",
     "SRC-017:L001122-L001175"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Integrate intake CLI, schemas, fixtures, self-validation, and evidence",
   "upstream_dependencies": []
 }

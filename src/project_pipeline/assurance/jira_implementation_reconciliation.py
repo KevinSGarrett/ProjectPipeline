@@ -306,6 +306,31 @@ def _evaluate_issue(
                 "live or protected lifecycle stays short of DONE"
             ),
         }
+    observed = issue.get("last_observed_remote_state")
+    remote_status = ""
+    if isinstance(observed, dict):
+        remote_status = str(observed.get("status_name") or "").strip()
+    if remote_status and remote_status.casefold() not in {"done", "in progress"}:
+        next_impl = projected_impl or (None if current_impl == "IMPLEMENTED" else "IMPLEMENTED")
+        if next_impl is None:
+            return {
+                **base,
+                "reason": (
+                    "implementation already projected; local DONE waits for integrated "
+                    "main and remote readback beyond To Do"
+                ),
+            }
+        return {
+            **base,
+            "accepted": True,
+            "next_implementation_state": next_impl,
+            "completion_evidence": evidence_ids,
+            "verify_acceptance": True,
+            "reason": (
+                "cataloged tests and verified evidence support implementation; "
+                "local DONE waits for integrated main and remote readback beyond To Do"
+            ),
+        }
     next_life = None if issue.get("state") == "DONE" else "DONE"
     if next_impl is None and next_life is None:
         return {**base, "reason": "already projected implemented and DONE"}

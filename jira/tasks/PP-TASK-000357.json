@@ -69,7 +69,6 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
     "implemented",
     "recovery",
     "resilience"
@@ -129,7 +128,7 @@
     "SRC-009:L000015-L000015",
     "SRC-013:L000420-L000529"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Complete resilience local-runtime and backup upstream adoption review",
   "upstream_dependencies": [
     "UPSTREAM-040",

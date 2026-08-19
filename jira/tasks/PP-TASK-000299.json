@@ -68,7 +68,6 @@
   "labels": [
     "context",
     "delegation",
-    "done",
     "implemented",
     "pass-12"
   ],
@@ -129,7 +128,7 @@
     "GOV-001:L000695-L000710",
     "SRC-002:L001158-L001234"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Integrate Context CLI schemas documentation and validation",
   "upstream_dependencies": []
 }

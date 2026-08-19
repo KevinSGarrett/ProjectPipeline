@@ -55,7 +55,6 @@
     "capability-story",
     "cluster-aws",
     "domain-infra",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -118,7 +117,7 @@
     "SRC-012:L000734-L000779",
     "SRC-012:L000817-L001036"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Aws — Deployment and Infrastructure",
   "upstream_dependencies": []
 }

@@ -86,7 +86,6 @@
     "assurance",
     "bulk-reconciled",
     "completion-gate",
-    "done",
     "implemented",
     "pass-15"
   ],
@@ -141,7 +140,7 @@
     "SRC-008:L000771-L000839",
     "SRC-011:L001212-L001345"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Complete Pass 15 verification upstream gate",
   "upstream_dependencies": [
     "UPSTREAM-015",

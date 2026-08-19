@@ -54,7 +54,6 @@
   "issue_type": "TASK",
   "labels": [
     "bulk-reconciled",
-    "done",
     "executable",
     "foundation",
     "implemented"
@@ -101,7 +100,7 @@
   "source_references": [
     "GOV-001:L000052-L000119"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Reconcile governing prompt aliases",
   "upstream_dependencies": []
 }

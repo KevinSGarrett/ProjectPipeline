@@ -55,7 +55,6 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
     "implemented",
     "pass-22",
     "platform-lifecycle"
@@ -112,7 +111,7 @@
   "source_references": [
     "SRC-017:L000671-L000822"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement portfolio and multi-repository lifecycle coordination",
   "upstream_dependencies": []
 }

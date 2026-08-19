@@ -47,7 +47,6 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "SUBTASK",
   "labels": [
-    "done",
     "foundation",
     "implemented",
     "verification"
@@ -97,7 +96,7 @@
     "GOV-001:L001364-L001385",
     "SRC-008:L000540-L000760"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement repository policy and traceability validation",
   "upstream_dependencies": []
 }

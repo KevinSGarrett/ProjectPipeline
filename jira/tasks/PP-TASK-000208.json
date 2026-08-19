@@ -67,7 +67,6 @@
   "labels": [
     "bulk-reconciled",
     "deterministic",
-    "done",
     "implemented",
     "non-destructive",
     "project-compiler",
@@ -130,7 +129,7 @@
   "source_references": [
     "SRC-017:L001122-L001175"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement controlled idempotent non-destructive bootstrap",
   "upstream_dependencies": []
 }

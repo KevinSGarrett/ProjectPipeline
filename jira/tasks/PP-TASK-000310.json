@@ -91,7 +91,6 @@
     "budget",
     "bulk-reconciled",
     "cost-governance",
-    "done",
     "implemented",
     "pass-14"
   ],
@@ -150,7 +149,7 @@
     "SRC-004:L000937-L000977",
     "SRC-012:L000780-L000816"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Complete Pass 14 budget upstream gate",
   "upstream_dependencies": [
     "UPSTREAM-012",

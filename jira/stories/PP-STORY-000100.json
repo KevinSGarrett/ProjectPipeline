@@ -61,7 +61,6 @@
     "capability-story",
     "cluster-forecast",
     "domain-budget",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -121,7 +120,7 @@
     "SRC-004:L000651-L000718",
     "SRC-004:L000735-L000811"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Forecast — Budget and Resource Governance",
   "upstream_dependencies": []
 }

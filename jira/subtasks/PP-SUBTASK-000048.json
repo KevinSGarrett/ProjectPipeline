@@ -42,7 +42,6 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "SUBTASK",
   "labels": [
-    "done",
     "foundation",
     "implemented",
     "verification"
@@ -90,7 +89,7 @@
   "source_references": [
     "GOV-001:L001884-L001992"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Record final test, validation, and archive evidence",
   "upstream_dependencies": []
 }

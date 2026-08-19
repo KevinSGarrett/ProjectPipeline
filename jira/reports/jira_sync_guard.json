@@ -9,7 +9,7 @@
     "metadata": "NO_DIFFERENCE",
     "status": "NO_DIFFERENCE"
   },
-  "generated_at_utc": "2026-08-19T00:02:22.393371Z",
+  "generated_at_utc": "2026-08-19T19:37:39.239232Z",
   "instruction_citations": [
     "instructions/06_JIRA_OPERATING_PROTOCOL.md",
     "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
@@ -20,7 +20,8 @@
   ],
   "local_edge_count": 890,
   "local_issue_count": 393,
-  "local_mirror_fingerprint": "4f9efa0f6c7a874770cc8cbbb68355ba13d1500c1c0ed643e6f3a2b91b26025d",
+  "local_mirror_fingerprint": "6511c76ed368d08eb9f6be0b37b12f8731f84423cd9a7e176daecaed96d4dd01",
+  "local_reconciliation_pending_remote": false,
   "parity_status": "PARITY_CONFIRMED",
   "plan_id": "JPLAN-3618FC1CD42B00FA927F",
   "project_key": "PP",

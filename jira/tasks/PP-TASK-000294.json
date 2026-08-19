@@ -61,7 +61,6 @@
   "labels": [
     "context",
     "delegation",
-    "done",
     "implemented",
     "pass-12"
   ],
@@ -132,7 +131,7 @@
     "SRC-002:L000889-L000958",
     "SRC-002:L001015-L001156"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement context trust classification and firewall",
   "upstream_dependencies": []
 }

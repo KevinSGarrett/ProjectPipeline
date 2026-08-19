@@ -52,8 +52,7 @@
   "labels": [
     "capability-story",
     "cluster-provider-failure",
-    "domain-res",
-    "done"
+    "domain-res"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -107,7 +106,7 @@
     "SRC-006:L000011-L000197",
     "SRC-006:L000825-L000938"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Provider Failure — Resilience, Recovery, and Disaster Readiness",
   "upstream_dependencies": []
 }

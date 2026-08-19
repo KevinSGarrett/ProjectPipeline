@@ -59,7 +59,6 @@
     "capability-story",
     "cluster-machine-failure",
     "domain-res",
-    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -128,7 +127,7 @@
     "SRC-006:L000567-L000603",
     "SRC-012:L000380-L000495"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Machine Failure — Resilience, Recovery, and Disaster Readiness",
   "upstream_dependencies": []
 }
