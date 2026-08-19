@@ -490,7 +490,8 @@ def run_director_action(
         if action == "status":
             return evaluate_director_status(root, body)
         if action == "portfolio":
-            portfolio = assign_local_portfolio(body)
+            resources = body.get("resources") if isinstance(body.get("resources"), dict) else body
+            portfolio = assign_local_portfolio(resources)
             store.put(
                 "portfolio",
                 _digest("portfolio", _canonical(body)),

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "da9445ac62081829e6e84ddc71f44cd603212818408c6ab3bcea8d80259c2b86",
+  "aggregate_sha256": "d56b47259bb5c9fe606ebe8ba67a28dc1952a2f8fc3e0d9fbf480bca6154122c",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12842,8 +12842,8 @@
     },
     {
       "path": "src/project_pipeline/intelligence/director.py",
-      "sha256": "9ddd7658938ff080a245b1e290ffc7e0499985264065587018e655a98e3b9bda",
-      "size_bytes": 18760
+      "sha256": "043ac5b062d2de2aac531998e891d70ac1cc2f5111b2dd4d7e6fc0503c8cc5e6",
+      "size_bytes": 18864
     },
     {
       "path": "src/project_pipeline/io.py",
@@ -14047,8 +14047,8 @@
     },
     {
       "path": "tests/test_director_intelligence.py",
-      "sha256": "14c52f9144cfdac0498f43e364aa99d382f00a7b69c067beda7fb2aa823dfa3f",
-      "size_bytes": 5255
+      "sha256": "1e0723f61779faeb22290ac6ecd91f9ac20cf06840bda4b91c4c12a6359b2486",
+      "size_bytes": 5453
     },
     {
       "path": "tests/test_docker_mcp_gateway.py",
@@ -14676,7 +14676,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T09:58:45.522333+00:00",
+  "generated_at_utc": "2026-08-19T10:07:09.104525+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14685,5 +14685,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25908069
+  "total_bytes": 25908371
 }

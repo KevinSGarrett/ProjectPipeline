@@ -153,3 +153,9 @@ def test_cli_status_is_machine_readable_and_advisory(tmp_path: Path) -> None:
     assert payload["user_action_required"] is False
     assert payload["model_output_authoritative"] is False
     assert payload["portfolio"]["paid_dependency_required"] is False
+    nested = run_director_action(
+        tmp_path,
+        "portfolio",
+        payload={"resources": {"ram_gb": 32, "vram_gb": 16}},
+    )
+    assert nested["resource_class"] == "workstation-gpu"
