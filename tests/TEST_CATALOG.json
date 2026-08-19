@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 610,
+  "test_count": 612,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3051,6 +3051,16 @@
       "callable": "test_cli_health_and_index",
       "path": "tests/test_ops_intelligence.py",
       "test_id": "TEST-OPS-CLI-001"
+    },
+    {
+      "callable": "test_retention_survives_reopen",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-STORE-003"
+    },
+    {
+      "callable": "test_empty_ops_store_does_not_rewrite_command_center_health",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-CC-002"
     }
   ]
 }

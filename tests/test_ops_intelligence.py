@@ -208,6 +208,27 @@ def test_conflicting_replay_and_journal_recovery(tmp_path: Path) -> None:
     store.close()
 
 
+def test_retention_survives_reopen(tmp_path: Path) -> None:
+    database = tmp_path / "ops.sqlite3"
+    store = OpsIntelligenceStore(database)
+    old = NOW - timedelta(days=40)
+    record_layer(store, _layer("project", when=old, suffix="old"))
+    deleted = store.apply_retention(retention_days=30)
+    assert deleted >= 1
+    assert store.list_kind("layer") == []
+    store.close()
+    reopened = OpsIntelligenceStore(database)
+    assert reopened.list_kind("layer") == []
+    reopened.close()
+
+
+def test_empty_ops_store_does_not_rewrite_command_center_health(tmp_path: Path) -> None:
+    store = OpsIntelligenceStore.open(tmp_path)
+    store.close()
+    assert (tmp_path / ".local" / "state" / "ops_intelligence" / "ops.sqlite3").is_file()
+    assert load_ops_health_dimensions(tmp_path) == ()
+
+
 def test_retention_and_concurrent_writers(tmp_path: Path) -> None:
     store = OpsIntelligenceStore(tmp_path / "ops.sqlite3")
     old = NOW - timedelta(days=40)

@@ -204,10 +204,22 @@ class OpsIntelligenceStore:
             db = self._connection()
             db.execute("BEGIN IMMEDIATE")
             try:
-                deleted = db.execute(
-                    "DELETE FROM ops_records WHERE recorded_at_utc < ?",
+                expired = db.execute(
+                    "SELECT record_id FROM ops_records WHERE recorded_at_utc < ?",
                     (cutoff_text,),
-                ).rowcount
+                ).fetchall()
+                expired_ids = [str(row["record_id"]) for row in expired]
+                deleted = 0
+                if expired_ids:
+                    placeholders = ",".join("?" for _ in expired_ids)
+                    deleted = db.execute(
+                        f"DELETE FROM ops_records WHERE record_id IN ({placeholders})",
+                        expired_ids,
+                    ).rowcount
+                    db.execute(
+                        f"DELETE FROM ops_journal WHERE operation = 'put' AND record_id IN ({placeholders})",
+                        expired_ids,
+                    )
                 db.execute(
                     """
                     INSERT INTO ops_journal(record_id, kind, operation, payload_json, recorded_at_utc)

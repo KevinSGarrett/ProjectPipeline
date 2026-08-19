@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "e6c943762547905ac48afadc5c5ce96c9b41091f91fcb974a6ad36234438dac7",
+  "aggregate_sha256": "c0b60a60a2bdf7c1571afc4e2d359cd2982318d407f4aacbd78d93f01c033f91",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12997,13 +12997,13 @@
     },
     {
       "path": "src/project_pipeline/observability/ops_service.py",
-      "sha256": "ba4503cc46d8c47fa99769952c15a0ebfff45f120e3194499dce6ea6ae22a33c",
-      "size_bytes": 12007
+      "sha256": "aa744c350d058cbdf8d2b3653528ff6f9b04dc796d76f3527ab35e1484f49afe",
+      "size_bytes": 12070
     },
     {
       "path": "src/project_pipeline/observability/ops_store.py",
-      "sha256": "e52510ea82941fdc086c646289ecee3b8b28b88bc051e13da5cae535d1154cf1",
-      "size_bytes": 8267
+      "sha256": "ca59a430217fd0210b0ebbf61bd50944a4d672a4d0e8c0c191f72efdf6c42f4d",
+      "size_bytes": 8881
     },
     {
       "path": "src/project_pipeline/observability/telemetry.py",
@@ -13817,8 +13817,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "6ac387c502b81780888a9589ecb555c731d72fc18d718d26fc48e446aad29217",
-      "size_bytes": 112208
+      "sha256": "10cb0895152a0c991a3e54510793a254154c9bfc6bb31acffbae9907069cffc9",
+      "size_bytes": 112536
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -14192,8 +14192,8 @@
     },
     {
       "path": "tests/test_ops_intelligence.py",
-      "sha256": "1592218c3930a602eef3c95adce264166bc724d3ae741c84b04d205a66aa2103",
-      "size_bytes": 9228
+      "sha256": "3f520738650356e5efcb9b3094c67ee828037fcf54292f11efde8dc1c4467621",
+      "size_bytes": 10027
     },
     {
       "path": "tests/test_orchestration_adapters.py",
@@ -14636,7 +14636,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T09:07:43.795949+00:00",
+  "generated_at_utc": "2026-08-19T09:19:18.515633+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14645,5 +14645,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25852979
+  "total_bytes": 25854783
 }

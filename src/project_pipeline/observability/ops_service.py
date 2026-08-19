@@ -268,6 +268,8 @@ def load_ops_health_dimensions(root: Path | None) -> tuple[HealthDimension, ...]
         return ()
     store = OpsIntelligenceStore(database)
     try:
+        if not store.list_kind("layer"):
+            return ()
         return health_dimensions(calculate_health(store))
     finally:
         store.close()
