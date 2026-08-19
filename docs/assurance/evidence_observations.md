@@ -10,6 +10,8 @@ A separate immutable **observation receipt** records an actual execution against
 
 Reconciliation consumes a definition plus a valid current observation. A stale, wrong-tree, wrong-environment, mock-only, failed, missing-artifact, missing-test-catalog, or unverified observation fails closed.
 
+Shared evidence is not a single fingerprint. Each observation records `requirement_scope_fingerprints` for every linked requirement and `test_outcomes` for every listed test. Reconciliation matches the evaluated requirement's current acceptance-scope fingerprint and requires that requirement's cataloged tests to be `PASS`. An unrun node/UI test or a source change in one requirement cannot fail-close unrelated siblings that share the same evidence ID.
+
 ## Self-reference rule
 
 Writing the current SHA or tree into a source-controlled evidence row cannot converge. The commit that stores the binding changes the subject it names. Observations therefore stay outside the acceptance-bearing tree. Metadata-only reconciliation (allowlisted `implementation_state` and generated Jira/index paths) may inherit an observation after a post-merge refresh when the acceptance-scope fingerprint is unchanged. Changing an acceptance-bearing source file invalidates inherited observations.

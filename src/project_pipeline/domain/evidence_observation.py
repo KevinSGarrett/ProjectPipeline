@@ -108,6 +108,8 @@ class EvidenceObservation(DomainModel):
     integrated_tree: str
     acceptance_scope_fingerprint: str
     path_fingerprints: dict[str, str] = Field(default_factory=dict)
+    requirement_scope_fingerprints: dict[str, str] = Field(default_factory=dict)
+    test_outcomes: dict[str, str] = Field(default_factory=dict)
     artifact_digest: str
     command_identity: tuple[str, ...]
     environment_class: EnvironmentClass

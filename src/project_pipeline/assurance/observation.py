@@ -19,6 +19,7 @@ from project_pipeline.domain.evidence_observation import (
     EvidenceObservation,
     MergeKind,
     ObservationResult,
+    canonical_fingerprint,
     observation_identifier,
 )
 from project_pipeline.io import read_json, read_jsonl, sha256_canonical_file
@@ -77,10 +78,23 @@ def observation_rejection(
         )
     if observation.verification_status != "VERIFIED":
         return f"observation {observation.observation_id} is not independently verified"
-    if observation.result is ObservationResult.FAIL:
-        return f"observation {observation.observation_id} records FAIL"
-    if observation.result is not ObservationResult.PASS:
-        return f"observation {observation.observation_id} does not record PASS"
+    outcomes = observation.test_outcomes
+    if outcomes:
+        for test_id in test_ids:
+            outcome = outcomes.get(test_id)
+            if outcome != "PASS":
+                return (
+                    f"observation {observation.observation_id} test {test_id} is "
+                    f"{outcome or 'missing'}"
+                )
+    else:
+        if observation.result is ObservationResult.FAIL:
+            return f"observation {observation.observation_id} records FAIL"
+        if observation.result is not ObservationResult.PASS:
+            return f"observation {observation.observation_id} does not record PASS"
+        missing_tests = [test_id for test_id in test_ids if test_id not in observation.test_ids]
+        if missing_tests:
+            return f"observation {observation.observation_id} is missing cataloged tests"
     age = max(0, int((now - observation.recorded_at_utc.astimezone(UTC)).total_seconds()))
     if age > policy.default_evidence_max_age_seconds:
         return f"observation {observation.observation_id} is stale"
@@ -90,7 +104,7 @@ def observation_rejection(
         return f"observation {observation.observation_id} is bound to a different integrated SHA"
     if observation.integrated_tree != current_tree:
         return f"observation {observation.observation_id} is bound to a different integrated tree"
-    if observation.acceptance_scope_fingerprint != acceptance_fingerprint:
+    if not _fingerprint_matches(observation, requirement_id, acceptance_fingerprint):
         return (
             f"observation {observation.observation_id} acceptance-scope fingerprint does not match"
         )
@@ -98,10 +112,16 @@ def observation_rejection(
         artifact = str(definition.get("artifact_path") or "")
         if artifact and observation.artifact_digest != str(definition.get("sha256") or ""):
             return f"observation {observation.observation_id} artifact digest does not match the definition"
-    missing_tests = [test_id for test_id in test_ids if test_id not in observation.test_ids]
-    if missing_tests:
-        return f"observation {observation.observation_id} is missing cataloged tests"
     return None
+
+
+def _fingerprint_matches(
+    observation: EvidenceObservation, requirement_id: str, acceptance_fingerprint: str
+) -> bool:
+    scopes = observation.requirement_scope_fingerprints
+    if scopes:
+        return scopes.get(requirement_id) == acceptance_fingerprint
+    return observation.acceptance_scope_fingerprint == acceptance_fingerprint
 
 
 def select_current_observation(
@@ -111,9 +131,20 @@ def select_current_observation(
     current_sha: str,
     current_tree: str,
     acceptance_fingerprint: str,
+    requirement_id: str | None = None,
 ) -> EvidenceObservation | None:
     exact = store.current(evidence_id, subject_sha=current_sha, subject_tree=current_tree)
-    if exact is not None and exact.acceptance_scope_fingerprint == acceptance_fingerprint:
+    if exact is None:
+        return None
+    if requirement_id:
+        return (
+            exact if _fingerprint_matches(exact, requirement_id, acceptance_fingerprint) else None
+        )
+    if exact.acceptance_scope_fingerprint == acceptance_fingerprint:
+        return exact
+    if any(
+        value == acceptance_fingerprint for value in exact.requirement_scope_fingerprints.values()
+    ):
         return exact
     return None
 
@@ -139,6 +170,8 @@ def record_observation(
     merge_kind: MergeKind = MergeKind.NONE,
     metadata_only_diff_proof: Any = None,
     now: datetime | None = None,
+    requirement_scope_fingerprints: dict[str, str] | None = None,
+    test_outcomes: dict[str, str] | None = None,
 ) -> EvidenceObservation:
     recorded = (now or datetime.now(UTC)).astimezone(UTC)
     previous = store.latest_any(evidence_id)
@@ -160,6 +193,8 @@ def record_observation(
         integrated_tree=integrated_tree,
         acceptance_scope_fingerprint=acceptance_scope_fingerprint,
         path_fingerprints=path_fingerprints,
+        requirement_scope_fingerprints=dict(requirement_scope_fingerprints or {}),
+        test_outcomes=dict(test_outcomes or {}),
         artifact_digest=artifact_digest,
         command_identity=tuple(command_identity),
         environment_class=environment_class,
@@ -206,26 +241,35 @@ def generate_observation(
             test_ids.extend(str(test_id) for test_id in item.get("test_ids", []))
         test_ids = list(dict.fromkeys(test_ids))
     fingerprints: dict[str, str] = {}
-    scopes: list[str] = []
+    scope_map: dict[str, str] = {}
     for requirement_id in requirement_ids:
         item = requirements.get(requirement_id)
         if item is None:
             continue
-        scopes.append(acceptance_scope_fingerprint(root, item))
+        scope_map[requirement_id] = acceptance_scope_fingerprint(root, item)
         for relative in item.get("implementation_paths", []):
             path = root / str(relative)
             if path.is_file():
                 fingerprints[str(relative).replace("\\", "/")] = sha256_canonical_file(path)
-    if not scopes:
+    if not scope_map:
         raise ValueError(f"evidence {evidence_id} is not linked to a requirement")
-    catalog = _catalog_paths(root, test_ids)
-    results = (runner or _pytest_runner(root))(test_ids, catalog)
-    failed = [test_id for test_id, outcome in results.items() if outcome != "PASS"]
-    result = ObservationResult.FAIL if failed else ObservationResult.PASS
+    pytest_ids = _pytest_test_ids(root, test_ids)
+    catalog: list[str] = []
+    results: dict[str, str] = {}
+    if pytest_ids:
+        catalog = _catalog_paths(root, pytest_ids)
+        results = (runner or _pytest_runner(root))(pytest_ids, catalog)
+    test_outcomes = {test_id: "MISSING" for test_id in test_ids}
+    test_outcomes.update({str(test_id): str(outcome) for test_id, outcome in results.items()})
+    failed = [test_id for test_id in pytest_ids if test_outcomes.get(test_id) != "PASS"]
+    result = ObservationResult.FAIL if failed or not pytest_ids else ObservationResult.PASS
     artifact = str(definition.get("artifact_path") or "")
     digest = str(definition.get("sha256") or "")
     if artifact and (root / artifact).is_file():
         digest = sha256_canonical_file(root / artifact)
+    combined = (
+        next(iter(scope_map.values())) if len(scope_map) == 1 else canonical_fingerprint(scope_map)
+    )
     return record_observation(
         store,
         evidence_id=evidence_id,
@@ -234,8 +278,10 @@ def generate_observation(
         requirement_ids=requirement_ids,
         integrated_sha=sha,
         integrated_tree=tree,
-        acceptance_scope_fingerprint=scopes[0],
+        acceptance_scope_fingerprint=combined,
         path_fingerprints=fingerprints,
+        requirement_scope_fingerprints=scope_map,
+        test_outcomes=test_outcomes,
         artifact_digest=digest,
         command_identity=("pytest", *catalog) if catalog else ("pytest", *test_ids),
         environment_class=classify_environment(str(definition.get("environment") or "local")),
@@ -279,9 +325,28 @@ def refresh_post_merge_observations(
         )
         if requirement_id is None:
             continue
-        fingerprint = acceptance_scope_fingerprint(root, by_id[requirement_id])
-        if fingerprint != inherited.acceptance_scope_fingerprint:
-            continue
+        inherited_scopes = dict(inherited.requirement_scope_fingerprints)
+        current_scopes = {
+            req_id: acceptance_scope_fingerprint(root, by_id[req_id])
+            for req_id in inherited.requirement_ids
+            if req_id in by_id
+        }
+        if inherited_scopes:
+            if any(
+                current_scopes.get(req_id) != fingerprint
+                for req_id, fingerprint in inherited_scopes.items()
+            ):
+                continue
+            fingerprint = (
+                next(iter(current_scopes.values()))
+                if len(current_scopes) == 1
+                else canonical_fingerprint(current_scopes)
+            )
+        else:
+            fingerprint = acceptance_scope_fingerprint(root, by_id[requirement_id])
+            if fingerprint != inherited.acceptance_scope_fingerprint:
+                continue
+            current_scopes = {requirement_id: fingerprint}
         prior_sha = previous_sha or inherited.integrated_sha
         prior_tree = previous_tree or inherited.integrated_tree
         proof = prove_metadata_only_diff(
@@ -310,6 +375,8 @@ def refresh_post_merge_observations(
                 integrated_tree=tree,
                 acceptance_scope_fingerprint=fingerprint,
                 path_fingerprints=dict(inherited.path_fingerprints),
+                requirement_scope_fingerprints=inherited_scopes or current_scopes,
+                test_outcomes=dict(inherited.test_outcomes),
                 artifact_digest=inherited.artifact_digest,
                 command_identity=("evidence.refresh-post-merge", inherited.observation_id, sha),
                 environment_class=inherited.environment_class,
@@ -370,16 +437,30 @@ def evidence_status(
     }
 
 
-def _catalog_paths(root: Path, test_ids: list[str]) -> list[str]:
+def _pytest_test_ids(root: Path, test_ids: list[str]) -> list[str]:
+    catalog = _test_catalog_map(root)
+    selected: list[str] = []
+    for test_id in test_ids:
+        path = str((catalog.get(test_id) or {}).get("path") or "").replace("\\", "/")
+        if path.endswith(".py"):
+            selected.append(test_id)
+    return selected
+
+
+def _test_catalog_map(root: Path) -> dict[str, dict[str, Any]]:
     path = root / "tests" / "TEST_CATALOG.json"
-    catalog: dict[str, dict[str, Any]] = {}
-    if path.is_file():
-        payload = read_json(path)
-        catalog = {
-            str(item.get("test_id")): item
-            for item in payload.get("tests", [])
-            if isinstance(item, dict) and item.get("test_id")
-        }
+    if not path.is_file():
+        return {}
+    payload = read_json(path)
+    return {
+        str(item.get("test_id")): item
+        for item in payload.get("tests", [])
+        if isinstance(item, dict) and item.get("test_id")
+    }
+
+
+def _catalog_paths(root: Path, test_ids: list[str]) -> list[str]:
+    catalog = _test_catalog_map(root)
     paths: list[str] = []
     for test_id in test_ids:
         entry = catalog.get(test_id)

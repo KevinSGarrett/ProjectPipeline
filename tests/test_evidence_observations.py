@@ -243,3 +243,5 @@ def test_generate_observation_uses_injected_runner(tmp_path: Path) -> None:
     )
     assert observation.result is ObservationResult.PASS
     assert observation.integrated_sha == CURRENT_SHA
+    assert observation.test_outcomes["TEST-MOD"] == "PASS"
+    assert "REQ-GOV-0001" in observation.requirement_scope_fingerprints

@@ -293,3 +293,102 @@ def test_generate_and_evaluate_share_fingerprint_for_multi_evidence_requirement(
     rows = evaluate_requirement_reconciliation(root, current_sha=sha, current_tree=tree)
     assert rows[0]["accepted"] is True
     assert rows[0]["acceptance_scope_fingerprint"] == expected
+
+
+def test_shared_evidence_proves_each_requirement_and_isolates_source_change(
+    tmp_path: Path,
+) -> None:
+    root = tmp_path / "repo"
+    root.mkdir()
+    first = _seed_repo(root)
+    other = root / "src" / "other.py"
+    other.write_text("other = 1\n", encoding="utf-8")
+    second = {
+        **first,
+        "requirement_id": "REQ-GOV-0007",
+        "implementation_paths": ["src/other.py"],
+        "title": "Other module",
+        "statement": "Other module routing is deterministic",
+    }
+    write_jsonl(root / "plans/_traceability/requirements.jsonl", [first, second])
+    ledger_path = root / "evidence" / "EVIDENCE_LEDGER.jsonl"
+    definition = json.loads(ledger_path.read_text(encoding="utf-8").splitlines()[0])
+    definition["requirement_ids"] = ["REQ-GOV-0006", "REQ-GOV-0007"]
+    ledger_path.write_text(json.dumps(definition) + "\n", encoding="utf-8")
+    sha = "a" * 40
+    tree = "b" * 40
+
+    def runner(test_ids, paths):
+        return {test_id: "PASS" for test_id in test_ids}
+
+    observation = generate_observation(
+        root, "EVID-000001", runner=runner, current_sha=sha, current_tree=tree
+    )
+    assert observation.result.value == "PASS"
+    assert set(observation.requirement_scope_fingerprints) == {"REQ-GOV-0006", "REQ-GOV-0007"}
+    ledger = evaluate_requirement_reconciliation(root, current_sha=sha, current_tree=tree)
+    by_id = {row["requirement_id"]: row for row in ledger}
+    assert by_id["REQ-GOV-0006"]["accepted"] is True
+    assert by_id["REQ-GOV-0007"]["accepted"] is True
+    other.write_text("other = 2\n", encoding="utf-8")
+    changed = evaluate_requirement_reconciliation(root, current_sha=sha, current_tree=tree)
+    by_id = {row["requirement_id"]: row for row in changed}
+    assert by_id["REQ-GOV-0006"]["accepted"] is True
+    assert by_id["REQ-GOV-0007"]["accepted"] is False
+    reason = str(by_id["REQ-GOV-0007"]["reason"])
+    assert "fingerprint" in reason or "no valid current-head observation" in reason
+
+
+def test_unrun_extra_evidence_test_does_not_fail_sibling_requirement(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    root.mkdir()
+    first = _seed_repo(root)
+    second = {
+        **first,
+        "requirement_id": "REQ-UX-0001",
+        "test_ids": ["TEST-CC-UI-001"],
+        "title": "Operator surface",
+        "statement": "Operator surface projection is deterministic",
+    }
+    write_jsonl(root / "plans/_traceability/requirements.jsonl", [first, second])
+    catalog_path = root / "tests" / "TEST_CATALOG.json"
+    catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
+    catalog["tests"].append(
+        {
+            "test_id": "TEST-CC-UI-001",
+            "path": "apps/command_center/tests/appModel.test.mjs",
+            "callable": "navigation contains all Pass 20 operator surfaces",
+        }
+    )
+    catalog["test_count"] = 2
+    catalog_path.write_text(json.dumps(catalog), encoding="utf-8")
+    ui = root / "apps" / "command_center" / "tests" / "appModel.test.mjs"
+    ui.parent.mkdir(parents=True)
+    ui.write_text(
+        'export const label = "navigation contains all Pass 20 operator surfaces";\n',
+        encoding="utf-8",
+    )
+    ledger_path = root / "evidence" / "EVIDENCE_LEDGER.jsonl"
+    definition = json.loads(ledger_path.read_text(encoding="utf-8").splitlines()[0])
+    definition["requirement_ids"] = ["REQ-GOV-0006", "REQ-UX-0001"]
+    definition["test_ids"] = ["TEST-MOD", "TEST-CC-UI-001"]
+    ledger_path.write_text(json.dumps(definition) + "\n", encoding="utf-8")
+    sha = "a" * 40
+    tree = "b" * 40
+    called: list[list[str]] = []
+
+    def runner(test_ids, paths):
+        called.append(list(test_ids))
+        return {test_id: "PASS" for test_id in test_ids}
+
+    observation = generate_observation(
+        root, "EVID-000001", runner=runner, current_sha=sha, current_tree=tree
+    )
+    assert called == [["TEST-MOD"]]
+    assert observation.test_outcomes["TEST-MOD"] == "PASS"
+    assert observation.test_outcomes["TEST-CC-UI-001"] == "MISSING"
+    ledger = evaluate_requirement_reconciliation(root, current_sha=sha, current_tree=tree)
+    by_id = {row["requirement_id"]: row for row in ledger}
+    assert by_id["REQ-GOV-0006"]["accepted"] is True
+    assert by_id["REQ-UX-0001"]["accepted"] is False
+    assert "TEST-CC-UI-001" in str(by_id["REQ-UX-0001"]["reason"])
