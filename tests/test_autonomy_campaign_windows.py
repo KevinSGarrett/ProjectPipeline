@@ -47,6 +47,21 @@ PROBE = ROOT / "scripts" / "autonomy_campaign_recovery_probe.py"
 LIVE_TASK = "ProjectPipelineAutonomyCampaign"
 
 
+def _scheduled_task_name(task_name: str) -> str:
+    completed = subprocess.run(
+        [
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            f"(Get-ScheduledTask -TaskName '{task_name}' -ErrorAction SilentlyContinue).TaskName",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return (completed.stdout or "").strip()
+
+
 def test_hidden_campaign_launcher_declares_windows_contract():
     text = LAUNCHER.read_text(encoding="utf-8")
     assert "Start-Process" in text
@@ -185,6 +200,7 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
         pytest.skip("Windows scheduled-task integration")
     task_name = f"ProjectPipelineAutonomyCampaign-C13Disp-{uuid.uuid4().hex[:10]}"
     assert task_name != LIVE_TASK
+    live_before = _scheduled_task_name(LIVE_TASK)
     identity = _live_identity()
     controller = CampaignController(
         tmp_path / "campaign.sqlite3",
@@ -321,15 +337,6 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
             check=False,
         )
         assert leftover.stdout.strip() == ""
-        live = subprocess.run(
-            [
-                "powershell",
-                "-NoProfile",
-                "-Command",
-                f"(Get-ScheduledTask -TaskName '{LIVE_TASK}' -ErrorAction SilentlyContinue).TaskName",
-            ],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        assert LIVE_TASK in (live.stdout or "")
+        live_after = _scheduled_task_name(LIVE_TASK)
+        assert live_after == live_before
+        assert task_name not in live_after
