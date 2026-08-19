@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_pass24_release_hardening.py",
         "method": "automated_behavior_validation",
         "path": "evidence/pass24_focused_suite.txt",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "provenance/pass_24_upstream_hardening_gate.json",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -47,7 +47,7 @@
     "provenance/pass_24_upstream_hardening_gate.json",
     "config/pass24_hardening_matrix.json"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "pass-24",

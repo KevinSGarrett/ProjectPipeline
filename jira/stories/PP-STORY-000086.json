@@ -67,12 +67,13 @@
     "database/migrations/postgresql/PPDB-0004_jira_steward_sync.up.sql",
     "docs/jira"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
     "cluster-jira",
-    "domain-gov"
+    "domain-gov",
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

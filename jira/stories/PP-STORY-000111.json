@@ -46,12 +46,13 @@
   "expected_implementation_artifacts": [
     "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
     "cluster-controls",
     "domain-ux",
+    "implemented",
     "pass-20"
   ],
   "last_observed_remote_state": {
@@ -102,6 +103,6 @@
     "SRC-006:L002067-L002086"
   ],
   "state": "BACKLOG",
-  "title": "Controls \u2014 Command Center and Operator Experience",
+  "title": "Controls — Command Center and Operator Experience",
   "upstream_dependencies": []
 }

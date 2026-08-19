@@ -5,8 +5,8 @@
 
 ## Implementation state
 
-- `IMPLEMENTED`: 293
-- `PARTIALLY_IMPLEMENTED`: 58
+- `IMPLEMENTED`: 331
+- `PARTIALLY_IMPLEMENTED`: 20
 - `PLANNED_ONLY`: 1
 
 ## Domain coverage

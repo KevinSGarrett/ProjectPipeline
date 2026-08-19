@@ -6452,7 +6452,7 @@
       "src/project_pipeline/control/kernel.py",
       "src/project_pipeline/services/state.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000007",
       "PP-STORY-000065",
@@ -6976,7 +6976,7 @@
     "implementation_paths": [
       "src/project_pipeline/control/kernel.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000007",
       "PP-STORY-000068",
@@ -8258,7 +8258,7 @@
       "src/project_pipeline/context_engine/compiler.py",
       "src/project_pipeline/domain/context.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000011",
       "PP-STORY-000077",
@@ -8582,7 +8582,7 @@
       "CONTRIBUTING.md",
       "src/project_pipeline/github_steward/local_git.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000016",
@@ -8642,7 +8642,7 @@
       "src/project_pipeline",
       "docs/development/source_layout.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000088",
@@ -9250,7 +9250,7 @@
       "src/project_pipeline/github_steward/service.py",
       "src/project_pipeline/github_steward/worktrunk.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000085",
@@ -9322,7 +9322,7 @@
       "src/project_pipeline/github_steward/local_git.py",
       "src/project_pipeline/github_steward/ownership.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000085",
@@ -9383,7 +9383,7 @@
     "implementation_paths": [
       "src/project_pipeline/github_steward/local_git.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000085",
@@ -9444,7 +9444,7 @@
       "src/project_pipeline/github_steward/service.py",
       "src/project_pipeline/github_steward/local_git.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000085",
@@ -9505,7 +9505,7 @@
       "src/project_pipeline/domain/github.py",
       "src/project_pipeline/github_steward/service.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000085",
@@ -9563,7 +9563,7 @@
       "src/project_pipeline/domain/github.py",
       "src/project_pipeline/github_steward/adapter.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000085",
@@ -9682,7 +9682,7 @@
       "src/project_pipeline/github_steward/merge_gate.py",
       "src/project_pipeline/github_steward/service.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000087",
@@ -9799,7 +9799,7 @@
       "src/project_pipeline/github_steward/ownership.py",
       "src/project_pipeline/github_steward/service.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000087",
@@ -9875,7 +9875,7 @@
       "src/project_pipeline/jira_steward/mock.py",
       "src/project_pipeline/jira_steward/ports.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000086",
@@ -10109,7 +10109,7 @@
       "src/project_pipeline/configuration",
       "src/project_pipeline/release_hardening"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000030",
@@ -10371,7 +10371,7 @@
       "src/project_pipeline/agent_router/docker_mcp_gateway.py",
       "src/project_pipeline/upstream_data/docker_mcp_gateway_security_defaults.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000123",
@@ -11283,7 +11283,7 @@
       "src/project_pipeline/lifecycle/contracts.py",
       "src/project_pipeline/persistence/migrations.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000032",
@@ -11575,7 +11575,7 @@
       "src/project_pipeline/lifecycle/contracts.py",
       "src/project_pipeline/persistence/migrations.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000126",
@@ -12258,7 +12258,7 @@
       "src/project_pipeline/configuration/models.py",
       "src/project_pipeline/lifecycle/qualification.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000126",
@@ -12456,7 +12456,7 @@
       "scripts/bootstrap_dev.ps1",
       "Makefile"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000028",
@@ -12646,7 +12646,7 @@
       "src/project_pipeline/orchestration/recovery.py",
       "src/project_pipeline/orchestration/runtime.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000120",
@@ -13363,7 +13363,7 @@
       "scripts/bootstrap_dev.ps1",
       "Makefile"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000119",
@@ -13424,7 +13424,7 @@
       "src/project_pipeline/cli.py",
       "scripts/bootstrap_dev.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000117",
@@ -14844,7 +14844,7 @@
       "src/project_pipeline/release_hardening/validation.py",
       "src/project_pipeline/validation"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000035",
       "PP-STORY-000137",
@@ -16752,7 +16752,7 @@
       "src/project_pipeline/github_steward/local_git.py",
       "src/project_pipeline/github_steward/service.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000104",
@@ -17115,7 +17115,7 @@
       "src/project_pipeline/github_steward/persistence.py",
       "src/project_pipeline/github_steward/service.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000105",
@@ -17973,7 +17973,7 @@
       "src/project_pipeline/scheduler/bridge.py",
       "src/project_pipeline/scheduler/engine.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000009",
       "PP-STORY-000071",
@@ -18108,7 +18108,7 @@
       "src/project_pipeline/scheduler/engine.py",
       "src/project_pipeline/scheduler/persistence.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000009",
       "PP-STORY-000071",
@@ -18374,7 +18374,7 @@
       "src/project_pipeline/github_steward/ownership.py",
       "src/project_pipeline/scheduler/bridge.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000009",
       "PP-STORY-000070",
@@ -18971,7 +18971,7 @@
       "src/project_pipeline/security/supply_chain.py",
       "src/project_pipeline/upstream_integrations/security.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000019",
       "PP-STORY-000020",
@@ -19891,7 +19891,7 @@
       "src/project_pipeline/security/supply_chain.py",
       "src/project_pipeline/upstream_integrations/security.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000019",
       "PP-STORY-000099",
@@ -20175,7 +20175,7 @@
       "requirements/quality-tools.txt",
       "src/project_pipeline/security/supply_chain.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000019",
       "PP-STORY-000099",
@@ -21744,7 +21744,7 @@
       "provenance/upstream_registry.json",
       "src/project_pipeline/upstream.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000033",
       "PP-STORY-000133",
@@ -22708,7 +22708,7 @@
       "src/project_pipeline/command_center/models.py",
       "src/project_pipeline/command_center/projections.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114"
@@ -22769,7 +22769,7 @@
       "src/project_pipeline/command_center/models.py",
       "src/project_pipeline/command_center/projections.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114"
@@ -23081,7 +23081,7 @@
       "src/project_pipeline/command_center/models.py",
       "src/project_pipeline/command_center/projections.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114"
@@ -23142,7 +23142,7 @@
       "src/project_pipeline/command_center/api.py",
       "src/project_pipeline/command_center/director.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000111"
@@ -23434,7 +23434,7 @@
       "src/project_pipeline/command_center/api.py",
       "src/project_pipeline/command_center/director.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000111"

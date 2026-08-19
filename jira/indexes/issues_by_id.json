@@ -3465,10 +3465,11 @@
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
+      "implemented",
       "plan-gov-001"
     ],
     "last_observed_remote_state": {
@@ -3675,10 +3676,11 @@
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
+      "implemented",
       "plan-sec-001"
     ],
     "last_observed_remote_state": {
@@ -4117,10 +4119,11 @@
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
+      "implemented",
       "plan-ops-001"
     ],
     "last_observed_remote_state": {
@@ -4220,10 +4223,11 @@
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
+      "implemented",
       "plan-infra-001"
     ],
     "last_observed_remote_state": {
@@ -4329,10 +4333,11 @@
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
+      "implemented",
       "pass-22",
       "plan-life-001"
     ],
@@ -6661,12 +6666,13 @@
     "expected_implementation_artifacts": [
       "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-authority",
       "domain-ctrl",
-      "cluster-authority"
+      "partially-implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7002,12 +7008,13 @@
     "expected_implementation_artifacts": [
       "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-intelligence",
       "domain-ctrl",
-      "cluster-intelligence"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -7213,12 +7220,13 @@
     "expected_implementation_artifacts": [
       "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-resources",
-      "domain-sched"
+      "domain-sched",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -8004,12 +8012,13 @@
     "expected_implementation_artifacts": [
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-freshness",
-      "domain-ctx"
+      "domain-ctx",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -8892,12 +8901,13 @@
       "src/project_pipeline/domain/github.py",
       "src/project_pipeline/github_steward"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-git",
       "domain-gov",
-      "cluster-git"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -9027,12 +9037,13 @@
       "database/migrations/postgresql/PPDB-0004_jira_steward_sync.up.sql",
       "docs/jira"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-jira",
-      "domain-gov"
+      "domain-gov",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -9293,12 +9304,13 @@
     "expected_implementation_artifacts": [
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-merge",
-      "domain-gov"
+      "domain-gov",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -9400,12 +9412,13 @@
     "expected_implementation_artifacts": [
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-structure",
-      "domain-gov"
+      "domain-gov",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10688,12 +10701,13 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-supply-chain",
-      "domain-sec"
+      "domain-sec",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11308,12 +11322,13 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-durable-state",
       "domain-res",
-      "cluster-durable-state"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11437,12 +11452,13 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-external-systems",
-      "domain-res"
+      "domain-res",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -12152,12 +12168,13 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-controls",
       "domain-ux",
+      "implemented",
       "pass-20"
     ],
     "last_observed_remote_state": {
@@ -12822,12 +12839,13 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-health",
       "domain-ops",
-      "cluster-health"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13028,12 +13046,13 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-operations",
       "domain-ops",
-      "cluster-operations"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13140,12 +13159,13 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-telemetry",
       "domain-ops",
-      "cluster-telemetry"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13482,12 +13502,13 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-local",
       "domain-infra",
-      "cluster-local"
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13849,12 +13870,13 @@
     "expected_implementation_artifacts": [
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-contracts",
       "domain-life",
+      "implemented",
       "pass-22"
     ],
     "last_observed_remote_state": {
@@ -14685,12 +14707,13 @@
     "expected_implementation_artifacts": [
       "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-review",
-      "domain-upstream"
+      "domain-upstream",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -15102,12 +15125,13 @@
     "expected_implementation_artifacts": [
       "plans/17_release_and_handoff/PLAN-REL-001_release_handoff.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
+      "cluster-verification",
       "domain-rel",
-      "cluster-verification"
+      "partially-implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -20083,7 +20107,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "behavior_and_traceability_validation",
           "path": "architecture/diagrams/system_context.mmd",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -20093,7 +20117,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -20140,7 +20164,7 @@
       "architecture/diagrams/deployment_profiles.mmd",
       "architecture/diagrams/traceability_flow.mmd"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -22053,7 +22077,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "behavior_and_traceability_validation",
           "path": "provenance/review_program.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -22063,7 +22087,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -22102,7 +22126,7 @@
       "provenance/reviews/",
       "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-003_high_value_reviews.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "platform",
@@ -26632,7 +26656,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_jira_steward_domain.py tests/test_jira_steward_persistence.py tests/test_jira_steward_mock_and_service.py tests/test_jira_cloud_adapter.py tests/test_jira_cli.py tests/test_jira_steward_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/domain/jira.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -26642,7 +26666,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -26676,7 +26700,7 @@
       "src/project_pipeline/domain/jira.py",
       "src/project_pipeline/jira_steward/repository.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "jira-steward",
@@ -26765,7 +26789,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_jira_steward_domain.py tests/test_jira_steward_persistence.py tests/test_jira_steward_mock_and_service.py tests/test_jira_cloud_adapter.py tests/test_jira_cli.py tests/test_jira_steward_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/jira_steward/repository.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -26775,7 +26799,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -26813,7 +26837,7 @@
       "src/project_pipeline/jira_steward/repository.py",
       "src/project_pipeline/jira_steward/validation.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "jira-steward",
@@ -26897,7 +26921,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_jira_steward_domain.py tests/test_jira_steward_persistence.py tests/test_jira_steward_mock_and_service.py tests/test_jira_cloud_adapter.py tests/test_jira_cli.py tests/test_jira_steward_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/jira_steward/ports.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -26907,7 +26931,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -26943,7 +26967,7 @@
       "src/project_pipeline/jira_steward/ports.py",
       "src/project_pipeline/domain/jira.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "jira-steward",
@@ -27026,7 +27050,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_jira_steward_domain.py tests/test_jira_steward_persistence.py tests/test_jira_steward_mock_and_service.py tests/test_jira_cloud_adapter.py tests/test_jira_cli.py tests/test_jira_steward_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/jira_steward/adapter.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -27036,7 +27060,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -27070,7 +27094,7 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/jira_steward/adapter.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "jira-steward",
@@ -27155,7 +27179,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_jira_steward_domain.py tests/test_jira_steward_persistence.py tests/test_jira_steward_mock_and_service.py tests/test_jira_cloud_adapter.py tests/test_jira_cli.py tests/test_jira_steward_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/jira_steward/mock.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -27165,7 +27189,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -27201,7 +27225,7 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/jira_steward/mock.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "jira-steward",
@@ -27287,7 +27311,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_jira_steward_domain.py tests/test_jira_steward_persistence.py tests/test_jira_steward_mock_and_service.py tests/test_jira_cloud_adapter.py tests/test_jira_cli.py tests/test_jira_steward_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/jira_steward/reconciliation.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -27297,7 +27321,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -27338,7 +27362,7 @@
       "config/jira/sync_policy.json",
       "config/jira/status_mapping.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "jira-steward",
@@ -27428,7 +27452,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_jira_steward_domain.py tests/test_jira_steward_persistence.py tests/test_jira_steward_mock_and_service.py tests/test_jira_cloud_adapter.py tests/test_jira_cli.py tests/test_jira_steward_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/jira_steward/persistence.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -27438,7 +27462,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -27476,7 +27500,7 @@
       "database/migrations/sqlite/PPDB-0004_jira_steward_sync.up.sql",
       "database/migrations/postgresql/PPDB-0004_jira_steward_sync.up.sql"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "jira-steward",
@@ -27697,7 +27721,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_jira_steward_domain.py tests/test_jira_steward_persistence.py tests/test_jira_steward_mock_and_service.py tests/test_jira_cloud_adapter.py tests/test_jira_cli.py tests/test_jira_steward_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/cli.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -27707,7 +27731,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -27751,7 +27775,7 @@
       "src/project_pipeline/cli.py",
       "src/project_pipeline/jira_steward/service.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "jira-steward",
@@ -27851,7 +27875,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_jira_steward_domain.py tests/test_jira_steward_persistence.py tests/test_jira_steward_mock_and_service.py tests/test_jira_cloud_adapter.py tests/test_jira_cli.py tests/test_jira_steward_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/jira_steward/validation.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -27861,7 +27885,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -27919,7 +27943,7 @@
       "docs/jira",
       "runbooks/jira_unknown_outcome_reconciliation.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "jira-steward",
@@ -28043,7 +28067,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/domain/github.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -28053,7 +28077,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -28101,7 +28125,7 @@
       "tests/test_github_steward_lifecycle.py",
       "docs/operations/github_steward_lifecycle.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "deterministic",
@@ -28179,7 +28203,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/github_steward/local_git.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -28189,7 +28213,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -28231,7 +28255,7 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/github_steward/local_git.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "repository-steward",
@@ -28313,7 +28337,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/github_steward/local_git.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -28323,7 +28347,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -28367,7 +28391,7 @@
       "src/project_pipeline/github_steward/local_git.py",
       "src/project_pipeline/github_steward/ownership.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "repository-steward",
@@ -28448,7 +28472,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/github_steward/local_git.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -28458,7 +28482,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -28508,7 +28532,7 @@
       "tests/test_github_steward_lifecycle.py",
       "docs/operations/github_steward_lifecycle.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "deterministic",
@@ -28600,7 +28624,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/domain/github.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -28610,7 +28634,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -28660,7 +28684,7 @@
       "tests/test_github_steward_lifecycle.py",
       "docs/operations/github_steward_lifecycle.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "deterministic",
@@ -28742,7 +28766,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/github_steward/merge_gate.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -28752,7 +28776,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -28801,7 +28825,7 @@
       "tests/test_github_steward_lifecycle.py",
       "docs/operations/github_steward_lifecycle.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "deterministic",
@@ -28887,7 +28911,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/github_steward/ports.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -28897,7 +28921,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -28943,7 +28967,7 @@
       "src/project_pipeline/github_steward/adapter.py",
       "src/project_pipeline/github_steward/mock.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "repository-steward",
@@ -29023,7 +29047,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/github_steward/persistence.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -29033,7 +29057,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -29079,7 +29103,7 @@
       "database/MIGRATION_CATALOG.json",
       "database/migrations/sqlite/PPDB-0005_repository_github_stewardship.up.sql"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "repository-steward",
@@ -29159,7 +29183,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/github_steward/service.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -29169,7 +29193,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -29221,7 +29245,7 @@
       "tests/test_github_steward_lifecycle.py",
       "docs/operations/github_steward_lifecycle.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "deterministic",
@@ -29315,7 +29339,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_github_steward_domain.py tests/test_local_git_repository.py tests/test_github_mock_and_service.py tests/test_github_rest_adapter.py tests/test_github_steward_persistence.py tests/test_github_cli.py tests/test_github_steward_lifecycle.py tests/test_cursor_shell_hook.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/cli.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -29325,7 +29349,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -29389,7 +29413,7 @@
       "tests/test_github_steward_lifecycle.py",
       "docs/operations/github_steward_lifecycle.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "deterministic",
@@ -29985,7 +30009,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_control_domain.py tests/test_build_sequencer.py tests/test_control_kernel.py tests/test_control_persistence.py tests/test_control_cli.py tests/test_control_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/control/kernel.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -29995,7 +30019,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -30033,7 +30057,7 @@
       "src/project_pipeline/control/kernel.py",
       "src/project_pipeline/control/persistence.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "control-kernel",
@@ -30111,7 +30135,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_control_domain.py tests/test_build_sequencer.py tests/test_control_kernel.py tests/test_control_persistence.py tests/test_control_cli.py tests/test_control_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/control/kernel.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -30121,7 +30145,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -30156,7 +30180,7 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/control/kernel.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "control-kernel",
@@ -31555,7 +31579,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_scheduler_domain.py tests/test_scheduler_conflicts.py tests/test_scheduler_engine.py tests/test_scheduler_persistence.py tests/test_scheduler_backpressure.py tests/test_scheduler_cli.py tests/test_scheduler_validation.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/scheduler/bridge.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -31565,7 +31589,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -31602,7 +31626,7 @@
       "src/project_pipeline/scheduler/bridge.py",
       "src/project_pipeline/scheduler/engine.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "dynamic-scheduler",
@@ -33674,7 +33698,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_upstream_reviews.py tests/test_upstream_contract_assets.py tests/test_ortools_optimizer.py tests/test_worktrunk_adapter.py tests/test_pydantic_ai_adapter.py tests/test_litellm_adapter.py tests/test_docker_mcp_gateway.py tests/test_openlit_bridge.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "src/project_pipeline/github_steward/worktrunk.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -33684,7 +33708,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_traceability_validation",
           "path": "provenance/upstream_usage.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -33716,7 +33740,7 @@
       "src/project_pipeline/github_steward/worktrunk.py",
       "tests/test_worktrunk_adapter.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "upstream-reuse",
@@ -35037,7 +35061,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_upstream_reviews.py tests/test_upstream_adoption_gate.py",
           "method": "automated_behavior_and_contract_validation",
           "path": "tests/test_upstream_adoption_gate.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -35047,7 +35071,7 @@
           "command": "python scripts/validate_repository.py --root .",
           "method": "repository_traceability_validation",
           "path": "provenance/upstream_adoption_gate.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -35081,7 +35105,7 @@
       "provenance/adoption_queue.json",
       "provenance/review_program.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "upstream-reuse",
@@ -40151,7 +40175,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/cli.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -40161,7 +40185,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -40209,7 +40233,7 @@
       "runbooks/orchestration_recovery.md",
       "docs/architecture/durable_orchestration_recovery.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "orchestration",
@@ -45423,7 +45447,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_security_*.py",
           "method": "automated_behavior_validation",
           "path": ".github/workflows/quality.yml",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -45433,7 +45457,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -45471,7 +45495,7 @@
       "src/project_pipeline/security/supply_chain.py",
       "runbooks/security_root_of_trust_and_secret_recovery.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "security",
@@ -45543,7 +45567,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_security_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/security/persistence.py",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -45553,7 +45577,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -45595,7 +45619,7 @@
       "src/project_pipeline/cli.py",
       "database/migrations/sqlite/PPDB-0014_security_identity_policy_secrets_supply_chain.up.sql"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "security",
@@ -48060,7 +48084,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass24_release_hardening.py",
           "method": "automated_behavior_validation",
           "path": "evidence/pass24_focused_suite.txt",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -48070,7 +48094,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "provenance/pass_24_upstream_hardening_gate.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -48100,7 +48124,7 @@
       "provenance/pass_24_upstream_hardening_gate.json",
       "config/pass24_hardening_matrix.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "pass-24",
@@ -48300,7 +48324,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass24_release_hardening.py",
           "method": "automated_behavior_validation",
           "path": "evidence/pass24_focused_suite.txt",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -48310,7 +48334,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "provenance/pass_24_upstream_hardening_gate.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -48344,7 +48368,7 @@
       "scripts/windows",
       "scripts/run_command_center_service.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "pass-24",
@@ -48419,7 +48443,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass24_release_hardening.py",
           "method": "automated_behavior_validation",
           "path": "evidence/pass24_focused_suite.txt",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -48429,7 +48453,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "provenance/pass_24_upstream_hardening_gate.json",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -48461,7 +48485,7 @@
       "src/project_pipeline/configuration/models.py",
       "config/pass24_hardening_matrix.json"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "pass-24",

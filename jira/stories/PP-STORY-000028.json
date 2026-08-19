@@ -44,10 +44,11 @@
     "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "domain-story",
+    "implemented",
     "plan-ops-001"
   ],
   "last_observed_remote_state": {
