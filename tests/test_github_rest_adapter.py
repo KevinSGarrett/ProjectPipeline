@@ -242,6 +242,79 @@ def test_create_pull_falls_back_to_provisioned_cli_on_authorization(
     assert created.head_sha == SHA2
 
 
+def test_protection_and_merge_fall_back_to_provisioned_api(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    denied = urllib_error.HTTPError(
+        "https://api.github.com",
+        403,
+        "no",
+        {},
+        io.BytesIO(json.dumps({"message": "Resource not accessible"}).encode()),
+    )
+    opener = Opener([denied, denied])
+    adapter = GitHubRestAdapter(opener=opener, retry_base_seconds=0)
+    calls: list[list[str]] = []
+
+    def fake_run(args, **_kwargs):
+        calls.append(list(args))
+        if any(str(item).endswith("/protection") for item in args):
+            return subprocess.CompletedProcess(
+                args,
+                0,
+                json.dumps(
+                    {
+                        "required_status_checks": {
+                            "strict": True,
+                            "contexts": [],
+                            "checks": [
+                                {"context": "Python 3.11 verification", "app_id": 15368},
+                                {"context": "Python 3.13 verification", "app_id": 15368},
+                                {"context": "dependency-audit", "app_id": 15368},
+                                {"context": "Python CodeQL", "app_id": None},
+                            ],
+                        },
+                        "required_pull_request_reviews": {
+                            "required_approving_review_count": 0,
+                            "dismiss_stale_reviews": True,
+                        },
+                        "enforce_admins": {"enabled": True},
+                        "required_linear_history": {"enabled": True},
+                        "required_conversation_resolution": {"enabled": True},
+                        "allow_force_pushes": {"enabled": False},
+                        "allow_deletions": {"enabled": False},
+                    }
+                ),
+                "",
+            )
+        return subprocess.CompletedProcess(
+            args, 0, json.dumps({"merged": True, "sha": SHA2, "message": "ok"}), ""
+        )
+
+    monkeypatch.setattr(
+        "project_pipeline.github_steward.adapter.subprocess.run",
+        fake_run,
+    )
+    protection = adapter.get_branch_protection("owner/repo", "main")
+    assert protection.required_approving_review_count == 0
+    assert "Python 3.11 verification" in protection.required_status_checks
+    merged = adapter.merge_pull_request(
+        "owner/repo",
+        number=4,
+        head_sha=SHA2,
+        method="squash",
+        context=GitHubWriteContext(
+            actor_id="actor:test",
+            correlation_id="corr:test",
+            idempotency_key="github-merge-0003",
+            authorization_id="auth:test",
+        ),
+    )
+    assert merged["merged"] is True
+    assert calls[0][:3] == ["gh", "api", "-X"]
+    assert "pr" not in calls[0]
+
+
 def test_delete_branch_uses_git_refs_endpoint():
     opener = Opener([Response(None)])
     adapter = GitHubRestAdapter(opener=opener)

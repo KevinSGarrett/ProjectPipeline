@@ -6887,7 +6887,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "85924644f47291bac0ab7b0a027392139fa45907d7f669e284c531d60489f29a",
+      "sha256": "56df315152877b6273a0a257aaffe7ad7b7e6ac3f1fd8aaadd20dede5d2e28aa",
       "size_bytes": 330857,
       "top_level": "_root"
     },
@@ -14104,8 +14104,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "6f34dbdecb631c03bf1767f842f6f6cd505fb36930de80c42b654364943452f0",
-      "size_bytes": 541706,
+      "sha256": "ceb9c1574aeeb9daccc9a1d826ea88c2b1874309bc8ffcc134570ed913db0277",
+      "size_bytes": 541709,
       "top_level": "_root"
     },
     {
@@ -17709,8 +17709,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/github_steward/adapter.py",
-      "sha256": "0d5de8dd1fcc0ae84cef4acdbe62946b42fea1d3ad1964c637a38eb25f61acc0",
-      "size_bytes": 24478,
+      "sha256": "000d59db4122030695fe857321001d1ba9be96c03b82a775fef65dfa82e45519",
+      "size_bytes": 27628,
       "top_level": "src"
     },
     {
@@ -19536,8 +19536,8 @@
     {
       "extension": ".py",
       "path": "tests/test_github_rest_adapter.py",
-      "sha256": "38a818e26a2e3c6fa35c338b273701f66b7edfb9ed768225fbafe795137236fb",
-      "size_bytes": 8817,
+      "sha256": "209985290ae363085f5442d571dcc34b6ba6c279264fd3d383499de7087a5b15",
+      "size_bytes": 11654,
       "top_level": "tests"
     },
     {
@@ -20318,7 +20318,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-19T02:06:57.032601+00:00",
+  "generated_at_utc": "2026-08-19T02:16:47.679107+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {
