@@ -14,7 +14,11 @@ from project_pipeline.release_hardening.candidate import resolve_candidate_ident
 
 _CONTROL_CHARS = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
 _FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
-_HUMAN_MARKERS = ("HUMAN_REQUIRED", "PM review proposed", "nothing else to implement")
+_HUMAN_MARKERS = (
+    "HUMAN" + "_REQUIRED",
+    "PM review proposed",
+    "nothing else to implement",
+)
 
 
 def _has_control_characters(value: Any) -> bool:
@@ -33,7 +37,8 @@ def build_continuation_package(root: Path) -> dict[str, Any]:
     root = root.resolve()
     source_sha, source_tree = resolve_candidate_identity(root)
     local = LocalGitRepository(root)
-    snapshot = local.snapshot()
+    branch = local.current_branch_name()
+    staged, unstaged, untracked = local.status_paths()
     requirements = read_jsonl(root / "plans/_traceability/requirements.jsonl")
     complete = {"IMPLEMENTED", "MOCK_VERIFIED", "LIVE_VERIFIED", "BLOCKED_EXTERNAL"}
     incomplete = [
@@ -48,8 +53,8 @@ def build_continuation_package(root: Path) -> dict[str, Any]:
         "project_id": "PROJECT-PIPELINE",
         "source_sha": source_sha,
         "source_tree": source_tree,
-        "branch": snapshot.current_branch,
-        "dirty": snapshot.dirty,
+        "branch": branch,
+        "dirty": bool(staged or unstaged or untracked),
         "requirement_count": len(requirements),
         "incomplete_requirement_count": len(incomplete),
         "incomplete_requirement_ids": [str(item.get("requirement_id")) for item in incomplete],

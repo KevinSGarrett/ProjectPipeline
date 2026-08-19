@@ -92,3 +92,17 @@ def test_invalid_branch_name_is_rejected(tmp_path):
     adapter = LocalGitRepository(make_repo(tmp_path))
     with pytest.raises(LocalGitError):
         adapter.create_branch("-bad", "HEAD", apply=True)
+
+
+def test_default_branch_from_origin_when_detached_without_local_main(tmp_path):
+    repo = make_repo(tmp_path)
+    sha = run(repo, "rev-parse", "HEAD").stdout.strip()
+    run(repo, "update-ref", "refs/remotes/origin/main", sha)
+    run(repo, "checkout", "--detach", "HEAD")
+    run(repo, "branch", "-D", "main")
+    adapter = LocalGitRepository(repo)
+    assert adapter.current_branch_name() is None
+    assert adapter.default_branch() == "main"
+    snapshot = adapter.snapshot()
+    assert snapshot.detached_head
+    assert snapshot.default_branch == "main"

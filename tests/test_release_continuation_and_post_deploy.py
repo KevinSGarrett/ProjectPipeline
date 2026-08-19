@@ -44,6 +44,43 @@ def test_post_deployment_incomplete_root_fails_closed(tmp_path: Path) -> None:
     assert decision.missing_or_failed_checks
 
 
+def test_continuation_package_from_detached_head_without_default_branch(tmp_path: Path) -> None:
+    repo = tmp_path / "detached"
+    repo.mkdir()
+    subprocess.run(["git", "init", "-b", "main"], cwd=repo, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "config", "user.email", "cont@example.test"],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(repo), "config", "user.name", "Continuation"],
+        check=True,
+        capture_output=True,
+    )
+    (repo / "tracked.txt").write_text("ok\n", encoding="utf-8")
+    (repo / "plans" / "_traceability").mkdir(parents=True)
+    (repo / "plans" / "_traceability" / "requirements.jsonl").write_text("", encoding="utf-8")
+    subprocess.run(["git", "-C", str(repo), "add", "."], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(repo), "commit", "-m", "init"],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(repo), "checkout", "--detach", "HEAD"], check=True, capture_output=True
+    )
+    subprocess.run(
+        ["git", "-C", str(repo), "branch", "-D", "main"], check=True, capture_output=True
+    )
+    package = build_continuation_package(repo)
+    assert package["branch"] is None
+    assert package["user_action_required"] is False
+    assert len(package["source_sha"]) == 40
+    assert len(package["source_tree"]) == 40
+    assert validate_continuation_package(package) == []
+
+
 def test_continuation_package_rejects_control_characters_and_abbreviated_git_ids() -> None:
     package = build_continuation_package(ROOT)
     assert package["user_action_required"] is False

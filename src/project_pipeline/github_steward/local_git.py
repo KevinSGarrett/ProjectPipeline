@@ -82,6 +82,10 @@ class LocalGitRepository:
                 result[name] = url.stdout.strip()
         return dict(sorted(result.items()))
 
+    def current_branch_name(self) -> str | None:
+        current = self._run("branch", "--show-current").stdout.strip()
+        return current or None
+
     def default_branch(self) -> str:
         symbolic = self._run(
             "symbolic-ref", "--quiet", "--short", "refs/remotes/origin/HEAD", check=False
@@ -89,14 +93,10 @@ class LocalGitRepository:
         if symbolic.returncode == 0 and symbolic.stdout.strip().startswith("origin/"):
             return symbolic.stdout.strip().split("/", 1)[1]
         for candidate in ("main", "master"):
-            if (
-                self._run(
-                    "show-ref", "--verify", "--quiet", f"refs/heads/{candidate}", check=False
-                ).returncode
-                == 0
-            ):
-                return candidate
-        current = self._run("branch", "--show-current").stdout.strip()
+            for ref in (f"refs/heads/{candidate}", f"refs/remotes/origin/{candidate}"):
+                if self._run("show-ref", "--verify", "--quiet", ref, check=False).returncode == 0:
+                    return candidate
+        current = self.current_branch_name()
         if current:
             return current
         raise LocalGitError("unable to determine default branch")
