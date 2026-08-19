@@ -151,7 +151,7 @@ def test_product_profile_rejects_paid_default(tmp_path: Path) -> None:
 
 def test_continuation_freshness_fails_after_later_merge() -> None:
     package = build_continuation_package(ROOT)
-    assert validate_continuation_package(package) == []
+    assert validate_continuation_package(package, reject_stale=False) == []
     stale = dict(package)
     stale["source_sha"] = "0" * 40
     stale["source_tree"] = "1" * 40

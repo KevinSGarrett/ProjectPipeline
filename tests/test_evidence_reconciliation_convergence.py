@@ -19,7 +19,7 @@ from project_pipeline.assurance.requirement_reconciliation import (
     apply_evidence_bound_requirement_states,
     evaluate_requirement_reconciliation,
 )
-from project_pipeline.io import read_jsonl, sha256_canonical_file, write_jsonl
+from project_pipeline.io import read_json, read_jsonl, sha256_canonical_file, write_jsonl
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -37,7 +37,9 @@ def _git(cwd: Path, *args: str) -> str:
 
 def test_canonical_ledger_has_no_inline_subject_bindings() -> None:
     rows = load_evidence(ROOT)
-    assert len(rows) == 177
+    summary = read_json(ROOT / "evidence/EVIDENCE_SUMMARY.json")
+    assert len(rows) == summary["record_count"]
+    assert len(rows) >= 177
     for row in rows:
         assert not row.get("integrated_sha")
         assert not row.get("head_sha")

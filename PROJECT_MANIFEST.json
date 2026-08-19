@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "a432cf609f2e3f11168d929f806f7992916abf800db876007bdae8e1df20c0e2",
+  "aggregate_sha256": "79b78dcb971ba9716c9f83af3b4d1abfb8abff828259e9969df732431fe8ab2f",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -5472,7 +5472,7 @@
     },
     {
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "65245a7b2098d03c8ec39afa54ba48ff40c165b540e79b95b3a0459cb11698e4",
+      "sha256": "0637dbfb7168c02515fa307293e9ef82d0ed3e491553ce6673fc200dcf23d61d",
       "size_bytes": 2013
     },
     {
@@ -13082,8 +13082,8 @@
     },
     {
       "path": "src/project_pipeline/release_hardening/continuation.py",
-      "sha256": "479dd8f67d79a734ae1b3592a19a52a646cbd5321f9b9bd1eab0e9ae0b7d1e2e",
-      "size_bytes": 8587
+      "sha256": "250a8ce072236bb19270ba4170ab302b8a3e4ec37fd822a3aa93bda2ee5bb448",
+      "size_bytes": 8669
     },
     {
       "path": "src/project_pipeline/release_hardening/hardening.py",
@@ -13687,8 +13687,8 @@
     },
     {
       "path": "tests/test_autonomous_governance.py",
-      "sha256": "8a754bec9a5f43e84f3b3e6ccc26b7301e592709723448cc93677533307a8c78",
-      "size_bytes": 6480
+      "sha256": "c39ef2d2dc2e242e170311bfe0c2a255bb105a309d3a55854dd0a6986c886d85",
+      "size_bytes": 6500
     },
     {
       "path": "tests/test_autonomous_recheck.py",
@@ -14012,8 +14012,8 @@
     },
     {
       "path": "tests/test_evidence_reconciliation_convergence.py",
-      "sha256": "f471a8418f9083f94765ed84d3475b608a0960e041907fcaa94c3c06ea27f0ea",
-      "size_bytes": 11274
+      "sha256": "5a35363a70880652ff451f4efe1270dce6fdca31a7512f08e3ef5555edbb2098",
+      "size_bytes": 11398
     },
     {
       "path": "tests/test_github_cli.py",
@@ -14267,8 +14267,8 @@
     },
     {
       "path": "tests/test_release_continuation_and_post_deploy.py",
-      "sha256": "d3242f6e3dd40ce68e50fb8c43d9f7e28ca9838317acb9d356dae27a85af3262",
-      "size_bytes": 5836
+      "sha256": "42e74b4dc80266208e318d576dea00b4e94ccebced2501bc203c147de0277088",
+      "size_bytes": 5876
     },
     {
       "path": "tests/test_repository_contract.py",
@@ -14606,7 +14606,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T08:39:01.110624+00:00",
+  "generated_at_utc": "2026-08-19T08:51:19.488522+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14615,5 +14615,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25799637
+  "total_bytes": 25799903
 }

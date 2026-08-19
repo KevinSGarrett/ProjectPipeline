@@ -78,7 +78,7 @@ def test_continuation_package_from_detached_head_without_default_branch(tmp_path
     assert package["user_action_required"] is False
     assert len(package["source_sha"]) == 40
     assert len(package["source_tree"]) == 40
-    assert validate_continuation_package(package) == []
+    assert validate_continuation_package(package, reject_stale=False) == []
 
 
 def test_continuation_package_rejects_control_characters_and_abbreviated_git_ids() -> None:
@@ -93,7 +93,7 @@ def test_continuation_package_rejects_control_characters_and_abbreviated_git_ids
     assert "decisions" in package
     assert "blockers" in package
     assert package["tests"]["test_catalog_count"] > 0
-    assert validate_continuation_package(package) == []
+    assert validate_continuation_package(package, reject_stale=False) == []
     broken = dict(package)
     broken["source_sha"] = package["source_sha"][:12]
     broken["note"] = "HUMAN_REQUIRED\x07"

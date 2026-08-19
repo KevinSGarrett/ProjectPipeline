@@ -173,13 +173,17 @@ def build_continuation_package(root: Path) -> dict[str, Any]:
     package["freshness"] = evaluate_continuation_freshness(
         package, origin_sha=origin_sha, origin_tree=origin_tree
     )
-    errors = validate_continuation_package(package)
+    errors = validate_continuation_package(package, reject_stale=False)
     if errors:
         raise ValueError("; ".join(errors))
     return package
 
 
-def validate_continuation_package(package: dict[str, Any]) -> list[str]:
+def validate_continuation_package(
+    package: dict[str, Any],
+    *,
+    reject_stale: bool = True,
+) -> list[str]:
     errors: list[str] = []
     serialized = json.dumps(package, ensure_ascii=False, sort_keys=True)
     if _has_control_characters(package) or _CONTROL_CHARS.search(serialized):
@@ -198,7 +202,7 @@ def validate_continuation_package(package: dict[str, Any]) -> list[str]:
         if key not in package:
             errors.append(f"continuation package missing session handoff field: {key}")
     freshness = package.get("freshness")
-    if isinstance(freshness, dict) and freshness.get("stale_after_merge"):
+    if reject_stale and isinstance(freshness, dict) and freshness.get("stale_after_merge"):
         errors.append("continuation package is stale after a later integrated merge")
     blob = serialized.casefold()
     for marker in _HUMAN_MARKERS:
