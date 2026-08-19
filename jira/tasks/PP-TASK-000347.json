@@ -56,12 +56,11 @@
     "src/project_pipeline/security/supply_chain.py",
     "provenance/license_policy.json"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "identity",
-    "implemented",
     "security",
+    "identity",
     "supply-chain"
   ],
   "last_observed_remote_state": {

@@ -49,13 +49,12 @@
   "expected_implementation_artifacts": [
     "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-retention",
     "domain-life",
-    "implemented",
+    "cluster-retention",
     "pass-22"
   ],
   "last_observed_remote_state": {
@@ -105,6 +104,6 @@
     "SRC-017:L000907-L001001"
   ],
   "state": "BACKLOG",
-  "title": "Retention — Platform Lifecycle",
+  "title": "Retention \u2014 Platform Lifecycle",
   "upstream_dependencies": []
 }

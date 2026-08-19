@@ -1,9 +1,9 @@
 {
   "counts_by_state": {
-    "BACKLOG": 290,
+    "BACKLOG": 305,
     "BLOCKED": 1,
     "CANCELLED": 1,
-    "DONE": 89,
+    "DONE": 74,
     "IN_PROGRESS": 4,
     "MERGE_READY": 8
   },

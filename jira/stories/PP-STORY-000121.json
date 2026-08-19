@@ -43,12 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-aws",
-    "domain-infra"
+    "domain-infra",
+    "cluster-aws"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -111,6 +111,6 @@
     "SRC-012:L000817-L001036"
   ],
   "state": "BACKLOG",
-  "title": "Aws — Deployment and Infrastructure",
+  "title": "Aws \u2014 Deployment and Infrastructure",
   "upstream_dependencies": []
 }

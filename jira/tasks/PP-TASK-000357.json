@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
         "method": "automated_behavior_validation",
         "path": "provenance/reviews/resilience_local_runtime_backup_review.md",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     },
     {
@@ -17,20 +17,12 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000069",
-    "EVID-000070",
-    "EVID-000072",
-    "EVID-000115",
-    "EVID-000116",
-    "EVID-000118",
-    "EVID-000121",
-    "EVID-000122",
     "EVID-000129",
     "EVID-000130",
     "EVID-000131",
@@ -66,11 +58,9 @@
     "provenance/upstream_usage.jsonl",
     "provenance/upstream_registry.json"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
-    "implemented",
     "recovery",
     "resilience"
   ],
@@ -129,7 +119,7 @@
     "SRC-009:L000015-L000015",
     "SRC-013:L000420-L000529"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Complete resilience local-runtime and backup upstream adoption review",
   "upstream_dependencies": [
     "UPSTREAM-040",

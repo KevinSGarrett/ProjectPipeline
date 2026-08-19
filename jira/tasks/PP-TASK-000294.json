@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
         "method": "automated_behavior_validation",
         "path": "src/project_pipeline/context_engine/firewall.py",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     },
     {
@@ -17,13 +17,12 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     }
   ],
   "blockers": [],
   "completion_evidence": [
-    "EVID-000088",
     "EVID-000089",
     "EVID-000091",
     "EVID-000093",
@@ -56,13 +55,11 @@
     "src/project_pipeline/context_engine/firewall.py",
     "src/project_pipeline/context_engine/trust.py"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "context",
     "delegation",
-    "done",
-    "implemented",
     "pass-12"
   ],
   "last_observed_remote_state": {
@@ -132,7 +129,7 @@
     "SRC-002:L000889-L000958",
     "SRC-002:L001015-L001156"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement context trust classification and firewall",
   "upstream_dependencies": []
 }

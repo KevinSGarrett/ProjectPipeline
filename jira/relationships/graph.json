@@ -6244,7 +6244,7 @@
     },
     {
       "id": "PP-TASK-000291",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement immutable delegation envelope and context domain",
       "type": "TASK"
     },
@@ -6262,13 +6262,13 @@
     },
     {
       "id": "PP-TASK-000294",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement context trust classification and firewall",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000295",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement context freshness and required coverage",
       "type": "TASK"
     },
@@ -6292,7 +6292,7 @@
     },
     {
       "id": "PP-TASK-000299",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Integrate Context CLI schemas documentation and validation",
       "type": "TASK"
     },
@@ -6316,7 +6316,7 @@
     },
     {
       "id": "PP-TASK-000303",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement deterministic retries timeouts and checkpoints",
       "type": "TASK"
     },
@@ -6328,7 +6328,7 @@
     },
     {
       "id": "PP-TASK-000305",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement worker heartbeat fencing and loss recovery",
       "type": "TASK"
     },
@@ -6610,19 +6610,19 @@
     },
     {
       "id": "PP-TASK-000352",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement fenced control-machine failover and recovery roles",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000353",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement provider-neutral local model outage gateway",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000354",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement recovery objectives and backup restore planning",
       "type": "TASK"
     },
@@ -6634,31 +6634,31 @@
     },
     {
       "id": "PP-TASK-000356",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement optional local-primary AWS recovery spine blueprint",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000357",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Complete resilience local-runtime and backup upstream adoption review",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000358",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Integrate resilience persistence migration CLI simulations and repository validation",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000359",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement portfolio and multi-repository lifecycle coordination",
       "type": "TASK"
     },
     {
       "id": "PP-TASK-000360",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement environment and test-data lifecycle safety",
       "type": "TASK"
     },
@@ -6670,7 +6670,7 @@
     },
     {
       "id": "PP-TASK-000362",
-      "state": "DONE",
+      "state": "BACKLOG",
       "title": "Implement reference-aware retention and project closure planning",
       "type": "TASK"
     },

@@ -46,7 +46,7 @@
   "expected_implementation_artifacts": [
     "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
@@ -107,6 +107,6 @@
     "SRC-006:L001578-L001604"
   ],
   "state": "BACKLOG",
-  "title": "Surfaces — Command Center and Operator Experience",
+  "title": "Surfaces \u2014 Command Center and Operator Experience",
   "upstream_dependencies": []
 }

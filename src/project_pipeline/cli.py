@@ -3208,11 +3208,23 @@ def main(argv: Sequence[str] | None = None) -> int:
                 return 2
             from project_pipeline.assurance.requirement_reconciliation import (
                 evaluate_requirement_reconciliation,
+                resolve_repository_identity,
             )
 
-            ledger = evaluate_requirement_reconciliation(args.root)
+            try:
+                current_sha, current_tree = resolve_repository_identity(args.root)
+            except ValueError:
+                current_sha, current_tree = None, None
+            ledger = evaluate_requirement_reconciliation(
+                args.root, current_sha=current_sha, current_tree=current_tree
+            )
             if args.apply:
-                applied = apply_evidence_bound_requirement_states(args.root, limit=args.limit)
+                applied = apply_evidence_bound_requirement_states(
+                    args.root,
+                    limit=args.limit,
+                    current_sha=current_sha,
+                    current_tree=current_tree,
+                )
                 _write_json_output(
                     {
                         "mode": "APPLIED",
@@ -3224,7 +3236,12 @@ def main(argv: Sequence[str] | None = None) -> int:
                     None,
                 )
                 return 0
-            proposals = propose_evidence_bound_requirement_states(args.root, limit=args.limit)
+            proposals = propose_evidence_bound_requirement_states(
+                args.root,
+                limit=args.limit,
+                current_sha=current_sha,
+                current_tree=current_tree,
+            )
             _write_json_output(
                 {
                     "mode": "DRY_RUN",

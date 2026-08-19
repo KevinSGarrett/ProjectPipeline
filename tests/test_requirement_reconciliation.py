@@ -13,6 +13,8 @@ from project_pipeline.cli import main
 from project_pipeline.io import read_jsonl, sha256_canonical_file, write_json, write_jsonl
 
 ROOT = Path(__file__).resolve().parents[1]
+CURRENT_SHA = "c" * 40
+CURRENT_TREE = "d" * 40
 
 
 def _candidate_row() -> dict:
@@ -71,6 +73,8 @@ def _seed_valid(tmp_path: Path, row: dict, *, evidence_updates: dict | None = No
         "supersedes": None,
         "test_ids": list(row["test_ids"]),
         "verification_status": "VERIFIED",
+        "integrated_sha": CURRENT_SHA,
+        "integrated_tree": CURRENT_TREE,
     }
     if evidence_updates:
         record.update(evidence_updates)
@@ -96,10 +100,14 @@ def test_evidence_bound_reconciliation_requires_artifacts_tests_and_evidence(
 ) -> None:
     candidate = _candidate_row()
     _seed_valid(tmp_path, candidate)
-    proposals = propose_evidence_bound_requirement_states(tmp_path)
+    proposals = propose_evidence_bound_requirement_states(
+        tmp_path, current_sha=CURRENT_SHA, current_tree=CURRENT_TREE
+    )
     assert proposals
     assert proposals[0]["requirement_id"] == candidate["requirement_id"]
-    applied = apply_evidence_bound_requirement_states(tmp_path, limit=1)
+    applied = apply_evidence_bound_requirement_states(
+        tmp_path, limit=1, current_sha=CURRENT_SHA, current_tree=CURRENT_TREE
+    )
     assert applied[0]["next_state"] == "IMPLEMENTED"
     assert (
         read_jsonl(tmp_path / "plans/_traceability/requirements.jsonl")[0]["implementation_state"]
@@ -130,7 +138,9 @@ def test_reconciliation_rejects_false_positive_classes(tmp_path: Path) -> None:
             empty.mkdir(parents=True, exist_ok=True)
             row["implementation_paths"] = ["empty_impl"]
             write_jsonl(workspace / "plans/_traceability/requirements.jsonl", [row])
-        ledger = evaluate_requirement_reconciliation(workspace)
+        ledger = evaluate_requirement_reconciliation(
+            workspace, current_sha=CURRENT_SHA, current_tree=CURRENT_TREE
+        )
         return ledger[0]["reason"]
 
     assert "not in TEST_CATALOG" in reason_for(_space="catalog", _delete_catalog=True)
@@ -159,7 +169,16 @@ def test_reconciliation_rejects_false_positive_classes(tmp_path: Path) -> None:
     protected["requirement_id"] = "REQ-PDEF-0011"
     workspace = tmp_path / "protected"
     _seed_valid(workspace, protected)
-    assert "protected" in evaluate_requirement_reconciliation(workspace)[0]["reason"]
+    assert (
+        "protected"
+        in evaluate_requirement_reconciliation(
+            workspace, current_sha=CURRENT_SHA, current_tree=CURRENT_TREE
+        )[0]["reason"]
+    )
+    unbound = reason_for(_space="unbound", _evidence={"integrated_sha": "", "integrated_tree": ""})
+    assert "unbound from the current head" in unbound
+    missing_identity = evaluate_requirement_reconciliation(tmp_path / "sha")[0]["reason"]
+    assert "current repository SHA/tree is required" in missing_identity
 
 
 def test_full_repository_ledger_covers_every_requirement() -> None:

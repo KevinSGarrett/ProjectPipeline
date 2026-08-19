@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import hashlib
+import re
+import subprocess
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -39,6 +41,7 @@ EXTERNAL_MARKERS = (
 EXTERNAL_TASK_IDS = {"PP-TASK-000384", "PP-TASK-000385"}
 GENERATED_PREFIXES = ("docs/generated/", "evidence/generated/")
 MOCK_ENVIRONMENTS = {"mock", "simulated", "fixture", "dry-run"}
+_FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 REQUIRED_EVIDENCE_FIELDS = (
     "evidence_id",
     "schema_version",
@@ -52,6 +55,40 @@ REQUIRED_EVIDENCE_FIELDS = (
 )
 
 
+def resolve_repository_identity(root: Path) -> tuple[str, str]:
+    """Return the exact current HEAD SHA and tree. Fail closed on abbreviated or missing identity."""
+
+    def _rev_parse(argument: str) -> str:
+        completed = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", argument],
+            check=False,
+            capture_output=True,
+            text=True,
+            shell=False,
+        )
+        value = (completed.stdout or "").strip().lower()
+        if completed.returncode != 0 or not _FULL_SHA.fullmatch(value):
+            raise ValueError(f"current repository SHA/tree could not be resolved ({argument})")
+        return value
+
+    return _rev_parse("HEAD"), _rev_parse("HEAD^{tree}")
+
+
+def _bound_identity(
+    root: Path, current_sha: str | None, current_tree: str | None
+) -> tuple[str | None, str | None]:
+    if current_sha and current_tree:
+        sha = current_sha.strip().lower()
+        tree = current_tree.strip().lower()
+        if not _FULL_SHA.fullmatch(sha) or not _FULL_SHA.fullmatch(tree):
+            return None, None
+        return sha, tree
+    try:
+        return resolve_repository_identity(root)
+    except ValueError:
+        return None, None
+
+
 def evaluate_requirement_reconciliation(
     root: Path,
     *,
@@ -63,6 +100,7 @@ def evaluate_requirement_reconciliation(
     """Return one ledger row per requirement with an accepted or rejected reason."""
 
     root = root.resolve()
+    current_sha, current_tree = _bound_identity(root, current_sha, current_tree)
     allowed = {item.upper() for item in domains} if domains is not None else None
     catalog = _test_catalog(root)
     evidence = {str(row.get("evidence_id")): row for row in load_evidence(root)}
@@ -92,12 +130,16 @@ def propose_evidence_bound_requirement_states(
     *,
     domains: Iterable[str] | None = None,
     limit: int | None = None,
+    current_sha: str | None = None,
+    current_tree: str | None = None,
 ) -> list[dict[str, Any]]:
     """Propose IMPLEMENTED only when artifacts, cataloged tests, and ledger evidence prove it."""
 
     accepted = [
         row
-        for row in evaluate_requirement_reconciliation(root, domains=domains)
+        for row in evaluate_requirement_reconciliation(
+            root, domains=domains, current_sha=current_sha, current_tree=current_tree
+        )
         if row.get("accepted") is True
     ]
     if limit is not None:
@@ -110,11 +152,19 @@ def apply_evidence_bound_requirement_states(
     *,
     domains: Iterable[str] | None = None,
     limit: int | None = None,
+    current_sha: str | None = None,
+    current_tree: str | None = None,
 ) -> list[dict[str, Any]]:
     root = root.resolve()
     proposals = {
         item["requirement_id"]: item
-        for item in propose_evidence_bound_requirement_states(root, domains=domains, limit=limit)
+        for item in propose_evidence_bound_requirement_states(
+            root,
+            domains=domains,
+            limit=limit,
+            current_sha=current_sha,
+            current_tree=current_tree,
+        )
     }
     rows = read_jsonl(root / "plans/_traceability/requirements.jsonl")
     applied: list[dict[str, Any]] = []
@@ -272,11 +322,17 @@ def _evidence_rejection(
     digest = str(record.get("sha256") or "")
     if len(digest) != 64 or digest != sha256_canonical_file(root / artifact):
         return f"evidence {evidence_id} digest does not match the artifact"
-    expected_sha = record.get("integrated_sha") or record.get("head_sha")
-    if expected_sha and expected_sha != current_sha:
+    if not current_sha or not current_tree:
+        return "current repository SHA/tree is required to prove current-head behavior"
+    expected_sha = str(record.get("integrated_sha") or record.get("head_sha") or "").strip().lower()
+    expected_tree = (
+        str(record.get("integrated_tree") or record.get("tree_sha") or "").strip().lower()
+    )
+    if not expected_sha or not expected_tree:
+        return f"evidence {evidence_id} is unbound from the current head"
+    if expected_sha != current_sha:
         return f"evidence {evidence_id} is bound to a different integrated SHA"
-    expected_tree = record.get("integrated_tree") or record.get("tree_sha")
-    if expected_tree and expected_tree != current_tree:
+    if expected_tree != current_tree:
         return f"evidence {evidence_id} is bound to a different integrated tree"
     method = str(record.get("method") or "").casefold()
     if "generated" in method or "generated-only" in environment:

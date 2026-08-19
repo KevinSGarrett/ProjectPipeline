@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
         "method": "automated_behavior_validation",
         "path": "src/project_pipeline/resilience/backup.py",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_contract_validation",
         "path": "plans/_traceability/requirements.jsonl",
-        "status": "VERIFIED"
+        "status": "PLANNED"
       }
     }
   ],
@@ -58,11 +58,9 @@
     "runbooks/backup_restore_verification.md",
     "config/resilience_policy.json"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "done",
-    "implemented",
     "recovery",
     "resilience"
   ],
@@ -124,7 +122,7 @@
     "SRC-009:L000025-L000025",
     "SRC-017:L000439-L000489"
   ],
-  "state": "DONE",
+  "state": "BACKLOG",
   "title": "Implement recovery objectives and backup restore planning",
   "upstream_dependencies": [
     "UPSTREAM-082",

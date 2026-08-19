@@ -3208,11 +3208,10 @@
       "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
-      "implemented",
       "plan-ctx-001"
     ],
     "last_observed_remote_state": {
@@ -3863,11 +3862,10 @@
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
-      "implemented",
       "plan-res-001"
     ],
     "last_observed_remote_state": {
@@ -4288,12 +4286,12 @@
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
-      "pass-22",
-      "plan-life-001"
+      "plan-life-001",
+      "pass-22"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10207,13 +10205,12 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-egress",
-      "domain-sec",
-      "implemented"
+      "domain-sec"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10314,13 +10311,12 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-identity",
-      "domain-sec",
-      "implemented"
+      "domain-sec"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -10422,13 +10418,12 @@
     "expected_implementation_artifacts": [
       "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-policy",
-      "domain-sec",
-      "implemented"
+      "domain-sec"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -11964,13 +11959,12 @@
     "expected_implementation_artifacts": [
       "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-recovery-verification",
-      "domain-res",
-      "implemented"
+      "domain-res"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -12188,13 +12182,12 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-director",
       "domain-ux",
-      "implemented",
       "pass-21"
     ],
     "last_observed_remote_state": {
@@ -12302,13 +12295,12 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-operator-inbox",
       "domain-ux",
-      "implemented",
       "pass-20",
       "pass-21"
     ],
@@ -12413,7 +12405,7 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
@@ -12538,7 +12530,7 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
@@ -13177,12 +13169,12 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-aws",
-      "domain-infra"
+      "domain-infra",
+      "cluster-aws"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13293,12 +13285,12 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-environments",
-      "domain-infra"
+      "domain-infra",
+      "cluster-environments"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13508,12 +13500,12 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-packaging",
-      "domain-infra"
+      "domain-infra",
+      "cluster-packaging"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -13770,12 +13762,12 @@
     "expected_implementation_artifacts": [
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-contracts",
       "domain-life",
+      "cluster-contracts",
       "pass-22"
     ],
     "last_observed_remote_state": {
@@ -13884,13 +13876,12 @@
     "expected_implementation_artifacts": [
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-portfolio",
       "domain-life",
-      "implemented",
+      "cluster-portfolio",
       "pass-22"
     ],
     "last_observed_remote_state": {
@@ -13997,13 +13988,12 @@
     "expected_implementation_artifacts": [
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-retention",
       "domain-life",
-      "implemented",
+      "cluster-retention",
       "pass-22"
     ],
     "last_observed_remote_state": {
@@ -14107,13 +14097,12 @@
     "expected_implementation_artifacts": [
       "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-upgrade",
       "domain-life",
-      "implemented",
+      "cluster-upgrade",
       "pass-22"
     ],
     "last_observed_remote_state": {
@@ -15026,12 +15015,12 @@
     "expected_implementation_artifacts": [
       "plans/17_release_and_handoff/PLAN-REL-001_release_handoff.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "cluster-verification",
-      "domain-rel"
+      "domain-rel",
+      "cluster-verification"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -21317,7 +21306,7 @@
       "integrations/policy/opa.py",
       "tests/integration/test_opa_policy.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "backlog",
@@ -22628,7 +22617,7 @@
       "deploy/windows/",
       "tests/packaging/test_windows_service.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
       "backlog",
@@ -30227,13 +30216,12 @@
       "src/project_pipeline/control/kernel.py",
       "src/project_pipeline/domain/control.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "build-sequencer",
       "control-kernel",
+      "build-sequencer",
       "deterministic",
-      "implemented",
       "project-control"
     ],
     "last_observed_remote_state": {
@@ -31055,12 +31043,11 @@
       "src/project_pipeline/scheduler/resources.py",
       "src/project_pipeline/domain/scheduler.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "deterministic",
       "dynamic-scheduler",
-      "implemented",
       "parallel-execution",
       "resource-governance"
     ],
@@ -31171,12 +31158,11 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/scheduler/persistence.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "deterministic",
       "dynamic-scheduler",
-      "implemented",
       "parallel-execution",
       "resource-governance"
     ],
@@ -37794,7 +37780,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/domain/context.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -37804,15 +37790,13 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
       "EVID-000089",
-      "EVID-000090",
-      "EVID-000092",
       "EVID-000093",
       "EVID-000094"
     ],
@@ -37840,13 +37824,11 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/domain/context.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
-      "done",
-      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -37904,7 +37886,7 @@
       "SRC-002:L000213-L000260",
       "SRC-002:L000959-L001014"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement immutable delegation envelope and context domain",
     "upstream_dependencies": []
   },
@@ -38175,7 +38157,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/context_engine/firewall.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -38185,13 +38167,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000088",
       "EVID-000089",
       "EVID-000091",
       "EVID-000093",
@@ -38224,13 +38205,11 @@
       "src/project_pipeline/context_engine/firewall.py",
       "src/project_pipeline/context_engine/trust.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
-      "done",
-      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -38300,7 +38279,7 @@
       "SRC-002:L000889-L000958",
       "SRC-002:L001015-L001156"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement context trust classification and firewall",
     "upstream_dependencies": []
   },
@@ -38313,7 +38292,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/context_engine/compiler.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -38323,7 +38302,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
@@ -38361,13 +38340,11 @@
       "src/project_pipeline/context_engine/compiler.py",
       "config/context_policy.json"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
-      "done",
-      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -38424,7 +38401,7 @@
       "SRC-002:L000959-L001014",
       "SRC-002:L001158-L001234"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement context freshness and required coverage",
     "upstream_dependencies": []
   },
@@ -38831,7 +38808,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_context_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/cli.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -38841,16 +38818,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000088",
-      "EVID-000089",
-      "EVID-000090",
-      "EVID-000091",
       "EVID-000092",
       "EVID-000093",
       "EVID-000094"
@@ -38887,13 +38860,11 @@
       "docs/architecture/context_and_delegation.md",
       "runbooks/context_pack_recovery.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "context",
       "delegation",
-      "done",
-      "implemented",
       "pass-12"
     ],
     "last_observed_remote_state": {
@@ -38953,7 +38924,7 @@
       "GOV-001:L000695-L000710",
       "SRC-002:L001158-L001234"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Integrate Context CLI schemas documentation and validation",
     "upstream_dependencies": []
   },
@@ -39405,7 +39376,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/orchestration/runtime.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -39415,14 +39386,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000029",
-      "EVID-000030",
       "EVID-000095",
       "EVID-000096",
       "EVID-000097",
@@ -39459,12 +39428,10 @@
     "expected_implementation_artifacts": [
       "src/project_pipeline/orchestration/runtime.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
       "durability",
-      "implemented",
       "orchestration",
       "pass-13"
     ],
@@ -39524,7 +39491,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement deterministic retries timeouts and checkpoints",
     "upstream_dependencies": []
   },
@@ -39670,7 +39637,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_orchestration_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/orchestration/runtime.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -39680,22 +39647,19 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000062",
       "EVID-000095",
       "EVID-000096",
       "EVID-000097",
       "EVID-000098",
       "EVID-000099",
       "EVID-000100",
-      "EVID-000101",
-      "EVID-000129",
-      "EVID-000130"
+      "EVID-000101"
     ],
     "definition_of_done": [
       "Implementation is present and locally behaviorally verified.",
@@ -39727,12 +39691,10 @@
       "src/project_pipeline/orchestration/runtime.py",
       "src/project_pipeline/orchestration/recovery.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
       "durability",
-      "implemented",
       "orchestration",
       "pass-13"
     ],
@@ -39794,7 +39756,7 @@
       "SRC-017:L000281-L000359",
       "SRC-016:L001748-L001756"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement worker heartbeat fencing and loss recovery",
     "upstream_dependencies": []
   },
@@ -45316,12 +45278,11 @@
       "src/project_pipeline/security/supply_chain.py",
       "provenance/license_policy.json"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "identity",
-      "implemented",
       "security",
+      "identity",
       "supply-chain"
     ],
     "last_observed_remote_state": {
@@ -45440,11 +45401,11 @@
       "src/project_pipeline/security/supply_chain.py",
       "runbooks/security_root_of_trust_and_secret_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "identity",
       "security",
+      "identity",
       "supply-chain"
     ],
     "last_observed_remote_state": {
@@ -45879,7 +45840,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/failover.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -45889,20 +45850,15 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000096",
-      "EVID-000097",
-      "EVID-000100",
-      "EVID-000101",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
-      "EVID-000132",
       "EVID-000133",
       "EVID-000134"
     ],
@@ -45935,11 +45891,9 @@
       "runbooks/control_machine_failover.md",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "implemented",
       "recovery",
       "resilience"
     ],
@@ -46000,7 +45954,7 @@
       "SRC-006:L000406-L000441",
       "SRC-006:L000567-L000603"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement fenced control-machine failover and recovery roles",
     "upstream_dependencies": []
   },
@@ -46013,7 +45967,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/local_models.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -46023,22 +45977,17 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000069",
-      "EVID-000070",
-      "EVID-000072",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
-      "EVID-000132",
       "EVID-000133",
-      "EVID-000134",
-      "EVID-000164"
+      "EVID-000134"
     ],
     "definition_of_done": [
       "Implementation is present and behaviorally verified.",
@@ -46069,11 +46018,9 @@
       "src/project_pipeline/upstream_integrations/resilience.py",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "implemented",
       "recovery",
       "resilience"
     ],
@@ -46131,7 +46078,7 @@
       "GOV-001:L000748-L000764",
       "SRC-013:L000420-L000529"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement provider-neutral local model outage gateway",
     "upstream_dependencies": [
       "UPSTREAM-040",
@@ -46149,7 +46096,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/backup.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -46159,7 +46106,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
@@ -46200,11 +46147,9 @@
       "runbooks/backup_restore_verification.md",
       "config/resilience_policy.json"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "implemented",
       "recovery",
       "resilience"
     ],
@@ -46266,7 +46211,7 @@
       "SRC-009:L000025-L000025",
       "SRC-017:L000439-L000489"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement recovery objectives and backup restore planning",
     "upstream_dependencies": [
       "UPSTREAM-082",
@@ -46406,7 +46351,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/aws.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -46416,7 +46361,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
@@ -46427,8 +46372,7 @@
       "EVID-000131",
       "EVID-000132",
       "EVID-000133",
-      "EVID-000134",
-      "EVID-000164"
+      "EVID-000134"
     ],
     "definition_of_done": [
       "Implementation is present and behaviorally verified.",
@@ -46462,11 +46406,9 @@
       "infrastructure/aws/terraform/variables.tf",
       "infrastructure/aws/README.md"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "implemented",
       "recovery",
       "resilience"
     ],
@@ -46535,7 +46477,7 @@
       "SRC-012:L000734-L000779",
       "SRC-012:L000817-L001036"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement optional local-primary AWS recovery spine blueprint",
     "upstream_dependencies": []
   },
@@ -46548,7 +46490,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "provenance/reviews/resilience_local_runtime_backup_review.md",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -46558,20 +46500,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000069",
-      "EVID-000070",
-      "EVID-000072",
-      "EVID-000115",
-      "EVID-000116",
-      "EVID-000118",
-      "EVID-000121",
-      "EVID-000122",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
@@ -46607,11 +46541,9 @@
       "provenance/upstream_usage.jsonl",
       "provenance/upstream_registry.json"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "implemented",
       "recovery",
       "resilience"
     ],
@@ -46670,7 +46602,7 @@
       "SRC-009:L000015-L000015",
       "SRC-013:L000420-L000529"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Complete resilience local-runtime and backup upstream adoption review",
     "upstream_dependencies": [
       "UPSTREAM-040",
@@ -46691,7 +46623,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_resilience_*.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/resilience/persistence.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -46701,17 +46633,12 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000115",
-      "EVID-000116",
-      "EVID-000118",
-      "EVID-000121",
-      "EVID-000122",
       "EVID-000129",
       "EVID-000130",
       "EVID-000131",
@@ -46749,11 +46676,9 @@
       "src/project_pipeline/cli.py",
       "src/project_pipeline/resilience/validation.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "implemented",
       "recovery",
       "resilience"
     ],
@@ -46819,7 +46744,7 @@
       "SRC-009:L000015-L000015",
       "SRC-017:L000439-L000489"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Integrate resilience persistence migration CLI simulations and repository validation",
     "upstream_dependencies": []
   },
@@ -46832,7 +46757,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/portfolio.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -46842,7 +46767,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
@@ -46877,13 +46802,11 @@
       "src/project_pipeline/lifecycle/repositories.py",
       "src/project_pipeline/domain/lifecycle.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "implemented",
-      "pass-22",
-      "platform-lifecycle"
+      "platform-lifecycle",
+      "pass-22"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -46937,7 +46860,7 @@
     "source_references": [
       "SRC-017:L000671-L000822"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement portfolio and multi-repository lifecycle coordination",
     "upstream_dependencies": []
   },
@@ -46950,7 +46873,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/environments.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -46960,7 +46883,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
@@ -46995,13 +46918,11 @@
       "config/platform_lifecycle_policy.json",
       "src/project_pipeline/domain/lifecycle.py"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "implemented",
-      "pass-22",
-      "platform-lifecycle"
+      "platform-lifecycle",
+      "pass-22"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -47053,7 +46974,7 @@
     "source_references": [
       "SRC-017:L000597-L000670"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement environment and test-data lifecycle safety",
     "upstream_dependencies": []
   },
@@ -47182,7 +47103,7 @@
           "command": "PYTHONPATH=src python -m pytest -q tests/test_pass22_platform_lifecycle.py",
           "method": "automated_behavior_validation",
           "path": "src/project_pipeline/lifecycle/retention.py",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       },
       {
@@ -47192,7 +47113,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "repository_contract_validation",
           "path": "plans/_traceability/requirements.jsonl",
-          "status": "VERIFIED"
+          "status": "PLANNED"
         }
       }
     ],
@@ -47227,13 +47148,11 @@
       "runbooks/project_closure_and_archive.md",
       "config/platform_lifecycle_policy.json"
     ],
-    "implementation_state": "IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "done",
-      "implemented",
-      "pass-22",
-      "platform-lifecycle"
+      "platform-lifecycle",
+      "pass-22"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -47285,7 +47204,7 @@
     "source_references": [
       "SRC-017:L000907-L001001"
     ],
-    "state": "DONE",
+    "state": "BACKLOG",
     "title": "Implement reference-aware retention and project closure planning",
     "upstream_dependencies": []
   },
@@ -47343,11 +47262,11 @@
       "runbooks/platform_upgrade_qualification.md",
       "config/platform_lifecycle_policy.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "pass-22",
-      "platform-lifecycle"
+      "platform-lifecycle",
+      "pass-22"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -47463,11 +47382,11 @@
       "src/project_pipeline/lifecycle/validation.py",
       "database/migrations/sqlite/PPDB-0018_advanced_platform_lifecycle.up.sql"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "pass-22",
-      "platform-lifecycle"
+      "platform-lifecycle",
+      "pass-22"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -48081,11 +48000,11 @@
       "provenance/pass_24_upstream_hardening_gate.json",
       "config/pass24_hardening_matrix.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "hardening",
-      "pass-24"
+      "pass-24",
+      "hardening"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -48201,11 +48120,11 @@
       "release/hardening_report_r24.json",
       "evidence/verification/pass24_performance.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "hardening",
-      "pass-24"
+      "pass-24",
+      "hardening"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -48325,11 +48244,11 @@
       "scripts/windows",
       "scripts/run_command_center_service.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "hardening",
-      "pass-24"
+      "pass-24",
+      "hardening"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -48442,11 +48361,11 @@
       "src/project_pipeline/configuration/models.py",
       "config/pass24_hardening_matrix.json"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "PLANNED_ONLY",
     "issue_type": "TASK",
     "labels": [
-      "hardening",
-      "pass-24"
+      "pass-24",
+      "hardening"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -49920,9 +49839,9 @@
     "issue_type": "TASK",
     "labels": [
       "autonomy-runtime",
-      "cohesive-slice",
+      "unattended",
       "release",
-      "unattended"
+      "cohesive-slice"
     ],
     "last_observed_remote_state": null,
     "local_id": "PP-TASK-000385",

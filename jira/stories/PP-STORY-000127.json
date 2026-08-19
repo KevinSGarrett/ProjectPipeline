@@ -49,13 +49,12 @@
   "expected_implementation_artifacts": [
     "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "cluster-portfolio",
     "domain-life",
-    "implemented",
+    "cluster-portfolio",
     "pass-22"
   ],
   "last_observed_remote_state": {
@@ -108,6 +107,6 @@
     "SRC-017:L000740-L000822"
   ],
   "state": "BACKLOG",
-  "title": "Portfolio — Platform Lifecycle",
+  "title": "Portfolio \u2014 Platform Lifecycle",
   "upstream_dependencies": []
 }

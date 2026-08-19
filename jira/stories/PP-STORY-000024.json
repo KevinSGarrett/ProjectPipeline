@@ -44,11 +44,10 @@
     "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "domain-story",
-    "implemented",
     "plan-res-001"
   ],
   "last_observed_remote_state": {

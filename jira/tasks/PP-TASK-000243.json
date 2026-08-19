@@ -52,12 +52,11 @@
     "src/project_pipeline/scheduler/resources.py",
     "src/project_pipeline/domain/scheduler.py"
   ],
-  "implementation_state": "IMPLEMENTED",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "deterministic",
     "dynamic-scheduler",
-    "implemented",
     "parallel-execution",
     "resource-governance"
   ],

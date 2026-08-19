@@ -53,11 +53,11 @@
     "release/hardening_report_r24.json",
     "evidence/verification/pass24_performance.json"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "PLANNED_ONLY",
   "issue_type": "TASK",
   "labels": [
-    "hardening",
-    "pass-24"
+    "pass-24",
+    "hardening"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
