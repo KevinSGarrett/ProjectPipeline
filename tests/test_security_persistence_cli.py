@@ -131,6 +131,9 @@ def test_ppdb_0014_rollback_preserves_0013(project_root, tmp_path):
         runner = __import__(
             "project_pipeline.persistence.migrations", fromlist=["SQLiteMigrationRunner"]
         ).SQLiteMigrationRunner(store.db, project_root)
+        runner.rollback_last()  # PPDB-0024 evidence observations
+        ids = {r[0] for r in store.db.execute("SELECT migration_id FROM schema_migrations")}
+        assert "PPDB-0023" in ids and "PPDB-0024" not in ids
         runner.rollback_last()  # PPDB-0023 campaign owner bindings
         ids = {r[0] for r in store.db.execute("SELECT migration_id FROM schema_migrations")}
         assert "PPDB-0022" in ids and "PPDB-0023" not in ids

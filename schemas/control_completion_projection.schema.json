@@ -9,6 +9,98 @@
       ],
       "title": "CompletionProjectionState",
       "type": "string"
+    },
+    "ControlCohortCounts": {
+      "additionalProperties": false,
+      "description": "Labeled same-snapshot denominators for facts, eligibility, and readiness.",
+      "properties": {
+        "dependency_ready": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Dependency Ready",
+          "type": "integer"
+        },
+        "eligibility_already_active": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Eligibility Already Active",
+          "type": "integer"
+        },
+        "eligibility_blocked": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Eligibility Blocked",
+          "type": "integer"
+        },
+        "eligibility_blocked_external": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Eligibility Blocked External",
+          "type": "integer"
+        },
+        "eligibility_eligible": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Eligibility Eligible",
+          "type": "integer"
+        },
+        "eligibility_policy_denied": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Eligibility Policy Denied",
+          "type": "integer"
+        },
+        "eligibility_product_scope_paused": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Eligibility Product Scope Paused",
+          "type": "integer"
+        },
+        "eligibility_reconciliation": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Eligibility Reconciliation",
+          "type": "integer"
+        },
+        "eligibility_terminal": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Eligibility Terminal",
+          "type": "integer"
+        },
+        "leaf_reconciliation_facts": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Leaf Reconciliation Facts",
+          "type": "integer"
+        },
+        "reconciliation_facts": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Reconciliation Facts",
+          "type": "integer"
+        },
+        "schema_version": {
+          "const": "1.0.0",
+          "default": "1.0.0",
+          "title": "Schema Version",
+          "type": "string"
+        },
+        "structural_container_facts": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Structural Container Facts",
+          "type": "integer"
+        },
+        "total_work_items": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Total Work Items",
+          "type": "integer"
+        }
+      },
+      "title": "ControlCohortCounts",
+      "type": "object"
     }
   },
   "$id": "https://project-pipeline.local/schemas/control_completion_projection.schema.json",
@@ -29,6 +121,9 @@
       "minimum": 0,
       "title": "Blocked Work Items",
       "type": "integer"
+    },
+    "cohorts": {
+      "$ref": "#/$defs/ControlCohortCounts"
     },
     "completed_work_items": {
       "minimum": 0,

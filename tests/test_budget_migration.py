@@ -9,7 +9,7 @@ def test_ppdb_0011_is_reversible_without_damaging_ppdb_0010(tmp_path: Path):
     conn = sqlite3.connect(tmp_path / "migrations.db")
     runner = SQLiteMigrationRunner(conn, root)
     status = runner.apply_all()
-    assert status.latest_applied == "PPDB-0023"
+    assert status.latest_applied == "PPDB-0024"
     assert conn.execute(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='budget_ledger'"
     ).fetchone()

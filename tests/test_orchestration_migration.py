@@ -11,7 +11,7 @@ def test_ppdb_0010_is_catalogued_and_reversible(project_root):
     connection = sqlite3.connect(":memory:")
     runner = SQLiteMigrationRunner(connection, project_root)
     status = runner.apply_all()
-    assert status.latest_applied == "PPDB-0023"
+    assert status.latest_applied == "PPDB-0024"
     tables = {
         row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type='table'")
     }

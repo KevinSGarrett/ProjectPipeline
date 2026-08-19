@@ -3,6 +3,11 @@ from project_pipeline.control.authority import (
     RecommendationDisposition,
     evaluate_recommendation_authority,
 )
+from project_pipeline.control.cohorts import (
+    assert_cohort_invariants,
+    describe_reconciliation_cohorts,
+    summarize_control_cohorts,
+)
 from project_pipeline.control.graph import BuildSequencer, ControlGraphError
 from project_pipeline.control.kernel import ProjectControlKernel
 from project_pipeline.control.persistence import ControlStore
@@ -15,6 +20,9 @@ __all__ = [
     "ProjectControlKernel",
     "RecommendationAuthorityDecision",
     "RecommendationDisposition",
+    "assert_cohort_invariants",
+    "describe_reconciliation_cohorts",
     "evaluate_recommendation_authority",
+    "summarize_control_cohorts",
     "validate_control_foundation",
 ]

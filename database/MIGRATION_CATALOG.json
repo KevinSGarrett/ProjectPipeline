@@ -435,6 +435,25 @@
       "sqlite_down_sha256": "d22d04bf6acc63185d3b5089353b1281997888c63d836fe0ab88796950902b0b",
       "sqlite_up_path": "database/migrations/sqlite/PPDB-0023_campaign_owner_and_receipt_semantics.up.sql",
       "sqlite_up_sha256": "e8d76cca713b3ec81ee5634303be441a4a148a7546d4c089ced843eaf5e7295c"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0023"
+      ],
+      "migration_id": "PPDB-0024",
+      "name": "evidence_observations",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0024_evidence_observations.down.sql",
+      "postgresql_down_sha256": "d4dee97a93e90d7598dfc4468256fc8938b3250f4be5f4e64dee5461a3bab92f",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0024_evidence_observations.up.sql",
+      "postgresql_up_sha256": "dd58b4fc5a8bec596344b5f44e15b3d26967f216ccbc8926eba305977a1dc8b3",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 24,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0024_evidence_observations.down.sql",
+      "sqlite_down_sha256": "d4dee97a93e90d7598dfc4468256fc8938b3250f4be5f4e64dee5461a3bab92f",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0024_evidence_observations.up.sql",
+      "sqlite_up_sha256": "0cb86568c9118f6996f720e92d46e806b4d9f5520b13d1c0b55ea7ea61e9ca73"
     }
   ],
   "schema_version": "1.0.0"

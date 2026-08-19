@@ -4,14 +4,20 @@ from __future__ import annotations
 
 import hashlib
 import re
-import subprocess
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.assurance.acceptance_scope import acceptance_scope_fingerprint
 from project_pipeline.assurance.evidence import load_evidence
+from project_pipeline.assurance.observation import (
+    observation_rejection,
+    select_current_observation,
+)
+from project_pipeline.assurance.observation_store import EvidenceObservationStore
 from project_pipeline.assurance.policy import AssurancePolicy
+from project_pipeline.assurance.repository_identity import resolve_repository_identity
 from project_pipeline.io import (
     read_json,
     read_jsonl,
@@ -61,7 +67,6 @@ def contains_external_marker(text: str) -> bool:
 
 EXTERNAL_TASK_IDS = {"PP-TASK-000384", "PP-TASK-000385"}
 GENERATED_PREFIXES = ("docs/generated/", "evidence/generated/")
-MOCK_ENVIRONMENTS = {"mock", "simulated", "fixture", "dry-run"}
 _FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 REQUIRED_EVIDENCE_FIELDS = (
     "evidence_id",
@@ -74,25 +79,6 @@ REQUIRED_EVIDENCE_FIELDS = (
     "requirement_ids",
     "artifact_path",
 )
-
-
-def resolve_repository_identity(root: Path) -> tuple[str, str]:
-    """Return the exact current HEAD SHA and tree. Fail closed on abbreviated or missing identity."""
-
-    def _rev_parse(argument: str) -> str:
-        completed = subprocess.run(
-            ["git", "-C", str(root), "rev-parse", argument],
-            check=False,
-            capture_output=True,
-            text=True,
-            shell=False,
-        )
-        value = (completed.stdout or "").strip().lower()
-        if completed.returncode != 0 or not _FULL_SHA.fullmatch(value):
-            raise ValueError(f"current repository SHA/tree could not be resolved ({argument})")
-        return value
-
-    return _rev_parse("HEAD"), _rev_parse("HEAD^{tree}")
 
 
 def _bound_identity(
@@ -117,6 +103,7 @@ def evaluate_requirement_reconciliation(
     now: datetime | None = None,
     current_sha: str | None = None,
     current_tree: str | None = None,
+    observation_store: EvidenceObservationStore | None = None,
 ) -> list[dict[str, Any]]:
     """Return one ledger row per requirement with an accepted or rejected reason."""
 
@@ -125,6 +112,7 @@ def evaluate_requirement_reconciliation(
     allowed = {item.upper() for item in domains} if domains is not None else None
     catalog = _test_catalog(root)
     evidence = {str(row.get("evidence_id")): row for row in load_evidence(root)}
+    store = observation_store or EvidenceObservationStore.open(root)
     policy = AssurancePolicy()
     observed = (now or datetime.now(UTC)).astimezone(UTC)
     ledger: list[dict[str, Any]] = []
@@ -137,6 +125,7 @@ def evaluate_requirement_reconciliation(
                 item,
                 catalog=catalog,
                 evidence=evidence,
+                store=store,
                 policy=policy,
                 now=observed,
                 current_sha=current_sha,
@@ -153,13 +142,18 @@ def propose_evidence_bound_requirement_states(
     limit: int | None = None,
     current_sha: str | None = None,
     current_tree: str | None = None,
+    observation_store: EvidenceObservationStore | None = None,
 ) -> list[dict[str, Any]]:
-    """Propose IMPLEMENTED only when artifacts, cataloged tests, and ledger evidence prove it."""
+    """Propose IMPLEMENTED only when artifacts, cataloged tests, and current observations prove it."""
 
     accepted = [
         row
         for row in evaluate_requirement_reconciliation(
-            root, domains=domains, current_sha=current_sha, current_tree=current_tree
+            root,
+            domains=domains,
+            current_sha=current_sha,
+            current_tree=current_tree,
+            observation_store=observation_store,
         )
         if row.get("accepted") is True
     ]
@@ -175,6 +169,7 @@ def apply_evidence_bound_requirement_states(
     limit: int | None = None,
     current_sha: str | None = None,
     current_tree: str | None = None,
+    observation_store: EvidenceObservationStore | None = None,
 ) -> list[dict[str, Any]]:
     root = root.resolve()
     proposals = {
@@ -185,6 +180,7 @@ def apply_evidence_bound_requirement_states(
             limit=limit,
             current_sha=current_sha,
             current_tree=current_tree,
+            observation_store=observation_store,
         )
     }
     rows = read_jsonl(root / "plans/_traceability/requirements.jsonl")
@@ -207,6 +203,7 @@ def _evaluate_requirement(
     *,
     catalog: dict[str, dict[str, Any]],
     evidence: dict[str, dict[str, Any]],
+    store: EvidenceObservationStore,
     policy: AssurancePolicy,
     now: datetime,
     current_sha: str | None,
@@ -274,17 +271,21 @@ def _evaluate_requirement(
     evidence_ids = [str(evidence_id) for evidence_id in item.get("evidence_ids", [])]
     if not evidence_ids:
         return {**base, "reason": "evidence_ids list is empty"}
+    fingerprint = acceptance_scope_fingerprint(root, item)
+    base["acceptance_scope_fingerprint"] = fingerprint
     for evidence_id in evidence_ids:
         reason = _evidence_rejection(
             root,
             requirement_id,
             evidence_id,
             evidence.get(evidence_id),
+            store=store,
             test_ids=test_ids,
             policy=policy,
             now=now,
             current_sha=current_sha,
             current_tree=current_tree,
+            acceptance_fingerprint=fingerprint,
             live_required=contains_external_marker(statement),
         )
         if reason:
@@ -293,7 +294,7 @@ def _evaluate_requirement(
         **base,
         "accepted": True,
         "next_state": "IMPLEMENTED",
-        "reason": "cataloged tests, fingerprintable artifacts, and fresh verified ledger evidence prove current-head behavior",
+        "reason": "cataloged tests, fingerprintable artifacts, and a valid current-head observation prove behavior",
     }
 
 
@@ -303,11 +304,13 @@ def _evidence_rejection(
     evidence_id: str,
     record: dict[str, Any] | None,
     *,
+    store: EvidenceObservationStore,
     test_ids: list[str],
     policy: AssurancePolicy,
     now: datetime,
     current_sha: str | None,
     current_tree: str | None,
+    acceptance_fingerprint: str,
     live_required: bool,
 ) -> str | None:
     if record is None:
@@ -319,46 +322,38 @@ def _evidence_rejection(
         return f"evidence {evidence_id} has an invalid schema"
     if requirement_id not in {str(item) for item in record.get("requirement_ids") or []}:
         return f"evidence {evidence_id} is unbound from {requirement_id}"
-    environment = str(record.get("environment") or "").casefold()
-    if live_required and any(token in environment for token in MOCK_ENVIRONMENTS):
-        return f"evidence {evidence_id} is mock-only and cannot prove live behavior"
-    if str(record.get("verification_status")) != "VERIFIED":
-        return f"evidence {evidence_id} is not independently verified"
-    if str(record.get("result")) == "FAIL":
-        return f"evidence {evidence_id} records FAIL"
-    if str(record.get("result")) != "PASS":
-        return f"evidence {evidence_id} does not record PASS"
-    try:
-        observed = datetime.fromisoformat(str(record["observed_at_utc"]))
-    except ValueError:
-        return f"evidence {evidence_id} has an invalid timestamp"
-    if observed.tzinfo is None:
-        observed = observed.replace(tzinfo=UTC)
-    age = max(0, int((now - observed.astimezone(UTC)).total_seconds()))
-    if age > policy.default_evidence_max_age_seconds:
-        return f"evidence {evidence_id} is stale"
     artifact = str(record.get("artifact_path") or "")
     if not artifact or not (root / artifact).exists():
         return f"evidence {evidence_id} artifact is missing"
     digest = str(record.get("sha256") or "")
     if len(digest) != 64 or digest != sha256_canonical_file(root / artifact):
         return f"evidence {evidence_id} digest does not match the artifact"
-    if not current_sha or not current_tree:
-        return "current repository SHA/tree is required to prove current-head behavior"
-    expected_sha = str(record.get("integrated_sha") or record.get("head_sha") or "").strip().lower()
-    expected_tree = (
-        str(record.get("integrated_tree") or record.get("tree_sha") or "").strip().lower()
-    )
-    if not expected_sha or not expected_tree:
-        return f"evidence {evidence_id} is unbound from the current head"
-    if expected_sha != current_sha:
-        return f"evidence {evidence_id} is bound to a different integrated SHA"
-    if expected_tree != current_tree:
-        return f"evidence {evidence_id} is bound to a different integrated tree"
     method = str(record.get("method") or "").casefold()
+    environment = str(record.get("environment") or "").casefold()
     if "generated" in method or "generated-only" in environment:
         return f"evidence {evidence_id} is generated-only and cannot prove the behavior that generated it"
-    return None
+    if not current_sha or not current_tree:
+        return "current repository SHA/tree is required to prove current-head behavior"
+    observation = select_current_observation(
+        store,
+        evidence_id,
+        current_sha=current_sha,
+        current_tree=current_tree,
+        acceptance_fingerprint=acceptance_fingerprint,
+    )
+    return observation_rejection(
+        observation,
+        requirement_id=requirement_id,
+        evidence_id=evidence_id,
+        test_ids=test_ids,
+        current_sha=current_sha,
+        current_tree=current_tree,
+        acceptance_fingerprint=acceptance_fingerprint,
+        policy=policy,
+        now=now,
+        live_required=live_required,
+        definition=record,
+    )
 
 
 def test_catalog(root: Path) -> dict[str, dict[str, Any]]:
