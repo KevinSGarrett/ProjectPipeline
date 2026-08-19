@@ -10326,10 +10326,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "INFRA",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000195"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/infra/boundaries.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000123"
@@ -10361,7 +10365,9 @@
       "local",
       "private-network"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-INFRA-OVERLAY-001"
+    ],
     "title": "Private network overlay",
     "verification_class": "INDEPENDENT_MULTI_EVIDENCE",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -10516,10 +10522,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "INFRA",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000196"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/infra/boundaries.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000122"
@@ -10551,7 +10561,9 @@
       "infra",
       "test-environment"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-INFRA-EPH-001"
+    ],
     "title": "Ephemeral integration dependencies",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -10563,10 +10575,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "INFRA",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000197"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/infra/boundaries.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000122"
@@ -10598,7 +10614,9 @@
       "environments",
       "infra"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-INFRA-EMU-001"
+    ],
     "title": "Optional local cloud emulation",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -10867,10 +10885,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "INFRA",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000198"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/infra/boundaries.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000121"
@@ -10902,7 +10924,9 @@
       "event-ingress",
       "infra"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-INFRA-INGRESS-001"
+    ],
     "title": "Cloud event ingress",
     "verification_class": "INDEPENDENT_MULTI_EVIDENCE",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -10972,10 +10996,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "INFRA",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000199"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/infra/boundaries.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000121"
@@ -11007,7 +11035,9 @@
       "cloud-capacity",
       "infra"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-INFRA-CAP-001"
+    ],
     "title": "Cloud capacity manager",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."

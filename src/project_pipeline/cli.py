@@ -157,6 +157,7 @@ from project_pipeline.governance.framework_version import evaluate_framework_ver
 from project_pipeline.governance.instruction_system import evaluate_instruction_system
 from project_pipeline.governance.product_profile import evaluate_product_profile
 from project_pipeline.governance.review_director import coordinate_independent_review
+from project_pipeline.infra.boundaries import run_infra_action
 from project_pipeline.intake import (
     BootstrapError,
     DiscoveryError,
@@ -440,6 +441,18 @@ def build_parser() -> argparse.ArgumentParser:
     ops_intelligence.add_argument("--payload", type=Path)
     ops_intelligence.add_argument("--freshness-seconds", type=int, default=3600)
     ops_intelligence.add_argument("--json-output", type=Path)
+
+    infra_boundaries = commands.add_parser(
+        "infra-boundaries",
+        help="Evaluate local overlay, ephemeral services, emulation, ingress, and capacity",
+    )
+    infra_boundaries.add_argument(
+        "action",
+        choices=("status", "overlay", "provision", "destroy", "emulation", "ingress", "capacity"),
+    )
+    infra_boundaries.add_argument("--root", type=_root, default=Path.cwd())
+    infra_boundaries.add_argument("--payload", type=Path)
+    infra_boundaries.add_argument("--json-output", type=Path)
 
     validate = commands.add_parser("validate", help="Run repository-contract validation")
     validate.add_argument("--root", type=_root, default=Path.cwd())
@@ -3454,6 +3467,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                     payload=payload,
                     freshness_seconds=int(args.freshness_seconds),
                 )
+            except ValueError as error:
+                _write_json_output(
+                    {"ok": False, "error": str(error), "user_action_required": False},
+                    args.json_output,
+                )
+                return 1
+            _write_json_output(result, args.json_output)
+            return 0
+        if args.command == "infra-boundaries":
+            payload = None
+            if args.payload is not None:
+                payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
+            try:
+                result = run_infra_action(args.root, args.action, payload=payload)
             except ValueError as error:
                 _write_json_output(
                     {"ok": False, "error": str(error), "user_action_required": False},

@@ -150,18 +150,18 @@
 {"requirement_id": "REQ-INFRA-0002", "test_ids": ["TEST-ARCHIVE-001", "TEST-CLI-FOUNDATION-001", "TEST-CLI-FOUNDATION-003", "TEST-CONFIG-001", "TEST-CONFIG-002", "TEST-CONFIG-007", "TEST-REL-HARDEN-005", "TEST-REL-HARDEN-008", "TEST-REL-HARDEN-012", "TEST-REL-HARDEN-014", "TEST-REL-HARDEN-015", "TEST-REPOSITORY-001", "TEST-RUNTIME-001", "TEST-RUNTIME-002"]}
 {"requirement_id": "REQ-INFRA-0003", "test_ids": ["TEST-CONTENT-POLICY-001", "TEST-REPOSITORY-001", "TEST-CONFIG-003", "TEST-CONFIG-004", "TEST-CONFIG-005", "TEST-CONFIG-006"]}
 {"requirement_id": "REQ-INFRA-0004", "test_ids": ["TEST-RES-FAILOVER-001", "TEST-RES-FAILOVER-002"]}
-{"requirement_id": "REQ-INFRA-0005", "test_ids": []}
+{"requirement_id":"REQ-INFRA-0005","test_ids":["TEST-INFRA-OVERLAY-001"]}
 {"requirement_id": "REQ-INFRA-0006", "test_ids": ["TEST-UPSTREAM-MCP-001", "TEST-UPSTREAM-MCP-002"]}
 {"requirement_id": "REQ-INFRA-0007", "test_ids": ["TEST-CLI-FOUNDATION-002", "TEST-DEPEND-001", "TEST-DEPEND-002", "TEST-DEPEND-003", "TEST-REL-HARDEN-009"]}
-{"requirement_id": "REQ-INFRA-0008", "test_ids": []}
-{"requirement_id": "REQ-INFRA-0009", "test_ids": []}
+{"requirement_id":"REQ-INFRA-0008","test_ids":["TEST-INFRA-EPH-001"]}
+{"requirement_id":"REQ-INFRA-0009","test_ids":["TEST-INFRA-EMU-001"]}
 {"requirement_id": "REQ-INFRA-0010", "test_ids": ["TEST-REL-HARDEN-005", "TEST-REL-HARDEN-006", "TEST-REL-HARDEN-008"]}
 {"requirement_id": "REQ-INFRA-0011", "test_ids": ["TEST-REL-HARDEN-005", "TEST-REL-HARDEN-007"]}
 {"requirement_id": "REQ-INFRA-0012", "test_ids": ["TEST-REL-HARDEN-005", "TEST-REL-HARDEN-013", "TEST-RES-AWS-001", "TEST-RES-AWS-002"]}
 {"requirement_id": "REQ-INFRA-0013", "test_ids": ["TEST-RES-FAILOVER-001", "TEST-RES-FAILOVER-002"]}
-{"requirement_id": "REQ-INFRA-0014", "test_ids": []}
+{"requirement_id":"REQ-INFRA-0014","test_ids":["TEST-INFRA-INGRESS-001"]}
 {"requirement_id": "REQ-INFRA-0015", "test_ids": ["TEST-RES-AWS-001"]}
-{"requirement_id": "REQ-INFRA-0016", "test_ids": []}
+{"requirement_id":"REQ-INFRA-0016","test_ids":["TEST-INFRA-CAP-001"]}
 {"requirement_id": "REQ-INFRA-0017", "test_ids": ["TEST-RES-AWS-001"]}
 {"requirement_id": "REQ-INFRA-0018", "test_ids": ["TEST-REL-HARDEN-009"]}
 {"requirement_id": "REQ-INFRA-0019", "test_ids": ["TEST-RES-BACKUP-002", "TEST-RES-BACKUP-003"]}

@@ -43,7 +43,7 @@
   "expected_implementation_artifacts": [
     "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
@@ -105,6 +105,6 @@
     "SRC-017:L000597-L000670"
   ],
   "state": "BACKLOG",
-  "title": "Environments \u2014 Deployment and Infrastructure",
+  "title": "Environments — Deployment and Infrastructure",
   "upstream_dependencies": []
 }

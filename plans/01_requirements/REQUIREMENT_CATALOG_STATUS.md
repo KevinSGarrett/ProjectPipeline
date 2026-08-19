@@ -7,9 +7,9 @@
 
 ## Implementation state
 
-- `IMPLEMENTED`: 226
+- `IMPLEMENTED`: 231
 - `PARTIALLY_IMPLEMENTED`: 113
-- `PLANNED_ONLY`: 13
+- `PLANNED_ONLY`: 8
 
 ## Priority
 
