@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 627,
+  "test_count": 629,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3136,6 +3136,16 @@
       "callable": "test_wip_preserve_and_restore_round_trip",
       "path": "tests/test_resilience_gaps.py",
       "test_id": "TEST-RES-WIPRESTORE-001"
+    },
+    {
+      "callable": "test_wip_restore_refuses_secret_and_digest_mismatch",
+      "path": "tests/test_resilience_gaps.py",
+      "test_id": "TEST-RES-WIPRESTORE-002"
+    },
+    {
+      "callable": "test_wip_restore_rejects_unsafe_destination",
+      "path": "tests/test_resilience_gaps.py",
+      "test_id": "TEST-RES-WIPRESTORE-003"
     }
   ]
 }

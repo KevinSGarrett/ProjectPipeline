@@ -10,13 +10,13 @@
 {"requirement_id": "REQ-AGENT-0010", "test_ids": ["TEST-AGENT-CIRCUIT-001", "TEST-AGENT-CIRCUIT-002", "TEST-AGENT-CIRCUIT-003", "TEST-AGENT-ROUTER-004"]}
 {"requirement_id": "REQ-AGENT-0011", "test_ids": ["TEST-AGENT-DOMAIN-001"]}
 {"requirement_id": "REQ-AGENT-0012", "test_ids": ["TEST-AGENT-ADAPTER-005", "TEST-AGENT-ROUTER-005", "TEST-RES-LOCAL-001", "TEST-RES-LOCAL-002", "TEST-RES-LOCAL-003", "TEST-RES-SIM-001"]}
-{"requirement_id":"REQ-AGENT-0013","test_ids":["TEST-DIR-PORTFOLIO-001"]}
+{"requirement_id": "REQ-AGENT-0013", "test_ids": ["TEST-DIR-PORTFOLIO-001"]}
 {"requirement_id": "REQ-AGENT-0014", "test_ids": ["TEST-AGENT-ROUTER-003", "TEST-AGENT-DOMAIN-004"]}
 {"requirement_id": "REQ-AGENT-0015", "test_ids": ["TEST-AGENT-PERF-001", "TEST-AGENT-PERSIST-001"]}
 {"requirement_id": "REQ-AGENT-0016", "test_ids": ["TEST-AGENT-DOMAIN-004", "TEST-AGENT-ROUTER-003"]}
 {"requirement_id": "REQ-AGENT-0017", "test_ids": ["TEST-AGENT-DOMAIN-004", "TEST-AGENT-ROUTER-003"]}
 {"requirement_id": "REQ-AGENT-0018", "test_ids": ["TEST-SCHED-CONFLICT-001", "TEST-SCHED-LEASE-001"]}
-{"requirement_id":"REQ-AGENT-0019","test_ids":["TEST-DIR-CONTEXT-001"]}
+{"requirement_id": "REQ-AGENT-0019", "test_ids": ["TEST-DIR-CONTEXT-001"]}
 {"requirement_id": "REQ-ARCH-0001", "test_ids": ["TEST-ARCH-QUERY-001", "TEST-ARCH-REGISTRY-001", "TEST-ARCHITECTURE-001", "TEST-ARCHITECTURE-002", "TEST-ARCHITECTURE-005", "TEST-REPOSITORY-001"]}
 {"requirement_id": "REQ-ARCH-0002", "test_ids": ["TEST-ARCH-REGISTRY-001", "TEST-ARCHITECTURE-002", "TEST-COMMAND-001", "TEST-COMMAND-002", "TEST-COMMAND-003", "TEST-COMMAND-004", "TEST-RUNTIME-003"]}
 {"requirement_id": "REQ-ARCH-0003", "test_ids": ["TEST-ARCH-REGISTRY-001", "TEST-ARCHITECTURE-003", "TEST-DECISION-001", "TEST-DECISION-002", "TEST-REPOSITORY-001"]}
@@ -92,8 +92,8 @@
 {"requirement_id": "REQ-CTRL-0003", "test_ids": ["TEST-MIGRATION-001", "TEST-MIGRATION-002", "TEST-MIGRATION-003", "TEST-MIGRATION-004", "TEST-ORCH-DOMAIN-003", "TEST-ORCH-MIGRATION-001", "TEST-ORCH-RUNTIME-001", "TEST-ORCH-RUNTIME-003", "TEST-ORCH-RUNTIME-004", "TEST-STATE-STORE-001", "TEST-STATE-STORE-002", "TEST-STATE-STORE-003", "TEST-STATE-STORE-004", "TEST-STATE-STORE-005"]}
 {"requirement_id": "REQ-CTRL-0004", "test_ids": ["TEST-CC-P21-001", "TEST-CC-P21-002"]}
 {"requirement_id": "REQ-CTRL-0005", "test_ids": ["TEST-CONTROL-KERNEL-001", "TEST-CONTROL-CLI-001"]}
-{"requirement_id":"REQ-CTRL-0006","test_ids":["TEST-DIR-PM-001"]}
-{"requirement_id":"REQ-CTRL-0007","test_ids":["TEST-DIR-ARCH-001"]}
+{"requirement_id": "REQ-CTRL-0006", "test_ids": ["TEST-DIR-PM-001"]}
+{"requirement_id": "REQ-CTRL-0007", "test_ids": ["TEST-DIR-ARCH-001"]}
 {"requirement_id": "REQ-CTRL-0008", "test_ids": ["TEST-ASSURE-REVIEW-001", "TEST-E2E-P23-004"]}
 {"requirement_id": "REQ-CTRL-0009", "test_ids": ["TEST-CONTROL-DOMAIN-001", "TEST-CONTROL-KERNEL-001"]}
 {"requirement_id": "REQ-CTRL-0010", "test_ids": ["TEST-ORCH-ADAPTER-001", "TEST-ORCH-DOMAIN-001", "TEST-ORCH-MIGRATION-001", "TEST-ORCH-RUNTIME-001", "TEST-ORCH-RUNTIME-005", "TEST-ORCH-RUNTIME-006"]}
@@ -126,7 +126,7 @@
 {"requirement_id": "REQ-GOV-0003", "test_ids": ["TEST-JIRA-GRAPH-001", "TEST-JIRA-REBUILD-001", "TEST-REPOSITORY-001"]}
 {"requirement_id": "REQ-GOV-0004", "test_ids": ["TEST-REPOSITORY-001", "TEST-GITHUB-STEWARDSHIP-001", "TEST-GITHUB-STEWARDSHIP-002"]}
 {"requirement_id": "REQ-GOV-0005", "test_ids": ["TEST-RUNTIME-001", "TEST-REPOSITORY-001"]}
-{"requirement_id":"REQ-GOV-0006","test_ids":["TEST-GOV-INSTR-001","TEST-GOV-INSTR-002"]}
+{"requirement_id": "REQ-GOV-0006", "test_ids": ["TEST-GOV-INSTR-001", "TEST-GOV-INSTR-002"]}
 {"requirement_id": "REQ-GOV-0007", "test_ids": ["TEST-LINE-PLANS-001", "TEST-TRACEABILITY-001", "TEST-TRACEABILITY-002"]}
 {"requirement_id": "REQ-GOV-0008", "test_ids": ["TEST-JIRA-CLI-001", "TEST-JIRA-DOMAIN-001", "TEST-JIRA-DOMAIN-002", "TEST-JIRA-DOMAIN-006", "TEST-JIRA-PERSIST-002"]}
 {"requirement_id": "REQ-GOV-0009", "test_ids": ["TEST-JIRA-DOMAIN-003", "TEST-JIRA-DOMAIN-004", "TEST-JIRA-SYNC-005"]}
@@ -140,28 +140,28 @@
 {"requirement_id": "REQ-GOV-0017", "test_ids": ["TEST-GITHUB-STEWARDSHIP-001", "TEST-GITHUB-STEWARDSHIP-002"]}
 {"requirement_id": "REQ-GOV-0018", "test_ids": ["TEST-GITHUB-STEWARDSHIP-001", "TEST-GITHUB-STEWARDSHIP-002"]}
 {"requirement_id": "REQ-GOV-0019", "test_ids": ["TEST-GITHUB-STEWARDSHIP-001", "TEST-GITHUB-STEWARDSHIP-002"]}
-{"requirement_id":"REQ-GOV-0020","test_ids":["TEST-GOV-REVIEW-001","TEST-GOV-REVIEW-002"]}
+{"requirement_id": "REQ-GOV-0020", "test_ids": ["TEST-GOV-REVIEW-001", "TEST-GOV-REVIEW-002"]}
 {"requirement_id": "REQ-GOV-0021", "test_ids": ["TEST-GITHUB-STEWARDSHIP-001", "TEST-GITHUB-STEWARDSHIP-002"]}
-{"requirement_id":"REQ-GOV-0022","test_ids":["TEST-GOV-POSTMERGE-001","TEST-GOV-POSTMERGE-002","TEST-GOV-POSTMERGE-003","TEST-GOV-POSTMERGE-004"]}
+{"requirement_id": "REQ-GOV-0022", "test_ids": ["TEST-GOV-POSTMERGE-001", "TEST-GOV-POSTMERGE-002", "TEST-GOV-POSTMERGE-003", "TEST-GOV-POSTMERGE-004"]}
 {"requirement_id": "REQ-GOV-0023", "test_ids": ["TEST-GITHUB-STEWARDSHIP-001", "TEST-GITHUB-STEWARDSHIP-002"]}
 {"requirement_id": "REQ-GOV-0024", "test_ids": ["TEST-GITHUB-STEWARDSHIP-001", "TEST-GITHUB-STEWARDSHIP-002", "TEST-JIRA-ADAPTER-001", "TEST-JIRA-ADAPTER-002", "TEST-JIRA-ADAPTER-003", "TEST-JIRA-ADAPTER-004", "TEST-UPSTREAM-MCP-001", "TEST-UPSTREAM-WORKTRUNK-001"]}
-{"requirement_id":"REQ-GOV-0025","test_ids":["TEST-GOV-VER-001","TEST-GOV-VER-002"]}
+{"requirement_id": "REQ-GOV-0025", "test_ids": ["TEST-GOV-VER-001", "TEST-GOV-VER-002"]}
 {"requirement_id": "REQ-INFRA-0001", "test_ids": ["TEST-REL-HARDEN-005", "TEST-REL-HARDEN-006", "TEST-REL-HARDEN-007", "TEST-RES-AWS-001", "TEST-RES-LOCAL-001"]}
 {"requirement_id": "REQ-INFRA-0002", "test_ids": ["TEST-ARCHIVE-001", "TEST-CLI-FOUNDATION-001", "TEST-CLI-FOUNDATION-003", "TEST-CONFIG-001", "TEST-CONFIG-002", "TEST-CONFIG-007", "TEST-REL-HARDEN-005", "TEST-REL-HARDEN-008", "TEST-REL-HARDEN-012", "TEST-REL-HARDEN-014", "TEST-REL-HARDEN-015", "TEST-REPOSITORY-001", "TEST-RUNTIME-001", "TEST-RUNTIME-002"]}
 {"requirement_id": "REQ-INFRA-0003", "test_ids": ["TEST-CONTENT-POLICY-001", "TEST-REPOSITORY-001", "TEST-CONFIG-003", "TEST-CONFIG-004", "TEST-CONFIG-005", "TEST-CONFIG-006"]}
 {"requirement_id": "REQ-INFRA-0004", "test_ids": ["TEST-RES-FAILOVER-001", "TEST-RES-FAILOVER-002"]}
-{"requirement_id":"REQ-INFRA-0005","test_ids":["TEST-INFRA-OVERLAY-001"]}
+{"requirement_id": "REQ-INFRA-0005", "test_ids": ["TEST-INFRA-OVERLAY-001"]}
 {"requirement_id": "REQ-INFRA-0006", "test_ids": ["TEST-UPSTREAM-MCP-001", "TEST-UPSTREAM-MCP-002"]}
 {"requirement_id": "REQ-INFRA-0007", "test_ids": ["TEST-CLI-FOUNDATION-002", "TEST-DEPEND-001", "TEST-DEPEND-002", "TEST-DEPEND-003", "TEST-REL-HARDEN-009"]}
-{"requirement_id":"REQ-INFRA-0008","test_ids":["TEST-INFRA-EPH-001"]}
-{"requirement_id":"REQ-INFRA-0009","test_ids":["TEST-INFRA-EMU-001"]}
+{"requirement_id": "REQ-INFRA-0008", "test_ids": ["TEST-INFRA-EPH-001"]}
+{"requirement_id": "REQ-INFRA-0009", "test_ids": ["TEST-INFRA-EMU-001"]}
 {"requirement_id": "REQ-INFRA-0010", "test_ids": ["TEST-REL-HARDEN-005", "TEST-REL-HARDEN-006", "TEST-REL-HARDEN-008"]}
 {"requirement_id": "REQ-INFRA-0011", "test_ids": ["TEST-REL-HARDEN-005", "TEST-REL-HARDEN-007"]}
 {"requirement_id": "REQ-INFRA-0012", "test_ids": ["TEST-REL-HARDEN-005", "TEST-REL-HARDEN-013", "TEST-RES-AWS-001", "TEST-RES-AWS-002"]}
 {"requirement_id": "REQ-INFRA-0013", "test_ids": ["TEST-RES-FAILOVER-001", "TEST-RES-FAILOVER-002"]}
-{"requirement_id":"REQ-INFRA-0014","test_ids":["TEST-INFRA-INGRESS-001"]}
+{"requirement_id": "REQ-INFRA-0014", "test_ids": ["TEST-INFRA-INGRESS-001"]}
 {"requirement_id": "REQ-INFRA-0015", "test_ids": ["TEST-RES-AWS-001"]}
-{"requirement_id":"REQ-INFRA-0016","test_ids":["TEST-INFRA-CAP-001"]}
+{"requirement_id": "REQ-INFRA-0016", "test_ids": ["TEST-INFRA-CAP-001"]}
 {"requirement_id": "REQ-INFRA-0017", "test_ids": ["TEST-RES-AWS-001"]}
 {"requirement_id": "REQ-INFRA-0018", "test_ids": ["TEST-REL-HARDEN-009"]}
 {"requirement_id": "REQ-INFRA-0019", "test_ids": ["TEST-RES-BACKUP-002", "TEST-RES-BACKUP-003"]}
@@ -184,20 +184,20 @@
 {"requirement_id": "REQ-LIFE-0017", "test_ids": ["TEST-LIFE-P22-001"]}
 {"requirement_id": "REQ-LIFE-0018", "test_ids": ["TEST-CONFIG-007", "TEST-CONTRACT-001", "TEST-LIFE-P22-001"]}
 {"requirement_id": "REQ-OPS-0001", "test_ids": ["TEST-OBS-001", "TEST-OBS-002", "TEST-OBS-004", "TEST-OBS-005", "TEST-UPSTREAM-OPENLIT-001", "TEST-UPSTREAM-OPENLIT-002"]}
-{"requirement_id":"REQ-OPS-0002","test_ids":["TEST-OPS-HEALTH-001","TEST-OPS-HEALTH-002","TEST-OPS-HEALTH-003","TEST-OPS-HEALTH-005"]}
+{"requirement_id": "REQ-OPS-0002", "test_ids": ["TEST-OPS-HEALTH-001", "TEST-OPS-HEALTH-002", "TEST-OPS-HEALTH-003", "TEST-OPS-HEALTH-005"]}
 {"requirement_id": "REQ-OPS-0003", "test_ids": ["TEST-REPOSITORY-001", "TEST-RUNTIME-001", "TEST-RUNTIME-002", "TEST-CLI-FOUNDATION-003"]}
 {"requirement_id": "REQ-OPS-0004", "test_ids": ["TEST-CONTRACT-001", "TEST-OBS-001", "TEST-OBS-005"]}
-{"requirement_id":"REQ-OPS-0005","test_ids":["TEST-OPS-HEALTH-004","TEST-OPS-STORE-002"]}
+{"requirement_id": "REQ-OPS-0005", "test_ids": ["TEST-OPS-HEALTH-004", "TEST-OPS-STORE-002"]}
 {"requirement_id": "REQ-OPS-0006", "test_ids": ["TEST-ORCH-CLI-001", "TEST-ORCH-CLI-002", "TEST-ORCH-RECOVERY-003", "TEST-ORCH-RUNTIME-003"]}
-{"requirement_id":"REQ-OPS-0007","test_ids":["TEST-OPS-HEALTH-004"]}
+{"requirement_id": "REQ-OPS-0007", "test_ids": ["TEST-OPS-HEALTH-004"]}
 {"requirement_id": "REQ-OPS-0008", "test_ids": ["TEST-CTX-COMPILER-007", "TEST-CTX-CLI-001"]}
-{"requirement_id":"REQ-OPS-0009","test_ids":["TEST-OPS-HEALTH-001","TEST-OPS-HEALTH-002","TEST-OPS-HEALTH-003","TEST-OPS-HEALTH-005"]}
+{"requirement_id": "REQ-OPS-0009", "test_ids": ["TEST-OPS-HEALTH-001", "TEST-OPS-HEALTH-002", "TEST-OPS-HEALTH-003", "TEST-OPS-HEALTH-005"]}
 {"requirement_id": "REQ-OPS-0010", "test_ids": ["TEST-CONV-P25-001", "TEST-CONV-P25-002"]}
-{"requirement_id":"REQ-OPS-0011","test_ids":["TEST-OPS-INDEX-001"]}
+{"requirement_id": "REQ-OPS-0011", "test_ids": ["TEST-OPS-INDEX-001"]}
 {"requirement_id": "REQ-OPS-0012", "test_ids": ["TEST-VERIFY-IMPACT-001", "TEST-VERIFY-IMPACT-002"]}
-{"requirement_id":"REQ-OPS-0013","test_ids":["TEST-OPS-INDEX-001"]}
-{"requirement_id":"REQ-OPS-0014","test_ids":["TEST-OPS-MEM-001"]}
-{"requirement_id":"REQ-OPS-0015","test_ids":["TEST-OPS-MEM-001"]}
+{"requirement_id": "REQ-OPS-0013", "test_ids": ["TEST-OPS-INDEX-001"]}
+{"requirement_id": "REQ-OPS-0014", "test_ids": ["TEST-OPS-MEM-001"]}
+{"requirement_id": "REQ-OPS-0015", "test_ids": ["TEST-OPS-MEM-001"]}
 {"requirement_id": "REQ-OPS-0016", "test_ids": ["TEST-CONV-P25-003", "TEST-CONV-P25-004"]}
 {"requirement_id": "REQ-OPS-0017", "test_ids": ["TEST-CC-API-004", "TEST-CC-INBOX-001", "TEST-CC-INBOX-002", "TEST-CC-INBOX-003", "TEST-CC-INBOX-004", "TEST-CC-INBOX-005", "TEST-CC-P21-006", "TEST-CC-P21-007", "TEST-CC-P21-008", "TEST-CC-P21-009", "TEST-CC-P21-010", "TEST-CC-P21-014"]}
 {"requirement_id": "REQ-OPS-0018", "test_ids": ["TEST-RUNTIME-001", "TEST-RUNTIME-002", "TEST-CLI-FOUNDATION-003"]}
@@ -208,10 +208,10 @@
 {"requirement_id": "REQ-PDEF-0004", "test_ids": ["TEST-INTAKE-COMPILER-003", "TEST-INTAKE-COMPILER-005", "TEST-INTAKE-BOOTSTRAP-002"]}
 {"requirement_id": "REQ-PDEF-0005", "test_ids": ["TEST-INTAKE-COMPILER-002", "TEST-INTAKE-COMPILER-003", "TEST-INTAKE-COMPILER-005", "TEST-INTAKE-CLI-002", "TEST-INTAKE-VALIDATION-001"]}
 {"requirement_id": "REQ-PDEF-0006", "test_ids": ["TEST-INTAKE-MODEL-001", "TEST-INTAKE-MODEL-002", "TEST-INTAKE-MODEL-003", "TEST-INTAKE-MODEL-004", "TEST-INTAKE-DISCOVERY-001", "TEST-INTAKE-DISCOVERY-002", "TEST-INTAKE-DISCOVERY-003", "TEST-INTAKE-DISCOVERY-004", "TEST-INTAKE-DISCOVERY-005", "TEST-INTAKE-DISCOVERY-006", "TEST-INTAKE-DISCOVERY-007", "TEST-INTAKE-COMPILER-001", "TEST-INTAKE-COMPILER-002", "TEST-INTAKE-COMPILER-003", "TEST-INTAKE-COMPILER-004", "TEST-INTAKE-COMPILER-005", "TEST-INTAKE-COMPILER-006", "TEST-INTAKE-VALIDATION-001", "TEST-INTAKE-BOOTSTRAP-001", "TEST-INTAKE-BOOTSTRAP-002", "TEST-INTAKE-BOOTSTRAP-003", "TEST-INTAKE-BOOTSTRAP-004", "TEST-INTAKE-BOOTSTRAP-005", "TEST-INTAKE-PERSISTENCE-001", "TEST-INTAKE-PERSISTENCE-002", "TEST-INTAKE-PERSISTENCE-003", "TEST-INTAKE-CLI-001", "TEST-INTAKE-CLI-002", "TEST-INTAKE-CLI-003", "TEST-INTAKE-CLI-004"]}
-{"requirement_id":"REQ-PDEF-0007","test_ids":["TEST-PDEF-PROFILE-001","TEST-PDEF-PROFILE-002"]}
-{"requirement_id":"REQ-PDEF-0008","test_ids":["TEST-PDEF-PROFILE-001","TEST-PDEF-PROFILE-002"]}
+{"requirement_id": "REQ-PDEF-0007", "test_ids": ["TEST-PDEF-PROFILE-001", "TEST-PDEF-PROFILE-002"]}
+{"requirement_id": "REQ-PDEF-0008", "test_ids": ["TEST-PDEF-PROFILE-001", "TEST-PDEF-PROFILE-002"]}
 {"requirement_id": "REQ-PDEF-0009", "test_ids": ["TEST-REPOSITORY-001"]}
-{"requirement_id":"REQ-PDEF-0010","test_ids":["TEST-PDEF-PROFILE-001"]}
+{"requirement_id": "REQ-PDEF-0010", "test_ids": ["TEST-PDEF-PROFILE-001"]}
 {"requirement_id": "REQ-PDEF-0011", "test_ids": []}
 {"requirement_id": "REQ-REL-0001", "test_ids": ["TEST-ARCHIVE-001", "TEST-REPOSITORY-001"]}
 {"requirement_id": "REQ-REL-0002", "test_ids": ["TEST-REPOSITORY-001"]}
@@ -221,8 +221,8 @@
 {"requirement_id": "REQ-REL-0006", "test_ids": ["TEST-CONV-P25-005"]}
 {"requirement_id": "REQ-REL-0007", "test_ids": ["TEST-REL-HARDEN-008", "TEST-REL-HARDEN-014"]}
 {"requirement_id": "REQ-REL-0008", "test_ids": ["TEST-REL-HARDEN-015"]}
-{"requirement_id":"REQ-REL-0009","test_ids":["TEST-REL-CONT-001","TEST-REL-CONT-002","TEST-REL-CONT-003"]}
-{"requirement_id":"REQ-REL-0010","test_ids":["TEST-ARCHIVE-001","TEST-ARCHIVE-002","TEST-ARCHIVE-003"]}
+{"requirement_id": "REQ-REL-0009", "test_ids": ["TEST-REL-CONT-001", "TEST-REL-CONT-002", "TEST-REL-CONT-003"]}
+{"requirement_id": "REQ-REL-0010", "test_ids": ["TEST-ARCHIVE-001", "TEST-ARCHIVE-002", "TEST-ARCHIVE-003"]}
 {"requirement_id": "REQ-REL-0011", "test_ids": ["TEST-ARCHIVE-001", "TEST-REL-HARDEN-015"]}
 {"requirement_id": "REQ-REL-0012", "test_ids": ["TEST-REL-HARDEN-010", "TEST-REL-HARDEN-015", "TEST-REPOSITORY-001"]}
 {"requirement_id": "REQ-REL-0013", "test_ids": ["TEST-CONV-P25-007", "TEST-CONV-P25-009"]}
@@ -248,15 +248,15 @@
 {"requirement_id": "REQ-RES-0002", "test_ids": ["TEST-RES-FAILOVER-005"]}
 {"requirement_id": "REQ-RES-0003", "test_ids": ["TEST-RES-BACKUP-001", "TEST-RES-BACKUP-003", "TEST-RES-SIM-001"]}
 {"requirement_id": "REQ-RES-0004", "test_ids": ["TEST-RES-FAILOVER-004", "TEST-RES-SIM-001"]}
-{"requirement_id":"REQ-RES-0005","test_ids":["TEST-RES-REMOVE-001"]}
+{"requirement_id": "REQ-RES-0005", "test_ids": ["TEST-RES-REMOVE-001"]}
 {"requirement_id": "REQ-RES-0006", "test_ids": ["TEST-ORCH-RECOVERY-001", "TEST-ORCH-RUNTIME-002", "TEST-SCHED-FENCING-001", "TEST-SCHED-LEASE-001"]}
 {"requirement_id": "REQ-RES-0007", "test_ids": ["TEST-RES-FAILOVER-001", "TEST-RES-FAILOVER-002"]}
 {"requirement_id": "REQ-RES-0008", "test_ids": ["TEST-RES-BACKUP-001", "TEST-RES-PERSIST-001"]}
 {"requirement_id": "REQ-RES-0009", "test_ids": ["TEST-ORCH-ADAPTER-004", "TEST-ORCH-RECOVERY-001", "TEST-ORCH-RUNTIME-002", "TEST-RES-FAILOVER-001", "TEST-RES-FAILOVER-002", "TEST-RES-SIM-001"]}
 {"requirement_id": "REQ-RES-0010", "test_ids": ["TEST-ORCH-RECOVERY-001", "TEST-ORCH-RUNTIME-004"]}
 {"requirement_id": "REQ-RES-0011", "test_ids": ["TEST-GITHUB-STEWARDSHIP-001", "TEST-GITHUB-STEWARDSHIP-002"]}
-{"requirement_id":"REQ-RES-0012","test_ids":["TEST-RES-WIPRESTORE-001"]}
-{"requirement_id":"REQ-RES-0013","test_ids":["TEST-RES-GPUWAIT-001"]}
+{"requirement_id": "REQ-RES-0012", "test_ids": ["TEST-RES-WIPRESTORE-001", "TEST-RES-WIPRESTORE-002", "TEST-RES-WIPRESTORE-003"]}
+{"requirement_id": "REQ-RES-0013", "test_ids": ["TEST-RES-GPUWAIT-001"]}
 {"requirement_id": "REQ-RES-0014", "test_ids": ["TEST-RES-FAILOVER-002", "TEST-RES-SIM-001"]}
 {"requirement_id": "REQ-RES-0015", "test_ids": ["TEST-RES-AWS-001", "TEST-RES-FAILOVER-003", "TEST-RES-SIM-001"]}
 {"requirement_id": "REQ-RES-0016", "test_ids": ["TEST-JIRA-PERSIST-002", "TEST-JIRA-SYNC-004"]}

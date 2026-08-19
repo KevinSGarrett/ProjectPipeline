@@ -3153,9 +3153,22 @@ def _run_resilience_command(args: argparse.Namespace) -> tuple[dict[str, Any], i
     if args.action == "restore-wip":
         bundle = Path(_require_argument(args, "source"))
         destination = Path(_require_argument(args, "output"))
+        if not destination.is_absolute():
+            destination = (Path.cwd() / destination).resolve()
+        if args.allow_root is None:
+            raise ConfigurationError("resilience restore-wip requires --allow-root")
         if args.apply and not args.approve:
             raise ConfigurationError("resilience restore-wip --apply requires --approve")
-        payload = restore_uncommitted_work(bundle, destination, apply=bool(args.apply))
+        allow = Path(args.allow_root).resolve()
+        workspace = Path(args.root).resolve()
+        policy = RestoreTargetPolicy([allow], workspace_roots=[workspace])
+        payload = restore_uncommitted_work(
+            bundle,
+            destination,
+            apply=bool(args.apply),
+            policy=policy,
+            workspace_root=workspace,
+        )
         return {"wip_restore": payload}, 0
     if args.action == "provider-removal":
         payload = simulate_provider_removal(

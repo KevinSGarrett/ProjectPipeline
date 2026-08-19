@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "10c8314a4678325e37e44ffca663f7e6a7b71676a3f9ae714b488b624c62b608",
+  "aggregate_sha256": "1fc544ad6e29dd50c3a607af7eb8a9707e91f3988a7bcd894ba39ed677d02b2f",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -1562,8 +1562,8 @@
     },
     {
       "path": "docs/resilience/gaps.md",
-      "sha256": "2356b02687fc9cfcf6a42c660d0e875325b021971aa0c72d61464b74c42a9aeb",
-      "size_bytes": 331
+      "sha256": "9652265e3bb9cc55dcd275ca8f33e880b41046fc75d90cbdd3b3a22f29ed3a92",
+      "size_bytes": 562
     },
     {
       "path": "docs/scheduling/dynamic_lane_scheduler.md",
@@ -4092,7 +4092,7 @@
     },
     {
       "path": "evidence/EVIDENCE_LEDGER.jsonl",
-      "sha256": "f9e7b8ddbe8f32ef016097937e4b7a4e7f9cd1a8fa732887a3a8b45ed46f6327",
+      "sha256": "5a057a15fe9c10a9b3fc2e6caeb59db6568eae15bf81a67e403d6a92753fb703",
       "size_bytes": 159503
     },
     {
@@ -9962,8 +9962,8 @@
     },
     {
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "414caaac68348de6ba53d94503f04012117baeadcbb786affb5cd617b718f683",
-      "size_bytes": 715162
+      "sha256": "25429504ae3f906f3ef0ef094b1d6e6d35942954fdd89809b06045bb2238fd18",
+      "size_bytes": 715214
     },
     {
       "path": "plans/_traceability/requirements_by_domain.json",
@@ -9972,8 +9972,8 @@
     },
     {
       "path": "plans/_traceability/requirements_by_id.json",
-      "sha256": "6db288e22ff5d94654f97fd5940f3f81c4f960ac37ea91cd84b25540a9ce58cf",
-      "size_bytes": 869730
+      "sha256": "903f5b4c1589e20bef661b7bebd6c0eef548d76b1223b96e343fcc5a048e2e84",
+      "size_bytes": 869796
     },
     {
       "path": "plans/_traceability/requirements_by_source.json",
@@ -9987,8 +9987,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_evidence.jsonl",
-      "sha256": "a00e38861227ea1a4f90c2713fad71dc9bbf4942cc06c989e4083efa51ffc02e",
-      "size_bytes": 37728
+      "sha256": "4622beb3c1c0dca256e703064fe8988ccbcbb594adb2bcc5704e0866c99412f4",
+      "size_bytes": 37815
     },
     {
       "path": "plans/_traceability/requirements_to_evolution.jsonl",
@@ -9997,8 +9997,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_implementation.jsonl",
-      "sha256": "f708250ad494fa6d611a16d64354187a48fc3d044e89c817bdacbef7a660c7f9",
-      "size_bytes": 90280
+      "sha256": "533a7799a0f13686c67980ed447c9e5e11f96731211897d4858b365782eb4790",
+      "size_bytes": 90375
     },
     {
       "path": "plans/_traceability/requirements_to_jira.jsonl",
@@ -10017,8 +10017,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_tests.jsonl",
-      "sha256": "dd847b50ec1117dbaaeda9aae44496f5b452febb05809f5d1726043a2f961761",
-      "size_bytes": 52314
+      "sha256": "7cd580362c7943713d17b463193b184bef0f44a0eb3d174525f59b762ab15b1d",
+      "size_bytes": 52474
     },
     {
       "path": "plans/_traceability/source_section_coverage.md",
@@ -12297,8 +12297,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "b0c00e36bca9bd7a97672f3dca667ea8283bef66f781caba0a9f4c6118f71ae3",
-      "size_bytes": 169316
+      "sha256": "0317bac5610ab8cf3b87f423533eead265d97d9f8c2438dcadeff05473870314",
+      "size_bytes": 169823
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -13237,8 +13237,8 @@
     },
     {
       "path": "src/project_pipeline/resilience/wip_preserve.py",
-      "sha256": "3eaeeea3fffe267f1cf3c2c9312344336eedeed73f2af013fc6d549b48152a71",
-      "size_bytes": 6957
+      "sha256": "ed32cf5a6922c95973e3b07e866dabdcbb7187a78f3a9c79bffe1ce1f2c2b6a5",
+      "size_bytes": 7671
     },
     {
       "path": "src/project_pipeline/runtime/__init__.py",
@@ -13857,8 +13857,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "97d61448d09417e9c821aeaf02231694b8b60f44abad5046868251bf05896ae2",
-      "size_bytes": 115161
+      "sha256": "6b76c37128097f061bbb2ed51b3575c4e08af53a3e6b5db45d0cb57a1a413175",
+      "size_bytes": 115505
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -14417,8 +14417,8 @@
     },
     {
       "path": "tests/test_resilience_gaps.py",
-      "sha256": "800a51bf69071d4447a54ae5462c129b34cd693b746aadcd372fd87df52ea7ad",
-      "size_bytes": 2816
+      "sha256": "9cd4b274bba40126d8df2cbbbc31d8a65ac45e77ed93ca50cd6419724b9a70ec",
+      "size_bytes": 6497
     },
     {
       "path": "tests/test_resilience_local_models.py",
@@ -14691,7 +14691,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T14:51:08.309977+00:00",
+  "generated_at_utc": "2026-08-19T15:03:35.617786+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14700,5 +14700,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25921140
+  "total_bytes": 25927077
 }

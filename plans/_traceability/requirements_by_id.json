@@ -16904,7 +16904,9 @@
       "uncommitted-work"
     ],
     "test_ids": [
-      "TEST-RES-WIPRESTORE-001"
+      "TEST-RES-WIPRESTORE-001",
+      "TEST-RES-WIPRESTORE-002",
+      "TEST-RES-WIPRESTORE-003"
     ],
     "title": "Uncommitted work preservation",
     "verification_class": "AUTOMATED_WITH_REVIEW",
