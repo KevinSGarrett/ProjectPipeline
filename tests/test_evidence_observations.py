@@ -6,6 +6,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from project_pipeline.assurance.observation import (
+    _parse_node_tap,
     evidence_status,
     generate_observation,
     record_observation,
@@ -245,3 +246,94 @@ def test_generate_observation_uses_injected_runner(tmp_path: Path) -> None:
     assert observation.integrated_sha == CURRENT_SHA
     assert observation.test_outcomes["TEST-MOD"] == "PASS"
     assert "REQ-GOV-0001" in observation.requirement_scope_fingerprints
+
+
+def test_parse_node_tap_maps_pass_and_fail_titles() -> None:
+    tap = (
+        "TAP version 13\n"
+        "ok 1 - summary keeps readiness dimensions distinct\n"
+        "not ok 2 - typed control command carries actor, project, correlation, and idempotency\n"
+    )
+    parsed = _parse_node_tap(tap)
+    assert parsed["summary keeps readiness dimensions distinct"] == "PASS"
+    assert (
+        parsed["typed control command carries actor, project, correlation, and idempotency"]
+        == "FAIL"
+    )
+
+
+def test_generate_observation_records_node_test_outcomes(tmp_path: Path) -> None:
+    title = "typed control command carries actor, project, correlation, and idempotency"
+    (tmp_path / "plans/_traceability").mkdir(parents=True)
+    (tmp_path / "apps" / "command_center" / "tests").mkdir(parents=True)
+    (tmp_path / "src").mkdir()
+    impl = tmp_path / "src" / "ui.py"
+    impl.write_text("value = 1\n", encoding="utf-8")
+    (tmp_path / "apps" / "command_center" / "tests" / "appModel.test.mjs").write_text(
+        "import test from 'node:test';\n"
+        "import assert from 'node:assert/strict';\n"
+        f"test({title!r}, () => {{ assert.equal(1, 1); }});\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "TEST_CATALOG.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "2.0.0",
+                "test_count": 1,
+                "tests": [
+                    {
+                        "test_id": "TEST-CC-UI-004",
+                        "path": "apps/command_center/tests/appModel.test.mjs",
+                        "callable": title,
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "plans/_traceability/requirements.jsonl").write_text(
+        json.dumps(
+            {
+                "requirement_id": "REQ-UX-0013",
+                "implementation_paths": ["src/ui.py"],
+                "test_ids": ["TEST-CC-UI-004"],
+                "evidence_ids": ["EVID-000001"],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    artifact = tmp_path / "evidence" / "receipt.txt"
+    artifact.parent.mkdir()
+    artifact.write_text("ok\n", encoding="utf-8")
+    (tmp_path / "evidence" / "EVIDENCE_LEDGER.jsonl").write_text(
+        json.dumps(
+            {
+                "artifact_path": "evidence/receipt.txt",
+                "claim": "command center typed command",
+                "criterion_ids": ["AC-1"],
+                "environment": "local_build_environment",
+                "evidence_id": "EVID-000001",
+                "method": "node:test",
+                "observed_at_utc": datetime.now(UTC).isoformat(),
+                "requirement_ids": ["REQ-UX-0013"],
+                "result": "PASS",
+                "schema_version": "1.0.0",
+                "sha256": sha256_canonical_file(artifact),
+                "test_ids": ["TEST-CC-UI-004"],
+                "verification_status": "VERIFIED",
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    observation = generate_observation(
+        tmp_path,
+        "EVID-000001",
+        current_sha=CURRENT_SHA,
+        current_tree=CURRENT_TREE,
+    )
+    assert observation.test_outcomes["TEST-CC-UI-004"] == "PASS"
+    assert observation.result is ObservationResult.PASS
+    assert observation.command_identity[0] == "node"

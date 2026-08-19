@@ -61,6 +61,34 @@ def test_catalog_callable_present_accepts_unittest_class_methods() -> None:
     assert not catalog_callable_present(
         source, "MissingClass.test_repository_contract_has_no_errors"
     )
+    node_source = (
+        'test("typed control command carries actor, project, correlation, and idempotency", '
+        "() => { assert.equal(1, 1); });\n"
+    )
+    assert catalog_callable_present(
+        node_source,
+        "typed control command carries actor, project, correlation, and idempotency",
+    )
+    assert not catalog_callable_present(
+        node_source,
+        "typed control command carries actor project correlation and idempotency",
+    )
+
+
+def test_command_center_ui_catalog_callables_exist_in_source() -> None:
+    catalog = json.loads((ROOT / "tests" / "TEST_CATALOG.json").read_text(encoding="utf-8"))
+    source = (ROOT / "apps" / "command_center" / "tests" / "appModel.test.mjs").read_text(
+        encoding="utf-8"
+    )
+    titles = [
+        str(item.get("callable") or "")
+        for item in catalog.get("tests", [])
+        if str(item.get("path") or "")
+        .replace("\\", "/")
+        .endswith("apps/command_center/tests/appModel.test.mjs")
+    ]
+    assert titles
+    assert all(catalog_callable_present(source, title) for title in titles)
 
 
 def _seed_valid(
