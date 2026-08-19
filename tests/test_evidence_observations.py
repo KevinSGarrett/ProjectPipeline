@@ -95,6 +95,7 @@ def test_concurrent_writers_are_serialized(tmp_path: Path) -> None:
         thread.join()
     assert not errors
     assert store.status()["observations"] == 8
+    store.close()
 
 
 def test_crash_recovery_replays_journal(tmp_path: Path) -> None:

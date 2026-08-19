@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import json
 import sqlite3
 import threading
@@ -46,12 +47,19 @@ class EvidenceObservationStore:
         self.database.parent.mkdir(parents=True, exist_ok=True)
         self.archive_dir.mkdir(parents=True, exist_ok=True)
         self._lock = threading.Lock()
-        self._db = sqlite3.connect(self.database, check_same_thread=False)
+        # Autocommit so concurrent writers can issue BEGIN IMMEDIATE without
+        # colliding with sqlite3's implicit transaction (PEP 249 / 3.13).
+        self._db = sqlite3.connect(
+            self.database,
+            check_same_thread=False,
+            timeout=30.0,
+            isolation_level=None,
+        )
         self._db.row_factory = sqlite3.Row
         self._db.execute("PRAGMA journal_mode=WAL")
         self._db.execute("PRAGMA foreign_keys=ON")
+        self._db.execute("PRAGMA busy_timeout=30000")
         self._db.executescript(SCHEMA_SQL)
-        self._db.commit()
         self.replay_journal()
 
     @classmethod
@@ -120,7 +128,8 @@ class EvidenceObservationStore:
                 )
                 self._db.execute("COMMIT")
             except Exception:
-                self._db.execute("ROLLBACK")
+                with contextlib.suppress(sqlite3.Error):
+                    self._db.execute("ROLLBACK")
                 raise
         archive = self.archive_dir / f"{observation.observation_id}.json"
         archive.write_text(payload + "\n", encoding="utf-8", newline="\n")
