@@ -69,7 +69,8 @@ class EvidenceObservationStore:
         return cls(base / "observations.sqlite3", archive_dir=base / "observations")
 
     def close(self) -> None:
-        self._db.close()
+        with self._lock:
+            self._db.close()
 
     def put(self, observation: EvidenceObservation) -> EvidenceObservation:
         payload = json.dumps(
@@ -136,21 +137,23 @@ class EvidenceObservationStore:
         return observation
 
     def get(self, observation_id: str) -> EvidenceObservation | None:
-        row = self._db.execute(
-            "SELECT payload_json FROM evidence_observations WHERE observation_id = ?",
-            (observation_id,),
-        ).fetchone()
+        with self._lock:
+            row = self._db.execute(
+                "SELECT payload_json FROM evidence_observations WHERE observation_id = ?",
+                (observation_id,),
+            ).fetchone()
         return EvidenceObservation.model_validate_json(row["payload_json"]) if row else None
 
     def list_for_evidence(self, evidence_id: str) -> tuple[EvidenceObservation, ...]:
-        rows = self._db.execute(
-            """
-            SELECT payload_json FROM evidence_observations
-            WHERE evidence_id = ?
-            ORDER BY recorded_at_utc ASC, observation_id ASC
-            """,
-            (evidence_id,),
-        ).fetchall()
+        with self._lock:
+            rows = self._db.execute(
+                """
+                SELECT payload_json FROM evidence_observations
+                WHERE evidence_id = ?
+                ORDER BY recorded_at_utc ASC, observation_id ASC
+                """,
+                (evidence_id,),
+            ).fetchall()
         return tuple(EvidenceObservation.model_validate_json(row["payload_json"]) for row in rows)
 
     def current(
@@ -168,71 +171,72 @@ class EvidenceObservationStore:
         if subject_tree:
             clauses.append("subject_tree = ?")
             values.append(subject_tree.lower())
-        row = self._db.execute(
-            f"""
-            SELECT payload_json FROM evidence_observations
-            WHERE {" AND ".join(clauses)}
-            ORDER BY recorded_at_utc DESC, observation_id DESC
-            LIMIT 1
-            """,
-            values,
-        ).fetchone()
+        with self._lock:
+            row = self._db.execute(
+                f"""
+                SELECT payload_json FROM evidence_observations
+                WHERE {" AND ".join(clauses)}
+                ORDER BY recorded_at_utc DESC, observation_id DESC
+                LIMIT 1
+                """,
+                values,
+            ).fetchone()
         return EvidenceObservation.model_validate_json(row["payload_json"]) if row else None
 
     def latest_any(self, evidence_id: str) -> EvidenceObservation | None:
-        row = self._db.execute(
-            """
-            SELECT payload_json FROM evidence_observations
-            WHERE evidence_id = ?
-            ORDER BY recorded_at_utc DESC, observation_id DESC
-            LIMIT 1
-            """,
-            (evidence_id,),
-        ).fetchone()
+        with self._lock:
+            row = self._db.execute(
+                """
+                SELECT payload_json FROM evidence_observations
+                WHERE evidence_id = ?
+                ORDER BY recorded_at_utc DESC, observation_id DESC
+                LIMIT 1
+                """,
+                (evidence_id,),
+            ).fetchone()
         return EvidenceObservation.model_validate_json(row["payload_json"]) if row else None
 
     def replay_journal(self) -> int:
         restored = 0
-        rows = self._db.execute(
-            """
-            SELECT observation_id, payload_json FROM evidence_observation_journal
-            WHERE operation = 'put'
-            ORDER BY journal_id ASC
-            """
-        ).fetchall()
-        for row in rows:
-            existing = self._db.execute(
-                "SELECT payload_json FROM evidence_observations WHERE observation_id = ?",
-                (row["observation_id"],),
-            ).fetchone()
-            if existing is None:
-                observation = EvidenceObservation.model_validate_json(row["payload_json"])
-                self._db.execute(
-                    """
-                    INSERT INTO evidence_observations(
-                        observation_id, evidence_id, subject_sha, subject_tree,
-                        acceptance_scope_fingerprint, result, recorded_at_utc,
-                        superseded_by, payload_json
-                    ) VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?)
-                    """,
-                    (
-                        observation.observation_id,
-                        observation.evidence_id,
-                        observation.integrated_sha,
-                        observation.integrated_tree,
-                        observation.acceptance_scope_fingerprint,
-                        observation.result.value,
-                        observation.recorded_at_utc.isoformat(),
-                        row["payload_json"],
-                    ),
-                )
-                restored += 1
-            elif existing["payload_json"] != row["payload_json"]:
-                raise ObservationStoreError(
-                    f"conflicting replay for observation {row['observation_id']}"
-                )
-        if restored:
-            self._db.commit()
+        with self._lock:
+            rows = self._db.execute(
+                """
+                SELECT observation_id, payload_json FROM evidence_observation_journal
+                WHERE operation = 'put'
+                ORDER BY journal_id ASC
+                """
+            ).fetchall()
+            for row in rows:
+                existing = self._db.execute(
+                    "SELECT payload_json FROM evidence_observations WHERE observation_id = ?",
+                    (row["observation_id"],),
+                ).fetchone()
+                if existing is None:
+                    observation = EvidenceObservation.model_validate_json(row["payload_json"])
+                    self._db.execute(
+                        """
+                        INSERT INTO evidence_observations(
+                            observation_id, evidence_id, subject_sha, subject_tree,
+                            acceptance_scope_fingerprint, result, recorded_at_utc,
+                            superseded_by, payload_json
+                        ) VALUES (?, ?, ?, ?, ?, ?, ?, NULL, ?)
+                        """,
+                        (
+                            observation.observation_id,
+                            observation.evidence_id,
+                            observation.integrated_sha,
+                            observation.integrated_tree,
+                            observation.acceptance_scope_fingerprint,
+                            observation.result.value,
+                            observation.recorded_at_utc.isoformat(),
+                            row["payload_json"],
+                        ),
+                    )
+                    restored += 1
+                elif existing["payload_json"] != row["payload_json"]:
+                    raise ObservationStoreError(
+                        f"conflicting replay for observation {row['observation_id']}"
+                    )
         return restored
 
     def retain(self, *, keep_current: bool = True, max_age_seconds: int | None = None) -> int:
@@ -241,29 +245,29 @@ class EvidenceObservationStore:
             cutoff = (datetime.now(UTC) - timedelta(seconds=max_age_seconds)).isoformat()
         query = "SELECT observation_id, payload_json, superseded_by, recorded_at_utc FROM evidence_observations"
         removed = 0
-        for row in self._db.execute(query).fetchall():
-            if keep_current and row["superseded_by"] is None:
-                continue
-            if cutoff is None or row["recorded_at_utc"] <= cutoff:
-                self._db.execute(
-                    "DELETE FROM evidence_observations WHERE observation_id = ?",
-                    (row["observation_id"],),
-                )
-                self._db.execute(
-                    "DELETE FROM evidence_observation_journal WHERE observation_id = ?",
-                    (row["observation_id"],),
-                )
-                archive = self.archive_dir / f"{row['observation_id']}.json"
-                if archive.exists():
-                    archive.unlink()
-                removed += 1
-        if removed:
-            self._db.commit()
+        with self._lock:
+            for row in self._db.execute(query).fetchall():
+                if keep_current and row["superseded_by"] is None:
+                    continue
+                if cutoff is None or row["recorded_at_utc"] <= cutoff:
+                    self._db.execute(
+                        "DELETE FROM evidence_observations WHERE observation_id = ?",
+                        (row["observation_id"],),
+                    )
+                    self._db.execute(
+                        "DELETE FROM evidence_observation_journal WHERE observation_id = ?",
+                        (row["observation_id"],),
+                    )
+                    archive = self.archive_dir / f"{row['observation_id']}.json"
+                    if archive.exists():
+                        archive.unlink()
+                    removed += 1
         return removed
 
     def status(self) -> dict[str, int]:
-        current = self._db.execute(
-            "SELECT COUNT(*) FROM evidence_observations WHERE superseded_by IS NULL"
-        ).fetchone()[0]
-        total = self._db.execute("SELECT COUNT(*) FROM evidence_observations").fetchone()[0]
+        with self._lock:
+            current = self._db.execute(
+                "SELECT COUNT(*) FROM evidence_observations WHERE superseded_by IS NULL"
+            ).fetchone()[0]
+            total = self._db.execute("SELECT COUNT(*) FROM evidence_observations").fetchone()[0]
         return {"observations": int(total), "current": int(current)}

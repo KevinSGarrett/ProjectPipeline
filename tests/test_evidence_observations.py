@@ -74,10 +74,12 @@ def test_idempotent_and_conflicting_replay(tmp_path: Path) -> None:
 
 
 def test_concurrent_writers_are_serialized(tmp_path: Path) -> None:
-    store = EvidenceObservationStore.open(tmp_path)
+    bootstrap = EvidenceObservationStore.open(tmp_path)
+    bootstrap.close()
     errors: list[str] = []
 
     def write(index: int) -> None:
+        store = EvidenceObservationStore.open(tmp_path)
         try:
             _record(
                 store,
@@ -87,6 +89,8 @@ def test_concurrent_writers_are_serialized(tmp_path: Path) -> None:
             )
         except Exception as exc:
             errors.append(str(exc))
+        finally:
+            store.close()
 
     threads = [threading.Thread(target=write, args=(index,)) for index in range(8)]
     for thread in threads:
@@ -94,6 +98,7 @@ def test_concurrent_writers_are_serialized(tmp_path: Path) -> None:
     for thread in threads:
         thread.join()
     assert not errors
+    store = EvidenceObservationStore.open(tmp_path)
     assert store.status()["observations"] == 8
     store.close()
 
