@@ -6929,7 +6929,7 @@
     "expected_implementation_artifacts": [
       "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
@@ -8374,7 +8374,7 @@
     "expected_implementation_artifacts": [
       "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",

@@ -10,13 +10,13 @@
 {"implementation_paths": ["src/project_pipeline/agent_router/circuit.py", "src/project_pipeline/agent_router/service.py"], "requirement_id": "REQ-AGENT-0010"}
 {"implementation_paths": ["src/project_pipeline/domain/agents.py", "config/agents/agents.json"], "requirement_id": "REQ-AGENT-0011"}
 {"implementation_paths": ["src/project_pipeline/agent_router/adapters.py", "src/project_pipeline/agent_router/router.py", "src/project_pipeline/resilience/local_models.py", "src/project_pipeline/upstream_integrations/resilience.py"], "requirement_id": "REQ-AGENT-0012"}
-{"implementation_paths": [], "requirement_id": "REQ-AGENT-0013"}
+{"implementation_paths":["src/project_pipeline/intelligence/director.py"],"requirement_id":"REQ-AGENT-0013"}
 {"implementation_paths": ["src/project_pipeline/agent_router/qualification.py", "src/project_pipeline/agent_router/performance.py"], "requirement_id": "REQ-AGENT-0014"}
 {"implementation_paths": ["src/project_pipeline/agent_router/performance.py", "src/project_pipeline/agent_router/persistence.py"], "requirement_id": "REQ-AGENT-0015"}
 {"implementation_paths": ["src/project_pipeline/agent_router/qualification.py", "src/project_pipeline/agent_router/router.py"], "requirement_id": "REQ-AGENT-0016"}
 {"implementation_paths": ["src/project_pipeline/agent_router/qualification.py", "src/project_pipeline/domain/agents.py"], "requirement_id": "REQ-AGENT-0017"}
 {"implementation_paths": ["src/project_pipeline/scheduler/persistence.py", "src/project_pipeline/scheduler/resources.py"], "requirement_id": "REQ-AGENT-0018"}
-{"implementation_paths": [], "requirement_id": "REQ-AGENT-0019"}
+{"implementation_paths":["src/project_pipeline/intelligence/director.py"],"requirement_id":"REQ-AGENT-0019"}
 {"implementation_paths": ["architecture/component_catalog.json", "architecture/requirement_component_map.jsonl", "architecture/state_ownership.json", "architecture/trust_boundaries.json", "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md", "plans/02_system_architecture/PLAN-ARCH-002_component_boundaries.md", "src/project_pipeline/", "src/project_pipeline/architecture.py"], "requirement_id": "REQ-ARCH-0001"}
 {"implementation_paths": ["architecture/component_catalog.json", "architecture/state_ownership.json", "architecture/trust_boundaries.json", "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md", "src/project_pipeline/ports.py", "src/project_pipeline/core/command_bus.py", "src/project_pipeline/core/journal.py", "src/project_pipeline/runtime/foundation.py"], "requirement_id": "REQ-ARCH-0002"}
 {"implementation_paths": ["adr/", "adr/ADR_CATALOG.json", "architecture/decision_map.json", "architecture/technology_stack.json"], "requirement_id": "REQ-ARCH-0003"}
@@ -92,8 +92,8 @@
 {"implementation_paths": ["config/project_manifest.json", "database/MIGRATION_CATALOG.json", "database/migrations/postgresql", "database/migrations/postgresql/PPDB-0010_durable_orchestration_recovery.up.sql", "database/migrations/sqlite", "database/migrations/sqlite/PPDB-0010_durable_orchestration_recovery.up.sql", "schemas/migration_catalog.schema.json", "schemas/migration_record.schema.json", "src/project_pipeline/core/journal.py", "src/project_pipeline/domain/orchestration.py", "src/project_pipeline/domain/state.py", "src/project_pipeline/orchestration/persistence.py", "src/project_pipeline/orchestration/runtime.py", "src/project_pipeline/orchestration/service.py", "src/project_pipeline/persistence/migrations.py", "src/project_pipeline/persistence/sqlite.py", "src/project_pipeline/services/state.py"], "requirement_id": "REQ-CTRL-0003"}
 {"implementation_paths": ["src/project_pipeline/command_center/director.py"], "requirement_id": "REQ-CTRL-0004"}
 {"implementation_paths": ["src/project_pipeline/control/kernel.py", "src/project_pipeline/services/state.py"], "requirement_id": "REQ-CTRL-0005"}
-{"implementation_paths": [], "requirement_id": "REQ-CTRL-0006"}
-{"implementation_paths": [], "requirement_id": "REQ-CTRL-0007"}
+{"implementation_paths":["src/project_pipeline/intelligence/director.py"],"requirement_id":"REQ-CTRL-0006"}
+{"implementation_paths":["src/project_pipeline/intelligence/director.py"],"requirement_id":"REQ-CTRL-0007"}
 {"implementation_paths": ["src/project_pipeline/assurance/evidence.py", "src/project_pipeline/domain/assurance.py"], "requirement_id": "REQ-CTRL-0008"}
 {"implementation_paths": ["src/project_pipeline/domain/control.py", "src/project_pipeline/control/kernel.py"], "requirement_id": "REQ-CTRL-0009"}
 {"implementation_paths": ["src/project_pipeline/domain/orchestration.py", "src/project_pipeline/orchestration/adapters.py", "src/project_pipeline/orchestration/persistence.py", "src/project_pipeline/orchestration/ports.py", "src/project_pipeline/orchestration/runtime.py"], "requirement_id": "REQ-CTRL-0010"}

@@ -43,7 +43,7 @@
   "expected_implementation_artifacts": [
     "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
@@ -101,6 +101,6 @@
     "SRC-014:L000210-L000373"
   ],
   "state": "BACKLOG",
-  "title": "Intelligence \u2014 Control Plane and Orchestration",
+  "title": "Intelligence — Control Plane and Orchestration",
   "upstream_dependencies": []
 }

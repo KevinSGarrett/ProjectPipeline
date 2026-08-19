@@ -167,6 +167,7 @@ from project_pipeline.intake import (
     discovery_summary,
     write_compilation_bundle,
 )
+from project_pipeline.intelligence.director import run_director_action
 from project_pipeline.jira import rebuild_jira_indexes
 from project_pipeline.jira_steward import (
     AtlassianJiraCloudAdapter,
@@ -453,6 +454,18 @@ def build_parser() -> argparse.ArgumentParser:
     infra_boundaries.add_argument("--root", type=_root, default=Path.cwd())
     infra_boundaries.add_argument("--payload", type=Path)
     infra_boundaries.add_argument("--json-output", type=Path)
+
+    director_intelligence = commands.add_parser(
+        "director-intelligence",
+        help="Assign local model portfolio, bound context, and persist advisory director decisions",
+    )
+    director_intelligence.add_argument(
+        "action",
+        choices=("status", "portfolio", "bound-context", "recommend", "architecture", "decisions"),
+    )
+    director_intelligence.add_argument("--root", type=_root, default=Path.cwd())
+    director_intelligence.add_argument("--payload", type=Path)
+    director_intelligence.add_argument("--json-output", type=Path)
 
     validate = commands.add_parser("validate", help="Run repository-contract validation")
     validate.add_argument("--root", type=_root, default=Path.cwd())
@@ -3481,6 +3494,20 @@ def main(argv: Sequence[str] | None = None) -> int:
                 payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
             try:
                 result = run_infra_action(args.root, args.action, payload=payload)
+            except ValueError as error:
+                _write_json_output(
+                    {"ok": False, "error": str(error), "user_action_required": False},
+                    args.json_output,
+                )
+                return 1
+            _write_json_output(result, args.json_output)
+            return 0
+        if args.command == "director-intelligence":
+            payload = None
+            if args.payload is not None:
+                payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
+            try:
+                result = run_director_action(args.root, args.action, payload=payload)
             except ValueError as error:
                 _write_json_output(
                     {"ok": False, "error": str(error), "user_action_required": False},
