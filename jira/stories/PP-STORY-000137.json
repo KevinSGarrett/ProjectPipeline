@@ -43,12 +43,13 @@
   "expected_implementation_artifacts": [
     "plans/17_release_and_handoff/PLAN-REL-001_release_handoff.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
+    "cluster-verification",
     "domain-rel",
-    "cluster-verification"
+    "partially-implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -102,6 +103,6 @@
     "GOV-001:L002066-L002103"
   ],
   "state": "BACKLOG",
-  "title": "Verification \u2014 Release and Handoff",
+  "title": "Verification — Release and Handoff",
   "upstream_dependencies": []
 }

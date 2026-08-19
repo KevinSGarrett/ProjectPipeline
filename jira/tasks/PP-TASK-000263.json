@@ -7,7 +7,7 @@
         "command": "PYTHONPATH=src python -m pytest -q tests/test_upstream_reviews.py tests/test_upstream_contract_assets.py tests/test_ortools_optimizer.py tests/test_worktrunk_adapter.py tests/test_pydantic_ai_adapter.py tests/test_litellm_adapter.py tests/test_docker_mcp_gateway.py tests/test_openlit_bridge.py",
         "method": "automated_behavior_and_contract_validation",
         "path": "src/project_pipeline/github_steward/worktrunk.py",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
@@ -17,7 +17,7 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "repository_traceability_validation",
         "path": "provenance/upstream_usage.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
@@ -49,7 +49,7 @@
     "src/project_pipeline/github_steward/worktrunk.py",
     "tests/test_worktrunk_adapter.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "upstream-reuse",

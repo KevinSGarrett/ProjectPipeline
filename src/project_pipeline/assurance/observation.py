@@ -540,14 +540,17 @@ def _node_runner(root: Path) -> TestRunner:
         if not paths:
             return {test_id: "MISSING" for test_id in test_ids}
         node = "node"
-        completed = subprocess.run(
-            [node, "--test", "--test-reporter=tap", *paths],
-            cwd=str(root),
-            check=False,
-            capture_output=True,
-            text=True,
-            shell=False,
-        )
+        try:
+            completed = subprocess.run(
+                [node, "--test", "--test-reporter=tap", *paths],
+                cwd=str(root),
+                check=False,
+                capture_output=True,
+                text=True,
+                shell=False,
+            )
+        except FileNotFoundError:
+            return {test_id: "MISSING" for test_id in test_ids}
         if completed.returncode == 127 or (
             completed.returncode != 0 and not (completed.stdout or completed.stderr)
         ):

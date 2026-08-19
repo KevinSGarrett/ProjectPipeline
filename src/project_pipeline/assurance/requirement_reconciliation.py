@@ -178,6 +178,82 @@ def propose_evidence_bound_requirement_states(
     return accepted
 
 
+def unusable_evidence_link_reason(requirement_id: str, record: dict[str, Any] | None) -> str | None:
+    """Return why a ledger row cannot prove ``requirement_id``, or None if usable."""
+
+    if record is None:
+        return "missing_from_ledger"
+    if requirement_id not in {str(item) for item in record.get("requirement_ids") or []}:
+        return "unbound"
+    method = str(record.get("method") or "").casefold()
+    environment = str(record.get("environment") or "").casefold()
+    if "generated" in method or "generated-only" in environment:
+        return "generated_only"
+    return None
+
+
+def prune_unusable_requirement_evidence_links(
+    root: Path,
+    *,
+    requirement_ids: Iterable[str] | None = None,
+) -> list[dict[str, Any]]:
+    """Drop generated-only or unbound evidence claims. Never invent bindings.
+
+    Leaves ``evidence_ids`` unchanged when every listed row is unusable so
+    reconciliation stays fail-closed rather than silently emptying the list.
+    """
+
+    root = root.resolve()
+    wanted = {str(item) for item in requirement_ids} if requirement_ids is not None else None
+    evidence = {str(row.get("evidence_id")): row for row in load_evidence(root)}
+    rows = read_jsonl(root / "plans/_traceability/requirements.jsonl")
+    changed: list[dict[str, Any]] = []
+    for row in rows:
+        requirement_id = str(row.get("requirement_id") or "")
+        if not requirement_id:
+            continue
+        if wanted is not None and requirement_id not in wanted:
+            continue
+        if str(row.get("implementation_state") or "") == "IMPLEMENTED":
+            continue
+        current = [str(item) for item in row.get("evidence_ids") or []]
+        if not current:
+            continue
+        dropped: list[dict[str, str]] = []
+        kept: list[str] = []
+        for evidence_id in current:
+            reason = unusable_evidence_link_reason(requirement_id, evidence.get(evidence_id))
+            if reason:
+                dropped.append({"evidence_id": evidence_id, "reason": reason})
+            else:
+                kept.append(evidence_id)
+        if not dropped:
+            continue
+        if not kept:
+            changed.append(
+                {
+                    "requirement_id": requirement_id,
+                    "dropped": dropped,
+                    "kept": list(current),
+                    "applied": False,
+                    "reason": "refusing to leave evidence_ids empty",
+                }
+            )
+            continue
+        row["evidence_ids"] = kept
+        changed.append(
+            {
+                "requirement_id": requirement_id,
+                "dropped": dropped,
+                "kept": kept,
+                "applied": True,
+            }
+        )
+    if any(item.get("applied") for item in changed):
+        write_jsonl(root / "plans/_traceability/requirements.jsonl", rows)
+    return changed
+
+
 def apply_evidence_bound_requirement_states(
     root: Path,
     *,

@@ -49,12 +49,13 @@
     "src/project_pipeline/domain/github.py",
     "src/project_pipeline/github_steward"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
+    "cluster-git",
     "domain-gov",
-    "cluster-git"
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -112,6 +113,6 @@
     "SRC-007:L000822-L000888"
   ],
   "state": "BACKLOG",
-  "title": "Git \u2014 Jira and Repository Governance",
+  "title": "Git — Jira and Repository Governance",
   "upstream_dependencies": []
 }

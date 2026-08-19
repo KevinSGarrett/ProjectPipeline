@@ -6,6 +6,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from project_pipeline.assurance.observation import (
+    _node_runner,
     _parse_node_tap,
     evidence_status,
     generate_observation,
@@ -337,3 +338,17 @@ def test_generate_observation_records_node_test_outcomes(tmp_path: Path) -> None
     assert observation.test_outcomes["TEST-CC-UI-004"] == "PASS"
     assert observation.result is ObservationResult.PASS
     assert observation.command_identity[0] == "node"
+
+
+def test_node_runner_records_missing_when_node_binary_is_absent(
+    tmp_path: Path, monkeypatch
+) -> None:
+    def boom(*_args, **_kwargs):
+        raise FileNotFoundError("node")
+
+    monkeypatch.setattr("project_pipeline.assurance.observation.subprocess.run", boom)
+    results = _node_runner(tmp_path)(
+        ["TEST-CC-UI-001"],
+        ["apps/command_center/tests/appModel.test.mjs"],
+    )
+    assert results == {"TEST-CC-UI-001": "MISSING"}

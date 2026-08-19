@@ -50,10 +50,11 @@
     "plans/15_platform_lifecycle/PLAN-LIFE-001_platform_lifecycle.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "domain-story",
+    "implemented",
     "pass-22",
     "plan-life-001"
   ],

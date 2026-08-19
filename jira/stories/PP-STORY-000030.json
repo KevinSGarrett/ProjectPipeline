@@ -44,10 +44,11 @@
     "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "domain-story",
+    "implemented",
     "plan-infra-001"
   ],
   "last_observed_remote_state": {

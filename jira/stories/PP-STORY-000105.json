@@ -43,12 +43,13 @@
   "expected_implementation_artifacts": [
     "plans/11_resilience_recovery_and_dr/PLAN-RES-001_resilience_recovery.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
     "cluster-external-systems",
-    "domain-res"
+    "domain-res",
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
