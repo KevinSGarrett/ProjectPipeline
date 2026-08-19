@@ -72,6 +72,25 @@ class CompletionProjectionState(StrEnum):
     READY_FOR_COMPLETION_GATE = "READY_FOR_COMPLETION_GATE"
 
 
+class ControlCohortCounts(DomainModel):
+    """Labeled same-snapshot denominators for facts, eligibility, and readiness."""
+
+    schema_version: Literal["1.0.0"] = "1.0.0"
+    total_work_items: int = Field(ge=0, default=0)
+    reconciliation_facts: int = Field(ge=0, default=0)
+    structural_container_facts: int = Field(ge=0, default=0)
+    leaf_reconciliation_facts: int = Field(ge=0, default=0)
+    eligibility_reconciliation: int = Field(ge=0, default=0)
+    eligibility_eligible: int = Field(ge=0, default=0)
+    eligibility_policy_denied: int = Field(ge=0, default=0)
+    eligibility_product_scope_paused: int = Field(ge=0, default=0)
+    eligibility_terminal: int = Field(ge=0, default=0)
+    eligibility_already_active: int = Field(ge=0, default=0)
+    eligibility_blocked: int = Field(ge=0, default=0)
+    eligibility_blocked_external: int = Field(ge=0, default=0)
+    dependency_ready: int = Field(ge=0, default=0)
+
+
 class TaskControlFact(DomainModel):
     schema_version: Literal["1.0.0"] = "1.0.0"
     task_id: str
@@ -334,6 +353,7 @@ class CompletionProjection(DomainModel):
     verification_eligible: bool
     final_completion_gate_satisfied: bool = False
     reasons: tuple[str, ...]
+    cohorts: ControlCohortCounts = Field(default_factory=ControlCohortCounts)
     generated_at_utc: datetime = Field(default_factory=utc_now)
 
     @field_validator("projection_id")

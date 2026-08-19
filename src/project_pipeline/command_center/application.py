@@ -9,6 +9,8 @@ from pydantic import Field
 
 from project_pipeline.command_center.models import CommandCenterSnapshot
 from project_pipeline.contracts.envelopes import ContractModel
+from project_pipeline.control.cohorts import describe_reconciliation_cohorts
+from project_pipeline.domain.control import ControlCohortCounts
 
 
 def utc_now() -> datetime:
@@ -169,14 +171,21 @@ class RepositoryApplicationProjectionBuilder:
             if item.get("implementation_state") == "IMPLEMENTED" and item.get("state") != "DONE"
         )
         context_detail = dict(snapshot.context_summary)
+        control_cohorts = context_detail.get("control_cohorts")
+        reconciliation_sentence = None
+        if isinstance(control_cohorts, dict):
+            cohorts = ControlCohortCounts.model_validate(control_cohorts)
+            reconciliation_sentence = describe_reconciliation_cohorts(cohorts)
         context_detail.update(
             {
                 "incomplete_requirement_count": incomplete_requirement_count,
                 "implemented_not_done_issue_count": implemented_not_done,
-                "reconciliation_is_immediately_batchable": implemented_not_done > 0,
+                "reconciliation_is_immediately_batchable": False,
+                "structural_containers_are_not_independently_executable": True,
                 "ready_count_is_not_a_stop_signal": True,
+                "reconciliation_sentence": reconciliation_sentence,
                 "next_autonomous_work": (
-                    "batch-reconcile evidence-backed Jira and requirement truth, then implement "
+                    "batch-reconcile evidence-backed leaf work, then implement "
                     "the highest-impact remaining incomplete Completion Gate domain"
                 ),
                 "user_action_required": False,

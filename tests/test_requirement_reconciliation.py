@@ -4,6 +4,9 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+from project_pipeline.assurance.acceptance_scope import acceptance_scope_fingerprint
+from project_pipeline.assurance.observation import record_observation
+from project_pipeline.assurance.observation_store import EvidenceObservationStore
 from project_pipeline.assurance.requirement_reconciliation import (
     apply_evidence_bound_requirement_states,
     contains_external_marker,
@@ -11,6 +14,7 @@ from project_pipeline.assurance.requirement_reconciliation import (
     propose_evidence_bound_requirement_states,
 )
 from project_pipeline.cli import main
+from project_pipeline.domain.evidence_observation import EnvironmentClass, ObservationResult
 from project_pipeline.io import read_jsonl, sha256_canonical_file, write_json, write_jsonl
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -41,7 +45,9 @@ def test_deliver_is_not_an_external_live_marker() -> None:
     assert not contains_external_marker("delivery progress and olive-colored UI")
 
 
-def _seed_valid(tmp_path: Path, row: dict, *, evidence_updates: dict | None = None) -> dict:
+def _seed_valid(
+    tmp_path: Path, row: dict, *, evidence_updates: dict | None = None, record_obs: bool = True
+) -> dict:
     target = tmp_path / "plans/_traceability/requirements.jsonl"
     target.parent.mkdir(parents=True)
     write_jsonl(target, [row])
@@ -82,8 +88,6 @@ def _seed_valid(tmp_path: Path, row: dict, *, evidence_updates: dict | None = No
         "supersedes": None,
         "test_ids": list(row["test_ids"]),
         "verification_status": "VERIFIED",
-        "integrated_sha": CURRENT_SHA,
-        "integrated_tree": CURRENT_TREE,
     }
     if evidence_updates:
         record.update(evidence_updates)
@@ -101,6 +105,26 @@ def _seed_valid(tmp_path: Path, row: dict, *, evidence_updates: dict | None = No
     (tmp_path / "evidence" / "EVIDENCE_LEDGER.jsonl").write_text(
         "\n".join(records) + "\n", encoding="utf-8"
     )
+    if record_obs:
+        store = EvidenceObservationStore.open(tmp_path)
+        fingerprint = acceptance_scope_fingerprint(tmp_path, row)
+        for evidence_id in row["evidence_ids"]:
+            record_observation(
+                store,
+                evidence_id=evidence_id,
+                test_ids=row["test_ids"],
+                criterion_ids=["AC-TEST-01"],
+                requirement_ids=[row["requirement_id"]],
+                integrated_sha=CURRENT_SHA,
+                integrated_tree=CURRENT_TREE,
+                acceptance_scope_fingerprint=fingerprint,
+                path_fingerprints={},
+                artifact_digest=record["sha256"],
+                command_identity=("pytest", "tests"),
+                environment_class=EnvironmentClass.LOCAL,
+                result=ObservationResult.PASS,
+                independent_verification_receipt="test-seed",
+            )
     return record
 
 
@@ -154,14 +178,90 @@ def test_reconciliation_rejects_false_positive_classes(tmp_path: Path) -> None:
 
     assert "not in TEST_CATALOG" in reason_for(_space="catalog", _delete_catalog=True)
     assert "missing from the ledger" in reason_for(_space="missing-ev", _fabricated=True)
-    assert "records FAIL" in reason_for(_space="fail", _evidence={"result": "FAIL"})
-    assert "is stale" in reason_for(
-        _space="stale",
-        _evidence={"observed_at_utc": (datetime.now(UTC) - timedelta(days=40)).isoformat()},
+    fail_space = tmp_path / "fail"
+    fail_space.mkdir()
+    _seed_valid(fail_space, dict(candidate))
+    store = EvidenceObservationStore.open(fail_space)
+    latest = store.latest_any(candidate["evidence_ids"][0])
+    assert latest is not None
+    record_observation(
+        store,
+        evidence_id=candidate["evidence_ids"][0],
+        test_ids=candidate["test_ids"],
+        criterion_ids=["AC-TEST-01"],
+        requirement_ids=[candidate["requirement_id"]],
+        integrated_sha=CURRENT_SHA,
+        integrated_tree=CURRENT_TREE,
+        acceptance_scope_fingerprint=latest.acceptance_scope_fingerprint,
+        path_fingerprints={},
+        artifact_digest=latest.artifact_digest,
+        command_identity=("pytest", "fail"),
+        environment_class=EnvironmentClass.LOCAL,
+        result=ObservationResult.FAIL,
+        independent_verification_receipt="fail",
     )
-    assert "different integrated SHA" in reason_for(
-        _space="sha",
-        _evidence={"integrated_sha": "a" * 40},
+    assert (
+        "records FAIL"
+        in evaluate_requirement_reconciliation(
+            fail_space, current_sha=CURRENT_SHA, current_tree=CURRENT_TREE
+        )[0]["reason"]
+    )
+    stale_space = tmp_path / "stale"
+    stale_space.mkdir()
+    _seed_valid(stale_space, dict(candidate))
+    stale_store = EvidenceObservationStore.open(stale_space)
+    stale_latest = stale_store.latest_any(candidate["evidence_ids"][0])
+    assert stale_latest is not None
+    record_observation(
+        stale_store,
+        evidence_id=candidate["evidence_ids"][0],
+        test_ids=candidate["test_ids"],
+        criterion_ids=["AC-TEST-01"],
+        requirement_ids=[candidate["requirement_id"]],
+        integrated_sha=CURRENT_SHA,
+        integrated_tree=CURRENT_TREE,
+        acceptance_scope_fingerprint=stale_latest.acceptance_scope_fingerprint,
+        path_fingerprints={},
+        artifact_digest=stale_latest.artifact_digest,
+        command_identity=("pytest", "stale"),
+        environment_class=EnvironmentClass.LOCAL,
+        result=ObservationResult.PASS,
+        independent_verification_receipt="stale",
+        now=datetime.now(UTC) - timedelta(days=40),
+    )
+    assert (
+        "is stale"
+        in evaluate_requirement_reconciliation(
+            stale_space, current_sha=CURRENT_SHA, current_tree=CURRENT_TREE
+        )[0]["reason"]
+    )
+    sha_space = tmp_path / "sha"
+    sha_space.mkdir()
+    _seed_valid(sha_space, dict(candidate))
+    sha_store = EvidenceObservationStore.open(sha_space)
+    sha_latest = sha_store.latest_any(candidate["evidence_ids"][0])
+    assert sha_latest is not None
+    record_observation(
+        sha_store,
+        evidence_id=candidate["evidence_ids"][0],
+        test_ids=candidate["test_ids"],
+        criterion_ids=["AC-TEST-01"],
+        requirement_ids=[candidate["requirement_id"]],
+        integrated_sha="a" * 40,
+        integrated_tree=CURRENT_TREE,
+        acceptance_scope_fingerprint=sha_latest.acceptance_scope_fingerprint,
+        path_fingerprints={},
+        artifact_digest=sha_latest.artifact_digest,
+        command_identity=("pytest", "sha"),
+        environment_class=EnvironmentClass.LOCAL,
+        result=ObservationResult.PASS,
+        independent_verification_receipt="sha",
+    )
+    assert (
+        "no valid current-head observation"
+        in evaluate_requirement_reconciliation(
+            sha_space, current_sha=CURRENT_SHA, current_tree=CURRENT_TREE
+        )[0]["reason"]
     )
     live_reason = reason_for(
         _space="mock",
@@ -184,8 +284,15 @@ def test_reconciliation_rejects_false_positive_classes(tmp_path: Path) -> None:
             workspace, current_sha=CURRENT_SHA, current_tree=CURRENT_TREE
         )[0]["reason"]
     )
-    unbound = reason_for(_space="unbound", _evidence={"integrated_sha": "", "integrated_tree": ""})
-    assert "unbound from the current head" in unbound
+    unbound_space = tmp_path / "unbound"
+    unbound_space.mkdir()
+    _seed_valid(unbound_space, dict(candidate), record_obs=False)
+    assert (
+        "no valid current-head observation"
+        in evaluate_requirement_reconciliation(
+            unbound_space, current_sha=CURRENT_SHA, current_tree=CURRENT_TREE
+        )[0]["reason"]
+    )
     missing_identity = evaluate_requirement_reconciliation(tmp_path / "sha")[0]["reason"]
     assert "current repository SHA/tree is required" in missing_identity
 

@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 570,
+  "test_count": 583,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -978,6 +978,11 @@
       "test_id": "TEST-CONTROL-CLI-001"
     },
     {
+      "callable": "test_same_snapshot_control_cohorts_are_labeled_and_invariant",
+      "path": "tests/test_control_cohort_invariants.py",
+      "test_id": "TEST-CONTROL-COHORT-001"
+    },
+    {
       "callable": "test_runtime_predecessors_admit_completion_convergence_work",
       "path": "tests/test_control_kernel.py",
       "test_id": "TEST-CONTROL-CONVERGENCE-001"
@@ -1341,6 +1346,66 @@
       "callable": "test_pass23_report_is_persisted_with_digest",
       "path": "tests/test_pass23_full_e2e.py",
       "test_id": "TEST-E2E-P23-006"
+    },
+    {
+      "callable": "test_canonical_ledger_has_no_inline_subject_bindings",
+      "path": "tests/test_evidence_reconciliation_convergence.py",
+      "test_id": "TEST-EVIDENCE-CONV-001"
+    },
+    {
+      "callable": "test_current_head_evaluation_rejects_unbound_definitions",
+      "path": "tests/test_evidence_reconciliation_convergence.py",
+      "test_id": "TEST-EVIDENCE-CONV-002"
+    },
+    {
+      "callable": "test_inline_sha_in_ledger_cannot_converge",
+      "path": "tests/test_evidence_reconciliation_convergence.py",
+      "test_id": "TEST-EVIDENCE-CONV-003"
+    },
+    {
+      "callable": "test_metadata_only_merge_refresh_converges_without_self_sha_commit",
+      "path": "tests/test_evidence_reconciliation_convergence.py",
+      "test_id": "TEST-EVIDENCE-CONV-004"
+    },
+    {
+      "callable": "test_generate_and_evaluate_share_fingerprint_for_multi_evidence_requirement",
+      "path": "tests/test_evidence_reconciliation_convergence.py",
+      "test_id": "TEST-EVIDENCE-CONV-005"
+    },
+    {
+      "callable": "test_windows_paths_and_lf_hashing",
+      "path": "tests/test_evidence_observations.py",
+      "test_id": "TEST-EVIDENCE-OBS-001"
+    },
+    {
+      "callable": "test_idempotent_and_conflicting_replay",
+      "path": "tests/test_evidence_observations.py",
+      "test_id": "TEST-EVIDENCE-OBS-002"
+    },
+    {
+      "callable": "test_concurrent_writers_are_serialized",
+      "path": "tests/test_evidence_observations.py",
+      "test_id": "TEST-EVIDENCE-OBS-003"
+    },
+    {
+      "callable": "test_crash_recovery_replays_journal",
+      "path": "tests/test_evidence_observations.py",
+      "test_id": "TEST-EVIDENCE-OBS-004"
+    },
+    {
+      "callable": "test_retention_keeps_current_and_drops_superseded",
+      "path": "tests/test_evidence_observations.py",
+      "test_id": "TEST-EVIDENCE-OBS-005"
+    },
+    {
+      "callable": "test_evidence_cli_list_get_status",
+      "path": "tests/test_evidence_observations.py",
+      "test_id": "TEST-EVIDENCE-OBS-006"
+    },
+    {
+      "callable": "test_generate_observation_uses_injected_runner",
+      "path": "tests/test_evidence_observations.py",
+      "test_id": "TEST-EVIDENCE-OBS-007"
     },
     {
       "callable": "test_repository_headers_include_current_version_and_bearer",
@@ -1723,31 +1788,6 @@
       "test_id": "TEST-JIRA-RECONCILE-006"
     },
     {
-      "callable": "test_jira_sync_guard_passes_for_repository_state",
-      "path": "tests/test_jira_sync_guard.py",
-      "test_id": "TEST-JIRA-SYNC-GUARD-001"
-    },
-    {
-      "callable": "test_jira_sync_guard_blocks_when_artifact_missing",
-      "path": "tests/test_jira_sync_guard.py",
-      "test_id": "TEST-JIRA-SYNC-GUARD-002"
-    },
-    {
-      "callable": "test_jira_sync_guard_blocks_when_fingerprint_stale",
-      "path": "tests/test_jira_sync_guard.py",
-      "test_id": "TEST-JIRA-SYNC-GUARD-003"
-    },
-    {
-      "callable": "test_jira_sync_guard_passes_when_parity_confirmed_without_pending_remote",
-      "path": "tests/test_jira_sync_guard.py",
-      "test_id": "TEST-JIRA-SYNC-GUARD-004"
-    },
-    {
-      "callable": "test_jira_sync_guard_blocks_parity_confirmed_while_pending_remote",
-      "path": "tests/test_jira_sync_guard.py",
-      "test_id": "TEST-JIRA-SYNC-GUARD-005"
-    },
-    {
       "callable": "JiraStewardMockAndServiceTests.test_dry_run_persists_plan_without_remote_writes",
       "path": "tests/test_jira_steward_mock_and_service.py",
       "test_id": "TEST-JIRA-SYNC-001"
@@ -1771,6 +1811,31 @@
       "callable": "JiraStewardMockAndServiceTests.test_meaningful_comment_posts_through_steward",
       "path": "tests/test_jira_steward_mock_and_service.py",
       "test_id": "TEST-JIRA-SYNC-005"
+    },
+    {
+      "callable": "test_jira_sync_guard_passes_for_repository_state",
+      "path": "tests/test_jira_sync_guard.py",
+      "test_id": "TEST-JIRA-SYNC-GUARD-001"
+    },
+    {
+      "callable": "test_jira_sync_guard_blocks_when_artifact_missing",
+      "path": "tests/test_jira_sync_guard.py",
+      "test_id": "TEST-JIRA-SYNC-GUARD-002"
+    },
+    {
+      "callable": "test_jira_sync_guard_blocks_when_fingerprint_stale",
+      "path": "tests/test_jira_sync_guard.py",
+      "test_id": "TEST-JIRA-SYNC-GUARD-003"
+    },
+    {
+      "callable": "test_jira_sync_guard_passes_when_parity_confirmed_without_pending_remote",
+      "path": "tests/test_jira_sync_guard.py",
+      "test_id": "TEST-JIRA-SYNC-GUARD-004"
+    },
+    {
+      "callable": "test_jira_sync_guard_blocks_parity_confirmed_while_pending_remote",
+      "path": "tests/test_jira_sync_guard.py",
+      "test_id": "TEST-JIRA-SYNC-GUARD-005"
     },
     {
       "callable": "JiraStewardValidationTests.test_jira_steward_foundation_is_self_validating",
@@ -2008,6 +2073,16 @@
       "test_id": "TEST-PROVENANCE-003"
     },
     {
+      "callable": "test_continuation_package_rejects_control_characters_and_abbreviated_git_ids",
+      "path": "tests/test_release_continuation_and_post_deploy.py",
+      "test_id": "TEST-REL-CONT-001"
+    },
+    {
+      "callable": "test_continuation_package_from_detached_head_without_default_branch",
+      "path": "tests/test_release_continuation_and_post_deploy.py",
+      "test_id": "TEST-REL-CONT-002"
+    },
+    {
       "callable": "test_pass24_upstream_gate_covers_exact_candidates_and_blocks_agpl_activation",
       "path": "tests/test_pass24_release_hardening.py",
       "test_id": "TEST-REL-HARDEN-001"
@@ -2083,11 +2158,6 @@
       "test_id": "TEST-REL-HARDEN-015"
     },
     {
-      "callable": "test_continuation_package_from_detached_head_without_default_branch",
-      "path": "tests/test_release_continuation_and_post_deploy.py",
-      "test_id": "TEST-REL-CONT-002"
-    },
-    {
       "callable": "test_local_post_deployment_pipeline_cannot_finalize_on_incomplete_or_non_live",
       "path": "tests/test_release_continuation_and_post_deploy.py",
       "test_id": "TEST-REL-HARDEN-016"
@@ -2096,11 +2166,6 @@
       "callable": "test_post_deployment_incomplete_root_fails_closed",
       "path": "tests/test_release_continuation_and_post_deploy.py",
       "test_id": "TEST-REL-HARDEN-017"
-    },
-    {
-      "callable": "test_continuation_package_rejects_control_characters_and_abbreviated_git_ids",
-      "path": "tests/test_release_continuation_and_post_deploy.py",
-      "test_id": "TEST-REL-CONT-001"
     },
     {
       "callable": "test_verify_post_deployment_still_requires_every_named_check",

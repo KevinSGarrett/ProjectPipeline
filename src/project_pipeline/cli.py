@@ -36,8 +36,18 @@ from project_pipeline.assurance import (
     evaluate_scope_change,
     load_delivery_policy,
 )
+from project_pipeline.assurance.observation import (
+    definition_rows,
+    evidence_status,
+    generate_observation,
+    get_definition,
+    refresh_post_merge_observations,
+)
+from project_pipeline.assurance.observation_store import EvidenceObservationStore
+from project_pipeline.assurance.repository_identity import resolve_repository_identity
 from project_pipeline.assurance.requirement_reconciliation import (
     apply_evidence_bound_requirement_states,
+    evaluate_requirement_reconciliation,
     propose_evidence_bound_requirement_states,
 )
 from project_pipeline.assurance.requirement_truth_ledger import (
@@ -436,6 +446,21 @@ def build_parser() -> argparse.ArgumentParser:
     requirement_reconcile.add_argument("--limit", type=int, default=None)
     requirement_reconcile.add_argument("--apply", action="store_true")
     requirement_reconcile.add_argument("--approve", action="store_true")
+
+    evidence = commands.add_parser(
+        "evidence",
+        help="List, inspect, generate, verify, and reconcile evidence observations",
+    )
+    evidence.add_argument(
+        "action",
+        choices=("list", "get", "status", "generate", "verify", "reconcile", "refresh"),
+    )
+    evidence.add_argument("--root", type=_root, default=Path.cwd())
+    evidence.add_argument("--evidence-id")
+    evidence.add_argument("--observation-id")
+    evidence.add_argument("--limit", type=int, default=None)
+    evidence.add_argument("--apply", action="store_true")
+    evidence.add_argument("--approve", action="store_true")
 
     jira_implementation_reconcile = commands.add_parser(
         "jira-implementation-reconcile",
@@ -3136,6 +3161,132 @@ def _run_verification_command(args: argparse.Namespace) -> tuple[dict[str, Any],
     raise ConfigurationError(f"unsupported verification action: {args.action}")
 
 
+def _run_evidence_command(args: argparse.Namespace) -> int:
+    root = args.root
+    store = EvidenceObservationStore.open(root)
+    if args.action == "list":
+        rows = definition_rows(root)
+        if args.limit is not None:
+            rows = rows[: args.limit]
+        _write_json_output({"count": len(rows), "definitions": rows}, None)
+        return 0
+    if args.action == "get":
+        if not args.evidence_id and not args.observation_id:
+            raise ConfigurationError("evidence get requires --evidence-id or --observation-id")
+        if args.observation_id:
+            observation = store.get(args.observation_id)
+            _write_json_output(
+                {
+                    "observation": None
+                    if observation is None
+                    else observation.model_dump(mode="json")
+                },
+                None,
+            )
+            return 0 if observation is not None else 1
+        definition = get_definition(root, args.evidence_id)
+        observations = store.list_for_evidence(args.evidence_id)
+        _write_json_output(
+            {
+                "definition": definition,
+                "observations": [item.model_dump(mode="json") for item in observations],
+            },
+            None,
+        )
+        return 0 if definition is not None else 1
+    if args.action == "status":
+        _write_json_output(evidence_status(root, store=store), None)
+        return 0
+    if args.action == "generate":
+        if not args.evidence_id:
+            raise ConfigurationError("evidence generate requires --evidence-id")
+        observation = generate_observation(root, args.evidence_id, store=store)
+        _write_json_output(observation.model_dump(mode="json"), None)
+        return 0 if observation.result.value == "PASS" else 1
+    if args.action == "verify":
+        if not args.observation_id:
+            raise ConfigurationError("evidence verify requires --observation-id")
+        observation = store.get(args.observation_id)
+        _write_json_output(
+            {
+                "observation_id": args.observation_id,
+                "found": observation is not None,
+                "result": None if observation is None else observation.result.value,
+                "verification_status": None
+                if observation is None
+                else observation.verification_status,
+            },
+            None,
+        )
+        return 0 if observation is not None and observation.verification_status == "VERIFIED" else 1
+    if args.action == "refresh":
+        refreshed = refresh_post_merge_observations(root, store=store)
+        _write_json_output(
+            {
+                "refreshed_count": len(refreshed),
+                "refreshed": [item.model_dump(mode="json") for item in refreshed],
+            },
+            None,
+        )
+        return 0
+    if args.action == "reconcile":
+        if args.apply and not args.approve:
+            _write_json_output(
+                {
+                    "error": "configuration_invalid",
+                    "message": "evidence reconcile --apply requires --approve",
+                },
+                None,
+            )
+            return 2
+        try:
+            current_sha, current_tree = resolve_repository_identity(root)
+        except ValueError:
+            current_sha, current_tree = None, None
+        ledger = evaluate_requirement_reconciliation(
+            root,
+            current_sha=current_sha,
+            current_tree=current_tree,
+            observation_store=store,
+        )
+        if args.apply:
+            applied = apply_evidence_bound_requirement_states(
+                root,
+                limit=args.limit,
+                current_sha=current_sha,
+                current_tree=current_tree,
+                observation_store=store,
+            )
+            _write_json_output(
+                {
+                    "mode": "APPLIED",
+                    "applied_count": len(applied),
+                    "applied": applied,
+                    "ledger_count": len(ledger),
+                },
+                None,
+            )
+            return 0
+        proposals = propose_evidence_bound_requirement_states(
+            root,
+            limit=args.limit,
+            current_sha=current_sha,
+            current_tree=current_tree,
+            observation_store=store,
+        )
+        _write_json_output(
+            {
+                "mode": "DRY_RUN",
+                "proposal_count": len(proposals),
+                "proposals": proposals,
+                "ledger_count": len(ledger),
+            },
+            None,
+        )
+        return 0
+    raise ConfigurationError(f"unsupported evidence action: {args.action}")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -3266,6 +3417,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "requirement-views":
             _write_json_output(write_requirement_views(args.root), None)
             return 0
+        if args.command == "evidence":
+            return _run_evidence_command(args)
         if args.command == "requirement-reconcile":
             if args.apply and not args.approve:
                 _write_json_output(
@@ -3276,11 +3429,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                     None,
                 )
                 return 2
-            from project_pipeline.assurance.requirement_reconciliation import (
-                evaluate_requirement_reconciliation,
-                resolve_repository_identity,
-            )
-
             try:
                 current_sha, current_tree = resolve_repository_identity(args.root)
             except ValueError:

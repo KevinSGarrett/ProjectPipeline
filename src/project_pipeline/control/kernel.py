@@ -5,6 +5,11 @@ import json
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.control.cohorts import (
+    assert_cohort_invariants,
+    describe_reconciliation_cohorts,
+    summarize_control_cohorts,
+)
 from project_pipeline.control.graph import BuildSequencer, ControlGraphError
 from project_pipeline.domain import ImplementationState, RequirementDisposition
 from project_pipeline.domain.control import (
@@ -16,6 +21,7 @@ from project_pipeline.domain.control import (
     ScopeFindingKind,
     ScopeReconciliationReport,
     TaskControlFact,
+    TaskEligibility,
     TaskReadiness,
     control_identifier,
 )
@@ -316,7 +322,11 @@ class ProjectControlKernel:
         )
 
     def completion_projection(
-        self, sequence: BuildSequence, readiness: tuple[TaskReadiness, ...]
+        self,
+        sequence: BuildSequence,
+        readiness: tuple[TaskReadiness, ...],
+        eligibility: tuple[TaskEligibility, ...] = (),
+        facts: tuple[TaskControlFact, ...] | None = None,
     ) -> CompletionProjection:
         requirements = [
             item
@@ -343,11 +353,11 @@ class ProjectControlKernel:
             item.get("implementation_state") in _COMPLETE_REQUIREMENT_STATES
             for item in requirements
         )
-        reconciliation_count = sum(
-            1
-            for fact in self.task_facts()
-            if fact.reconciliation_required and fact.state not in _TERMINAL_WORK
-        )
+        fact_list = facts if facts is not None else self.task_facts()
+        if not eligibility:
+            eligibility = tuple(BuildSequencer(fact_list).eligibility(item) for item in fact_list)
+        cohorts = summarize_control_cohorts(fact_list, eligibility, readiness)
+        reconciliation_count = cohorts.reconciliation_facts
         incomplete_requirement_count = len(requirements) - req_complete
         reasons: list[str] = []
         all_work_terminal = completed == total
@@ -391,9 +401,7 @@ class ProjectControlKernel:
                     f"{sequence.ready_count} independent work items are ready to continue"
                 )
             if reconciliation_count:
-                reasons.append(
-                    f"{reconciliation_count} work items are RECONCILIATION_REQUIRED and are immediately batchable"
-                )
+                reasons.append(describe_reconciliation_cohorts(cohorts))
             if sequence.ready_count <= 1 and (reconciliation_count or incomplete_requirement_count):
                 reasons.append(
                     "a single ready item is not a stop signal while reconciliation or incomplete requirements remain"
@@ -420,6 +428,7 @@ class ProjectControlKernel:
             verification_eligible=state is CompletionProjectionState.READY_FOR_COMPLETION_GATE,
             final_completion_gate_satisfied=False,
             reasons=tuple(reasons),
+            cohorts=cohorts,
         )
 
     def evaluate(self) -> ControlSnapshot:
@@ -429,7 +438,10 @@ class ProjectControlKernel:
         eligibility = tuple(sequencer.eligibility(item) for item in facts)
         readiness = tuple(sequencer.readiness(item) for item in facts)
         scope = self.scope_reconciliation()
-        completion = self.completion_projection(sequence, readiness)
+        completion = self.completion_projection(
+            sequence, readiness, eligibility=eligibility, facts=facts
+        )
+        assert_cohort_invariants(facts, eligibility, readiness, completion.cohorts)
         # Semantic identity intentionally excludes generated timestamps so repeated
         # evaluation of unchanged accepted state produces the same snapshot ID.
         fingerprint = _json_fingerprint(

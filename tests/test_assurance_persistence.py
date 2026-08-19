@@ -18,13 +18,15 @@ def test_ppdb_0012_is_reversible_without_damaging_ppdb_0011(tmp_path: Path):
     conn = sqlite3.connect(tmp_path / "assurance.db")
     runner = SQLiteMigrationRunner(conn, root)
     status = runner.apply_all()
-    assert status.latest_applied == "PPDB-0023"
+    assert status.latest_applied == "PPDB-0024"
     assert conn.execute(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='assurance_gate_evaluations'"
     ).fetchone()
     assert conn.execute(
         "SELECT name FROM sqlite_master WHERE type='table' AND name='verification_runs'"
     ).fetchone()
+    after_observations = runner.rollback_last()
+    assert after_observations.latest_applied == "PPDB-0023"
     after_owner = runner.rollback_last()
     assert after_owner.latest_applied == "PPDB-0022"
     after_campaign = runner.rollback_last()
