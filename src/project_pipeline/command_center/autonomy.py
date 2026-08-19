@@ -22,6 +22,33 @@ from project_pipeline.command_center.models import (
 from project_pipeline.command_center.projections import CommandCenterProjectionService
 
 
+def _campaign_projection(
+    campaign_state: Path | None, repository_root: Path | None
+) -> dict[str, Any]:
+    if campaign_state is None or not campaign_state.exists() or repository_root is None:
+        return {"label": "absent", "active": False}
+    from project_pipeline.autonomy_runtime.campaign import CampaignController
+
+    controller = CampaignController(campaign_state, repository_root=repository_root)
+    try:
+        row = controller._db.execute(
+            "SELECT campaign_id, stage, status, next_transition FROM campaign_runs "
+            "ORDER BY started_at_utc DESC LIMIT 1"
+        ).fetchone()
+        if row is None:
+            return {"label": "idle", "active": False}
+        return {
+            "label": "campaign",
+            "active": str(row["status"]) in {"RUNNING", "ATTESTED", "READY_TO_FINALIZE"},
+            "campaign_id": str(row["campaign_id"]),
+            "stage": str(row["stage"]),
+            "status": str(row["status"]),
+            "next_transition": row["next_transition"],
+        }
+    finally:
+        controller.close()
+
+
 def project_autonomy_runtime(
     *,
     supervisor_state: Path,
@@ -31,6 +58,7 @@ def project_autonomy_runtime(
     ready_task_ids: list[str] | None = None,
     provider_status: dict[str, Any] | None = None,
     recheck_state: Path | None = None,
+    campaign_state: Path | None = None,
 ) -> dict[str, Any]:
     supervisor = PersistentSupervisor(supervisor_state, repository_root=repository_root)
     status = supervisor.status()
@@ -111,6 +139,7 @@ def project_autonomy_runtime(
             "autonomous_rechecks": AutonomousRecheckStore(recheck_state).snapshot()
             if recheck_state is not None
             else {"count": 0, "items": [], "global_stop": False, "owner": "autonomy-runtime"},
+            "campaign": _campaign_projection(campaign_state, repository_root),
             "source": "durable_state",
         },
     )

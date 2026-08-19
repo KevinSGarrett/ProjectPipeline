@@ -397,6 +397,25 @@
       "sqlite_down_sha256": "711445ee50c91332d82dbc079c5a6531ec23f0c29b9d6927e7875987babc27ee",
       "sqlite_up_path": "database/migrations/sqlite/PPDB-0021_unattended_qualification.up.sql",
       "sqlite_up_sha256": "e380db92691207750d445d9f978877a769d57b22155acd37f5dfefd81fc3efed"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0021"
+      ],
+      "migration_id": "PPDB-0022",
+      "name": "autonomy_campaign",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0022_autonomy_campaign.down.sql",
+      "postgresql_down_sha256": "5271faba3c4c9bf059a51048333c92499c4b429bcc17fd13f2f82b1dfe12f795",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0022_autonomy_campaign.up.sql",
+      "postgresql_up_sha256": "25b23ee896d4db3741be61eafd249fedb30ebb0de02ed13df40f44a7d59a6909",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 22,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0022_autonomy_campaign.down.sql",
+      "sqlite_down_sha256": "5271faba3c4c9bf059a51048333c92499c4b429bcc17fd13f2f82b1dfe12f795",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0022_autonomy_campaign.up.sql",
+      "sqlite_up_sha256": "25b23ee896d4db3741be61eafd249fedb30ebb0de02ed13df40f44a7d59a6909"
     }
   ],
   "schema_version": "1.0.0"

@@ -793,19 +793,19 @@
   },
   "PLAN-CTRL-003:SEC-06": {
     "authoritative_path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
-    "end_line": 37,
+    "end_line": 39,
     "line_numbered_path": "plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt",
-    "line_reference": "PLAN-CTRL-003:SEC-06:L000034-L000037",
+    "line_reference": "PLAN-CTRL-003:SEC-06:L000034-L000039",
     "plan_id": "PLAN-CTRL-003",
     "start_line": 34
   },
   "PLAN-CTRL-003:SEC-07": {
     "authoritative_path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
-    "end_line": 40,
+    "end_line": 42,
     "line_numbered_path": "plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt",
-    "line_reference": "PLAN-CTRL-003:SEC-07:L000038-L000040",
+    "line_reference": "PLAN-CTRL-003:SEC-07:L000040-L000042",
     "plan_id": "PLAN-CTRL-003",
-    "start_line": 38
+    "start_line": 40
   },
   "PLAN-CTX-001:SEC-01": {
     "authoritative_path": "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md",

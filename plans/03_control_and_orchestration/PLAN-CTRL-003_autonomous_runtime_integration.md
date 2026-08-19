@@ -35,6 +35,8 @@ After the local-real and isolated-Git stages pass, qualify authorized GitHub/Jir
 
 Run the qualification ladder in order: deterministic unit/contract; local-real integrated journey; isolated real Git/worktree; authorized GitHub/Jira; real worker/provider; Windows service and Command Center; recovery/restart; unattended 24-hour; unattended 72-hour; released-state and post-release Completion Gate. Each stage binds exact source, code, configuration, environment, observations, failures, and recovery evidence. A later stage cannot inherit PASS from a mock or lower environment class.
 
+A durable campaign controller owns the ladder after PP-384 integrated-main qualification: it pins exact SHA/tree, executes a real recovery drill, heartbeats on the wall clock, admits 24-hour then 72-hour only after attested prior stages, records executed allowlisted command receipts, and autonomously restarts a fresh attempt when a timed window is broken. Elapsed time is never simulated.
+
 ## PLAN-CTRL-003:SEC-07 Cohesive vertical slices
 
 Deliver this plan through six outcomes, not lifecycle-label PRs: source-to-control realignment; persistent supervisor composition; conflict-safe recovery and partial continuation; local-real Git/Jira golden journey; authorized live workers plus Command Center/Windows qualification; and unattended/release qualification. Focused checks run during development; expensive CI, independent review, manifest refresh, external reconciliation, and merge run once at each cohesive slice boundary.

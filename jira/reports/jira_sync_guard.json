@@ -1,5 +1,6 @@
 {
   "authority_mode": "SOURCE_CONTROLLED_LOCAL_PLUS_LIVE_READBACK",
+  "autonomous_rechecks": [],
   "diff_classification": {
     "comments": "NO_DIFFERENCE",
     "hierarchy": "NO_DIFFERENCE",
@@ -8,8 +9,7 @@
     "metadata": "NO_DIFFERENCE",
     "status": "NO_DIFFERENCE"
   },
-  "generated_at_utc": "2026-08-18T22:05:46.656283Z",
-  "autonomous_rechecks": [],
+  "generated_at_utc": "2026-08-19T00:02:22.393371Z",
   "instruction_citations": [
     "instructions/06_JIRA_OPERATING_PROTOCOL.md",
     "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
@@ -20,7 +20,7 @@
   ],
   "local_edge_count": 890,
   "local_issue_count": 393,
-  "local_mirror_fingerprint": "e8dea3c05e2fd11c6ff7ea065ff1092dcf5040b3bffe7955b2352bdcd940ffe7",
+  "local_mirror_fingerprint": "9282ab328ac6c753ae7913d57f65b88476431a0a77faecb6f4d79f9849ba91e5",
   "parity_status": "PARITY_CONFIRMED",
   "plan_id": "JPLAN-3618FC1CD42B00FA927F",
   "project_key": "PP",

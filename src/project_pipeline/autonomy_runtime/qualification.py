@@ -266,19 +266,20 @@ class QualificationStore:
         return self.get(run_id)
 
     def orchestrate(self, run_id: str, commands: list[list[str]]) -> dict[str, Any]:
+        from project_pipeline.autonomy_runtime.command_execution import (
+            execute_allowlisted_command,
+        )
+
         row = self._require(run_id)
         now = self._attestation_now(str(row["stage"]))
         receipts = []
         for command in commands:
-            encoded = json.dumps(command, sort_keys=True)
-            receipts.append(
-                {
-                    "command": command,
-                    "command_sha256": hashlib.sha256(encoded.encode()).hexdigest(),
-                    "recorded_at_utc": now.isoformat(),
-                    "executed": False,
-                }
+            receipt = execute_allowlisted_command(
+                [str(item) for item in command],
+                cwd=self.repository_root,
+                repository_root=self.repository_root,
             )
+            receipts.append(receipt)
         with self._db:
             self._append_event(
                 run_id, "ORCHESTRATE", str(row["status"]), {"receipts": receipts}, now

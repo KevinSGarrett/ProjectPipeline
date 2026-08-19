@@ -32,6 +32,8 @@ def test_ppdb_0013_is_reversible_without_damaging_ppdb_0012(project_root: Path):
     conn = sqlite3.connect(":memory:")
     runner = SQLiteMigrationRunner(conn, project_root)
     runner.apply_all()
+    assert runner.status().latest_applied == "PPDB-0022"
+    runner.rollback_last()
     assert runner.status().latest_applied == "PPDB-0021"
     runner.rollback_last()
     assert runner.status().latest_applied == "PPDB-0020"

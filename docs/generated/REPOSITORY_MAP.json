@@ -16,12 +16,12 @@
     ".mmd": 6,
     ".mod": 1,
     ".png": 15,
-    ".ps1": 8,
-    ".py": 550,
+    ".ps1": 10,
+    ".py": 556,
     ".rego": 1,
     ".rs": 2,
     ".sha256": 1,
-    ".sql": 85,
+    ".sql": 89,
     ".svg": 5,
     ".tf": 4,
     ".toml": 5,
@@ -44,7 +44,7 @@
     "architecture": 19,
     "config": 41,
     "contracts": 5,
-    "database": 86,
+    "database": 90,
     "docs": 68,
     "dummy": 429,
     "evidence": 235,
@@ -59,12 +59,12 @@
     "requirements": 5,
     "runbooks": 28,
     "schemas": 209,
-    "scripts": 36,
-    "src": 296,
-    "tests": 204,
+    "scripts": 40,
+    "src": 298,
+    "tests": 206,
     "third_party": 1
   },
-  "file_count": 2874,
+  "file_count": 2886,
   "files": [
     {
       "extension": ".md",
@@ -230,8 +230,8 @@
     {
       "extension": "[none]",
       "path": ".git",
-      "sha256": "dfe91b0aea4078ac25169423559615916bd221467975243349a8b61eb423eff3",
-      "size_bytes": 63,
+      "sha256": "2cf4b5b4e3b131f03569e8bdba5e869e5e6b3cb06d40e55042aa890be79e1782",
+      "size_bytes": 61,
       "top_level": "_root"
     },
     {
@@ -1105,8 +1105,8 @@
     {
       "extension": ".json",
       "path": "database/MIGRATION_CATALOG.json",
-      "sha256": "c4734ccec637d8ca7cc4464a10bb44cf356eeb079fd4f0be5393753ec9000dbc",
-      "size_bytes": 22390,
+      "sha256": "180825755e00d4a0d373c9923cc2724758d22385a5095148aea5c3085aa0e206",
+      "size_bytes": 23411,
       "top_level": "database"
     },
     {
@@ -1405,6 +1405,20 @@
     },
     {
       "extension": ".sql",
+      "path": "database/migrations/postgresql/PPDB-0022_autonomy_campaign.down.sql",
+      "sha256": "5271faba3c4c9bf059a51048333c92499c4b429bcc17fd13f2f82b1dfe12f795",
+      "size_bytes": 163,
+      "top_level": "database"
+    },
+    {
+      "extension": ".sql",
+      "path": "database/migrations/postgresql/PPDB-0022_autonomy_campaign.up.sql",
+      "sha256": "25b23ee896d4db3741be61eafd249fedb30ebb0de02ed13df40f44a7d59a6909",
+      "size_bytes": 2045,
+      "top_level": "database"
+    },
+    {
+      "extension": ".sql",
       "path": "database/migrations/sqlite/PPDB-0001_core_state.down.sql",
       "sha256": "e7e8d5bd0c78f61b24fb869a335bfc0372ffdc9d9798c5ae1b605d4052f6698f",
       "size_bytes": 283,
@@ -1695,6 +1709,20 @@
       "path": "database/migrations/sqlite/PPDB-0021_unattended_qualification.up.sql",
       "sha256": "e380db92691207750d445d9f978877a769d57b22155acd37f5dfefd81fc3efed",
       "size_bytes": 1087,
+      "top_level": "database"
+    },
+    {
+      "extension": ".sql",
+      "path": "database/migrations/sqlite/PPDB-0022_autonomy_campaign.down.sql",
+      "sha256": "5271faba3c4c9bf059a51048333c92499c4b429bcc17fd13f2f82b1dfe12f795",
+      "size_bytes": 163,
+      "top_level": "database"
+    },
+    {
+      "extension": ".sql",
+      "path": "database/migrations/sqlite/PPDB-0022_autonomy_campaign.up.sql",
+      "sha256": "25b23ee896d4db3741be61eafd249fedb30ebb0de02ed13df40f44a7d59a6909",
+      "size_bytes": 2045,
       "top_level": "database"
     },
     {
@@ -5312,8 +5340,8 @@
     {
       "extension": ".json",
       "path": "evidence/autonomy_runtime/live_qualification/live_qualification_latest.json",
-      "sha256": "2b08a58cb50a8a9cc2e7c013204d89b171b9184bbef40a90082820565ab5dfad",
-      "size_bytes": 11354,
+      "sha256": "1ca0d241d38960ac8e88bf13d0f87b05541d8e29f749339a49c683f5dbf7f838",
+      "size_bytes": 11079,
       "top_level": "evidence"
     },
     {
@@ -6831,8 +6859,8 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "4d6f013e0b8e297af28c3457ef8328907d2f9b60aaea58821ad3fda74cd94d79",
-      "size_bytes": 328517,
+      "sha256": "a0e642a7b721be2cc07abc8f016784e4141e9ff1dfb11b166751440c74fba33a",
+      "size_bytes": 329900,
       "top_level": "_root"
     },
     {
@@ -7552,8 +7580,8 @@
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000036.json",
-      "sha256": "acc2b0671f5eee94a570bfd1adccc8610f8e575cb53ccb18f124b28605cffddc",
-      "size_bytes": 4470,
+      "sha256": "847f7677d72082d00dea1e9872771c0d995d38d24360ce7127000e808266b484",
+      "size_bytes": 4359,
       "top_level": "jira"
     },
     {
@@ -7580,15 +7608,15 @@
     {
       "extension": ".jsonl",
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "2ebbe31d62110ca092125924876ead362ed35d5f1299bcf8b722a1c929e102e8",
-      "size_bytes": 1672528,
+      "sha256": "e65c44fe6089918e14caf2c4aed024c54370d4614eedce1bf097dcca697e2c73",
+      "size_bytes": 1672948,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "2fc29da0c153f9ab04b1f1b3d0540f8ac1ce87f16ec73e8c55b44415783e9e2b",
-      "size_bytes": 1980757,
+      "sha256": "bd42a087d474ddcd345e1c6f4c0c4bbe1f0212ae62a4c64544b6721552866cf7",
+      "size_bytes": 1981255,
       "top_level": "jira"
     },
     {
@@ -8595,7 +8623,7 @@
     {
       "extension": ".md",
       "path": "jira/source_context/PP-STORY-000143.md",
-      "sha256": "1c6b5a1c2db2337dde77801d7d31e137021913e669fad44af9a2a2f0289b078c",
+      "sha256": "5f90f10662e99053701c29493fe3f240ed42c334e924c7c72915a2ed3ab8ece3",
       "size_bytes": 275,
       "top_level": "jira"
     },
@@ -10415,7 +10443,7 @@
     {
       "extension": ".md",
       "path": "jira/source_context/PP-TASK-000385.md",
-      "sha256": "7612b762ffd9449c4fe2642def9c161c222945444e3a0492a6f1c5e862de3e21",
+      "sha256": "39c43aa9aae96d0739314ac98e449ce416dacd8f75d73e999271c5ab9c04f841",
       "size_bytes": 288,
       "top_level": "jira"
     },
@@ -11192,8 +11220,8 @@
     {
       "extension": ".json",
       "path": "jira/stories/PP-STORY-000140.json",
-      "sha256": "0473010f18f21d699a5d22d773da782dda03967ef43a179c34a51a6e50e94293",
-      "size_bytes": 3685,
+      "sha256": "339c177eda569a2fb39c6d857967c9ceb4add4eabd2c8271c048d8279b2c87e3",
+      "size_bytes": 3589,
       "top_level": "jira"
     },
     {
@@ -11213,8 +11241,8 @@
     {
       "extension": ".json",
       "path": "jira/stories/PP-STORY-000143.json",
-      "sha256": "6795bd2358353f1b6dc3c57ae855c4b795c7a6ac83367914decac891c66498f7",
-      "size_bytes": 3598,
+      "sha256": "c86d0ed4d39d878273249c7a9fc9ac0e1704c407b5e04a9adf4895681efa119c",
+      "size_bytes": 3695,
       "top_level": "jira"
     },
     {
@@ -12837,8 +12865,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000355.json",
-      "sha256": "3912a055a2a84fce98a18583e3aafa7a0026c14a249a5bb2186e2202762e99aa",
-      "size_bytes": 4895,
+      "sha256": "9bc816883c822c6ddda0f13ab9dfe070e9bae277f987adc9caa74f01d3a9b395",
+      "size_bytes": 4773,
       "top_level": "jira"
     },
     {
@@ -12921,8 +12949,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000367.json",
-      "sha256": "f4d4ca6c81d4a03085446d57381a7f1ab5c27d6921f62280f95e4c0717d1400d",
-      "size_bytes": 4892,
+      "sha256": "42be0bfb7b787f87d1fd77a53fe357533ffd7352bcb5f43f10f8039ec8d90872",
+      "size_bytes": 4773,
       "top_level": "jira"
     },
     {
@@ -13026,15 +13054,15 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000382.json",
-      "sha256": "d515fffe8ced023e59741758d9d0caf9e9bb3fa12212cbdc188016eaab998cd7",
-      "size_bytes": 4058,
+      "sha256": "274e9bbedcd46a89b80f885dc52f23aa7afb5a1a1bb49690b4d1597c9cfc2151",
+      "size_bytes": 3945,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000383.json",
-      "sha256": "9ad5b7381287b73cf8d9df8bff39a3be2208aeb3ca2bc1acde943b2fc2302e90",
-      "size_bytes": 4231,
+      "sha256": "76a548d3f3c66b6f15730b37cf05be5073e3886e50d6d8acbcf0006bad70c3ca",
+      "size_bytes": 4121,
       "top_level": "jira"
     },
     {
@@ -13047,8 +13075,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000385.json",
-      "sha256": "f3d375987146a794e4f284f2ba518348af4ed083b4b21ae3e5e302780d235c6f",
-      "size_bytes": 3644,
+      "sha256": "ccf481da705f6fd10a120e88b5f964e36beae1554257ca6b3f3898a2a2e0b16f",
+      "size_bytes": 4019,
       "top_level": "jira"
     },
     {
@@ -13222,8 +13250,8 @@
     {
       "extension": ".md",
       "path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
-      "sha256": "5a390a57cb64d1490d771cc52b52524e672ea3743ce44d85043d74619cb1e216",
-      "size_bytes": 5036,
+      "sha256": "83915512416576d288af3245b135ed439968cff5c067510d54759e476555b424",
+      "size_bytes": 5428,
       "top_level": "plans"
     },
     {
@@ -13551,7 +13579,7 @@
     {
       "extension": ".json",
       "path": "plans/_indexes/plan_section_index.json",
-      "sha256": "6606e349ec22e8fe2457df903fed3a9f72e3a8e5e5cb2a40f322691b2f01de0b",
+      "sha256": "7ee02792ce4830bf7cb51bc8b758a8e74d9a442d9cc741e6e0c21075ffb55a92",
       "size_bytes": 122967,
       "top_level": "plans"
     },
@@ -13649,8 +13677,8 @@
     {
       "extension": ".txt",
       "path": "plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt",
-      "sha256": "3c8b34dd029867c67a4d79df93ca23a0c965abc26d78c9d1c804b8b0e87196cb",
-      "size_bytes": 5436,
+      "sha256": "49a32e0a3ef2e9ddcc46599bfc2de53c1833ef02231e40d4ba7cb3917135e4f7",
+      "size_bytes": 5848,
       "top_level": "plans"
     },
     {
@@ -14048,8 +14076,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "a6f59418cb216ba7890475dc5f879484a4cf1ab9db51869bd0dda6bb4ed8d0a5",
-      "size_bytes": 537984,
+      "sha256": "00be8e81c2fab50f53b6528b1055039254fa7d406bdfc8e5dd135236c5921e1d",
+      "size_bytes": 540242,
       "top_level": "_root"
     },
     {
@@ -14769,8 +14797,8 @@
     {
       "extension": ".md",
       "path": "runbooks/autonomy_runtime/unattended_operation.md",
-      "sha256": "434c88a8dc9757b0966a6340fb9882a43c2c5a820745387582e50cf53536dc79",
-      "size_bytes": 1990,
+      "sha256": "e6a3a53e8885ecd4cc55030957b0ef8dcf4ea1055e498d23454dc5e76899364c",
+      "size_bytes": 2895,
       "top_level": "runbooks"
     },
     {
@@ -16448,6 +16476,13 @@
     },
     {
       "extension": ".py",
+      "path": "scripts/campaign_probe.py",
+      "sha256": "5fc57b86e4c41eae60cc0e34e26e4bc908471331cf6c528b86b33afa89fba3e8",
+      "size_bytes": 123,
+      "top_level": "scripts"
+    },
+    {
+      "extension": ".py",
       "path": "scripts/create_project_archive.py",
       "sha256": "01888cdc7e6d1b625b77e39e6c810c4c1f28ed5cff563963d65b4ca9b626752e",
       "size_bytes": 718,
@@ -16503,6 +16538,13 @@
       "top_level": "scripts"
     },
     {
+      "extension": ".ps1",
+      "path": "scripts/register_autonomy_campaign_recovery.ps1",
+      "sha256": "b47a434d7ca28073c1ffa3933cebfc52b578d368a07ba1e5a64abefbfb0d0a50",
+      "size_bytes": 3435,
+      "top_level": "scripts"
+    },
+    {
       "extension": ".py",
       "path": "scripts/repair_jira_plan_references.py",
       "sha256": "ec763ac69f123d9859657788d3e56188a05db2027d82b7927b9efd585e29cae6",
@@ -16528,6 +16570,13 @@
       "path": "scripts/resolve_dependencies.py",
       "sha256": "1daa3b6764f22de05382a19a49510505cfb9da63cffd8b260692815e548169de",
       "size_bytes": 1403,
+      "top_level": "scripts"
+    },
+    {
+      "extension": ".py",
+      "path": "scripts/run_autonomy_campaign.py",
+      "sha256": "28f9fd02ca101cb244f921b8a2f322c2592f2431ac1a3300df0c3fd50d84ed4b",
+      "size_bytes": 3717,
       "top_level": "scripts"
     },
     {
@@ -16584,6 +16633,13 @@
       "path": "scripts/run_takeover_lane_c_verification.py",
       "sha256": "dca7cd39ccc36fd07139026f90eab10780f4c157e7194002aaab9ec3007f5a9b",
       "size_bytes": 6186,
+      "top_level": "scripts"
+    },
+    {
+      "extension": ".ps1",
+      "path": "scripts/start_autonomy_campaign_hidden.ps1",
+      "sha256": "834a89b353bee80fea0e4a3144aa242e5e09d814afa9ecbcd561d20e41c2f9a3",
+      "size_bytes": 3817,
       "top_level": "scripts"
     },
     {
@@ -16904,8 +16960,22 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/__init__.py",
-      "sha256": "be70061bbaa52b762330f5f538fecd22e6e49afe13aa9e25856469a579cdca49",
-      "size_bytes": 885,
+      "sha256": "57c0f75bf6a91e19de3906b0a452da0c9faa63e9692aef57fac51a58eeb6e919",
+      "size_bytes": 985,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/autonomy_runtime/campaign.py",
+      "sha256": "9a7214378ec2f73e672f9365212fcbe2793b814ee8e27bf80d16f9833737804d",
+      "size_bytes": 28940,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/autonomy_runtime/command_execution.py",
+      "sha256": "aaf8f2ee6c787d143c27cd2806857854b17439189a19d9fd92d9e9ab15727887",
+      "size_bytes": 3854,
       "top_level": "src"
     },
     {
@@ -16953,8 +17023,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/qualification.py",
-      "sha256": "da5fc9a12cc7057ed32eb12254d7f0044609866b67ad4c0df45ccb3662a5f658",
-      "size_bytes": 19165,
+      "sha256": "ec3524ed664a1cb4285b2969706c09b901cafa7289d3ea052f2e2bfe563b612d",
+      "size_bytes": 19182,
       "top_level": "src"
     },
     {
@@ -17114,8 +17184,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/autonomy.py",
-      "sha256": "9f9a7cb41ac4e22b43b16e99f52f20cc1288e4490008ab882d7b899600491dc8",
-      "size_bytes": 5041,
+      "sha256": "c4d8d39aab382ec4b67098487c6f260bdbbd1d0c6d2e8d05d691da67ad5b2d9b",
+      "size_bytes": 6237,
       "top_level": "src"
     },
     {
@@ -18073,8 +18143,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/persistence/migrations.py",
-      "sha256": "f2e3bad0dcbd2d8a7205bee6da3bc0859b76f6a9b7edfda8a5a4479fe67c049c",
-      "size_bytes": 19109,
+      "sha256": "816b32e748d4339f949bcb1cfbe71e4ba4a374c4889f429a0224680c095e048a",
+      "size_bytes": 19402,
       "top_level": "src"
     },
     {
@@ -18948,8 +19018,8 @@
     {
       "extension": ".py",
       "path": "tests/test_assurance_persistence.py",
-      "sha256": "0e1e3ce9046b8c55b32d38f1afdb218175f5b3bd476f0c55825d9e9bc93f5474",
-      "size_bytes": 4780,
+      "sha256": "2233261ca05ce59d1185d2a8a7b557e7dc754457108dc88c1018f01731084eaf",
+      "size_bytes": 4880,
       "top_level": "tests"
     },
     {
@@ -18971,6 +19041,20 @@
       "path": "tests/test_autonomous_recheck.py",
       "sha256": "1584c133ab3cc08613b9286b9e2d65c1ae2179de6c8fbdb16e57e5deab58a72b",
       "size_bytes": 3552,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_autonomy_campaign.py",
+      "sha256": "f7d57c4e6b67ebc427f394c517d5a3ca3a52b53a6f341678a9ef607d6d7dba6d",
+      "size_bytes": 15465,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_autonomy_campaign_windows.py",
+      "sha256": "42e0722a0b4b949dbb9e4bd519b0a2d515854817daeb45e747ef91590b5950b1",
+      "size_bytes": 2798,
       "top_level": "tests"
     },
     {
@@ -18997,8 +19081,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_qualification.py",
-      "sha256": "bcd3d94c894b924ee1ab3bd8447bcc17ca0dac3d9d41c624257609d28490d1c9",
-      "size_bytes": 11947,
+      "sha256": "f7859b4ba944299e5f810be8ada6ca5e13a6e884c692f82bfdc2dedc4edfaa31",
+      "size_bytes": 11994,
       "top_level": "tests"
     },
     {
@@ -19060,8 +19144,8 @@
     {
       "extension": ".py",
       "path": "tests/test_budget_migration.py",
-      "sha256": "f3b1d14b0afa13a35ebb04fb1a503fa676e9418cbd79ce883e778508e2805b74",
-      "size_bytes": 5275,
+      "sha256": "9233f1fec81b0205c6abc94ac36be5cc66a2f21efda40f31b2c2abe8d5b398bd",
+      "size_bytes": 5359,
       "top_level": "tests"
     },
     {
@@ -19095,8 +19179,8 @@
     {
       "extension": ".json",
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "84bf30131313d18ff7fdbae946592a37c8cc5de0a51fd7a95f0db64b676de4af",
-      "size_bytes": 95876,
+      "sha256": "76c4e4ea3d91086d73ff8cb09abc43a9d61898acb824796b8fb8c840a45337ab",
+      "size_bytes": 99089,
       "top_level": "tests"
     },
     {
@@ -19158,15 +19242,15 @@
     {
       "extension": ".py",
       "path": "tests/test_command_center_pass21.py",
-      "sha256": "7f0dfbe07419edeb5599e305a5ed4a61c2f9a61e8bd4292e9283fb16f6b76e39",
-      "size_bytes": 19186,
+      "sha256": "f336906610b27b2b35c40ec65553c6e5cab9d8ad30fdd50d7f7161272fe33bc8",
+      "size_bytes": 19270,
       "top_level": "tests"
     },
     {
       "extension": ".py",
       "path": "tests/test_command_center_persistence.py",
-      "sha256": "7590db3f40e2d3f9e95d077d2417b9a2fd7c99358f39f05e56df1737f1e275fe",
-      "size_bytes": 2661,
+      "sha256": "d9582db3a3ddfa6f037c44dacec8f2825acbb6d477d891f4ce13a5870aab0923",
+      "size_bytes": 2753,
       "top_level": "tests"
     },
     {
@@ -19228,8 +19312,8 @@
     {
       "extension": ".py",
       "path": "tests/test_context_persistence.py",
-      "sha256": "08e5c047ba04e62791464aa7dc010c1827e8ab23eb52317d71e7db644f15a29e",
-      "size_bytes": 6336,
+      "sha256": "114ba4ec9d3087854ad5e5da0e91f573aabf571933a1a3076987ea6dd5db399f",
+      "size_bytes": 6415,
       "top_level": "tests"
     },
     {
@@ -19564,8 +19648,8 @@
     {
       "extension": ".py",
       "path": "tests/test_migrations.py",
-      "sha256": "5791d644bd1f97cba18ee784504f2fb4bd39354002892eeccddb521381e356a8",
-      "size_bytes": 6222,
+      "sha256": "4ed7704bb60b3a290b7848935d9efc90ce10cb1efa611b9b8a59de207ba48e99",
+      "size_bytes": 6538,
       "top_level": "tests"
     },
     {
@@ -19606,8 +19690,8 @@
     {
       "extension": ".py",
       "path": "tests/test_orchestration_migration.py",
-      "sha256": "d2db0b61c296cfec65bd60bb9ca7ab5e4a4626a400605b942b74fb6a749894f4",
-      "size_bytes": 5386,
+      "sha256": "5022b47225d3742ae8d90400a21fbe89ae0dc9b035eebedd586ea59bd362acf6",
+      "size_bytes": 5470,
       "top_level": "tests"
     },
     {
@@ -19641,8 +19725,8 @@
     {
       "extension": ".py",
       "path": "tests/test_pass22_platform_lifecycle.py",
-      "sha256": "1cb98d04fd25453226253a5233dc9fa415369d62712a1901199359778b635d38",
-      "size_bytes": 13407,
+      "sha256": "1ecac14a25d8ae305dfd6081ef227eccc0851eb0fdc9e297bc55637bf1fd5511",
+      "size_bytes": 13588,
       "top_level": "tests"
     },
     {
@@ -19662,8 +19746,8 @@
     {
       "extension": ".py",
       "path": "tests/test_pass25_final_convergence.py",
-      "sha256": "0764e5476e14ad7d73383e08e2e2ef1af3fcbd589857969a3b7050f47ff35525",
-      "size_bytes": 7592,
+      "sha256": "19d022878e7bcdac15d5b5956ad9c089a08e8904e1162d302572287d00f646a7",
+      "size_bytes": 7759,
       "top_level": "tests"
     },
     {
@@ -19823,8 +19907,8 @@
     {
       "extension": ".py",
       "path": "tests/test_resilience_persistence.py",
-      "sha256": "2575744b057fee86b9ac559844666d429c2712b0f14a32a38b164f2b2afd50d6",
-      "size_bytes": 2508,
+      "sha256": "8d7c7e72e0feb2b138307b719f6e55705c96568b8f793480ad741fa0ac8ad9d7",
+      "size_bytes": 2689,
       "top_level": "tests"
     },
     {
@@ -19942,8 +20026,8 @@
     {
       "extension": ".py",
       "path": "tests/test_security_persistence_cli.py",
-      "sha256": "b66c67b2eefce0fef6ce8350b9d91aafa9634771da335900b5f6e08c4a55a643",
-      "size_bytes": 14960,
+      "sha256": "d060c91d5319b75272ca577f24f7781d2ce0c196142d8b9339457a391dd01e1d",
+      "size_bytes": 15176,
       "top_level": "tests"
     },
     {
@@ -20131,8 +20215,8 @@
     {
       "extension": ".py",
       "path": "tests/test_verification_persistence.py",
-      "sha256": "d378a86b75fe47d4145d1f69de4e78ac5f23207ff6e2bfcba63b30f33b572f0d",
-      "size_bytes": 4313,
+      "sha256": "a2d04ba3fe94709ddaaab84e567944308e04e8cb83137da2b36074949fa5a70d",
+      "size_bytes": 4397,
       "top_level": "tests"
     },
     {
@@ -20185,7 +20269,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-18T23:13:57.195405+00:00",
+  "generated_at_utc": "2026-08-18T23:52:38.059732+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

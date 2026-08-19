@@ -242,9 +242,10 @@ def test_run_loop_and_orchestration_receipts(tmp_path: Path):
     run = store.start("RECOVERY", state_path=tmp_path / "state")
     orch = store.orchestrate(
         run["run_id"],
-        [["python", "-m", "project_pipeline", "control", "completion", "--root", "."]],
+        [[sys.executable, str(ROOT / "scripts" / "campaign_probe.py")]],
     )
-    assert orch["orchestration_receipts"][0]["executed"] is False
+    assert orch["orchestration_receipts"][0]["executed"] is True
+    assert orch["orchestration_receipts"][0]["exit_code"] == 0
     assert orch["orchestration_receipts"][0]["command_sha256"]
     store.close()
 

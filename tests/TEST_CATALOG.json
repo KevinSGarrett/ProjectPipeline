@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 518,
+  "test_count": 538,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -441,6 +441,106 @@
       "callable": "test_copying_arbitrary_json_cannot_pass_pp384",
       "path": "tests/test_cursor_cli_qualification.py",
       "test_id": "TEST-C11-QUAL-001"
+    },
+    {
+      "callable": "test_pp384_admission_requires_all_five_stages",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-001"
+    },
+    {
+      "callable": "test_campaign_rejects_dirty_worktree_and_failed_pp384",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-002"
+    },
+    {
+      "callable": "test_campaign_runs_recovery_and_admits_24h",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-003"
+    },
+    {
+      "callable": "test_advance_does_not_shorten_24h",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-004"
+    },
+    {
+      "callable": "test_seeded_attested_24h_auto_admits_72h",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-005"
+    },
+    {
+      "callable": "test_identity_drift_disqualifies",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-006"
+    },
+    {
+      "callable": "test_clock_rollback_and_fence_mismatch_disqualify",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-007"
+    },
+    {
+      "callable": "test_stale_timed_runner_preserves_disqualified_and_starts_fresh",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-008"
+    },
+    {
+      "callable": "test_allowlist_rejects_untrusted_and_executes_probe",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-009"
+    },
+    {
+      "callable": "test_campaign_execute_persists_truthful_receipt",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-010"
+    },
+    {
+      "callable": "test_finalize_after_seeded_72h",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-011"
+    },
+    {
+      "callable": "test_schema_comes_from_catalog",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-012"
+    },
+    {
+      "callable": "test_concurrent_campaign_rejected",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-013"
+    },
+    {
+      "callable": "test_health_reports_no_simulated_elapsed",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-014"
+    },
+    {
+      "callable": "test_cli_health_and_stop",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-015"
+    },
+    {
+      "callable": "test_inspect_worktree_identity_reports_git_fields",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-016"
+    },
+    {
+      "callable": "test_orchestrate_executes_allowlisted_probe",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-017"
+    },
+    {
+      "callable": "test_hidden_campaign_launcher_declares_windows_contract",
+      "path": "tests/test_autonomy_campaign_windows.py",
+      "test_id": "TEST-CAMP-018"
+    },
+    {
+      "callable": "test_hidden_campaign_launcher_dry_run",
+      "path": "tests/test_autonomy_campaign_windows.py",
+      "test_id": "TEST-CAMP-019"
+    },
+    {
+      "callable": "test_recovery_task_plan_is_hidden_and_non_interactive",
+      "path": "tests/test_autonomy_campaign_windows.py",
+      "test_id": "TEST-CAMP-020"
     },
     {
       "callable": "test_agui_run_requires_lifecycle_bookends",
