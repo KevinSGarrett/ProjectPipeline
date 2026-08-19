@@ -12,7 +12,7 @@ from pydantic import Field, field_validator, model_validator
 
 from project_pipeline.domain.base import DomainModel
 from project_pipeline.domain.identifiers import IdentifierKind, validate_identifier
-from project_pipeline.io import read_json, sha256_file, write_json
+from project_pipeline.io import read_json, sha256_canonical_file, write_json
 
 
 class MigrationError(RuntimeError):
@@ -137,13 +137,13 @@ def _record(
         reversible=reversible,
         compatibility_phase=compatibility_phase,
         sqlite_up_path=sqlite_up,
-        sqlite_up_sha256=sha256_file(root / sqlite_up),
+        sqlite_up_sha256=sha256_canonical_file(root / sqlite_up),
         sqlite_down_path=sqlite_down if reversible else None,
-        sqlite_down_sha256=sha256_file(root / sqlite_down) if reversible else None,
+        sqlite_down_sha256=sha256_canonical_file(root / sqlite_down) if reversible else None,
         postgresql_up_path=postgres_up,
-        postgresql_up_sha256=sha256_file(root / postgres_up),
+        postgresql_up_sha256=sha256_canonical_file(root / postgres_up),
         postgresql_down_path=postgres_down if reversible else None,
-        postgresql_down_sha256=sha256_file(root / postgres_down) if reversible else None,
+        postgresql_down_sha256=sha256_canonical_file(root / postgres_down) if reversible else None,
     )
 
 
@@ -339,6 +339,15 @@ def write_migration_catalog(root: Path) -> MigrationCatalog:
                 reversible=True,
                 compatibility_phase="EXPAND",
             ),
+            _record(
+                root,
+                migration_id="PPDB-0022",
+                sequence=22,
+                name="autonomy_campaign",
+                depends_on=("PPDB-0021",),
+                reversible=True,
+                compatibility_phase="EXPAND",
+            ),
         )
     )
     write_json(_catalog_path(root), catalog.model_dump(mode="json"))
@@ -367,7 +376,7 @@ def validate_migration_catalog(root: Path) -> list[str]:
             file = root / relative
             if not file.exists():
                 errors.append(f"migration file is missing: {relative}")
-            elif sha256_file(file) != expected:
+            elif sha256_canonical_file(file) != expected:
                 errors.append(f"migration digest is stale: {relative}")
     return errors
 

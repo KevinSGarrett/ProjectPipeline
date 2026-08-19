@@ -1,7 +1,7 @@
 # PP-STORY-000143 — Source Context
 
 - Title: Unattended operation, release, and Completion qualification
-- Plan: `PLAN-CTRL-003:SEC-06:L000034-L000037`
+- Plan: `PLAN-CTRL-003:SEC-06:L000034-L000039`
 - Requirements: `REQ-PDEF-0011`
 
 ## Canonical source references

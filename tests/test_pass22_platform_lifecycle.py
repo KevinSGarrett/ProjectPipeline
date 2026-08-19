@@ -377,6 +377,9 @@ def test_ppdb_0018_store_and_rollback(project_root, tmp_path):
         runner = SQLiteMigrationRunner(s.db, project_root)
         runner.rollback_last()
         ids = {x[0] for x in s.db.execute("SELECT migration_id FROM schema_migrations")}
+        assert "PPDB-0022" not in ids and "PPDB-0021" in ids
+        runner.rollback_last()
+        ids = {x[0] for x in s.db.execute("SELECT migration_id FROM schema_migrations")}
         assert "PPDB-0021" not in ids and "PPDB-0020" in ids
         runner.rollback_last()
         ids = {x[0] for x in s.db.execute("SELECT migration_id FROM schema_migrations")}

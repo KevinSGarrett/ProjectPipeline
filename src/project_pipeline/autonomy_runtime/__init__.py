@@ -1,3 +1,4 @@
+from project_pipeline.autonomy_runtime.campaign import CampaignController
 from project_pipeline.autonomy_runtime.golden import GoldenJourneyHarness, validate_evidence_map
 from project_pipeline.autonomy_runtime.lanes import LaneIncident, LaneLease, LaneRegistry
 from project_pipeline.autonomy_runtime.qualification import QualificationStore
@@ -11,6 +12,7 @@ from project_pipeline.autonomy_runtime.supervisor import DispatchReceipt, Persis
 
 __all__ = [
     "AutonomyRuntimeService",
+    "CampaignController",
     "DispatchReceipt",
     "DurableRecoveryService",
     "GoldenJourneyHarness",

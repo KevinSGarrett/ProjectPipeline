@@ -35,6 +35,11 @@
     "runbooks/autonomy_runtime"
   ],
   "expected_implementation_artifacts": [
+    "src/project_pipeline/autonomy_runtime/campaign.py",
+    "src/project_pipeline/autonomy_runtime/command_execution.py",
+    "scripts/run_autonomy_campaign.py",
+    "scripts/start_autonomy_campaign_hidden.ps1",
+    "scripts/register_autonomy_campaign_recovery.ps1",
     "scripts/run_autonomy_qualification.py",
     "runbooks/autonomy_runtime/unattended_operation.md"
   ],
@@ -55,9 +60,9 @@
   "plan_references": [
     {
       "authoritative_path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
-      "end_line": 37,
+      "end_line": 39,
       "line_numbered_path": "plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt",
-      "line_reference": "PLAN-CTRL-003:SEC-06:L000034-L000037",
+      "line_reference": "PLAN-CTRL-003:SEC-06:L000034-L000039",
       "plan_id": "PLAN-CTRL-003",
       "section_id": "PLAN-CTRL-003:SEC-06",
       "start_line": 34
@@ -75,7 +80,13 @@
     }
   ],
   "remote_jira_key": null,
-  "required_tests": [],
+  "required_tests": [
+    "TEST-CAMP-001",
+    "TEST-CAMP-002",
+    "TEST-CAMP-003",
+    "TEST-CAMP-004",
+    "TEST-CAMP-005"
+  ],
   "requirement_ids": [
     "REQ-PDEF-0011"
   ],

@@ -34,6 +34,8 @@
     "runbooks/autonomy_runtime"
   ],
   "expected_implementation_artifacts": [
+    "src/project_pipeline/autonomy_runtime/campaign.py",
+    "scripts/run_autonomy_campaign.py",
     "scripts/run_autonomy_qualification.py",
     "runbooks/autonomy_runtime/unattended_operation.md"
   ],
@@ -54,9 +56,9 @@
   "plan_references": [
     {
       "authoritative_path": "plans/03_control_and_orchestration/PLAN-CTRL-003_autonomous_runtime_integration.md",
-      "end_line": 37,
+      "end_line": 39,
       "line_numbered_path": "plans/_line_numbered/PLAN-CTRL-003_autonomous_runtime_integration.lines.txt",
-      "line_reference": "PLAN-CTRL-003:SEC-06:L000034-L000037",
+      "line_reference": "PLAN-CTRL-003:SEC-06:L000034-L000039",
       "plan_id": "PLAN-CTRL-003",
       "section_id": "PLAN-CTRL-003:SEC-06",
       "start_line": 34
