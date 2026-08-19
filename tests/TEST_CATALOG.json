@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 563,
+  "test_count": 568,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -201,6 +201,11 @@
       "callable": "ArchiveTests.test_wrong_root_is_reported",
       "path": "tests/test_archive.py",
       "test_id": "TEST-ARCHIVE-002"
+    },
+    {
+      "callable": "ArchiveTests.test_archive_rejects_changed_files_subset",
+      "path": "tests/test_archive.py",
+      "test_id": "TEST-ARCHIVE-003"
     },
     {
       "callable": "ArchitectureRegistryTests.test_local_artifact_store_deduplicates_and_detects_corruption",
@@ -1373,6 +1378,21 @@
       "test_id": "TEST-GITHUB-STEWARDSHIP-002"
     },
     {
+      "callable": "test_post_merge_refresh_preserves_dirty_pinned_and_root",
+      "path": "tests/test_governance_post_merge_refresh.py",
+      "test_id": "TEST-GOV-POSTMERGE-001"
+    },
+    {
+      "callable": "test_post_merge_refresh_closes_only_clean_eligible_worktree",
+      "path": "tests/test_governance_post_merge_refresh.py",
+      "test_id": "TEST-GOV-POSTMERGE-002"
+    },
+    {
+      "callable": "test_post_merge_refresh_rejects_identity_mismatch",
+      "path": "tests/test_governance_post_merge_refresh.py",
+      "test_id": "TEST-GOV-POSTMERGE-003"
+    },
+    {
       "callable": "IdentifierTests.test_valid_identifiers_match",
       "path": "tests/test_ids.py",
       "test_id": "TEST-IDS-001"
@@ -2056,6 +2076,11 @@
       "callable": "test_pass24_release_hardening_validator_is_clean_after_generated_assets",
       "path": "tests/test_pass24_release_hardening.py",
       "test_id": "TEST-REL-HARDEN-015"
+    },
+    {
+      "callable": "test_continuation_package_from_detached_head_without_default_branch",
+      "path": "tests/test_release_continuation_and_post_deploy.py",
+      "test_id": "TEST-REL-CONT-002"
     },
     {
       "callable": "test_local_post_deployment_pipeline_cannot_finalize_on_incomplete_or_non_live",

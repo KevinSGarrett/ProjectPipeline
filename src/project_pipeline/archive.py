@@ -62,11 +62,53 @@ def create_archive(root: Path, output: Path) -> Path:
     return output
 
 
+def verify_archive_completeness(
+    archive_path: Path,
+    source_root: Path,
+    *,
+    expected_root: str | None = None,
+) -> list[str]:
+    """Reject a changed-files subset. A delivered archive must hold the full workspace."""
+
+    source_root = source_root.resolve()
+    prefix = expected_root or source_root.name
+    expected = {
+        path.relative_to(source_root).as_posix()
+        for path in iter_repository_files(source_root)
+        if path.suffix.lower() not in ARCHIVE_EXCLUDED_SUFFIXES
+    }
+    errors: list[str] = []
+    try:
+        with zipfile.ZipFile(archive_path, "r") as archive:
+            members: set[str] = set()
+            for name in archive.namelist():
+                if name.endswith("/"):
+                    continue
+                parts = PurePosixPath(name).parts
+                if not parts:
+                    continue
+                if parts[0] != prefix:
+                    continue
+                members.add("/".join(parts[1:]))
+    except zipfile.BadZipFile as error:
+        return [f"Invalid ZIP archive: {error}"]
+    missing = sorted(expected - members)
+    if missing:
+        errors.append(
+            "archive is a changed-files subset or incomplete workspace; "
+            f"missing {len(missing)} canonical files"
+        )
+    if not expected:
+        errors.append("source workspace has no archivable files")
+    return errors
+
+
 def verify_archive(
     archive_path: Path,
     expected_root: str | None = None,
     *,
     enforce_repository_policy: bool = True,
+    source_root: Path | None = None,
 ) -> ArchiveVerification:
     archive_path = archive_path.resolve()
     report = ArchiveVerification(str(archive_path), expected_root)
@@ -116,4 +158,10 @@ def verify_archive(
                 report.warnings.append(f"Archive has multiple roots: {sorted(roots)!r}")
     except zipfile.BadZipFile as error:
         report.errors.append(f"Invalid ZIP archive: {error}")
+    if source_root is not None:
+        report.errors.extend(
+            verify_archive_completeness(
+                archive_path, source_root, expected_root=expected_root or source_root.name
+            )
+        )
     return report
