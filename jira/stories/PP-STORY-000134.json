@@ -43,12 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/17_release_and_handoff/PLAN-REL-001_release_handoff.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "domain-rel",
-    "cluster-archive"
+    "cluster-archive",
+    "domain-rel"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -97,6 +97,6 @@
     "GOV-001:L001884-L001927"
   ],
   "state": "BACKLOG",
-  "title": "Archive \u2014 Release and Handoff",
+  "title": "Archive — Release and Handoff",
   "upstream_dependencies": []
 }

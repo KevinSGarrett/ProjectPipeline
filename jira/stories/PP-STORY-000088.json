@@ -43,12 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "domain-gov",
-    "cluster-structure"
+    "cluster-structure",
+    "domain-gov"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -102,6 +102,6 @@
     "SRC-007:L001129-L001167"
   ],
   "state": "BACKLOG",
-  "title": "Structure \u2014 Jira and Repository Governance",
+  "title": "Structure — Jira and Repository Governance",
   "upstream_dependencies": []
 }

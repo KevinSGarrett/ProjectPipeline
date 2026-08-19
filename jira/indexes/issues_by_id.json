@@ -4588,12 +4588,12 @@
     "expected_implementation_artifacts": [
       "plans/00_project_definition/PLAN-PDEF-001_project_definition.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-pdef",
-      "cluster-boundaries"
+      "cluster-boundaries",
+      "domain-pdef"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -4882,12 +4882,12 @@
       "plans/00_project_definition/PLAN-PDEF-001_project_definition.md",
       "src/project_pipeline/intake/profiles.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-pdef",
-      "cluster-mission"
+      "cluster-mission",
+      "domain-pdef"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -9220,12 +9220,12 @@
     "expected_implementation_artifacts": [
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-gov",
-      "cluster-merge"
+      "cluster-merge",
+      "domain-gov"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -9327,12 +9327,12 @@
     "expected_implementation_artifacts": [
       "plans/07_jira_and_repository_governance/PLAN-GOV-001_jira_repository_governance.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-gov",
-      "cluster-structure"
+      "cluster-structure",
+      "domain-gov"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -14677,12 +14677,12 @@
     "expected_implementation_artifacts": [
       "plans/17_release_and_handoff/PLAN-REL-001_release_handoff.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-rel",
-      "cluster-archive"
+      "cluster-archive",
+      "domain-rel"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -14880,12 +14880,12 @@
     "expected_implementation_artifacts": [
       "plans/17_release_and_handoff/PLAN-REL-001_release_handoff.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
-      "domain-rel",
-      "cluster-handoff"
+      "cluster-handoff",
+      "domain-rel"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",

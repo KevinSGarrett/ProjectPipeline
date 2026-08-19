@@ -8676,10 +8676,15 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "GOV",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000179"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/governance/instruction_system.py",
+      "instructions/INSTRUCTION_COVERAGE_MATRIX.json"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000088"
@@ -8711,7 +8716,10 @@
       "instruction-contract",
       "structure"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-GOV-INSTR-001",
+      "TEST-GOV-INSTR-002"
+    ],
     "title": "Modular instruction system",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -9613,10 +9621,15 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "GOV",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000180"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/governance/review_director.py",
+      "src/project_pipeline/github_steward/autonomous_review.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000087"
@@ -9648,7 +9661,10 @@
       "merge",
       "review-director"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-GOV-REVIEW-001",
+      "TEST-GOV-REVIEW-002"
+    ],
     "title": "Review Director",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -9727,10 +9743,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "GOV",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000181"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/governance/post_merge_refresh.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000087"
@@ -9762,7 +9782,12 @@
       "merge",
       "post-merge"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-GOV-POSTMERGE-001",
+      "TEST-GOV-POSTMERGE-002",
+      "TEST-GOV-POSTMERGE-003",
+      "TEST-GOV-POSTMERGE-004"
+    ],
     "title": "Post-merge cleanup and reconciliation",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -9949,10 +9974,15 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "GOV",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000182"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/governance/framework_version.py",
+      "config/version_compatibility.json"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000015",
       "PP-STORY-000088"
@@ -9984,7 +10014,10 @@
       "gov",
       "structure"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-GOV-VER-001",
+      "TEST-GOV-VER-002"
+    ],
     "title": "Framework version record",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -13816,10 +13849,15 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "PDEF",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000185"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/governance/product_profile.py",
+      "config/project.json"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000001",
       "PP-STORY-000051"
@@ -13852,7 +13890,10 @@
       "mission",
       "pdef"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-PDEF-PROFILE-001",
+      "TEST-PDEF-PROFILE-002"
+    ],
     "title": "Local-first baseline",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -13864,10 +13905,15 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "PDEF",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000185"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/governance/product_profile.py",
+      "config/project.json"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000001",
       "PP-STORY-000049"
@@ -13900,7 +13946,10 @@
       "cost-boundary",
       "pdef"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-PDEF-PROFILE-001",
+      "TEST-PDEF-PROFILE-002"
+    ],
     "title": "No paid-service dependency by default",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -13970,10 +14019,15 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "PDEF",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000186"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/governance/product_profile.py",
+      "config/project.json"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000001",
       "PP-STORY-000049"
@@ -14005,7 +14059,9 @@
       "non-goal",
       "pdef"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-PDEF-PROFILE-001"
+    ],
     "title": "Consumer chat automation exclusion",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -14555,10 +14611,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "REL",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000183"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/release_hardening/continuation.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000035",
       "PP-STORY-000136"
@@ -14590,7 +14650,11 @@
       "rehydration",
       "rel"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-REL-CONT-001",
+      "TEST-REL-CONT-002",
+      "TEST-REL-CONT-003"
+    ],
     "title": "AI continuation handoff",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -14602,10 +14666,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "REL",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000184"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/archive.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000035",
       "PP-STORY-000134"
@@ -14637,7 +14705,11 @@
       "cumulative-archive",
       "rel"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-ARCHIVE-001",
+      "TEST-ARCHIVE-002",
+      "TEST-ARCHIVE-003"
+    ],
     "title": "Cumulative archive completeness",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."

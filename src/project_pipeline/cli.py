@@ -131,6 +131,7 @@ from project_pipeline.domain.context import (
     ProviderEgress,
     ReceiptStatus,
 )
+from project_pipeline.domain.github import AutonomousReviewReceipt
 from project_pipeline.domain.orchestration import (
     DurableBackendKind,
     WorkflowDefinition,
@@ -152,6 +153,10 @@ from project_pipeline.github_steward import (
     evaluate_protection_drift,
     prove_consolidation,
 )
+from project_pipeline.governance.framework_version import evaluate_framework_version
+from project_pipeline.governance.instruction_system import evaluate_instruction_system
+from project_pipeline.governance.product_profile import evaluate_product_profile
+from project_pipeline.governance.review_director import coordinate_independent_review
 from project_pipeline.intake import (
     BootstrapError,
     DiscoveryError,
@@ -390,6 +395,27 @@ def build_parser() -> argparse.ArgumentParser:
     release_hardening.add_argument("--live-target", action="store_true")
     release_hardening.add_argument("--evidence-id", action="append", default=[])
     release_hardening.add_argument("--json-output", type=Path)
+
+    governance = commands.add_parser(
+        "governance",
+        help="Evaluate instruction coverage, review director, versions, and product profile",
+    )
+    governance.add_argument(
+        "action",
+        choices=(
+            "instruction-system",
+            "review-director",
+            "framework-version",
+            "product-profile",
+            "continuation-freshness",
+        ),
+    )
+    governance.add_argument("--root", type=_root, default=Path.cwd())
+    governance.add_argument("--review-receipt", type=Path)
+    governance.add_argument("--expected-head-sha")
+    governance.add_argument("--expected-tree-sha")
+    governance.add_argument("--implementer-id", default="actor:cycle-014-combined")
+    governance.add_argument("--json-output", type=Path)
 
     validate = commands.add_parser("validate", help="Run repository-contract validation")
     validate.add_argument("--root", type=_root, default=Path.cwd())
@@ -1342,6 +1368,39 @@ def _github_adapter(args: argparse.Namespace, configuration: Any):
         )
     token = _secret_resolver(args).resolve(token_ref)
     return GitHubRestAdapter(token=token)
+
+
+def _run_governance_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    root = args.root
+    if args.action == "instruction-system":
+        payload = evaluate_instruction_system(root)
+        return payload, 0 if payload.get("ok") else 1
+    if args.action == "framework-version":
+        payload = evaluate_framework_version(root)
+        return payload, 0 if payload.get("ok") else 1
+    if args.action == "product-profile":
+        payload = evaluate_product_profile(root)
+        return payload, 0 if payload.get("ok") else 1
+    if args.action == "continuation-freshness":
+        package = build_continuation_package(root)
+        freshness = package.get("freshness") or {}
+        return {"continuation_package": package, "freshness": freshness}, (
+            0 if freshness.get("fresh") else 1
+        )
+    if args.review_receipt is None or not args.expected_head_sha or not args.expected_tree_sha:
+        raise ConfigurationError(
+            "review-director requires --review-receipt, --expected-head-sha, and --expected-tree-sha"
+        )
+    receipt = AutonomousReviewReceipt.model_validate_json(
+        Path(args.review_receipt).read_text(encoding="utf-8")
+    )
+    payload = coordinate_independent_review(
+        receipt,
+        expected_head_sha=args.expected_head_sha,
+        expected_tree_sha=args.expected_tree_sha,
+        implementer_id=args.implementer_id,
+    )
+    return payload, 0 if payload.get("accepted") else 1
 
 
 def _run_repository_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -3352,6 +3411,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 write_quality_report(report, args.json_output)
             _write_json_output(report.as_dict(), None)
             return 0 if report.ok else 1
+        if args.command == "governance":
+            payload, code = _run_governance_command(args)
+            _write_json_output(payload, args.json_output)
+            return code
         if args.command == "release-hardening":
             result, code = _run_release_hardening_command(args)
             _write_json_output(result, args.json_output)

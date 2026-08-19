@@ -126,7 +126,7 @@
 {"evidence_ids": ["EVID-000004", "EVID-000005", "EVID-000006", "EVID-000011"], "requirement_id": "REQ-GOV-0003"}
 {"evidence_ids": ["EVID-000005", "EVID-000006", "EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0004"}
 {"evidence_ids": ["EVID-000022", "EVID-000027"], "requirement_id": "REQ-GOV-0005"}
-{"evidence_ids": [], "requirement_id": "REQ-GOV-0006"}
+{"evidence_ids":["EVID-000179"],"requirement_id":"REQ-GOV-0006"}
 {"evidence_ids": ["EVID-000169"], "requirement_id": "REQ-GOV-0007"}
 {"evidence_ids": ["EVID-000043", "EVID-000045", "EVID-000046", "EVID-000047", "EVID-000048"], "requirement_id": "REQ-GOV-0008"}
 {"evidence_ids": ["EVID-000043"], "requirement_id": "REQ-GOV-0009"}
@@ -140,12 +140,12 @@
 {"evidence_ids": ["EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0017"}
 {"evidence_ids": ["EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0018"}
 {"evidence_ids": ["EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0019"}
-{"evidence_ids": [], "requirement_id": "REQ-GOV-0020"}
+{"evidence_ids":["EVID-000180"],"requirement_id":"REQ-GOV-0020"}
 {"evidence_ids": ["EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0021"}
-{"evidence_ids": [], "requirement_id": "REQ-GOV-0022"}
+{"evidence_ids":["EVID-000181"],"requirement_id":"REQ-GOV-0022"}
 {"evidence_ids": ["EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053"], "requirement_id": "REQ-GOV-0023"}
 {"evidence_ids": ["EVID-000043", "EVID-000046", "EVID-000047", "EVID-000048", "EVID-000049", "EVID-000050", "EVID-000051", "EVID-000052", "EVID-000053", "EVID-000075", "EVID-000076"], "requirement_id": "REQ-GOV-0024"}
-{"evidence_ids": [], "requirement_id": "REQ-GOV-0025"}
+{"evidence_ids":["EVID-000182"],"requirement_id":"REQ-GOV-0025"}
 {"evidence_ids": ["EVID-000129", "EVID-000132", "EVID-000164"], "requirement_id": "REQ-INFRA-0001"}
 {"evidence_ids": ["EVID-000005", "EVID-000006", "EVID-000008", "EVID-000022", "EVID-000024", "EVID-000026", "EVID-000027", "EVID-000164"], "requirement_id": "REQ-INFRA-0002"}
 {"evidence_ids": ["EVID-000005", "EVID-000006", "EVID-000007", "EVID-000022", "EVID-000024", "EVID-000027"], "requirement_id": "REQ-INFRA-0003"}
@@ -208,10 +208,10 @@
 {"evidence_ids": ["EVID-000036", "EVID-000037"], "requirement_id": "REQ-PDEF-0004"}
 {"evidence_ids": ["EVID-000036", "EVID-000039", "EVID-000041", "EVID-000042"], "requirement_id": "REQ-PDEF-0005"}
 {"evidence_ids": ["EVID-000035", "EVID-000036", "EVID-000037", "EVID-000038", "EVID-000039", "EVID-000040", "EVID-000041", "EVID-000042"], "requirement_id": "REQ-PDEF-0006"}
-{"evidence_ids": [], "requirement_id": "REQ-PDEF-0007"}
-{"evidence_ids": [], "requirement_id": "REQ-PDEF-0008"}
+{"evidence_ids":["EVID-000185"],"requirement_id":"REQ-PDEF-0007"}
+{"evidence_ids":["EVID-000185"],"requirement_id":"REQ-PDEF-0008"}
 {"evidence_ids": ["EVID-000022", "EVID-000027"], "requirement_id": "REQ-PDEF-0009"}
-{"evidence_ids": [], "requirement_id": "REQ-PDEF-0010"}
+{"evidence_ids":["EVID-000186"],"requirement_id":"REQ-PDEF-0010"}
 {"evidence_ids": [], "requirement_id": "REQ-PDEF-0011"}
 {"evidence_ids": ["EVID-000005", "EVID-000006", "EVID-000008"], "requirement_id": "REQ-REL-0001"}
 {"evidence_ids": ["EVID-000005", "EVID-000006"], "requirement_id": "REQ-REL-0002"}
@@ -221,8 +221,8 @@
 {"evidence_ids": ["EVID-000169", "EVID-000170"], "requirement_id": "REQ-REL-0006"}
 {"evidence_ids": ["EVID-000164", "EVID-000165"], "requirement_id": "REQ-REL-0007"}
 {"evidence_ids": ["EVID-000164"], "requirement_id": "REQ-REL-0008"}
-{"evidence_ids": [], "requirement_id": "REQ-REL-0009"}
-{"evidence_ids": [], "requirement_id": "REQ-REL-0010"}
+{"evidence_ids":["EVID-000183"],"requirement_id":"REQ-REL-0009"}
+{"evidence_ids":["EVID-000184"],"requirement_id":"REQ-REL-0010"}
 {"evidence_ids": ["EVID-000164"], "requirement_id": "REQ-REL-0011"}
 {"evidence_ids": ["EVID-000164"], "requirement_id": "REQ-REL-0012"}
 {"evidence_ids": ["EVID-000171"], "requirement_id": "REQ-REL-0013"}

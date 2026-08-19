@@ -43,12 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/00_project_definition/PLAN-PDEF-001_project_definition.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "domain-pdef",
-    "cluster-boundaries"
+    "cluster-boundaries",
+    "domain-pdef"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -101,6 +101,6 @@
     "SRC-009:L000080-L000095"
   ],
   "state": "BACKLOG",
-  "title": "Boundaries \u2014 Project Definition and Scope",
+  "title": "Boundaries — Project Definition and Scope",
   "upstream_dependencies": []
 }

@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 589,
+  "test_count": 599,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -1488,6 +1488,51 @@
       "test_id": "TEST-GOV-POSTMERGE-003"
     },
     {
+      "callable": "test_instruction_system_covers_required_modules",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-GOV-INSTR-001"
+    },
+    {
+      "callable": "test_instruction_system_fails_closed_when_primary_missing",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-GOV-INSTR-002"
+    },
+    {
+      "callable": "test_review_director_rejects_self_review",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-GOV-REVIEW-001"
+    },
+    {
+      "callable": "test_review_director_accepts_distinct_read_only_reviewer",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-GOV-REVIEW-002"
+    },
+    {
+      "callable": "test_framework_version_records_current_catalog",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-GOV-VER-001"
+    },
+    {
+      "callable": "test_framework_version_reports_migration_drift",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-GOV-VER-002"
+    },
+    {
+      "callable": "test_product_profile_is_local_first_without_paid_or_chat_dependency",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-PDEF-PROFILE-001"
+    },
+    {
+      "callable": "test_product_profile_rejects_paid_default",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-PDEF-PROFILE-002"
+    },
+    {
+      "callable": "test_post_merge_refresh_classifies_local_jira_mirror",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-GOV-POSTMERGE-004"
+    },
+    {
       "callable": "IdentifierTests.test_valid_identifiers_match",
       "path": "tests/test_ids.py",
       "test_id": "TEST-IDS-001"
@@ -2111,6 +2156,11 @@
       "callable": "test_continuation_package_from_detached_head_without_default_branch",
       "path": "tests/test_release_continuation_and_post_deploy.py",
       "test_id": "TEST-REL-CONT-002"
+    },
+    {
+      "callable": "test_continuation_freshness_fails_after_later_merge",
+      "path": "tests/test_autonomous_governance.py",
+      "test_id": "TEST-REL-CONT-003"
     },
     {
       "callable": "test_pass24_upstream_gate_covers_exact_candidates_and_blocks_agpl_activation",
