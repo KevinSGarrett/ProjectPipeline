@@ -6,6 +6,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.assurance.requirement_reconciliation import text_contains_whole_markers
 from project_pipeline.io import read_json, read_jsonl, write_json
 
 ALLOWED = {
@@ -107,7 +108,7 @@ def _disposition(
         return "IMPLEMENTED_VERIFIED", "implementation paths and evidence or tests are bound"
     if state == "PARTIALLY_IMPLEMENTED" and existing and tests and not planned_only:
         return "IMPLEMENTED_VERIFIED", "partial label understates existing implementation and tests"
-    if any(marker in statement for marker in EXTERNAL_MARKERS) and state not in {
+    if text_contains_whole_markers(statement, EXTERNAL_MARKERS) and state not in {
         "IMPLEMENTED",
         "LIVE_VERIFIED",
     }:

@@ -38,6 +38,27 @@ EXTERNAL_MARKERS = (
     "completion gate",
     "final completion",
 )
+
+
+def text_contains_whole_markers(text: str, markers: tuple[str, ...]) -> bool:
+    """True only for whole-token markers. 'deliver' must not match 'live'."""
+
+    if not text or not markers:
+        return False
+    pattern = re.compile(
+        r"(?<![a-z0-9])(?:"
+        + "|".join(re.escape(marker.casefold()) for marker in markers)
+        + r")(?![a-z0-9])"
+    )
+    return pattern.search(text.casefold()) is not None
+
+
+def contains_external_marker(text: str) -> bool:
+    """True only for whole-token live/timed markers. 'deliver' must not match 'live'."""
+
+    return text_contains_whole_markers(text, EXTERNAL_MARKERS)
+
+
 EXTERNAL_TASK_IDS = {"PP-TASK-000384", "PP-TASK-000385"}
 GENERATED_PREFIXES = ("docs/generated/", "evidence/generated/")
 MOCK_ENVIRONMENTS = {"mock", "simulated", "fixture", "dry-run"}
@@ -217,7 +238,7 @@ def _evaluate_requirement(
     statement = " ".join(
         str(item.get(key, "")) for key in ("statement", "title", "acceptance_summary")
     ).lower()
-    if any(marker in statement for marker in EXTERNAL_MARKERS):
+    if contains_external_marker(statement):
         return {
             **base,
             "reason": "live, timed, or Completion Gate behavior cannot use presence-only proof",
@@ -264,7 +285,7 @@ def _evaluate_requirement(
             now=now,
             current_sha=current_sha,
             current_tree=current_tree,
-            live_required=any(marker in statement for marker in ("live", "unattended")),
+            live_required=contains_external_marker(statement),
         )
         if reason:
             return {**base, "reason": reason}

@@ -6,6 +6,7 @@ from pathlib import Path
 
 from project_pipeline.assurance.requirement_reconciliation import (
     apply_evidence_bound_requirement_states,
+    contains_external_marker,
     evaluate_requirement_reconciliation,
     propose_evidence_bound_requirement_states,
 )
@@ -27,9 +28,17 @@ def _candidate_row() -> dict:
         and row.get("test_ids")
         and row.get("evidence_ids")
         and row["requirement_id"] not in {"REQ-PDEF-0011", "REQ-CTRL-0004"}
-        and "live" not in str(row.get("acceptance_summary", "")).lower()
-        and "24-hour" not in str(row.get("acceptance_summary", "")).lower()
+        and not contains_external_marker(
+            " ".join(str(row.get(key, "")) for key in ("statement", "title", "acceptance_summary"))
+        )
     )
+
+
+def test_deliver_is_not_an_external_live_marker() -> None:
+    assert contains_external_marker("Qualify live unattended Windows service")
+    assert contains_external_marker("final Completion Gate")
+    assert not contains_external_marker("Deliver the accepted requirements")
+    assert not contains_external_marker("delivery progress and olive-colored UI")
 
 
 def _seed_valid(tmp_path: Path, row: dict, *, evidence_updates: dict | None = None) -> dict:

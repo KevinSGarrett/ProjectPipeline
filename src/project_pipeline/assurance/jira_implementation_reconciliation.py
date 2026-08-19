@@ -9,9 +9,9 @@ from typing import Any
 
 from project_pipeline.assurance.evidence import load_evidence
 from project_pipeline.assurance.requirement_reconciliation import (
-    EXTERNAL_MARKERS,
     EXTERNAL_TASK_IDS,
     PROTECTED_REQUIREMENT_IDS,
+    contains_external_marker,
     path_fingerprint,
     test_catalog,
 )
@@ -203,27 +203,17 @@ def _evaluate_issue(
         )
     elif current_impl == "PARTIALLY_IMPLEMENTED" and complete_linked and artifacts_ok:
         projected_impl = "IMPLEMENTED"
-    live_wording = any(marker in _text_blob(issue) for marker in EXTERNAL_MARKERS)
+    live_wording = contains_external_marker(_text_blob(issue))
     protected = any(item.get("requirement_id") in PROTECTED_REQUIREMENT_IDS for item in linked)
-    if not complete_linked or live_wording or protected:
-        if projected_impl and projected_impl != current_impl:
+    if not complete_linked:
+        if projected_impl == "PARTIALLY_IMPLEMENTED" and not live_wording and not protected:
             return {
                 **base,
                 "accepted": True,
                 "next_implementation_state": projected_impl,
-                "reason": (
-                    "implementation projection from completed linked requirements; "
-                    "lifecycle stays short of DONE"
-                ),
+                "reason": "partial implementation projection from some completed linked requirements",
             }
-        if not complete_linked:
-            return {**base, "reason": "not every linked requirement is complete"}
-        if protected:
-            return {**base, "reason": "linked protected high-risk requirement"}
-        return {
-            **base,
-            "reason": "live, timed, or Completion Gate wording blocks presence-only DoD",
-        }
+        return {**base, "reason": "not every linked requirement is complete"}
     if not artifacts:
         return {**base, "reason": "expected implementation artifacts are missing"}
     if not artifacts_ok:
@@ -297,6 +287,25 @@ def _evaluate_issue(
             "reason": "implementation projection only; lifecycle stays on structural types",
         }
     next_impl = projected_impl or (None if current_impl == "IMPLEMENTED" else "IMPLEMENTED")
+    if live_wording or protected:
+        if next_impl is None:
+            return {
+                **base,
+                "reason": (
+                    "live or protected item already projected; lifecycle stays short of DONE"
+                ),
+            }
+        return {
+            **base,
+            "accepted": True,
+            "next_implementation_state": next_impl,
+            "completion_evidence": evidence_ids,
+            "verify_acceptance": True,
+            "reason": (
+                "cataloged tests and verified evidence support implementation; "
+                "live or protected lifecycle stays short of DONE"
+            ),
+        }
     next_life = None if issue.get("state") == "DONE" else "DONE"
     if next_impl is None and next_life is None:
         return {**base, "reason": "already projected implemented and DONE"}

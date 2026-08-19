@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "89813fb8f4e7a9b44c00647b7866ad523b3d8799c87780fee3496355049c352b",
+  "aggregate_sha256": "c92ec4dce4ab9768be8a6fbce36c32f351a9f3061d1d2291b9123957e331dfb5",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12047,8 +12047,8 @@
     },
     {
       "path": "src/project_pipeline/assurance/jira_implementation_reconciliation.py",
-      "sha256": "1ac91b3819b918b37a8e51ede586b1e939f5c589c59fa5a949e7719c99441542",
-      "size_bytes": 12983
+      "sha256": "05dbf9233590faafdc008c2c57b415a5bc43f66490e34841bf01b097f7885f9f",
+      "size_bytes": 13284
     },
     {
       "path": "src/project_pipeline/assurance/loop_guard.py",
@@ -12067,13 +12067,13 @@
     },
     {
       "path": "src/project_pipeline/assurance/requirement_reconciliation.py",
-      "sha256": "4362b7d701c54fa85f2575f5194b0b9a79dfb4710822b799772334cfc4a824dc",
-      "size_bytes": 16852
+      "sha256": "4d2453642f712767212dad5768f459418110afd1db6b6c2f80fa19a2299aab62",
+      "size_bytes": 17437
     },
     {
       "path": "src/project_pipeline/assurance/requirement_truth_ledger.py",
-      "sha256": "8e6a571e118b88362753ac3ecfc245357c01634adae6f1b50a810de70fc0756b",
-      "size_bytes": 11240
+      "sha256": "9c0f8c2be6c131310fca389e5a65312bdf8a5346f48493984d0430d1e4437ce1",
+      "size_bytes": 11335
     },
     {
       "path": "src/project_pipeline/assurance/scope.py",
@@ -13707,8 +13707,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "2a8448d25ad431d7f63943c2501ef6dd63840e0ad2664e888a0342f29807f1fb",
-      "size_bytes": 104821
+      "sha256": "7e5a8021e0556d87486841a5c1ca9c4ea1dbdf2d30c2934a75438f29f4fef2ae",
+      "size_bytes": 105212
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -13992,8 +13992,8 @@
     },
     {
       "path": "tests/test_jira_implementation_reconciliation.py",
-      "sha256": "4cdd72cebeb29570d2c42e7886b789664454aab9253caeed50fd9b0050520d19",
-      "size_bytes": 7435
+      "sha256": "1ed529a533c62fa779d72b0d4df50a8f0c5806207fc6e1c15d7b00543e7b30cb",
+      "size_bytes": 8070
     },
     {
       "path": "tests/test_jira_operational_alignment.py",
@@ -14187,8 +14187,8 @@
     },
     {
       "path": "tests/test_requirement_reconciliation.py",
-      "sha256": "7f18ce57ae1f2512af8270e440c0a55aec9a0b4e9167f0145804e71d941f2711",
-      "size_bytes": 8618
+      "sha256": "15671f4209cc3912eacb1b1fc476dd69c3ba100a46540a3d96786a4659745e01",
+      "size_bytes": 9011
     },
     {
       "path": "tests/test_requirement_registries.py",
@@ -14506,7 +14506,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T05:13:19.780255+00:00",
+  "generated_at_utc": "2026-08-19T05:43:18.433925+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14515,5 +14515,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25651504
+  "total_bytes": 25653904
 }
