@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import sqlite3
 import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
@@ -337,6 +338,7 @@ def test_schema_comes_from_catalog(tmp_path: Path):
         encoding="utf-8"
     )
     assert "CREATE TABLE IF NOT EXISTS campaign_runs" not in source
+    assert "apply PPDB-0022 rather than creating tables ad hoc" not in source
     controller.close()
 
 
@@ -959,3 +961,236 @@ def test_orchestrate_executes_allowlisted_probe(tmp_path: Path):
     assert orch["orchestration_receipts"][0]["executed"] is True
     assert orch["orchestration_receipts"][0]["exit_code"] == 0
     store.close()
+
+
+def test_missing_owner_bindings_names_ppdb_0023_not_0022():
+    from project_pipeline.autonomy_runtime.campaign import (
+        CampaignSchemaError,
+        required_migrations_for_missing_tables,
+    )
+
+    assert required_migrations_for_missing_tables(["campaign_owner_bindings"]) == ["PPDB-0023"]
+    assert required_migrations_for_missing_tables(["campaign_runs"]) == ["PPDB-0022"]
+    error = CampaignSchemaError(["campaign_owner_bindings"], ["PPDB-0023"])
+    assert "PPDB-0023" in str(error)
+    assert "apply PPDB-0022" not in str(error)
+    assert error.next_action["user_action_required"] is False
+    assert error.next_action["ad_hoc_tables_forbidden"] is True
+
+
+def test_legacy_0022_copy_upgrades_to_0023_with_incomplete_identity(tmp_path: Path):
+    from project_pipeline.autonomy_runtime.campaign import (
+        classify_campaign_database,
+        legacy_non_final_import_receipt,
+    )
+    from project_pipeline.persistence.migrations import SQLiteMigrationRunner
+
+    database = tmp_path / "legacy.sqlite3"
+    connection = sqlite3.connect(database)
+    connection.row_factory = sqlite3.Row
+    runner = SQLiteMigrationRunner(connection, ROOT)
+    runner.apply_all(target="PPDB-0022")
+    classification = classify_campaign_database(connection)
+    assert classification["latest_applied"] == "PPDB-0022"
+    assert classification["migration_required"] is True
+    assert classification["next_action"]["user_action_required"] is False
+    assert "campaign_owner_bindings" in classification["missing_tables"]
+    connection.execute(
+        """
+        INSERT INTO campaign_runs (
+            campaign_id, integrated_sha, integrated_tree, release_identity, stage,
+            qualification_run_id, fence, lease_id, process_id, service_identity,
+            state_path, last_event_sha256, started_at_utc, last_heartbeat_utc,
+            next_transition, retry_budget, last_probe, evidence_path,
+            pp384_evidence_path, status, window_broken, prior_campaign_id, lock_token
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        (
+            "QCAMP-legacy",
+            "a" * 40,
+            "b" * 40,
+            "REL-legacy",
+            "UNATTENDED_24_HOUR",
+            "QRUN-legacy",
+            "CFENCE-legacy",
+            "CLEASE-legacy",
+            51876,
+            "schtasks:ProjectPipelineAutonomyCampaign",
+            str(tmp_path / "state"),
+            "0" * 64,
+            datetime.now(UTC).isoformat(),
+            datetime.now(UTC).isoformat(),
+            "UNATTENDED_72_HOUR",
+            2,
+            "heartbeat:RUNNING",
+            str(tmp_path / "evidence"),
+            str(tmp_path / "pp384.json"),
+            "RUNNING",
+            0,
+            None,
+            "CLOCK-legacy",
+        ),
+    )
+    connection.execute(
+        """
+        INSERT INTO campaign_locks (lock_name, campaign_id, process_id, fence, acquired_at_utc)
+        VALUES ('active-campaign', 'QCAMP-legacy', 51876, 'CFENCE-legacy', ?)
+        """,
+        (datetime.now(UTC).isoformat(),),
+    )
+    connection.commit()
+    runner.apply_all(target="PPDB-0023")
+    assert runner.status().latest_applied == "PPDB-0023"
+    after = classify_campaign_database(connection)
+    assert after["migration_required"] is False
+    binding = dict(
+        connection.execute(
+            "SELECT * FROM campaign_owner_bindings WHERE lock_name = 'active-campaign'"
+        ).fetchone()
+    )
+    assert binding["process_id"] == 51876
+    assert binding["executable_identity"] == ""
+    assert binding["process_started_at_utc"] == ""
+    assert CampaignController._binding_complete(binding) is False
+    receipt = legacy_non_final_import_receipt(
+        campaign_id="QCAMP-legacy",
+        integrated_sha="a" * 40,
+        integrated_tree="b" * 40,
+        source_database=str(database),
+        latest_applied="PPDB-0023",
+    )
+    assert receipt["qualifies_release"] is False
+    assert receipt["admits_72_hour"] is False
+    assert receipt["admits_finalization"] is False
+    connection.close()
+
+
+def test_recover_refuses_live_foreign_qualification_owner(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    started = controller.admit_24h(started["campaign_id"])
+    foreign = {
+        "process_id": 777001,
+        "executable": "python.exe",
+        "started_at_utc": "2026-01-01T00:00:00+00:00",
+        "alive": True,
+    }
+
+    def fake_inspect(pid: int):
+        if int(pid) == 777001:
+            return foreign
+        if int(pid) == 51876:
+            return None
+        return inspect_process(int(pid))
+
+    monkeypatch.setattr("project_pipeline.autonomy_runtime.campaign.inspect_process", fake_inspect)
+    controller._db.execute(
+        "UPDATE campaign_locks SET process_id = 51876 WHERE lock_name = 'active-campaign'"
+    )
+    controller._db.execute(
+        "UPDATE qualification_locks SET process_id = 777001 WHERE lock_name = 'active-qualification'"
+    )
+    controller._db.commit()
+    with pytest.raises(ValueError, match="live qualification owner"):
+        controller.recover(started["campaign_id"])
+    assert controller.get(started["campaign_id"])["status"] == "RUNNING"
+    controller.close()
+
+
+def test_campaign_aware_health_requires_identity_not_pid_only():
+    from project_pipeline.autonomy_runtime.campaign import evaluate_campaign_aware_health
+
+    campaign = {
+        "status": "RUNNING",
+        "process_id": 51876,
+        "integrated_sha": "a" * 40,
+        "integrated_tree": "b" * 40,
+        "fence": "CFENCE-1",
+        "last_heartbeat_utc": datetime.now(UTC).isoformat(),
+    }
+    pid_only = evaluate_campaign_aware_health(
+        campaign=campaign,
+        pid_identity={"process_id": 51876},
+        campaign_lock_live=None,
+        heartbeat_max_age_seconds=90.0,
+    )
+    assert pid_only["healthy"] is False
+    assert "pid_only_insufficient" in pid_only["reasons"]
+    assert pid_only["user_action_required"] is False
+
+    reused = evaluate_campaign_aware_health(
+        campaign=campaign,
+        owner_binding={
+            "executable_identity": "python.exe",
+            "process_started_at_utc": "2026-01-01T00:00:00+00:00",
+        },
+        pid_identity={
+            "process_id": 51876,
+            "executable": "python.exe",
+            "started_at_utc": "2026-01-01T00:00:00+00:00",
+        },
+        campaign_lock_live={
+            "process_id": 51876,
+            "executable": "other.exe",
+            "started_at_utc": "1999-01-01T00:00:00+00:00",
+            "alive": True,
+        },
+        heartbeat_max_age_seconds=90.0,
+    )
+    assert reused["healthy"] is False
+    assert "pid_reuse" in reused["reasons"]
+
+
+def test_campaign_aware_health_treats_stale_lock_and_live_child_as_one_owner():
+    from project_pipeline.autonomy_runtime.campaign import evaluate_campaign_aware_health
+
+    campaign = {
+        "status": "RUNNING",
+        "process_id": 51876,
+        "integrated_sha": "a" * 40,
+        "integrated_tree": "b" * 40,
+        "fence": "CFENCE-1",
+        "last_heartbeat_utc": datetime.now(UTC).isoformat(),
+    }
+    verdict = evaluate_campaign_aware_health(
+        campaign=campaign,
+        owner_binding={
+            "executable_identity": "python.exe",
+            "process_started_at_utc": "2026-01-01T00:00:00+00:00",
+        },
+        pid_identity={"process_id": 51876},
+        campaign_lock_live=None,
+        qualification_owner_live={
+            "process_id": 21976,
+            "executable": "python.exe",
+            "started_at_utc": "2026-01-01T00:00:00+00:00",
+            "alive": True,
+        },
+        expected_sha="a" * 40,
+        expected_tree="b" * 40,
+        expected_fence="CFENCE-1",
+        heartbeat_max_age_seconds=90.0,
+    )
+    assert verdict["healthy"] is True
+    assert verdict["owner_kind"] == "qualification_child"
+    assert verdict["user_action_required"] is False
+
+    mismatched = evaluate_campaign_aware_health(
+        campaign=campaign,
+        qualification_owner_live={
+            "process_id": 21976,
+            "executable": "python.exe",
+            "started_at_utc": "2026-01-01T00:00:00+00:00",
+            "alive": True,
+        },
+        expected_sha="c" * 40,
+        heartbeat_max_age_seconds=90.0,
+    )
+    assert mismatched["healthy"] is False
+    assert "sha_mismatch" in mismatched["reasons"]
