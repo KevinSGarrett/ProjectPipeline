@@ -20,6 +20,7 @@ from project_pipeline.command_center.models import (
     LiveWorkItem,
 )
 from project_pipeline.command_center.projections import CommandCenterProjectionService
+from project_pipeline.observability.ops_service import load_ops_health_dimensions
 
 
 def _campaign_projection(
@@ -114,6 +115,7 @@ def project_autonomy_runtime(
                 state=health,
                 reason="derived from durable supervisor, lane, provider, and service state",
             ),
+            *load_ops_health_dimensions(repository_root),
         ),
         live_work=tuple(live_work),
         active_incident_ids=tuple(item.incident_id for item in external_blocks),

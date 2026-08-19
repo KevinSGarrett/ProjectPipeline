@@ -4067,7 +4067,7 @@
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
@@ -12713,7 +12713,7 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
@@ -12816,7 +12816,7 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
@@ -12919,7 +12919,7 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
@@ -13031,7 +13031,7 @@
     "expected_implementation_artifacts": [
       "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",

@@ -180,6 +180,7 @@ from project_pipeline.jira_steward import (
 from project_pipeline.jira_steward.persistence import JiraSyncStore
 from project_pipeline.line_numbering import generate_line_numbered_plans
 from project_pipeline.manifest import write_manifest
+from project_pipeline.observability.ops_service import run_ops_action
 from project_pipeline.orchestration import (
     DBOSFallbackAdapter,
     HatchetDurableAdapter,
@@ -416,6 +417,29 @@ def build_parser() -> argparse.ArgumentParser:
     governance.add_argument("--expected-tree-sha")
     governance.add_argument("--implementer-id", default="actor:cycle-014-combined")
     governance.add_argument("--json-output", type=Path)
+
+    ops_intelligence = commands.add_parser(
+        "ops-intelligence",
+        help="Record and query observed health, worker, cost, index, cache, and distilled memory",
+    )
+    ops_intelligence.add_argument(
+        "action",
+        choices=(
+            "health",
+            "status",
+            "index",
+            "classify-deps",
+            "record-layer",
+            "record-worker",
+            "record-cost",
+            "record-cache",
+            "distill",
+        ),
+    )
+    ops_intelligence.add_argument("--root", type=_root, default=Path.cwd())
+    ops_intelligence.add_argument("--payload", type=Path)
+    ops_intelligence.add_argument("--freshness-seconds", type=int, default=3600)
+    ops_intelligence.add_argument("--json-output", type=Path)
 
     validate = commands.add_parser("validate", help="Run repository-contract validation")
     validate.add_argument("--root", type=_root, default=Path.cwd())
@@ -3419,6 +3443,25 @@ def main(argv: Sequence[str] | None = None) -> int:
             result, code = _run_release_hardening_command(args)
             _write_json_output(result, args.json_output)
             return code
+        if args.command == "ops-intelligence":
+            payload = None
+            if args.payload is not None:
+                payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
+            try:
+                result = run_ops_action(
+                    args.root,
+                    args.action,
+                    payload=payload,
+                    freshness_seconds=int(args.freshness_seconds),
+                )
+            except ValueError as error:
+                _write_json_output(
+                    {"ok": False, "error": str(error), "user_action_required": False},
+                    args.json_output,
+                )
+                return 1
+            _write_json_output(result, args.json_output)
+            return 0
         if args.command == "validate":
             report = RepositoryValidator(args.root).validate()
             print(report.render())
