@@ -11,6 +11,8 @@ def test_command_center_migration_is_latest_and_reversible(tmp_path, project_roo
         status = runner.status()
         assert status.latest_applied == "PPDB-0024"
         runner.rollback_last()
+        assert runner.status().latest_applied == "PPDB-0023"
+        runner.rollback_last()
         assert runner.status().latest_applied == "PPDB-0022"
         runner.rollback_last()
         assert runner.status().latest_applied == "PPDB-0021"

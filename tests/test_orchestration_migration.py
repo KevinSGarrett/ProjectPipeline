@@ -21,6 +21,8 @@ def test_ppdb_0010_is_catalogued_and_reversible(project_root):
     assert "autonomy_runtime_operations" in tables
 
     status = runner.rollback_last()
+    assert status.latest_applied == "PPDB-0023"
+    status = runner.rollback_last()
     assert status.latest_applied == "PPDB-0022"
     status = runner.rollback_last()
     assert status.latest_applied == "PPDB-0021"

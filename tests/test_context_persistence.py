@@ -71,6 +71,8 @@ def test_migration_0009_applies_and_rolls_back(tmp_path, project_root):
     assert status.latest_applied == "PPDB-0024"
 
     status = r.rollback_last()
+    assert status.latest_applied == "PPDB-0023"
+    status = r.rollback_last()
     assert status.latest_applied == "PPDB-0022"
     status = r.rollback_last()
     assert status.latest_applied == "PPDB-0021"

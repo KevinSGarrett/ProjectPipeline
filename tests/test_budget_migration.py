@@ -21,6 +21,8 @@ def test_ppdb_0011_is_reversible_without_damaging_ppdb_0010(tmp_path: Path):
     ).fetchone()
 
     rolled = runner.rollback_last()
+    assert rolled.latest_applied == "PPDB-0023"
+    rolled = runner.rollback_last()
     assert rolled.latest_applied == "PPDB-0022"
     rolled = runner.rollback_last()
     assert rolled.latest_applied == "PPDB-0021"

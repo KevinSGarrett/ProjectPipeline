@@ -319,6 +319,8 @@ def test_ppdb_0017_rolls_back_without_removing_pass19_command_center_schema(tmp_
     assert "lifecycle_portfolio_projects" in tables
     assert "autonomy_runtime_operations" in tables
     runner.rollback_last()
+    assert runner.status().latest_applied == "PPDB-0023"
+    runner.rollback_last()
     assert runner.status().latest_applied == "PPDB-0022"
     runner.rollback_last()
     assert runner.status().latest_applied == "PPDB-0021"
