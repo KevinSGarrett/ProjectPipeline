@@ -288,6 +288,41 @@ def evaluate_campaign_aware_health(
     }
 
 
+def observe_windows_scheduled_task(
+    task_name: str,
+    *,
+    runner: Callable[..., Any] | None = None,
+) -> dict[str, Any]:
+    """Observe a Windows scheduled task. Absence is not a human instruction."""
+
+    invoke = runner or subprocess.run
+    completed = invoke(
+        [
+            "powershell",
+            "-NoProfile",
+            "-Command",
+            (
+                "(Get-ScheduledTask -TaskName '"
+                + task_name.replace("'", "''")
+                + "' -ErrorAction SilentlyContinue).TaskName"
+            ),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    observed = (getattr(completed, "stdout", None) or "").strip()
+    observed_name = observed.splitlines()[0].strip() if observed else ""
+    present = bool(observed_name) and observed_name.casefold() == task_name.casefold()
+    return {
+        "task_name": task_name,
+        "present": present,
+        "observed_name": observed_name,
+        "user_action_required": False,
+        "next_action": "none" if present else "defer_register_until_release_candidate",
+    }
+
+
 def inspect_worktree_identity(root: Path) -> dict[str, Any]:
     def git(*args: str) -> tuple[int, str]:
         completed = subprocess.run(
