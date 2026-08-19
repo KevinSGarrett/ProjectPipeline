@@ -258,8 +258,8 @@ def test_runtime_predecessors_admit_completion_convergence_work(
         facts = {item.task_id: item for item in kernel.task_facts()}
         sequencer = BuildSequencer(facts.values())
 
-        assert facts["PP-TASK-000168"].product_scope_allowed
-        assert sequencer.eligibility(facts["PP-TASK-000168"]).state in {
+        assert facts["PP-TASK-000186"].product_scope_allowed
+        assert sequencer.eligibility(facts["PP-TASK-000186"]).state in {
             EligibilityState.ELIGIBLE,
             EligibilityState.RECONCILIATION_REQUIRED,
             EligibilityState.ALREADY_ACTIVE,

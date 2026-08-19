@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "70bd22f59d4a67999e2bc7750bdcd31179ac7453bbcd089bec95e1513f47bf30",
+  "aggregate_sha256": "a94bb899141e1f34c1e6d7f23c07a3e567a6d68cd689c9cc28ef5201df2ca69d",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -13997,7 +13997,7 @@
     },
     {
       "path": "tests/test_control_kernel.py",
-      "sha256": "f1bec748b82b24a370cb956614826116318ab81152ec1c53639751031a73eef7",
+      "sha256": "621529f2cdaa12c63f219559d3430d20498656d70268bb8a138fd8e3e3e8c6dc",
       "size_bytes": 12828
     },
     {
@@ -14691,7 +14691,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T21:16:11.932018+00:00",
+  "generated_at_utc": "2026-08-19T21:25:40.944985+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
