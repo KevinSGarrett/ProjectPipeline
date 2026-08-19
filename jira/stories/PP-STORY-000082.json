@@ -43,12 +43,13 @@
   "expected_implementation_artifacts": [
     "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
+    "cluster-qualification",
     "domain-agent",
-    "cluster-qualification"
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -103,6 +104,6 @@
     "SRC-017:L001002-L001064"
   ],
   "state": "BACKLOG",
-  "title": "Qualification \u2014 Agents, Models, Providers, and Tools",
+  "title": "Qualification — Agents, Models, Providers, and Tools",
   "upstream_dependencies": []
 }

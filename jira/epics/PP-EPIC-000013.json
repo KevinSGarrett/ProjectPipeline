@@ -35,7 +35,7 @@
   "expected_implementation_artifacts": [
     "plans/06_agents_models_and_tools/PLAN-AGENT-001_agents_models_tools.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",

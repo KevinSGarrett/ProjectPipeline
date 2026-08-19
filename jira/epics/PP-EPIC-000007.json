@@ -35,7 +35,7 @@
   "expected_implementation_artifacts": [
     "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",

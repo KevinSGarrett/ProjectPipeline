@@ -59,11 +59,11 @@
     "src/project_pipeline/cli.py",
     "database/migrations/sqlite/PPDB-0014_security_identity_policy_secrets_supply_chain.up.sql"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "security",
     "identity",
+    "security",
     "supply-chain"
   ],
   "last_observed_remote_state": {

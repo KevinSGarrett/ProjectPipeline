@@ -55,11 +55,11 @@
     "src/project_pipeline/security/supply_chain.py",
     "runbooks/security_root_of_trust_and_secret_recovery.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "security",
     "identity",
+    "security",
     "supply-chain"
   ],
   "last_observed_remote_state": {

@@ -54,11 +54,11 @@
     "src/project_pipeline/lifecycle/validation.py",
     "database/migrations/sqlite/PPDB-0018_advanced_platform_lifecycle.up.sql"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "platform-lifecycle",
-    "pass-22"
+    "pass-22",
+    "platform-lifecycle"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

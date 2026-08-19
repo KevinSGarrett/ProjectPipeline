@@ -35,7 +35,7 @@
   "expected_implementation_artifacts": [
     "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",

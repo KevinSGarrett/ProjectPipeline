@@ -420,6 +420,14 @@ def build_parser() -> argparse.ArgumentParser:
     requirement_reconcile.add_argument("--apply", action="store_true")
     requirement_reconcile.add_argument("--approve", action="store_true")
 
+    jira_implementation_reconcile = commands.add_parser(
+        "jira-implementation-reconcile",
+        help="Propose or apply evidence-bound local Jira implementation and lifecycle truth",
+    )
+    jira_implementation_reconcile.add_argument("--root", type=_root, default=Path.cwd())
+    jira_implementation_reconcile.add_argument("--apply", action="store_true")
+    jira_implementation_reconcile.add_argument("--approve", action="store_true")
+
     architecture = commands.add_parser(
         "architecture", help="Query the target architecture and technology stack"
     )
@@ -3198,16 +3206,62 @@ def main(argv: Sequence[str] | None = None) -> int:
                     None,
                 )
                 return 2
+            from project_pipeline.assurance.requirement_reconciliation import (
+                evaluate_requirement_reconciliation,
+            )
+
+            ledger = evaluate_requirement_reconciliation(args.root)
             if args.apply:
                 applied = apply_evidence_bound_requirement_states(args.root, limit=args.limit)
                 _write_json_output(
-                    {"mode": "APPLIED", "applied_count": len(applied), "applied": applied},
+                    {
+                        "mode": "APPLIED",
+                        "applied_count": len(applied),
+                        "applied": applied,
+                        "ledger_count": len(ledger),
+                        "ledger": ledger,
+                    },
                     None,
                 )
                 return 0
             proposals = propose_evidence_bound_requirement_states(args.root, limit=args.limit)
             _write_json_output(
-                {"mode": "DRY_RUN", "proposal_count": len(proposals), "proposals": proposals},
+                {
+                    "mode": "DRY_RUN",
+                    "proposal_count": len(proposals),
+                    "proposals": proposals,
+                    "ledger_count": len(ledger),
+                    "ledger": ledger,
+                },
+                None,
+            )
+            return 0
+        if args.command == "jira-implementation-reconcile":
+            from project_pipeline.assurance.jira_implementation_reconciliation import (
+                apply_jira_implementation_reconciliation,
+                evaluate_jira_implementation_reconciliation,
+            )
+
+            if args.apply and not args.approve:
+                _write_json_output(
+                    {
+                        "error": "configuration_invalid",
+                        "message": "jira-implementation-reconcile --apply requires --approve",
+                    },
+                    None,
+                )
+                return 2
+            if args.apply:
+                _write_json_output(apply_jira_implementation_reconciliation(args.root), None)
+                return 0
+            ledger = evaluate_jira_implementation_reconciliation(args.root)
+            _write_json_output(
+                {
+                    "mode": "DRY_RUN",
+                    "ledger_count": len(ledger),
+                    "accepted_count": sum(1 for item in ledger if item.get("accepted")),
+                    "ledger": ledger,
+                },
                 None,
             )
             return 0

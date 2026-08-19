@@ -57,6 +57,7 @@
     "bulk-reconciled",
     "control-kernel",
     "deterministic",
+    "done",
     "implemented",
     "project-control"
   ],
@@ -110,7 +111,7 @@
     "GOV-001:L001114-L001158",
     "SRC-003:L000225-L000278"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Validated dependency DAG and graph analysis",
   "upstream_dependencies": [
     "https://github.com/networkx/networkx"

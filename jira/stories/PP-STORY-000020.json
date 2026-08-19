@@ -46,7 +46,7 @@
     "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "domain-story",

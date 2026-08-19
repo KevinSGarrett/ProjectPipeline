@@ -59,11 +59,11 @@
     "docs/architecture/FINAL_ARCHITECTURE.md",
     "runbooks/release_upgrade_and_rollback.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "pass-24",
-    "hardening"
+    "hardening",
+    "pass-24"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

@@ -65,6 +65,7 @@
     "budget",
     "bulk-reconciled",
     "cost-governance",
+    "done",
     "implemented",
     "pass-14"
   ],
@@ -126,7 +127,7 @@
     "SRC-004:L000937-L000977",
     "SRC-012:L000780-L000816"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Integrate PPDB-0011 CLI schemas simulations documentation and validation",
   "upstream_dependencies": []
 }

@@ -43,12 +43,13 @@
   "expected_implementation_artifacts": [
     "plans/08_execution_assurance_and_testing/PLAN-ASSURE-001_execution_assurance.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
+    "cluster-truth",
     "domain-assure",
-    "cluster-truth"
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -104,6 +105,6 @@
     "SRC-008:L001042-L001066"
   ],
   "state": "BACKLOG",
-  "title": "Truth \u2014 Execution Assurance and Testing",
+  "title": "Truth — Execution Assurance and Testing",
   "upstream_dependencies": []
 }

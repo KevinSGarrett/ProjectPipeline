@@ -43,12 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/03_control_and_orchestration/PLAN-CTRL-001_control_plane.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "domain-ctrl",
-    "cluster-authority"
+    "cluster-authority",
+    "domain-ctrl"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -108,6 +108,6 @@
     "SRC-015:L000031-L000150"
   ],
   "state": "BACKLOG",
-  "title": "Authority \u2014 Control Plane and Orchestration",
+  "title": "Authority — Control Plane and Orchestration",
   "upstream_dependencies": []
 }

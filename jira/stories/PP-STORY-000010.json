@@ -44,10 +44,11 @@
     "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "domain-story",
+    "implemented",
     "plan-sched-001"
   ],
   "last_observed_remote_state": {

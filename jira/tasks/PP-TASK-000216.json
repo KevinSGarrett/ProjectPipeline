@@ -58,13 +58,13 @@
     "config/jira/sync_policy.json",
     "config/jira/status_mapping.json"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "jira-steward",
-    "jira-sync",
     "deterministic",
-    "dry-run-default"
+    "dry-run-default",
+    "jira-steward",
+    "jira-sync"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

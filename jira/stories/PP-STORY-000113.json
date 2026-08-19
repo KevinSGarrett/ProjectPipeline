@@ -49,12 +49,13 @@
   "expected_implementation_artifacts": [
     "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
     "cluster-operator-inbox",
     "domain-ux",
+    "implemented",
     "pass-20",
     "pass-21"
   ],
@@ -108,6 +109,6 @@
     "SRC-015:L000031-L000150"
   ],
   "state": "BACKLOG",
-  "title": "Operator Inbox \u2014 Command Center and Operator Experience",
+  "title": "Operator Inbox — Command Center and Operator Experience",
   "upstream_dependencies": []
 }

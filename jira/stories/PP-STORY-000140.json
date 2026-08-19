@@ -35,7 +35,7 @@
     "src/project_pipeline/autonomy_runtime/lanes.py",
     "src/project_pipeline/autonomy_runtime/recovery.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "autonomy-runtime",

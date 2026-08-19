@@ -47,9 +47,9 @@
   "issue_type": "TASK",
   "labels": [
     "autonomy-runtime",
-    "unattended",
+    "cohesive-slice",
     "release",
-    "cohesive-slice"
+    "unattended"
   ],
   "last_observed_remote_state": null,
   "local_id": "PP-TASK-000385",

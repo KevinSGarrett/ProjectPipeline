@@ -47,12 +47,13 @@
   "expected_implementation_artifacts": [
     "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "domain-ux",
     "cluster-director",
+    "domain-ux",
+    "implemented",
     "pass-21"
   ],
   "last_observed_remote_state": {
@@ -106,6 +107,6 @@
     "SRC-015:L001456-L001582"
   ],
   "state": "BACKLOG",
-  "title": "Director \u2014 Command Center and Operator Experience",
+  "title": "Director — Command Center and Operator Experience",
   "upstream_dependencies": []
 }

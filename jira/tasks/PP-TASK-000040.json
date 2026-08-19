@@ -67,6 +67,7 @@
   "issue_type": "TASK",
   "labels": [
     "bulk-reconciled",
+    "done",
     "executable",
     "foundation",
     "implemented"
@@ -119,7 +120,7 @@
     "GOV-001:L000748-L000764",
     "GOV-001:L001364-L001385"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Establish the professional repository foundation",
   "upstream_dependencies": []
 }

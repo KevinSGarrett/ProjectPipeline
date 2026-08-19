@@ -83,6 +83,7 @@
     "bulk-reconciled",
     "context",
     "delegation",
+    "done",
     "implemented",
     "pass-12"
   ],
@@ -150,7 +151,7 @@
     "GOV-001:L000797-L000876",
     "GOV-001:L000797-L000854"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Apply upstream gate to Context implementation",
   "upstream_dependencies": [
     "UPSTREAM-115",

@@ -46,7 +46,7 @@
     "tests/e2e/",
     "tests/integration/"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "backlog",

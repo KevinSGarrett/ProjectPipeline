@@ -40,7 +40,7 @@
   "expected_implementation_artifacts": [
     "src/project_pipeline/validation/repository.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "SUBTASK",
   "labels": [
     "foundation",

@@ -55,13 +55,13 @@
     "schemas/project_profile_detection.schema.json",
     "fixtures/intake/polyglot_application"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "project-intake",
-    "project-compiler",
     "deterministic",
-    "non-destructive"
+    "non-destructive",
+    "project-compiler",
+    "project-intake"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

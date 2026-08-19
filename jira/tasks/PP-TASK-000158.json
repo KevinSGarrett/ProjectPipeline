@@ -64,7 +64,7 @@
     "architecture/diagrams/deployment_profiles.mmd",
     "architecture/diagrams/traceability_flow.mmd"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "architecture",

@@ -43,12 +43,12 @@
   "expected_implementation_artifacts": [
     "plans/16_upstream_repository_adoption/PLAN-UPSTREAM-001_upstream_adoption.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
-    "domain-upstream",
-    "cluster-review"
+    "cluster-review",
+    "domain-upstream"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -103,6 +103,6 @@
     "SRC-016:L001691-L001832"
   ],
   "state": "BACKLOG",
-  "title": "Review \u2014 Upstream Repository Adoption",
+  "title": "Review — Upstream Repository Adoption",
   "upstream_dependencies": []
 }

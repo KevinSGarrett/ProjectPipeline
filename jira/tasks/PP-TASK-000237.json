@@ -55,12 +55,13 @@
     "src/project_pipeline/control/kernel.py",
     "src/project_pipeline/domain/control.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "control-kernel",
     "build-sequencer",
+    "control-kernel",
     "deterministic",
+    "implemented",
     "project-control"
   ],
   "last_observed_remote_state": {

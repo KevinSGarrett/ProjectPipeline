@@ -72,6 +72,7 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
+    "done",
     "implemented",
     "verification"
   ],
@@ -130,7 +131,7 @@
     "GOV-001:L002200-L002231",
     "SRC-017:L000490-L000596"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Verify implement requirement query and summary interfaces",
   "upstream_dependencies": []
 }

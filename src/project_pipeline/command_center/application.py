@@ -156,6 +156,32 @@ class RepositoryApplicationProjectionBuilder:
                 note="Repository-local GitHub governance state is visible; this projection does not claim a current remote observation.",
             ),
         )
+        complete = {"IMPLEMENTED", "MOCK_VERIFIED", "LIVE_VERIFIED", "BLOCKED_EXTERNAL"}
+        incomplete_requirement_count = sum(
+            1
+            for row in requirements
+            if row.get("disposition") == "ACCEPTED"
+            and row.get("implementation_state") not in complete
+        )
+        implemented_not_done = sum(
+            1
+            for item in issues
+            if item.get("implementation_state") == "IMPLEMENTED" and item.get("state") != "DONE"
+        )
+        context_detail = dict(snapshot.context_summary)
+        context_detail.update(
+            {
+                "incomplete_requirement_count": incomplete_requirement_count,
+                "implemented_not_done_issue_count": implemented_not_done,
+                "reconciliation_is_immediately_batchable": implemented_not_done > 0,
+                "ready_count_is_not_a_stop_signal": True,
+                "next_autonomous_work": (
+                    "batch-reconcile evidence-backed Jira and requirement truth, then implement "
+                    "the highest-impact remaining incomplete Completion Gate domain"
+                ),
+                "user_action_required": False,
+            }
+        )
         return CommandCenterApplicationProjection(
             project_id=snapshot.project_id,
             readiness=readiness,
@@ -172,7 +198,7 @@ class RepositoryApplicationProjectionBuilder:
             ),
             budget_detail=dict(snapshot.budget_summary),
             provider_detail=dict(snapshot.provider_summary),
-            context_detail=dict(snapshot.context_summary),
+            context_detail=context_detail,
         )
 
     def _count_jsonl(self, relative: str) -> int:

@@ -65,6 +65,7 @@
   "labels": [
     "bulk-reconciled",
     "catalog-foundation",
+    "done",
     "implemented"
   ],
   "last_observed_remote_state": {
@@ -122,7 +123,7 @@
   "source_references": [
     "SRC-008:L000540-L000760"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Add behavior-specific catalog, source, and Jira tests",
   "upstream_dependencies": []
 }

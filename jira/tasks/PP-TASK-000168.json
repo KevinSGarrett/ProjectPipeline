@@ -46,7 +46,7 @@
     "integrations/policy/opa.py",
     "tests/integration/test_opa_policy.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "backlog",

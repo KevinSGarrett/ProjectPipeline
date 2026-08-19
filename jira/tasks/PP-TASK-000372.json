@@ -49,11 +49,11 @@
     "src/project_pipeline/configuration/models.py",
     "config/pass24_hardening_matrix.json"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "pass-24",
-    "hardening"
+    "hardening",
+    "pass-24"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

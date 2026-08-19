@@ -35,10 +35,11 @@
   "expected_implementation_artifacts": [
     "plans/02_system_architecture/PLAN-ARCH-001_system_architecture.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",
+    "implemented",
     "plan-arch-001"
   ],
   "last_observed_remote_state": {

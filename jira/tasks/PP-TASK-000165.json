@@ -46,7 +46,7 @@
     "src/project_pipeline/scheduling/",
     "tests/test_scheduling.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "backlog",

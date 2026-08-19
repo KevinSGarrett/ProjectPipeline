@@ -53,10 +53,11 @@
     "src/project_pipeline/orchestration/adapters.py",
     "src/project_pipeline/orchestration/ports.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "backlog",
+    "implemented",
     "platform",
     "upstream"
   ],

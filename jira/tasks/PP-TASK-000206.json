@@ -64,6 +64,7 @@
   "labels": [
     "bulk-reconciled",
     "deterministic",
+    "done",
     "implemented",
     "non-destructive",
     "project-compiler",
@@ -121,7 +122,7 @@
   "source_references": [
     "SRC-002:L000479-L000515"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Compile an enriched deterministic repository map",
   "upstream_dependencies": []
 }

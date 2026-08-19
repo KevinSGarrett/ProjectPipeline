@@ -65,6 +65,7 @@
   "labels": [
     "bulk-reconciled",
     "deterministic",
+    "done",
     "implemented",
     "non-destructive",
     "project-compiler",
@@ -127,7 +128,7 @@
     "SRC-014:L000005-L000125",
     "SRC-017:L001122-L001175"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Discover project authorities and operating surfaces",
   "upstream_dependencies": []
 }

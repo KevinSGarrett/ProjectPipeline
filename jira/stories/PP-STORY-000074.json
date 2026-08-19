@@ -49,12 +49,13 @@
   "expected_implementation_artifacts": [
     "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
+    "cluster-broker",
     "domain-ctx",
-    "cluster-broker"
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -103,6 +104,6 @@
     "SRC-002:L000445-L000478"
   ],
   "state": "BACKLOG",
-  "title": "Broker \u2014 Context and Knowledge",
+  "title": "Broker — Context and Knowledge",
   "upstream_dependencies": []
 }

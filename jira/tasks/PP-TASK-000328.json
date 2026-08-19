@@ -66,6 +66,7 @@
     "assurance",
     "bulk-reconciled",
     "completion-gate",
+    "done",
     "implemented",
     "pass-15"
   ],
@@ -122,7 +123,7 @@
     "SRC-008:L001016-L001066",
     "SRC-008:L001168-L001195"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement completion failure localization and rework routing",
   "upstream_dependencies": []
 }

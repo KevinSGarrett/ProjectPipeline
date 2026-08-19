@@ -35,7 +35,7 @@
   "expected_implementation_artifacts": [
     "plans/13_observability_and_operations/PLAN-OPS-001_observability_operations.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",

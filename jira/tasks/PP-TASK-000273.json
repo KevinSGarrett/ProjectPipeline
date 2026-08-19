@@ -51,12 +51,12 @@
     "provenance/adoption_queue.json",
     "provenance/review_program.json"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "upstream-reuse",
+    "adoption-gate",
     "provenance",
-    "adoption-gate"
+    "upstream-reuse"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",

@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 540,
+  "test_count": 550,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -973,6 +973,11 @@
       "test_id": "TEST-CONTROL-CLI-001"
     },
     {
+      "callable": "test_runtime_predecessors_admit_completion_convergence_work",
+      "path": "tests/test_control_kernel.py",
+      "test_id": "TEST-CONTROL-CONVERGENCE-001"
+    },
+    {
       "callable": "test_declared_duration_critical_path_is_deterministic",
       "path": "tests/test_build_sequencer.py",
       "test_id": "TEST-CONTROL-CRITICAL-PATH-001"
@@ -1668,6 +1673,31 @@
       "test_id": "TEST-JIRA-REBUILD-001"
     },
     {
+      "callable": "test_jira_reconciliation_applies_dod_and_never_reopens_done",
+      "path": "tests/test_jira_implementation_reconciliation.py",
+      "test_id": "TEST-JIRA-RECONCILE-001"
+    },
+    {
+      "callable": "test_jira_reconciliation_rejects_missing_catalog_and_live_wording",
+      "path": "tests/test_jira_implementation_reconciliation.py",
+      "test_id": "TEST-JIRA-RECONCILE-002"
+    },
+    {
+      "callable": "test_jira_implementation_reconcile_cli_requires_approve",
+      "path": "tests/test_jira_implementation_reconciliation.py",
+      "test_id": "TEST-JIRA-RECONCILE-003"
+    },
+    {
+      "callable": "test_bulk_script_ignores_base_ref_and_does_not_revert",
+      "path": "tests/test_jira_implementation_reconciliation.py",
+      "test_id": "TEST-JIRA-RECONCILE-004"
+    },
+    {
+      "callable": "test_full_repository_jira_ledger_covers_every_issue",
+      "path": "tests/test_jira_implementation_reconciliation.py",
+      "test_id": "TEST-JIRA-RECONCILE-005"
+    },
+    {
       "callable": "JiraStewardMockAndServiceTests.test_dry_run_persists_plan_without_remote_writes",
       "path": "tests/test_jira_steward_mock_and_service.py",
       "test_id": "TEST-JIRA-SYNC-001"
@@ -2011,6 +2041,26 @@
       "callable": "RepositoryMapTests.test_map_groups_semantic_paths",
       "path": "tests/test_repository_map.py",
       "test_id": "TEST-REPOSITORY-MAP-001"
+    },
+    {
+      "callable": "test_evidence_bound_reconciliation_requires_artifacts_tests_and_evidence",
+      "path": "tests/test_requirement_reconciliation.py",
+      "test_id": "TEST-REQ-RECONCILE-001"
+    },
+    {
+      "callable": "test_reconciliation_rejects_false_positive_classes",
+      "path": "tests/test_requirement_reconciliation.py",
+      "test_id": "TEST-REQ-RECONCILE-002"
+    },
+    {
+      "callable": "test_full_repository_ledger_covers_every_requirement",
+      "path": "tests/test_requirement_reconciliation.py",
+      "test_id": "TEST-REQ-RECONCILE-003"
+    },
+    {
+      "callable": "test_requirement_reconcile_cli_requires_approve_and_dry_runs",
+      "path": "tests/test_requirement_reconciliation.py",
+      "test_id": "TEST-REQ-RECONCILE-004"
     },
     {
       "callable": "RequirementQueryTests.test_query_filters_are_composable_and_case_normalized",

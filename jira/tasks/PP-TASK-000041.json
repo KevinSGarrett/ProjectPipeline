@@ -68,6 +68,7 @@
   "issue_type": "TASK",
   "labels": [
     "bulk-reconciled",
+    "done",
     "executable",
     "foundation",
     "implemented"
@@ -123,7 +124,7 @@
     "GOV-001:L000123-L000221",
     "SRC-008:L000540-L000760"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Establish requirements and plan traceability",
   "upstream_dependencies": []
 }

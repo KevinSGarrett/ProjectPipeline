@@ -46,7 +46,7 @@
     "scripts/secrets/",
     "runbooks/provision_secrets.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "PARTIALLY_IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "backlog",

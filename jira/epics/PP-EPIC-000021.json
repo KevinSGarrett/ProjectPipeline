@@ -35,10 +35,11 @@
   "expected_implementation_artifacts": [
     "plans/10_budget_and_resource_governance/PLAN-BUDGET-001_budget_resource_governance.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",
+    "implemented",
     "plan-budget-001"
   ],
   "last_observed_remote_state": {

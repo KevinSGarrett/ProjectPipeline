@@ -63,6 +63,7 @@
     "bulk-reconciled",
     "context",
     "delegation",
+    "done",
     "implemented",
     "pass-12"
   ],
@@ -121,7 +122,7 @@
     "SRC-002:L000213-L000260",
     "SRC-002:L000959-L001014"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement content-addressed Context Compiler",
   "upstream_dependencies": []
 }

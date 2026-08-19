@@ -67,6 +67,7 @@
     "bulk-reconciled",
     "context",
     "delegation",
+    "done",
     "implemented",
     "pass-12"
   ],
@@ -127,7 +128,7 @@
     "SRC-002:L000959-L001014",
     "SRC-002:L000359-L000386"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Persist context packs and add PPDB-0009",
   "upstream_dependencies": []
 }

@@ -6651,7 +6651,7 @@
       "src/project_pipeline/domain/control.py",
       "src/project_pipeline/control/kernel.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000007",
       "PP-STORY-000065",
@@ -7192,7 +7192,7 @@
       "src/project_pipeline/domain/context.py",
       "src/project_pipeline/context_engine/service.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000011",
       "PP-STORY-000012",
@@ -7324,7 +7324,7 @@
       "src/project_pipeline/context_engine/trust.py",
       "src/project_pipeline/context_engine/compiler.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000011",
       "PP-STORY-000012",
@@ -8117,7 +8117,7 @@
     "implementation_paths": [
       "src/project_pipeline/context_engine/compiler.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000011",
       "PP-STORY-000077",
@@ -10013,7 +10013,7 @@
       "infrastructure/docker/Dockerfile",
       "infrastructure/windows/ProjectPipelineService.xml"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000030",
@@ -10653,7 +10653,7 @@
       "infrastructure/docker/README.md",
       "infrastructure/docker/compose.yaml"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000124",
@@ -10720,7 +10720,7 @@
       "infrastructure/aws/terraform/main.tf",
       "src/project_pipeline/resilience/aws.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000121",
@@ -10784,7 +10784,7 @@
       "infrastructure/aws/terraform/main.tf",
       "src/project_pipeline/resilience/failover.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000121",
@@ -10892,7 +10892,7 @@
       "config/resilience_policy.json",
       "infrastructure/aws/README.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000121",
@@ -10997,7 +10997,7 @@
       "config/resilience_policy.json",
       "docs/operations/resilience_and_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000121",
@@ -11057,7 +11057,7 @@
       "config/runtime/profiles/test.json",
       "src/project_pipeline/configuration/models.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000122",
@@ -11116,7 +11116,7 @@
       "config/resilience_policy.json",
       "src/project_pipeline/resilience/backup.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000122",
@@ -11176,7 +11176,7 @@
       "src/project_pipeline/lifecycle/portfolio.py",
       "src/project_pipeline/lifecycle/repositories.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000032"
@@ -11310,7 +11310,7 @@
       "runbooks/platform_upgrade_qualification.md",
       "src/project_pipeline/lifecycle/qualification.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000032"
@@ -11362,7 +11362,7 @@
       "config/platform_lifecycle_policy.json",
       "src/project_pipeline/lifecycle/portfolio.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000127"
@@ -11417,7 +11417,7 @@
       "config/platform_lifecycle_policy.json",
       "src/project_pipeline/lifecycle/portfolio.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000127"
@@ -11469,7 +11469,7 @@
     "implementation_paths": [
       "src/project_pipeline/lifecycle/repositories.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000127"
@@ -11604,7 +11604,7 @@
       "config/platform_lifecycle_policy.json",
       "src/project_pipeline/lifecycle/retention.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000128"
@@ -11657,7 +11657,7 @@
       "runbooks/project_closure_and_archive.md",
       "src/project_pipeline/lifecycle/retention.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000128"
@@ -11713,7 +11713,7 @@
       "runbooks/platform_upgrade_qualification.md",
       "src/project_pipeline/lifecycle/qualification.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000129"
@@ -11767,7 +11767,7 @@
       "runbooks/platform_upgrade_qualification.md",
       "src/project_pipeline/lifecycle/qualification.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000129"
@@ -11888,7 +11888,7 @@
     "implementation_paths": [
       "src/project_pipeline/lifecycle/qualification.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000129"
@@ -12103,7 +12103,7 @@
       "config/platform_lifecycle_policy.json",
       "src/project_pipeline/lifecycle/environments.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000126"
@@ -12157,7 +12157,7 @@
       "src/project_pipeline/lifecycle/qualification.py",
       "tests/test_pass22_platform_lifecycle.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000031",
       "PP-STORY-000129"
@@ -12714,7 +12714,7 @@
       "src/project_pipeline/context_engine/compiler.py",
       "src/project_pipeline/cli.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000120",
@@ -14447,7 +14447,7 @@
       "scripts/windows/rollback.ps1",
       "scripts/windows/upgrade.ps1"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000035",
       "PP-STORY-000137",
@@ -14508,7 +14508,7 @@
       "docs/operations/INSTALLATION_AND_OPERATIONS.md",
       "docs/release/RELEASE_PROCEDURE.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000035",
       "PP-STORY-000136",
@@ -16120,7 +16120,7 @@
       "runbooks/backup_restore_verification.md",
       "src/project_pipeline/resilience/backup.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000024",
@@ -16292,7 +16292,7 @@
       "src/project_pipeline/scheduler/persistence.py",
       "src/project_pipeline/scheduler/resources.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000107",
@@ -16420,7 +16420,7 @@
       "config/resilience_policy.json",
       "src/project_pipeline/resilience/backup.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000104"
@@ -16555,7 +16555,7 @@
       "src/project_pipeline/orchestration/persistence.py",
       "src/project_pipeline/orchestration/runtime.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000104",
@@ -16780,7 +16780,7 @@
       "runbooks/control_machine_failover.md",
       "src/project_pipeline/resilience/failover.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000107",
@@ -17229,7 +17229,7 @@
       "src/project_pipeline/domain/resilience.py",
       "src/project_pipeline/resilience/backup.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000110",
@@ -17407,7 +17407,7 @@
       "runbooks/control_machine_failover.md",
       "src/project_pipeline/resilience/aws.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000107",
@@ -17469,7 +17469,7 @@
       "config/resilience_policy.json",
       "src/project_pipeline/resilience/aws.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000023",
       "PP-STORY-000105",
@@ -19107,7 +19107,7 @@
       "runbooks/security_root_of_trust_and_secret_recovery.md",
       "src/project_pipeline/security/identity.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000019",
       "PP-STORY-000096",
@@ -19174,7 +19174,7 @@
       "policies/security/action_policy.rego",
       "src/project_pipeline/security/policy.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000019",
       "PP-STORY-000097",
@@ -19495,7 +19495,7 @@
       "docs/security/secrets_and_egress.md",
       "src/project_pipeline/security/policy.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000019",
       "PP-STORY-000095",
@@ -19618,7 +19618,7 @@
       "policies/security/action_policy.rego",
       "src/project_pipeline/security/policy.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000019",
       "PP-STORY-000097",
@@ -19900,7 +19900,7 @@
       "src/project_pipeline/security/supply_chain.py",
       "src/project_pipeline/upstream_integrations/security.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000019",
       "PP-STORY-000099",
@@ -20195,7 +20195,7 @@
       "src/project_pipeline/security/policy.py",
       "src/project_pipeline/security/supply_chain.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000019",
       "PP-STORY-000097",
@@ -22519,7 +22519,7 @@
       "src/project_pipeline/command_center/models.py",
       "src/project_pipeline/command_center/projections.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000115"
@@ -22580,7 +22580,7 @@
       "src/project_pipeline/command_center/models.py",
       "src/project_pipeline/command_center/projections.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114"
@@ -22641,7 +22641,7 @@
       "src/project_pipeline/command_center/models.py",
       "src/project_pipeline/command_center/projections.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114"
@@ -22953,7 +22953,7 @@
       "src/project_pipeline/command_center/models.py",
       "src/project_pipeline/command_center/projections.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114"
@@ -23073,7 +23073,7 @@
       "apps/command_center/src/App.jsx",
       "apps/command_center/src/appModel.mjs"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114"
@@ -23128,7 +23128,7 @@
       "apps/command_center/src/App.jsx",
       "apps/command_center/src/appModel.mjs"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114"
@@ -23186,7 +23186,7 @@
       "src/project_pipeline/command_center/director.py",
       "docs/command_center/director_incident_notifications.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000112"
@@ -23244,7 +23244,7 @@
       "apps/command_center/src/App.jsx",
       "src/project_pipeline/command_center/application.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000113",
@@ -23380,7 +23380,7 @@
       "docs/command_center/director_incident_notifications.md",
       "runbooks/operator_notification_failure_recovery.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000113"
@@ -23445,7 +23445,7 @@
       "src/project_pipeline/command_center/models.py",
       "src/project_pipeline/command_center/projections.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114"
@@ -23507,7 +23507,7 @@
       "scripts/verify_command_center_ui.py",
       "src/project_pipeline/command_center/application_verification.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114"
@@ -23635,7 +23635,7 @@
       "src/project_pipeline/command_center/api.py",
       "src/project_pipeline/command_center/realtime.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114"

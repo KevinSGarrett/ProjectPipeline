@@ -45,12 +45,13 @@
   "expected_implementation_artifacts": [
     "plans/09_security_identity_and_policy/PLAN-SEC-001_security_identity_policy.md"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
+    "cluster-identity",
     "domain-sec",
-    "cluster-identity"
+    "implemented"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -102,6 +103,6 @@
     "SRC-017:L000142-L000191"
   ],
   "state": "BACKLOG",
-  "title": "Identity \u2014 Security, Identity, and Policy",
+  "title": "Identity — Security, Identity, and Policy",
   "upstream_dependencies": []
 }

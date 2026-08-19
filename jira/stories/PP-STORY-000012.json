@@ -50,10 +50,11 @@
     "plans/05_context_and_knowledge/PLAN-CTX-001_context_knowledge.md",
     "plans/_traceability/requirements.jsonl"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "domain-story",
+    "implemented",
     "plan-ctx-001"
   ],
   "last_observed_remote_state": {
