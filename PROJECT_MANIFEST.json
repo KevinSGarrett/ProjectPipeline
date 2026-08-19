@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "b2e7646fa251dfb0bca0d3eae2c7ab09b8762acf0a7d75aac7e68282f0fcf5a8",
+  "aggregate_sha256": "a6190f44db258901cac01bcdabb44b7d5506e263c36708630dbfd16e2c71bc77",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12597,8 +12597,8 @@
     },
     {
       "path": "src/project_pipeline/github_steward/adapter.py",
-      "sha256": "d50f11d3f840e319584569a9c71bbbb502467b1adca8135f96820921ea6c2631",
-      "size_bytes": 22212
+      "sha256": "0d5de8dd1fcc0ae84cef4acdbe62946b42fea1d3ad1964c637a38eb25f61acc0",
+      "size_bytes": 24478
     },
     {
       "path": "src/project_pipeline/github_steward/autonomous_review.py",
@@ -13902,8 +13902,8 @@
     },
     {
       "path": "tests/test_github_rest_adapter.py",
-      "sha256": "2efea8c8ff393639d8c607c6b19b74702b7c321b957067d898f76a211011bade",
-      "size_bytes": 7602
+      "sha256": "38a818e26a2e3c6fa35c338b273701f66b7edfb9ed768225fbafe795137236fb",
+      "size_bytes": 8817
     },
     {
       "path": "tests/test_github_steward_domain.py",
@@ -14461,7 +14461,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-19T01:31:17.148126+00:00",
+  "generated_at_utc": "2026-08-19T01:36:03.935197+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14470,5 +14470,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 25542134
+  "total_bytes": 25545615
 }

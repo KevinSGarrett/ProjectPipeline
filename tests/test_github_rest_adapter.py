@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import json
+import subprocess
 from urllib import error as urllib_error
 
 import pytest
@@ -200,6 +201,45 @@ def test_merge_sends_head_sha_and_method():
     body = json.loads(opener.requests[0][0].data)
     assert body == {"sha": SHA2, "merge_method": "rebase"}
     assert result["merged"] is True
+
+
+def test_create_pull_falls_back_to_provisioned_cli_on_authorization(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    denied = urllib_error.HTTPError(
+        "https://api.github.com",
+        403,
+        "no",
+        {},
+        io.BytesIO(json.dumps({"message": "Resource not accessible"}).encode()),
+    )
+    opener = Opener([denied, Response(pull_payload())])
+    adapter = GitHubRestAdapter(opener=opener, retry_base_seconds=0)
+
+    def fake_run(args, **_kwargs):
+        assert args[:3] == ["gh", "pr", "create"]
+        return subprocess.CompletedProcess(args, 0, "https://github.com/owner/repo/pull/4\n", "")
+
+    monkeypatch.setattr(
+        "project_pipeline.github_steward.adapter.subprocess.run",
+        fake_run,
+    )
+    created = adapter.create_pull_request(
+        "owner/repo",
+        head="feature/x",
+        base="main",
+        title="Feature",
+        body="Body",
+        draft=False,
+        context=GitHubWriteContext(
+            actor_id="actor:test",
+            correlation_id="corr:test",
+            idempotency_key="github-open-0001",
+            authorization_id="auth:test",
+        ),
+    )
+    assert created.number == 4
+    assert created.head_sha == SHA2
 
 
 def test_delete_branch_uses_git_refs_endpoint():

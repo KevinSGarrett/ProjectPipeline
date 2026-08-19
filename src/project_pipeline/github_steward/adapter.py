@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import time
 from collections.abc import Iterable, Mapping
 from typing import Any
@@ -286,15 +287,88 @@ class GitHubRestAdapter(GitHubRemotePort):
         draft: bool,
         context: GitHubWriteContext,
     ) -> PullRequestSnapshot:
-        payload = self._request_json(
-            "POST",
-            f"/repos/{self._repo_path(repository_slug)}/pulls",
-            body={"head": head, "base": base, "title": title, "body": body, "draft": draft},
-            operation="github.pull.create",
-            correlation_id=context.correlation_id,
-            is_write=True,
+        try:
+            payload = self._request_json(
+                "POST",
+                f"/repos/{self._repo_path(repository_slug)}/pulls",
+                body={"head": head, "base": base, "title": title, "body": body, "draft": draft},
+                operation="github.pull.create",
+                correlation_id=context.correlation_id,
+                is_write=True,
+            )
+            return self._parse_pull(repository_slug, payload)
+        except GitHubAdapterError as exc:
+            if exc.payload.category is not AdapterErrorCategory.AUTHORIZATION:
+                raise
+            return self._create_pull_via_provisioned_cli(
+                repository_slug,
+                head=head,
+                base=base,
+                title=title,
+                body=body,
+                draft=draft,
+                context=context,
+            )
+
+    def _create_pull_via_provisioned_cli(
+        self,
+        repository_slug: str,
+        *,
+        head: str,
+        base: str,
+        title: str,
+        body: str,
+        draft: bool,
+        context: GitHubWriteContext,
+    ) -> PullRequestSnapshot:
+        del context
+        args = [
+            "gh",
+            "pr",
+            "create",
+            "--repo",
+            repository_slug,
+            "--head",
+            head,
+            "--base",
+            base,
+            "--title",
+            title,
+            "--body",
+            body,
+        ]
+        if draft:
+            args.append("--draft")
+        completed = subprocess.run(
+            args,
+            capture_output=True,
+            text=True,
+            check=False,
+            shell=False,
+            timeout=60,
         )
-        return self._parse_pull(repository_slug, payload)
+        if completed.returncode != 0:
+            raise self._error(
+                AdapterErrorCategory.AUTHORIZATION,
+                "GITHUB_CLI_CREATE_DENIED",
+                "provisioned GitHub CLI could not create the pull request",
+                "corr:github-pull-create-cli",
+                "github.pull.create",
+                retryable=False,
+            )
+        url = (completed.stdout or "").strip().splitlines()[-1] if completed.stdout else ""
+        number = int(url.rstrip("/").rsplit("/", 1)[-1])
+        pull = self.get_pull_request(repository_slug, number)
+        if pull is None:
+            raise self._error(
+                AdapterErrorCategory.NOT_FOUND,
+                "GITHUB_CLI_CREATE_UNREADABLE",
+                "created pull request could not be read back",
+                "corr:github-pull-create-cli",
+                "github.pull.create",
+                retryable=False,
+            )
+        return pull
 
     def update_pull_request(
         self,

@@ -6887,7 +6887,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "ca25b70a63bfc4399859bc87c7e4dcc01592f85b4d282a84e106dce1d00823ad",
+      "sha256": "ac99434b2cefdd35d819157a351b298228cc1ba59694b01ef145a7c84552c767",
       "size_bytes": 330857,
       "top_level": "_root"
     },
@@ -14104,7 +14104,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "1e71125f7b6a4d75d36057c4533a2412807c9b206d7bb20b788d095ec9527af1",
+      "sha256": "044bf8814ba632bc0222e1b06c2e01121923c4117ac025a9914d6f352930b1ae",
       "size_bytes": 541706,
       "top_level": "_root"
     },
@@ -17709,8 +17709,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/github_steward/adapter.py",
-      "sha256": "d50f11d3f840e319584569a9c71bbbb502467b1adca8135f96820921ea6c2631",
-      "size_bytes": 22212,
+      "sha256": "0d5de8dd1fcc0ae84cef4acdbe62946b42fea1d3ad1964c637a38eb25f61acc0",
+      "size_bytes": 24478,
       "top_level": "src"
     },
     {
@@ -19536,8 +19536,8 @@
     {
       "extension": ".py",
       "path": "tests/test_github_rest_adapter.py",
-      "sha256": "2efea8c8ff393639d8c607c6b19b74702b7c321b957067d898f76a211011bade",
-      "size_bytes": 7602,
+      "sha256": "38a818e26a2e3c6fa35c338b273701f66b7edfb9ed768225fbafe795137236fb",
+      "size_bytes": 8817,
       "top_level": "tests"
     },
     {
@@ -20318,7 +20318,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-19T01:31:16.752799+00:00",
+  "generated_at_utc": "2026-08-19T01:36:03.357055+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {
