@@ -55,8 +55,237 @@ REQUIRED_TABLES = (
     "campaign_locks",
     "campaign_owner_bindings",
 )
+TABLE_INTRODUCED_BY = {
+    "campaign_runs": "PPDB-0022",
+    "campaign_events": "PPDB-0022",
+    "campaign_command_receipts": "PPDB-0022",
+    "campaign_locks": "PPDB-0022",
+    "campaign_owner_bindings": "PPDB-0023",
+}
+REQUIRED_CAMPAIGN_MIGRATION = "PPDB-0023"
 TIMED_STAGES = {"UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR"}
 IdentityInspector = Callable[[Path], dict[str, Any]]
+
+
+class CampaignSchemaError(RuntimeError):
+    """Legacy or incomplete campaign schema. Next action is machine-owned."""
+
+    def __init__(self, missing: list[str], required_migrations: list[str]) -> None:
+        self.missing = tuple(missing)
+        self.required_migrations = tuple(required_migrations)
+        self.next_action = {
+            "owner": "campaign.controller",
+            "action": "apply_catalog_migrations",
+            "target_migrations": self.required_migrations,
+            "user_action_required": False,
+            "ad_hoc_tables_forbidden": True,
+        }
+        super().__init__(
+            "campaign schema is missing catalog tables "
+            f"{list(self.missing)}; required catalog migration(s) "
+            f"{list(self.required_migrations)}; next_action=apply_catalog_migrations; "
+            "do not create tables ad hoc"
+        )
+
+
+def required_migrations_for_missing_tables(missing: list[str]) -> list[str]:
+    required: list[str] = []
+    for name in missing:
+        migration_id = TABLE_INTRODUCED_BY.get(name)
+        if migration_id and migration_id not in required:
+            required.append(migration_id)
+    if not required and missing:
+        required.append(REQUIRED_CAMPAIGN_MIGRATION)
+    return required
+
+
+def classify_campaign_database(connection: sqlite3.Connection) -> dict[str, Any]:
+    """Classify a campaign database against the current catalog. Never mutates."""
+
+    tables = {
+        str(row[0])
+        for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
+    }
+    latest = None
+    if "schema_migrations" in tables:
+        row = connection.execute(
+            "SELECT migration_id FROM schema_migrations ORDER BY migration_id DESC LIMIT 1"
+        ).fetchone()
+        latest = None if row is None else str(row[0])
+    missing = [name for name in REQUIRED_TABLES if name not in tables]
+    required = required_migrations_for_missing_tables(missing)
+    migration_required = bool(missing) or (
+        latest is not None and latest < REQUIRED_CAMPAIGN_MIGRATION
+    )
+    return {
+        "latest_applied": latest,
+        "required_latest": REQUIRED_CAMPAIGN_MIGRATION,
+        "missing_tables": missing,
+        "required_migrations": required,
+        "migration_required": migration_required,
+        "next_action": {
+            "owner": "campaign.controller",
+            "action": "apply_catalog_migrations" if migration_required else "none",
+            "target_migrations": required
+            if required
+            else ([REQUIRED_CAMPAIGN_MIGRATION] if migration_required else []),
+            "user_action_required": False,
+            "ad_hoc_tables_forbidden": True,
+        },
+        "user_action_required": False,
+    }
+
+
+def legacy_non_final_import_receipt(
+    *,
+    campaign_id: str,
+    integrated_sha: str,
+    integrated_tree: str,
+    source_database: str,
+    latest_applied: str | None,
+    elapsed_observations_retained: bool = True,
+) -> dict[str, Any]:
+    return {
+        "schema_version": "1.0.0",
+        "receipt_kind": "legacy_non_final_import_archive",
+        "campaign_id": campaign_id,
+        "integrated_sha": integrated_sha,
+        "integrated_tree": integrated_tree,
+        "source_database": source_database,
+        "latest_applied": latest_applied,
+        "elapsed_observations_retained": elapsed_observations_retained,
+        "qualifies_release": False,
+        "admits_72_hour": False,
+        "admits_finalization": False,
+        "user_action_required": False,
+        "reason": (
+            "legacy campaign observations may be retained but cannot qualify a "
+            "different integrated subject or a later release candidate"
+        ),
+    }
+
+
+def evaluate_campaign_aware_health(
+    *,
+    campaign: dict[str, Any],
+    owner_binding: dict[str, Any] | None = None,
+    pid_identity: dict[str, Any] | None = None,
+    qualification_owner_live: dict[str, Any] | None = None,
+    campaign_lock_live: dict[str, Any] | None = None,
+    expected_sha: str = "",
+    expected_tree: str = "",
+    expected_fence: str = "",
+    heartbeat_max_age_seconds: float = 90.0,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Classify campaign health. PID existence alone is never sufficient."""
+
+    reasons: list[str] = []
+    current = now or datetime.now(UTC)
+    status = str(campaign.get("status") or "")
+    if status not in {"RUNNING", "ATTESTED", "READY_TO_FINALIZE"}:
+        reasons.append("inactive_status")
+    last = campaign.get("last_heartbeat_utc")
+    heartbeat_fresh = False
+    if not last:
+        reasons.append("heartbeat_missing")
+    else:
+        stamp = datetime.fromisoformat(str(last))
+        if stamp.tzinfo is None:
+            stamp = stamp.replace(tzinfo=UTC)
+        heartbeat_fresh = (current - stamp).total_seconds() <= float(heartbeat_max_age_seconds)
+        if not heartbeat_fresh:
+            reasons.append("stale_heartbeat")
+    if expected_sha and str(campaign.get("integrated_sha") or "") != expected_sha:
+        reasons.append("sha_mismatch")
+    if expected_tree and str(campaign.get("integrated_tree") or "") != expected_tree:
+        reasons.append("tree_mismatch")
+    if expected_fence and str(campaign.get("fence") or "") != expected_fence:
+        reasons.append("fence_mismatch")
+
+    binding_complete = bool(
+        owner_binding
+        and str(owner_binding.get("executable_identity") or "").strip()
+        and str(owner_binding.get("process_started_at_utc") or "").strip()
+    )
+    pid_only = bool(
+        pid_identity
+        and pid_identity.get("process_id")
+        and not str(pid_identity.get("executable") or "").strip()
+        and not str(pid_identity.get("started_at_utc") or "").strip()
+        and not binding_complete
+    )
+    if pid_only and qualification_owner_live is None:
+        reasons.append("pid_only_insufficient")
+
+    qual_live = bool(
+        qualification_owner_live is not None and qualification_owner_live.get("alive") is not False
+    )
+    lock_live = bool(
+        campaign_lock_live is not None and campaign_lock_live.get("alive") is not False
+    )
+
+    if lock_live and (binding_complete or (pid_identity or {}).get("executable")):
+        bound = {
+            "process_id": int(
+                (campaign_lock_live or {}).get("process_id")
+                or (pid_identity or {}).get("process_id")
+                or campaign.get("process_id")
+                or 0
+            ),
+            "executable": (
+                (owner_binding or {}).get("executable_identity")
+                or (pid_identity or {}).get("executable")
+            ),
+            "started_at_utc": (
+                (owner_binding or {}).get("process_started_at_utc")
+                or (pid_identity or {}).get("started_at_utc")
+            ),
+        }
+        if (
+            bound.get("executable")
+            and bound.get("started_at_utc")
+            and not identities_match(bound, campaign_lock_live)
+        ):
+            reasons.append("pid_reuse")
+
+    identity_mismatch = bool(
+        {"sha_mismatch", "tree_mismatch", "fence_mismatch", "inactive_status"} & set(reasons)
+    )
+    owner_kind = "none"
+    if qual_live and heartbeat_fresh and not identity_mismatch:
+        owner_kind = "process_chain" if lock_live else "qualification_child"
+    elif (
+        lock_live
+        and heartbeat_fresh
+        and binding_complete
+        and "pid_reuse" not in reasons
+        and not identity_mismatch
+    ):
+        owner_kind = "campaign_lock"
+    if owner_kind == "none" and not qual_live and not lock_live:
+        reasons.append("no_live_owner")
+
+    blocking = {
+        "inactive_status",
+        "stale_heartbeat",
+        "heartbeat_missing",
+        "sha_mismatch",
+        "tree_mismatch",
+        "fence_mismatch",
+        "pid_only_insufficient",
+        "pid_reuse",
+    }
+    healthy = owner_kind != "none" and not blocking.intersection(reasons)
+    return {
+        "healthy": healthy,
+        "owner_kind": owner_kind,
+        "reasons": reasons,
+        "live_owner_kinds": (
+            (("qualification",) if qual_live else ()) + (("campaign_lock",) if lock_live else ())
+        ),
+        "user_action_required": False,
+    }
 
 
 def inspect_worktree_identity(root: Path) -> dict[str, Any]:
@@ -137,10 +366,7 @@ class CampaignController:
         }
         missing = [name for name in REQUIRED_TABLES if name not in present]
         if missing:
-            raise RuntimeError(
-                "campaign schema is missing catalog tables "
-                f"{missing}; apply PPDB-0022 rather than creating tables ad hoc"
-            )
+            raise CampaignSchemaError(missing, required_migrations_for_missing_tables(missing))
 
     def close(self) -> None:
         self.qualification.close()
@@ -424,6 +650,11 @@ class CampaignController:
                 raise ValueError("concurrent campaign runner is already active")
             # Missing/incomplete binding or a live mismatched PID is reuse:
             # this recover path is the governed takeover. claim_runner refuses it.
+        if self._live_qualification_owner_blocks_recover(row):
+            raise ValueError(
+                "live qualification owner still holds the campaign; "
+                "do not recover a parent/child process chain"
+            )
         self._assert_identity(row)
         if str(row["stage"]) in TIMED_STAGES:
             run_id = str(row["qualification_run_id"] or "")
@@ -934,6 +1165,48 @@ class CampaignController:
         return bool(str(binding.get("executable_identity") or "").strip()) and bool(
             str(binding.get("process_started_at_utc") or "").strip()
         )
+
+    def _heartbeat_fresh(self, row: sqlite3.Row | dict[str, Any]) -> bool:
+        last = datetime.fromisoformat(str(row["last_heartbeat_utc"]))
+        if last.tzinfo is None:
+            last = last.replace(tzinfo=UTC)
+        max_age = max(self.heartbeat_seconds * 3.0, 90.0)
+        return (datetime.now(UTC) - last).total_seconds() <= max_age
+
+    def _live_qualification_owner_blocks_recover(self, row: sqlite3.Row | dict[str, Any]) -> bool:
+        """Block recover only for a distinct live child or identity-matched owner.
+
+        A qualification lock that shares a PID with the campaign lock is not an
+        owner when the live process identity does not match the stored binding.
+        That is PID reuse: recover is the governed takeover.
+        """
+
+        lock = self._db.execute(
+            "SELECT * FROM qualification_locks WHERE lock_name = 'active-qualification'"
+        ).fetchone()
+        if lock is None:
+            return False
+        owner_pid = int(lock["process_id"])
+        if owner_pid <= 0 or owner_pid == os.getpid():
+            return False
+        live = inspect_process(owner_pid)
+        if live is None or not self._heartbeat_fresh(row):
+            return False
+        campaign_lock = self._db.execute(
+            "SELECT * FROM campaign_locks WHERE lock_name = 'active-campaign'"
+        ).fetchone()
+        campaign_pid = 0 if campaign_lock is None else int(campaign_lock["process_id"])
+        if campaign_pid > 0 and owner_pid != campaign_pid:
+            return True
+        binding = self._owner_binding()
+        if not self._binding_complete(binding):
+            return False
+        bound = {
+            "process_id": owner_pid,
+            "executable": None if binding is None else binding.get("executable_identity"),
+            "started_at_utc": None if binding is None else binding.get("process_started_at_utc"),
+        }
+        return identities_match(bound, live)
 
     def _upsert_owner_binding(
         self,

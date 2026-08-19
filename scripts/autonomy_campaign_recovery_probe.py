@@ -5,14 +5,17 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sqlite3
 import subprocess
 import time
-from datetime import UTC, datetime
 from pathlib import Path
 
-from project_pipeline.autonomy_runtime.campaign import CampaignController
+from project_pipeline.autonomy_runtime.campaign import (
+    CampaignController,
+    evaluate_campaign_aware_health,
+)
 from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusError
-from project_pipeline.autonomy_runtime.process_identity import identities_match, inspect_process
+from project_pipeline.autonomy_runtime.process_identity import inspect_process
 
 
 def _load_config(path: Path) -> dict:
@@ -37,14 +40,28 @@ def _pid_file_identity(path: Path) -> dict | None:
         return None
 
 
-def _heartbeat_fresh(campaign: dict, max_age: float) -> bool:
-    last = campaign.get("last_heartbeat_utc")
-    if not last:
-        return False
-    stamp = datetime.fromisoformat(str(last))
-    if stamp.tzinfo is None:
-        stamp = stamp.replace(tzinfo=UTC)
-    return (datetime.now(UTC) - stamp).total_seconds() <= max_age
+def _qualification_owner_live(controller: CampaignController) -> dict | None:
+    try:
+        lock = controller._db.execute(
+            "SELECT process_id FROM qualification_locks WHERE lock_name = 'active-qualification'"
+        ).fetchone()
+    except sqlite3.Error:
+        return None
+    if lock is None:
+        return None
+    return inspect_process(int(lock["process_id"]))
+
+
+def _campaign_lock_live(controller: CampaignController) -> dict | None:
+    try:
+        lock = controller._db.execute(
+            "SELECT process_id FROM campaign_locks WHERE lock_name = 'active-campaign'"
+        ).fetchone()
+    except sqlite3.Error:
+        return None
+    if lock is None:
+        return None
+    return inspect_process(int(lock["process_id"]))
 
 
 def _healthy(
@@ -52,32 +69,27 @@ def _healthy(
     pid_identity: dict | None,
     max_age: float,
     binding: dict | None = None,
+    qualification_owner: dict | None = None,
+    campaign_lock_owner: dict | None = None,
+    expected_sha: str = "",
+    expected_tree: str = "",
+    expected_fence: str = "",
 ) -> bool:
-    if str(campaign.get("status")) not in {"RUNNING", "ATTESTED", "READY_TO_FINALIZE"}:
-        return False
-    if not _heartbeat_fresh(campaign, max_age):
-        return False
-    if pid_identity is None or not pid_identity.get("process_id"):
-        return False
-    live = inspect_process(int(pid_identity["process_id"]))
-    if live is None:
-        return False
-    claimed = int(campaign.get("process_id") or 0)
-    if claimed and claimed != int(pid_identity["process_id"]):
-        return False
-    owner = binding or {}
-    executable = owner.get("executable_identity") or pid_identity.get("executable")
-    started = owner.get("process_started_at_utc") or pid_identity.get("started_at_utc")
-    if not executable or not started:
-        return False
-    return identities_match(
-        {
-            "process_id": pid_identity.get("process_id") or campaign.get("process_id"),
-            "executable": executable,
-            "started_at_utc": started,
-        },
-        live,
+    live = campaign_lock_owner
+    if live is None and pid_identity and pid_identity.get("process_id"):
+        live = inspect_process(int(pid_identity["process_id"]))
+    verdict = evaluate_campaign_aware_health(
+        campaign=campaign,
+        owner_binding=binding,
+        pid_identity=pid_identity,
+        qualification_owner_live=qualification_owner,
+        campaign_lock_live=live,
+        expected_sha=expected_sha,
+        expected_tree=expected_tree,
+        expected_fence=expected_fence,
+        heartbeat_max_age_seconds=max_age,
     )
+    return bool(verdict["healthy"])
 
 
 def _parse_campaign_id(text: str) -> str:
@@ -209,7 +221,17 @@ def main() -> int:
         if fence and campaign["fence"] != fence:
             raise SystemExit("campaign fence does not match bound fence")
         pid_identity = _pid_file_identity(pid_path)
-        if _healthy(campaign, pid_identity, max_age, controller._owner_binding()):
+        if _healthy(
+            campaign,
+            pid_identity,
+            max_age,
+            controller._owner_binding(),
+            qualification_owner=_qualification_owner_live(controller),
+            campaign_lock_owner=_campaign_lock_live(controller),
+            expected_sha=expected_sha,
+            expected_tree=expected_tree,
+            expected_fence=fence,
+        ):
             controller.project_status(
                 campaign_id,
                 status_path=status_path,

@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 583,
+  "test_count": 589,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -556,6 +556,36 @@
       "callable": "test_failed_finalize_does_not_claim_complete",
       "path": "tests/test_autonomy_campaign.py",
       "test_id": "TEST-CAMP-022"
+    },
+    {
+      "callable": "test_missing_owner_bindings_names_ppdb_0023_not_0022",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-023"
+    },
+    {
+      "callable": "test_legacy_0022_copy_upgrades_to_0023_with_incomplete_identity",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-024"
+    },
+    {
+      "callable": "test_recover_refuses_live_foreign_qualification_owner",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-025"
+    },
+    {
+      "callable": "test_recover_takes_over_reused_shared_qualification_pid",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-028"
+    },
+    {
+      "callable": "test_campaign_aware_health_requires_identity_not_pid_only",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-026"
+    },
+    {
+      "callable": "test_campaign_aware_health_treats_stale_lock_and_live_child_as_one_owner",
+      "path": "tests/test_autonomy_campaign.py",
+      "test_id": "TEST-CAMP-027"
     },
     {
       "callable": "test_agui_run_requires_lifecycle_bookends",
