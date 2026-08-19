@@ -53,9 +53,15 @@ class CoreStateStoreTests(unittest.TestCase):
     def test_task_transition_records_immutable_history(self) -> None:
         with tempfile.TemporaryDirectory() as directory, self.make_store(directory) as store:
             CoreStateService(store, ROOT).initialize_from_repository()
-            task = store.get_task_state("PP-TASK-000385")
-            assert task is not None
-            self.assertEqual(task.state, TaskLifecycleState.BACKLOG)
+            task = next(
+                item
+                for item in store.list_task_states("PROJECT-PIPELINE")
+                if item.state is TaskLifecycleState.BACKLOG
+            )
+            self.assertNotEqual(task.task_id, "PP-TASK-000385")
+            bound = store.get_task_state("PP-TASK-000385")
+            assert bound is not None
+            self.assertEqual(bound.state, TaskLifecycleState.IN_PROGRESS)
             updated = store.transition_task(
                 task_id=task.task_id,
                 next_state=TaskLifecycleState.READY,

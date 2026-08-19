@@ -21,6 +21,7 @@ from project_pipeline.domain.jira import (
     RemoteJiraIssue,
     jira_sync_identifier,
 )
+from project_pipeline.jira_steward.identity import derive_remote_local_id
 
 
 @dataclass(frozen=True, slots=True)
@@ -86,14 +87,40 @@ class JiraReconciler:
         remote_by_local: dict[str, RemoteJiraIssue] = {}
         duplicates: dict[str, list[str]] = {}
         for item in remote.issues:
-            if item.local_id is None:
+            resolved_local_id = item.local_id
+            if resolved_local_id is None:
+                derivation = derive_remote_local_id(
+                    labels=item.labels,
+                    description=item.description_text,
+                    fields=item.fields,
+                )
+                if derivation.fail_closed():
+                    conflicts.append(
+                        self._conflict(
+                            JiraConflictKind.DUPLICATE_REMOTE_MAPPING,
+                            local_id=None,
+                            remote_key=item.remote_key,
+                            fields=("local_id",),
+                            description=(
+                                f"Remote Jira issue {item.remote_key} has conflicting "
+                                f"local IDs: {', '.join(derivation.candidates)}."
+                            ),
+                            required_resolution=(
+                                "Resolve duplicate local-ID labels or description markers "
+                                "before writing."
+                            ),
+                        )
+                    )
+                    continue
+                resolved_local_id = derivation.local_id
+            if resolved_local_id is None:
                 continue
-            if item.local_id in remote_by_local:
+            if resolved_local_id in remote_by_local:
                 duplicates.setdefault(
-                    item.local_id, [remote_by_local[item.local_id].remote_key]
+                    resolved_local_id, [remote_by_local[resolved_local_id].remote_key]
                 ).append(item.remote_key)
             else:
-                remote_by_local[item.local_id] = item
+                remote_by_local[resolved_local_id] = item
         for local_id, keys in sorted(duplicates.items()):
             conflicts.append(
                 self._conflict(

@@ -7,9 +7,10 @@
     "identity": "NO_DIFFERENCE",
     "links": "NO_DIFFERENCE",
     "metadata": "NO_DIFFERENCE",
-    "status": "NO_DIFFERENCE"
+    "status": "RECONCILIATION_REQUIRED"
   },
-  "generated_at_utc": "2026-08-19T19:37:39.239232Z",
+  "generated_at_utc": "2026-08-19T22:28:01Z",
+  "identity_parity": "NO_DIFFERENCE",
   "instruction_citations": [
     "instructions/06_JIRA_OPERATING_PROTOCOL.md",
     "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
@@ -20,20 +21,16 @@
   ],
   "local_edge_count": 890,
   "local_issue_count": 393,
-  "local_mirror_fingerprint": "25d4a92943ee99287a8807ce019e691ceb5f69cef8a81d851ab17946875871c9",
+  "local_mirror_fingerprint": "a426c27d045d6cdb2473de49f5f77b431ed0ebba2aaddcc1b647105082b7658f",
   "local_reconciliation_pending_remote": false,
   "parity_status": "PARITY_CONFIRMED",
-  "plan_id": "JPLAN-3618FC1CD42B00FA927F",
+  "plan_id": "JPLAN-CYCLE015-PP385-OBS",
   "project_key": "PP",
   "readback": {
-    "comment_not_empty": 7,
-    "issueLinkType_not_empty": 341,
-    "labels_not_empty": 393,
-    "parent_not_empty": 129,
     "status_counts": {
       "Done": 20,
-      "In Progress": 13,
-      "To Do": 360
+      "In Progress": 14,
+      "To Do": 359
     },
     "total_count": 393,
     "type_counts": {
@@ -45,29 +42,182 @@
   },
   "readback_source": "MCP:plugin-atlassian-atlassian",
   "readback_verified": true,
-  "receipt_id": "JREC-54CE8D5BF4557A09F0B2",
-  "receipt_result": "APPLIED",
+  "receipt_id": "JREC-CYCLE015-PP385-OBS",
+  "receipt_result": "OBSERVED",
   "reconciled_remote_keys": {
+    "PP-EPIC-000036": {
+      "live_state": "In Progress",
+      "remote_id": "25353",
+      "remote_key": "PP-379"
+    },
+    "PP-STORY-000138": {
+      "live_state": "In Progress",
+      "remote_id": "25355",
+      "remote_key": "PP-381"
+    },
+    "PP-TASK-000221": {
+      "live_state": "Done",
+      "remote_id": "25266",
+      "remote_key": "PP-297"
+    },
+    "PP-TASK-000224": {
+      "live_state": "Done",
+      "remote_id": "25120",
+      "remote_key": "PP-151"
+    },
+    "PP-TASK-000225": {
+      "live_state": "Done",
+      "remote_id": "25111",
+      "remote_key": "PP-142"
+    },
+    "PP-TASK-000226": {
+      "live_state": "Done",
+      "remote_id": "25168",
+      "remote_key": "PP-199"
+    },
+    "PP-TASK-000229": {
+      "live_state": "Done",
+      "remote_id": "25320",
+      "remote_key": "PP-351"
+    },
+    "PP-TASK-000230": {
+      "live_state": "Done",
+      "remote_id": "25177",
+      "remote_key": "PP-208"
+    },
+    "PP-TASK-000323": {
+      "live_state": "In Progress",
+      "remote_id": "25203",
+      "remote_key": "PP-234"
+    },
+    "PP-TASK-000327": {
+      "live_state": "In Progress",
+      "remote_id": "25287",
+      "remote_key": "PP-318"
+    },
+    "PP-TASK-000340": {
+      "live_state": "In Progress",
+      "remote_id": "25224",
+      "remote_key": "PP-255"
+    },
+    "PP-TASK-000341": {
+      "live_state": "In Progress",
+      "remote_id": "25190",
+      "remote_key": "PP-221"
+    },
+    "PP-TASK-000342": {
+      "live_state": "In Progress",
+      "remote_id": "25309",
+      "remote_key": "PP-340"
+    },
+    "PP-TASK-000343": {
+      "live_state": "In Progress",
+      "remote_id": "25150",
+      "remote_key": "PP-181"
+    },
+    "PP-TASK-000344": {
+      "live_state": "In Progress",
+      "remote_id": "25149",
+      "remote_key": "PP-180"
+    },
+    "PP-TASK-000345": {
+      "live_state": "In Progress",
+      "remote_id": "25139",
+      "remote_key": "PP-170"
+    },
+    "PP-TASK-000346": {
+      "live_state": "In Progress",
+      "remote_id": "25247",
+      "remote_key": "PP-278"
+    },
+    "PP-TASK-000347": {
+      "live_state": "In Progress",
+      "remote_id": "25197",
+      "remote_key": "PP-228"
+    },
+    "PP-TASK-000370": {
+      "live_state": "Done",
+      "remote_id": "25167",
+      "remote_key": "PP-198"
+    },
+    "PP-TASK-000371": {
+      "live_state": "Done",
+      "remote_id": "25285",
+      "remote_key": "PP-316"
+    },
+    "PP-TASK-000372": {
+      "live_state": "Done",
+      "remote_id": "25198",
+      "remote_key": "PP-229"
+    },
+    "PP-TASK-000373": {
+      "live_state": "Done",
+      "remote_id": "25140",
+      "remote_key": "PP-171"
+    },
+    "PP-TASK-000374": {
+      "live_state": "Done",
+      "remote_id": "25193",
+      "remote_key": "PP-224"
+    },
+    "PP-TASK-000375": {
+      "live_state": "Done",
+      "remote_id": "25191",
+      "remote_key": "PP-222"
+    },
+    "PP-TASK-000376": {
+      "live_state": "Done",
+      "remote_id": "25317",
+      "remote_key": "PP-348"
+    },
+    "PP-TASK-000377": {
+      "live_state": "Done",
+      "remote_id": "25209",
+      "remote_key": "PP-240"
+    },
+    "PP-TASK-000378": {
+      "live_state": "Done",
+      "remote_id": "25127",
+      "remote_key": "PP-158"
+    },
+    "PP-TASK-000379": {
+      "live_state": "In Progress",
+      "remote_id": "25362",
+      "remote_key": "PP-388"
+    },
     "PP-TASK-000380": {
       "live_state": "Done",
+      "remote_id": "25366",
       "remote_key": "PP-392"
     },
     "PP-TASK-000381": {
       "live_state": "Done",
+      "remote_id": "25364",
       "remote_key": "PP-390"
     },
     "PP-TASK-000382": {
       "live_state": "Done",
+      "remote_id": "25363",
       "remote_key": "PP-389"
     },
     "PP-TASK-000383": {
       "live_state": "Done",
+      "remote_id": "25361",
       "remote_key": "PP-387"
     },
     "PP-TASK-000384": {
       "live_state": "Done",
+      "remote_id": "25367",
       "remote_key": "PP-393"
+    },
+    "PP-TASK-000385": {
+      "live_state": "In Progress",
+      "remote_id": "25365",
+      "remote_key": "PP-391"
     }
   },
+  "remote_fingerprint": "fdba76c385afccc2d4cdc20d078e59935dd70405331a1be3e1088d577897b699",
+  "remote_snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+  "remote_version": "JSNAP-CYCLE015-20260819T222801Z",
   "schema_version": "1.0.0"
 }

@@ -28,7 +28,7 @@ def test_ready_plan_is_dry_run(tmp_path: Path, capsys) -> None:
     operations = result["operations"]
     assert isinstance(operations, list)
     ready_ids = {item["task_id"] for item in operations}
-    assert "PP-TASK-000385" in ready_ids
+    assert "PP-TASK-000385" not in ready_ids
     assert ready_ids
     assert all(item["next_state"] == "READY" for item in operations)
 
@@ -56,6 +56,10 @@ def test_ready_plan_can_target_one_task(tmp_path: Path, capsys) -> None:
 
 def test_ready_apply_can_target_one_task(tmp_path: Path, capsys) -> None:
     db = tmp_path / "control.db"
+    assert main(["control", "ready-plan", "--root", str(ROOT), "--database", str(db)]) == 0
+    planned = json.loads(capsys.readouterr().out)
+    target = planned["operations"][0]["task_id"]
+    assert target != "PP-TASK-000385"
     assert (
         main(
             [
@@ -66,7 +70,7 @@ def test_ready_apply_can_target_one_task(tmp_path: Path, capsys) -> None:
                 "--database",
                 str(db),
                 "--task-id",
-                "PP-TASK-000385",
+                target,
                 "--apply",
                 "--approve",
             ]
@@ -75,7 +79,7 @@ def test_ready_apply_can_target_one_task(tmp_path: Path, capsys) -> None:
     )
     result = json.loads(capsys.readouterr().out)
     assert result["applied_transition_count"] == 1
-    assert {item["task_id"] for item in result["applied_transitions"]} == {"PP-TASK-000385"}
+    assert {item["task_id"] for item in result["applied_transitions"]} == {target}
 
 
 def test_ready_apply_requires_explicit_apply_and_approval(tmp_path: Path, capsys) -> None:
@@ -104,7 +108,7 @@ def test_ready_apply_transitions_only_currently_ready_backlog(tmp_path: Path, ca
     result = json.loads(capsys.readouterr().out)
     assert code == 0
     applied_ids = {item["task_id"] for item in result["applied_transitions"]}
-    assert "PP-TASK-000385" in applied_ids
+    assert "PP-TASK-000385" not in applied_ids
     assert result["applied_transition_count"] == len(applied_ids)
     assert result["applied_transition_count"] >= 1
     leftover = main(["control", "ready-plan", "--root", str(ROOT), "--database", str(db)])

@@ -49963,11 +49963,18 @@
     "issue_type": "TASK",
     "labels": [
       "autonomy-runtime",
-      "unattended",
+      "cohesive-slice",
+      "in-progress",
       "release",
-      "cohesive-slice"
+      "unattended"
     ],
-    "last_observed_remote_state": null,
+    "last_observed_remote_state": {
+      "observed_at_utc": "2026-08-19T22:28:01Z",
+      "remote_id": "25365",
+      "remote_key": "PP-391",
+      "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+      "status_name": "In Progress"
+    },
     "local_id": "PP-TASK-000385",
     "objective": "Pass unattended operation, release, and terminal Completion qualification",
     "observability_impact": "Captures continuous cycle, health, incident, recovery, cost, release, and completion evidence.",
@@ -49995,7 +50002,7 @@
         "type": "DEPENDS_ON"
       }
     ],
-    "remote_jira_key": null,
+    "remote_jira_key": "PP-391",
     "required_tests": [
       "TEST-CAMP-001",
       "TEST-CAMP-002",
@@ -50021,7 +50028,7 @@
       "SRC-014:L000001-L000086",
       "SRC-015:L000001-L000112"
     ],
-    "state": "BACKLOG",
+    "state": "IN_PROGRESS",
     "title": "Pass unattended operation, release, and terminal Completion qualification",
     "upstream_dependencies": []
   }

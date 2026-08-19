@@ -19,6 +19,11 @@ _COMPLETE_IMPLEMENTATION_STATES = {
     "LIVE_VERIFIED",
     "BLOCKED_EXTERNAL",
 }
+_IMPLEMENTATION_CLAIM_LABELS = {"implemented", "reconciled", "verified", "done"}
+_OBSERVATION_ALIGNED_STATES = {
+    "in progress": "IN_PROGRESS",
+    "to do": "BACKLOG",
+}
 _ISSUE_ROOTS = {"tasks", "stories", "bugs", "subtasks"}
 _GENERATED_PREFIXES = (
     "docs/generated/",
@@ -221,25 +226,51 @@ def _evidence_backed(issue: Mapping[str, Any] | None) -> bool:
     )
 
 
+def _verification_statuses(issue: Mapping[str, Any] | None) -> tuple[Any, ...]:
+    if issue is None:
+        return ()
+    return tuple(
+        item.get("verification", {}).get("status")
+        for item in issue.get("acceptance_criteria", ())
+        if isinstance(item, dict) and isinstance(item.get("verification"), dict)
+    )
+
+
 def _lifecycle_changed(before: Mapping[str, Any] | None, after: Mapping[str, Any] | None) -> bool:
     if before is None or after is None:
         return False
     tracked = ("state", "implementation_state", "completion_evidence", "labels")
     if any(before.get(key) != after.get(key) for key in tracked):
         return True
-    before_criteria = before.get("acceptance_criteria", ())
-    after_criteria = after.get("acceptance_criteria", ())
-    before_statuses = tuple(
-        item.get("verification", {}).get("status")
-        for item in before_criteria
-        if isinstance(item, dict) and isinstance(item.get("verification"), dict)
-    )
-    after_statuses = tuple(
-        item.get("verification", {}).get("status")
-        for item in after_criteria
-        if isinstance(item, dict) and isinstance(item.get("verification"), dict)
-    )
-    return before_statuses != after_statuses
+    return _verification_statuses(before) != _verification_statuses(after)
+
+
+def _remote_observation_alignment_only(
+    before: Mapping[str, Any] | None, after: Mapping[str, Any] | None
+) -> bool:
+    if before is None or after is None:
+        return False
+    if before.get("implementation_state") != after.get("implementation_state"):
+        return False
+    if before.get("completion_evidence") != after.get("completion_evidence"):
+        return False
+    if _verification_statuses(before) != _verification_statuses(after):
+        return False
+    observed = after.get("last_observed_remote_state")
+    if not isinstance(observed, dict):
+        return False
+    observed_status = str(observed.get("status_name") or "").strip().lower()
+    aligned_state = _OBSERVATION_ALIGNED_STATES.get(observed_status)
+    if aligned_state is None or str(after.get("state") or "") != aligned_state:
+        return False
+    if not str(after.get("remote_jira_key") or "").strip():
+        return False
+    added_labels = {str(item) for item in after.get("labels", ())} - {
+        str(item) for item in before.get("labels", ())
+    }
+    if added_labels & _IMPLEMENTATION_CLAIM_LABELS:
+        return False
+    return before.get("state") != after.get("state") or before.get("labels") != after.get("labels")
 
 
 def _requirement_progress(root: Path, base_ref: str, head_ref: str) -> int:
@@ -372,7 +403,10 @@ def evaluate_delivery_gate(
         if before != after and _normalized_issue(before) == _normalized_issue(after)
     )
     lifecycle_transition_paths = tuple(
-        path for path, (before, after) in issue_pairs.items() if _lifecycle_changed(before, after)
+        path
+        for path, (before, after) in issue_pairs.items()
+        if _lifecycle_changed(before, after)
+        and not _remote_observation_alignment_only(before, after)
     )
     task_ids = tuple(
         sorted(

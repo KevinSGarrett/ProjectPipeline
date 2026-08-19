@@ -374,3 +374,56 @@ def test_implementation_and_test_change_is_objective_progress(tmp_path: Path) ->
     assert decision.state is DeliveryGateState.PASS
     assert decision.objective_progress_units == 1
     assert not decision.reconciliation_batch
+
+
+def test_remote_in_progress_alignment_does_not_block_material_slice(tmp_path: Path) -> None:
+    root, base = _repository(tmp_path)
+    issue = _issue("PP-TASK-000001")
+    issue["state"] = "IN_PROGRESS"
+    issue["remote_jira_key"] = "PP-391"
+    issue["labels"] = ["assurance", "in-progress"]
+    issue["last_observed_remote_state"] = {
+        "remote_key": "PP-391",
+        "status_name": "In Progress",
+    }
+    _write_json(root / "jira" / "tasks" / "PP-TASK-000001.json", issue)
+    source = root / "src" / "project_pipeline" / "identity.py"
+    test = root / "tests" / "test_identity.py"
+    source.parent.mkdir(parents=True, exist_ok=True)
+    test.parent.mkdir(parents=True, exist_ok=True)
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    test.write_text("def test_identity():\n    assert 1 == 1\n", encoding="utf-8")
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "bind observed in-progress identity")
+
+    decision = evaluate_delivery_gate(root, base_ref=base)
+
+    assert decision.state is DeliveryGateState.PASS
+    assert decision.lifecycle_only_task_ids == ()
+    assert decision.objective_progress_units >= 1
+
+
+def test_remote_done_alignment_is_still_an_implementation_lifecycle(tmp_path: Path) -> None:
+    root, base = _repository(tmp_path)
+    issue = _issue("PP-TASK-000001")
+    issue["state"] = "DONE"
+    issue["remote_jira_key"] = "PP-393"
+    issue["last_observed_remote_state"] = {
+        "remote_key": "PP-393",
+        "status_name": "Done",
+    }
+    _write_json(root / "jira" / "tasks" / "PP-TASK-000001.json", issue)
+    source = root / "src" / "unrelated.py"
+    test = root / "tests" / "test_unrelated.py"
+    source.parent.mkdir(parents=True, exist_ok=True)
+    test.parent.mkdir(parents=True, exist_ok=True)
+    source.write_text("VALUE = 1\n", encoding="utf-8")
+    test.write_text("def test_unrelated():\n    assert 1 == 1\n", encoding="utf-8")
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "claim done from remote observation")
+
+    decision = evaluate_delivery_gate(root, base_ref=base)
+
+    assert decision.state is DeliveryGateState.BLOCKED
+    assert decision.lifecycle_only_task_ids == ("PP-TASK-000001",)
+    assert "lifecycle transitions" in decision.reasons[0]

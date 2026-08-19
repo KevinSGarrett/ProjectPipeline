@@ -6808,7 +6808,7 @@
     },
     {
       "id": "PP-TASK-000385",
-      "state": "BACKLOG",
+      "state": "IN_PROGRESS",
       "title": "Pass unattended operation, release, and terminal Completion qualification",
       "type": "TASK"
     }
