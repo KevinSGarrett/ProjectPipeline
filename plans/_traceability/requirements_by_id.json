@@ -12379,10 +12379,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited authoritative source establishes this obligation.",
     "domain": "OPS",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000187"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/observability/ops_health.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000028",
@@ -12413,7 +12417,12 @@
     "tags": [
       "ops"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-OPS-HEALTH-001",
+      "TEST-OPS-HEALTH-002",
+      "TEST-OPS-HEALTH-003",
+      "TEST-OPS-HEALTH-005"
+    ],
     "title": "Health shall be derived from observed component, project, provider, synchronization, budget, and evidence state",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Automated verification plus independent evidence where risk requires it."
@@ -12562,10 +12571,15 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "OPS",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000188"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/observability/ops_models.py",
+      "src/project_pipeline/observability/ops_store.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000120"
@@ -12597,7 +12611,10 @@
       "telemetry",
       "worker-telemetry"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-OPS-HEALTH-004",
+      "TEST-OPS-STORE-002"
+    ],
     "title": "Worker telemetry",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -12685,10 +12702,15 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "OPS",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000189"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/observability/ops_models.py",
+      "src/project_pipeline/observability/ops_store.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000120"
@@ -12721,7 +12743,9 @@
       "ops",
       "telemetry"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-OPS-HEALTH-004"
+    ],
     "title": "Cost telemetry",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -12803,10 +12827,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "OPS",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000190"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/observability/ops_health.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000117"
@@ -12840,7 +12868,12 @@
       "health-calculation",
       "ops"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-OPS-HEALTH-001",
+      "TEST-OPS-HEALTH-002",
+      "TEST-OPS-HEALTH-003",
+      "TEST-OPS-HEALTH-005"
+    ],
     "title": "Deterministic health calculation",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -12909,10 +12942,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "OPS",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000191"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/observability/ops_service.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000118"
@@ -12946,7 +12983,9 @@
       "intelligence",
       "ops"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-OPS-INDEX-001"
+    ],
     "title": "Code Intelligence Index",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -13014,10 +13053,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "OPS",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000192"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/observability/ops_service.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000119"
@@ -13049,7 +13092,9 @@
       "operations",
       "ops"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-OPS-INDEX-001"
+    ],
     "title": "Dependency update intelligence",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -13061,10 +13106,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "OPS",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000193"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/observability/ops_service.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000119"
@@ -13096,7 +13145,9 @@
       "operations",
       "ops"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-OPS-MEM-001"
+    ],
     "title": "Build and dependency cache",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
@@ -13108,10 +13159,14 @@
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "OPS",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000194"
+    ],
     "evolution_ids": [],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/observability/ops_service.py"
+    ],
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000027",
       "PP-STORY-000119"
@@ -13143,7 +13198,9 @@
       "operations",
       "ops"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-OPS-MEM-001"
+    ],
     "title": "Knowledge distillation",
     "verification_class": "AUTOMATED_WITH_REVIEW",
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."

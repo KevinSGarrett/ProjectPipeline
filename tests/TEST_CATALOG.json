@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 599,
+  "test_count": 610,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -2996,6 +2996,61 @@
       "callable": "test_verification_foundation_is_registered",
       "path": "tests/test_verification_validation.py",
       "test_id": "TEST-VERIFY-VALIDATION-001"
+    },
+    {
+      "callable": "test_health_is_unknown_when_required_layers_are_missing",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-HEALTH-001"
+    },
+    {
+      "callable": "test_stale_observation_fails_closed",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-HEALTH-002"
+    },
+    {
+      "callable": "test_contradictory_layer_is_unhealthy",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-HEALTH-003"
+    },
+    {
+      "callable": "test_failed_worker_and_quota_breach_are_unhealthy",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-HEALTH-004"
+    },
+    {
+      "callable": "test_complete_fresh_layers_are_healthy",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-HEALTH-005"
+    },
+    {
+      "callable": "test_code_index_and_dependency_classification_are_local",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-INDEX-001"
+    },
+    {
+      "callable": "test_cache_and_distilled_memory",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-MEM-001"
+    },
+    {
+      "callable": "test_conflicting_replay_and_journal_recovery",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-STORE-001"
+    },
+    {
+      "callable": "test_retention_and_concurrent_writers",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-STORE-002"
+    },
+    {
+      "callable": "test_missing_store_does_not_rewrite_command_center_health",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-CC-001"
+    },
+    {
+      "callable": "test_cli_health_and_index",
+      "path": "tests/test_ops_intelligence.py",
+      "test_id": "TEST-OPS-CLI-001"
     }
   ]
 }

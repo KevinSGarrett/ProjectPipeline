@@ -170,9 +170,10 @@ def test_cache_and_distilled_memory(tmp_path: Path) -> None:
     assert event.outcome is CacheOutcome.HIT
     try:
         distill_memory(store, {"chat": "hello", "kind": MemoryKind.FACT.value})
+    except ValueError as error:
+        assert "conversation history" in str(error)
+    else:
         raise AssertionError("conversation history must be rejected")
-    except ValueError:
-        pass
     memory = distill_memory(
         store,
         {
