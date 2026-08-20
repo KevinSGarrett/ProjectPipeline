@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "d4d8a488adb7150fb55aab72661a8dfdbc8c39e882e4e97fc861f7a7efa2fb59",
+  "aggregate_sha256": "5ef12e9c2d1c62f4de5479ecd91afa44413af61f4e79fbfb1ff3bba4f638e4cd",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -157,7 +157,7 @@
     },
     {
       "path": ".github/workflows/desktop-windows.yml",
-      "sha256": "f7aaa7a4df200751af0258fd62ee3afd37c60ce74dad072afd2e74d85e7b29ca",
+      "sha256": "f4cee1803fd4a012a7773fe3e2b360321183a038ac1be3186b2a3a8dc4939c12",
       "size_bytes": 4493
     },
     {
@@ -12487,8 +12487,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/desktop_reproducibility.py",
-      "sha256": "35604fa58e4ad8f2d8209645cb0d51a49935c9b718094d919d96f84a786d2fd8",
-      "size_bytes": 5254
+      "sha256": "91588ed2553f998263350c1d919b3998ab78339fd0b0e4d54ac26bec0c900e16",
+      "size_bytes": 8801
     },
     {
       "path": "src/project_pipeline/command_center/desktop_session.py",
@@ -14267,8 +14267,8 @@
     },
     {
       "path": "tests/test_desktop_reproducibility.py",
-      "sha256": "7beace0a0d576463bb925bbabdaf8fe63322233a8b99c7265511500d1a36a0f1",
-      "size_bytes": 3172
+      "sha256": "67150176673b047a6e0530a7304f7eb4c92627b8f1af344a6f5e4b1323694f7a",
+      "size_bytes": 6216
     },
     {
       "path": "tests/test_desktop_session.py",
@@ -14936,7 +14936,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T08:45:15.970747+00:00",
+  "generated_at_utc": "2026-08-20T10:07:01.663187+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14945,5 +14945,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29911453
+  "total_bytes": 29918044
 }
