@@ -69,8 +69,14 @@ from project_pipeline.budget.simulation import (
 from project_pipeline.budget.simulation import (
     supported_scenarios as supported_budget_scenarios,
 )
-from project_pipeline.command_center.live_browser import verify_live_command_center
-from project_pipeline.command_center.live_server import LiveCommandCenterServer
+
+try:
+    from project_pipeline.command_center.live_browser import verify_live_command_center
+    from project_pipeline.command_center.live_server import LiveCommandCenterServer
+except ImportError:
+    # optional:api extra is not part of the active lock groups used by CI.
+    verify_live_command_center = None
+    LiveCommandCenterServer = None
 from project_pipeline.configuration import (
     ConfigurationError,
     ExternalWriteMode,
@@ -1418,6 +1424,10 @@ def _jira_adapter(args: argparse.Namespace, configuration: Any):
 
 
 def _run_command_center_command(args: argparse.Namespace) -> int:
+    if verify_live_command_center is None or LiveCommandCenterServer is None:
+        raise ConfigurationError(
+            "command-center serve/verify-live requires the optional api extra (fastapi, uvicorn, websockets)"
+        )
     token_path = args.token_file or (args.root / ".local" / "command_center_loopback_token")
     if args.action == "verify-live":
         token = (

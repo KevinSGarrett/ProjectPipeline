@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "2e4cc1eb02cfe304006f71c5e0def5b97cdf00c0bdbe67b8599554b6eb6678e4",
+  "aggregate_sha256": "d668657318149ff05b219dc7ac454d364ff827dbe3429fabe015001b0bdb477c",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12362,13 +12362,13 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "1d31ea3a89d348591670a238bcbb2cce40ae8a8fb999ea8010b3b839cfdeadec",
-      "size_bytes": 171883
+      "sha256": "a427019afeb6c1f33797ccc3ef4088be856d77ffb0cba0fc3a7f5202a7141805",
+      "size_bytes": 172297
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
-      "sha256": "9edaeea13061029be813bc12dc157d1c04a76e4ffc041f8b4cf2db19e5839777",
-      "size_bytes": 3139
+      "sha256": "e1c2a7b92cdd8707c4c33e79fc8a343e14da37e38b0f77dd8be398a571338dc3",
+      "size_bytes": 2943
     },
     {
       "path": "src/project_pipeline/command_center/agui.py",
@@ -14786,7 +14786,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T00:12:27.447947+00:00",
+  "generated_at_utc": "2026-08-20T00:18:42.032208+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14795,5 +14795,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29367208
+  "total_bytes": 29367426
 }
