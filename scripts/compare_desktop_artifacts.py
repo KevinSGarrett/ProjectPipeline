@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 from project_pipeline.command_center.desktop_reproducibility import (
-    compare_normalized_trees,
+    compare_desktop_artifact_sets,
     load_nondeterminism_schema,
 )
 
@@ -19,7 +19,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json-output", type=Path)
     args = parser.parse_args(argv)
     schema = load_nondeterminism_schema(args.root)
-    result = compare_normalized_trees(args.left, args.right, schema)
+    result = compare_desktop_artifact_sets(args.left, args.right, schema)
     text = json.dumps(result, indent=2, sort_keys=True) + "\n"
     if args.json_output is not None:
         args.json_output.parent.mkdir(parents=True, exist_ok=True)

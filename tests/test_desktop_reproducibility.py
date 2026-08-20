@@ -3,12 +3,11 @@ from __future__ import annotations
 from pathlib import Path
 
 from project_pipeline.command_center.desktop_reproducibility import (
-    CFB_MAGIC,
     NSIS_SIGNATURE,
+    compare_desktop_artifact_sets,
+    compare_extracted_payload_trees,
     compare_normalized_trees,
     load_nondeterminism_schema,
-    normalize_msi_container,
-    normalize_nsis_installer,
     normalize_pe_image,
 )
 
@@ -25,6 +24,10 @@ def _minimal_pe(*, timestamp: int, checksum: int = 1) -> bytes:
     payload[216:220] = checksum.to_bytes(4, "little")
     payload[220:] = b"application-payload"
     return bytes(payload)
+
+
+def _nsis_pe(*, pe_timestamp: int) -> bytes:
+    return _minimal_pe(timestamp=pe_timestamp) + b"\xef\xbe\xad\xde" + NSIS_SIGNATURE + b"body"
 
 
 def test_nondeterminism_schema_is_versioned_and_allowlisted() -> None:
@@ -57,70 +60,78 @@ def test_normalized_pe_comparison_ignores_only_allowlisted_fields(tmp_path: Path
     assert result["passed"] is True
 
 
-def _msi_like(*, package_code: str, payload: bytes) -> bytes:
-    guid = f"{{{package_code}}}".encode("utf-16le")
-    return CFB_MAGIC + b"\x00" * 24 + "PackageCode".encode("utf-16le") + guid + payload
-
-
-def _nsis_like(*, timestamp: int, pe_timestamp: int = 1, payload: bytes = b"payload") -> bytes:
-    body = bytearray(_minimal_pe(timestamp=pe_timestamp))
-    header_timestamp = timestamp.to_bytes(4, "little")
-    body.extend(header_timestamp + b"\x00\x00\x00\x00\x00\x00\x00\x00" + NSIS_SIGNATURE + payload)
-    return bytes(body)
-
-
-def test_msi_package_code_is_allowlisted_and_stripped(tmp_path: Path) -> None:
+def test_identity_msi_containers_are_not_compared_as_raw_bytes(tmp_path: Path) -> None:
     schema = load_nondeterminism_schema(ROOT)
     left_dir = tmp_path / "A"
     right_dir = tmp_path / "B"
-    left_dir.mkdir()
-    right_dir.mkdir()
-    payload = b"extracted-application-tree"
-    left = _msi_like(package_code="AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA", payload=payload)
-    right = _msi_like(package_code="BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB", payload=payload)
-    (left_dir / "app.msi").write_bytes(left)
-    (right_dir / "app.msi").write_bytes(right)
-    normalized_left, removed_left = normalize_msi_container(left, schema)
-    normalized_right, removed_right = normalize_msi_container(right, schema)
-    assert removed_left == ("msi_package_code",)
-    assert removed_right == ("msi_package_code",)
-    assert normalized_left == normalized_right
+    for root in (left_dir, right_dir):
+        (root / "compare").mkdir(parents=True)
+        (root / "identity").mkdir(parents=True)
+        (root / "compare" / "app.exe").write_bytes(_minimal_pe(timestamp=3))
+    (left_dir / "identity" / "app.msi").write_bytes(b"D0CF-left-package-code")
+    (right_dir / "identity" / "app.msi").write_bytes(b"D0CF-right-package-code")
     result = compare_normalized_trees(left_dir, right_dir, schema)
     assert result["passed"] is True
+    assert all(not item["name"].endswith(".msi") for item in result["comparisons"])
 
 
-def test_msi_unallowlisted_payload_difference_fails(tmp_path: Path) -> None:
+def test_extracted_msi_payload_trees_ignore_package_identity(tmp_path: Path) -> None:
+    schema = load_nondeterminism_schema(ROOT)
+    left = tmp_path / "extract-A"
+    right = tmp_path / "extract-B"
+    for root, stamp in ((left, 4), (right, 8)):
+        (root / "ProgramFiles").mkdir(parents=True)
+        (root / "ProgramFiles" / "app.exe").write_bytes(_minimal_pe(timestamp=stamp))
+    result = compare_extracted_payload_trees(
+        left, right, schema, name="app.msi", removed_field="msi_package_code"
+    )
+    assert result["equal"] is True
+    assert "msi_package_code" in result["left_removed_fields"]
+
+
+def test_extracted_msi_payload_difference_fails(tmp_path: Path) -> None:
+    schema = load_nondeterminism_schema(ROOT)
+    left = tmp_path / "extract-A"
+    right = tmp_path / "extract-B"
+    left.mkdir()
+    right.mkdir()
+    (left / "app.exe").write_bytes(_minimal_pe(timestamp=1))
+    changed = bytearray(_minimal_pe(timestamp=1))
+    changed[221] = (changed[221] + 1) % 256
+    (right / "app.exe").write_bytes(changed)
+    result = compare_extracted_payload_trees(
+        left, right, schema, name="app.msi", removed_field="msi_package_code"
+    )
+    assert result["equal"] is False
+
+
+def test_unextractable_identity_msi_fails_closed(tmp_path: Path) -> None:
     schema = load_nondeterminism_schema(ROOT)
     left_dir = tmp_path / "A"
     right_dir = tmp_path / "B"
-    left_dir.mkdir()
-    right_dir.mkdir()
-    (left_dir / "app.msi").write_bytes(
-        _msi_like(package_code="AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA", payload=b"tree-a")
-    )
-    (right_dir / "app.msi").write_bytes(
-        _msi_like(package_code="BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB", payload=b"tree-b")
-    )
-    result = compare_normalized_trees(left_dir, right_dir, schema)
+    for root in (left_dir, right_dir):
+        (root / "compare").mkdir(parents=True)
+        (root / "identity").mkdir(parents=True)
+        (root / "compare" / "app.exe").write_bytes(_minimal_pe(timestamp=1))
+        (root / "identity" / "app.msi").write_bytes(b"not-a-real-msi")
+    result = compare_desktop_artifact_sets(left_dir, right_dir, schema)
     assert result["passed"] is False
+    assert any("msiexec" in item or "extract" in item.lower() for item in result["mismatches"])
 
 
-def test_nsis_header_timestamp_is_allowlisted_and_stripped(tmp_path: Path) -> None:
+def test_nsis_identity_uses_pe_container_timestamp(tmp_path: Path) -> None:
     schema = load_nondeterminism_schema(ROOT)
     left_dir = tmp_path / "A"
     right_dir = tmp_path / "B"
-    left_dir.mkdir()
-    right_dir.mkdir()
-    left = _nsis_like(timestamp=1_700_000_000, pe_timestamp=11)
-    right = _nsis_like(timestamp=1_800_000_000, pe_timestamp=22)
-    (left_dir / "installer.exe").write_bytes(left)
-    (right_dir / "installer.exe").write_bytes(right)
-    _, removed_left = normalize_nsis_installer(left, schema)
-    _, removed_right = normalize_nsis_installer(right, schema)
-    assert "nsis_build_timestamp" in removed_left
-    assert "nsis_build_timestamp" in removed_right
-    result = compare_normalized_trees(left_dir, right_dir, schema)
+    for root, stamp in ((left_dir, 11), (right_dir, 22)):
+        (root / "compare").mkdir(parents=True)
+        (root / "identity").mkdir(parents=True)
+        (root / "compare" / "app.exe").write_bytes(_minimal_pe(timestamp=stamp))
+        (root / "identity" / "setup.exe").write_bytes(_nsis_pe(pe_timestamp=stamp))
+    result = compare_desktop_artifact_sets(left_dir, right_dir, schema)
     assert result["passed"] is True
+    nsis = next(item for item in result["comparisons"] if item["name"] == "setup.exe")
+    assert "nsis_build_timestamp" in nsis["left_removed_fields"]
 
 
 def test_compare_ignores_raw_hash_sidecars(tmp_path: Path) -> None:
