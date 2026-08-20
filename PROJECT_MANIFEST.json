@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "30378fc04238358141ca48ddb71d0824dabe4bced03fdb07ef08272cfe7c09b1",
+  "aggregate_sha256": "cffdeef22bb528926f81dc53aac47bb12f5f08177f26712fb3afffa1c36830e0",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12197,8 +12197,8 @@
     },
     {
       "path": "src/project_pipeline/assurance/observation.py",
-      "sha256": "864384aec2e57bd7b469cf8613e254f770f0903eead94f722941ebbe8ba32861",
-      "size_bytes": 22379
+      "sha256": "d8cd8523ef88352ef105b2007c333a3378b6dfe70f78dad50269f388098d9b0d",
+      "size_bytes": 23050
     },
     {
       "path": "src/project_pipeline/assurance/observation_store.py",
@@ -14212,8 +14212,8 @@
     },
     {
       "path": "tests/test_evidence_observations.py",
-      "sha256": "2674380143d52b0738fe57118c6fd294ed9849581ed32ab9d592fbe3932d5ce6",
-      "size_bytes": 12818
+      "sha256": "c9a472612494fcae9a730658b109b53f830323e55ab15aae22d60e057a3f4e71",
+      "size_bytes": 14157
     },
     {
       "path": "tests/test_evidence_reconciliation_convergence.py",
@@ -14851,7 +14851,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T02:57:53.877778+00:00",
+  "generated_at_utc": "2026-08-20T03:01:05.477338+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14860,5 +14860,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29447551
+  "total_bytes": 29449561
 }
