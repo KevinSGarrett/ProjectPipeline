@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "8d1b5d03a7b65e3f81908885c63960bb9af8691b884addffa8392153c45999c2",
+  "aggregate_sha256": "043c66c16fd8670d2839ea32d3e0f487a209fec8b3c0ba003a6db3c9537eff4f",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12362,8 +12362,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
-      "sha256": "e956b76e17b0244fbc86caabad4f3473b5c7f7ff4b59822697abee914ac6b0bc",
-      "size_bytes": 30643
+      "sha256": "9b1c0693150836896f51759a0dde06076c655e8c20d132bd9afcfb8856bad83e",
+      "size_bytes": 30775
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/nonduration.py",
@@ -12512,8 +12512,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/desktop_qualification.py",
-      "sha256": "5b051428ea1f27e82942ca1bf19151847f366b37a97739d6d97d178f8fc6633c",
-      "size_bytes": 17933
+      "sha256": "4401132f4337ee0f4c9d518f66125d0b22db730c6f9e36d63516e29f83388203",
+      "size_bytes": 17927
     },
     {
       "path": "src/project_pipeline/command_center/desktop_reproducibility.py",
@@ -13927,8 +13927,8 @@
     },
     {
       "path": "tests/test_assurance_cli.py",
-      "sha256": "9c2a5da56bbd638dc24daa2a278788aecbee73f08c566a609d9442fdebf19db9",
-      "size_bytes": 4395
+      "sha256": "c212cb9f66479f84aca5c5b78f0423b09971367bb321b17373ba8a1fa1e10afc",
+      "size_bytes": 4555
     },
     {
       "path": "tests/test_assurance_compiler.py",
@@ -13937,8 +13937,8 @@
     },
     {
       "path": "tests/test_assurance_completion.py",
-      "sha256": "e542d0d14558a66812b84e1bd90674826f1956f42011dcd3c0daa90faf855e4b",
-      "size_bytes": 4657
+      "sha256": "3b06d22a1d9dfeecb4da506f9ba6a2acd5934cce30bef822560365bff4e74de7",
+      "size_bytes": 4718
     },
     {
       "path": "tests/test_assurance_domain.py",
@@ -14122,8 +14122,8 @@
     },
     {
       "path": "tests/test_command_center_live.py",
-      "sha256": "24cd9b1548ae445fa15490825f8c4e2f66abdd50276b4f9e99a3510d3853fec0",
-      "size_bytes": 5907
+      "sha256": "045bac9ae454f7e35593741795b64b5d1a338281685b0d42407535e7a275758f",
+      "size_bytes": 6054
     },
     {
       "path": "tests/test_command_center_models.py",
@@ -14212,8 +14212,8 @@
     },
     {
       "path": "tests/test_control_cli.py",
-      "sha256": "6b8eef04e8372273fe69804f5efd9bf48af88784551f28d13130a41b64f8f9d1",
-      "size_bytes": 4689
+      "sha256": "42bdfa8723c62cb7d79ed9394e76746d071bfee20ad846f8657804e167389f38",
+      "size_bytes": 4666
     },
     {
       "path": "tests/test_control_cohort_invariants.py",
@@ -14227,8 +14227,8 @@
     },
     {
       "path": "tests/test_control_kernel.py",
-      "sha256": "8c497288e46377dc1977b9882d3e82c99d8e524721f2f4d9003b593da86607bd",
-      "size_bytes": 14092
+      "sha256": "6f16f778f28695cdc2c4d7b738092e68ad51e10ef56f9ad158d71a6721b6712f",
+      "size_bytes": 14335
     },
     {
       "path": "tests/test_control_persistence.py",
@@ -14582,8 +14582,8 @@
     },
     {
       "path": "tests/test_product_outcome_contract.py",
-      "sha256": "5c9b18dedd7557e9308f12a58de063b7e47d114a46050b8a57fde50443969667",
-      "size_bytes": 14317
+      "sha256": "9c04aabd3bb91351d0878292dd3d86f8888b32e3c5bc9ad4e5217cdae077e093",
+      "size_bytes": 14309
     },
     {
       "path": "tests/test_product_outcome_reconciliation.py",
@@ -14971,7 +14971,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T18:06:40.173800+00:00",
+  "generated_at_utc": "2026-08-20T18:49:24.213636+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14980,5 +14980,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30009316
+  "total_bytes": 30010022
 }

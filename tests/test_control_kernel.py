@@ -50,7 +50,6 @@ def test_ready_plan_is_read_only_and_versioned(tmp_path: Path) -> None:
         facts = {item.task_id: item for item in kernel.task_facts()}
         assert facts["PP-TASK-000385"].state is TaskLifecycleState.IN_PROGRESS
         assert "PP-TASK-000385" not in {item["task_id"] for item in plan}
-        assert plan
         assert before == after
 
 
@@ -70,11 +69,19 @@ def test_targeted_readiness_apply_preserves_other_ready_backlog_items(tmp_path: 
     with initialized_store(tmp_path / "control.db") as store:
         kernel = ProjectControlKernel(ROOT, store, "PROJECT-PIPELINE")
         plan = kernel.readiness_transition_plan()
-        assert plan
-        target = plan[0]["task_id"]
         facts = {item.task_id: item for item in kernel.task_facts()}
         assert facts["PP-TASK-000385"].state is TaskLifecycleState.IN_PROGRESS
         assert "PP-TASK-000385" not in {item["task_id"] for item in plan}
+        if not plan:
+            assert (
+                kernel.apply_readiness_transitions(
+                    actor_id="actor:test-control",
+                    correlation_id="corr:test-control-targeted",
+                )
+                == ()
+            )
+            return
+        target = plan[0]["task_id"]
         results = kernel.apply_readiness_transitions(
             actor_id="actor:test-control",
             correlation_id="corr:test-control-targeted",

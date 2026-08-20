@@ -51,12 +51,15 @@ def test_assurance_cli_completion_gate_truthfully_reports_not_complete(
         for item in payload["completion_gate"]["questions"]
         if not item["passed"]
     }
-    assert 5 in failed
+    assert failed == {2, 5, 16}
     golden = next(
         item for item in payload["completion_gate"]["questions"] if item["question_number"] == 5
     )
     assert "EVID-000116" in golden["evidence_ids"]
-    assert 13 in failed
+    command_center = next(
+        item for item in payload["completion_gate"]["questions"] if item["question_number"] == 13
+    )
+    assert command_center["passed"] is True
 
 
 def test_assurance_cli_candidate_challenges_lazy_completion(project_root, tmp_path, capsys):
