@@ -8,7 +8,7 @@
     ".html": 3,
     ".ico": 1,
     ".ini": 1,
-    ".json": 1126,
+    ".json": 1127,
     ".jsonl": 64,
     ".jsx": 2,
     ".lock": 1,
@@ -50,7 +50,7 @@
     "database": 102,
     "docs": 75,
     "dummy": 429,
-    "evidence": 252,
+    "evidence": 253,
     "fixtures": 25,
     "infrastructure": 11,
     "instructions": 46,
@@ -67,7 +67,7 @@
     "tests": 231,
     "third_party": 1
   },
-  "file_count": 3006,
+  "file_count": 3007,
   "files": [
     {
       "extension": ".md",
@@ -5917,14 +5917,14 @@
     {
       "extension": ".jsonl",
       "path": "evidence/EVIDENCE_LEDGER.jsonl",
-      "sha256": "a0d570e1c624fc84275b0357df088c21077316b1534df4af29aea005d3da98f7",
-      "size_bytes": 165231,
+      "sha256": "6c71bd643de700d648ba9a19e9208403e98e21d8273754a13bf977b2c3f494d1",
+      "size_bytes": 166327,
       "top_level": "evidence"
     },
     {
       "extension": ".json",
       "path": "evidence/EVIDENCE_SUMMARY.json",
-      "sha256": "adc49950e0c536149a0285ae36d4878b7973071d09da6a1903246f9e61eb2c48",
+      "sha256": "0f702efb2449638d95b3e919fd31878d9b124c19d47b707552c4412a9c93da77",
       "size_bytes": 289,
       "top_level": "evidence"
     },
@@ -6574,6 +6574,13 @@
     },
     {
       "extension": ".json",
+      "path": "evidence/retrieval/exact_fallback_benchmark.json",
+      "sha256": "9b6e412857da89934de8a45872276763337b65e2dc71ef7b065f0c3eebcf9609",
+      "size_bytes": 1307,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".json",
       "path": "evidence/sched_0016_productive_idle.json",
       "sha256": "d84c2c1fcdb48bf30fd334426f8db34aee68ddbdebb30536d7dd11a14e6ad931",
       "size_bytes": 284,
@@ -7191,8 +7198,8 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "e959a93ed62afeeb6b8201c31eada0f8602c512f1626e83993226f0beefe4de1",
-      "size_bytes": 343927,
+      "sha256": "5c91d80aa693b54de16b40f282feee412360340eed8a5632fed7b421b513daba",
+      "size_bytes": 344042,
       "top_level": "_root"
     },
     {
@@ -7940,15 +7947,15 @@
     {
       "extension": ".jsonl",
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "bbafba1d75c044b9f5c92ccac101626f83eae6d963f03c37b960a99763749ae3",
-      "size_bytes": 1684305,
+      "sha256": "3b546b30ad5ec5e05fcdb11917e54a3e5fd12f92b9f72c1c7b4b05a749bc35ae",
+      "size_bytes": 1684342,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "ca2b9379df2b1bfdd8a6ef15c3186004bac78278b2763a95bb8f99a1aa1e4a81",
-      "size_bytes": 1997160,
+      "sha256": "97caf732115d3b108cf9cbca6eed7f6fb5d9cafb4ced0078a47a177d3292027b",
+      "size_bytes": 1997209,
       "top_level": "jira"
     },
     {
@@ -12007,8 +12014,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000180.json",
-      "sha256": "7972d071bc78f18a5e8806e26675d02b101b4fedf40f3fc95dd8003736353ee2",
-      "size_bytes": 4561,
+      "sha256": "2f1163a9a7acf0baf558ef2095f68e2dfc778ea2aeb3bfe79bae927a63f3afb4",
+      "size_bytes": 4606,
       "top_level": "jira"
     },
     {
@@ -14415,8 +14422,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "b504afd706de9385d5619fc1e2c4533f2a650989d1a9a4e9110f64dfd9e73690",
-      "size_bytes": 563058,
+      "sha256": "a9764ea37dcc0589ab69c10a5d0c816c491a237af4dc09cba00ed7ac5b1bd14b",
+      "size_bytes": 563246,
       "top_level": "_root"
     },
     {
@@ -18979,8 +18986,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/retrieval/service.py",
-      "sha256": "5cecc04e10de329c31b82847f33b925626761ce0d5c0d1a38dadee5ba7c0f388",
-      "size_bytes": 8989,
+      "sha256": "8990845025c2b6143e3d4e2e6c62ce027efae8be6db35a65877190db9f685132",
+      "size_bytes": 9296,
       "top_level": "src"
     },
     {
@@ -19861,8 +19868,8 @@
     {
       "extension": ".json",
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "bf5d3832608abf64c9d17ea36953218f7a0cdf3421781d4f0f28dcce757f81bc",
-      "size_bytes": 125359,
+      "sha256": "5fda2403ff5eb44f7e93d7ec300c239ab342895d5434eb7ef4755345066e58e2",
+      "size_bytes": 125534,
       "top_level": "tests"
     },
     {
@@ -20771,8 +20778,8 @@
     {
       "extension": ".py",
       "path": "tests/test_retrieval_benchmark.py",
-      "sha256": "dddbe755fc4c4237f3fa2d3c229a5aade37078c5ccf155c00454abd17ea997f4",
-      "size_bytes": 5179,
+      "sha256": "a2e59eb0f40a10b06b08dc1ca505a27b67974634c1447e94e76d3b842dac7b86",
+      "size_bytes": 5721,
       "top_level": "tests"
     },
     {
@@ -21112,7 +21119,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-20T19:35:07.237506+00:00",
+  "generated_at_utc": "2026-08-20T19:45:56.717860+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {
@@ -21320,6 +21327,7 @@
       "evidence/resilience_repository_validation.txt",
       "evidence/resilience_simulation_snapshot.json",
       "evidence/resilience_upstream_review_snapshot.json",
+      "evidence/retrieval/exact_fallback_benchmark.json",
       "evidence/sched_0016_productive_idle.json",
       "evidence/scheduler_cli_simulation_tests.txt",
       "evidence/scheduler_contract_validation.txt",

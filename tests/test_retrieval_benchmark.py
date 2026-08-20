@@ -104,6 +104,16 @@ def test_retrieval_cli_benchmark(tmp_path: Path, capsys, monkeypatch) -> None:
     assert payload["observed_engine"] == EXACT_FALLBACK_ENGINE
 
 
+def test_benchmark_rerun_on_same_database_is_idempotent(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.delenv("PROJECT_PIPELINE_PGVECTOR_DSN", raising=False)
+    db = tmp_path / "idempotent.sqlite"
+    first = run_retrieval_benchmark(ROOT, database=db, output_dir=tmp_path / "one")
+    second = run_retrieval_benchmark(ROOT, database=db, output_dir=tmp_path / "two")
+    assert first["exact_recall_at_1"] == 1.0
+    assert second["exact_recall_at_1"] == 1.0
+    assert first["backup"]["receipt_id"] == second["backup"]["receipt_id"]
+
+
 def test_semantic_status_ignores_unset_or_dead_dsn(monkeypatch) -> None:
     monkeypatch.delenv("PROJECT_PIPELINE_PGVECTOR_DSN", raising=False)
     connection = sqlite3.connect(":memory:")

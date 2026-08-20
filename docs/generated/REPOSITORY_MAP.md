@@ -1,7 +1,7 @@
 # Generated Repository Map
 
-- Files: `3006`
-- Generated: `2026-08-20T19:35:07.237506+00:00`
+- Files: `3007`
+- Generated: `2026-08-20T19:45:56.717860+00:00`
 
 ## Top-level counts
 
@@ -18,7 +18,7 @@
 - `database`: 102
 - `docs`: 75
 - `dummy`: 429
-- `evidence`: 252
+- `evidence`: 253
 - `fixtures`: 25
 - `infrastructure`: 11
 - `instructions`: 46
@@ -244,6 +244,7 @@
 - `evidence/resilience_repository_validation.txt`
 - `evidence/resilience_simulation_snapshot.json`
 - `evidence/resilience_upstream_review_snapshot.json`
+- `evidence/retrieval/exact_fallback_benchmark.json`
 - `evidence/sched_0016_productive_idle.json`
 - `evidence/scheduler_cli_simulation_tests.txt`
 - `evidence/scheduler_contract_validation.txt`

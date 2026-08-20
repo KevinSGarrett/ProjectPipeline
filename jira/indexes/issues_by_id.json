@@ -23027,7 +23027,8 @@
     ],
     "blockers": [],
     "completion_evidence": [
-      "EVID-000213"
+      "EVID-000213",
+      "EVID-000214"
     ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
@@ -23098,7 +23099,8 @@
       "TEST-RETRIEVAL-003",
       "TEST-RETRIEVAL-004",
       "TEST-RETRIEVAL-005",
-      "TEST-RETRIEVAL-006"
+      "TEST-RETRIEVAL-006",
+      "TEST-RETRIEVAL-007"
     ],
     "requirement_ids": [
       "REQ-ARCH-0011",

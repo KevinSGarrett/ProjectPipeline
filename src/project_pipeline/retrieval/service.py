@@ -231,6 +231,12 @@ class RetrievalService:
             INSERT INTO retrieval_backup_receipts(
                 receipt_id, engine, artifact_sha256, chunk_count, recorded_at_utc, payload_json
             ) VALUES (?, ?, ?, ?, ?, ?)
+            ON CONFLICT(receipt_id) DO UPDATE SET
+                engine=excluded.engine,
+                artifact_sha256=excluded.artifact_sha256,
+                chunk_count=excluded.chunk_count,
+                recorded_at_utc=excluded.recorded_at_utc,
+                payload_json=excluded.payload_json
             """,
             (
                 receipt_id,
