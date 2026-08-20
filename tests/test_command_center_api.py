@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -240,3 +242,70 @@ def test_autonomy_director_api_selects_from_control_and_rejects_chat_mutation(tm
     after = client.get("/api/v1/director/autonomy", headers=headers()).json()
     assert after["revision"] == before["revision"]
     assert after["last_selected_task_id"] == before["last_selected_task_id"]
+
+
+def test_autonomy_director_api_strategy_coordinate_and_boundary(tmp_path):
+    director = PersistentAutonomyDirector(tmp_path / "director_state.json")
+    auth = CommandCenterAuth(lambda token: "actor:test" if token == "good" else None)
+    app = create_command_center_app(
+        snapshot_provider=snapshot,
+        event_broker=RealtimeEventBroker(),
+        inbox=AttentionNotificationBroker(),
+        auth=auth,
+        autonomy_director=director,
+        control_provider=lambda: control_snapshot(("PP-STORY-000065",)),
+        repository_root=Path(__file__).resolve().parents[1],
+        runtime_database=tmp_path / "runtime.db",
+    )
+    client = TestClient(app)
+    assert client.post("/api/v1/director/autonomy/select", headers=headers()).status_code == 200
+    strategy = client.post(
+        "/api/v1/director/autonomy/strategy",
+        headers=headers(),
+        json={
+            "goal": "drive next-work continuation",
+            "plan_steps": ["select", "coordinate"],
+            "alternatives": ["chat mutation"],
+            "assumptions": ["Control remains authority"],
+            "ambiguity": "RESOLVED",
+            "risk": "HIGH",
+            "resource_claims": ["director:PP-STORY-000065"],
+            "evidence_citations": ["control:live"],
+            "acceptance_checks": ["typed controls only"],
+            "rollback_boundary": "feat/PP-TASK-000381-director-slice",
+        },
+    )
+    assert strategy.status_code == 200
+    assert strategy.json()["strategy"]["status"] == "ACCEPTED"
+    coordinated = client.post(
+        "/api/v1/director/autonomy/coordinate",
+        headers=headers(),
+        json={"provider": "local", "blocked_lanes": ["PP-STORY-000049"]},
+    )
+    assert coordinated.status_code == 200
+    body = coordinated.json()
+    assert body["execution"]["status"] == "DISPATCHED"
+    assert body["projection"]["lease_fence"]
+    assert body["projection"]["context_identity"]
+    assert body["projection"]["execution_status"] == "DISPATCHED"
+    denied = client.post(
+        "/api/v1/director/autonomy/recover-boundary",
+        headers=headers(),
+        json={
+            "stage": "unknown_external_write",
+            "external_readback": "UNKNOWN",
+            "retry_authorized": True,
+        },
+    )
+    assert denied.status_code == 409
+    recovered = client.post(
+        "/api/v1/director/autonomy/recover-boundary",
+        headers=headers(),
+        json={
+            "stage": "dispatched",
+            "external_readback": "ABSENT",
+            "retry_authorized": True,
+        },
+    )
+    assert recovered.status_code == 200
+    assert recovered.json()["projection"]["chat_mutation"] is False

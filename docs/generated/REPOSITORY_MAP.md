@@ -1,27 +1,27 @@
 # Generated Repository Map
 
-- Files: `2939`
-- Generated: `2026-08-19T21:36:37.402891+00:00`
+- Files: `2994`
+- Generated: `2026-08-20T12:21:39.539441+00:00`
 
 ## Top-level counts
 
 - `.agents`: 8
 - `.cursor`: 12
-- `.github`: 6
-- `_root`: 17
-- `adr`: 29
-- `apps`: 18
+- `.github`: 7
+- `_root`: 18
+- `adr`: 30
+- `apps`: 25
 - `architecture`: 19
-- `config`: 41
+- `config`: 42
 - `contracts`: 5
 - `database`: 98
 - `docs`: 74
 - `dummy`: 429
-- `evidence`: 235
+- `evidence`: 251
 - `fixtures`: 25
 - `infrastructure`: 11
 - `instructions`: 46
-- `jira`: 808
+- `jira`: 809
 - `plans`: 137
 - `policies`: 1
 - `provenance`: 89
@@ -29,9 +29,9 @@
 - `requirements`: 5
 - `runbooks`: 28
 - `schemas`: 209
-- `scripts`: 41
-- `src`: 324
-- `tests`: 218
+- `scripts`: 44
+- `src`: 336
+- `tests`: 230
 - `third_party`: 1
 
 ## Semantic indexes
@@ -65,6 +65,7 @@
 - `adr/ADR-0025_define_domain_recovery_objectives_and_measured_restore_evidence.md`
 - `adr/ADR-0026_keep_project_pipeline_notification_authority_with_tauri_local_and_apprise_remote.md`
 - `adr/ADR-0027_keep_project_native_locks_canonical_with_optional_mise_and_devcontainer_profiles.md`
+- `adr/ADR-0028_command_center_os_identity_and_loopback_session_auth.md`
 - `adr/ADR_CATALOG.json`
 - `adr/README.md`
 
@@ -113,6 +114,7 @@
 - `evidence/command_center_application_upstream_review_snapshot.json`
 - `evidence/command_center_completion_gate_snapshot.json`
 - `evidence/command_center_focused_suite.txt`
+- `evidence/command_center_live_browser.json`
 - `evidence/command_center_partitioned_regression.txt`
 - `evidence/command_center_pass21_completion_gate_snapshot.json`
 - `evidence/command_center_pass21_focused_suite.txt`
@@ -191,6 +193,8 @@
 - `evidence/orchestration_upstream_gate_snapshot.json`
 - `evidence/pass24_focused_suite.txt`
 - `evidence/pass25_focused_suite.txt`
+- `evidence/pdef_0009_platform_separation.json`
+- `evidence/pdef_0011_nonduration.json`
 - `evidence/platform_lifecycle_pass22_completion_gate_snapshot.json`
 - `evidence/platform_lifecycle_pass22_focused_suite.txt`
 - `evidence/platform_lifecycle_pass22_partitioned_regression.txt`
@@ -221,6 +225,7 @@
 - `evidence/project_intake_foundation_validation.json`
 - `evidence/project_intake_integrated_suite.txt`
 - `evidence/project_pipeline_intake_snapshot.json`
+- `evidence/rel_disposable_rehearsal.json`
 - `evidence/repository_foundation_full_suite.txt`
 - `evidence/repository_foundation_smoke.json`
 - `evidence/repository_foundation_tests.txt`
@@ -237,6 +242,7 @@
 - `evidence/resilience_repository_validation.txt`
 - `evidence/resilience_simulation_snapshot.json`
 - `evidence/resilience_upstream_review_snapshot.json`
+- `evidence/sched_0016_productive_idle.json`
 - `evidence/scheduler_cli_simulation_tests.txt`
 - `evidence/scheduler_contract_validation.txt`
 - `evidence/scheduler_focused_suite.txt`
@@ -276,6 +282,17 @@
 - `evidence/verification/browser/verification_report_1280x720.png`
 - `evidence/verification/browser/verification_report_390x844.png`
 - `evidence/verification/browser_evidence.json`
+- `evidence/verification/command_center_live/live_command_center_1024x768_full.png`
+- `evidence/verification/command_center_live/live_command_center_1024x768_initial.png`
+- `evidence/verification/command_center_live/live_command_center_1024x768_viewport.png`
+- `evidence/verification/command_center_live/live_command_center_1440x900.png`
+- `evidence/verification/command_center_live/live_command_center_1440x900_full.png`
+- `evidence/verification/command_center_live/live_command_center_1440x900_initial.png`
+- `evidence/verification/command_center_live/live_command_center_1440x900_viewport.png`
+- `evidence/verification/command_center_live/live_command_center_390x844_full.png`
+- `evidence/verification/command_center_live/live_command_center_390x844_initial.png`
+- `evidence/verification/command_center_live/live_command_center_390x844_viewport.png`
+- `evidence/verification/command_center_live/live_command_center_forced_colors_1440x900.png`
 - `evidence/verification/command_center_ui/command_center_1024x768.png`
 - `evidence/verification/command_center_ui/command_center_1024x768_full.png`
 - `evidence/verification/command_center_ui/command_center_1024x768_initial.png`
@@ -349,6 +366,7 @@
 - `jira/reports/foundation_status.json`
 - `jira/reports/jira_sync_guard.json`
 - `jira/reports/live_jira_sync_report.json`
+- `jira/reports/live_status_snapshot.json`
 - `jira/reports/remote_completion_audit.jsonl`
 - `jira/reports/remote_mapping_report.json`
 - `jira/schemas/ISSUE_SCHEMA_REFERENCE.json`

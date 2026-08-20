@@ -6,52 +6,54 @@
     ".go": 2,
     ".hcl": 1,
     ".html": 3,
+    ".ico": 1,
     ".ini": 1,
-    ".json": 1117,
+    ".json": 1125,
     ".jsonl": 63,
     ".jsx": 2,
-    ".md": 797,
+    ".lock": 1,
+    ".md": 798,
     ".mdc": 6,
-    ".mjs": 5,
+    ".mjs": 6,
     ".mmd": 6,
     ".mod": 1,
-    ".png": 15,
+    ".png": 28,
     ".ps1": 10,
-    ".py": 595,
+    ".py": 622,
     ".rego": 1,
     ".rs": 2,
     ".sha256": 1,
     ".sql": 97,
     ".svg": 5,
     ".tf": 4,
-    ".toml": 5,
+    ".toml": 7,
     ".ts": 2,
     ".tsx": 1,
     ".txt": 162,
     ".typed": 1,
     ".xml": 1,
     ".yaml": 3,
-    ".yml": 5,
+    ".yml": 6,
     "[none]": 21
   },
   "by_top_level": {
     ".agents": 8,
     ".cursor": 12,
-    ".github": 6,
-    "_root": 17,
-    "adr": 29,
-    "apps": 18,
+    ".github": 7,
+    "_root": 18,
+    "adr": 30,
+    "apps": 25,
     "architecture": 19,
-    "config": 41,
+    "config": 42,
     "contracts": 5,
     "database": 98,
     "docs": 74,
     "dummy": 429,
-    "evidence": 235,
+    "evidence": 251,
     "fixtures": 25,
     "infrastructure": 11,
     "instructions": 46,
-    "jira": 808,
+    "jira": 809,
     "plans": 137,
     "policies": 1,
     "provenance": 89,
@@ -59,12 +61,12 @@
     "requirements": 5,
     "runbooks": 28,
     "schemas": 209,
-    "scripts": 41,
-    "src": 324,
-    "tests": 218,
+    "scripts": 44,
+    "src": 336,
+    "tests": 230,
     "third_party": 1
   },
-  "file_count": 2939,
+  "file_count": 2994,
   "files": [
     {
       "extension": ".md",
@@ -230,8 +232,8 @@
     {
       "extension": "[none]",
       "path": ".git",
-      "sha256": "b7ac5fadd426f50cf339e8e4e489cf53a96aa4e4e2866338e9eb670f0742d5c7",
-      "size_bytes": 63,
+      "sha256": "e4780583d83d39c6417c819a9539a31820ea5f26003069c9281cb298e7b17eed",
+      "size_bytes": 51,
       "top_level": "_root"
     },
     {
@@ -278,6 +280,13 @@
     },
     {
       "extension": ".yml",
+      "path": ".github/workflows/desktop-windows.yml",
+      "sha256": "eb38d91af95a55ace1a563a93fee8f6a31bd4cc0cb1bca1ac484ef2513d0e5ed",
+      "size_bytes": 5415,
+      "top_level": ".github"
+    },
+    {
+      "extension": ".yml",
       "path": ".github/workflows/quality.yml",
       "sha256": "29c4e79661b813f2f9042f39f813dabe5d78bf4b577d7324760bd40c077090cf",
       "size_bytes": 3546,
@@ -286,8 +295,8 @@
     {
       "extension": "[none]",
       "path": ".gitignore",
-      "sha256": "6abc65037c1db46be08d8ecfc4625c7ca9899a58ca94c3b9048cfef91f2350ea",
-      "size_bytes": 2185,
+      "sha256": "281e7ea8eb1f971a7fd29b7c2c67f0015d179f80838213d947a0fc46dfbdd6f8",
+      "size_bytes": 2395,
       "top_level": "_root"
     },
     {
@@ -494,10 +503,17 @@
       "top_level": "adr"
     },
     {
+      "extension": ".md",
+      "path": "adr/ADR-0028_command_center_os_identity_and_loopback_session_auth.md",
+      "sha256": "60c96ad3de0bb58e0a59d3920ccf0033ae377f8fd49690475df04d773ef86926",
+      "size_bytes": 2096,
+      "top_level": "adr"
+    },
+    {
       "extension": ".json",
       "path": "adr/ADR_CATALOG.json",
-      "sha256": "afd9062251a21646309a82b8c8a55742620880835a2236ff888c952728a6dee1",
-      "size_bytes": 31053,
+      "sha256": "8008edb389db113d2d1aed2308a951b000e87c44f34c8b656e9a1cec46269831",
+      "size_bytes": 32199,
       "top_level": "adr"
     },
     {
@@ -523,16 +539,23 @@
     },
     {
       "extension": ".json",
+      "path": "apps/command_center/package-lock.json",
+      "sha256": "521f5d8412a32e85c40a1c35524963b35826703b05022f536aaf2b5da79d9b81",
+      "size_bytes": 67736,
+      "top_level": "apps"
+    },
+    {
+      "extension": ".json",
       "path": "apps/command_center/package.json",
-      "sha256": "0c34788cd0de5447f10d28f456862a962ac1ccb54228956023e42000209acfd0",
-      "size_bytes": 650,
+      "sha256": "8e70de08b6b59dbebd03c25b12112f6bb0def2340c0bc2daa034a5f7691892d3",
+      "size_bytes": 625,
       "top_level": "apps"
     },
     {
       "extension": ".html",
       "path": "apps/command_center/preview/index.html",
-      "sha256": "5bb042a6a4587c7e4c88a20c7bf0327540121b8009ab1822e906242cb74a8014",
-      "size_bytes": 39364,
+      "sha256": "dd187e52566270119035784ee047ff657973f5d25975fee0205cf34d65593ad4",
+      "size_bytes": 44371,
       "top_level": "apps"
     },
     {
@@ -544,23 +567,30 @@
     },
     {
       "extension": ".mjs",
+      "path": "apps/command_center/scripts/run-tauri.mjs",
+      "sha256": "6e45dca93cc42111ed08d57115f3da8cf92abbd534fc409d293dbc262c6aa985",
+      "size_bytes": 1026,
+      "top_level": "apps"
+    },
+    {
+      "extension": ".mjs",
       "path": "apps/command_center/src/apiClient.mjs",
-      "sha256": "8717de914d9d2e68b195cd36776dab1a0b57616633158993dda04d87d1a810fb",
-      "size_bytes": 3105,
+      "sha256": "5302773f89b98d8f3144463af269e5b58cc18a43cc9aaa799c1ef79d17a9de93",
+      "size_bytes": 3270,
       "top_level": "apps"
     },
     {
       "extension": ".css",
       "path": "apps/command_center/src/app.css",
-      "sha256": "af02039d0abbd3684f81ec8972e9759cba8334a6895d1c1352b562083b57dfd2",
-      "size_bytes": 17807,
+      "sha256": "e21fcf4bd9c7c4e02fbec3734bcda9fe7df36ef563581aa089233c2b33e4f31b",
+      "size_bytes": 18271,
       "top_level": "apps"
     },
     {
       "extension": ".jsx",
       "path": "apps/command_center/src/App.jsx",
-      "sha256": "ee9ee7453cedf12eef0842ff7baccd4bf31b430ee528609af93779aaa10e741b",
-      "size_bytes": 27195,
+      "sha256": "319de4c6e9827287532b4d537915129617a67cbf1c76df7489e3705d7503ebe8",
+      "size_bytes": 28908,
       "top_level": "apps"
     },
     {
@@ -573,8 +603,8 @@
     {
       "extension": ".mjs",
       "path": "apps/command_center/src/desktopBridge.mjs",
-      "sha256": "242626ff52f270964d2edf067330dcbc3efe7f4aaa6222b81c168b49f97f68a6",
-      "size_bytes": 781,
+      "sha256": "ba87c488b529b9ae62d245ebe1d60a93fcef416fdc81652e853633912cab3c7a",
+      "size_bytes": 1652,
       "top_level": "apps"
     },
     {
@@ -601,8 +631,15 @@
     {
       "extension": ".md",
       "path": "apps/desktop_shell/README.md",
-      "sha256": "e69ca94e9bc286fa260ceda395241e833e080d40993f3a35868ef6a43e1b6284",
-      "size_bytes": 1263,
+      "sha256": "781c820d4654c0789100bbd946b11ea7c5208728672156c2156ec0fc47152bca",
+      "size_bytes": 1274,
+      "top_level": "apps"
+    },
+    {
+      "extension": ".toml",
+      "path": "apps/desktop_shell/src-tauri/.cargo/config.toml",
+      "sha256": "c0882385360ad035e808cd7fad49b44db23a39bba9c01169be3663c6a6e1e6fb",
+      "size_bytes": 116,
       "top_level": "apps"
     },
     {
@@ -620,6 +657,13 @@
       "top_level": "apps"
     },
     {
+      "extension": ".lock",
+      "path": "apps/desktop_shell/src-tauri/Cargo.lock",
+      "sha256": "feedaad7cc7220d7144a72d6542c71f2843e293a9774abf7005dc11c1b64f6f6",
+      "size_bytes": 123149,
+      "top_level": "apps"
+    },
+    {
       "extension": ".toml",
       "path": "apps/desktop_shell/src-tauri/Cargo.toml",
       "sha256": "297f81f7a901cf9c843a64894bed28d647fbc7d9ec6b909daa578bb7221fbcbf",
@@ -627,17 +671,38 @@
       "top_level": "apps"
     },
     {
+      "extension": ".png",
+      "path": "apps/desktop_shell/src-tauri/icons/128x128.png",
+      "sha256": "f58174e61701b5e4d10ecd0099a8311af662ecf9ab1d929d29d3f7ba7e08527e",
+      "size_bytes": 300,
+      "top_level": "apps"
+    },
+    {
+      "extension": ".png",
+      "path": "apps/desktop_shell/src-tauri/icons/32x32.png",
+      "sha256": "f97ed06f73fb345796560671bf883f278b412f066807f2ccb7568c4334f6d4e2",
+      "size_bytes": 105,
+      "top_level": "apps"
+    },
+    {
+      "extension": ".ico",
+      "path": "apps/desktop_shell/src-tauri/icons/icon.ico",
+      "sha256": "1928a24a8f14e69f4c01d28f3839bc5b4b701abdeac18fd5fdd2b9a7667fe0a3",
+      "size_bytes": 127,
+      "top_level": "apps"
+    },
+    {
       "extension": ".rs",
       "path": "apps/desktop_shell/src-tauri/src/main.rs",
-      "sha256": "43f9de7b756082a00372b20e403ff83df683b66100f7128169bee7cbb985c7ad",
-      "size_bytes": 270,
+      "sha256": "d5e2ff131c782f251a3ee8b5c5c18b688c406e3400341e388a64f81d17b06ab7",
+      "size_bytes": 4304,
       "top_level": "apps"
     },
     {
       "extension": ".json",
       "path": "apps/desktop_shell/src-tauri/tauri.conf.json",
-      "sha256": "86003f363e12dc1c7cd051f5d0e62d436a60a199bc782da355c57ea3428538f6",
-      "size_bytes": 1073,
+      "sha256": "1e8b1bfe0767ef50c12df458d7bbadb62950960f6c6d17935b9ce895c6137c73",
+      "size_bytes": 1109,
       "top_level": "apps"
     },
     {
@@ -678,8 +743,8 @@
     {
       "extension": ".json",
       "path": "architecture/decision_map.json",
-      "sha256": "9f0226cb863cddb3c3921fec6f7da1510100ad8cabfac56d65cbb7ac1642be4f",
-      "size_bytes": 19742,
+      "sha256": "5b42d9d45a271ba30ce0f944eb722678909658884e82a61cda660a620d6f518d",
+      "size_bytes": 20350,
       "top_level": "architecture"
     },
     {
@@ -818,8 +883,8 @@
     {
       "extension": ".json",
       "path": "config/assurance_policy.json",
-      "sha256": "cd0971a7025eb7c8348c0d3fcbfb261f9b63f7e74bf83b298abee46c92dcb627",
-      "size_bytes": 843,
+      "sha256": "fba3410206603cc59192ca110508bb0ef60e2d962687c38ce26541a1725317cc",
+      "size_bytes": 1285,
       "top_level": "config"
     },
     {
@@ -832,8 +897,8 @@
     {
       "extension": ".json",
       "path": "config/command_center_policy.json",
-      "sha256": "702ba69dd152bb6619021205d5bda3f2927525eba2e2fc339426abb7f309621f",
-      "size_bytes": 1374,
+      "sha256": "4b67ab84a674382549db87ed0249adc89cc03937edf80745ef2ed09a7bec45c1",
+      "size_bytes": 1712,
       "top_level": "config"
     },
     {
@@ -853,8 +918,15 @@
     {
       "extension": ".json",
       "path": "config/dependency_policy.json",
-      "sha256": "153a6104fd176d759e6ebdd8b60d4e5572a4e13dfa026d685a965031f11a7d07",
-      "size_bytes": 5389,
+      "sha256": "7f46f4909f4359f45935e7b6e8bf1a5a3dad6c417a01b673fd686aba23b4b82b",
+      "size_bytes": 5797,
+      "top_level": "config"
+    },
+    {
+      "extension": ".json",
+      "path": "config/desktop_nondeterminism_schema.json",
+      "sha256": "d52656d5fbb05a918044de8603298a26e9992f9bdb0db8e83ee338d9a814346b",
+      "size_bytes": 1832,
       "top_level": "config"
     },
     {
@@ -1868,8 +1940,8 @@
     {
       "extension": ".md",
       "path": "docs/command_center/application_and_desktop_shell.md",
-      "sha256": "ffd915a550dbfb0f0e9b504cb16b09b2136b91840907613a7576b57518712648",
-      "size_bytes": 2990,
+      "sha256": "af3e3d1c2fe7674f97ccff02b258dd2f2924fd457576d57198630dc1731f1b3b",
+      "size_bytes": 3296,
       "top_level": "docs"
     },
     {
@@ -5534,6 +5606,13 @@
       "top_level": "evidence"
     },
     {
+      "extension": ".json",
+      "path": "evidence/command_center_live_browser.json",
+      "sha256": "d32f3494813ecd78749d4d228dc39e8c8335b0bb952e256b243b24e650d92714",
+      "size_bytes": 6665,
+      "top_level": "evidence"
+    },
+    {
       "extension": ".txt",
       "path": "evidence/command_center_partitioned_regression.txt",
       "sha256": "add2aa837d61b686dc869cb73090a766b986219b67df0e3c1e8d0dfd13361123",
@@ -5788,14 +5867,14 @@
     {
       "extension": ".jsonl",
       "path": "evidence/EVIDENCE_LEDGER.jsonl",
-      "sha256": "5a057a15fe9c10a9b3fc2e6caeb59db6568eae15bf81a67e403d6a92753fb703",
-      "size_bytes": 159503,
+      "sha256": "43fe3bf9cd7231011e12f07440f7bd7f8a87a16dc32a0cf166d6d05b52e54cd2",
+      "size_bytes": 163425,
       "top_level": "evidence"
     },
     {
       "extension": ".json",
       "path": "evidence/EVIDENCE_SUMMARY.json",
-      "sha256": "e3a35da4a61d39cd8231e6a816f4fad28e6ac77229e9acea1058d8a7780d9ba0",
+      "sha256": "fea8ca507eaf62c321cb61a0685efcfe01de8b8ae6f0e330df8de00fc37aeadf",
       "size_bytes": 289,
       "top_level": "evidence"
     },
@@ -6095,6 +6174,20 @@
     },
     {
       "extension": ".json",
+      "path": "evidence/pdef_0009_platform_separation.json",
+      "sha256": "d6f5e5684d28f14ca723bdcb8651d1a370bbcfbbcd1fdfdb718976e9137892f9",
+      "size_bytes": 230,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".json",
+      "path": "evidence/pdef_0011_nonduration.json",
+      "sha256": "02998306822f8aca0357ec5d623f7bf7b34accf2c6e47104cf101e837af68a6f",
+      "size_bytes": 514,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".json",
       "path": "evidence/platform_lifecycle_pass22_completion_gate_snapshot.json",
       "sha256": "12ec00652be4805642d5f3bc8f7f4c31a3c46fd1e3d42a717527cf568c1fef4c",
       "size_bytes": 15422,
@@ -6311,6 +6404,13 @@
       "top_level": "evidence"
     },
     {
+      "extension": ".json",
+      "path": "evidence/rel_disposable_rehearsal.json",
+      "sha256": "018462012a7b88c4fdba14c7c9187f5d17dce68f336584cc044827486f5fe589",
+      "size_bytes": 352,
+      "top_level": "evidence"
+    },
+    {
       "extension": ".txt",
       "path": "evidence/repository_foundation_full_suite.txt",
       "sha256": "324c421f7a783becf730bb8f99815ba22e926a9a90d540589ffc0f1f0b8fac9c",
@@ -6420,6 +6520,13 @@
       "path": "evidence/resilience_upstream_review_snapshot.json",
       "sha256": "d4d4037ce62688a310e69e030f26b3b1741bfbbf71e60fea41d4a6f958d4e8f1",
       "size_bytes": 3781,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".json",
+      "path": "evidence/sched_0016_productive_idle.json",
+      "sha256": "d84c2c1fcdb48bf30fd334426f8db34aee68ddbdebb30536d7dd11a14e6ad931",
+      "size_bytes": 284,
       "top_level": "evidence"
     },
     {
@@ -6697,6 +6804,83 @@
     },
     {
       "extension": ".png",
+      "path": "evidence/verification/command_center_live/live_command_center_1024x768_full.png",
+      "sha256": "3fe93b08cf2036cb8c3d612c04c974d2f65d6e17e607c37bf28241c289b1de12",
+      "size_bytes": 522578,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".png",
+      "path": "evidence/verification/command_center_live/live_command_center_1024x768_initial.png",
+      "sha256": "9d9c61e472c516038a27d8135e577c67f4b36ee5b2f6c597e272d17b50eda417",
+      "size_bytes": 171542,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".png",
+      "path": "evidence/verification/command_center_live/live_command_center_1024x768_viewport.png",
+      "sha256": "708cc8c2c836010ff8e27344ab704f8cce59b06eb44d18412c1d5c2b66c32d04",
+      "size_bytes": 171533,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".png",
+      "path": "evidence/verification/command_center_live/live_command_center_1440x900.png",
+      "sha256": "4a050c3557e76c668301a403fb81d06ff640d7bc47112efc13b7bad9b1df83f5",
+      "size_bytes": 507602,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".png",
+      "path": "evidence/verification/command_center_live/live_command_center_1440x900_full.png",
+      "sha256": "7cc686bb38b2c70513370630e1d978af307dc3a482f6d2805f255820e5b2f45b",
+      "size_bytes": 572692,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".png",
+      "path": "evidence/verification/command_center_live/live_command_center_1440x900_initial.png",
+      "sha256": "09c70d05a53dd8dffff80ee001e1e01cb29f254f8683f7aead42d27aab4c35ff",
+      "size_bytes": 247363,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".png",
+      "path": "evidence/verification/command_center_live/live_command_center_1440x900_viewport.png",
+      "sha256": "634972b62d85192bd19d17f2489bccad72ecd079da731e3c1c64c5f9d0a23a41",
+      "size_bytes": 246611,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".png",
+      "path": "evidence/verification/command_center_live/live_command_center_390x844_full.png",
+      "sha256": "ffd7c178a071e2cddc04567ed8f9a21410d3866502735950cfc3df235a7c1993",
+      "size_bytes": 403482,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".png",
+      "path": "evidence/verification/command_center_live/live_command_center_390x844_initial.png",
+      "sha256": "e65b03f37a962cb73bc559e8a3f60ffc674dc6fde1b4446d2252de85dd2f4447",
+      "size_bytes": 118424,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".png",
+      "path": "evidence/verification/command_center_live/live_command_center_390x844_viewport.png",
+      "sha256": "52d8d75ecd5821766be209c609fcfefef980bd911c65a188fd18cb04ea22fe07",
+      "size_bytes": 118302,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".png",
+      "path": "evidence/verification/command_center_live/live_command_center_forced_colors_1440x900.png",
+      "sha256": "91cf9446b0becca3593663b7eb9b87ff0e240f663d7bf6d66ebb79eb373f52e8",
+      "size_bytes": 305428,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".png",
       "path": "evidence/verification/command_center_ui/command_center_1024x768.png",
       "sha256": "89e28188793711b91edaa5db7de52b6bef5c95fea016130ed3072a0d11d8d07b",
       "size_bytes": 609140,
@@ -6957,8 +7141,8 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "d9c6e5319569d9eff528895f6abd68ebe34fece8b1f5fd4956c0a8c7b9948e0b",
-      "size_bytes": 336030,
+      "sha256": "db62f147559030136376cb2dd4d72704d9125bf30c46e26249661a39a70f1478",
+      "size_bytes": 342471,
       "top_level": "_root"
     },
     {
@@ -7230,8 +7414,8 @@
     {
       "extension": ".md",
       "path": "instructions/02_AUTONOMOUS_OPERATING_CONTRACT.md",
-      "sha256": "1d47cf675cd695da5fca9c37158174c6b227ab2918fa70723a8188db38d794be",
-      "size_bytes": 5870,
+      "sha256": "2920f1e932e7567334b3743ac0b496eca96addf27673f4baea26d4bae4dcfe13",
+      "size_bytes": 7518,
       "top_level": "instructions"
     },
     {
@@ -7251,8 +7435,8 @@
     {
       "extension": ".md",
       "path": "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
-      "sha256": "63b418d8236effff4cf1c9d6603e7f3a518d1db561ad062668c4f45ed77f3987",
-      "size_bytes": 4710,
+      "sha256": "842ba712228070506f675274fac652b46359d0e6be9c3bbc12b6abffcea39480",
+      "size_bytes": 5252,
       "top_level": "instructions"
     },
     {
@@ -7293,8 +7477,8 @@
     {
       "extension": ".md",
       "path": "instructions/11_ANTI_LOOP_AND_ANTI_OVERENGINEERING.md",
-      "sha256": "43f9ad2a632b9b639a1a701647351ff4afef6289a31b5cf12c37b675dad4b3d5",
-      "size_bytes": 4288,
+      "sha256": "bdd0b1f91b02c8e529a46370074ba71054f57488b7806d7ac492541c6aa70c80",
+      "size_bytes": 4592,
       "top_level": "instructions"
     },
     {
@@ -7356,8 +7540,8 @@
     {
       "extension": ".md",
       "path": "instructions/20_INSTRUCTION_MAINTENANCE.md",
-      "sha256": "00136f3af50beb6f10ddcdbdbc6aa2070cf3ca37e2a79479482312a5eb6823d4",
-      "size_bytes": 4410,
+      "sha256": "60cead401e21672c59d56468311c3125b91cb65119a96aa4406d2c01f8575f52",
+      "size_bytes": 4697,
       "top_level": "instructions"
     },
     {
@@ -7370,8 +7554,8 @@
     {
       "extension": ".md",
       "path": "instructions/CHANGELOG.md",
-      "sha256": "b8cbb9fa2f27179b69b7f6ba7facef83395decb1043a8b6583147d5a23f1c300",
-      "size_bytes": 2856,
+      "sha256": "b5058e8fa8b44f1b4e6c98dac5c0e7d62a22f414c8af58a324627e9dce9699ac",
+      "size_bytes": 3519,
       "top_level": "instructions"
     },
     {
@@ -7405,8 +7589,8 @@
     {
       "extension": ".json",
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "06cbd4826ef1588dce4eb9134651695353cdd6cc2b44ef7c9f775e2ec3fdbf2d",
-      "size_bytes": 25491,
+      "sha256": "b0988cd513a6d493f76a51eed50baf3d3207c3257ce3783338ca4897c2acd75f",
+      "size_bytes": 25756,
       "top_level": "instructions"
     },
     {
@@ -7461,8 +7645,8 @@
     {
       "extension": ".json",
       "path": "instructions/policies/VALIDATION_SCENARIOS.json",
-      "sha256": "43631d0fcefd8a844b0983191cc180290eabaf7ee6a9352caa4ca6f534386b9f",
-      "size_bytes": 3553,
+      "sha256": "5b7bf60c4846648bace85b1c8a0a76c25f57b609b490f4dd0972e9c21bc0c965",
+      "size_bytes": 7029,
       "top_level": "instructions"
     },
     {
@@ -7538,8 +7722,8 @@
     {
       "extension": ".json",
       "path": "jira/BOARD_MANIFEST.json",
-      "sha256": "d9f1e9de285e8266a653d1790c486252c26d1e95d38aedf1fd35ad8d0b240ca4",
-      "size_bytes": 668,
+      "sha256": "9dd6864e9e58a8c135853cc3518a421974cdfe169609b76b741a39aa1349fdfb",
+      "size_bytes": 669,
       "top_level": "jira"
     },
     {
@@ -7552,8 +7736,8 @@
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000001.json",
-      "sha256": "fc593c8ac2656ef719ca381525bb4c8349beb528a5c38531c31f37d367de13bc",
-      "size_bytes": 3872,
+      "sha256": "9be98fd23db9f7bc3eaef88f2aef8b03546e2a7d6e4b9311331bc42b3183473c",
+      "size_bytes": 4207,
       "top_level": "jira"
     },
     {
@@ -7580,15 +7764,15 @@
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000009.json",
-      "sha256": "8f7f3952dff41f36fd2902694895b2387ca9dc6b29582144d9e3cacf285e3889",
-      "size_bytes": 4263,
+      "sha256": "fd4c8eca0ea714bae6956fe3992830fdb25287582522788a298e271076fa42f8",
+      "size_bytes": 4522,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000011.json",
-      "sha256": "0a6072dfec9158cd2ae0c9f047a7c756a168ba0c417f2db9a0ccd9fb68cd96c0",
-      "size_bytes": 4188,
+      "sha256": "ba2b6d7c632367929f7a00db4be7d9f9226e32abe02389f28e7e0ca2df7fce38",
+      "size_bytes": 4369,
       "top_level": "jira"
     },
     {
@@ -7601,8 +7785,8 @@
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000015.json",
-      "sha256": "e38af5c819d746f642a0e9a230e3a288b79b75212486e0198c95fc00918bda47",
-      "size_bytes": 4225,
+      "sha256": "acea6ceabf0160f8276d91d377a75735fe5fc42cc83cc089d397e49049eb7f3e",
+      "size_bytes": 4636,
       "top_level": "jira"
     },
     {
@@ -7629,57 +7813,57 @@
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000023.json",
-      "sha256": "8323d389a43d8f55928bb94643dbecb180a91817f9b8207933af273c51f4b1e0",
-      "size_bytes": 4449,
+      "sha256": "70384f76ebedd5516062caeb5d4f7bfd703f481fb3da45d225505bf7e30bfcfa",
+      "size_bytes": 4860,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000025.json",
-      "sha256": "d78305518b821e55a52aebc5a2c20595597ff77f17da598fd64302ccd9c1632e",
-      "size_bytes": 4311,
+      "sha256": "337cee4d4d870d4a2398f5964423bf4fa5ca6d3bd3385106c78b1936dc1994b3",
+      "size_bytes": 4320,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000027.json",
-      "sha256": "4bf6d3425b9003bf866ad3d14dac5f70a522ee6330c85b57762bf3c6df01c060",
-      "size_bytes": 4161,
+      "sha256": "058e1e687a11318e6b91b28ae0ea064359dcf19dc608528e496f3b185b3936c2",
+      "size_bytes": 4724,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000029.json",
-      "sha256": "6bddaaa4a3fa5bba6ec033852cfd8223e3e7dbd4f2a0de3278623126f83859ad",
-      "size_bytes": 4151,
+      "sha256": "c10475651ece2765c790db96420aa21927b2c376164bb41fc3eed6b8a0a6a3d1",
+      "size_bytes": 4486,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000031.json",
-      "sha256": "a75be4323a96e6ddff603fd34c8188d030d15fdce4529cab241acd69d3a1b03c",
-      "size_bytes": 4252,
+      "sha256": "330a0090f8830057d7b92d5092ee13e259197b90fb8e4dc0fcaeb2306c22de1c",
+      "size_bytes": 4433,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000033.json",
-      "sha256": "ac44d90c3eae3ba2f4ce516c0f2852ab782c876d0cf8afa6272d5b031bcbcffd",
-      "size_bytes": 4119,
+      "sha256": "5d1f66cff063e704f303c9456f4cec557c6b08a97e0d9104e8a31e2e201c915f",
+      "size_bytes": 4758,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000035.json",
-      "sha256": "60798fc6c4c0b468249ec2d4104776627b2bfaac98b306f13b548b06838559d9",
-      "size_bytes": 3943,
+      "sha256": "cfd82c24dc684a44391ccb2f805ccdae4b94f53d2759a4ea12274ccedea94be4",
+      "size_bytes": 4192,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/epics/PP-EPIC-000036.json",
-      "sha256": "847f7677d72082d00dea1e9872771c0d995d38d24360ce7127000e808266b484",
-      "size_bytes": 4359,
+      "sha256": "2608f7f044a913d74ef69ede7a2fd2778bbda9b881573f4f1aa83257bcfa6302",
+      "size_bytes": 4552,
       "top_level": "jira"
     },
     {
@@ -7706,15 +7890,15 @@
     {
       "extension": ".jsonl",
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "f5c58ce219887972f7a9b2cf9f31e947d66af671ce24b7de62961ca127cb5d3f",
-      "size_bytes": 1678655,
+      "sha256": "27bd1d4d9fb3ab82a669ac7f91eade81a03966500614cb294d8df8d8f3d57e1f",
+      "size_bytes": 1684132,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "e05b957e36ebb0964f32b889aadaaefefba9b7dcd5f20207805d5a06031fa284",
-      "size_bytes": 1989146,
+      "sha256": "1fa9b98a67dbda2c169dfa0b5413918c8a1deccc0dc7e63b76cc6f07c869d208",
+      "size_bytes": 1996921,
       "top_level": "jira"
     },
     {
@@ -7727,8 +7911,8 @@
     {
       "extension": ".json",
       "path": "jira/relationships/graph.json",
-      "sha256": "e11fb3af7b3ad600717e993e527c3c3bd7e301a281003abf29c03912c391dbfc",
-      "size_bytes": 154750,
+      "sha256": "bfc59edb39c95b028225ad3c7b2724e033e0641cff219abf73456f701e481052",
+      "size_bytes": 154656,
       "top_level": "jira"
     },
     {
@@ -7741,8 +7925,8 @@
     {
       "extension": ".json",
       "path": "jira/reports/backlog_status.json",
-      "sha256": "8f35e92506e22a366744da15d052dd01a501b055dc386eb19e2a8898fea70ed4",
-      "size_bytes": 379,
+      "sha256": "26e8147286c881c9aa0e1757c6acdb58584fc9c850829019f1cb6f774f991eea",
+      "size_bytes": 380,
       "top_level": "jira"
     },
     {
@@ -7755,8 +7939,8 @@
     {
       "extension": ".json",
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "d91a923143f62e7af5f4616ab149f968b688273bda30ecb6ea55a78671ef242e",
-      "size_bytes": 2061,
+      "sha256": "0fa141a99457be5f374c6b7a849694a900f17505e265debbf6c1d6d00aa650c9",
+      "size_bytes": 5786,
       "top_level": "jira"
     },
     {
@@ -7764,6 +7948,13 @@
       "path": "jira/reports/live_jira_sync_report.json",
       "sha256": "c673ca589884d80d366da56c047a7e4917a40637d7560eab18c78c24a6115b0f",
       "size_bytes": 2071,
+      "top_level": "jira"
+    },
+    {
+      "extension": ".json",
+      "path": "jira/reports/live_status_snapshot.json",
+      "sha256": "475400100508253b1f7e156e3425e2c9d142c86d38fc95d1f4c1a66ef4de8cf4",
+      "size_bytes": 3953,
       "top_level": "jira"
     },
     {
@@ -10639,8 +10830,8 @@
     {
       "extension": ".json",
       "path": "jira/stories/PP-STORY-000026.json",
-      "sha256": "fe8415a3ff6e7d65b6966069e135d2b6acd0dfe72316458588b61f0d45713c7a",
-      "size_bytes": 3935,
+      "sha256": "39a58ff25dcc7c370db03f610fda2b7d9a411794395e65e8ec2d90e3c71e1d88",
+      "size_bytes": 3953,
       "top_level": "jira"
     },
     {
@@ -11129,15 +11320,15 @@
     {
       "extension": ".json",
       "path": "jira/stories/PP-STORY-000113.json",
-      "sha256": "746877d131ab15c7214d5cb2a80307e7e8894644a38c0f4ace817a30e629cd58",
-      "size_bytes": 4214,
+      "sha256": "24d53ef557446e4e1673c1932c54c2aab8b7ac6c2065ca8030a7a9405a682a0c",
+      "size_bytes": 4229,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/stories/PP-STORY-000114.json",
-      "sha256": "9b162b2a932d82e21c50820d297d8662ce3c6d53f9a5b84076cd32006ee936c5",
-      "size_bytes": 4604,
+      "sha256": "911ff429c314c15cebc7e8da478c1bab7fa486f11a5fd026e78d71362a3f6870",
+      "size_bytes": 4613,
       "top_level": "jira"
     },
     {
@@ -11206,8 +11397,8 @@
     {
       "extension": ".json",
       "path": "jira/stories/PP-STORY-000124.json",
-      "sha256": "dc5bc5772763fedf84603afc2099184a221a9a18ad0ecddcdca7e6aec60ace7c",
-      "size_bytes": 4024,
+      "sha256": "c06ec6543d1d4decff3f727c2b1729a4a5342bee1a60784eb306b401e0f9da3e",
+      "size_bytes": 4033,
       "top_level": "jira"
     },
     {
@@ -11304,8 +11495,8 @@
     {
       "extension": ".json",
       "path": "jira/stories/PP-STORY-000138.json",
-      "sha256": "43a9c085751d3663874b728ab4810e3994c3fe23ab80c064052b92bda8e8d54b",
-      "size_bytes": 3326,
+      "sha256": "8ab36d45e4511a332a936556b6b1b5f0d2de97083cdb099e50287b3403b63ba8",
+      "size_bytes": 3519,
       "top_level": "jira"
     },
     {
@@ -11514,8 +11705,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000043.json",
-      "sha256": "5b66871ed323c7fae5dde47904eacdf9107b1ec28699f795060907ef71dc4cf9",
-      "size_bytes": 4220,
+      "sha256": "020d454b6642c64cc76975cf758a85f8741c4125d17c89510166abf0f0521b26",
+      "size_bytes": 4459,
       "top_level": "jira"
     },
     {
@@ -11654,8 +11845,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000164.json",
-      "sha256": "be09912e491677a04f1755d2a43ae11a06b85728c44f1c2e51ced2a9e377b5df",
-      "size_bytes": 4583,
+      "sha256": "0882be5d28e99ef3cfa1384d9f237ffa5681c4587d0c31ed45fb26413e1783fe",
+      "size_bytes": 4584,
       "top_level": "jira"
     },
     {
@@ -11703,8 +11894,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000171.json",
-      "sha256": "b141baecfc42260d6e5aeed8b548566a779c67af1001c38cd456e061fb7f677d",
-      "size_bytes": 4772,
+      "sha256": "1c9651c3cbdb00c1504abf0494a74af60f5f13259f877a932909243559619ac7",
+      "size_bytes": 4773,
       "top_level": "jira"
     },
     {
@@ -11780,8 +11971,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000186.json",
-      "sha256": "31cb435f911e1a888df866b51fc2b546b218a7107d2c8fdd1aae01e231a945d2",
-      "size_bytes": 5284,
+      "sha256": "39f58d5e5d0cc9a32c14d1e41bc538cc5bec979434f23c253fda419822709587",
+      "size_bytes": 5390,
       "top_level": "jira"
     },
     {
@@ -11794,8 +11985,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000188.json",
-      "sha256": "35d24e36b1837da4d641d675cc8383af43cfacfe928facac17ef3966a2cb5872",
-      "size_bytes": 5347,
+      "sha256": "d61b2e6b1a4fc45932f634e27304560d373a28a83c1dd2aabe40e4ea59c1cf02",
+      "size_bytes": 5491,
       "top_level": "jira"
     },
     {
@@ -11829,8 +12020,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000193.json",
-      "sha256": "2b68cd4ba823a2fe997a574a3363dac2e6115dce2fb4fc9a3437ac9f62d7b59c",
-      "size_bytes": 5686,
+      "sha256": "33979664166f4179cf789b099afc5004df53bc22502fd36880201780be6ecb81",
+      "size_bytes": 5811,
       "top_level": "jira"
     },
     {
@@ -12025,8 +12216,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000221.json",
-      "sha256": "3fc11564596fed307e4a3876e33e5272397a339a6f2c16676503ec2ed0f7598c",
-      "size_bytes": 5873,
+      "sha256": "2f854e99f402eb4a0a9c61b83a27f58ab0b348a4cfea3a0921f07538bddf9901",
+      "size_bytes": 5974,
       "top_level": "jira"
     },
     {
@@ -12046,22 +12237,22 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000224.json",
-      "sha256": "be4ab47d60205488e24b3cf19ac3417bbfe50de2aec2d1cbb09edcdd869f88dc",
-      "size_bytes": 6086,
+      "sha256": "81d4d7e2e2ef12ebc6575c56e52b83af31a4b7821cbf997bf2e0feae762a26ff",
+      "size_bytes": 6092,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000225.json",
-      "sha256": "ab3d83bd43d0c685eda34f02607c67bf6ae1b048048c92091aeab3b383abd46b",
-      "size_bytes": 5870,
+      "sha256": "1b440b20b705d24efd062539e63a609d3691dda84708bd744e6994ac6ea9261a",
+      "size_bytes": 5876,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000226.json",
-      "sha256": "a92af0fc40ff6240bbef429662f8292f43865e61e2ca91fffbaa8e0031450a82",
-      "size_bytes": 5930,
+      "sha256": "fccb12b44ab9628b18a755d53ff399adf74965c7497a716e6a91ffc5780f5116",
+      "size_bytes": 6069,
       "top_level": "jira"
     },
     {
@@ -12081,15 +12272,15 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000229.json",
-      "sha256": "642332dbd6667d022ee700d19e882d43aba4b449327ddeeb622e7169cdc13158",
-      "size_bytes": 6345,
+      "sha256": "5e65122a543c66bcee928447a83d63d4eccd3f6a4feaefce1b13778eb5dca323",
+      "size_bytes": 6351,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000230.json",
-      "sha256": "b3556c3ac9e4f90c977442eb5f44fffd55932b2fce38c7fca4339fc5fe57f679",
-      "size_bytes": 7097,
+      "sha256": "5badf648e3335180eb7512148febd0767545e86f21c2a56e8ca1b49700f579c6",
+      "size_bytes": 7198,
       "top_level": "jira"
     },
     {
@@ -12109,8 +12300,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000233.json",
-      "sha256": "9376653e855363a9407ab21defb296cd50c83c55247000e0118d79edff1cfa5d",
-      "size_bytes": 5391,
+      "sha256": "fbf4070d750dd20d0a0095726b853458d6b4302d74ae52c3c932fad2dda8b177",
+      "size_bytes": 5402,
       "top_level": "jira"
     },
     {
@@ -12550,8 +12741,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000296.json",
-      "sha256": "133e00bc001381bab7e6b1d830da6fc993e8c9b886bb804c7310a617958d0645",
-      "size_bytes": 5022,
+      "sha256": "bd3741b425b7825e4a27cbb911e281fc26fa555957e86d34cec3d8d5af7517a5",
+      "size_bytes": 5071,
       "top_level": "jira"
     },
     {
@@ -12592,8 +12783,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000302.json",
-      "sha256": "6cef1008d8a7846605d2b8634a3a6e18078dfd623d00ee82c168095551101858",
-      "size_bytes": 5154,
+      "sha256": "a9cca9761f0637a831804186758508ac4e1eb3e52a3ae6c2a5abe83e00c0fff0",
+      "size_bytes": 5165,
       "top_level": "jira"
     },
     {
@@ -12641,8 +12832,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000309.json",
-      "sha256": "eceff31315a47cd8337699e45308fc6cff436416c071c8a8e2c616c5ab41cbdd",
-      "size_bytes": 5162,
+      "sha256": "e6005f3059e727d71fd45fa5bdbb336200fb01cc585e2894e0b7291733b1bce8",
+      "size_bytes": 5268,
       "top_level": "jira"
     },
     {
@@ -12739,8 +12930,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000323.json",
-      "sha256": "67c75dee204676f11cd326bfde551b55daeb43de858145c533bcaf34d59c2088",
-      "size_bytes": 5804,
+      "sha256": "c7ebd2aaf253193b2f49b21e827ffaf22555fbc4b645e6e710fd3971c23f0bef",
+      "size_bytes": 5813,
       "top_level": "jira"
     },
     {
@@ -12767,8 +12958,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000327.json",
-      "sha256": "d3ef38f3e3ba6245ea919ac1b24ef02c1f628bfde52349f2533a6ed849778d33",
-      "size_bytes": 4817,
+      "sha256": "80ffcc7cb383c71d85fd18a2f9c991eb8aa44a8dd3e2d83b97b2dcd446e6482a",
+      "size_bytes": 4815,
       "top_level": "jira"
     },
     {
@@ -12858,57 +13049,57 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000340.json",
-      "sha256": "14c9cc5618930dfefa57d9dbfd84badc1967a13dd0e70392c2fa72391c0af318",
-      "size_bytes": 4809,
+      "sha256": "4b4d5ecc3a3751e3a14136d7348a6aa4627ead4cc6d627cde57fad33fb84fa3d",
+      "size_bytes": 5458,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000341.json",
-      "sha256": "8109c3b2c721c1842e05114f4bb1d9e0f2083e6bd9084c313f4cd7c65186a414",
-      "size_bytes": 4658,
+      "sha256": "c90d1640685384e31c9b55efc3fe107dd5e46781f771d3fb7fcf80e8bee685a3",
+      "size_bytes": 4661,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000342.json",
-      "sha256": "90f371bd7edcc6ac7acd93ada524e51b5330f70369abc57a93891e44cf4fcc69",
-      "size_bytes": 4734,
+      "sha256": "ba006bcc7e8aaec87a3a068f324be9def312d45528d3d080ba77975c42796ba6",
+      "size_bytes": 4813,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000343.json",
-      "sha256": "06ce232cab570a564bb55a1080f83b4acf19987c114dc3ff316f538bfbbb6571",
-      "size_bytes": 4671,
+      "sha256": "cfe94585ebd15dda6a7760bf48d9b2410739edad8898c30f35b6246b2426fb49",
+      "size_bytes": 4674,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000344.json",
-      "sha256": "5ab37e33777d6165ed8681ff4993b0be15f6aa26590cd0a575e18539502ff089",
-      "size_bytes": 4723,
+      "sha256": "1125d792a7525987648f5f7f4a5f436dde6c477b0003dce9614cba7268bd4558",
+      "size_bytes": 4783,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000345.json",
-      "sha256": "136359410dbd0ed782035055107732b2451274e63a36f3b5f158e43e7ed30542",
-      "size_bytes": 4508,
+      "sha256": "baf172eb1f42639b547dcb8a79b5e6238eb68b208986c714a80095f7eed15a23",
+      "size_bytes": 4536,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000346.json",
-      "sha256": "465527c98f03dab2e6cdf339eb2a9bdc948c2b5c4ed05f239ed77b674a8b46db",
-      "size_bytes": 5376,
+      "sha256": "7185ff2ae305c8c1aff75f2bcf6ef372806c3cf1cb3752a6a1d8abc016cb95ce",
+      "size_bytes": 5380,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000347.json",
-      "sha256": "14e2964737663c8677fe182b2049de170ca984dce886aaa3813ecef0bd9da04f",
-      "size_bytes": 4746,
+      "sha256": "8af9b8019062fcf015666b574d8c21ce650e2196ec4639481709c31ca6aecc77",
+      "size_bytes": 4755,
       "top_level": "jira"
     },
     {
@@ -13005,8 +13196,8 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000361.json",
-      "sha256": "fc26033722b190be563e57d4fd4b6885283582c8757fd596e9c920d4dda56dfd",
-      "size_bytes": 4882,
+      "sha256": "9a5e9545228333c8648d2cf3e66d9198b125e22a0d9197814a8421a3ab2a0084",
+      "size_bytes": 4950,
       "top_level": "jira"
     },
     {
@@ -13019,15 +13210,15 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000363.json",
-      "sha256": "9a1ef6be25b5ddff6d0e479d421270d8261b7d233406e446a648f0d0c5867fb5",
-      "size_bytes": 4837,
+      "sha256": "790cc3d62ee0f8b21d95c617139110daa84d579bdfc77f8fd1468072f4c039b4",
+      "size_bytes": 4867,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000364.json",
-      "sha256": "e505f42de087d49e5d5b74d0bad6256e20617948258c4e9288f11a21b9f33ef5",
-      "size_bytes": 5070,
+      "sha256": "576e6b9f9795c67afae9f0fc86655b5b49b9f98210bf3b2f3cd906c1d31fb208",
+      "size_bytes": 5119,
       "top_level": "jira"
     },
     {
@@ -13068,113 +13259,113 @@
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000370.json",
-      "sha256": "125c05285c0412453a1b7c23fa104ecab91a58b2e83e46290fec1a788f8e1283",
-      "size_bytes": 4919,
+      "sha256": "1cd204b01bf9b7b953fec930f5383ab92bbe2cba19968b6cbbad7d97b1569554",
+      "size_bytes": 4916,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000371.json",
-      "sha256": "82f243f3c5781a0648c9fb341bd1519a05fa9b3f63346b5538db67a42cbf4698",
-      "size_bytes": 4602,
+      "sha256": "ac18973bb0c3dbf544c6f6d452da556ff74a8d6f2116f36c97db85a66a9041bf",
+      "size_bytes": 4741,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000372.json",
-      "sha256": "9dc9c4ca080ef2e1513293a06fdbe942d994ea965bb6769f6f40e5bbc1f12c68",
-      "size_bytes": 4628,
+      "sha256": "6e02a8f1d52f99ba81c128a973acf8242851d1b514357993abc190af9fbee06c",
+      "size_bytes": 4805,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000373.json",
-      "sha256": "d359162e13eaee343471e954ccb22c4334450c71e9724a5bfa2030f4abacbb45",
-      "size_bytes": 5281,
+      "sha256": "24c54bc17dc914b3462387911829aa309c85357c30ec3132213d63050bc1dde9",
+      "size_bytes": 5325,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000374.json",
-      "sha256": "821b6b2c2d03d9f160cc9ddbb7eec97a5eb9d38c98a817d643233189cddfc0e3",
-      "size_bytes": 3954,
+      "sha256": "1e6ac384c1fbdf792ba70e8ee253f1e00aa472309d54f18e0118ba8ceb07190c",
+      "size_bytes": 3960,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000375.json",
-      "sha256": "15ed3a98512737332c5ce3da3eba5c4bbeed80438d142e77a4161d8d02e3dea7",
-      "size_bytes": 3656,
+      "sha256": "1b7c50be1830e738c610f6c0e5174d66af8be0de2a1e41d1d41dfb65723c34e1",
+      "size_bytes": 3662,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000376.json",
-      "sha256": "6a599c2245cbf782883fdd63098ff0c647c0e747d75e0b8f354c68bf43eba5fd",
-      "size_bytes": 3799,
+      "sha256": "0003ae989b0e556ca21a81e4537be06515e64c0ea0bffca8013756e6daca779c",
+      "size_bytes": 3805,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000377.json",
-      "sha256": "cf273bda1aca9b3e60a6cb2b5ccce64c5c025b6199765eb3bcf79747b8073365",
-      "size_bytes": 3686,
+      "sha256": "2989a8de3208699e30a18da72a69e4a5a28c7c52111035b346ea158cea7b556e",
+      "size_bytes": 3730,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000378.json",
-      "sha256": "7efacf6c006cd77ac36e41327e48c2f86e55c2be3d52355774682317abb7d3a3",
-      "size_bytes": 3861,
+      "sha256": "a86eb649c93480add371dbdb965649beb80be50db19a57b10daa48dc984e5b83",
+      "size_bytes": 3867,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000379.json",
-      "sha256": "90d447f1b16692219d318f8889f59c9fa38ef59aba521a022b86bc45ef03e493",
-      "size_bytes": 6473,
+      "sha256": "85a27144b7a6e1276c663724f24e4cb234b284f04c8b6a700466fe7a92cfb29f",
+      "size_bytes": 6666,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000380.json",
-      "sha256": "844730409cbbb623806b971d0cbd0daa4dcbac98aa022f0dd825a552750437c5",
-      "size_bytes": 4742,
+      "sha256": "41f8a569fc242ade5e6fcb3e178e1aa8903a797a351662f065d9d287ee618674",
+      "size_bytes": 4747,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000381.json",
-      "sha256": "85ae55095b5512a835acfb8d03eab2d4cea2b1be7fdeb51274f3b4721b6e847a",
-      "size_bytes": 3783,
+      "sha256": "4d42c04ec971d98399ea240dfb2160d491270f699e0945370ffe696b6fa694ad",
+      "size_bytes": 3788,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000382.json",
-      "sha256": "274e9bbedcd46a89b80f885dc52f23aa7afb5a1a1bb49690b4d1597c9cfc2151",
-      "size_bytes": 3945,
+      "sha256": "d5f2b207cc2f18dca37e690c4053d76bfc9db25a016c154c2027c9300e4bd927",
+      "size_bytes": 3950,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000383.json",
-      "sha256": "76a548d3f3c66b6f15730b37cf05be5073e3886e50d6d8acbcf0006bad70c3ca",
-      "size_bytes": 4121,
+      "sha256": "268687818f5c462ee6d3af6ce73739981b7d80a939a56c070c12e153f9727464",
+      "size_bytes": 4126,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000384.json",
-      "sha256": "ccf0a1160722687c53e93c4213198b5109d00ab20d101dbc2652f450248ec92c",
-      "size_bytes": 4207,
+      "sha256": "2a2b8b951e0a94f30c78ccdeb18198c7b5b8fc38f2f75cde28011208c96e064d",
+      "size_bytes": 4208,
       "top_level": "jira"
     },
     {
       "extension": ".json",
       "path": "jira/tasks/PP-TASK-000385.json",
-      "sha256": "ccf481da705f6fd10a120e88b5f964e36beae1554257ca6b3f3898a2a2e0b16f",
-      "size_bytes": 4019,
+      "sha256": "103947fb7672dd5447eb2db175a69a3c41523e3059e65373a02c4e1c4a544c75",
+      "size_bytes": 4235,
       "top_level": "jira"
     },
     {
@@ -13243,15 +13434,15 @@
     {
       "extension": ".jsonl",
       "path": "plans/01_requirements/open_decisions.jsonl",
-      "sha256": "b742d85a02ffb762b5f16c5d7c98dd67338d6c476d8ff9422f88b83c658adbad",
-      "size_bytes": 31904,
+      "sha256": "b065959d1e940f852f64789cbaec867fd703457766bd616d63d01deda7333a8c",
+      "size_bytes": 32287,
       "top_level": "plans"
     },
     {
       "extension": ".md",
       "path": "plans/01_requirements/OPEN_DECISIONS.md",
-      "sha256": "b16330653a2a4ec181703b836ed29e7cb597fa03f624294c24fd5d44a85b7d0f",
-      "size_bytes": 27361,
+      "sha256": "0fcb01ec069775142ce720464cd028bdc7dad881ac81d443547b4ee8a96cbe7f",
+      "size_bytes": 27723,
       "top_level": "plans"
     },
     {
@@ -13278,8 +13469,8 @@
     {
       "extension": ".md",
       "path": "plans/01_requirements/REQUIREMENT_CATALOG_STATUS.md",
-      "sha256": "de3e6534334cba5e7bf979b40752eb475edb5aee506c870c3d9d46235ba3f390",
-      "size_bytes": 798,
+      "sha256": "b6b1016f5869411d79cc37d757e4bc5be6faac108ab45f1966e5a4a29f1c959d",
+      "size_bytes": 777,
       "top_level": "plans"
     },
     {
@@ -13985,15 +14176,15 @@
     {
       "extension": ".json",
       "path": "plans/_traceability/coverage_report.json",
-      "sha256": "9e8db9820398029db14bb16f2b46e9fd8bf0994bd5dec507214909c3796e7f9f",
-      "size_bytes": 2471,
+      "sha256": "e2eeff9ffe1e205bb03b4f0e4425bfe93e877a6553c4dd91c9c14408f0160bc3",
+      "size_bytes": 2447,
       "top_level": "plans"
     },
     {
       "extension": ".md",
       "path": "plans/_traceability/coverage_report.md",
-      "sha256": "102c2250f804efacf3c3afb1b8aec6dec0a84cbdebd3998f4c5f7228dd9f2dc5",
-      "size_bytes": 751,
+      "sha256": "a0782333e0dd0e07e4f8cfbdb0e52614575dcae39821951a87cebd8fca56ec57",
+      "size_bytes": 730,
       "top_level": "plans"
     },
     {
@@ -14006,15 +14197,15 @@
     {
       "extension": ".json",
       "path": "plans/_traceability/requirement_registry_summary.json",
-      "sha256": "29778cfc285093059e6ea0909437aaddd309bcc4cfd97063e91181fde8405541",
-      "size_bytes": 909,
+      "sha256": "6356992ae777615c26c0a568b42969a2542c7e1bbcb32b257b230a2abade6799",
+      "size_bytes": 885,
       "top_level": "plans"
     },
     {
       "extension": ".jsonl",
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "540656cdd1f5048913bb1bbf4318336cfae8ba700ebcb0829aee69b59557d673",
-      "size_bytes": 741354,
+      "sha256": "37c1f681cb3cfac675363bf8501493b546e299763dad90baa9b467ed5a75c71b",
+      "size_bytes": 746385,
       "top_level": "plans"
     },
     {
@@ -14027,8 +14218,8 @@
     {
       "extension": ".json",
       "path": "plans/_traceability/requirements_by_id.json",
-      "sha256": "b704b3cb6f98b81c1cbde189d333c43e26746172488e0e6708a82291ce397afd",
-      "size_bytes": 867270,
+      "sha256": "e35c13f5089f5223baae16d8a5747e4518da000b5f7b14ae33a35bfd3532ca50",
+      "size_bytes": 872795,
       "top_level": "plans"
     },
     {
@@ -14041,15 +14232,15 @@
     {
       "extension": ".jsonl",
       "path": "plans/_traceability/requirements_to_decisions.jsonl",
-      "sha256": "2afa497c86521aac4cbd8784201257ffb12f60179e7d51c14ce33099355a174d",
-      "size_bytes": 21961,
+      "sha256": "d14a26ed2cd1b32905f0c7e48127ecb16861ed4a801dace65f09171fd3fd44de",
+      "size_bytes": 21993,
       "top_level": "plans"
     },
     {
       "extension": ".jsonl",
       "path": "plans/_traceability/requirements_to_evidence.jsonl",
-      "sha256": "d5fdb2c1207e2f4c4891cd98e3191fd88ae4479c2b19bc5f296bcff546b4d769",
-      "size_bytes": 36675,
+      "sha256": "9aa7f2d0aebff147ccf88c43244b4902d59d2aaaa3e4b9beaeba0c2e71bbbd61",
+      "size_bytes": 36958,
       "top_level": "plans"
     },
     {
@@ -14062,8 +14253,8 @@
     {
       "extension": ".jsonl",
       "path": "plans/_traceability/requirements_to_implementation.jsonl",
-      "sha256": "533a7799a0f13686c67980ed447c9e5e11f96731211897d4858b365782eb4790",
-      "size_bytes": 90375,
+      "sha256": "b9d94e983df4763de57eacdbb1d753e61d9770cfbd5076fbcc147e77392e00c0",
+      "size_bytes": 94012,
       "top_level": "plans"
     },
     {
@@ -14090,8 +14281,8 @@
     {
       "extension": ".jsonl",
       "path": "plans/_traceability/requirements_to_tests.jsonl",
-      "sha256": "7cd580362c7943713d17b463193b184bef0f44a0eb3d174525f59b762ab15b1d",
-      "size_bytes": 52474,
+      "sha256": "a06ada63aa6b3762f54287dbf743fa931de5151b85c371cd4af38476bbb29286",
+      "size_bytes": 53374,
       "top_level": "plans"
     },
     {
@@ -14174,8 +14365,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "455267d1c466835c3a1f221fe97a289fd3b5aa154ad743ea72457f0a0454db85",
-      "size_bytes": 550240,
+      "sha256": "cb1eda598c0e7142b8a8b2d22ea21e383079a7a7fa16fbb14f9ef12e861bd700",
+      "size_bytes": 560730,
       "top_level": "_root"
     },
     {
@@ -14804,8 +14995,8 @@
     {
       "extension": ".toml",
       "path": "pyproject.toml",
-      "sha256": "0bd7100e14704431abba256db1980f62fa4507d50fa95280251ae1ce67bc2dfa",
-      "size_bytes": 3649,
+      "sha256": "944ffa6579f37051497b81e2cd9a700cd6d427d3c55f6e52a6c8b93f23fb17be",
+      "size_bytes": 3695,
       "top_level": "_root"
     },
     {
@@ -14853,15 +15044,15 @@
     {
       "extension": ".txt",
       "path": "requirements/development.txt",
-      "sha256": "96492b74442742826818f6aca2836a8c20ae8856fda3e93459821025d41106c3",
-      "size_bytes": 743,
+      "sha256": "3df47ca5aa8c5484a3669c7be58a5a3307d9c82149c16b9dc111087954622301",
+      "size_bytes": 772,
       "top_level": "requirements"
     },
     {
       "extension": ".json",
       "path": "requirements/environment.lock.json",
-      "sha256": "4342cd2f160193cf11cccce99dacb6f351ea1addbd02565464b3b9af8841c777",
-      "size_bytes": 11755,
+      "sha256": "3bac473dd4560b723b7815b8f80394d20e2d2f20d70ccbb1443259edf35f0f99",
+      "size_bytes": 12469,
       "top_level": "requirements"
     },
     {
@@ -14930,8 +15121,8 @@
     {
       "extension": ".md",
       "path": "runbooks/command_center_windows_qualification.md",
-      "sha256": "152c580cad6f8bbe002b120f7fb36b4b470ddb5112749aaf313af694cf62627f",
-      "size_bytes": 2036,
+      "sha256": "7f28b53790b7dfe5160af9c829b3c8dbb655c548741a5ee9f7d5c40fda5c4919",
+      "size_bytes": 2653,
       "top_level": "runbooks"
     },
     {
@@ -15080,6 +15271,13 @@
       "sha256": "c48774a960a93f8de77d177133243b966cef6af1782f12738d27e8c530870390",
       "size_bytes": 1135,
       "top_level": "runbooks"
+    },
+    {
+      "extension": ".toml",
+      "path": "rust-toolchain.toml",
+      "sha256": "570dcc848c1b1f34e2f0fe9f9ca189e97ff25241b6cd424e61f0258146ef88ff",
+      "size_bytes": 123,
+      "top_level": "_root"
     },
     {
       "extension": ".json",
@@ -15658,8 +15856,8 @@
     {
       "extension": ".json",
       "path": "schemas/control_task_fact.schema.json",
-      "sha256": "4f221eddb81e4a508e9273674ac357ca1b2d55e1197eb1485410d2842dd01d96",
-      "size_bytes": 3805,
+      "sha256": "8d5df309f73faeae815df2bc5a615e388571a01ac47fe7ce7205c5d645b08df3",
+      "size_bytes": 3937,
       "top_level": "schemas"
     },
     {
@@ -16588,6 +16786,13 @@
     },
     {
       "extension": ".py",
+      "path": "scripts/compare_desktop_artifacts.py",
+      "sha256": "a48a0adef2b76e2894eae46837fddf9b567c9f9f04bf36afb6fc73f03ccc1fcf",
+      "size_bytes": 1143,
+      "top_level": "scripts"
+    },
+    {
+      "extension": ".py",
       "path": "scripts/create_project_archive.py",
       "sha256": "01888cdc7e6d1b625b77e39e6c810c4c1f28ed5cff563963d65b4ca9b626752e",
       "size_bytes": 718,
@@ -16617,8 +16822,8 @@
     {
       "extension": ".py",
       "path": "scripts/generate_product_reconciliation_audit.py",
-      "sha256": "6f0437f14896a5c24820c59f80f31eef94325e5b2f37bf7a02a853756b06abab",
-      "size_bytes": 4718,
+      "sha256": "3898d5fc574fa70882d43b5833f71255ed435dcd8d1177a3387036d661ab5379",
+      "size_bytes": 4833,
       "top_level": "scripts"
     },
     {
@@ -16633,6 +16838,13 @@
       "path": "scripts/instruction_cold_start.py",
       "sha256": "80fe3ef4058c25a5c545c1374c96f931dc1b257e0e410437b966d2e4601e15a3",
       "size_bytes": 5149,
+      "top_level": "scripts"
+    },
+    {
+      "extension": ".py",
+      "path": "scripts/qualify_desktop_windows.py",
+      "sha256": "b65dd9e92857cd840b11180db9924ee975f46b0970335c7d110d7598f0db91bd",
+      "size_bytes": 871,
       "top_level": "scripts"
     },
     {
@@ -16741,6 +16953,13 @@
       "top_level": "scripts"
     },
     {
+      "extension": ".py",
+      "path": "scripts/stage_desktop_artifacts.py",
+      "sha256": "f210099991b1dfbe0bd60c6e07eccb4a0b5507110c72b3a180f024e79ed283f3",
+      "size_bytes": 2103,
+      "top_level": "scripts"
+    },
+    {
       "extension": ".ps1",
       "path": "scripts/start_autonomy_campaign_hidden.ps1",
       "sha256": "8e60565bf914faa3f9d56755d56fe62d4f5a980fb0b78d00d7c5c8fdd6d0ff4d",
@@ -16764,8 +16983,8 @@
     {
       "extension": ".py",
       "path": "scripts/validate_instructions.py",
-      "sha256": "0ba2c754085c0a36635f01f42cc44f49a86a40321f0db7decca0dfad12ee17c8",
-      "size_bytes": 40664,
+      "sha256": "33269d63d3e3a5cc1d95acd0e3b992649a29663a98fa67c627f2abaa58baee0c",
+      "size_bytes": 41751,
       "top_level": "scripts"
     },
     {
@@ -16792,8 +17011,8 @@
     {
       "extension": ".py",
       "path": "scripts/verify_command_center_ui.py",
-      "sha256": "38e121f825d9d9d0023380480964a14dffe76074a9c55d39701411b21891f320",
-      "size_bytes": 788,
+      "sha256": "8385bca89122638d0bf5403c9d28cc24457f313d55ffc9232a36dd9835c59a6b",
+      "size_bytes": 1106,
       "top_level": "scripts"
     },
     {
@@ -16974,8 +17193,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/assurance/__init__.py",
-      "sha256": "01074cb83b5c851d6889b32a77e35bfafb90d8bff4036ea8cab9c56ef9d28ff5",
-      "size_bytes": 1315,
+      "sha256": "c26785140e3e60cfef920830ab1dac65dc13cdce3eb1a9658228fc4b52c28e75",
+      "size_bytes": 1472,
       "top_level": "src"
     },
     {
@@ -17001,9 +17220,16 @@
     },
     {
       "extension": ".py",
+      "path": "src/project_pipeline/assurance/cycle_workload.py",
+      "sha256": "37d0b8f8619c3d1e1f296d052ead2983d564bce6e5e1fb260f9cf929f4343ea5",
+      "size_bytes": 18432,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
       "path": "src/project_pipeline/assurance/delivery_progress.py",
-      "sha256": "dafb546f4e39b1b222a4440a6b16c3b0e8101aca0a62ef356ff880c6adf9d0d0",
-      "size_bytes": 20338,
+      "sha256": "fe5412571611f093c00624e3173625a9b8c53095a27f2a4931938f52b0b8ad60",
+      "size_bytes": 21661,
       "top_level": "src"
     },
     {
@@ -17016,8 +17242,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/assurance/jira_implementation_reconciliation.py",
-      "sha256": "3208fd12105c75c70f49bff9337b0737a93e1e9828e43a5be0fd1a66fad254a8",
-      "size_bytes": 14357,
+      "sha256": "bce061dafb31ec37b7a9741835ee461e9581c1668a55bf698165565601667921",
+      "size_bytes": 18093,
       "top_level": "src"
     },
     {
@@ -17030,8 +17256,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/assurance/observation.py",
-      "sha256": "864384aec2e57bd7b469cf8613e254f770f0903eead94f722941ebbe8ba32861",
-      "size_bytes": 22379,
+      "sha256": "c95c806ec289b037280ee1b977228bcba9ec26c6f5f4ce250bb8e76782ef7de6",
+      "size_bytes": 23358,
       "top_level": "src"
     },
     {
@@ -17051,8 +17277,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/assurance/policy.py",
-      "sha256": "c64df363a7f5a9a708e461c1fb289a3d90d0cc0ef3b5287834ebe95891c1dfb4",
-      "size_bytes": 1648,
+      "sha256": "f55c704e54f9ddc28759a7608d9ea3d1ac0f285d741637161f26164b0375be13",
+      "size_bytes": 3125,
       "top_level": "src"
     },
     {
@@ -17065,15 +17291,15 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/assurance/requirement_reconciliation.py",
-      "sha256": "e9b0aaf47cf38665854963c62b81848f9cabf60f7d89bd01f2c4994045b2034c",
-      "size_bytes": 22239,
+      "sha256": "d8f93a9b98d256bf1a71ae4e8cf1da737d292b44ab7e19d36404236085d25899",
+      "size_bytes": 23095,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/assurance/requirement_truth_ledger.py",
-      "sha256": "9c0f8c2be6c131310fca389e5a65312bdf8a5346f48493984d0430d1e4437ce1",
-      "size_bytes": 11335,
+      "sha256": "09890b6d80fb06118e4460de4fee8462b957981a88236e28d9ab46124304767a",
+      "size_bytes": 11298,
       "top_level": "src"
     },
     {
@@ -17155,6 +17381,13 @@
     },
     {
       "extension": ".py",
+      "path": "src/project_pipeline/autonomy_runtime/nonduration.py",
+      "sha256": "6d5751960562d74836c54f6a853bf1b789b8f61aadea87cb75fdbd7234c57855",
+      "size_bytes": 5058,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/process_identity.py",
       "sha256": "9f0afa6acdcffdad3da19a75d7d11408e98a271571929c1e0713f56d8f535f1a",
       "size_bytes": 4329,
@@ -17212,8 +17445,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/windows_service.py",
-      "sha256": "7acc71ff2c562dd429e5b61d3d59bb9905f2acb1bd8c306e6c4c48d3180ab13d",
-      "size_bytes": 7195,
+      "sha256": "4acbfdc4b7fea0fbb3790f89068d7c2c73ad8cb8c7fdd5e9b233ac76c725ece1",
+      "size_bytes": 10088,
       "top_level": "src"
     },
     {
@@ -17289,15 +17522,15 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/cli.py",
-      "sha256": "0317bac5610ab8cf3b87f423533eead265d97d9f8c2438dcadeff05473870314",
-      "size_bytes": 169823,
+      "sha256": "616ea96918732f174272daf50578d0a0bd8cd3ce89e8e19038d9c9365eaf2b78",
+      "size_bytes": 173210,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/__init__.py",
-      "sha256": "e1c2a7b92cdd8707c4c33e79fc8a343e14da37e38b0f77dd8be398a571338dc3",
-      "size_bytes": 2943,
+      "sha256": "28f810970a14672979e3384b2f98c655a9aaf45a6b89530f19036f8de7c4358a",
+      "size_bytes": 4520,
       "top_level": "src"
     },
     {
@@ -17310,29 +17543,29 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/api.py",
-      "sha256": "6faa452af0389f8b22ec124b58eed7641997b7d98e2dab6462784a31970b8260",
-      "size_bytes": 13022,
+      "sha256": "5d6a8f6b6075cb6f64c34b28c33b6e298a5110fe82a9b33afabadb31a2e12746",
+      "size_bytes": 18398,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/application.py",
-      "sha256": "783403c2e987356f1d0391da48d2e2e8e355c70fbe3cda2cb64554529222fae9",
-      "size_bytes": 14137,
+      "sha256": "fd38bf02f9f1da06ea860c961539af33b7af8c2c57f491a9afebad5006e0c6ff",
+      "size_bytes": 18330,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/application_validation.py",
-      "sha256": "a918d56b0d9d59ae84cd42eb22cef371da160c7ccc8540f093f2d184b4af1c7e",
-      "size_bytes": 6456,
+      "sha256": "00c3e5bad848bd5ee1354200b4096222c4a9bda34a7c0d4d27b3fb2fd649d7c3",
+      "size_bytes": 9690,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/application_verification.py",
-      "sha256": "8a668524ab90ce6aaedbdf8136b1bf5278522b0cb38aefb41823a2f99f42835e",
-      "size_bytes": 9559,
+      "sha256": "105600ef0e66a68d32c943ddfc62add1e33fb141b16114573522c088109ac625",
+      "size_bytes": 11422,
       "top_level": "src"
     },
     {
@@ -17344,9 +17577,44 @@
     },
     {
       "extension": ".py",
+      "path": "src/project_pipeline/command_center/autonomy_director.py",
+      "sha256": "77b7583a55601887c0727c2e63c2abea6c891fa5ffd9e73f4465c1b749d68a79",
+      "size_bytes": 25361,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/command_center/desktop_qualification.py",
+      "sha256": "4e3326beac4cc1aa1fc51bf788b88eed60a4b2ea91fd9fe70c2a2a3206651734",
+      "size_bytes": 8922,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/command_center/desktop_reproducibility.py",
+      "sha256": "6b31c75b9039bdb29374648cbf986299b3baab4e0a7bfdf212b5965faedbf2ee",
+      "size_bytes": 18192,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/command_center/desktop_session.py",
+      "sha256": "34352d4e6ca9c8db0fbac5410720ef1588b8e176ed4a999314acb4e29d8c1fcb",
+      "size_bytes": 7828,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
       "path": "src/project_pipeline/command_center/director.py",
       "sha256": "d5493298a7c991d64a356f1e7c38a284fcf5b7587ae885a52523e8bee9dd41f9",
       "size_bytes": 9701,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/command_center/director_runtime.py",
+      "sha256": "21c7a9f7c0acf0ae6c31bb9e990e70973787bafa689b8fa57df386dc79c1fe59",
+      "size_bytes": 6634,
       "top_level": "src"
     },
     {
@@ -17365,9 +17633,23 @@
     },
     {
       "extension": ".py",
+      "path": "src/project_pipeline/command_center/live_browser.py",
+      "sha256": "25e7e0d4e9b92b06bc86f8c6b68170478a091ebd5d92efbc7838c44930730d47",
+      "size_bytes": 9801,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/command_center/live_server.py",
+      "sha256": "279875a08c0d473b5a32b3ca3eecf21edcf444c2e4fbc22d5fbf66e2e08e002c",
+      "size_bytes": 10206,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
       "path": "src/project_pipeline/command_center/models.py",
-      "sha256": "eda62193baba8df63e08d1f85b417b85c895dc74de3357816c897201cf5dad46",
-      "size_bytes": 11344,
+      "sha256": "ba021867d29a1ced49dcd650f8c03f3c1e6e2cc6e69424e4b3b6ff19a31617ec",
+      "size_bytes": 11405,
       "top_level": "src"
     },
     {
@@ -17562,15 +17844,15 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/control/graph.py",
-      "sha256": "a890217d45316950c19dca7590f6f1b1e21188472a81761e10e9a5aa056b8f2e",
-      "size_bytes": 18165,
+      "sha256": "cc7c5389e2ea069bb755f11c25c19301f82f8a7b0ca53381ea8ddf775ef847c8",
+      "size_bytes": 18655,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/control/kernel.py",
-      "sha256": "3eca4fbc39f18212f44a56d73984377dc55a70cc8136accfa0728fa0101ab19a",
-      "size_bytes": 22568,
+      "sha256": "803d74dcb48262e68b8ac6768fa29b3543e2bb64341f1d072034d11cb09f444d",
+      "size_bytes": 23368,
       "top_level": "src"
     },
     {
@@ -17702,8 +17984,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/domain/control.py",
-      "sha256": "95b0fa610f8e7238fec520e3345162375fc62f8abef6bcd818529e59eb57969e",
-      "size_bytes": 14761,
+      "sha256": "a219ea3a41ab384027c1495a4049ebd2c30b39916b6ac67fd8443591ec3815b4",
+      "size_bytes": 14804,
       "top_level": "src"
     },
     {
@@ -18066,8 +18348,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/io.py",
-      "sha256": "3a105dc43b92502b26c3de7df978f30fea6e0624c32a10b000d4f925971770fd",
-      "size_bytes": 5864,
+      "sha256": "eed5f920682136d7b027bd14f0cd0c92f0c6f5442abcefb3e154823da87d50b0",
+      "size_bytes": 5882,
       "top_level": "src"
     },
     {
@@ -18087,8 +18369,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/jira_steward/adapter.py",
-      "sha256": "1c9fdb9b767a9c7153ed5832cfb1611802306f7d6683d1763a2cbc6762f80485",
-      "size_bytes": 31468,
+      "sha256": "cdd040f0597c6ebb1c55d0c207dd8ad367c8ee99b399fd9c8b4f0d9ec7604f53",
+      "size_bytes": 31236,
       "top_level": "src"
     },
     {
@@ -18103,6 +18385,13 @@
       "path": "src/project_pipeline/jira_steward/comments.py",
       "sha256": "8007c9c2197088c65e27f91e844bb473599f0989064830dc30199ce4e5e80a65",
       "size_bytes": 6131,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/jira_steward/identity.py",
+      "sha256": "060710a50990b78be4808298d5850b897a7f06d93eec8fe3abb0b0426d0a8bc0",
+      "size_bytes": 12436,
       "top_level": "src"
     },
     {
@@ -18129,8 +18418,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/jira_steward/reconciliation.py",
-      "sha256": "140b3596628fd83e1ab4b3bf4921232735d21221f390f4a14d1d4183aafd3464",
-      "size_bytes": 25623,
+      "sha256": "061b3268617d1cf3be09b3db2e6fee9f8b81ae756d8817592b674586bf6e2c2f",
+      "size_bytes": 26953,
       "top_level": "src"
     },
     {
@@ -18150,8 +18439,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/jira_steward/sync_guard.py",
-      "sha256": "1e07c317cb141ff6007b4479b3c34653d1c963de13a69e7eda0103840de91bc0",
-      "size_bytes": 4344,
+      "sha256": "9ad4fc815fef44eb9fb6959f34624f88f4cf6891829e7c789b10fea9f466039f",
+      "size_bytes": 8120,
       "top_level": "src"
     },
     {
@@ -18192,8 +18481,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/lifecycle/cycle_handoff.py",
-      "sha256": "e4f6d92a7eed92533793d0fe35ac5fcc39d524eac36d59179462c580ce276cc9",
-      "size_bytes": 5259,
+      "sha256": "0f2cceb6b95745a87f895edff6df1349efc64b7be154327626b146beafa616cf",
+      "size_bytes": 16575,
       "top_level": "src"
     },
     {
@@ -18402,15 +18691,15 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/persistence/__init__.py",
-      "sha256": "d5dd2629a23c9493bf2c29fc74e4567dcc6e106bc3d7547c2cb3594a04631490",
-      "size_bytes": 1077,
+      "sha256": "1c530b22dfb737061ecda0502b37e0331d1933abd7951acbb6f06f7a7c81c041",
+      "size_bytes": 1129,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/persistence/migrations.py",
-      "sha256": "4cd7dab9765377020a4ab282e94cdd29702dd82cc0e77d2b4075dbdf77438238",
-      "size_bytes": 19774,
+      "sha256": "469c0d45ca8cd140c9a179425e36fd066cd611079fe45845fd2703c1166954d9",
+      "size_bytes": 24713,
       "top_level": "src"
     },
     {
@@ -18451,8 +18740,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/release_hardening/__init__.py",
-      "sha256": "53ea46f6d645a1025d637914582da007ca7add73b8c119b932750340ba0de232",
-      "size_bytes": 1218,
+      "sha256": "3cd37f3bb832ebebadf1e25ab1ca467a5550c1c3c0c5ebc2d7865d71c1aafadb",
+      "size_bytes": 1352,
       "top_level": "src"
     },
     {
@@ -18474,6 +18763,13 @@
       "path": "src/project_pipeline/release_hardening/continuation.py",
       "sha256": "250a8ce072236bb19270ba4170ab302b8a3e4ec37fd822a3aa93bda2ee5bb448",
       "size_bytes": 8669,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/release_hardening/disposable_rehearsal.py",
+      "sha256": "f49aab695e2389bcc74c58decd1b9b6e3ac3f897e2d54e6b1bcdc93d216ac56f",
+      "size_bytes": 9272,
       "top_level": "src"
     },
     {
@@ -18633,8 +18929,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/scheduler/__init__.py",
-      "sha256": "5ad83694de30019a3637017304a9977c814dca7b2b145eebd7d1aad60780df1c",
-      "size_bytes": 1104,
+      "sha256": "71bfffc8ca1da7566b2ca649da2ea66ae5f406ef24f998445315c5efab164d97",
+      "size_bytes": 1345,
       "top_level": "src"
     },
     {
@@ -18647,8 +18943,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/scheduler/bridge.py",
-      "sha256": "7c576524d0a4d55c2d097d1b358575cc229fb26e4005f567d73610afc1ccae6d",
-      "size_bytes": 5700,
+      "sha256": "fa7327851ac67eccfbcb130a7975472c6ec23dd2f845042363ec285939b9498a",
+      "size_bytes": 6243,
       "top_level": "src"
     },
     {
@@ -18677,6 +18973,13 @@
       "path": "src/project_pipeline/scheduler/persistence.py",
       "sha256": "da045f1bbbf30a6c1dab9ef9c59f712bfa731ec90a78dcf289f78e0ccaabc9b0",
       "size_bytes": 16028,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/scheduler/productive_idle.py",
+      "sha256": "b9ae353a003b5baf7a25b5e2e2d09e34a71a2836943302dac60ef831c59e988e",
+      "size_bytes": 5066,
       "top_level": "src"
     },
     {
@@ -19353,6 +19656,13 @@
     },
     {
       "extension": ".py",
+      "path": "tests/test_autonomy_director.py",
+      "sha256": "50e253432a0d2d55ab51474cde914996d77291ba433bded0d59796e0828e0dba",
+      "size_bytes": 10211,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
       "path": "tests/test_autonomy_language_gate.py",
       "sha256": "b595a9d728bedc16b3e7b06bce467f8e09fe985f8bd5fb9315965866393db528",
       "size_bytes": 1180,
@@ -19389,8 +19699,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_windows_service.py",
-      "sha256": "953bc713215fc2d3fb47f4497a51e31151b4637f6d920a758ec1aea892a3bdd1",
-      "size_bytes": 1400,
+      "sha256": "92109b383884d908a2e512bb4981217dc41b4a40de3caec1a71698ec48cc0e7e",
+      "size_bytes": 2125,
       "top_level": "tests"
     },
     {
@@ -19473,8 +19783,8 @@
     {
       "extension": ".json",
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "1cfb9102fc57430874540d6f36afc217fc0c2dedb9bb8f8e95bedd6459353eaa",
-      "size_bytes": 115890,
+      "sha256": "3f0895f5b987f995c0282c444ac9f5402b2e47a48d2ea102403d94984a7c7ed1",
+      "size_bytes": 124360,
       "top_level": "tests"
     },
     {
@@ -19494,15 +19804,15 @@
     {
       "extension": ".py",
       "path": "tests/test_command_center_api.py",
-      "sha256": "656853224af9d6a1e72fbaaa17da9653663e3bd920a5889cb04406c194129346",
-      "size_bytes": 6709,
+      "sha256": "be5d5bc1ba5960d8243e83711c9eee111e2e40acaeda461001d853bcdcaebf6a",
+      "size_bytes": 11601,
       "top_level": "tests"
     },
     {
       "extension": ".py",
       "path": "tests/test_command_center_application.py",
-      "sha256": "378a1ce52b5a52004be918f7ff845a282e44d5e2d149da24aaf160992451f88c",
-      "size_bytes": 4920,
+      "sha256": "bfcdd875d0dc5669a35e7604905e6dc0f0419508fa183fe78a00143e430843a5",
+      "size_bytes": 6118,
       "top_level": "tests"
     },
     {
@@ -19524,6 +19834,13 @@
       "path": "tests/test_command_center_inbox.py",
       "sha256": "761120546aafd33a279e06040b716d697077e21fc482c127873875fbcae52559",
       "size_bytes": 2475,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_command_center_live.py",
+      "sha256": "24cd9b1548ae445fa15490825f8c4e2f66abdd50276b4f9e99a3510d3853fec0",
+      "size_bytes": 5907,
       "top_level": "tests"
     },
     {
@@ -19648,8 +19965,8 @@
     {
       "extension": ".py",
       "path": "tests/test_control_cli.py",
-      "sha256": "eeca3f906c47c8655ad1473bb50873a92dce94fd3855e14160e1a235e5a761dd",
-      "size_bytes": 4472,
+      "sha256": "6b8eef04e8372273fe69804f5efd9bf48af88784551f28d13130a41b64f8f9d1",
+      "size_bytes": 4689,
       "top_level": "tests"
     },
     {
@@ -19669,8 +19986,8 @@
     {
       "extension": ".py",
       "path": "tests/test_control_kernel.py",
-      "sha256": "621529f2cdaa12c63f219559d3430d20498656d70268bb8a138fd8e3e3e8c6dc",
-      "size_bytes": 12828,
+      "sha256": "8c497288e46377dc1977b9882d3e82c99d8e524721f2f4d9003b593da86607bd",
+      "size_bytes": 14092,
       "top_level": "tests"
     },
     {
@@ -19690,8 +20007,8 @@
     {
       "extension": ".py",
       "path": "tests/test_core_state_store.py",
-      "sha256": "3eac7243daf42794fb338f35273f5426bdafe2d3472dbf59e23495cd14557655",
-      "size_bytes": 4324,
+      "sha256": "1ecd66ddd6441eafe388d2b79b15b5a8bd7244bba6677fd835309e43e1c7fb9e",
+      "size_bytes": 4586,
       "top_level": "tests"
     },
     {
@@ -19731,16 +20048,30 @@
     },
     {
       "extension": ".py",
+      "path": "tests/test_cycle_packet_integrity.py",
+      "sha256": "5db2d585f7c7049cc939674ca3b3a7839acc4d024d13bf2fc365d74cd0352c8a",
+      "size_bytes": 11752,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_cycle_workload.py",
+      "sha256": "c29c79c13b6a24a123c00ab674e4aa19f5b52ec725f85b5bc05fd590a9d6f5dd",
+      "size_bytes": 11231,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
       "path": "tests/test_decision_resolution.py",
-      "sha256": "ec5fd872558c8e3d51250433f4a8afd3857c28451903e473d531c9682e71e5f4",
+      "sha256": "8cfe11dd1684d7a4575ebb8c282f3f256a027eaf89a9fa544636fff745eee73b",
       "size_bytes": 2232,
       "top_level": "tests"
     },
     {
       "extension": ".py",
       "path": "tests/test_delivery_progress.py",
-      "sha256": "e3e3293bb5d8825ddc4073f3862a091a9321f6da62a93622e50932a5379c6703",
-      "size_bytes": 14056,
+      "sha256": "0dff34e47f3a0319ed1cff696b312f072890c17e03851cc043cc2745140b84d1",
+      "size_bytes": 16301,
       "top_level": "tests"
     },
     {
@@ -19748,6 +20079,27 @@
       "path": "tests/test_dependencies.py",
       "sha256": "4d20c3f9762191ee1c188f7c635fcf77b9adf21d432b1b5f2f7da0bd90fd32ab",
       "size_bytes": 5271,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_desktop_qualification.py",
+      "sha256": "24e3a65059878b639f5084ee1d42c8df6b7395d5ba8a4116772f1526085f5700",
+      "size_bytes": 1544,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_desktop_reproducibility.py",
+      "sha256": "5ea77b6f8ea8c6ab5b74c49cce610039c73f3f8a74f1baf54ed3604d80e7e369",
+      "size_bytes": 11412,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_desktop_session.py",
+      "sha256": "12af237c2f64934b2a7a0ade1c81dc4fb62a74f7a25141222d26e3f1e4efbd29",
+      "size_bytes": 4990,
       "top_level": "tests"
     },
     {
@@ -19781,15 +20133,15 @@
     {
       "extension": ".py",
       "path": "tests/test_evidence_observations.py",
-      "sha256": "2674380143d52b0738fe57118c6fd294ed9849581ed32ab9d592fbe3932d5ce6",
-      "size_bytes": 12818,
+      "sha256": "364c56c55ad7bb11778481cea895ba0f772363efd2eb040f777f0f4dd2e9edbc",
+      "size_bytes": 14159,
       "top_level": "tests"
     },
     {
       "extension": ".py",
       "path": "tests/test_evidence_reconciliation_convergence.py",
-      "sha256": "19744643d7e64c9658f77202c369af6e87e8d3bfd59f6f9c379147de5eb41672",
-      "size_bytes": 15892,
+      "sha256": "08f8edff599d17a3c3afcf9654b76c32e5f99c715854bde35cf0c8f3d817391e",
+      "size_bytes": 15970,
       "top_level": "tests"
     },
     {
@@ -19858,8 +20210,8 @@
     {
       "extension": ".py",
       "path": "tests/test_instruction_system.py",
-      "sha256": "87fdebea25094ee889ec2742f985f4eec919bf9df1a5210ed4eb65543471edd8",
-      "size_bytes": 9403,
+      "sha256": "8319b1cefa1e892b5bcc5203759e99a727644b16ff18f4bda70a88b9da534cc9",
+      "size_bytes": 9514,
       "top_level": "tests"
     },
     {
@@ -19906,9 +20258,16 @@
     },
     {
       "extension": ".py",
+      "path": "tests/test_jira_identity_parity.py",
+      "sha256": "d580314c5f564d32609ed1aaf9d9170691461668d3686f63074f60bd995d6a72",
+      "size_bytes": 9216,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
       "path": "tests/test_jira_implementation_reconciliation.py",
-      "sha256": "d285835e0a35204424c3b07fcc022808a5c0cd8f3ab298ae3ac54b64c2a8e774",
-      "size_bytes": 9053,
+      "sha256": "720994c52bcc5e5504649b7cfeeccd7e9859f91da521f25eca75d3390b4232fc",
+      "size_bytes": 11372,
       "top_level": "tests"
     },
     {
@@ -19991,8 +20350,8 @@
     {
       "extension": ".py",
       "path": "tests/test_migrations.py",
-      "sha256": "fa1b7851acc7f46a1110eca62c0fd6050638b8c7ac1dc77d4215f2e910cd5209",
-      "size_bytes": 7189,
+      "sha256": "060de450522c1d86625c272cf7f30b5538b402c3530433efa551d8c3e111e0aa",
+      "size_bytes": 17115,
       "top_level": "tests"
     },
     {
@@ -20102,6 +20461,20 @@
     },
     {
       "extension": ".py",
+      "path": "tests/test_pdef_0011_nonduration.py",
+      "sha256": "6f5314e8e1795e128429261687a47b7bb9d508f11d4cd661befc529445bf76d6",
+      "size_bytes": 3376,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_platform_project_separation.py",
+      "sha256": "7073dd196acf65a13737d4b74bb2b520d115ecce4716a01bd86234f5a08d0d76",
+      "size_bytes": 891,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
       "path": "tests/test_pp380_corrected_dispositions.py",
       "sha256": "5a3462a47c61bdee84349bd4813ecba65803d11db35c56025c6a85d9b537ec8e",
       "size_bytes": 17505,
@@ -20165,6 +20538,13 @@
     },
     {
       "extension": ".py",
+      "path": "tests/test_release_disposable_rehearsal.py",
+      "sha256": "74c21f3eddc4587315e8e82819d60b8941ab64dc90ec149c60350795e4c6afbb",
+      "size_bytes": 1049,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
       "path": "tests/test_repository_contract.py",
       "sha256": "e18b2829b08221c05f8e9200359c47ac37ad26ed818ed531d13b7843b1aa6fda",
       "size_bytes": 1942,
@@ -20187,8 +20567,8 @@
     {
       "extension": ".py",
       "path": "tests/test_requirement_reconciliation.py",
-      "sha256": "768de718e499a8acc0edbab3ea2274ac94bc0baa9f9b158cc785022f09b29381",
-      "size_bytes": 19501,
+      "sha256": "1d4419be8a1abcc9d949df0b54a33397b1ab4e84834c005e8b454b73c0016c62",
+      "size_bytes": 21064,
       "top_level": "tests"
     },
     {
@@ -20364,6 +20744,13 @@
       "path": "tests/test_scheduler_persistence.py",
       "sha256": "a534a2b924f07dfed9f35e13a04b24c4a06a98a690bbdc7a500799873a3c002c",
       "size_bytes": 5662,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_scheduler_productive_idle.py",
+      "sha256": "5e19d13169002dc8d168af836cd524851e86fa13b19747ed18d6f1a00fe5ef86",
+      "size_bytes": 3887,
       "top_level": "tests"
     },
     {
@@ -20640,7 +21027,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-19T21:36:37.402891+00:00",
+  "generated_at_utc": "2026-08-20T12:21:39.539441+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {
@@ -20672,6 +21059,7 @@
       "adr/ADR-0025_define_domain_recovery_objectives_and_measured_restore_evidence.md",
       "adr/ADR-0026_keep_project_pipeline_notification_authority_with_tauri_local_and_apprise_remote.md",
       "adr/ADR-0027_keep_project_native_locks_canonical_with_optional_mise_and_devcontainer_profiles.md",
+      "adr/ADR-0028_command_center_os_identity_and_loopback_session_auth.md",
       "adr/ADR_CATALOG.json",
       "adr/README.md"
     ],
@@ -20718,6 +21106,7 @@
       "evidence/command_center_application_upstream_review_snapshot.json",
       "evidence/command_center_completion_gate_snapshot.json",
       "evidence/command_center_focused_suite.txt",
+      "evidence/command_center_live_browser.json",
       "evidence/command_center_partitioned_regression.txt",
       "evidence/command_center_pass21_completion_gate_snapshot.json",
       "evidence/command_center_pass21_focused_suite.txt",
@@ -20796,6 +21185,8 @@
       "evidence/orchestration_upstream_gate_snapshot.json",
       "evidence/pass24_focused_suite.txt",
       "evidence/pass25_focused_suite.txt",
+      "evidence/pdef_0009_platform_separation.json",
+      "evidence/pdef_0011_nonduration.json",
       "evidence/platform_lifecycle_pass22_completion_gate_snapshot.json",
       "evidence/platform_lifecycle_pass22_focused_suite.txt",
       "evidence/platform_lifecycle_pass22_partitioned_regression.txt",
@@ -20826,6 +21217,7 @@
       "evidence/project_intake_foundation_validation.json",
       "evidence/project_intake_integrated_suite.txt",
       "evidence/project_pipeline_intake_snapshot.json",
+      "evidence/rel_disposable_rehearsal.json",
       "evidence/repository_foundation_full_suite.txt",
       "evidence/repository_foundation_smoke.json",
       "evidence/repository_foundation_tests.txt",
@@ -20842,6 +21234,7 @@
       "evidence/resilience_repository_validation.txt",
       "evidence/resilience_simulation_snapshot.json",
       "evidence/resilience_upstream_review_snapshot.json",
+      "evidence/sched_0016_productive_idle.json",
       "evidence/scheduler_cli_simulation_tests.txt",
       "evidence/scheduler_contract_validation.txt",
       "evidence/scheduler_focused_suite.txt",
@@ -20881,6 +21274,17 @@
       "evidence/verification/browser/verification_report_1280x720.png",
       "evidence/verification/browser/verification_report_390x844.png",
       "evidence/verification/browser_evidence.json",
+      "evidence/verification/command_center_live/live_command_center_1024x768_full.png",
+      "evidence/verification/command_center_live/live_command_center_1024x768_initial.png",
+      "evidence/verification/command_center_live/live_command_center_1024x768_viewport.png",
+      "evidence/verification/command_center_live/live_command_center_1440x900.png",
+      "evidence/verification/command_center_live/live_command_center_1440x900_full.png",
+      "evidence/verification/command_center_live/live_command_center_1440x900_initial.png",
+      "evidence/verification/command_center_live/live_command_center_1440x900_viewport.png",
+      "evidence/verification/command_center_live/live_command_center_390x844_full.png",
+      "evidence/verification/command_center_live/live_command_center_390x844_initial.png",
+      "evidence/verification/command_center_live/live_command_center_390x844_viewport.png",
+      "evidence/verification/command_center_live/live_command_center_forced_colors_1440x900.png",
       "evidence/verification/command_center_ui/command_center_1024x768.png",
       "evidence/verification/command_center_ui/command_center_1024x768_full.png",
       "evidence/verification/command_center_ui/command_center_1024x768_initial.png",
@@ -20953,6 +21357,7 @@
       "jira/reports/foundation_status.json",
       "jira/reports/jira_sync_guard.json",
       "jira/reports/live_jira_sync_report.json",
+      "jira/reports/live_status_snapshot.json",
       "jira/reports/remote_completion_audit.jsonl",
       "jira/reports/remote_mapping_report.json",
       "jira/schemas/ISSUE_SCHEMA_REFERENCE.json",

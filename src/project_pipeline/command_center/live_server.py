@@ -22,8 +22,8 @@ from project_pipeline.command_center.api import CommandCenterAuth, create_comman
 from project_pipeline.command_center.application import RepositoryApplicationProjectionBuilder
 from project_pipeline.command_center.autonomy_director import (
     PersistentAutonomyDirector,
-    control_snapshot_for_selection,
     default_state_path,
+    evaluate_live_control,
 )
 from project_pipeline.command_center.desktop_session import (
     DesktopSessionError,
@@ -44,8 +44,11 @@ from project_pipeline.command_center.models import (
 )
 from project_pipeline.command_center.projections import CommandCenterProjectionService
 from project_pipeline.command_center.realtime import RealtimeEventBroker
+from project_pipeline.configuration import load_runtime_configuration
 from project_pipeline.domain.control import ControlSnapshot
 from project_pipeline.jira import load_issues
+
+_LIVE_CONTROL_LOCK = threading.Lock()
 
 
 def _issue_progress_time(item: dict[str, Any]) -> datetime | None:
@@ -61,15 +64,8 @@ def _issue_progress_time(item: dict[str, Any]) -> datetime | None:
 
 
 def live_control_snapshot(root: Path) -> ControlSnapshot:
-    issues = load_issues(root)
-    ready: list[str] = []
-    if any(item.get("local_id") == "PP-STORY-000065" for item in issues):
-        ready.append("PP-STORY-000065")
-    for item in issues:
-        local_id = str(item.get("local_id") or "")
-        if local_id and local_id not in ready and item.get("state") == "IN_PROGRESS":
-            ready.append(local_id)
-    return control_snapshot_for_selection(tuple(ready[:8]))
+    with _LIVE_CONTROL_LOCK:
+        return evaluate_live_control(root)
 
 
 def snapshot_from_repository(root: Path) -> CommandCenterSnapshot:
@@ -149,6 +145,7 @@ def create_live_command_center_app(
     if token:
         session_issuer.seed_static_token(token, actor_id="actor:command-center")
 
+    runtime_database = load_runtime_configuration(root).settings.database_path(root)
     app = create_command_center_app(
         snapshot_provider=lambda: snapshot_from_repository(root),
         event_broker=broker,
@@ -158,6 +155,8 @@ def create_live_command_center_app(
         auth=CommandCenterAuth(session_issuer.authenticate),
         autonomy_director=director,
         control_provider=lambda: live_control_snapshot(root),
+        repository_root=root,
+        runtime_database=runtime_database,
     )
     preview = root / "apps/command_center/preview/index.html"
 
