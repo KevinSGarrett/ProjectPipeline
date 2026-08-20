@@ -193,7 +193,7 @@ def extract_msi_administrative_image(msi_path: Path, destination: Path) -> None:
             text=True,
             timeout=300,
         )
-    except (FileNotFoundError, OSError) as exc:
+    except (FileNotFoundError, OSError, subprocess.TimeoutExpired) as exc:
         raise DesktopReproducibilityError(
             f"msiexec administrative extract unavailable for {msi_path.name}"
         ) from exc

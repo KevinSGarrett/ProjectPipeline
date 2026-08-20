@@ -127,7 +127,7 @@ def test_missing_msiexec_is_fail_closed(tmp_path: Path, monkeypatch) -> None:
         raise AssertionError("missing msiexec must fail closed")
 
 
-def test_unextractable_identity_msi_fails_closed(tmp_path: Path) -> None:
+def test_unextractable_identity_msi_fails_closed(tmp_path: Path, monkeypatch) -> None:
     schema = load_nondeterminism_schema(ROOT)
     left_dir = tmp_path / "A"
     right_dir = tmp_path / "B"
@@ -136,6 +136,16 @@ def test_unextractable_identity_msi_fails_closed(tmp_path: Path) -> None:
         (root / "identity").mkdir(parents=True)
         (root / "compare" / "app.exe").write_bytes(_minimal_pe(timestamp=1))
         (root / "identity" / "app.msi").write_bytes(b"not-a-real-msi")
+
+    def _unavailable(msi_path: Path, destination: Path) -> None:
+        raise DesktopReproducibilityError(
+            f"msiexec administrative extract unavailable for {msi_path.name}"
+        )
+
+    monkeypatch.setattr(
+        "project_pipeline.command_center.desktop_reproducibility.extract_msi_administrative_image",
+        _unavailable,
+    )
     result = compare_desktop_artifact_sets(left_dir, right_dir, schema)
     assert result["passed"] is False
     assert any("msiexec" in item or "extract" in item.lower() for item in result["mismatches"])

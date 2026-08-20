@@ -2,7 +2,7 @@
 
 use std::fs;
 use std::net::TcpStream;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::sync::Mutex;
 use std::thread;
@@ -40,7 +40,7 @@ fn handshake_path() -> PathBuf {
     dir
 }
 
-fn read_handshake(path: &PathBuf) -> Result<Handshake, String> {
+fn read_handshake(path: &Path) -> Result<Handshake, String> {
     let raw = fs::read_to_string(path).map_err(|error| error.to_string())?;
     let value: Value = serde_json::from_str(&raw).map_err(|error| error.to_string())?;
     Ok(Handshake {
@@ -62,7 +62,7 @@ fn read_handshake(path: &PathBuf) -> Result<Handshake, String> {
     })
 }
 
-fn spawn_loopback_service(root: &str, handshake: &PathBuf) -> Result<(), String> {
+fn spawn_loopback_service(root: &str, handshake: &Path) -> Result<(), String> {
     let python = std::env::var("PROJECT_PIPELINE_PYTHON").unwrap_or_else(|_| "python".to_string());
     let mut command = Command::new(python);
     command

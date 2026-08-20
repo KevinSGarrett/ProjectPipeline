@@ -65,12 +65,21 @@ jobs:
         run: |
           npm test
           npm run build
-      - name: Rust format, lint, and tests
-        working-directory: apps/desktop_shell/src-tauri
+      - name: Confirm pinned Rust components
         run: |
-          cargo fmt --check
-          cargo clippy --locked -- -D warnings
-          cargo test --locked
+          rustup show
+          rustup component add rustfmt clippy --toolchain 1.97.1
+          cargo fmt --version
+          cargo clippy --version
+      - name: Rust format
+        working-directory: apps/desktop_shell/src-tauri
+        run: cargo fmt --check
+      - name: Rust lint
+        working-directory: apps/desktop_shell/src-tauri
+        run: cargo clippy --locked -- -D warnings
+      - name: Rust tests
+        working-directory: apps/desktop_shell/src-tauri
+        run: cargo test --locked
       - name: Build native Windows executable and installers
         working-directory: apps/command_center
         run: npm run tauri:build -- -- --locked
