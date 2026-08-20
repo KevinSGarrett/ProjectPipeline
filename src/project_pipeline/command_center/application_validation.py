@@ -15,6 +15,7 @@ _REQUIRED_FILES = (
     "apps/command_center/preview/index.html",
     "apps/desktop_shell/src-tauri/Cargo.toml",
     "apps/desktop_shell/src-tauri/Cargo.lock",
+    "apps/desktop_shell/src-tauri/.cargo/config.toml",
     "apps/desktop_shell/src-tauri/src/main.rs",
     "apps/desktop_shell/src-tauri/tauri.conf.json",
     "apps/desktop_shell/src-tauri/capabilities/main.json",

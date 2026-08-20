@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "c780f8cd3f37f615beffdc388f00fc6b168b49783f920d079c5a857f497737c0",
+  "aggregate_sha256": "71e1b5f952bd9020c0f348a8ff71f1a7b5aa5ee63bdceda906e9a80e7b8c9095",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2989,
+  "file_count": 2990,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -157,8 +157,8 @@
     },
     {
       "path": ".github/workflows/desktop-windows.yml",
-      "sha256": "604befdd5ba5ec45944b90d9237192650684e06b1252add73979dbc45d3c1a75",
-      "size_bytes": 4841
+      "sha256": "eb38d91af95a55ace1a563a93fee8f6a31bd4cc0cb1bca1ac484ef2513d0e5ed",
+      "size_bytes": 5415
     },
     {
       "path": ".github/workflows/quality.yml",
@@ -411,6 +411,11 @@
       "size_bytes": 1274
     },
     {
+      "path": "apps/desktop_shell/src-tauri/.cargo/config.toml",
+      "sha256": "c0882385360ad035e808cd7fad49b44db23a39bba9c01169be3663c6a6e1e6fb",
+      "size_bytes": 116
+    },
+    {
       "path": "apps/desktop_shell/src-tauri/build.rs",
       "sha256": "487059eaf8a947b80f20a9aacac038a5047b2ad69d2401b827376c67d6fe847f",
       "size_bytes": 39
@@ -612,8 +617,8 @@
     },
     {
       "path": "config/desktop_nondeterminism_schema.json",
-      "sha256": "769530c8ad1c26ee889bbcaffdb7e850f388403dfd738fd18000873d27881e13",
-      "size_bytes": 1216
+      "sha256": "d52656d5fbb05a918044de8603298a26e9992f9bdb0db8e83ee338d9a814346b",
+      "size_bytes": 1832
     },
     {
       "path": "config/feature_profiles.json",
@@ -12482,8 +12487,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/application_validation.py",
-      "sha256": "922b6b2281bebdf01621ccb651cb55d75e39717e1c2c94ca714ab4e0049af554",
-      "size_bytes": 9635
+      "sha256": "00c3e5bad848bd5ee1354200b4096222c4a9bda34a7c0d4d27b3fb2fd649d7c3",
+      "size_bytes": 9690
     },
     {
       "path": "src/project_pipeline/command_center/application_verification.py",
@@ -12507,8 +12512,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/desktop_reproducibility.py",
-      "sha256": "4ed3b4d4e4b4b5bf9ea6416a0bb5cb2e63fda523d279ce56f5b0860964f9309c",
-      "size_bytes": 12581
+      "sha256": "6b31c75b9039bdb29374648cbf986299b3baab4e0a7bfdf212b5965faedbf2ee",
+      "size_bytes": 18192
     },
     {
       "path": "src/project_pipeline/command_center/desktop_session.py",
@@ -14287,8 +14292,8 @@
     },
     {
       "path": "tests/test_desktop_reproducibility.py",
-      "sha256": "5d6afd036aad5439c9f52071fe683fa9234d28467d93202ca62294cc08091831",
-      "size_bytes": 8045
+      "sha256": "5ea77b6f8ea8c6ab5b74c49cce610039c73f3f8a74f1baf54ed3604d80e7e369",
+      "size_bytes": 11412
     },
     {
       "path": "tests/test_desktop_session.py",
@@ -14956,7 +14961,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T11:34:14.571278+00:00",
+  "generated_at_utc": "2026-08-20T11:51:03.190549+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14965,5 +14970,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29930140
+  "total_bytes": 29940479
 }

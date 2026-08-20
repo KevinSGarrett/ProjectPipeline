@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import subprocess
 import tempfile
 from dataclasses import dataclass
@@ -16,6 +17,12 @@ IDENTITY_DIR_NAMES = frozenset({"identity", "installers"})
 INSTALLER_CONTAINER_SUFFIXES = frozenset({".msi", ".msix"})
 NSIS_SIGNATURE = b"NullsoftInst"
 EXTRACTED_TREE_ALGORITHM = "compare_extracted_payload_tree/v1"
+SEVEN_ZIP_CANDIDATES = (
+    "7z",
+    "7z.exe",
+    r"C:\Program Files\7-Zip\7z.exe",
+    r"C:\Program Files (x86)\7-Zip\7z.exe",
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -84,7 +91,81 @@ def normalize_pe_image(payload: bytes, schema: dict[str, Any]) -> tuple[bytes, t
         ):
             _zero_u32(data, checksum_offset)
             removed.append("pe_checksum")
-    return bytes(data), tuple(removed)
+        removed.extend(_zero_debug_container_fields(data, e_lfanew, magic, allow))
+    return bytes(data), tuple(dict.fromkeys(removed))
+
+
+def _section_table(payload: bytearray, e_lfanew: int) -> list[tuple[int, int, int]]:
+    coff = e_lfanew + 4
+    if coff + 16 > len(payload):
+        return []
+    section_count = int.from_bytes(payload[coff + 2 : coff + 4], "little")
+    optional_size = int.from_bytes(payload[coff + 16 : coff + 18], "little")
+    section_offset = e_lfanew + 24 + optional_size
+    sections: list[tuple[int, int, int]] = []
+    for index in range(section_count):
+        entry = section_offset + index * 40
+        if entry + 40 > len(payload):
+            break
+        virtual_address = int.from_bytes(payload[entry + 12 : entry + 16], "little")
+        raw_size = int.from_bytes(payload[entry + 16 : entry + 20], "little")
+        raw_pointer = int.from_bytes(payload[entry + 20 : entry + 24], "little")
+        sections.append((virtual_address, raw_pointer, raw_size))
+    return sections
+
+
+def _rva_to_offset(sections: list[tuple[int, int, int]], rva: int) -> int | None:
+    for virtual_address, raw_pointer, raw_size in sections:
+        if virtual_address <= rva < virtual_address + raw_size:
+            return raw_pointer + (rva - virtual_address)
+    return None
+
+
+def _zero_debug_container_fields(
+    payload: bytearray,
+    e_lfanew: int,
+    magic: int,
+    allow: set[str],
+) -> list[str]:
+    removed: list[str] = []
+    directory_base = e_lfanew + 24 + (112 if magic == 0x20B else 96)
+    if directory_base + 56 > len(payload):
+        return removed
+    debug_rva = int.from_bytes(payload[directory_base + 48 : directory_base + 52], "little")
+    debug_size = int.from_bytes(payload[directory_base + 52 : directory_base + 56], "little")
+    if debug_rva == 0 or debug_size < 28:
+        return removed
+    sections = _section_table(payload, e_lfanew)
+    debug_offset = _rva_to_offset(sections, debug_rva)
+    if debug_offset is None:
+        return removed
+    entry_count = debug_size // 28
+    for index in range(entry_count):
+        entry = debug_offset + index * 28
+        if entry + 28 > len(payload):
+            break
+        timestamp_offset = entry + 4
+        if (
+            "pe_debug_timedatestamp" in allow
+            and payload[timestamp_offset : timestamp_offset + 4] != b"\x00\x00\x00\x00"
+        ):
+            _zero_u32(payload, timestamp_offset)
+            removed.append("pe_debug_timedatestamp")
+        debug_type = int.from_bytes(payload[entry + 12 : entry + 16], "little")
+        data_rva = int.from_bytes(payload[entry + 20 : entry + 24], "little")
+        data_ptr = int.from_bytes(payload[entry + 24 : entry + 28], "little")
+        data_offset = data_ptr if data_ptr else _rva_to_offset(sections, data_rva)
+        if (
+            debug_type == 2
+            and data_offset is not None
+            and data_offset + 24 <= len(payload)
+            and payload[data_offset : data_offset + 4] == b"RSDS"
+            and "pe_codeview_guid" in allow
+            and payload[data_offset + 4 : data_offset + 20] != b"\x00" * 16
+        ):
+            payload[data_offset + 4 : data_offset + 20] = b"\x00" * 16
+            removed.append("pe_codeview_guid")
+    return removed
 
 
 def normalize_archive_member(
@@ -175,6 +256,38 @@ def canonical_extracted_tree(root: Path, schema: dict[str, Any]) -> tuple[str, t
         json.dumps(members, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     )
     return digest, tuple(dict.fromkeys(removed))
+
+
+def _seven_zip_executable() -> str | None:
+    for candidate in SEVEN_ZIP_CANDIDATES:
+        path = Path(candidate)
+        if path.is_file():
+            return str(path)
+        found = shutil.which(candidate)
+        if found:
+            return found
+    return None
+
+
+def extract_nsis_payload(installer: Path, destination: Path) -> None:
+    destination.mkdir(parents=True, exist_ok=True)
+    seven_zip = _seven_zip_executable()
+    if seven_zip is None:
+        raise DesktopReproducibilityError(f"7-Zip NSIS extract unavailable for {installer.name}")
+    try:
+        completed = subprocess.run(
+            [seven_zip, "x", "-y", f"-o{destination.resolve()}", str(installer.resolve())],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=300,
+        )
+    except (FileNotFoundError, OSError, subprocess.TimeoutExpired) as exc:
+        raise DesktopReproducibilityError(
+            f"7-Zip NSIS extract unavailable for {installer.name}"
+        ) from exc
+    if completed.returncode != 0 or not any(destination.rglob("*")):
+        raise DesktopReproducibilityError(f"7-Zip NSIS extract failed for {installer.name}")
 
 
 def extract_msi_administrative_image(msi_path: Path, destination: Path) -> None:
@@ -338,9 +451,33 @@ def compare_desktop_artifact_sets(
         for path in right_identity.glob("*.exe")
         if NSIS_SIGNATURE in path.read_bytes()
     }
-    nsis_comparisons, nsis_mismatches = _compare_named_files(left_nsis, right_nsis, schema)
-    comparisons.extend(nsis_comparisons)
-    mismatches.extend(nsis_mismatches)
+    for name in sorted(set(left_nsis) | set(right_nsis)):
+        if name not in left_nsis or name not in right_nsis:
+            mismatches.append(f"missing NSIS identity artifact in one lane: {name}")
+            continue
+        try:
+            with (
+                tempfile.TemporaryDirectory(prefix="pp-nsis-left-") as left_tmp,
+                tempfile.TemporaryDirectory(prefix="pp-nsis-right-") as right_tmp,
+            ):
+                extract_nsis_payload(left_nsis[name], Path(left_tmp))
+                extract_nsis_payload(right_nsis[name], Path(right_tmp))
+                extracted = compare_extracted_payload_trees(
+                    Path(left_tmp),
+                    Path(right_tmp),
+                    schema,
+                    name=name,
+                    removed_field="nsis_build_timestamp",
+                )
+        except DesktopReproducibilityError as exc:
+            mismatches.append(str(exc))
+            continue
+        comparisons.append(extracted)
+        if not extracted["equal"]:
+            mismatches.append(
+                f"extracted NSIS payload tree mismatch for {name}: "
+                f"{extracted['left_normalized_sha256']} != {extracted['right_normalized_sha256']}"
+            )
     result["comparisons"] = comparisons
     result["mismatches"] = mismatches
     result["passed"] = not mismatches
