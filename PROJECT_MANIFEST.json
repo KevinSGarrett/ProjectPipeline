@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "25709c2378c01e7d74f8812638fcb86d512e3e55685260cf5734f51d1d22df53",
+  "aggregate_sha256": "0564ca0cf39eab88763b5b4dc3042852969a20c18b8c4e9be0e9609d3bb661fb",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2960,
+  "file_count": 2968,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -337,8 +337,8 @@
     },
     {
       "path": "apps/command_center/preview/index.html",
-      "sha256": "5bb042a6a4587c7e4c88a20c7bf0327540121b8009ab1822e906242cb74a8014",
-      "size_bytes": 39364
+      "sha256": "430604299e1f42998f73c78b47ccf6635dd824d634f86e37f7b7bd7bd19d038e",
+      "size_bytes": 39404
     },
     {
       "path": "apps/command_center/README.md",
@@ -352,8 +352,8 @@
     },
     {
       "path": "apps/command_center/src/app.css",
-      "sha256": "af02039d0abbd3684f81ec8972e9759cba8334a6895d1c1352b562083b57dfd2",
-      "size_bytes": 17807
+      "sha256": "264aca35d72f0dc90542d4442a48eab8cdd95601e2a592097a994ce7505ef8c1",
+      "size_bytes": 17847
     },
     {
       "path": "apps/command_center/src/App.jsx",
@@ -4097,12 +4097,12 @@
     },
     {
       "path": "evidence/EVIDENCE_LEDGER.jsonl",
-      "sha256": "cb5130571b2ac8eebc8fc588880cb599e71d4d35d47783b04de0268c56b0395f",
-      "size_bytes": 160527
+      "sha256": "2616b152650cc7530f3cc6977488dcd9e079b0b5d26942bae2246012615179d9",
+      "size_bytes": 163425
     },
     {
       "path": "evidence/EVIDENCE_SUMMARY.json",
-      "sha256": "d1baf7b91c0d8c66d8fefd3d91d3e60927fc6798a63b103ae0cc11cd2fdcdd68",
+      "sha256": "fea8ca507eaf62c321cb61a0685efcfe01de8b8ae6f0e330df8de00fc37aeadf",
       "size_bytes": 289
     },
     {
@@ -4316,6 +4316,16 @@
       "size_bytes": 1010
     },
     {
+      "path": "evidence/pdef_0009_platform_separation.json",
+      "sha256": "d6f5e5684d28f14ca723bdcb8651d1a370bbcfbbcd1fdfdb718976e9137892f9",
+      "size_bytes": 230
+    },
+    {
+      "path": "evidence/pdef_0011_nonduration.json",
+      "sha256": "02998306822f8aca0357ec5d623f7bf7b34accf2c6e47104cf101e837af68a6f",
+      "size_bytes": 514
+    },
+    {
       "path": "evidence/platform_lifecycle_pass22_completion_gate_snapshot.json",
       "sha256": "12ec00652be4805642d5f3bc8f7f4c31a3c46fd1e3d42a717527cf568c1fef4c",
       "size_bytes": 15422
@@ -4471,6 +4481,11 @@
       "size_bytes": 778
     },
     {
+      "path": "evidence/rel_disposable_rehearsal.json",
+      "sha256": "018462012a7b88c4fdba14c7c9187f5d17dce68f336584cc044827486f5fe589",
+      "size_bytes": 352
+    },
+    {
       "path": "evidence/repository_foundation_full_suite.txt",
       "sha256": "324c421f7a783becf730bb8f99815ba22e926a9a90d540589ffc0f1f0b8fac9c",
       "size_bytes": 194
@@ -4549,6 +4564,11 @@
       "path": "evidence/resilience_upstream_review_snapshot.json",
       "sha256": "d4d4037ce62688a310e69e030f26b3b1741bfbbf71e60fea41d4a6f958d4e8f1",
       "size_bytes": 3781
+    },
+    {
+      "path": "evidence/sched_0016_productive_idle.json",
+      "sha256": "d84c2c1fcdb48bf30fd334426f8db34aee68ddbdebb30536d7dd11a14e6ad931",
+      "size_bytes": 284
     },
     {
       "path": "evidence/scheduler_cli_simulation_tests.txt",
@@ -5397,8 +5417,8 @@
     },
     {
       "path": "jira/BOARD_MANIFEST.json",
-      "sha256": "120964d7155dc943ecf18920163c1b2449c0e0aec1cd70429f0b62b4fef55c50",
-      "size_bytes": 668
+      "sha256": "66339b6b7f7051566de52d78bd63de80a3d7e4ec792d9b2ae8d4b33e2dec1a14",
+      "size_bytes": 669
     },
     {
       "path": "jira/bugs/README.md",
@@ -5407,8 +5427,8 @@
     },
     {
       "path": "jira/epics/PP-EPIC-000001.json",
-      "sha256": "fc593c8ac2656ef719ca381525bb4c8349beb528a5c38531c31f37d367de13bc",
-      "size_bytes": 3872
+      "sha256": "9be98fd23db9f7bc3eaef88f2aef8b03546e2a7d6e4b9311331bc42b3183473c",
+      "size_bytes": 4207
     },
     {
       "path": "jira/epics/PP-EPIC-000003.json",
@@ -5427,13 +5447,13 @@
     },
     {
       "path": "jira/epics/PP-EPIC-000009.json",
-      "sha256": "8f7f3952dff41f36fd2902694895b2387ca9dc6b29582144d9e3cacf285e3889",
-      "size_bytes": 4263
+      "sha256": "fd4c8eca0ea714bae6956fe3992830fdb25287582522788a298e271076fa42f8",
+      "size_bytes": 4522
     },
     {
       "path": "jira/epics/PP-EPIC-000011.json",
-      "sha256": "0a6072dfec9158cd2ae0c9f047a7c756a168ba0c417f2db9a0ccd9fb68cd96c0",
-      "size_bytes": 4188
+      "sha256": "ba2b6d7c632367929f7a00db4be7d9f9226e32abe02389f28e7e0ca2df7fce38",
+      "size_bytes": 4369
     },
     {
       "path": "jira/epics/PP-EPIC-000013.json",
@@ -5442,8 +5462,8 @@
     },
     {
       "path": "jira/epics/PP-EPIC-000015.json",
-      "sha256": "e38af5c819d746f642a0e9a230e3a288b79b75212486e0198c95fc00918bda47",
-      "size_bytes": 4225
+      "sha256": "acea6ceabf0160f8276d91d377a75735fe5fc42cc83cc089d397e49049eb7f3e",
+      "size_bytes": 4636
     },
     {
       "path": "jira/epics/PP-EPIC-000017.json",
@@ -5462,8 +5482,8 @@
     },
     {
       "path": "jira/epics/PP-EPIC-000023.json",
-      "sha256": "8323d389a43d8f55928bb94643dbecb180a91817f9b8207933af273c51f4b1e0",
-      "size_bytes": 4449
+      "sha256": "70384f76ebedd5516062caeb5d4f7bfd703f481fb3da45d225505bf7e30bfcfa",
+      "size_bytes": 4860
     },
     {
       "path": "jira/epics/PP-EPIC-000025.json",
@@ -5472,8 +5492,8 @@
     },
     {
       "path": "jira/epics/PP-EPIC-000027.json",
-      "sha256": "4bf6d3425b9003bf866ad3d14dac5f70a522ee6330c85b57762bf3c6df01c060",
-      "size_bytes": 4161
+      "sha256": "058e1e687a11318e6b91b28ae0ea064359dcf19dc608528e496f3b185b3936c2",
+      "size_bytes": 4724
     },
     {
       "path": "jira/epics/PP-EPIC-000029.json",
@@ -5482,23 +5502,23 @@
     },
     {
       "path": "jira/epics/PP-EPIC-000031.json",
-      "sha256": "a75be4323a96e6ddff603fd34c8188d030d15fdce4529cab241acd69d3a1b03c",
-      "size_bytes": 4252
+      "sha256": "330a0090f8830057d7b92d5092ee13e259197b90fb8e4dc0fcaeb2306c22de1c",
+      "size_bytes": 4433
     },
     {
       "path": "jira/epics/PP-EPIC-000033.json",
-      "sha256": "ac44d90c3eae3ba2f4ce516c0f2852ab782c876d0cf8afa6272d5b031bcbcffd",
-      "size_bytes": 4119
+      "sha256": "5d1f66cff063e704f303c9456f4cec557c6b08a97e0d9104e8a31e2e201c915f",
+      "size_bytes": 4758
     },
     {
       "path": "jira/epics/PP-EPIC-000035.json",
-      "sha256": "60798fc6c4c0b468249ec2d4104776627b2bfaac98b306f13b548b06838559d9",
-      "size_bytes": 3943
+      "sha256": "cfd82c24dc684a44391ccb2f805ccdae4b94f53d2759a4ea12274ccedea94be4",
+      "size_bytes": 4192
     },
     {
       "path": "jira/epics/PP-EPIC-000036.json",
-      "sha256": "847f7677d72082d00dea1e9872771c0d995d38d24360ce7127000e808266b484",
-      "size_bytes": 4359
+      "sha256": "2608f7f044a913d74ef69ede7a2fd2778bbda9b881573f4f1aa83257bcfa6302",
+      "size_bytes": 4552
     },
     {
       "path": "jira/epics/PP-EPIC-000037.json",
@@ -5517,13 +5537,13 @@
     },
     {
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "3294aa4a28e6ec9ee5e89eb02e2f8d816accbb465d78f2ea18271c847ea0516f",
-      "size_bytes": 1678843
+      "sha256": "3ad72ab89d027824bfa921c6178a35618b08044f7c7a181f264ed4445e144f85",
+      "size_bytes": 1683714
     },
     {
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "f5af30d9695c92486101e5bc2fde0e027acd324593931707200c7458f5aa26b2",
-      "size_bytes": 1989376
+      "sha256": "ddbc8de9ddc0d241cea550b8e31ac7062234427f1f2502dd7ab2603ce192f426",
+      "size_bytes": 1996317
     },
     {
       "path": "jira/README.md",
@@ -5532,8 +5552,8 @@
     },
     {
       "path": "jira/relationships/graph.json",
-      "sha256": "d884abf84889aa7772e4c0d19f430f38bca1cc64211aceca64be8890b1d16989",
-      "size_bytes": 154754
+      "sha256": "53dc6cb69902d7cbd9ec88aba40046f8267e55d4375a298979f781beafc9a632",
+      "size_bytes": 154659
     },
     {
       "path": "jira/relationships/issues.jsonl",
@@ -5542,8 +5562,8 @@
     },
     {
       "path": "jira/reports/backlog_status.json",
-      "sha256": "e7b10b1d49c9fef9922fdb3fce4616e238b3acbdd6765d1f014a85eb99393a07",
-      "size_bytes": 379
+      "sha256": "dcdf62f03b285921d39dcb47c7e5ce7b3954efda62ad737d18e67b52b5cbc7c7",
+      "size_bytes": 380
     },
     {
       "path": "jira/reports/foundation_status.json",
@@ -5552,7 +5572,7 @@
     },
     {
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "11b4e292e069c38ef0cf5d012d0016bbe604123b8ae708fd904ed192a0c8051e",
+      "sha256": "0d9fa72b446f08676ed5475faa7ad3ce258c299715d862158a9a1c5d4929ed1b",
       "size_bytes": 5786
     },
     {
@@ -8092,8 +8112,8 @@
     },
     {
       "path": "jira/stories/PP-STORY-000138.json",
-      "sha256": "43a9c085751d3663874b728ab4810e3994c3fe23ab80c064052b92bda8e8d54b",
-      "size_bytes": 3326
+      "sha256": "8ab36d45e4511a332a936556b6b1b5f0d2de97083cdb099e50287b3403b63ba8",
+      "size_bytes": 3519
     },
     {
       "path": "jira/stories/PP-STORY-000139.json",
@@ -8242,8 +8262,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000043.json",
-      "sha256": "5b66871ed323c7fae5dde47904eacdf9107b1ec28699f795060907ef71dc4cf9",
-      "size_bytes": 4220
+      "sha256": "020d454b6642c64cc76975cf758a85f8741c4125d17c89510166abf0f0521b26",
+      "size_bytes": 4459
     },
     {
       "path": "jira/tasks/PP-TASK-000044.json",
@@ -8432,8 +8452,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000186.json",
-      "sha256": "31cb435f911e1a888df866b51fc2b546b218a7107d2c8fdd1aae01e231a945d2",
-      "size_bytes": 5284
+      "sha256": "39f58d5e5d0cc9a32c14d1e41bc538cc5bec979434f23c253fda419822709587",
+      "size_bytes": 5390
     },
     {
       "path": "jira/tasks/PP-TASK-000187.json",
@@ -8442,8 +8462,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000188.json",
-      "sha256": "35d24e36b1837da4d641d675cc8383af43cfacfe928facac17ef3966a2cb5872",
-      "size_bytes": 5347
+      "sha256": "d61b2e6b1a4fc45932f634e27304560d373a28a83c1dd2aabe40e4ea59c1cf02",
+      "size_bytes": 5491
     },
     {
       "path": "jira/tasks/PP-TASK-000189.json",
@@ -8467,8 +8487,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000193.json",
-      "sha256": "2b68cd4ba823a2fe997a574a3363dac2e6115dce2fb4fc9a3437ac9f62d7b59c",
-      "size_bytes": 5686
+      "sha256": "33979664166f4179cf789b099afc5004df53bc22502fd36880201780be6ecb81",
+      "size_bytes": 5811
     },
     {
       "path": "jira/tasks/PP-TASK-000194.json",
@@ -8607,8 +8627,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000221.json",
-      "sha256": "3fc11564596fed307e4a3876e33e5272397a339a6f2c16676503ec2ed0f7598c",
-      "size_bytes": 5873
+      "sha256": "2f854e99f402eb4a0a9c61b83a27f58ab0b348a4cfea3a0921f07538bddf9901",
+      "size_bytes": 5974
     },
     {
       "path": "jira/tasks/PP-TASK-000222.json",
@@ -8622,18 +8642,18 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000224.json",
-      "sha256": "be4ab47d60205488e24b3cf19ac3417bbfe50de2aec2d1cbb09edcdd869f88dc",
-      "size_bytes": 6086
+      "sha256": "81d4d7e2e2ef12ebc6575c56e52b83af31a4b7821cbf997bf2e0feae762a26ff",
+      "size_bytes": 6092
     },
     {
       "path": "jira/tasks/PP-TASK-000225.json",
-      "sha256": "ab3d83bd43d0c685eda34f02607c67bf6ae1b048048c92091aeab3b383abd46b",
-      "size_bytes": 5870
+      "sha256": "1b440b20b705d24efd062539e63a609d3691dda84708bd744e6994ac6ea9261a",
+      "size_bytes": 5876
     },
     {
       "path": "jira/tasks/PP-TASK-000226.json",
-      "sha256": "a92af0fc40ff6240bbef429662f8292f43865e61e2ca91fffbaa8e0031450a82",
-      "size_bytes": 5930
+      "sha256": "fccb12b44ab9628b18a755d53ff399adf74965c7497a716e6a91ffc5780f5116",
+      "size_bytes": 6069
     },
     {
       "path": "jira/tasks/PP-TASK-000227.json",
@@ -8647,13 +8667,13 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000229.json",
-      "sha256": "642332dbd6667d022ee700d19e882d43aba4b449327ddeeb622e7169cdc13158",
-      "size_bytes": 6345
+      "sha256": "5e65122a543c66bcee928447a83d63d4eccd3f6a4feaefce1b13778eb5dca323",
+      "size_bytes": 6351
     },
     {
       "path": "jira/tasks/PP-TASK-000230.json",
-      "sha256": "b3556c3ac9e4f90c977442eb5f44fffd55932b2fce38c7fca4339fc5fe57f679",
-      "size_bytes": 7097
+      "sha256": "5badf648e3335180eb7512148febd0767545e86f21c2a56e8ca1b49700f579c6",
+      "size_bytes": 7198
     },
     {
       "path": "jira/tasks/PP-TASK-000231.json",
@@ -8667,8 +8687,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000233.json",
-      "sha256": "9376653e855363a9407ab21defb296cd50c83c55247000e0118d79edff1cfa5d",
-      "size_bytes": 5391
+      "sha256": "fbf4070d750dd20d0a0095726b853458d6b4302d74ae52c3c932fad2dda8b177",
+      "size_bytes": 5402
     },
     {
       "path": "jira/tasks/PP-TASK-000234.json",
@@ -8982,8 +9002,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000296.json",
-      "sha256": "133e00bc001381bab7e6b1d830da6fc993e8c9b886bb804c7310a617958d0645",
-      "size_bytes": 5022
+      "sha256": "bd3741b425b7825e4a27cbb911e281fc26fa555957e86d34cec3d8d5af7517a5",
+      "size_bytes": 5071
     },
     {
       "path": "jira/tasks/PP-TASK-000297.json",
@@ -9012,8 +9032,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000302.json",
-      "sha256": "6cef1008d8a7846605d2b8634a3a6e18078dfd623d00ee82c168095551101858",
-      "size_bytes": 5154
+      "sha256": "a9cca9761f0637a831804186758508ac4e1eb3e52a3ae6c2a5abe83e00c0fff0",
+      "size_bytes": 5165
     },
     {
       "path": "jira/tasks/PP-TASK-000303.json",
@@ -9047,8 +9067,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000309.json",
-      "sha256": "eceff31315a47cd8337699e45308fc6cff436416c071c8a8e2c616c5ab41cbdd",
-      "size_bytes": 5162
+      "sha256": "e6005f3059e727d71fd45fa5bdbb336200fb01cc585e2894e0b7291733b1bce8",
+      "size_bytes": 5268
     },
     {
       "path": "jira/tasks/PP-TASK-000310.json",
@@ -9117,8 +9137,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000323.json",
-      "sha256": "67c75dee204676f11cd326bfde551b55daeb43de858145c533bcaf34d59c2088",
-      "size_bytes": 5804
+      "sha256": "c7ebd2aaf253193b2f49b21e827ffaf22555fbc4b645e6e710fd3971c23f0bef",
+      "size_bytes": 5813
     },
     {
       "path": "jira/tasks/PP-TASK-000324.json",
@@ -9137,8 +9157,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000327.json",
-      "sha256": "d3ef38f3e3ba6245ea919ac1b24ef02c1f628bfde52349f2533a6ed849778d33",
-      "size_bytes": 4817
+      "sha256": "80ffcc7cb383c71d85fd18a2f9c991eb8aa44a8dd3e2d83b97b2dcd446e6482a",
+      "size_bytes": 4815
     },
     {
       "path": "jira/tasks/PP-TASK-000328.json",
@@ -9202,43 +9222,43 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000340.json",
-      "sha256": "14c9cc5618930dfefa57d9dbfd84badc1967a13dd0e70392c2fa72391c0af318",
-      "size_bytes": 4809
+      "sha256": "4b4d5ecc3a3751e3a14136d7348a6aa4627ead4cc6d627cde57fad33fb84fa3d",
+      "size_bytes": 5458
     },
     {
       "path": "jira/tasks/PP-TASK-000341.json",
-      "sha256": "8109c3b2c721c1842e05114f4bb1d9e0f2083e6bd9084c313f4cd7c65186a414",
-      "size_bytes": 4658
+      "sha256": "c90d1640685384e31c9b55efc3fe107dd5e46781f771d3fb7fcf80e8bee685a3",
+      "size_bytes": 4661
     },
     {
       "path": "jira/tasks/PP-TASK-000342.json",
-      "sha256": "90f371bd7edcc6ac7acd93ada524e51b5330f70369abc57a93891e44cf4fcc69",
-      "size_bytes": 4734
+      "sha256": "ba006bcc7e8aaec87a3a068f324be9def312d45528d3d080ba77975c42796ba6",
+      "size_bytes": 4813
     },
     {
       "path": "jira/tasks/PP-TASK-000343.json",
-      "sha256": "06ce232cab570a564bb55a1080f83b4acf19987c114dc3ff316f538bfbbb6571",
-      "size_bytes": 4671
+      "sha256": "cfe94585ebd15dda6a7760bf48d9b2410739edad8898c30f35b6246b2426fb49",
+      "size_bytes": 4674
     },
     {
       "path": "jira/tasks/PP-TASK-000344.json",
-      "sha256": "5ab37e33777d6165ed8681ff4993b0be15f6aa26590cd0a575e18539502ff089",
-      "size_bytes": 4723
+      "sha256": "1125d792a7525987648f5f7f4a5f436dde6c477b0003dce9614cba7268bd4558",
+      "size_bytes": 4783
     },
     {
       "path": "jira/tasks/PP-TASK-000345.json",
-      "sha256": "136359410dbd0ed782035055107732b2451274e63a36f3b5f158e43e7ed30542",
-      "size_bytes": 4508
+      "sha256": "baf172eb1f42639b547dcb8a79b5e6238eb68b208986c714a80095f7eed15a23",
+      "size_bytes": 4536
     },
     {
       "path": "jira/tasks/PP-TASK-000346.json",
-      "sha256": "465527c98f03dab2e6cdf339eb2a9bdc948c2b5c4ed05f239ed77b674a8b46db",
-      "size_bytes": 5376
+      "sha256": "7185ff2ae305c8c1aff75f2bcf6ef372806c3cf1cb3752a6a1d8abc016cb95ce",
+      "size_bytes": 5380
     },
     {
       "path": "jira/tasks/PP-TASK-000347.json",
-      "sha256": "14e2964737663c8677fe182b2049de170ca984dce886aaa3813ecef0bd9da04f",
-      "size_bytes": 4746
+      "sha256": "8af9b8019062fcf015666b574d8c21ce650e2196ec4639481709c31ca6aecc77",
+      "size_bytes": 4755
     },
     {
       "path": "jira/tasks/PP-TASK-000348.json",
@@ -9307,8 +9327,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000361.json",
-      "sha256": "fc26033722b190be563e57d4fd4b6885283582c8757fd596e9c920d4dda56dfd",
-      "size_bytes": 4882
+      "sha256": "9a5e9545228333c8648d2cf3e66d9198b125e22a0d9197814a8421a3ab2a0084",
+      "size_bytes": 4950
     },
     {
       "path": "jira/tasks/PP-TASK-000362.json",
@@ -9317,13 +9337,13 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000363.json",
-      "sha256": "9a1ef6be25b5ddff6d0e479d421270d8261b7d233406e446a648f0d0c5867fb5",
-      "size_bytes": 4837
+      "sha256": "790cc3d62ee0f8b21d95c617139110daa84d579bdfc77f8fd1468072f4c039b4",
+      "size_bytes": 4867
     },
     {
       "path": "jira/tasks/PP-TASK-000364.json",
-      "sha256": "e505f42de087d49e5d5b74d0bad6256e20617948258c4e9288f11a21b9f33ef5",
-      "size_bytes": 5070
+      "sha256": "576e6b9f9795c67afae9f0fc86655b5b49b9f98210bf3b2f3cd906c1d31fb208",
+      "size_bytes": 5119
     },
     {
       "path": "jira/tasks/PP-TASK-000365.json",
@@ -9352,78 +9372,78 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000370.json",
-      "sha256": "125c05285c0412453a1b7c23fa104ecab91a58b2e83e46290fec1a788f8e1283",
-      "size_bytes": 4919
+      "sha256": "1cd204b01bf9b7b953fec930f5383ab92bbe2cba19968b6cbbad7d97b1569554",
+      "size_bytes": 4916
     },
     {
       "path": "jira/tasks/PP-TASK-000371.json",
-      "sha256": "82f243f3c5781a0648c9fb341bd1519a05fa9b3f63346b5538db67a42cbf4698",
-      "size_bytes": 4602
+      "sha256": "3ad8d181669a2c15c5289fba4b5e59c743a89d2b4f29637491c1673b7572ff24",
+      "size_bytes": 4599
     },
     {
       "path": "jira/tasks/PP-TASK-000372.json",
-      "sha256": "9dc9c4ca080ef2e1513293a06fdbe942d994ea965bb6769f6f40e5bbc1f12c68",
-      "size_bytes": 4628
+      "sha256": "6e02a8f1d52f99ba81c128a973acf8242851d1b514357993abc190af9fbee06c",
+      "size_bytes": 4805
     },
     {
       "path": "jira/tasks/PP-TASK-000373.json",
-      "sha256": "d359162e13eaee343471e954ccb22c4334450c71e9724a5bfa2030f4abacbb45",
-      "size_bytes": 5281
+      "sha256": "24c54bc17dc914b3462387911829aa309c85357c30ec3132213d63050bc1dde9",
+      "size_bytes": 5325
     },
     {
       "path": "jira/tasks/PP-TASK-000374.json",
-      "sha256": "821b6b2c2d03d9f160cc9ddbb7eec97a5eb9d38c98a817d643233189cddfc0e3",
-      "size_bytes": 3954
+      "sha256": "1e6ac384c1fbdf792ba70e8ee253f1e00aa472309d54f18e0118ba8ceb07190c",
+      "size_bytes": 3960
     },
     {
       "path": "jira/tasks/PP-TASK-000375.json",
-      "sha256": "15ed3a98512737332c5ce3da3eba5c4bbeed80438d142e77a4161d8d02e3dea7",
-      "size_bytes": 3656
+      "sha256": "1b7c50be1830e738c610f6c0e5174d66af8be0de2a1e41d1d41dfb65723c34e1",
+      "size_bytes": 3662
     },
     {
       "path": "jira/tasks/PP-TASK-000376.json",
-      "sha256": "6a599c2245cbf782883fdd63098ff0c647c0e747d75e0b8f354c68bf43eba5fd",
-      "size_bytes": 3799
+      "sha256": "0003ae989b0e556ca21a81e4537be06515e64c0ea0bffca8013756e6daca779c",
+      "size_bytes": 3805
     },
     {
       "path": "jira/tasks/PP-TASK-000377.json",
-      "sha256": "cf273bda1aca9b3e60a6cb2b5ccce64c5c025b6199765eb3bcf79747b8073365",
-      "size_bytes": 3686
+      "sha256": "2989a8de3208699e30a18da72a69e4a5a28c7c52111035b346ea158cea7b556e",
+      "size_bytes": 3730
     },
     {
       "path": "jira/tasks/PP-TASK-000378.json",
-      "sha256": "7efacf6c006cd77ac36e41327e48c2f86e55c2be3d52355774682317abb7d3a3",
-      "size_bytes": 3861
+      "sha256": "a86eb649c93480add371dbdb965649beb80be50db19a57b10daa48dc984e5b83",
+      "size_bytes": 3867
     },
     {
       "path": "jira/tasks/PP-TASK-000379.json",
-      "sha256": "90d447f1b16692219d318f8889f59c9fa38ef59aba521a022b86bc45ef03e493",
-      "size_bytes": 6473
+      "sha256": "85a27144b7a6e1276c663724f24e4cb234b284f04c8b6a700466fe7a92cfb29f",
+      "size_bytes": 6666
     },
     {
       "path": "jira/tasks/PP-TASK-000380.json",
-      "sha256": "844730409cbbb623806b971d0cbd0daa4dcbac98aa022f0dd825a552750437c5",
-      "size_bytes": 4742
+      "sha256": "41f8a569fc242ade5e6fcb3e178e1aa8903a797a351662f065d9d287ee618674",
+      "size_bytes": 4747
     },
     {
       "path": "jira/tasks/PP-TASK-000381.json",
-      "sha256": "85ae55095b5512a835acfb8d03eab2d4cea2b1be7fdeb51274f3b4721b6e847a",
-      "size_bytes": 3783
+      "sha256": "4d42c04ec971d98399ea240dfb2160d491270f699e0945370ffe696b6fa694ad",
+      "size_bytes": 3788
     },
     {
       "path": "jira/tasks/PP-TASK-000382.json",
-      "sha256": "274e9bbedcd46a89b80f885dc52f23aa7afb5a1a1bb49690b4d1597c9cfc2151",
-      "size_bytes": 3945
+      "sha256": "d5f2b207cc2f18dca37e690c4053d76bfc9db25a016c154c2027c9300e4bd927",
+      "size_bytes": 3950
     },
     {
       "path": "jira/tasks/PP-TASK-000383.json",
-      "sha256": "76a548d3f3c66b6f15730b37cf05be5073e3886e50d6d8acbcf0006bad70c3ca",
-      "size_bytes": 4121
+      "sha256": "268687818f5c462ee6d3af6ce73739981b7d80a939a56c070c12e153f9727464",
+      "size_bytes": 4126
     },
     {
       "path": "jira/tasks/PP-TASK-000384.json",
-      "sha256": "ccf0a1160722687c53e93c4213198b5109d00ab20d101dbc2652f450248ec92c",
-      "size_bytes": 4207
+      "sha256": "2a2b8b951e0a94f30c78ccdeb18198c7b5b8fc38f2f75cde28011208c96e064d",
+      "size_bytes": 4208
     },
     {
       "path": "jira/tasks/PP-TASK-000385.json",
@@ -9502,8 +9522,8 @@
     },
     {
       "path": "plans/01_requirements/REQUIREMENT_CATALOG_STATUS.md",
-      "sha256": "de3e6534334cba5e7bf979b40752eb475edb5aee506c870c3d9d46235ba3f390",
-      "size_bytes": 798
+      "sha256": "ee1426fc7d8094c7043b6272065fcd7256f0e7b0b644000245cb89182a758c09",
+      "size_bytes": 778
     },
     {
       "path": "plans/01_requirements/source_evolution.jsonl",
@@ -10007,13 +10027,13 @@
     },
     {
       "path": "plans/_traceability/coverage_report.json",
-      "sha256": "9e8db9820398029db14bb16f2b46e9fd8bf0994bd5dec507214909c3796e7f9f",
-      "size_bytes": 2471
+      "sha256": "d07c4276743063080e59622e158ba5838dd1cc812e8bef3455dd45bb05a88fa2",
+      "size_bytes": 2448
     },
     {
       "path": "plans/_traceability/coverage_report.md",
-      "sha256": "102c2250f804efacf3c3afb1b8aec6dec0a84cbdebd3998f4c5f7228dd9f2dc5",
-      "size_bytes": 751
+      "sha256": "715b604b4f92ece8aee5be43014d8965328d8e9be92aa66de8155ad16b715d8e",
+      "size_bytes": 731
     },
     {
       "path": "plans/_traceability/README.md",
@@ -10022,13 +10042,13 @@
     },
     {
       "path": "plans/_traceability/requirement_registry_summary.json",
-      "sha256": "29778cfc285093059e6ea0909437aaddd309bcc4cfd97063e91181fde8405541",
-      "size_bytes": 909
+      "sha256": "82cee0ea208bde14747fef48703d79e200dcec6d96cdf3d7e7cdf82496dd26c2",
+      "size_bytes": 886
     },
     {
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "3831174ead5a7027e7be8503cfdcdc5aa128cca54d4f10885b29bfa1d9b36f8e",
-      "size_bytes": 744689
+      "sha256": "e2ec13563b1acbe740f8f9ffad1da87d0b46d050e8db26012445bf45b6f764e5",
+      "size_bytes": 745429
     },
     {
       "path": "plans/_traceability/requirements_by_domain.json",
@@ -10037,8 +10057,8 @@
     },
     {
       "path": "plans/_traceability/requirements_by_id.json",
-      "sha256": "bdcb586b6e4a23377b668813d8b71dca915de228c6394c0a5d722a3e31756b1b",
-      "size_bytes": 871169
+      "sha256": "23b6783996debe170f05b12242e5acf43ebed525477464e37fbcb75389f7bad8",
+      "size_bytes": 872053
     },
     {
       "path": "plans/_traceability/requirements_by_source.json",
@@ -10052,8 +10072,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_evidence.jsonl",
-      "sha256": "e80692834439c774000a37a2e05457727abc73c8084059055b71269fd2f1006a",
-      "size_bytes": 36870
+      "sha256": "9aa7f2d0aebff147ccf88c43244b4902d59d2aaaa3e4b9beaeba0c2e71bbbd61",
+      "size_bytes": 36958
     },
     {
       "path": "plans/_traceability/requirements_to_evolution.jsonl",
@@ -10062,8 +10082,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_implementation.jsonl",
-      "sha256": "83c0c5275556ff7a66b3241c39ed25ccb6f4130f7d42ab34e0e7738bb7b5bf31",
-      "size_bytes": 92962
+      "sha256": "b35729374af50961658c3a5daf6c18971c55fbb71583530f11a302103d22af2c",
+      "size_bytes": 93512
     },
     {
       "path": "plans/_traceability/requirements_to_jira.jsonl",
@@ -10082,8 +10102,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_tests.jsonl",
-      "sha256": "d82cdd734e31527b18f48c2afad6132e6ed0a2acd93a6548a68ee6d89129e8e0",
-      "size_bytes": 53027
+      "sha256": "f02d37323cca782cc839194410d474adc80f6c8fcd71a83b962324cee4b80efa",
+      "size_bytes": 53172
     },
     {
       "path": "plans/_traceability/source_section_coverage.md",
@@ -12266,6 +12286,11 @@
       "size_bytes": 29855
     },
     {
+      "path": "src/project_pipeline/autonomy_runtime/nonduration.py",
+      "sha256": "6d5751960562d74836c54f6a853bf1b789b8f61aadea87cb75fdbd7234c57855",
+      "size_bytes": 5058
+    },
+    {
       "path": "src/project_pipeline/autonomy_runtime/process_identity.py",
       "sha256": "9f0afa6acdcffdad3da19a75d7d11408e98a271571929c1e0713f56d8f535f1a",
       "size_bytes": 4329
@@ -13212,8 +13237,8 @@
     },
     {
       "path": "src/project_pipeline/release_hardening/__init__.py",
-      "sha256": "53ea46f6d645a1025d637914582da007ca7add73b8c119b932750340ba0de232",
-      "size_bytes": 1218
+      "sha256": "3cd37f3bb832ebebadf1e25ab1ca467a5550c1c3c0c5ebc2d7865d71c1aafadb",
+      "size_bytes": 1352
     },
     {
       "path": "src/project_pipeline/release_hardening/candidate.py",
@@ -13229,6 +13254,11 @@
       "path": "src/project_pipeline/release_hardening/continuation.py",
       "sha256": "250a8ce072236bb19270ba4170ab302b8a3e4ec37fd822a3aa93bda2ee5bb448",
       "size_bytes": 8669
+    },
+    {
+      "path": "src/project_pipeline/release_hardening/disposable_rehearsal.py",
+      "sha256": "f49aab695e2389bcc74c58decd1b9b6e3ac3f897e2d54e6b1bcdc93d216ac56f",
+      "size_bytes": 9272
     },
     {
       "path": "src/project_pipeline/release_hardening/hardening.py",
@@ -13952,8 +13982,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "2d7914602e4fdee4272657f1c2cf9207b770501369012bbe16f11845e6d0bf86",
-      "size_bytes": 122109
+      "sha256": "3bec506592dc40b76c7691317b83f07e9702587f303e7a5f5640d892c9d99b17",
+      "size_bytes": 122871
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -14097,8 +14127,8 @@
     },
     {
       "path": "tests/test_control_kernel.py",
-      "sha256": "badab24a89fb37cacd76f3f16f89adbcd3905c3a503814e63d8b11960ee139e5",
-      "size_bytes": 13530
+      "sha256": "8c497288e46377dc1977b9882d3e82c99d8e524721f2f4d9003b593da86607bd",
+      "size_bytes": 14092
     },
     {
       "path": "tests/test_control_persistence.py",
@@ -14416,6 +14446,11 @@
       "size_bytes": 8093
     },
     {
+      "path": "tests/test_pdef_0011_nonduration.py",
+      "sha256": "6f5314e8e1795e128429261687a47b7bb9d508f11d4cd661befc529445bf76d6",
+      "size_bytes": 3376
+    },
+    {
       "path": "tests/test_platform_project_separation.py",
       "sha256": "7073dd196acf65a13737d4b74bb2b520d115ecce4716a01bd86234f5a08d0d76",
       "size_bytes": 891
@@ -14464,6 +14499,11 @@
       "path": "tests/test_release_continuation_and_post_deploy.py",
       "sha256": "42e74b4dc80266208e318d576dea00b4e94ccebced2501bc203c147de0277088",
       "size_bytes": 5876
+    },
+    {
+      "path": "tests/test_release_disposable_rehearsal.py",
+      "sha256": "74c21f3eddc4587315e8e82819d60b8941ab64dc90ec149c60350795e4c6afbb",
+      "size_bytes": 1049
     },
     {
       "path": "tests/test_repository_contract.py",
@@ -14811,7 +14851,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T01:29:49.185553+00:00",
+  "generated_at_utc": "2026-08-20T02:29:41.728448+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14820,5 +14860,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29395247
+  "total_bytes": 29440109
 }

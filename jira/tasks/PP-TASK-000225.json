@@ -71,6 +71,7 @@
   "issue_type": "TASK",
   "labels": [
     "deterministic",
+    "done",
     "dry-run-default",
     "git",
     "github",
@@ -78,11 +79,11 @@
     "repository-steward"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-16T03:25:32.135977Z",
+    "observed_at_utc": "2026-08-19T22:28:01Z",
     "remote_id": "25111",
     "remote_key": "PP-142",
-    "snapshot_id": "JSNAP-A098A755EB9B413EF6DB",
-    "status_name": "To Do"
+    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+    "status_name": "Done"
   },
   "local_id": "PP-TASK-000225",
   "objective": "Implement provider-neutral pull-request, review, check, and branch-protection observations at an immutable head SHA.",
@@ -134,7 +135,7 @@
     "SRC-007:L000799-L000848",
     "SRC-007:L000822-L000888"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Pull-request review and check state model",
   "upstream_dependencies": [
     "https://github.com/github/github-mcp-server"

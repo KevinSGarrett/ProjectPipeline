@@ -7,12 +7,26 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "automated_graph_and_traceability_check",
         "path": "plans/_traceability/requirements_to_jira.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "EVID-000049",
+    "EVID-000053",
+    "EVID-000055",
+    "EVID-000057",
+    "EVID-000058",
+    "EVID-000059",
+    "EVID-000061",
+    "EVID-000062",
+    "EVID-000063",
+    "EVID-000064",
+    "EVID-000065",
+    "EVID-000169",
+    "EVID-000210"
+  ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
     "Acceptance criteria have current verification evidence.",
@@ -35,10 +49,11 @@
   "expected_implementation_artifacts": [
     "plans/04_scheduling_and_parallel_execution/PLAN-SCHED-001_scheduling_parallel_execution.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "EPIC",
   "labels": [
     "domain-epic",
+    "implemented",
     "plan-sched-001"
   ],
   "last_observed_remote_state": {

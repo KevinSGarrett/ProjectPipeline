@@ -224,11 +224,15 @@ def test_issue_with_complete_requirements_but_incomplete_issue_proof_is_quaranti
         kernel = ProjectControlKernel(ROOT, store, "PROJECT-PIPELINE")
         fact = next(item for item in kernel.task_facts() if item.task_id == issue_id)
 
-        assert fact.reconciliation_required
-        assert (
-            BuildSequencer(kernel.task_facts()).eligibility(fact).state
-            is EligibilityState.RECONCILIATION_REQUIRED
-        )
+        eligibility = BuildSequencer(kernel.task_facts()).eligibility(fact)
+        assert fact.reconciliation_required or fact.remote_readback_required
+        assert eligibility.state in {
+            EligibilityState.RECONCILIATION_REQUIRED,
+            EligibilityState.POLICY_DENIED,
+        }
+        if fact.remote_readback_required:
+            assert eligibility.state is EligibilityState.POLICY_DENIED
+            assert "remote readback beyond To Do" in " ".join(eligibility.reasons)
 
 
 def test_existing_delivery_footprints_are_not_ranked_as_fresh_implementation(
@@ -269,14 +273,20 @@ def test_runtime_predecessors_admit_completion_convergence_work(
         facts = {item.task_id: item for item in kernel.task_facts()}
         sequencer = BuildSequencer(facts.values())
 
-        assert facts["PP-TASK-000186"].product_scope_allowed
-        assert sequencer.eligibility(facts["PP-TASK-000186"]).state in {
+        assert not facts["PP-TASK-000186"].product_scope_allowed
+        assert (
+            sequencer.eligibility(facts["PP-TASK-000186"]).state is EligibilityState.POLICY_DENIED
+        )
+        assert "remote readback beyond To Do" in " ".join(
+            sequencer.eligibility(facts["PP-TASK-000186"]).reasons
+        )
+        assert facts["PP-TASK-000385"].product_scope_allowed
+        assert sequencer.eligibility(facts["PP-TASK-000385"]).state in {
             EligibilityState.ELIGIBLE,
             EligibilityState.RECONCILIATION_REQUIRED,
             EligibilityState.ALREADY_ACTIVE,
             EligibilityState.POLICY_DENIED,
         }
-        assert facts["PP-TASK-000381"].product_scope_allowed
         assert any(
             "RECONCILIATION_REQUIRED" in reason or "not a stop signal" in reason
             for reason in kernel.evaluate().completion.reasons

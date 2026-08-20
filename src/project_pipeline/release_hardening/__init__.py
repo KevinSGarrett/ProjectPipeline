@@ -8,10 +8,17 @@ from project_pipeline.release_hardening.continuation import (
     build_continuation_package,
     validate_continuation_package,
 )
+from project_pipeline.release_hardening.disposable_rehearsal import rehearse_disposable_candidate
 from project_pipeline.release_hardening.hardening import (
     build_hardening_report,
     qualify_packaging_targets,
     qualify_tools,
+)
+from project_pipeline.release_hardening.post_deploy import (
+    PostDeploymentDecision,
+    PostDeploymentObservation,
+    execute_local_post_deployment,
+    verify_post_deployment,
 )
 from project_pipeline.release_hardening.validation import validate_release_hardening
 
@@ -25,16 +32,10 @@ __all__ = [
     "execute_local_post_deployment",
     "qualify_packaging_targets",
     "qualify_tools",
+    "rehearse_disposable_candidate",
     "release_input_fingerprint",
     "resolve_candidate_identity",
     "validate_continuation_package",
     "validate_release_hardening",
     "verify_post_deployment",
 ]
-
-from project_pipeline.release_hardening.post_deploy import (
-    PostDeploymentDecision,
-    PostDeploymentObservation,
-    execute_local_post_deployment,
-    verify_post_deployment,
-)

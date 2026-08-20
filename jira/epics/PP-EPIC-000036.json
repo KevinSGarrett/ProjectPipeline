@@ -45,7 +45,13 @@
     "product-outcome",
     "vertical-slices-only"
   ],
-  "last_observed_remote_state": null,
+  "last_observed_remote_state": {
+    "observed_at_utc": "2026-08-19T22:28:01Z",
+    "remote_id": "25353",
+    "remote_key": "PP-379",
+    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
+    "status_name": "In Progress"
+  },
   "local_id": "PP-EPIC-000036",
   "objective": "Autonomous Runtime Integration and Unattended Qualification",
   "observability_impact": "Expose durable loop, lane, incident, integration, budget, qualification, and Completion Gate state.",
@@ -89,7 +95,7 @@
       "type": "PARENT_OF"
     }
   ],
-  "remote_jira_key": null,
+  "remote_jira_key": "PP-379",
   "required_tests": [],
   "requirement_ids": [
     "REQ-PDEF-0011",
