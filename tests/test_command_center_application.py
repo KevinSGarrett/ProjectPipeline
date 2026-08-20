@@ -53,8 +53,13 @@ def test_repository_projection_never_invents_remote_sync_or_approval_truth(proje
     assert projection.approvals_detail_available is False
     assert projection.approvals_detail == ()
     assert {item.system for item in projection.synchronization} == {"Jira", "GitHub"}
-    assert all(item.mode == "LOCAL_ONLY" for item in projection.synchronization)
-    assert all(item.stale is True for item in projection.synchronization)
+    jira = next(item for item in projection.synchronization if item.system == "Jira")
+    github = next(item for item in projection.synchronization if item.system == "GitHub")
+    assert jira.mode != "LOCAL_ONLY"
+    assert jira.stale is False
+    assert "PP-391" in jira.note
+    assert github.mode == "LOCAL_ONLY"
+    assert github.stale is True
     assert all(item.remote_mutation_performed is False for item in projection.synchronization)
     assert projection.recovery_detail[0]["detail_state"] == "LIVE_PROVIDER_REQUIRED"
 

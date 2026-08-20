@@ -15,6 +15,10 @@ from project_pipeline.command_center.director import (
 )
 from project_pipeline.command_center.inbox import AttentionNotificationBroker
 from project_pipeline.command_center.incidents import IncidentManager
+from project_pipeline.command_center.live_server import (
+    create_live_command_center_app,
+    snapshot_from_repository,
+)
 from project_pipeline.command_center.models import (
     CommandCenterScope,
     CommandCenterSnapshot,
@@ -85,6 +89,8 @@ __all__ = [
     "RepositoryApplicationProjectionBuilder",
     "TimelinePage",
     "create_command_center_app",
+    "create_live_command_center_app",
+    "snapshot_from_repository",
     "validate_command_center_application",
     "validate_command_center_foundation",
 ]

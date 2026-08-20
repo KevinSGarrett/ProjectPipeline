@@ -136,28 +136,7 @@ class RepositoryApplicationProjectionBuilder:
             if item.get("state") == "IN_PROGRESS"
         )[:60]
         evidence_rows = tuple(self._evidence_row(row) for row in evidence[-self.max_evidence :])
-        sync = (
-            ApplicationSyncStatus(
-                system="Jira",
-                mode="LOCAL_ONLY",
-                remote_mutation_performed=False,
-                stale=True,
-                local_record_count=len(issues),
-                pending_outbox_count=self._count_jsonl("jira/reports/outbox.jsonl"),
-                conflict_count=self._count_jsonl("jira/reports/conflicts.jsonl"),
-                note="Repository-local Jira mirror is visible; this projection does not claim a current remote observation.",
-            ),
-            ApplicationSyncStatus(
-                system="GitHub",
-                mode="LOCAL_ONLY",
-                remote_mutation_performed=False,
-                stale=True,
-                local_record_count=self._count_jsonl("evidence/github_reconciliation.jsonl"),
-                pending_outbox_count=self._count_jsonl("evidence/github_outbox.jsonl"),
-                conflict_count=self._count_jsonl("evidence/github_conflicts.jsonl"),
-                note="Repository-local GitHub governance state is visible; this projection does not claim a current remote observation.",
-            ),
-        )
+        sync = (self._jira_sync_status(len(issues)), self._github_sync_status())
         complete = {"IMPLEMENTED", "MOCK_VERIFIED", "LIVE_VERIFIED", "BLOCKED_EXTERNAL"}
         incomplete_requirement_count = sum(
             1
@@ -212,6 +191,78 @@ class RepositoryApplicationProjectionBuilder:
 
     def _count_jsonl(self, relative: str) -> int:
         return len(_read_jsonl(self.root / relative))
+
+    def _read_json(self, relative: str) -> dict[str, Any] | None:
+        path = self.root / relative
+        if not path.is_file():
+            return None
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return None
+        return payload if isinstance(payload, dict) else None
+
+    def _jira_sync_status(self, local_issue_count: int) -> ApplicationSyncStatus:
+        guard = self._read_json("jira/reports/jira_sync_guard.json")
+        snapshot = self._read_json("jira/reports/live_status_snapshot.json")
+        pending = self._count_jsonl("jira/reports/outbox.jsonl")
+        conflicts = self._count_jsonl("jira/reports/conflicts.jsonl")
+        if not isinstance(guard, dict) or not isinstance(snapshot, dict):
+            return ApplicationSyncStatus(
+                system="Jira",
+                mode="LOCAL_ONLY",
+                remote_mutation_performed=False,
+                stale=True,
+                local_record_count=local_issue_count,
+                pending_outbox_count=pending,
+                conflict_count=conflicts,
+                note="Repository-local Jira mirror is visible; this projection does not claim a current remote observation.",
+            )
+        counts = snapshot.get("status_counts")
+        if not isinstance(counts, dict):
+            readback = guard.get("readback")
+            counts = readback.get("status_counts") if isinstance(readback, dict) else {}
+        if not isinstance(counts, dict):
+            counts = {}
+        mappings = guard.get("reconciled_remote_keys") or {}
+        pp385 = mappings.get("PP-TASK-000385") or {}
+        pp384 = mappings.get("PP-TASK-000384") or {}
+        parity = str(guard.get("parity_status") or "")
+        stale = parity != "PARITY_CONFIRMED"
+        note = (
+            f"Observed live readback {counts.get('To Do', '?')}/"
+            f"{counts.get('In Progress', '?')}/{counts.get('Done', '?')} "
+            f"from snapshot {snapshot.get('snapshot_id')}; "
+            f"PP-TASK-000385->{pp385.get('remote_key', 'unbound')} "
+            f"{pp385.get('live_state', '')}; "
+            f"PP-TASK-000384->{pp384.get('remote_key', 'unbound')} "
+            f"{pp384.get('live_state', '')}. "
+            "This projection does not perform a remote write."
+        )
+        return ApplicationSyncStatus(
+            system="Jira",
+            mode=str(guard.get("authority_mode") or "SOURCE_CONTROLLED_LOCAL_PLUS_LIVE_READBACK")[
+                :100
+            ],
+            remote_mutation_performed=False,
+            stale=stale,
+            local_record_count=local_issue_count,
+            pending_outbox_count=pending,
+            conflict_count=conflicts,
+            note=note[:1000],
+        )
+
+    def _github_sync_status(self) -> ApplicationSyncStatus:
+        return ApplicationSyncStatus(
+            system="GitHub",
+            mode="LOCAL_ONLY",
+            remote_mutation_performed=False,
+            stale=True,
+            local_record_count=self._count_jsonl("evidence/github_reconciliation.jsonl"),
+            pending_outbox_count=self._count_jsonl("evidence/github_outbox.jsonl"),
+            conflict_count=self._count_jsonl("evidence/github_conflicts.jsonl"),
+            note="Repository-local GitHub governance state is visible; this projection does not claim a current remote observation.",
+        )
 
     @staticmethod
     def _next_transition(issue: dict[str, Any]) -> str | None:

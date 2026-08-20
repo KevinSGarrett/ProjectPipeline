@@ -22350,7 +22350,8 @@
     "evidence_ids": [
       "EVID-000136",
       "EVID-000141",
-      "EVID-000143"
+      "EVID-000143",
+      "EVID-000207"
     ],
     "evolution_ids": [
       "SOURCE-EVOLUTION-0009"
@@ -22364,7 +22365,11 @@
       "src/project_pipeline/command_center/api.py",
       "src/project_pipeline/command_center/application.py",
       "src/project_pipeline/command_center/models.py",
-      "src/project_pipeline/command_center/projections.py"
+      "src/project_pipeline/command_center/projections.py",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py",
+      "scripts/verify_command_center_ui.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -22407,7 +22412,10 @@
       "TEST-CC-PROJECTION-001",
       "TEST-CC-UI-001",
       "TEST-CC-UI-002",
-      "TEST-CC-UI-006"
+      "TEST-CC-UI-006",
+      "TEST-CC-LIVE-001",
+      "TEST-CC-LIVE-002",
+      "TEST-CC-LIVE-004"
     ],
     "title": "A Windows-capable, network-accessible Command Center shall expose live system and project state",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -22571,7 +22579,8 @@
       "EVID-000136",
       "EVID-000141",
       "EVID-000142",
-      "EVID-000143"
+      "EVID-000143",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -22582,7 +22591,11 @@
       "apps/desktop_shell/src-tauri/capabilities/main.json",
       "config/command_center_policy.json",
       "src/project_pipeline/command_center/api.py",
-      "src/project_pipeline/command_center/application.py"
+      "src/project_pipeline/command_center/application.py",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py",
+      "scripts/verify_command_center_ui.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -22624,7 +22637,9 @@
       "TEST-CC-API-002",
       "TEST-CC-APP-004",
       "TEST-CC-APP-006",
-      "TEST-CC-BROWSER-001"
+      "TEST-CC-BROWSER-001",
+      "TEST-CC-LIVE-002",
+      "TEST-CC-LIVE-004"
     ],
     "title": "Desktop and network access",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -22818,13 +22833,18 @@
     "domain": "UX",
     "evidence_ids": [
       "EVID-000141",
-      "EVID-000142"
+      "EVID-000142",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
       "apps/command_center/src/App.jsx",
       "apps/command_center/src/appModel.mjs",
-      "src/project_pipeline/command_center/application.py"
+      "src/project_pipeline/command_center/application.py",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py",
+      "scripts/verify_command_center_ui.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -22861,7 +22881,8 @@
     "test_ids": [
       "TEST-CC-APP-003",
       "TEST-CC-BROWSER-001",
-      "TEST-CC-UI-003"
+      "TEST-CC-UI-003",
+      "TEST-CC-LIVE-004"
     ],
     "title": "Interactive project graph",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -22876,7 +22897,8 @@
     "domain": "UX",
     "evidence_ids": [
       "EVID-000136",
-      "EVID-000141"
+      "EVID-000141",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -22885,7 +22907,11 @@
       "apps/command_center/src/appModel.mjs",
       "src/project_pipeline/command_center/application.py",
       "src/project_pipeline/command_center/models.py",
-      "src/project_pipeline/command_center/projections.py"
+      "src/project_pipeline/command_center/projections.py",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py",
+      "scripts/verify_command_center_ui.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -22922,7 +22948,9 @@
     "test_ids": [
       "TEST-CC-APP-001",
       "TEST-CC-PROJECTION-001",
-      "TEST-CC-UI-006"
+      "TEST-CC-UI-006",
+      "TEST-CC-LIVE-001",
+      "TEST-CC-LIVE-002"
     ],
     "title": "Live work view",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -23005,7 +23033,8 @@
     "evidence_ids": [
       "EVID-000136",
       "EVID-000137",
-      "EVID-000138"
+      "EVID-000138",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -23013,7 +23042,11 @@
       "docs/command_center/backend_realtime_api.md",
       "src/project_pipeline/command_center/agui.py",
       "src/project_pipeline/command_center/api.py",
-      "src/project_pipeline/command_center/realtime.py"
+      "src/project_pipeline/command_center/realtime.py",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py",
+      "scripts/verify_command_center_ui.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -23057,7 +23090,9 @@
       "TEST-CC-REALTIME-001",
       "TEST-CC-REALTIME-002",
       "TEST-CC-REALTIME-003",
-      "TEST-CC-REALTIME-004"
+      "TEST-CC-REALTIME-004",
+      "TEST-CC-LIVE-003",
+      "TEST-CC-LIVE-004"
     ],
     "title": "Real-time state updates",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -23193,12 +23228,17 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "UX",
     "evidence_ids": [
-      "EVID-000141"
+      "EVID-000141",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
       "apps/command_center/src/App.jsx",
-      "apps/command_center/src/appModel.mjs"
+      "apps/command_center/src/appModel.mjs",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py",
+      "scripts/verify_command_center_ui.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -23234,7 +23274,8 @@
     ],
     "test_ids": [
       "TEST-CC-BROWSER-001",
-      "TEST-CC-UI-002"
+      "TEST-CC-UI-002",
+      "TEST-CC-LIVE-004"
     ],
     "title": "Cost drill-down",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -23248,12 +23289,17 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "UX",
     "evidence_ids": [
-      "EVID-000141"
+      "EVID-000141",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
       "apps/command_center/src/App.jsx",
-      "apps/command_center/src/appModel.mjs"
+      "apps/command_center/src/appModel.mjs",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py",
+      "scripts/verify_command_center_ui.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -23289,7 +23335,8 @@
     ],
     "test_ids": [
       "TEST-CC-BROWSER-001",
-      "TEST-CC-UI-005"
+      "TEST-CC-UI-005",
+      "TEST-CC-LIVE-004"
     ],
     "title": "Agent performance view",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -23364,12 +23411,17 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "UX",
     "evidence_ids": [
-      "EVID-000141"
+      "EVID-000141",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
       "apps/command_center/src/App.jsx",
-      "src/project_pipeline/command_center/application.py"
+      "src/project_pipeline/command_center/application.py",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py",
+      "scripts/verify_command_center_ui.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -23408,7 +23460,8 @@
     ],
     "test_ids": [
       "TEST-CC-APP-002",
-      "TEST-CC-BROWSER-001"
+      "TEST-CC-BROWSER-001",
+      "TEST-CC-LIVE-004"
     ],
     "title": "Approval Center",
     "verification_class": "INDEPENDENT_MULTI_EVIDENCE",
@@ -23492,7 +23545,8 @@
       "EVID-000141",
       "EVID-000147",
       "EVID-000148",
-      "EVID-000150"
+      "EVID-000150",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -23505,7 +23559,11 @@
       "src/project_pipeline/command_center/projections.py",
       "src/project_pipeline/command_center/incidents.py",
       "docs/command_center/director_incident_notifications.md",
-      "runbooks/operator_notification_failure_recovery.md"
+      "runbooks/operator_notification_failure_recovery.md",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py",
+      "scripts/verify_command_center_ui.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -23546,7 +23604,8 @@
       "TEST-CC-PROJECTION-001",
       "TEST-CC-P21-004",
       "TEST-CC-P21-005",
-      "TEST-CC-P21-013"
+      "TEST-CC-P21-013",
+      "TEST-CC-LIVE-004"
     ],
     "title": "Recovery Center",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -23561,7 +23620,8 @@
     "domain": "UX",
     "evidence_ids": [
       "EVID-000136",
-      "EVID-000141"
+      "EVID-000141",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -23570,7 +23630,11 @@
       "src/project_pipeline/command_center/application.py",
       "src/project_pipeline/command_center/director.py",
       "src/project_pipeline/command_center/models.py",
-      "src/project_pipeline/command_center/projections.py"
+      "src/project_pipeline/command_center/projections.py",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py",
+      "scripts/verify_command_center_ui.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -23608,7 +23672,8 @@
       "TEST-CC-BROWSER-001",
       "TEST-CC-DIRECTOR-004",
       "TEST-CC-PROJECTION-001",
-      "TEST-CC-UI-006"
+      "TEST-CC-UI-006",
+      "TEST-CC-LIVE-004"
     ],
     "title": "Context health view",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -23625,14 +23690,18 @@
     "domain": "UX",
     "evidence_ids": [
       "EVID-000141",
-      "EVID-000142"
+      "EVID-000142",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
       "apps/command_center/src/App.jsx",
       "evidence/command_center_ui_browser_accessibility.json",
       "scripts/verify_command_center_ui.py",
-      "src/project_pipeline/command_center/application_verification.py"
+      "src/project_pipeline/command_center/application_verification.py",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -23669,7 +23738,8 @@
       "visual-qa"
     ],
     "test_ids": [
-      "TEST-CC-BROWSER-001"
+      "TEST-CC-BROWSER-001",
+      "TEST-CC-LIVE-004"
     ],
     "title": "Visual QA evidence view",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -23687,7 +23757,8 @@
       "EVID-000046",
       "EVID-000047",
       "EVID-000048",
-      "EVID-000141"
+      "EVID-000141",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -23695,7 +23766,11 @@
       "docs/jira/operator_workflows.md",
       "src/project_pipeline/cli.py",
       "src/project_pipeline/command_center/application.py",
-      "src/project_pipeline/jira_steward/reconciliation.py"
+      "src/project_pipeline/jira_steward/reconciliation.py",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py",
+      "scripts/verify_command_center_ui.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -23740,7 +23815,9 @@
       "TEST-CC-APP-002",
       "TEST-CC-BROWSER-001",
       "TEST-JIRA-CLI-001",
-      "TEST-JIRA-CLI-002"
+      "TEST-JIRA-CLI-002",
+      "TEST-CC-LIVE-002",
+      "TEST-CC-LIVE-004"
     ],
     "title": "Jira and GitHub reconciliation view",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -23976,7 +24053,8 @@
     "evidence_ids": [
       "EVID-000141",
       "EVID-000142",
-      "EVID-000143"
+      "EVID-000143",
+      "EVID-000207"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -23984,7 +24062,10 @@
       "apps/command_center/src/App.jsx",
       "apps/command_center/src/app.css",
       "scripts/verify_command_center_ui.py",
-      "src/project_pipeline/command_center/application_verification.py"
+      "src/project_pipeline/command_center/application_verification.py",
+      "src/project_pipeline/command_center/live_server.py",
+      "src/project_pipeline/command_center/live_browser.py",
+      "tests/test_command_center_live.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -24025,7 +24106,8 @@
     ],
     "test_ids": [
       "TEST-CC-BROWSER-001",
-      "TEST-CC-UI-001"
+      "TEST-CC-UI-001",
+      "TEST-CC-LIVE-004"
     ],
     "title": "Accessible responsive interface",
     "verification_class": "AUTOMATED_WITH_REVIEW",

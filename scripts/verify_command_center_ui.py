@@ -8,11 +8,24 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from project_pipeline.command_center.application_verification import verify_command_center_ui
+from project_pipeline.command_center.live_browser import verify_live_command_center
 from project_pipeline.verification.browser import find_chromium
 
-chromium = find_chromium(("/usr/bin/chromium", "/usr/bin/chromium-browser", "/usr/bin/google-chrome"))
+chromium = find_chromium()
 if chromium is None:
     raise SystemExit("Chromium is unavailable; Command Center browser verification cannot run")
-result = verify_command_center_ui(ROOT, chromium_path=chromium)
-print(json.dumps({"passed": result["passed"], "target": result["target"], "viewports": len(result["viewports"])}, sort_keys=True))
-raise SystemExit(0 if result["passed"] else 1)
+preview = verify_command_center_ui(ROOT, chromium_path=chromium)
+live = verify_live_command_center(ROOT, chromium_path=chromium)
+print(
+    json.dumps(
+        {
+            "preview_passed": preview["passed"],
+            "live_passed": live["passed"],
+            "preview_target": preview["target"],
+            "live_target": live["target"],
+            "viewports": len(preview["viewports"]),
+        },
+        sort_keys=True,
+    )
+)
+raise SystemExit(0 if preview["passed"] and live["passed"] else 1)
