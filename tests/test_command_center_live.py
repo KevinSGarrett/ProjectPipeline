@@ -85,3 +85,5 @@ def test_live_browser_against_loopback_command_center(tmp_path: Path) -> None:
     assert result["checks"]["websocket_reconnect"] is True
     assert len(result["viewports"]) == 3
     assert all(item["passed"] for item in result["viewports"])
+    assert all(item["checks"].get("hydrated_in_progress_work") for item in result["viewports"])
+    assert all(item["checks"].get("live_work_fields") for item in result["viewports"])

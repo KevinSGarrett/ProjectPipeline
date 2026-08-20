@@ -17,15 +17,12 @@ ALLOWED = {
     "CONTRADICTORY",
 }
 EXTERNAL_MARKERS = (
-    "live",
-    "github",
-    "jira",
     "24-hour",
     "72-hour",
     "unattended",
     "windows service",
-    "command center",
     "provider dispatch",
+    "completion gate",
 )
 
 

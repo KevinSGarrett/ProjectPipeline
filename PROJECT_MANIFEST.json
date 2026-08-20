@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "0564ca0cf39eab88763b5b4dc3042852969a20c18b8c4e9be0e9609d3bb661fb",
+  "aggregate_sha256": "30378fc04238358141ca48ddb71d0824dabe4bced03fdb07ef08272cfe7c09b1",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -337,8 +337,8 @@
     },
     {
       "path": "apps/command_center/preview/index.html",
-      "sha256": "430604299e1f42998f73c78b47ccf6635dd824d634f86e37f7b7bd7bd19d038e",
-      "size_bytes": 39404
+      "sha256": "decbea2999da9f17e02e3668d0f6ca6349a35a3ccc2b38bd8956590f7fa97b05",
+      "size_bytes": 42248
     },
     {
       "path": "apps/command_center/README.md",
@@ -12222,13 +12222,13 @@
     },
     {
       "path": "src/project_pipeline/assurance/requirement_reconciliation.py",
-      "sha256": "e9b0aaf47cf38665854963c62b81848f9cabf60f7d89bd01f2c4994045b2034c",
-      "size_bytes": 22239
+      "sha256": "d8f93a9b98d256bf1a71ae4e8cf1da737d292b44ab7e19d36404236085d25899",
+      "size_bytes": 23095
     },
     {
       "path": "src/project_pipeline/assurance/requirement_truth_ledger.py",
-      "sha256": "9c0f8c2be6c131310fca389e5a65312bdf8a5346f48493984d0430d1e4437ce1",
-      "size_bytes": 11335
+      "sha256": "09890b6d80fb06118e4460de4fee8462b957981a88236e28d9ab46124304767a",
+      "size_bytes": 11298
     },
     {
       "path": "src/project_pipeline/assurance/scope.py",
@@ -12417,8 +12417,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/application_verification.py",
-      "sha256": "79a7ea39a891b86371529b8164a4435d08cbc17b508f4b60810020af7ad4e46d",
-      "size_bytes": 9089
+      "sha256": "4636b65109599db3fbb123130625767f831b3541b279c4b6533b104470b0ef35",
+      "size_bytes": 10782
     },
     {
       "path": "src/project_pipeline/command_center/autonomy.py",
@@ -12452,8 +12452,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/live_server.py",
-      "sha256": "7cbad9cb3f2cb4b2153d7dd24a23803c94dcfb3b0c6a3842f4559880b86b66ce",
-      "size_bytes": 7248
+      "sha256": "58d29b9c302d0c26933c62ee5505d8c86969bee6af57923732522253d17a42f9",
+      "size_bytes": 7637
     },
     {
       "path": "src/project_pipeline/command_center/models.py",
@@ -14022,8 +14022,8 @@
     },
     {
       "path": "tests/test_command_center_live.py",
-      "sha256": "f0cc557c0431efda67d7dab1a79e74520b9e89f2cdbfdb464bc9d3624820a942",
-      "size_bytes": 3489
+      "sha256": "36135ec9fc08437f988bbdfd9b20963f0367e369e4b035afd4f9b346c33d9de4",
+      "size_bytes": 3672
     },
     {
       "path": "tests/test_command_center_models.py",
@@ -14522,8 +14522,8 @@
     },
     {
       "path": "tests/test_requirement_reconciliation.py",
-      "sha256": "768de718e499a8acc0edbab3ea2274ac94bc0baa9f9b158cc785022f09b29381",
-      "size_bytes": 19501
+      "sha256": "ff0dd81dbe8b3332e9be36c28d1df205349b133959ff240604d8daa3f57cd5fe",
+      "size_bytes": 21015
     },
     {
       "path": "tests/test_requirement_registries.py",
@@ -14851,7 +14851,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T02:29:41.728448+00:00",
+  "generated_at_utc": "2026-08-20T02:57:53.877778+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14860,5 +14860,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29440109
+  "total_bytes": 29447551
 }
