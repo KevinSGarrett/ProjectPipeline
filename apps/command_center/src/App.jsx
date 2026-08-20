@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { CommandCenterClient, createMemorySession } from "./apiClient.mjs";
 import { NAV_ITEMS, filterGraph, healthTone, makeControlCommand, makeDirectorRequest, money, normalizeLiveApplication, percent, summarize } from "./appModel.mjs";
-import { notifyDesktop } from "./desktopBridge.mjs";
+import { bootstrapDesktopSession, notifyDesktop } from "./desktopBridge.mjs";
 
 const session = createMemorySession();
 
@@ -102,18 +102,36 @@ export function App() {
   const graph = useMemo(() => filterGraph(data.application.graph, graphSearch), [data.application.graph, graphSearch]);
 
   useEffect(() => {
-    const current = session.get();
-    if (!current.token) return undefined;
-    const client = new CommandCenterClient(current);
-    Promise.all([client.status(), client.application(), client.inbox()])
-      .then(([snapshot, application, inbox]) => {
+    let cancelled = false;
+    async function hydrate() {
+      if (!session.get().token) {
+        try {
+          const boot = await bootstrapDesktopSession();
+          if (boot?.token) session.set({ token: boot.token, actorId: boot.actorId });
+        } catch {
+          if (!cancelled) setConnection("SERVICE UNAVAILABLE");
+        }
+      }
+      const current = session.get();
+      if (!current.token || cancelled) return;
+      const client = new CommandCenterClient(current);
+      try {
+        const [snapshot, application, inbox] = await Promise.all([
+          client.status(),
+          client.application(),
+          client.inbox()
+        ]);
+        if (cancelled) return;
         setData((currentData) => ({ ...currentData, snapshot, application: normalizeLiveApplication(snapshot, application), inbox }));
         setConnection("LIVE");
         client.incidents().then((incidents) => setData((currentData) => ({ ...currentData, incidents }))).catch(() => undefined);
         client.autonomyDirector().then(setAutonomy).catch(() => undefined);
-      })
-      .catch(() => setConnection("DEGRADED"));
-    return undefined;
+      } catch {
+        if (!cancelled) setConnection("DEGRADED");
+      }
+    }
+    hydrate();
+    return () => { cancelled = true; };
   }, []);
 
   async function issueControl(commandType, label) {

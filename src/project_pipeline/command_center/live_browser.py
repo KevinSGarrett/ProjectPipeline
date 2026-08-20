@@ -9,6 +9,7 @@ from typing import Any
 from project_pipeline.command_center.application_verification import (
     evaluate_loaded_command_center_page,
 )
+from project_pipeline.command_center.desktop_qualification import observe_desktop_toolchain
 from project_pipeline.command_center.live_server import LiveCommandCenterServer
 from project_pipeline.verification.browser import find_chromium
 
@@ -42,7 +43,7 @@ def _http_status(url: str, *, token: str | None = None) -> tuple[int, Any]:
 def verify_live_command_center(
     root: Path,
     *,
-    token: str = "cc-local-loopback",
+    token: str | None = None,
     chromium_path: str | None = None,
     viewports: tuple[tuple[int, int], ...] = ((1440, 900), (1024, 768), (390, 844)),
     write_evidence: bool = True,
@@ -59,12 +60,22 @@ def verify_live_command_center(
 
     server = LiveCommandCenterServer(root, token=token)
     base_url = server.start()
+    session_token = token or server.redeem_local_bootstrap().token
+    session_script = (
+        "window.__PP_MEMORY_SESSION__="
+        + json.dumps({"token": session_token, "actorId": "actor:command-center"})
+        + ";window.CC_LIVE_TOKEN="
+        + json.dumps(session_token)
+        + ";"
+    )
     output = output_dir or (root / "evidence/verification/command_center_live")
     output.mkdir(parents=True, exist_ok=True)
     checks: dict[str, bool] = {}
     unauthorized_status, _ = _http_status(f"{base_url}/api/v1/command-center/application")
     checks["rejects_missing_bearer"] = unauthorized_status == 401
-    status, body = _http_status(f"{base_url}/api/v1/command-center/application", token=token)
+    status, body = _http_status(
+        f"{base_url}/api/v1/command-center/application", token=session_token
+    )
     checks["application_ok"] = status == 200 and isinstance(body, dict)
     live_work = body.get("live_work", []) if isinstance(body, dict) else []
     checks["live_work_includes_pp385"] = any(
@@ -77,6 +88,14 @@ def verify_live_command_center(
     checks["ui_not_authoritative"] = (
         isinstance(body, dict) and body.get("ui_state_authoritative") is False
     )
+    served_html_status, _ = _http_status(f"{base_url}/")
+    with urllib.request.urlopen(f"{base_url}/", timeout=5) as response:
+        served_html = response.read().decode("utf-8", errors="replace")
+    checks["preview_served"] = served_html_status == 200
+    checks["html_omits_legacy_token_injection"] = "CC_LIVE_TOKEN=" not in served_html
+    checks["html_omits_memory_session_injection"] = "__PP_MEMORY_SESSION__=" not in served_html
+    if len(session_token) >= 16:
+        checks["html_omits_bearer_token"] = session_token not in served_html
 
     viewport_results: list[dict[str, Any]] = []
     console_errors: list[str] = []
@@ -99,6 +118,7 @@ def verify_live_command_center(
                             page_errors.append(message.text) if message.type == "error" else None
                         ),
                     )
+                    page.add_init_script(session_script)
                     page.goto(f"{base_url}/", wait_until="load", timeout=20000)
                     result = evaluate_loaded_command_center_page(
                         page,
@@ -117,6 +137,7 @@ def verify_live_command_center(
 
                 contrast = browser.new_page(viewport={"width": 1440, "height": 900})
                 contrast.emulate_media(forced_colors="active", reduced_motion="reduce")
+                contrast.add_init_script(session_script)
                 contrast.goto(f"{base_url}/", wait_until="load", timeout=20000)
                 forced_colors_overflow = bool(
                     contrast.evaluate(
@@ -128,6 +149,7 @@ def verify_live_command_center(
                 contrast.close()
 
                 page = browser.new_page(viewport={"width": 1440, "height": 900})
+                page.add_init_script(session_script)
                 page.goto(f"{base_url}/", wait_until="load", timeout=20000)
                 checks["live_document"] = page.locator("main").count() == 1
                 checks["live_title"] = page.locator("h1").count() == 1
@@ -151,7 +173,7 @@ def verify_live_command_center(
                     }""",
                     base_url.replace("http://", "ws://")
                     + "/api/v1/command-center/ws?token="
-                    + token,
+                    + session_token,
                 )
                 checks["websocket_connect"] = bool(ws_result.get("opened"))
                 checks["websocket_reconnect"] = bool(ws_result.get("reopened"))
@@ -178,6 +200,7 @@ def verify_live_command_center(
             "claim": "LIVE_LOOPBACK_COMMAND_CENTER",
             "server": "uvicorn loopback",
             "browser": "system Chrome",
+            "toolchain": observe_desktop_toolchain(),
         },
         "passed": (
             all(checks.values())

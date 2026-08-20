@@ -537,7 +537,11 @@ Which qualified models shall provide lightweight planning, strong generalist, vi
 
 ## OPEN-DEC-0018 — Authentication for Command Center
 
-**Status:** `OPEN`
+**Status:** `RESOLVED`
+
+**Resolved by:** `ADR-0028`
+
+**Resolution:** Authenticate the Command Center with local OS identity plus an ephemeral in-memory session bearer. Bind loopback only by default. Exchange a one-time loopback nonce; do not persist tokens in HTML, argv, or files. Reject non-loopback exposure until an accepted authenticated TLS profile exists.
 
 Which authentication and authorization mechanism shall protect local and network-accessible operator surfaces?
 
@@ -554,7 +558,7 @@ Which authentication and authorization mechanism shall protect local and network
 - RBAC
 - Recovery
 
-**Resolution method:** Threat model and prototype local plus remote login and recovery.
+**Resolution method:** Threat model plus loopback bootstrap prototype with residue and replay falsifiers.
 
 **Decision gate:** Required before network exposure.
 

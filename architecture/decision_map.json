@@ -1,5 +1,5 @@
 {
-  "decision_count": 27,
+  "decision_count": 28,
   "decisions": [
     {
       "component_ids": [
@@ -676,6 +676,27 @@
       "status": "ACCEPTED",
       "technology_ids": [],
       "title": "Keep Project-Native Locks Canonical with Optional mise and Dev Container Profiles"
+    },
+    {
+      "component_ids": [
+        "COMP-API-001",
+        "COMP-SECRET-001",
+        "COMP-UI-001"
+      ],
+      "decision_id": "ADR-0028",
+      "path": "adr/ADR-0028_command_center_os_identity_and_loopback_session_auth.md",
+      "requirement_ids": [
+        "REQ-SEC-0005",
+        "REQ-SEC-0006",
+        "REQ-UX-0004"
+      ],
+      "source_references": [
+        "SRC-017:L000072-L000141",
+        "SRC-006:L001079-L001140"
+      ],
+      "status": "ACCEPTED",
+      "technology_ids": [],
+      "title": "Authenticate Command Center with local OS identity and ephemeral loopback sessions"
     }
   ],
   "schema_version": "1.0.0"

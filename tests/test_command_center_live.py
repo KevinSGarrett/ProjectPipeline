@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 
 from project_pipeline.command_center.live_browser import verify_live_command_center
 from project_pipeline.command_center.live_server import (
+    LiveCommandCenterServer,
     create_live_command_center_app,
     snapshot_from_repository,
 )
@@ -31,7 +32,7 @@ def test_repository_snapshot_includes_bound_in_progress_work() -> None:
 
 
 def test_live_app_requires_bearer_and_projects_jira_readback() -> None:
-    app, _broker = create_live_command_center_app(ROOT, token="good")
+    app, _broker, _issuer = create_live_command_center_app(ROOT, token="good")
     client = TestClient(app)
     assert client.get("/healthz").status_code == 200
     assert client.get("/api/v1/command-center/application").status_code == 401
@@ -61,7 +62,9 @@ def test_live_app_requires_bearer_and_projects_jira_readback() -> None:
 
 def test_live_autonomy_director_selects_and_reloads_persisted_state(tmp_path: Path) -> None:
     state = tmp_path / "director_state.json"
-    first, _broker = create_live_command_center_app(ROOT, token="good", director_state_path=state)
+    first, _broker, _issuer = create_live_command_center_app(
+        ROOT, token="good", director_state_path=state
+    )
     client = TestClient(first)
     selected = client.post(
         "/api/v1/director/autonomy/select",
@@ -70,7 +73,7 @@ def test_live_autonomy_director_selects_and_reloads_persisted_state(tmp_path: Pa
     assert selected.status_code == 200
     task_id = selected.json()["decision"]["selected_task_id"]
     assert task_id
-    second, _ = create_live_command_center_app(ROOT, token="good", director_state_path=state)
+    second, _, _ = create_live_command_center_app(ROOT, token="good", director_state_path=state)
     recovered = (
         TestClient(second)
         .post(
@@ -83,9 +86,28 @@ def test_live_autonomy_director_selects_and_reloads_persisted_state(tmp_path: Pa
     assert recovered["last_selected_task_id"] == task_id
 
 
+def test_live_server_restart_requires_fresh_bootstrap(tmp_path: Path) -> None:
+    handshake = tmp_path / "handshake.json"
+    first = LiveCommandCenterServer(ROOT, handshake_path=handshake)
+    url = first.start()
+    grant = first.redeem_local_bootstrap()
+    assert grant.token
+    first.stop()
+    second = LiveCommandCenterServer(ROOT, handshake_path=handshake)
+    second.start()
+    try:
+        assert second.issuer.authenticate(grant.token) is None
+        replacement = second.redeem_local_bootstrap()
+        assert replacement.token != grant.token
+        assert second.issuer.authenticate(replacement.token)
+    finally:
+        second.stop()
+    assert url.startswith("http://127.0.0.1:")
+
+
 def test_live_websocket_reconnects_after_disconnect() -> None:
     broker = RealtimeEventBroker()
-    app, _ = create_live_command_center_app(ROOT, token="good", event_broker=broker)
+    app, _, _ = create_live_command_center_app(ROOT, token="good", event_broker=broker)
     client = TestClient(app)
     with client.websocket_connect("/api/v1/command-center/ws?token=good") as first:
         first.close()

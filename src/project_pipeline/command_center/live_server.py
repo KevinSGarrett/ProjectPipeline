@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import socket
 import threading
 import time
@@ -10,7 +9,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, Response
 
 try:
@@ -25,6 +24,14 @@ from project_pipeline.command_center.autonomy_director import (
     PersistentAutonomyDirector,
     control_snapshot_for_selection,
     default_state_path,
+)
+from project_pipeline.command_center.desktop_session import (
+    DesktopSessionError,
+    EphemeralSessionIssuer,
+    SessionGrant,
+    current_os_identity,
+    is_loopback_host,
+    validate_bind_host,
 )
 from project_pipeline.command_center.inbox import AttentionNotificationBroker
 from project_pipeline.command_center.incidents import IncidentManager
@@ -127,16 +134,20 @@ def snapshot_from_repository(root: Path) -> CommandCenterSnapshot:
 def create_live_command_center_app(
     root: Path,
     *,
-    token: str,
+    token: str | None = None,
+    issuer: EphemeralSessionIssuer | None = None,
     event_broker: RealtimeEventBroker | None = None,
     director_state_path: Path | None = None,
-) -> tuple[FastAPI, RealtimeEventBroker]:
+) -> tuple[FastAPI, RealtimeEventBroker, EphemeralSessionIssuer]:
     root = root.resolve()
     broker = event_broker or RealtimeEventBroker()
     inbox = AttentionNotificationBroker()
     incidents = IncidentManager(inbox)
     builder = RepositoryApplicationProjectionBuilder(root)
     director = PersistentAutonomyDirector(director_state_path or default_state_path(root))
+    session_issuer = issuer or EphemeralSessionIssuer(os_identity=current_os_identity())
+    if token:
+        session_issuer.seed_static_token(token, actor_id="actor:command-center")
 
     app = create_command_center_app(
         snapshot_provider=lambda: snapshot_from_repository(root),
@@ -144,22 +155,14 @@ def create_live_command_center_app(
         inbox=inbox,
         application_provider=lambda: builder.build(snapshot_from_repository(root)),
         incident_manager=incidents,
-        auth=CommandCenterAuth(lambda value: "actor:command-center" if value == token else None),
+        auth=CommandCenterAuth(session_issuer.authenticate),
         autonomy_director=director,
         control_provider=lambda: live_control_snapshot(root),
     )
     preview = root / "apps/command_center/preview/index.html"
 
-    def _hydrated_preview() -> str:
-        html = preview.read_text(encoding="utf-8")
-        bootstrap = (
-            "<script>window.CC_LIVE_TOKEN="
-            + json.dumps(token)
-            + ";document.documentElement.dataset.liveToken='1';</script>"
-        )
-        if "</head>" in html:
-            return html.replace("</head>", bootstrap + "</head>", 1)
-        return bootstrap + html
+    def _preview_html() -> str:
+        return preview.read_text(encoding="utf-8")
 
     @app.get("/favicon.ico", include_in_schema=False)
     def favicon() -> Response:
@@ -167,26 +170,61 @@ def create_live_command_center_app(
 
     @app.get("/", include_in_schema=False)
     def preview_index() -> HTMLResponse:
-        return HTMLResponse(_hydrated_preview())
+        return HTMLResponse(_preview_html())
 
     @app.get("/command-center", include_in_schema=False)
     def preview_alias() -> HTMLResponse:
-        return HTMLResponse(_hydrated_preview())
+        return HTMLResponse(_preview_html())
 
-    return app, broker
+    @app.post("/api/v1/command-center/session/bootstrap")
+    def session_bootstrap(payload: dict[str, Any], request: Request) -> dict[str, Any]:
+        peer = request.client.host if request.client is not None else ""
+        if not is_loopback_host(peer):
+            raise HTTPException(status_code=401, detail="bootstrap is loopback-only")
+        try:
+            grant = session_issuer.redeem(
+                str(payload.get("nonce") or ""),
+                peer_host=peer,
+                os_identity=str(payload.get("os_identity") or ""),
+            )
+        except DesktopSessionError as exc:
+            raise HTTPException(status_code=401, detail=str(exc)) from exc
+        return {
+            "token": grant.token,
+            "actor_id": grant.actor_id,
+            "os_identity": grant.os_identity,
+            "session_id": grant.session_id,
+            "expires_at_utc": grant.expires_at_utc.isoformat(),
+            "persist_secrets": False,
+        }
+
+    return app, broker, session_issuer
 
 
 class LiveCommandCenterServer:
-    def __init__(self, root: Path, *, token: str, host: str = "127.0.0.1", port: int = 0) -> None:
-        if host not in {"127.0.0.1", "localhost", "::1"}:
-            raise ValueError("Command Center live server is loopback-only")
+    def __init__(
+        self,
+        root: Path,
+        *,
+        token: str | None = None,
+        issuer: EphemeralSessionIssuer | None = None,
+        host: str = "127.0.0.1",
+        port: int = 0,
+        handshake_path: Path | None = None,
+    ) -> None:
+        bind_host = validate_bind_host(host)
         self.root = root.resolve()
-        self.token = token
         self.host = host
-        self.app, self.broker = create_live_command_center_app(self.root, token=token)
+        self.issuer = issuer or EphemeralSessionIssuer(os_identity=current_os_identity())
+        self.app, self.broker, self.issuer = create_live_command_center_app(
+            self.root,
+            token=token,
+            issuer=self.issuer,
+        )
+        self.token = token
+        self.handshake_path = handshake_path
         if Config is None or Server is None:
             raise RuntimeError("uvicorn is required to serve the live Command Center")
-        bind_host = "127.0.0.1" if host == "localhost" else host
         chosen = port
         if chosen == 0:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
@@ -214,12 +252,21 @@ class LiveCommandCenterServer:
             try:
                 with urllib.request.urlopen(f"{self.base_url}/healthz", timeout=1) as response:
                     if response.status == 200:
+                        if self.handshake_path is not None:
+                            self.issuer.write_handshake(self.handshake_path, url=self.base_url)
                         return self.base_url
             except (urllib.error.URLError, TimeoutError, ConnectionError, OSError):
                 time.sleep(0.05)
                 continue
             time.sleep(0.05)
         raise RuntimeError("Command Center live server failed to start")
+
+    def redeem_local_bootstrap(self) -> SessionGrant:
+        return self.issuer.redeem(
+            self.issuer.bootstrap_nonce,
+            peer_host="127.0.0.1",
+            os_identity=self.issuer.os_identity,
+        )
 
     def stop(self) -> None:
         self._server.should_exit = True

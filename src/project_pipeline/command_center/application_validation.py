@@ -5,6 +5,7 @@ from pathlib import Path
 
 _REQUIRED_FILES = (
     "apps/command_center/package.json",
+    "apps/command_center/package-lock.json",
     "apps/command_center/index.html",
     "apps/command_center/src/App.jsx",
     "apps/command_center/src/app.css",
@@ -13,9 +14,13 @@ _REQUIRED_FILES = (
     "apps/command_center/src/desktopBridge.mjs",
     "apps/command_center/preview/index.html",
     "apps/desktop_shell/src-tauri/Cargo.toml",
+    "apps/desktop_shell/src-tauri/Cargo.lock",
     "apps/desktop_shell/src-tauri/src/main.rs",
     "apps/desktop_shell/src-tauri/tauri.conf.json",
     "apps/desktop_shell/src-tauri/capabilities/main.json",
+    "config/desktop_nondeterminism_schema.json",
+    "rust-toolchain.toml",
+    ".github/workflows/desktop-windows.yml",
     "docs/command_center/application_and_desktop_shell.md",
     "runbooks/command_center_windows_qualification.md",
 )
@@ -57,6 +62,23 @@ def validate_command_center_application(root: Path) -> list[str]:
             errors.append(
                 f"credential-capable Command Center source must not persist auth state: {path.relative_to(root)}"
             )
+
+    live_server = root / "src/project_pipeline/command_center/live_server.py"
+    if live_server.is_file() and "CC_LIVE_TOKEN=" in live_server.read_text(encoding="utf-8"):
+        errors.append("live Command Center preview must not inject bearer tokens into HTML")
+
+    policy_path = root / "config/command_center_policy.json"
+    if policy_path.is_file():
+        policy = json.loads(policy_path.read_text(encoding="utf-8"))
+        desktop_auth = policy.get("desktop_auth") or {}
+        if desktop_auth.get("decision_id") != "ADR-0028":
+            errors.append("Command Center desktop_auth must bind ADR-0028")
+        if desktop_auth.get("default_bind") != "127.0.0.1":
+            errors.append("Command Center desktop_auth must default to loopback")
+        if desktop_auth.get("persist_secrets") is not False:
+            errors.append("Command Center desktop_auth must forbid persisted secrets")
+        if desktop_auth.get("allow_nonloopback") is not False:
+            errors.append("Command Center desktop_auth must reject non-loopback binds by default")
 
     tauri_path = root / "apps/desktop_shell/src-tauri/tauri.conf.json"
     if tauri_path.is_file():
