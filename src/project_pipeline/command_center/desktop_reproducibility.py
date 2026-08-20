@@ -158,13 +158,19 @@ def _identity_root(root: Path) -> Path | None:
 def canonical_extracted_tree(root: Path, schema: dict[str, Any]) -> tuple[str, tuple[str, ...]]:
     members: list[tuple[str, str]] = []
     removed: list[str] = []
+    residual_installer = False
     for path in sorted(root.rglob("*")):
         if not path.is_file() or path.name in COMPARE_EXCLUDED_NAMES:
+            continue
+        if path.suffix.lower() in INSTALLER_CONTAINER_SUFFIXES:
+            residual_installer = True
             continue
         relative = path.relative_to(root).as_posix()
         normalized, fields = normalize_archive_member(path, path.read_bytes(), schema)
         members.append((relative, _sha256_bytes(normalized)))
         removed.extend(fields)
+    if residual_installer and "msi_package_code" in _allowlist(schema):
+        removed.append("msi_package_code")
     digest = _sha256_bytes(
         json.dumps(members, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
     )
@@ -173,19 +179,24 @@ def canonical_extracted_tree(root: Path, schema: dict[str, Any]) -> tuple[str, t
 
 def extract_msi_administrative_image(msi_path: Path, destination: Path) -> None:
     destination.mkdir(parents=True, exist_ok=True)
-    completed = subprocess.run(
-        [
-            "msiexec",
-            "/a",
-            str(msi_path.resolve()),
-            f"TARGETDIR={destination.resolve()}",
-            "/qn",
-        ],
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=300,
-    )
+    try:
+        completed = subprocess.run(
+            [
+                "msiexec",
+                "/a",
+                str(msi_path.resolve()),
+                f"TARGETDIR={destination.resolve()}",
+                "/qn",
+            ],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=300,
+        )
+    except (FileNotFoundError, OSError) as exc:
+        raise DesktopReproducibilityError(
+            f"msiexec administrative extract unavailable for {msi_path.name}"
+        ) from exc
     if completed.returncode != 0 or not any(destination.rglob("*")):
         raise DesktopReproducibilityError(
             f"msiexec administrative extract failed for {msi_path.name}"
@@ -202,12 +213,6 @@ def compare_extracted_payload_trees(
 ) -> dict[str, Any]:
     left_digest, left_removed = canonical_extracted_tree(left_root, schema)
     right_digest, right_removed = canonical_extracted_tree(right_root, schema)
-    allow = _allowlist(schema)
-    recorded_left = list(left_removed)
-    recorded_right = list(right_removed)
-    if removed_field in allow:
-        recorded_left.append(removed_field)
-        recorded_right.append(removed_field)
     equal = left_digest == right_digest
     return {
         "name": name,
@@ -215,9 +220,9 @@ def compare_extracted_payload_trees(
         "right_raw_sha256": None,
         "left_normalized_sha256": left_digest,
         "right_normalized_sha256": right_digest,
-        "left_removed_fields": recorded_left,
-        "right_removed_fields": recorded_right,
-        "algorithm": EXTRACTED_TREE_ALGORITHM,
+        "left_removed_fields": list(left_removed),
+        "right_removed_fields": list(right_removed),
+        "algorithm": f"{EXTRACTED_TREE_ALGORITHM}:{removed_field}",
         "equal": equal,
     }
 

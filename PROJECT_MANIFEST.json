@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "a30b3260e5e8d811fe048d1a0b500a131d67b2d76e7fea6a2a6fee428b617093",
+  "aggregate_sha256": "2e85ed68bbe78001ae0991f26d2743728e217f0387f14c2a1d84a1d274919599",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12487,8 +12487,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/desktop_reproducibility.py",
-      "sha256": "0d01c6fd132657d516c865897d9daa3e7e24e325e89dc486b95b9983ae1a8c0b",
-      "size_bytes": 12236
+      "sha256": "8006de53289f6aaa4b7aeae85b71521fc4494509fb4a93a763a5e470e85fc1ea",
+      "size_bytes": 12554
     },
     {
       "path": "src/project_pipeline/command_center/desktop_session.py",
@@ -14267,8 +14267,8 @@
     },
     {
       "path": "tests/test_desktop_reproducibility.py",
-      "sha256": "48f856fe8f2e8c3980583445c4f27c0f0f1a146e60f468445d04fca48cd639c0",
-      "size_bytes": 6863
+      "sha256": "1ac16fff1f1252d988e837afbde8ce3c7d6e0be5cfbd8c638161ebc4b493268e",
+      "size_bytes": 7681
     },
     {
       "path": "tests/test_desktop_session.py",
@@ -14936,7 +14936,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T10:14:16.432902+00:00",
+  "generated_at_utc": "2026-08-20T10:23:22.939263+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14945,5 +14945,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29922832
+  "total_bytes": 29923968
 }

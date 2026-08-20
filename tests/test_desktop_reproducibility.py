@@ -4,9 +4,11 @@ from pathlib import Path
 
 from project_pipeline.command_center.desktop_reproducibility import (
     NSIS_SIGNATURE,
+    DesktopReproducibilityError,
     compare_desktop_artifact_sets,
     compare_extracted_payload_trees,
     compare_normalized_trees,
+    extract_msi_administrative_image,
     load_nondeterminism_schema,
     normalize_pe_image,
 )
@@ -79,14 +81,16 @@ def test_extracted_msi_payload_trees_ignore_package_identity(tmp_path: Path) -> 
     schema = load_nondeterminism_schema(ROOT)
     left = tmp_path / "extract-A"
     right = tmp_path / "extract-B"
-    for root, stamp in ((left, 4), (right, 8)):
+    for root, stamp, residual in ((left, 4, b"residual-A"), (right, 8, b"residual-B")):
         (root / "ProgramFiles").mkdir(parents=True)
         (root / "ProgramFiles" / "app.exe").write_bytes(_minimal_pe(timestamp=stamp))
+        (root / "app.msi").write_bytes(residual)
     result = compare_extracted_payload_trees(
         left, right, schema, name="app.msi", removed_field="msi_package_code"
     )
     assert result["equal"] is True
     assert "msi_package_code" in result["left_removed_fields"]
+    assert "msi_package_code" in result["right_removed_fields"]
 
 
 def test_extracted_msi_payload_difference_fails(tmp_path: Path) -> None:
@@ -103,6 +107,24 @@ def test_extracted_msi_payload_difference_fails(tmp_path: Path) -> None:
         left, right, schema, name="app.msi", removed_field="msi_package_code"
     )
     assert result["equal"] is False
+
+
+def test_missing_msiexec_is_fail_closed(tmp_path: Path, monkeypatch) -> None:
+    def _raise(*_args, **_kwargs):
+        raise FileNotFoundError("msiexec")
+
+    monkeypatch.setattr(
+        "project_pipeline.command_center.desktop_reproducibility.subprocess.run",
+        _raise,
+    )
+    msi = tmp_path / "app.msi"
+    msi.write_bytes(b"not-a-real-msi")
+    try:
+        extract_msi_administrative_image(msi, tmp_path / "out")
+    except DesktopReproducibilityError as exc:
+        assert "unavailable" in str(exc)
+    else:
+        raise AssertionError("missing msiexec must fail closed")
 
 
 def test_unextractable_identity_msi_fails_closed(tmp_path: Path) -> None:
