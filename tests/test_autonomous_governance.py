@@ -106,8 +106,8 @@ def test_review_director_accepts_distinct_read_only_reviewer() -> None:
 def test_framework_version_records_current_catalog() -> None:
     verdict = evaluate_framework_version(ROOT)
     assert verdict["ok"] is True
-    assert verdict["observed_latest_database_migration"] == "PPDB-0024"
-    assert verdict["recorded_latest_database_migration"] == "PPDB-0024"
+    assert verdict["observed_latest_database_migration"] == "PPDB-0025"
+    assert verdict["recorded_latest_database_migration"] == "PPDB-0025"
     assert verdict["drift"] == []
 
 

@@ -359,6 +359,24 @@ def write_migration_catalog(root: Path) -> MigrationCatalog:
                 reversible=True,
                 compatibility_phase="EXPAND",
             ),
+            _record(
+                root,
+                migration_id="PPDB-0024",
+                sequence=24,
+                name="evidence_observations",
+                depends_on=("PPDB-0023",),
+                reversible=True,
+                compatibility_phase="EXPAND",
+            ),
+            _record(
+                root,
+                migration_id="PPDB-0025",
+                sequence=25,
+                name="retrieval_pgvector_and_exact_fallback",
+                depends_on=("PPDB-0024",),
+                reversible=True,
+                compatibility_phase="EXPAND",
+            ),
         )
     )
     write_json(_catalog_path(root), catalog.model_dump(mode="json"))
@@ -418,6 +436,12 @@ def _split_sql(text: str) -> list[str]:
     if buffer:
         raise MigrationError("SQL migration contains a statement without a terminating semicolon")
     return statements
+
+
+def split_sql_statements(text: str) -> list[str]:
+    """Split dialect SQL into executable statements, preserving trigger bodies."""
+
+    return _split_sql(text)
 
 
 @dataclass(frozen=True, slots=True)

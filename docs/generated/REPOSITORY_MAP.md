@@ -1,7 +1,7 @@
 # Generated Repository Map
 
-- Files: `2995`
-- Generated: `2026-08-20T18:49:28.034719+00:00`
+- Files: `3012`
+- Generated: `2026-08-20T22:33:40.193248+00:00`
 
 ## Top-level counts
 
@@ -12,12 +12,13 @@
 - `adr`: 30
 - `apps`: 25
 - `architecture`: 19
+- `benchmarks`: 1
 - `config`: 42
 - `contracts`: 5
-- `database`: 98
-- `docs`: 74
+- `database`: 102
+- `docs`: 76
 - `dummy`: 429
-- `evidence`: 252
+- `evidence`: 254
 - `fixtures`: 25
 - `infrastructure`: 11
 - `instructions`: 46
@@ -30,8 +31,8 @@
 - `runbooks`: 28
 - `schemas`: 209
 - `scripts`: 44
-- `src`: 336
-- `tests`: 230
+- `src`: 341
+- `tests`: 233
 - `third_party`: 1
 
 ## Semantic indexes
@@ -243,6 +244,7 @@
 - `evidence/resilience_repository_validation.txt`
 - `evidence/resilience_simulation_snapshot.json`
 - `evidence/resilience_upstream_review_snapshot.json`
+- `evidence/retrieval/exact_fallback_benchmark.json`
 - `evidence/sched_0016_productive_idle.json`
 - `evidence/scheduler_cli_simulation_tests.txt`
 - `evidence/scheduler_contract_validation.txt`
@@ -317,6 +319,7 @@
 - `evidence/verification/pass25_convergence_audit_summary.json`
 - `evidence/verification/pass25_external_qualification.json`
 - `evidence/verification/performance_results.json`
+- `evidence/verification/pgvector_container_runtime.json`
 - `evidence/verification/post_merge_report.json`
 - `evidence/verification/property_probes.json`
 - `evidence/verification/runs/VCHK-35E1CF03F3DF07A722A4.stdout.txt`

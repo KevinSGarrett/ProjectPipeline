@@ -1,0 +1,42 @@
+{
+  "backup": {
+    "artifact_sha256": "7b3dc03d012f57f1da601a07bba3b3e02f401b0af70034bfd00f5f98dbaf73ad",
+    "chunk_count": 3,
+    "engine": "sqlite_exact_fallback",
+    "receipt_id": "RTRV-D6F67DE191D50C4BD6B3",
+    "restore_verified": true,
+    "verified": true
+  },
+  "default_engine": "postgresql_pgvector",
+  "exact_recall_at_1": 1.0,
+  "generated_at_utc": "2026-08-20T19:42:19.762629+00:00",
+  "indexes": [
+    "idx_retrieval_chunks_source",
+    "postgresql:idx_retrieval_chunks_embedding"
+  ],
+  "observed_engine": "sqlite_exact_fallback",
+  "query_count": 3,
+  "ranked": [
+    {
+      "expected_chunk_id": "CHK-ARCH-0011",
+      "method": "exact_source_address",
+      "query": "SRC-009:L000075-L000087",
+      "top_chunk_id": "CHK-ARCH-0011"
+    },
+    {
+      "expected_chunk_id": "CHK-CTX-PGVECTOR",
+      "method": "exact_lexical_fallback",
+      "query": "pgvector default semantic retrieval fallback",
+      "top_chunk_id": "CHK-CTX-PGVECTOR"
+    },
+    {
+      "expected_chunk_id": "CHK-CTX-EXACT",
+      "method": "exact_source_address",
+      "query": "SRC-016:L001777-L001780",
+      "top_chunk_id": "CHK-CTX-EXACT"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "semantic_status": "UNAVAILABLE_IN_EXECUTION_ENVIRONMENT",
+  "standalone_vector_service": "DEFERRED_UNTIL_BENCHMARK_JUSTIFIES"
+}

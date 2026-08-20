@@ -17,6 +17,7 @@ _REQUIRED = (
     "src/project_pipeline/verification/post_merge.py",
     "src/project_pipeline/verification/external_tools.py",
     "src/project_pipeline/verification/e2e.py",
+    "src/project_pipeline/verification/containers.py",
     "src/project_pipeline/verification/persistence.py",
     "config/verification_policy.json",
     "provenance/pass_16_verification_activation_gate.json",
@@ -28,7 +29,10 @@ _REQUIRED = (
     "provenance/pass_23_upstream_e2e_gate.json",
     "provenance/reviews/PASS-23_full_e2e_upstream_review.md",
     "docs/verification/pass23_full_end_to_end_integration.md",
+    "docs/verification/testcontainers_and_playwright.md",
     "tests/test_pass23_full_e2e.py",
+    "tests/e2e/test_pgvector_container_recovery.py",
+    "tests/integration/test_playwright_testcontainers_infra.py",
     "plans/08_execution_assurance_and_testing/PLAN-VERIFY-001_verification_harness_golden_journeys.md",
 )
 

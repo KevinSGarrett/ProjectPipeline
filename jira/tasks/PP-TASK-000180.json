@@ -7,22 +7,25 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "behavior_and_traceability_validation",
         "path": "benchmarks/retrieval/",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
       "criterion_id": "AC-PP-000180-02",
       "statement": "Applicable behavior tests and evidence pass, and unavailable live or external verification remains explicitly represented.",
       "verification": {
-        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "command": "PYTHONPATH=src python -m project_pipeline retrieval benchmark --root .",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "EVID-000213",
+    "EVID-000214"
+  ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
     "Acceptance criteria have current verification evidence.",
@@ -33,20 +36,27 @@
   ],
   "dependencies": [],
   "description": "Qualify pgvector migrations, indexes, backup, exact-retrieval fallback, and retrieval quality.",
-  "evidence_required": [],
+  "evidence_required": [
+    "EVID-000213"
+  ],
   "exclusions": [
     "No unverified claim of live external-system completion.",
     "No external write or source incorporation is authorized by this item."
   ],
   "expected_file_locations": [
-    "benchmarks/retrieval/",
-    "docs/retrieval_benchmark.md"
+    "benchmarks/retrieval/corpus.jsonl",
+    "docs/retrieval_benchmark.md",
+    "src/project_pipeline/retrieval/service.py",
+    "tests/test_retrieval_benchmark.py"
   ],
   "expected_implementation_artifacts": [
-    "benchmarks/retrieval/",
-    "docs/retrieval_benchmark.md"
+    "src/project_pipeline/retrieval/service.py",
+    "src/project_pipeline/retrieval/benchmark.py",
+    "docs/retrieval_benchmark.md",
+    "tests/test_retrieval_benchmark.py",
+    "benchmarks/retrieval/corpus.jsonl"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "architecture",
@@ -84,7 +94,15 @@
     }
   ],
   "remote_jira_key": "PP-269",
-  "required_tests": [],
+  "required_tests": [
+    "TEST-RETRIEVAL-001",
+    "TEST-RETRIEVAL-002",
+    "TEST-RETRIEVAL-003",
+    "TEST-RETRIEVAL-004",
+    "TEST-RETRIEVAL-005",
+    "TEST-RETRIEVAL-006",
+    "TEST-RETRIEVAL-007"
+  ],
   "requirement_ids": [
     "REQ-ARCH-0011",
     "REQ-CTX-0009",

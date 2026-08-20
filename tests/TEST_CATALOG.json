@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 677,
+  "test_count": 688,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -1538,6 +1538,26 @@
       "test_id": "TEST-E2E-P23-006"
     },
     {
+      "callable": "test_playwright_status_does_not_invent_a_live_browser",
+      "path": "tests/integration/test_playwright_testcontainers_infra.py",
+      "test_id": "TEST-E2E-PW-001"
+    },
+    {
+      "callable": "test_docker_engine_probe_is_structured",
+      "path": "tests/e2e/test_pgvector_container_recovery.py",
+      "test_id": "TEST-E2E-TC-001"
+    },
+    {
+      "callable": "test_pgvector_container_persists_across_kill_and_records_image_identity",
+      "path": "tests/e2e/test_pgvector_container_recovery.py",
+      "test_id": "TEST-E2E-TC-002"
+    },
+    {
+      "callable": "test_testcontainers_python_package_is_optional_and_docker_probe_is_explicit",
+      "path": "tests/integration/test_playwright_testcontainers_infra.py",
+      "test_id": "TEST-E2E-TC-003"
+    },
+    {
       "callable": "test_canonical_ledger_has_no_inline_subject_bindings",
       "path": "tests/test_evidence_reconciliation_convergence.py",
       "test_id": "TEST-EVIDENCE-CONV-001"
@@ -2686,6 +2706,41 @@
       "callable": "DetailedRequirementTests.test_requirement_plan_jira_test_and_evidence_links_resolve",
       "path": "tests/test_requirements_detailed.py",
       "test_id": "TEST-REQUIREMENTS-002"
+    },
+    {
+      "callable": "test_ppdb_0025_applies_retrieval_tables",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-001"
+    },
+    {
+      "callable": "test_exact_source_address_and_lexical_fallback",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-002"
+    },
+    {
+      "callable": "test_backup_restore_and_benchmark_recall",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-003"
+    },
+    {
+      "callable": "test_retrieval_cli_benchmark",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-004"
+    },
+    {
+      "callable": "test_semantic_status_ignores_unset_or_dead_dsn",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-005"
+    },
+    {
+      "callable": "test_postgresql_retrieval_sql_enables_vector_and_indexes",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-006"
+    },
+    {
+      "callable": "test_benchmark_rerun_on_same_database_is_idempotent",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-007"
     },
     {
       "callable": "test_aws_blueprint_keeps_local_primary",

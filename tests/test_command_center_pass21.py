@@ -304,7 +304,7 @@ def test_command_center_store_persists_pass21_artifacts(tmp_path, project_root):
         assert status["command_center_incident_cases"] == 1
         assert status["command_center_notification_deliveries"] >= 2
         assert response.context.incident_id == case.incident.incident_id
-        assert SQLiteMigrationRunner(store.db, project_root).status().latest_applied == "PPDB-0024"
+        assert SQLiteMigrationRunner(store.db, project_root).status().latest_applied == "PPDB-0025"
 
 
 def test_ppdb_0017_rolls_back_without_removing_pass19_command_center_schema(tmp_path, project_root):
@@ -313,11 +313,13 @@ def test_ppdb_0017_rolls_back_without_removing_pass19_command_center_schema(tmp_
     conn = sqlite3.connect(tmp_path / "m.db")
     runner = SQLiteMigrationRunner(conn, project_root)
     runner.apply_all()
-    assert runner.status().latest_applied == "PPDB-0024"
+    assert runner.status().latest_applied == "PPDB-0025"
     tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
     assert "command_center_director_messages" in tables and "command_center_events" in tables
     assert "lifecycle_portfolio_projects" in tables
     assert "autonomy_runtime_operations" in tables
+    runner.rollback_last()
+    assert runner.status().latest_applied == "PPDB-0024"
     runner.rollback_last()
     assert runner.status().latest_applied == "PPDB-0023"
     runner.rollback_last()

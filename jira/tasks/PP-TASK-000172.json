@@ -7,22 +7,24 @@
         "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
         "method": "behavior_and_traceability_validation",
         "path": "tests/e2e/",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     },
     {
       "criterion_id": "AC-PP-000172-02",
       "statement": "Applicable behavior tests and evidence pass, and unavailable live or external verification remains explicitly represented.",
       "verification": {
-        "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
+        "command": "PYTHONPATH=src python -m pytest tests/e2e tests/integration/test_playwright_testcontainers_infra.py -q",
         "method": "tests_and_evidence_review",
         "path": "evidence/EVIDENCE_LEDGER.jsonl",
-        "status": "PLANNED"
+        "status": "VERIFIED"
       }
     }
   ],
   "blockers": [],
-  "completion_evidence": [],
+  "completion_evidence": [
+    "EVID-000215"
+  ],
   "definition_of_done": [
     "Applicable implementation is complete or accurately dispositioned.",
     "Acceptance criteria have current verification evidence.",
@@ -39,14 +41,18 @@
     "No external write or source incorporation is authorized by this item."
   ],
   "expected_file_locations": [
-    "tests/e2e/",
-    "tests/integration/"
+    "src/project_pipeline/verification/containers.py",
+    "src/project_pipeline/verification/browser.py",
+    "tests/e2e/test_pgvector_container_recovery.py",
+    "tests/integration/test_playwright_testcontainers_infra.py"
   ],
   "expected_implementation_artifacts": [
-    "tests/e2e/",
-    "tests/integration/"
+    "src/project_pipeline/verification/containers.py",
+    "src/project_pipeline/verification/browser.py",
+    "tests/e2e/test_pgvector_container_recovery.py",
+    "tests/integration/test_playwright_testcontainers_infra.py"
   ],
-  "implementation_state": "PLANNED_ONLY",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
     "backlog",
@@ -84,7 +90,12 @@
     }
   ],
   "remote_jira_key": "PP-330",
-  "required_tests": [],
+  "required_tests": [
+    "TEST-E2E-PW-001",
+    "TEST-E2E-TC-001",
+    "TEST-E2E-TC-002",
+    "TEST-E2E-TC-003"
+  ],
   "requirement_ids": [
     "REQ-ASSURE-0003",
     "REQ-ASSURE-0014",

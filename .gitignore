@@ -85,6 +85,10 @@ terraform.rc
 *.p12
 *.pfx
 
+# Generated retrieval benchmark outputs (corpus.jsonl is source-controlled)
+/benchmarks/retrieval/latest.json
+/benchmarks/retrieval/backup.json
+
 # Runtime state and local databases
 /.local/
 /state/

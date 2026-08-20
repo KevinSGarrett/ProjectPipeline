@@ -58,7 +58,10 @@ def test_ppdb_0020_is_latest_and_reversible_without_removing_ppdb_0019(tmp_path)
     db = sqlite3.connect(tmp_path / "m.db")
     runner = SQLiteMigrationRunner(db, ROOT)
     runner.apply_all()
-    assert runner.status().latest_applied == "PPDB-0024"
+    assert runner.status().latest_applied == "PPDB-0025"
+    runner.rollback_last()
+    ids = {r[0] for r in db.execute("SELECT migration_id FROM schema_migrations")}
+    assert "PPDB-0024" in ids and "PPDB-0025" not in ids
     runner.rollback_last()
     ids = {r[0] for r in db.execute("SELECT migration_id FROM schema_migrations")}
     assert "PPDB-0023" in ids and "PPDB-0024" not in ids

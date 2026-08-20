@@ -454,6 +454,25 @@
       "sqlite_down_sha256": "d4dee97a93e90d7598dfc4468256fc8938b3250f4be5f4e64dee5461a3bab92f",
       "sqlite_up_path": "database/migrations/sqlite/PPDB-0024_evidence_observations.up.sql",
       "sqlite_up_sha256": "0cb86568c9118f6996f720e92d46e806b4d9f5520b13d1c0b55ea7ea61e9ca73"
+    },
+    {
+      "compatibility_phase": "EXPAND",
+      "depends_on": [
+        "PPDB-0024"
+      ],
+      "migration_id": "PPDB-0025",
+      "name": "retrieval_pgvector_and_exact_fallback",
+      "postgresql_down_path": "database/migrations/postgresql/PPDB-0025_retrieval_pgvector_and_exact_fallback.down.sql",
+      "postgresql_down_sha256": "30c8efa1d3a6c61abeb30302116786dc64fff5c2db88e04f2e72d1e8560f253a",
+      "postgresql_up_path": "database/migrations/postgresql/PPDB-0025_retrieval_pgvector_and_exact_fallback.up.sql",
+      "postgresql_up_sha256": "c2739e91fccf4171c54e4a2bbcc47fd871071302fa998e9c8e25d238e00bdc92",
+      "reversible": true,
+      "schema_version": "1.0.0",
+      "sequence": 25,
+      "sqlite_down_path": "database/migrations/sqlite/PPDB-0025_retrieval_pgvector_and_exact_fallback.down.sql",
+      "sqlite_down_sha256": "f0b80995b228eb0ba9781a321a6d5461a98aca220c0d8445da3ed1a639165009",
+      "sqlite_up_path": "database/migrations/sqlite/PPDB-0025_retrieval_pgvector_and_exact_fallback.up.sql",
+      "sqlite_up_sha256": "79320bf3457bc1823c42da869375b79ab24b48f8ebda815b5c64327c58bd6dac"
     }
   ],
   "schema_version": "1.0.0"
