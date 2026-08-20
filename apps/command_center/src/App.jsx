@@ -88,6 +88,14 @@ export function App() {
   const [directorScope, setDirectorScope] = useState("PROJECT");
   const [directorMessages, setDirectorMessages] = useState([]);
   const [directorStatus, setDirectorStatus] = useState("Director answers are grounded in the current authorized projection; raw chat never mutates state.");
+  const [autonomy, setAutonomy] = useState({
+    canonical_authority: "PROJECT_CONTROL_KERNEL",
+    last_selected_task_id: null,
+    revision: 0,
+    recovered: false,
+    chat_mutation: false,
+    authoritative_for_transitions: false
+  });
   const [incidentStatus, setIncidentStatus] = useState("Incident resolution requires verification and reconciliation evidence.");
   const [notificationStatus, setNotificationStatus] = useState("Remote delivery is disabled unless explicitly configured; desktop action-click qualification remains separate.");
   const summary = useMemo(() => summarize(data.snapshot, data.application), [data]);
@@ -102,6 +110,7 @@ export function App() {
         setData((currentData) => ({ ...currentData, snapshot, application: normalizeLiveApplication(snapshot, application), inbox }));
         setConnection("LIVE");
         client.incidents().then((incidents) => setData((currentData) => ({ ...currentData, incidents }))).catch(() => undefined);
+        client.autonomyDirector().then(setAutonomy).catch(() => undefined);
       })
       .catch(() => setConnection("DEGRADED"));
     return undefined;
@@ -241,6 +250,17 @@ export function App() {
 
             <Section id="director" kicker="INTELLIGENCE" title="Director Chat">
               <div className="director-layout">
+                <aside className="autonomy-director" aria-label="Persistent Autonomy Director">
+                  <p className="eyebrow">PERSISTENT AUTONOMY DIRECTOR</p>
+                  <dl>
+                    <div><dt>Canonical authority</dt><dd>{autonomy.canonical_authority}</dd></div>
+                    <div><dt>Last selected</dt><dd>{autonomy.last_selected_task_id || "none"}</dd></div>
+                    <div><dt>Revision</dt><dd>{autonomy.revision}</dd></div>
+                    <div><dt>Recovered</dt><dd>{String(Boolean(autonomy.recovered))}</dd></div>
+                    <div><dt>Chat mutation</dt><dd>{String(Boolean(autonomy.chat_mutation))}</dd></div>
+                    <div><dt>Transition authority</dt><dd>{autonomy.authoritative_for_transitions ? "director" : "PROJECT_CONTROL_KERNEL"}</dd></div>
+                  </dl>
+                </aside>
                 <div className="chat-log" aria-live="polite">{directorMessages.length ? directorMessages.map((item, index) => <article key={`${item.role}-${index}`} className={`chat-message ${item.role === "USER" ? "chat-user" : "chat-assistant"}`}><span>{item.role === "USER" ? "Operator" : "Director"}</span><p>{item.content}</p>{item.proposals?.length ? <small>{item.proposals.length} typed proposal(s) prepared — none executed automatically.</small> : null}</article>) : <article className="chat-message chat-assistant"><span>Director</span><p>Ask about global, project, or incident state. Answers are limited to authorized Project Pipeline projections and never expose private reasoning.</p></article>}</div>
                 <form className="director-form" onSubmit={askDirector}><label><span>Scope</span><select aria-label="Director scope" value={directorScope} onChange={(event) => setDirectorScope(event.target.value)}><option value="GLOBAL">Global</option><option value="PROJECT">Project</option><option value="INCIDENT">Incident</option></select></label><label className="director-input"><span>Message</span><input aria-label="Director message" value={directorInput} onChange={(event) => setDirectorInput(event.target.value)} placeholder="What is blocked and what needs my attention?" /></label><button type="submit">Ask Director</button></form>
                 <p className="control-status" role="status">{directorStatus}</p>

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "9389d6bfebf14a00100b4e8ca8fe419b3c3be6651b20a3d5a1a8cbe7ef02cda9",
+  "aggregate_sha256": "abfc405b57b42976e9e4ee7403a511361a177064fc251937b7a834a97a55c503",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -337,8 +337,8 @@
     },
     {
       "path": "apps/command_center/preview/index.html",
-      "sha256": "decbea2999da9f17e02e3668d0f6ca6349a35a3ccc2b38bd8956590f7fa97b05",
-      "size_bytes": 42248
+      "sha256": "0244062f16fda74da4531fc24184ce13eed154d2ec90a037ea06095c818fdf0a",
+      "size_bytes": 44299
     },
     {
       "path": "apps/command_center/README.md",
@@ -347,18 +347,18 @@
     },
     {
       "path": "apps/command_center/src/apiClient.mjs",
-      "sha256": "8717de914d9d2e68b195cd36776dab1a0b57616633158993dda04d87d1a810fb",
-      "size_bytes": 3105
+      "sha256": "5302773f89b98d8f3144463af269e5b58cc18a43cc9aaa799c1ef79d17a9de93",
+      "size_bytes": 3270
     },
     {
       "path": "apps/command_center/src/app.css",
-      "sha256": "264aca35d72f0dc90542d4442a48eab8cdd95601e2a592097a994ce7505ef8c1",
-      "size_bytes": 17847
+      "sha256": "e21fcf4bd9c7c4e02fbec3734bcda9fe7df36ef563581aa089233c2b33e4f31b",
+      "size_bytes": 18271
     },
     {
       "path": "apps/command_center/src/App.jsx",
-      "sha256": "ee9ee7453cedf12eef0842ff7baccd4bf31b430ee528609af93779aaa10e741b",
-      "size_bytes": 27195
+      "sha256": "286ca88d69847d21e8dfe7b7f5427b753cb555829927300c6fb8ad420ca0a9dc",
+      "size_bytes": 28385
     },
     {
       "path": "apps/command_center/src/appModel.mjs",
@@ -10047,8 +10047,8 @@
     },
     {
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "04354c73f23a48735eae45115fcf59c25b5516bd5255bab8ed8421b4aa378291",
-      "size_bytes": 745299
+      "sha256": "b9782e389ccce00f22ee8e5f1bde985b97ffe65c34207d968ff7c10552028725",
+      "size_bytes": 745371
     },
     {
       "path": "plans/_traceability/requirements_by_domain.json",
@@ -10057,8 +10057,8 @@
     },
     {
       "path": "plans/_traceability/requirements_by_id.json",
-      "sha256": "cfa276ad5e68070ef053a6a0a0d9c5c0d9fa31082bb92644b6d05df61283c0bf",
-      "size_bytes": 871923
+      "sha256": "f41fcb4c1d6f2708e46ba8c75c9fc6af180d838a2caf369bb3a882eccdb87118",
+      "size_bytes": 872013
     },
     {
       "path": "plans/_traceability/requirements_by_source.json",
@@ -10102,8 +10102,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_tests.jsonl",
-      "sha256": "f02d37323cca782cc839194410d474adc80f6c8fcd71a83b962324cee4b80efa",
-      "size_bytes": 53172
+      "sha256": "828145516bed59fd2eec813fd1726f7904505f1e288a89a70f9ce6b66f0307ec",
+      "size_bytes": 53244
     },
     {
       "path": "plans/_traceability/source_section_coverage.md",
@@ -12402,8 +12402,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/api.py",
-      "sha256": "85820c8d851a92380b004b642b89a1b3cb1f980f16ec900ab284aeea64d8b7f9",
-      "size_bytes": 13250
+      "sha256": "4c49353a75cc9074c4583991ed8c2c15a8432867de39ceb95aa0d0b60234d02b",
+      "size_bytes": 14868
     },
     {
       "path": "src/project_pipeline/command_center/application.py",
@@ -12427,8 +12427,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/autonomy_director.py",
-      "sha256": "69bef0d1edbd19e98d61336f2bda59c030e83790462035c08984e70a59b98253",
-      "size_bytes": 5092
+      "sha256": "878b1648e58901b064dcbc0b00241290533a6fdb0fb4e70375320cf974f0454d",
+      "size_bytes": 9699
     },
     {
       "path": "src/project_pipeline/command_center/director.py",
@@ -12452,8 +12452,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/live_server.py",
-      "sha256": "58d29b9c302d0c26933c62ee5505d8c86969bee6af57923732522253d17a42f9",
-      "size_bytes": 7637
+      "sha256": "280d3a157c4de8b8c2131e018d576f5088179aa6cdcd980ff67afbef8aaeae43",
+      "size_bytes": 8576
     },
     {
       "path": "src/project_pipeline/command_center/models.py",
@@ -13892,8 +13892,8 @@
     },
     {
       "path": "tests/test_autonomy_director.py",
-      "sha256": "4d5cb785b1147d5ee1259f562759b5f924e534816b3441487d340cb92ab51a72",
-      "size_bytes": 1789
+      "sha256": "622092668c326e4f8beee48e94a06141b13f8988973ef2aecf582464f4ca62bc",
+      "size_bytes": 3199
     },
     {
       "path": "tests/test_autonomy_language_gate.py",
@@ -13982,8 +13982,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "3bec506592dc40b76c7691317b83f07e9702587f303e7a5f5640d892c9d99b17",
-      "size_bytes": 122871
+      "sha256": "256ef799c5a71cbc1261468b421b78b4c5c12b0d5f557cf8cb4262cbcf65c918",
+      "size_bytes": 123420
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -13997,8 +13997,8 @@
     },
     {
       "path": "tests/test_command_center_api.py",
-      "sha256": "656853224af9d6a1e72fbaaa17da9653663e3bd920a5889cb04406c194129346",
-      "size_bytes": 6709
+      "sha256": "af0e2a2a7dff434f400b0b660b1e9ad81d15d99cebe1950b0153afa240b9445e",
+      "size_bytes": 8907
     },
     {
       "path": "tests/test_command_center_application.py",
@@ -14022,8 +14022,8 @@
     },
     {
       "path": "tests/test_command_center_live.py",
-      "sha256": "36135ec9fc08437f988bbdfd9b20963f0367e369e4b035afd4f9b346c33d9de4",
-      "size_bytes": 3672
+      "sha256": "fa5d619552d0f645114a899cc10d77f187459e197409c1c7552620e5343250cb",
+      "size_bytes": 5135
     },
     {
       "path": "tests/test_command_center_models.py",
@@ -14851,7 +14851,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T04:42:03.854403+00:00",
+  "generated_at_utc": "2026-08-20T05:09:47.491264+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14860,5 +14860,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29580129
+  "total_bytes": 29596977
 }

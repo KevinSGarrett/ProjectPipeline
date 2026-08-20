@@ -16,6 +16,7 @@ from fastapi import (
 from fastapi.responses import StreamingResponse
 
 from project_pipeline.command_center.application import CommandCenterApplicationProjection
+from project_pipeline.command_center.autonomy_director import PersistentAutonomyDirector
 from project_pipeline.command_center.director import (
     CommandCenterControlGateway,
     DirectorChatService,
@@ -32,6 +33,7 @@ from project_pipeline.command_center.models import (
 from project_pipeline.command_center.notifications import NotificationDeliveryService
 from project_pipeline.command_center.realtime import RealtimeEventBroker
 from project_pipeline.contracts import CommandEnvelope
+from project_pipeline.domain.control import ControlSnapshot
 
 
 @dataclass(frozen=True, slots=True)
@@ -63,6 +65,8 @@ def create_command_center_app(
     incident_manager: IncidentManager | None = None,
     notification_service: NotificationDeliveryService | None = None,
     auth: CommandCenterAuth | None = None,
+    autonomy_director: PersistentAutonomyDirector | None = None,
+    control_provider: Callable[[], ControlSnapshot] | None = None,
 ):
     app = FastAPI(title="Project Pipeline Command Center API", version="1.1.0")
     auth = auth or CommandCenterAuth.deny_all()
@@ -86,6 +90,7 @@ def create_command_center_app(
             "transports": ["http", "sse", "websocket"],
             "application_projection": application_provider is not None,
             "director_chat": director_chat is not None,
+            "persistent_autonomy_director": autonomy_director is not None,
             "incident_management": incident_manager is not None,
             "notification_delivery": {
                 "configured": notification_service is not None,
@@ -196,6 +201,37 @@ def create_command_center_app(
                 await websocket.send_json({"actor": actor, "event": event.model_dump(mode="json")})
         except WebSocketDisconnect:
             return
+
+    @app.get("/api/v1/director/autonomy")
+    def autonomy_status(_actor: str = Depends(principal)) -> dict[str, Any]:
+        if autonomy_director is None:
+            raise HTTPException(
+                status_code=503,
+                detail="Persistent Autonomy Director not configured",
+            )
+        return autonomy_director.projection()
+
+    @app.post("/api/v1/director/autonomy/select")
+    def autonomy_select(_actor: str = Depends(principal)) -> dict[str, Any]:
+        if autonomy_director is None or control_provider is None:
+            raise HTTPException(
+                status_code=503,
+                detail="Persistent Autonomy Director not configured",
+            )
+        decision = autonomy_director.select_next_work(control_provider())
+        return {
+            "decision": decision.as_dict(),
+            "projection": autonomy_director.projection(),
+        }
+
+    @app.post("/api/v1/director/autonomy/recover")
+    def autonomy_recover(_actor: str = Depends(principal)) -> dict[str, Any]:
+        if autonomy_director is None:
+            raise HTTPException(
+                status_code=503,
+                detail="Persistent Autonomy Director not configured",
+            )
+        return autonomy_director.recover()
 
     @app.post("/api/v1/director/context")
     def director_context(

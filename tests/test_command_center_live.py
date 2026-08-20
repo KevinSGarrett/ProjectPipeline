@@ -44,6 +44,43 @@ def test_live_app_requires_bearer_and_projects_jira_readback() -> None:
     assert jira["stale"] is False
     assert "PP-391" in jira["note"]
     assert client.get("/").status_code == 200
+    caps = client.get(
+        "/api/v1/command-center/capabilities",
+        headers={"Authorization": "Bearer good"},
+    ).json()
+    assert caps["persistent_autonomy_director"] is True
+    autonomy = client.get(
+        "/api/v1/director/autonomy",
+        headers={"Authorization": "Bearer good"},
+    ).json()
+    assert autonomy["kind"] == "persistent_autonomy_director"
+    assert autonomy["canonical_authority"] == "PROJECT_CONTROL_KERNEL"
+    assert autonomy["authoritative_for_transitions"] is False
+    assert autonomy["chat_mutation"] is False
+
+
+def test_live_autonomy_director_selects_and_reloads_persisted_state(tmp_path: Path) -> None:
+    state = tmp_path / "director_state.json"
+    first, _broker = create_live_command_center_app(ROOT, token="good", director_state_path=state)
+    client = TestClient(first)
+    selected = client.post(
+        "/api/v1/director/autonomy/select",
+        headers={"Authorization": "Bearer good"},
+    )
+    assert selected.status_code == 200
+    task_id = selected.json()["decision"]["selected_task_id"]
+    assert task_id
+    second, _ = create_live_command_center_app(ROOT, token="good", director_state_path=state)
+    recovered = (
+        TestClient(second)
+        .post(
+            "/api/v1/director/autonomy/recover",
+            headers={"Authorization": "Bearer good"},
+        )
+        .json()
+    )
+    assert recovered["recovered"] is True
+    assert recovered["last_selected_task_id"] == task_id
 
 
 def test_live_websocket_reconnects_after_disconnect() -> None:
