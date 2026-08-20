@@ -37,6 +37,9 @@ dist/
 pip-wheel-metadata/
 MANIFEST
 
+# Rust and Tauri build output
+target/
+
 # JavaScript, browser-test, and frontend output
 node_modules/
 .npm/
