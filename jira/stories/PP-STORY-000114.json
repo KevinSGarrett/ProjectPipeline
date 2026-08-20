@@ -46,12 +46,13 @@
   "expected_implementation_artifacts": [
     "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
   ],
-  "implementation_state": "PARTIALLY_IMPLEMENTED",
+  "implementation_state": "IMPLEMENTED",
   "issue_type": "STORY",
   "labels": [
     "capability-story",
     "cluster-project-intelligence",
     "domain-ux",
+    "implemented",
     "partially-implemented",
     "pass-20"
   ],
