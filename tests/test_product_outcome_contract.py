@@ -117,8 +117,7 @@ def test_command_center_director_chat_cannot_qualify_persistent_director(
 
 def test_bound_runtime_qualification_may_close_persistent_director(product_root: Path) -> None:
     evidence = (
-        product_root
-        / "evidence/autonomy_runtime/live_qualification/live_qualification_latest.json"
+        product_root / "evidence/autonomy_runtime/live_qualification/live_qualification_latest.json"
     )
     evidence.parent.mkdir(parents=True, exist_ok=True)
     evidence.write_text(

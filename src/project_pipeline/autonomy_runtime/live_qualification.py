@@ -702,16 +702,24 @@ def _cursor_cli_disposable_root(repository_root: Path, live_root: Path, runner: 
 
 def _git_identity(repository_root: Path) -> tuple[str | None, str | None]:
     try:
-        head = subprocess.check_output(
-            ["git", "-C", str(repository_root), "rev-parse", "HEAD"],
-            text=True,
-            timeout=30,
-        ).strip().lower()
-        tree = subprocess.check_output(
-            ["git", "-C", str(repository_root), "rev-parse", "HEAD^{tree}"],
-            text=True,
-            timeout=30,
-        ).strip().lower()
+        head = (
+            subprocess.check_output(
+                ["git", "-C", str(repository_root), "rev-parse", "HEAD"],
+                text=True,
+                timeout=30,
+            )
+            .strip()
+            .lower()
+        )
+        tree = (
+            subprocess.check_output(
+                ["git", "-C", str(repository_root), "rev-parse", "HEAD^{tree}"],
+                text=True,
+                timeout=30,
+            )
+            .strip()
+            .lower()
+        )
     except (OSError, subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return None, None
     if len(head) != 40 or len(tree) != 40:

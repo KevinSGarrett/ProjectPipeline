@@ -329,9 +329,7 @@ def _remaining_files(target_root: Path) -> list[str]:
         return []
 
 
-def _settle_remaining_installer_files(
-    target_root: Path, *, timeout_s: float = 8.0
-) -> list[str]:
+def _settle_remaining_installer_files(target_root: Path, *, timeout_s: float = 8.0) -> list[str]:
     """NSIS cannot delete uninstall.exe while that process is still exiting."""
 
     deadline = time.monotonic() + timeout_s
