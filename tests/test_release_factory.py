@@ -4,11 +4,13 @@ import hashlib
 import json
 import subprocess
 import zipfile
+from argparse import Namespace
 from pathlib import Path
 
 import pytest
 
-from project_pipeline.cli import main
+from project_pipeline.cli import _run_release_factory_command, main
+from project_pipeline.configuration import ConfigurationError
 from project_pipeline.contracts import ActionIntent, AdapterErrorCategory, ApprovalState, RiskLevel
 from project_pipeline.github_steward import GitHubDraftReleaseService, GitHubStewardStore
 from project_pipeline.github_steward.errors import GitHubStewardError
@@ -166,12 +168,31 @@ def test_zip_slip_and_secret_residue_are_rejected(tmp_path):
         payload.writestr("../evil.txt", "nope")
     with pytest.raises(ValueError, match="archive traversal"):
         extract_zip_safely(archive, tmp_path / "out")
+    dest = tmp_path / "extract-root"
+    dest.mkdir()
+    prefix = tmp_path / "prefix.zip"
+    with zipfile.ZipFile(prefix, "w") as payload:
+        payload.writestr("../extract-root-evil/payload.txt", "escaped")
+    with pytest.raises(ValueError, match="archive traversal"):
+        extract_zip_safely(prefix, dest)
+    assert not (tmp_path / "extract-root-evil").exists()
     secret_zip = tmp_path / "secret.zip"
     with zipfile.ZipFile(secret_zip, "w") as payload:
         payload.writestr("leak.txt", "BEGIN OPENSSH PRIVATE " + "KEY\n")
     written = extract_zip_safely(secret_zip, tmp_path / "secret-out")
     with pytest.raises(ValueError, match="secret residue"):
         _scan_secrets(written)
+
+
+def test_desktop_dir_fails_closed_without_exact_match(tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _write_version_tree(repo)
+    _git_repo(repo)
+    empty = tmp_path / "desktop"
+    empty.mkdir()
+    with pytest.raises(ValueError, match="exactly one file"):
+        build_release_bundle(repo, tmp_path / "out", desktop_artifact_dir=empty)
 
 
 def test_draft_release_unknown_outcome_duplicate_and_finalize_guards(tmp_path):
@@ -256,6 +277,16 @@ def test_draft_release_unknown_outcome_duplicate_and_finalize_guards(tmp_path):
                 actor_id="actor:test",
                 correlation_id="corr:test",
             )
+        with pytest.raises(GitHubStewardError, match="different candidate"):
+            service.plan_upload_asset(
+                "owner/repo",
+                release_id=release.api_id,
+                name="other.bin",
+                sha256="a" * 64,
+                source_sha="f" * 40,
+                actor_id="actor:test",
+                correlation_id="corr:test",
+            )
         with pytest.raises(GitHubStewardError, match="finalize-before-campaign"):
             service.plan_finalize(
                 "owner/repo",
@@ -294,6 +325,12 @@ def test_acquired_remote_bytes_lifecycle_does_not_use_worktree(tmp_path):
     assert report.source == "REMOTE_DRAFT_BYTES"
     assert report.checks["uninstall"] == "PASS"
     assert report.checks["desktop_launch"] == "FIXTURE_BYTES_BOUND"
+    worktree_like = tmp_path / "fake-worktree"
+    write_acquired_assets(worktree_like, assets)
+    (worktree_like / ".git").mkdir()
+    (worktree_like / "src" / "project_pipeline").mkdir(parents=True)
+    with pytest.raises(ValueError, match="worktree_bytes_used"):
+        exercise_acquired_lifecycle(worktree_like, tmp_path / "work2")
 
 
 def test_release_factory_cli_version(capsys):
@@ -301,3 +338,33 @@ def test_release_factory_cli_version(capsys):
     assert code == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["version_authority"]["bundle_version"] == "0.9.0"
+
+
+def test_live_draft_writes_require_approval_gate():
+    args = Namespace(
+        action="draft-apply",
+        root=ROOT,
+        provider="github",
+        apply=True,
+        approve=True,
+        authorization_id="auth:test",
+        profile="local",
+        config_file=None,
+        env_file=None,
+        overrides=["security.external_writes_default=DENY"],
+        output_dir=None,
+        bundle_dir=None,
+        desktop_dir=None,
+        fixture_desktop=False,
+        acquire_dir=None,
+        work_dir=None,
+        repository_slug=None,
+        database=None,
+        actor_id="actor:test",
+        correlation_id="corr:test",
+        campaign_complete=False,
+        asset=None,
+        release_id=None,
+    )
+    with pytest.raises(ConfigurationError, match="REQUIRE_APPROVAL"):
+        _run_release_factory_command(args)

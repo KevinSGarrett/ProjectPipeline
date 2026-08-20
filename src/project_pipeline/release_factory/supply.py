@@ -42,17 +42,33 @@ class SupplyBinding(ContractModel):
     license_inventory_path: str
 
 
+def _zip_member_is_escaped(name: str, root: Path) -> bool:
+    normalized = name.replace("\\", "/")
+    if normalized.startswith("/") or (len(normalized) >= 2 and normalized[1] == ":"):
+        return True
+    parts = [part for part in normalized.split("/") if part not in {"", "."}]
+    if not parts or any(part == ".." for part in parts):
+        return True
+    try:
+        target = root.joinpath(*parts).resolve()
+        return target == root or not target.is_relative_to(root)
+    except (OSError, ValueError):
+        return True
+
+
 def extract_zip_safely(archive: Path, dest: Path) -> tuple[Path, ...]:
     dest.mkdir(parents=True, exist_ok=True)
     root = dest.resolve()
     written: list[Path] = []
     with zipfile.ZipFile(archive) as payload:
         for info in payload.infolist():
-            if info.is_dir():
+            name = info.filename.replace("\\", "/")
+            if info.is_dir() or name.endswith("/"):
                 continue
-            target = (root / info.filename).resolve()
-            if not str(target).startswith(str(root)):
+            if _zip_member_is_escaped(info.filename, root):
                 raise ValueError(f"archive traversal rejected: {info.filename}")
+            parts = [part for part in name.split("/") if part not in {"", "."}]
+            target = root.joinpath(*parts).resolve()
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(payload.read(info))
             written.append(target)

@@ -33,7 +33,7 @@ class AcquiredCandidateLifecycle(ContractModel):
     install_root: str
     checks: dict[str, str]
     expected_sha256s: dict[str, str] = Field(default_factory=dict)
-    worktree_bytes_used: Literal[False] = False
+    worktree_bytes_used: bool
 
 
 def write_acquired_assets(dest: Path, assets: dict[str, bytes]) -> Path:
@@ -59,11 +59,40 @@ def _find_archive(acquired: Path) -> Path:
     return archives[0]
 
 
+def _looks_like_source_worktree(acquired: Path) -> bool:
+    return (acquired / ".git").exists() and (acquired / "src" / "project_pipeline").is_dir()
+
+
+def _version_from_payload(payload_root: Path) -> str:
+    version_file = payload_root / "VERSION"
+    if version_file.is_file():
+        observed = version_file.read_text(encoding="utf-8").strip()
+        if observed:
+            return observed
+    pyproject = payload_root / "pyproject.toml"
+    if pyproject.is_file():
+        for line in pyproject.read_text(encoding="utf-8").splitlines():
+            stripped = line.strip()
+            if stripped.startswith("version") and "=" in stripped:
+                return stripped.split("=", 1)[1].strip().strip('"').strip("'")
+    raise ValueError("acquired candidate is missing VERSION")
+
+
 def exercise_acquired_lifecycle(
-    acquired_dir: Path, work_dir: Path, *, expected_version: str
+    acquired_dir: Path,
+    work_dir: Path,
+    *,
+    expected_version: str | None = None,
+    source_worktree: Path | None = None,
 ) -> AcquiredCandidateLifecycle:
     acquired = acquired_dir.resolve()
     work = work_dir.resolve()
+    if _looks_like_source_worktree(acquired):
+        raise ValueError("worktree_bytes_used")
+    if source_worktree is not None:
+        tree = source_worktree.resolve()
+        if acquired == tree or acquired.is_relative_to(tree):
+            raise ValueError("worktree_bytes_used")
     if work.exists():
         shutil.rmtree(work)
     install = work / "install"
@@ -76,11 +105,8 @@ def exercise_acquired_lifecycle(
     if len(nested) == 1 and not (extract_root / "VERSION").is_file():
         payload_root = nested[0]
     shutil.copytree(payload_root, install)
-    version_file = install / "VERSION"
-    if not version_file.is_file():
-        version_file.write_text(f"{expected_version}\n", encoding="utf-8")
-    observed = version_file.read_text(encoding="utf-8").strip()
-    if observed != expected_version:
+    observed = _version_from_payload(install)
+    if expected_version is not None and observed != expected_version:
         raise ValueError("installed version does not match the candidate")
     health = install / "health.json"
     health.write_text(
@@ -120,4 +146,5 @@ def exercise_acquired_lifecycle(
         install_root=str(install),
         checks=checks,
         expected_sha256s=manifest,
+        worktree_bytes_used=False,
     )

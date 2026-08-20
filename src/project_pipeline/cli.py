@@ -3275,6 +3275,18 @@ def _release_factory_intent(
     )
 
 
+def _require_live_github_write_gate(args: argparse.Namespace, configuration: Any) -> None:
+    if args.provider != "github":
+        return
+    if (
+        configuration.settings.security.external_writes_default
+        is not ExternalWriteMode.REQUIRE_APPROVAL
+    ):
+        raise ConfigurationError(
+            "live GitHub writes require security.external_writes_default=REQUIRE_APPROVAL"
+        )
+
+
 def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     root = args.root
     if args.action == "version":
@@ -3297,13 +3309,16 @@ def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, An
     if args.action == "lifecycle":
         acquired = Path(_require_argument(args, "acquire_dir"))
         work = args.work_dir or (acquired.parent / "lifecycle-work")
-        version = resolve_release_version_authority(root)
-        report = exercise_acquired_lifecycle(
-            acquired, work, expected_version=version.bundle_version
-        )
+        report = exercise_acquired_lifecycle(acquired, work)
         return {"lifecycle": report.model_dump(mode="json")}, 0
 
     configuration = _load_configuration(args)
+    if args.action in {"draft-apply", "draft-upload", "finalize"}:
+        if not args.apply or not args.approve or not args.authorization_id:
+            raise ConfigurationError(
+                f"{args.action} requires --apply, --approve, and --authorization-id"
+            )
+        _require_live_github_write_gate(args, configuration)
     database = _state_database_path(args, configuration)
     adapter = _github_adapter(args, configuration)
     local = LocalGitRepository(root)
@@ -3326,10 +3341,6 @@ def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, An
             )
             return {"operation": operation.model_dump(mode="json")}, 0
         if args.action == "draft-apply":
-            if not args.apply or not args.approve or not args.authorization_id:
-                raise ConfigurationError(
-                    "draft-apply requires --apply, --approve, and --authorization-id"
-                )
             planned = service.plan_create_draft(
                 repository_slug,
                 tag_name=bundle.version.tag_name,
@@ -3365,10 +3376,6 @@ def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, An
             receipt = service.reconcile_create_draft(pending[0])
             return {"receipt": receipt.model_dump(mode="json")}, 0
         if args.action == "draft-upload":
-            if not args.apply or not args.approve or not args.authorization_id:
-                raise ConfigurationError(
-                    "draft-upload requires --apply, --approve, and --authorization-id"
-                )
             asset_path = Path(_require_argument(args, "asset"))
             release_id = int(_require_argument(args, "release_id"))
             content = asset_path.read_bytes()
@@ -3416,10 +3423,6 @@ def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, An
         if args.action == "finalize":
             if not args.campaign_complete:
                 raise ConfigurationError("finalize requires --campaign-complete")
-            if not args.apply or not args.approve or not args.authorization_id:
-                raise ConfigurationError(
-                    "finalize requires --apply, --approve, and --authorization-id"
-                )
             release_id = int(_require_argument(args, "release_id"))
             planned = service.plan_finalize(
                 repository_slug,

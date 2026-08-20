@@ -212,7 +212,9 @@ def build_release_bundle(
                 if kind == "windows_executable":
                     matches = [path for path in matches if "setup" not in path.name.lower()]
                 if len(matches) != 1:
-                    continue
+                    raise ValueError(
+                        f"desktop {kind} must resolve to exactly one file under --desktop-dir"
+                    )
                 copied = dest / matches[0].name
                 copied.write_bytes(matches[0].read_bytes())
                 paths[kind] = copied

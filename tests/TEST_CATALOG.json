@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 698,
+  "test_count": 700,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -2576,6 +2576,16 @@
       "callable": "test_release_factory_cli_version",
       "path": "tests/test_release_factory.py",
       "test_id": "TEST-REL-FACTORY-008"
+    },
+    {
+      "callable": "test_desktop_dir_fails_closed_without_exact_match",
+      "path": "tests/test_release_factory.py",
+      "test_id": "TEST-REL-FACTORY-009"
+    },
+    {
+      "callable": "test_live_draft_writes_require_approval_gate",
+      "path": "tests/test_release_factory.py",
+      "test_id": "TEST-REL-FACTORY-010"
     },
     {
       "callable": "test_pass24_upstream_gate_covers_exact_candidates_and_blocks_agpl_activation",
