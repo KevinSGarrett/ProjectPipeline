@@ -19076,7 +19076,9 @@
   "REQ-SEC-0005": {
     "acceptance_summary": "Verified when: All human operators, autonomous workers, services, and adapters that act on project state shall use distinct attributable identities",
     "authority_classification": "SOURCE_DERIVED",
-    "decision_ids": [],
+    "decision_ids": [
+      "ADR-0028"
+    ],
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "SEC",
@@ -19139,7 +19141,9 @@
   "REQ-SEC-0006": {
     "acceptance_summary": "Verified when: Permissions shall be granted by role and capability with least privilege and shall distinguish read, propose, approve, mutate, merge, deploy, and emergency authority",
     "authority_classification": "SOURCE_DERIVED",
-    "decision_ids": [],
+    "decision_ids": [
+      "ADR-0028"
+    ],
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "SEC",
@@ -22609,7 +22613,8 @@
     "acceptance_summary": "Verified when: The Command Center shall be usable as a Windows-capable desktop application and as an authenticated network-accessible interface",
     "authority_classification": "SOURCE_DERIVED",
     "decision_ids": [
-      "ADR-0011"
+      "ADR-0011",
+      "ADR-0028"
     ],
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
@@ -22634,7 +22639,16 @@
       "src/project_pipeline/command_center/live_server.py",
       "src/project_pipeline/command_center/live_browser.py",
       "tests/test_command_center_live.py",
-      "scripts/verify_command_center_ui.py"
+      "scripts/verify_command_center_ui.py",
+      "src/project_pipeline/command_center/desktop_session.py",
+      "src/project_pipeline/command_center/desktop_reproducibility.py",
+      "src/project_pipeline/command_center/desktop_qualification.py",
+      "apps/command_center/package-lock.json",
+      "apps/desktop_shell/src-tauri/Cargo.lock",
+      "rust-toolchain.toml",
+      ".github/workflows/desktop-windows.yml",
+      "tests/test_desktop_session.py",
+      "adr/ADR-0028_command_center_os_identity_and_loopback_session_auth.md"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [

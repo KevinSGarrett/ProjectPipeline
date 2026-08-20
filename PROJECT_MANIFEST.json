@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "4574c39fb4e33e7116f2f9e5bca1b328515c2895ecf8be1244f0562c20c0d312",
+  "aggregate_sha256": "71e1b5f952bd9020c0f348a8ff71f1a7b5aa5ee63bdceda906e9a80e7b8c9095",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2970,
+  "file_count": 2990,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -156,14 +156,19 @@
       "size_bytes": 983
     },
     {
+      "path": ".github/workflows/desktop-windows.yml",
+      "sha256": "eb38d91af95a55ace1a563a93fee8f6a31bd4cc0cb1bca1ac484ef2513d0e5ed",
+      "size_bytes": 5415
+    },
+    {
       "path": ".github/workflows/quality.yml",
       "sha256": "29c4e79661b813f2f9042f39f813dabe5d78bf4b577d7324760bd40c077090cf",
       "size_bytes": 3546
     },
     {
       "path": ".gitignore",
-      "sha256": "6abc65037c1db46be08d8ecfc4625c7ca9899a58ca94c3b9048cfef91f2350ea",
-      "size_bytes": 2185
+      "sha256": "281e7ea8eb1f971a7fd29b7c2c67f0015d179f80838213d947a0fc46dfbdd6f8",
+      "size_bytes": 2395
     },
     {
       "path": ".pre-commit-config.yaml",
@@ -311,9 +316,14 @@
       "size_bytes": 2092
     },
     {
+      "path": "adr/ADR-0028_command_center_os_identity_and_loopback_session_auth.md",
+      "sha256": "60c96ad3de0bb58e0a59d3920ccf0033ae377f8fd49690475df04d773ef86926",
+      "size_bytes": 2096
+    },
+    {
       "path": "adr/ADR_CATALOG.json",
-      "sha256": "afd9062251a21646309a82b8c8a55742620880835a2236ff888c952728a6dee1",
-      "size_bytes": 31053
+      "sha256": "8008edb389db113d2d1aed2308a951b000e87c44f34c8b656e9a1cec46269831",
+      "size_bytes": 32199
     },
     {
       "path": "adr/README.md",
@@ -331,19 +341,29 @@
       "size_bytes": 422
     },
     {
+      "path": "apps/command_center/package-lock.json",
+      "sha256": "521f5d8412a32e85c40a1c35524963b35826703b05022f536aaf2b5da79d9b81",
+      "size_bytes": 67736
+    },
+    {
       "path": "apps/command_center/package.json",
-      "sha256": "0c34788cd0de5447f10d28f456862a962ac1ccb54228956023e42000209acfd0",
-      "size_bytes": 650
+      "sha256": "8e70de08b6b59dbebd03c25b12112f6bb0def2340c0bc2daa034a5f7691892d3",
+      "size_bytes": 625
     },
     {
       "path": "apps/command_center/preview/index.html",
-      "sha256": "0244062f16fda74da4531fc24184ce13eed154d2ec90a037ea06095c818fdf0a",
-      "size_bytes": 44299
+      "sha256": "dd187e52566270119035784ee047ff657973f5d25975fee0205cf34d65593ad4",
+      "size_bytes": 44371
     },
     {
       "path": "apps/command_center/README.md",
       "sha256": "79e14dbba7dc04d68dcc3b9932d0aae1eb03a7817ecc0ae567c4c47529a97ccc",
       "size_bytes": 1754
+    },
+    {
+      "path": "apps/command_center/scripts/run-tauri.mjs",
+      "sha256": "6e45dca93cc42111ed08d57115f3da8cf92abbd534fc409d293dbc262c6aa985",
+      "size_bytes": 1026
     },
     {
       "path": "apps/command_center/src/apiClient.mjs",
@@ -357,8 +377,8 @@
     },
     {
       "path": "apps/command_center/src/App.jsx",
-      "sha256": "286ca88d69847d21e8dfe7b7f5427b753cb555829927300c6fb8ad420ca0a9dc",
-      "size_bytes": 28385
+      "sha256": "319de4c6e9827287532b4d537915129617a67cbf1c76df7489e3705d7503ebe8",
+      "size_bytes": 28908
     },
     {
       "path": "apps/command_center/src/appModel.mjs",
@@ -367,8 +387,8 @@
     },
     {
       "path": "apps/command_center/src/desktopBridge.mjs",
-      "sha256": "242626ff52f270964d2edf067330dcbc3efe7f4aaa6222b81c168b49f97f68a6",
-      "size_bytes": 781
+      "sha256": "ba87c488b529b9ae62d245ebe1d60a93fcef416fdc81652e853633912cab3c7a",
+      "size_bytes": 1652
     },
     {
       "path": "apps/command_center/src/main.jsx",
@@ -387,8 +407,13 @@
     },
     {
       "path": "apps/desktop_shell/README.md",
-      "sha256": "e69ca94e9bc286fa260ceda395241e833e080d40993f3a35868ef6a43e1b6284",
-      "size_bytes": 1263
+      "sha256": "781c820d4654c0789100bbd946b11ea7c5208728672156c2156ec0fc47152bca",
+      "size_bytes": 1274
+    },
+    {
+      "path": "apps/desktop_shell/src-tauri/.cargo/config.toml",
+      "sha256": "c0882385360ad035e808cd7fad49b44db23a39bba9c01169be3663c6a6e1e6fb",
+      "size_bytes": 116
     },
     {
       "path": "apps/desktop_shell/src-tauri/build.rs",
@@ -401,19 +426,39 @@
       "size_bytes": 299
     },
     {
+      "path": "apps/desktop_shell/src-tauri/Cargo.lock",
+      "sha256": "feedaad7cc7220d7144a72d6542c71f2843e293a9774abf7005dc11c1b64f6f6",
+      "size_bytes": 123149
+    },
+    {
       "path": "apps/desktop_shell/src-tauri/Cargo.toml",
       "sha256": "297f81f7a901cf9c843a64894bed28d647fbc7d9ec6b909daa578bb7221fbcbf",
       "size_bytes": 417
     },
     {
+      "path": "apps/desktop_shell/src-tauri/icons/128x128.png",
+      "sha256": "f58174e61701b5e4d10ecd0099a8311af662ecf9ab1d929d29d3f7ba7e08527e",
+      "size_bytes": 300
+    },
+    {
+      "path": "apps/desktop_shell/src-tauri/icons/32x32.png",
+      "sha256": "f97ed06f73fb345796560671bf883f278b412f066807f2ccb7568c4334f6d4e2",
+      "size_bytes": 105
+    },
+    {
+      "path": "apps/desktop_shell/src-tauri/icons/icon.ico",
+      "sha256": "1928a24a8f14e69f4c01d28f3839bc5b4b701abdeac18fd5fdd2b9a7667fe0a3",
+      "size_bytes": 127
+    },
+    {
       "path": "apps/desktop_shell/src-tauri/src/main.rs",
-      "sha256": "43f9de7b756082a00372b20e403ff83df683b66100f7128169bee7cbb985c7ad",
-      "size_bytes": 270
+      "sha256": "d5e2ff131c782f251a3ee8b5c5c18b688c406e3400341e388a64f81d17b06ab7",
+      "size_bytes": 4304
     },
     {
       "path": "apps/desktop_shell/src-tauri/tauri.conf.json",
-      "sha256": "86003f363e12dc1c7cd051f5d0e62d436a60a199bc782da355c57ea3428538f6",
-      "size_bytes": 1073
+      "sha256": "1e8b1bfe0767ef50c12df458d7bbadb62950960f6c6d17935b9ce895c6137c73",
+      "size_bytes": 1109
     },
     {
       "path": "architecture/architecture_summary.json",
@@ -442,8 +487,8 @@
     },
     {
       "path": "architecture/decision_map.json",
-      "sha256": "9f0226cb863cddb3c3921fec6f7da1510100ad8cabfac56d65cbb7ac1642be4f",
-      "size_bytes": 19742
+      "sha256": "5b42d9d45a271ba30ce0f944eb722678909658884e82a61cda660a620d6f518d",
+      "size_bytes": 20350
     },
     {
       "path": "architecture/deployment_profiles.json",
@@ -552,8 +597,8 @@
     },
     {
       "path": "config/command_center_policy.json",
-      "sha256": "702ba69dd152bb6619021205d5bda3f2927525eba2e2fc339426abb7f309621f",
-      "size_bytes": 1374
+      "sha256": "4b67ab84a674382549db87ed0249adc89cc03937edf80745ef2ed09a7bec45c1",
+      "size_bytes": 1712
     },
     {
       "path": "config/context_policy.json",
@@ -569,6 +614,11 @@
       "path": "config/dependency_policy.json",
       "sha256": "7f46f4909f4359f45935e7b6e8bf1a5a3dad6c417a01b673fd686aba23b4b82b",
       "size_bytes": 5797
+    },
+    {
+      "path": "config/desktop_nondeterminism_schema.json",
+      "sha256": "d52656d5fbb05a918044de8603298a26e9992f9bdb0db8e83ee338d9a814346b",
+      "size_bytes": 1832
     },
     {
       "path": "config/feature_profiles.json",
@@ -1292,8 +1342,8 @@
     },
     {
       "path": "docs/command_center/application_and_desktop_shell.md",
-      "sha256": "ffd915a550dbfb0f0e9b504cb16b09b2136b91840907613a7576b57518712648",
-      "size_bytes": 2990
+      "sha256": "af3e3d1c2fe7674f97ccff02b258dd2f2924fd457576d57198630dc1731f1b3b",
+      "size_bytes": 3296
     },
     {
       "path": "docs/command_center/backend_realtime_api.md",
@@ -5322,7 +5372,7 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "fc35816feb9dbc6caa0f05b6d12440648211391c640733f35e27c8d532edad15",
+      "sha256": "b0988cd513a6d493f76a51eed50baf3d3207c3257ce3783338ca4897c2acd75f",
       "size_bytes": 25756
     },
     {
@@ -9497,13 +9547,13 @@
     },
     {
       "path": "plans/01_requirements/open_decisions.jsonl",
-      "sha256": "b742d85a02ffb762b5f16c5d7c98dd67338d6c476d8ff9422f88b83c658adbad",
-      "size_bytes": 31904
+      "sha256": "b065959d1e940f852f64789cbaec867fd703457766bd616d63d01deda7333a8c",
+      "size_bytes": 32287
     },
     {
       "path": "plans/01_requirements/OPEN_DECISIONS.md",
-      "sha256": "b16330653a2a4ec181703b836ed29e7cb597fa03f624294c24fd5d44a85b7d0f",
-      "size_bytes": 27361
+      "sha256": "0fcb01ec069775142ce720464cd028bdc7dad881ac81d443547b4ee8a96cbe7f",
+      "size_bytes": 27723
     },
     {
       "path": "plans/01_requirements/PLAN-REQ-001_requirements_engineering.md",
@@ -10047,8 +10097,8 @@
     },
     {
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "b9782e389ccce00f22ee8e5f1bde985b97ffe65c34207d968ff7c10552028725",
-      "size_bytes": 745371
+      "sha256": "b3e5dff668bffe3ffa74a30419020e82af67d427f4c1132ec386bf21ed31f8f7",
+      "size_bytes": 745844
     },
     {
       "path": "plans/_traceability/requirements_by_domain.json",
@@ -10057,8 +10107,8 @@
     },
     {
       "path": "plans/_traceability/requirements_by_id.json",
-      "sha256": "f41fcb4c1d6f2708e46ba8c75c9fc6af180d838a2caf369bb3a882eccdb87118",
-      "size_bytes": 872013
+      "sha256": "ca2a99d9c5a3e105c48b9327afe5d636c68b047e462019223d03860d316e325e",
+      "size_bytes": 872570
     },
     {
       "path": "plans/_traceability/requirements_by_source.json",
@@ -10067,8 +10117,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_decisions.jsonl",
-      "sha256": "2afa497c86521aac4cbd8784201257ffb12f60179e7d51c14ce33099355a174d",
-      "size_bytes": 21961
+      "sha256": "d14a26ed2cd1b32905f0c7e48127ecb16861ed4a801dace65f09171fd3fd44de",
+      "size_bytes": 21993
     },
     {
       "path": "plans/_traceability/requirements_to_evidence.jsonl",
@@ -10082,8 +10132,8 @@
     },
     {
       "path": "plans/_traceability/requirements_to_implementation.jsonl",
-      "sha256": "b35729374af50961658c3a5daf6c18971c55fbb71583530f11a302103d22af2c",
-      "size_bytes": 93512
+      "sha256": "10db491a4dc4a60cc3a9e2b16daf5c67d8f00bf8c184f1b08d2db8257bfcddcc",
+      "size_bytes": 93953
     },
     {
       "path": "plans/_traceability/requirements_to_jira.jsonl",
@@ -10607,8 +10657,8 @@
     },
     {
       "path": "pyproject.toml",
-      "sha256": "e95c1ba49b58ec00f82cecfcea594f475f0bb44f169beb265d796958751a9a32",
-      "size_bytes": 3673
+      "sha256": "944ffa6579f37051497b81e2cd9a700cd6d427d3c55f6e52a6c8b93f23fb17be",
+      "size_bytes": 3695
     },
     {
       "path": "README.md",
@@ -10642,13 +10692,13 @@
     },
     {
       "path": "requirements/development.txt",
-      "sha256": "96492b74442742826818f6aca2836a8c20ae8856fda3e93459821025d41106c3",
-      "size_bytes": 743
+      "sha256": "3df47ca5aa8c5484a3669c7be58a5a3307d9c82149c16b9dc111087954622301",
+      "size_bytes": 772
     },
     {
       "path": "requirements/environment.lock.json",
-      "sha256": "4342cd2f160193cf11cccce99dacb6f351ea1addbd02565464b3b9af8841c777",
-      "size_bytes": 11755
+      "sha256": "3bac473dd4560b723b7815b8f80394d20e2d2f20d70ccbb1443259edf35f0f99",
+      "size_bytes": 12469
     },
     {
       "path": "requirements/quality-tools.txt",
@@ -10697,8 +10747,8 @@
     },
     {
       "path": "runbooks/command_center_windows_qualification.md",
-      "sha256": "152c580cad6f8bbe002b120f7fb36b4b470ddb5112749aaf313af694cf62627f",
-      "size_bytes": 2036
+      "sha256": "7f28b53790b7dfe5160af9c829b3c8dbb655c548741a5ee9f7d5c40fda5c4919",
+      "size_bytes": 2653
     },
     {
       "path": "runbooks/completion_failure_rework.md",
@@ -10804,6 +10854,11 @@
       "path": "runbooks/verification_failure_triage.md",
       "sha256": "c48774a960a93f8de77d177133243b966cef6af1782f12738d27e8c530870390",
       "size_bytes": 1135
+    },
+    {
+      "path": "rust-toolchain.toml",
+      "sha256": "570dcc848c1b1f34e2f0fe9f9ca189e97ff25241b6cd424e61f0258146ef88ff",
+      "size_bytes": 123
     },
     {
       "path": "schemas/action_intent.schema.json",
@@ -11881,6 +11936,11 @@
       "size_bytes": 118
     },
     {
+      "path": "scripts/compare_desktop_artifacts.py",
+      "sha256": "a48a0adef2b76e2894eae46837fddf9b567c9f9f04bf36afb6fc73f03ccc1fcf",
+      "size_bytes": 1143
+    },
+    {
       "path": "scripts/create_project_archive.py",
       "sha256": "01888cdc7e6d1b625b77e39e6c810c4c1f28ed5cff563963d65b4ca9b626752e",
       "size_bytes": 718
@@ -11914,6 +11974,11 @@
       "path": "scripts/instruction_cold_start.py",
       "sha256": "80fe3ef4058c25a5c545c1374c96f931dc1b257e0e410437b966d2e4601e15a3",
       "size_bytes": 5149
+    },
+    {
+      "path": "scripts/qualify_desktop_windows.py",
+      "sha256": "b65dd9e92857cd840b11180db9924ee975f46b0970335c7d110d7598f0db91bd",
+      "size_bytes": 871
     },
     {
       "path": "scripts/README.md",
@@ -11989,6 +12054,11 @@
       "path": "scripts/run_takeover_lane_c_verification.py",
       "sha256": "dca7cd39ccc36fd07139026f90eab10780f4c157e7194002aaab9ec3007f5a9b",
       "size_bytes": 6186
+    },
+    {
+      "path": "scripts/stage_desktop_artifacts.py",
+      "sha256": "f210099991b1dfbe0bd60c6e07eccb4a0b5507110c72b3a180f024e79ed283f3",
+      "size_bytes": 2103
     },
     {
       "path": "scripts/start_autonomy_campaign_hidden.ps1",
@@ -12392,8 +12462,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "baf3db8ac89d2f6076eac68ef3a92322b10e96ab88d649d712156058202a0095",
-      "size_bytes": 173189
+      "sha256": "616ea96918732f174272daf50578d0a0bd8cd3ce89e8e19038d9c9365eaf2b78",
+      "size_bytes": 173210
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12417,13 +12487,13 @@
     },
     {
       "path": "src/project_pipeline/command_center/application_validation.py",
-      "sha256": "a918d56b0d9d59ae84cd42eb22cef371da160c7ccc8540f093f2d184b4af1c7e",
-      "size_bytes": 6456
+      "sha256": "00c3e5bad848bd5ee1354200b4096222c4a9bda34a7c0d4d27b3fb2fd649d7c3",
+      "size_bytes": 9690
     },
     {
       "path": "src/project_pipeline/command_center/application_verification.py",
-      "sha256": "aae49a924b5009541d7ed2926ec3ec061c6cc16d04904175d4ddd92c951f2361",
-      "size_bytes": 11331
+      "sha256": "105600ef0e66a68d32c943ddfc62add1e33fb141b16114573522c088109ac625",
+      "size_bytes": 11422
     },
     {
       "path": "src/project_pipeline/command_center/autonomy.py",
@@ -12434,6 +12504,21 @@
       "path": "src/project_pipeline/command_center/autonomy_director.py",
       "sha256": "878b1648e58901b064dcbc0b00241290533a6fdb0fb4e70375320cf974f0454d",
       "size_bytes": 9699
+    },
+    {
+      "path": "src/project_pipeline/command_center/desktop_qualification.py",
+      "sha256": "4e3326beac4cc1aa1fc51bf788b88eed60a4b2ea91fd9fe70c2a2a3206651734",
+      "size_bytes": 8922
+    },
+    {
+      "path": "src/project_pipeline/command_center/desktop_reproducibility.py",
+      "sha256": "6b31c75b9039bdb29374648cbf986299b3baab4e0a7bfdf212b5965faedbf2ee",
+      "size_bytes": 18192
+    },
+    {
+      "path": "src/project_pipeline/command_center/desktop_session.py",
+      "sha256": "34352d4e6ca9c8db0fbac5410720ef1588b8e176ed4a999314acb4e29d8c1fcb",
+      "size_bytes": 7828
     },
     {
       "path": "src/project_pipeline/command_center/director.py",
@@ -12452,13 +12537,13 @@
     },
     {
       "path": "src/project_pipeline/command_center/live_browser.py",
-      "sha256": "540999f0ac975c6bbac818fed07126801682bafeec748c2659db3b1b3af90e70",
-      "size_bytes": 8613
+      "sha256": "25e7e0d4e9b92b06bc86f8c6b68170478a091ebd5d92efbc7838c44930730d47",
+      "size_bytes": 9801
     },
     {
       "path": "src/project_pipeline/command_center/live_server.py",
-      "sha256": "280d3a157c4de8b8c2131e018d576f5088179aa6cdcd980ff67afbef8aaeae43",
-      "size_bytes": 8576
+      "sha256": "3236250eac914f51eb46d3b028a40d066453fa8cbfe7211ef4fadc01198e6f16",
+      "size_bytes": 10303
     },
     {
       "path": "src/project_pipeline/command_center/models.py",
@@ -12962,8 +13047,8 @@
     },
     {
       "path": "src/project_pipeline/io.py",
-      "sha256": "3a105dc43b92502b26c3de7df978f30fea6e0624c32a10b000d4f925971770fd",
-      "size_bytes": 5864
+      "sha256": "eed5f920682136d7b027bd14f0cd0c92f0c6f5442abcefb3e154823da87d50b0",
+      "size_bytes": 5882
     },
     {
       "path": "src/project_pipeline/jira.py",
@@ -14007,8 +14092,8 @@
     },
     {
       "path": "tests/test_command_center_application.py",
-      "sha256": "61c862b091fac348279f67b37842985cbd358557514034fc0ae5c5ba3bf415ee",
-      "size_bytes": 5113
+      "sha256": "bfcdd875d0dc5669a35e7604905e6dc0f0419508fa183fe78a00143e430843a5",
+      "size_bytes": 6118
     },
     {
       "path": "tests/test_command_center_autonomy.py",
@@ -14027,8 +14112,8 @@
     },
     {
       "path": "tests/test_command_center_live.py",
-      "sha256": "fa5d619552d0f645114a899cc10d77f187459e197409c1c7552620e5343250cb",
-      "size_bytes": 5135
+      "sha256": "24cd9b1548ae445fa15490825f8c4e2f66abdd50276b4f9e99a3510d3853fec0",
+      "size_bytes": 5907
     },
     {
       "path": "tests/test_command_center_models.py",
@@ -14187,7 +14272,7 @@
     },
     {
       "path": "tests/test_decision_resolution.py",
-      "sha256": "ec5fd872558c8e3d51250433f4a8afd3857c28451903e473d531c9682e71e5f4",
+      "sha256": "8cfe11dd1684d7a4575ebb8c282f3f256a027eaf89a9fa544636fff745eee73b",
       "size_bytes": 2232
     },
     {
@@ -14199,6 +14284,21 @@
       "path": "tests/test_dependencies.py",
       "sha256": "4d20c3f9762191ee1c188f7c635fcf77b9adf21d432b1b5f2f7da0bd90fd32ab",
       "size_bytes": 5271
+    },
+    {
+      "path": "tests/test_desktop_qualification.py",
+      "sha256": "24e3a65059878b639f5084ee1d42c8df6b7395d5ba8a4116772f1526085f5700",
+      "size_bytes": 1544
+    },
+    {
+      "path": "tests/test_desktop_reproducibility.py",
+      "sha256": "5ea77b6f8ea8c6ab5b74c49cce610039c73f3f8a74f1baf54ed3604d80e7e369",
+      "size_bytes": 11412
+    },
+    {
+      "path": "tests/test_desktop_session.py",
+      "sha256": "12af237c2f64934b2a7a0ade1c81dc4fb62a74f7a25141222d26e3f1e4efbd29",
+      "size_bytes": 4990
     },
     {
       "path": "tests/test_director_intelligence.py",
@@ -14861,7 +14961,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T07:43:14.959495+00:00",
+  "generated_at_utc": "2026-08-20T11:51:03.190549+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14870,5 +14970,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29661633
+  "total_bytes": 29940479
 }

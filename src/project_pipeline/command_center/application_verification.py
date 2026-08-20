@@ -6,6 +6,8 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.command_center.desktop_qualification import observe_desktop_toolchain
+
 
 def _sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -39,7 +41,7 @@ def evaluate_loaded_command_center_page(
 ) -> dict[str, Any]:
     checks: dict[str, bool] = {}
     page.wait_for_function(
-        "() => document.body.dataset.liveHydrated === 'true' || document.body.dataset.liveHydrated === 'skipped' || !window.CC_LIVE_TOKEN",
+        "() => document.body.dataset.liveHydrated === 'true' || document.body.dataset.liveHydrated === 'skipped' || !(window.CC_LIVE_TOKEN || window.__PP_MEMORY_SESSION__)",
         timeout=8000,
     )
     checks["single_main"] = page.locator("main").count() == 1
@@ -69,7 +71,9 @@ def evaluate_loaded_command_center_page(
     checks["interactive_graph"] = all(
         token in graph for token in ("requirement", "story", "task", "evidence")
     )
-    if page.evaluate("() => Boolean(window.CC_LIVE_TOKEN)"):
+    if page.evaluate(
+        "() => Boolean(window.CC_LIVE_TOKEN || (window.__PP_MEMORY_SESSION__ && window.__PP_MEMORY_SESSION__.token))"
+    ):
         checks["hydrated_in_progress_work"] = "pp-task-000385" in work
     checks["no_horizontal_overflow"] = not bool(
         page.evaluate(
@@ -250,8 +254,7 @@ def verify_command_center_ui(
             "passed": not forced_colors_overflow,
         },
         "external_runtime_qualification": {
-            "react_vite_dependency_install": "UNAVAILABLE_IN_EXECUTION_ENVIRONMENT",
-            "tauri_rust_windows_build": "UNAVAILABLE_IN_EXECUTION_ENVIRONMENT",
+            **observe_desktop_toolchain(),
             "claim": "NOT_CERTIFIED_BY_OFFLINE_PREVIEW",
         },
     }

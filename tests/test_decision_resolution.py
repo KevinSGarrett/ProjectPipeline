@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 class DecisionResolutionTests(unittest.TestCase):
     def test_accepted_adrs_link_sources_requirements_components_and_tradeoffs(self) -> None:
         catalog = json.loads((ROOT / "adr/ADR_CATALOG.json").read_text(encoding="utf-8"))
-        self.assertEqual(catalog["decision_count"], 27)
+        self.assertEqual(catalog["decision_count"], 28)
         for item in catalog["decisions"]:
             self.assertEqual(item["status"], "ACCEPTED")
             self.assertTrue(item["source_references"])
@@ -35,7 +35,7 @@ class DecisionResolutionTests(unittest.TestCase):
             .splitlines()
         ]
         resolved = [item for item in decisions if item["status"] == "RESOLVED"]
-        self.assertEqual(len(resolved), 22)
+        self.assertEqual(len(resolved), 23)
         for item in resolved:
             self.assertTrue(item["resolution"])
             self.assertTrue(item["resolved_by_decision_ids"])

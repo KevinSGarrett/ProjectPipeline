@@ -1,0 +1,44 @@
+{
+  "schema_id": "PP-DESKTOP-NONDET-001",
+  "schema_version": "1.1.0",
+  "algorithm": "allowlisted-field-zeroing/v1",
+  "description": "Only these fields may be removed before byte-for-byte comparison of native desktop artifacts. Any other difference fails C16-UX-01.",
+  "allowlisted_fields": [
+    {
+      "id": "pe_timedatestamp",
+      "kind": "signed_container_timestamp",
+      "reason": "PE COFF TimeDateStamp is a container timestamp, not application code.",
+      "algorithm": "zero_u32_at_coff_offset"
+    },
+    {
+      "id": "pe_checksum",
+      "kind": "signed_container_checksum",
+      "reason": "Optional PE checksum is recalculated after timestamp changes.",
+      "algorithm": "zero_u32_at_optional_header_checksum"
+    },
+    {
+      "id": "msi_package_code",
+      "kind": "installer_package_code",
+      "reason": "Windows Installer PackageCode is unique per package instance.",
+      "algorithm": "compare_extracted_payload_tree_not_package_code"
+    },
+    {
+      "id": "nsis_build_timestamp",
+      "kind": "installer_timestamp",
+      "reason": "NSIS header timestamps are installer-container metadata.",
+      "algorithm": "compare_extracted_payload_tree_not_header_timestamp"
+    },
+    {
+      "id": "pe_debug_timedatestamp",
+      "kind": "signed_container_timestamp",
+      "reason": "IMAGE_DEBUG_DIRECTORY TimeDateStamp values are container timestamps, not application code. Hosted lanes A/B on c6c4787 differed by exactly three of these DWORDs.",
+      "algorithm": "zero_u32_at_each_debug_directory_timestamp"
+    },
+    {
+      "id": "pe_codeview_guid",
+      "kind": "debug_identity",
+      "reason": "CodeView RSDS GUID is a per-link debug identity, not application payload. Hosted lanes A/B on c6c4787 differed by exactly those 16 bytes.",
+      "algorithm": "zero_16_at_rsds_guid"
+    }
+  ]
+}

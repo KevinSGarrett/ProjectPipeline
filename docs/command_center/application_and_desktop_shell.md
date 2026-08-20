@@ -10,7 +10,7 @@ The application includes professional navigation and surfaces for project readin
 
 ## Authentication and client state
 
-Bearer credentials are held in memory by the application session abstraction. The source deliberately does not persist auth tokens in `localStorage`, `sessionStorage`, IndexedDB, or a Tauri store. Reconnection may rebuild views from the API and replayable event cursor; a browser cache is not a recovery authority.
+`ADR-0028` authenticates the Command Center with local OS identity plus an ephemeral in-memory session bearer. Bootstrap uses a one-time loopback nonce; the live server does not inject tokens into HTML and does not write a persistent token file. The source does not persist auth tokens in `localStorage`, `sessionStorage`, IndexedDB, or a Tauri store. Reconnection may rebuild views from the API and replayable event cursor; a browser cache is not a recovery authority. Non-loopback binds are rejected until an accepted authenticated TLS profile exists.
 
 ## Desktop shell
 
@@ -22,7 +22,7 @@ Tauri itself is not a control-plane shortcut. Native notifications may draw oper
 
 The layout has desktop, tablet, and narrow-mobile breakpoints, keyboard-visible focus, a skip link, semantic landmarks, labelled controls, accessible status text, reduced-motion handling, and a forced-colors treatment. Pass 20 runs the repository-local preview through real Chromium/Playwright at 1440×900, 1024×768, and 390×844 plus a forced-colors rendering.
 
-The preview is intentionally dependency-free and contains representative non-authoritative records so browser layout can be verified when package-registry access is unavailable. It does **not** certify the React/Vite package build or the Tauri native build. Those toolchain gaps are preserved as external qualification work rather than converted into a false pass.
+The preview is intentionally dependency-free and contains representative non-authoritative records so browser layout can be verified when package-registry access is unavailable. It does **not** certify the React/Vite package build or the Tauri native build. Native compilation is pinned by `package-lock.json`, `Cargo.lock`, and `rust-toolchain.toml`, and is proven by the dual hosted Windows workflow plus local hash verification.
 
 ## Director scope
 

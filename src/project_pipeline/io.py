@@ -46,6 +46,7 @@ DEFAULT_IGNORED_DIRECTORIES = frozenset(
         "node_modules",
         "pip-wheel-metadata",
         "playwright-report",
+        "target",
         "test-results",
         ".pytest_cache",
         ".mypy_cache",

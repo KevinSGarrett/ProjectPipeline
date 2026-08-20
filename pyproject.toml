@@ -74,6 +74,7 @@ test = [
   "jsonschema>=4.25,<5",
   "pytest>=8.4,<10",
   "pytest-cov>=6.2,<8",
+  "uvicorn>=0.35,<1",
 ]
 quality = [
   "build==1.5.0",

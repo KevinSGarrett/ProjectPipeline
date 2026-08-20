@@ -37,6 +37,9 @@ dist/
 pip-wheel-metadata/
 MANIFEST
 
+# Rust and Tauri build output
+target/
+
 # JavaScript, browser-test, and frontend output
 node_modules/
 .npm/
@@ -143,7 +146,9 @@ terraform.rc
 .DS_Store
 .AppleDouble
 .LSOverride
-Icon?
+# macOS Finder custom-folder icon is the filename Icon plus a carriage return.
+# Do not use Icon? : on case-insensitive Windows that matches the Tauri icons/ directory.
+Icon[]
 ._*
 Thumbs.db
 ehthumbs.db

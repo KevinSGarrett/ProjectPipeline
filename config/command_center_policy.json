@@ -41,6 +41,16 @@
     ]
   },
   "safe_default_bind": "127.0.0.1",
-  "schema_version": "1.0.0",
+  "desktop_auth": {
+    "decision_id": "ADR-0028",
+    "mechanism": "local_os_identity_plus_ephemeral_session",
+    "default_bind": "127.0.0.1",
+    "allow_nonloopback": false,
+    "require_tls_for_nonloopback": true,
+    "require_auth_for_nonloopback": true,
+    "persist_secrets": false,
+    "bootstrap": "one_time_loopback_nonce"
+  },
+  "schema_version": "1.1.0",
   "ui_state_authoritative": false
 }
