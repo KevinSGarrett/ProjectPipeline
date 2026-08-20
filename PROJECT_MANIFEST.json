@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "2f96b3e2e7300239dd2c2649b0946717d08c7f5d1f98d9ae36939c4a566b4bd3",
+  "aggregate_sha256": "ff92ea1fd702ae5314d802645c8e812e539eff2aab4d20d71c6a9bf1ccfc3e2a",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -5572,7 +5572,7 @@
     },
     {
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "0d9fa72b446f08676ed5475faa7ad3ce258c299715d862158a9a1c5d4929ed1b",
+      "sha256": "aef715d55cf7ccfc04b6a939617409ef0dfd6fdfc0f460dc7b1b76606b090f51",
       "size_bytes": 5786
     },
     {
@@ -14212,13 +14212,13 @@
     },
     {
       "path": "tests/test_evidence_observations.py",
-      "sha256": "c9a472612494fcae9a730658b109b53f830323e55ab15aae22d60e057a3f4e71",
-      "size_bytes": 14157
+      "sha256": "364c56c55ad7bb11778481cea895ba0f772363efd2eb040f777f0f4dd2e9edbc",
+      "size_bytes": 14159
     },
     {
       "path": "tests/test_evidence_reconciliation_convergence.py",
-      "sha256": "19744643d7e64c9658f77202c369af6e87e8d3bfd59f6f9c379147de5eb41672",
-      "size_bytes": 15892
+      "sha256": "08f8edff599d17a3c3afcf9654b76c32e5f99c715854bde35cf0c8f3d817391e",
+      "size_bytes": 15970
     },
     {
       "path": "tests/test_github_cli.py",
@@ -14851,7 +14851,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T03:43:02.386885+00:00",
+  "generated_at_utc": "2026-08-20T03:51:37.959586+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14860,5 +14860,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29576461
+  "total_bytes": 29576541
 }

@@ -358,7 +358,7 @@ def test_node_runner_records_missing_when_node_binary_is_absent(
 def test_pytest_runner_uses_interpreter_and_isolates_script_failures(tmp_path: Path) -> None:
     passing = tmp_path / "tests" / "test_pass.py"
     passing.parent.mkdir(parents=True)
-    passing.write_text("def test_pass() -> None:\n    assert True\n", encoding="utf-8")
+    passing.write_text("def test_pass() -> None:\n    assert 1 == 1\n", encoding="utf-8")
     script = tmp_path / "scripts" / "verify_ok.py"
     script.parent.mkdir(parents=True)
     script.write_text("raise SystemExit(0)\n", encoding="utf-8")
