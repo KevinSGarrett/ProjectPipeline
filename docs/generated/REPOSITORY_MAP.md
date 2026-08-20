@@ -1,7 +1,7 @@
 # Generated Repository Map
 
-- Files: `3012`
-- Generated: `2026-08-20T22:33:40.193248+00:00`
+- Files: `3022`
+- Generated: `2026-08-20T23:26:14.910323+00:00`
 
 ## Top-level counts
 
@@ -16,9 +16,9 @@
 - `config`: 42
 - `contracts`: 5
 - `database`: 102
-- `docs`: 76
+- `docs`: 77
 - `dummy`: 429
-- `evidence`: 254
+- `evidence`: 255
 - `fixtures`: 25
 - `infrastructure`: 11
 - `instructions`: 46
@@ -31,8 +31,8 @@
 - `runbooks`: 28
 - `schemas`: 209
 - `scripts`: 44
-- `src`: 341
-- `tests`: 233
+- `src`: 348
+- `tests`: 234
 - `third_party`: 1
 
 ## Semantic indexes
@@ -228,6 +228,7 @@
 - `evidence/project_intake_integrated_suite.txt`
 - `evidence/project_pipeline_intake_snapshot.json`
 - `evidence/rel_disposable_rehearsal.json`
+- `evidence/release/draft_release_factory.json`
 - `evidence/repository_foundation_full_suite.txt`
 - `evidence/repository_foundation_smoke.json`
 - `evidence/repository_foundation_tests.txt`

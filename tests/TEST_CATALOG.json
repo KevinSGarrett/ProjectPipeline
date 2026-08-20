@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 688,
+  "test_count": 698,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -1623,9 +1623,19 @@
       "test_id": "TEST-GITHUB-ADAPTER-001"
     },
     {
+      "callable": "test_draft_release_create_upload_download_and_changed_head_finalize",
+      "path": "tests/test_github_rest_adapter.py",
+      "test_id": "TEST-GITHUB-ADAPTER-002"
+    },
+    {
       "callable": "test_merge_gate_requires_checks_and_approval",
       "path": "tests/test_github_steward_domain.py",
       "test_id": "TEST-GITHUB-DOMAIN-001"
+    },
+    {
+      "callable": "test_draft_release_unknown_outcome_duplicate_and_finalize_guards",
+      "path": "tests/test_release_factory.py",
+      "test_id": "TEST-GITHUB-DRAFT-001"
     },
     {
       "callable": "test_lifecycle_end_to_end_mock_merge_and_delete",
@@ -2528,6 +2538,46 @@
       "test_id": "TEST-REL-CONT-003"
     },
     {
+      "callable": "test_version_authority_reads_current_repository",
+      "path": "tests/test_release_factory.py",
+      "test_id": "TEST-REL-FACTORY-001"
+    },
+    {
+      "callable": "test_python_version_mismatch_fails_closed",
+      "path": "tests/test_release_factory.py",
+      "test_id": "TEST-REL-FACTORY-002"
+    },
+    {
+      "callable": "test_desktop_version_mismatch_fails_closed",
+      "path": "tests/test_release_factory.py",
+      "test_id": "TEST-REL-FACTORY-003"
+    },
+    {
+      "callable": "test_bundle_is_content_addressed_resumable_and_rejects_mixed_head",
+      "path": "tests/test_release_factory.py",
+      "test_id": "TEST-REL-FACTORY-004"
+    },
+    {
+      "callable": "test_supply_binding_extracts_cleanly_and_records_missing_signing",
+      "path": "tests/test_release_factory.py",
+      "test_id": "TEST-REL-FACTORY-005"
+    },
+    {
+      "callable": "test_zip_slip_and_secret_residue_are_rejected",
+      "path": "tests/test_release_factory.py",
+      "test_id": "TEST-REL-FACTORY-006"
+    },
+    {
+      "callable": "test_acquired_remote_bytes_lifecycle_does_not_use_worktree",
+      "path": "tests/test_release_factory.py",
+      "test_id": "TEST-REL-FACTORY-007"
+    },
+    {
+      "callable": "test_release_factory_cli_version",
+      "path": "tests/test_release_factory.py",
+      "test_id": "TEST-REL-FACTORY-008"
+    },
+    {
       "callable": "test_pass24_upstream_gate_covers_exact_candidates_and_blocks_agpl_activation",
       "path": "tests/test_pass24_release_hardening.py",
       "test_id": "TEST-REL-HARDEN-001"
@@ -2708,41 +2758,6 @@
       "test_id": "TEST-REQUIREMENTS-002"
     },
     {
-      "callable": "test_ppdb_0025_applies_retrieval_tables",
-      "path": "tests/test_retrieval_benchmark.py",
-      "test_id": "TEST-RETRIEVAL-001"
-    },
-    {
-      "callable": "test_exact_source_address_and_lexical_fallback",
-      "path": "tests/test_retrieval_benchmark.py",
-      "test_id": "TEST-RETRIEVAL-002"
-    },
-    {
-      "callable": "test_backup_restore_and_benchmark_recall",
-      "path": "tests/test_retrieval_benchmark.py",
-      "test_id": "TEST-RETRIEVAL-003"
-    },
-    {
-      "callable": "test_retrieval_cli_benchmark",
-      "path": "tests/test_retrieval_benchmark.py",
-      "test_id": "TEST-RETRIEVAL-004"
-    },
-    {
-      "callable": "test_semantic_status_ignores_unset_or_dead_dsn",
-      "path": "tests/test_retrieval_benchmark.py",
-      "test_id": "TEST-RETRIEVAL-005"
-    },
-    {
-      "callable": "test_postgresql_retrieval_sql_enables_vector_and_indexes",
-      "path": "tests/test_retrieval_benchmark.py",
-      "test_id": "TEST-RETRIEVAL-006"
-    },
-    {
-      "callable": "test_benchmark_rerun_on_same_database_is_idempotent",
-      "path": "tests/test_retrieval_benchmark.py",
-      "test_id": "TEST-RETRIEVAL-007"
-    },
-    {
       "callable": "test_aws_blueprint_keeps_local_primary",
       "path": "tests/test_resilience_aws.py",
       "test_id": "TEST-RES-AWS-001"
@@ -2901,6 +2916,41 @@
       "callable": "test_wip_restore_rejects_unsafe_destination",
       "path": "tests/test_resilience_gaps.py",
       "test_id": "TEST-RES-WIPRESTORE-003"
+    },
+    {
+      "callable": "test_ppdb_0025_applies_retrieval_tables",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-001"
+    },
+    {
+      "callable": "test_exact_source_address_and_lexical_fallback",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-002"
+    },
+    {
+      "callable": "test_backup_restore_and_benchmark_recall",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-003"
+    },
+    {
+      "callable": "test_retrieval_cli_benchmark",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-004"
+    },
+    {
+      "callable": "test_semantic_status_ignores_unset_or_dead_dsn",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-005"
+    },
+    {
+      "callable": "test_postgresql_retrieval_sql_enables_vector_and_indexes",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-006"
+    },
+    {
+      "callable": "test_benchmark_rerun_on_same_database_is_idempotent",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-007"
     },
     {
       "callable": "RuntimeFoundationTests.test_bootstrap_reports_required_foundation_ready",

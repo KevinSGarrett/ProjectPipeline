@@ -1,0 +1,13 @@
+{
+  "authenticode_state": "BLOCKED_EXTERNAL_SIGNING_IDENTITY_MISSING",
+  "bundle_version_authority": "platform_version 0.9.0; desktop 0.10.0 dual identity recorded",
+  "draft_finalize": "rejected without campaign_complete",
+  "generated_at_utc": "2026-08-20T23:10:00+00:00",
+  "github_operations": [
+    "CREATE_DRAFT_RELEASE",
+    "UPLOAD_RELEASE_ASSET",
+    "FINALIZE_RELEASE"
+  ],
+  "schema_version": "1.0.0",
+  "unknown_outcome": "reconcile-before-retry"
+}

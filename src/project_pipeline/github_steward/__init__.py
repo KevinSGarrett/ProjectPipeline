@@ -1,6 +1,7 @@
 from project_pipeline.github_steward.adapter import GitHubRestAdapter
 from project_pipeline.github_steward.autonomous_review import evaluate_autonomous_review
 from project_pipeline.github_steward.consolidation import prove_consolidation
+from project_pipeline.github_steward.draft_release import GitHubDraftReleaseService
 from project_pipeline.github_steward.errors import GitHubAdapterError, GitHubStewardError
 from project_pipeline.github_steward.lifecycle import ClosedLoopLifecycle
 from project_pipeline.github_steward.local_git import (
@@ -29,6 +30,7 @@ from project_pipeline.github_steward.worktrunk import (
 __all__ = [
     "ClosedLoopLifecycle",
     "GitHubAdapterError",
+    "GitHubDraftReleaseService",
     "GitHubRemotePort",
     "GitHubRestAdapter",
     "GitHubStewardError",

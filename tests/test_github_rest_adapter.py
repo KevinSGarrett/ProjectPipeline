@@ -331,3 +331,82 @@ def test_delete_branch_uses_git_refs_endpoint():
     request = opener.requests[0][0]
     assert request.method == "DELETE"
     assert request.full_url.endswith("/repos/owner/repo/git/refs/heads/feature%2Fx")
+
+
+class BinaryResponse:
+    def __init__(self, payload: bytes):
+        self.payload = payload
+
+    def read(self):
+        return self.payload
+
+
+def test_draft_release_create_upload_download_and_changed_head_finalize():
+    created = {
+        "id": 11,
+        "tag_name": "v0.9.0-rc.aaaaaaaaaaaa",
+        "name": "draft",
+        "draft": True,
+        "prerelease": True,
+        "target_commitish": SHA1,
+        "html_url": "https://github.com/owner/repo/releases/11",
+        "upload_url": "https://uploads.github.com/repos/owner/repo/releases/11/assets{?name,label}",
+        "body": "body",
+        "assets": [],
+    }
+    uploaded = {
+        "id": 22,
+        "name": "source.zip",
+        "size": 4,
+        "content_type": "application/zip",
+        "browser_download_url": "https://example.test/source.zip",
+    }
+    changed = dict(created)
+    changed["target_commitish"] = SHA2
+    opener = Opener(
+        [
+            Response(created),
+            Response(uploaded),
+            BinaryResponse(b"data"),
+            Response(changed),
+        ]
+    )
+    adapter = GitHubRestAdapter(
+        opener=opener,
+        retry_base_seconds=0,
+        upload_base_url="https://uploads.github.com",
+    )
+    context = GitHubWriteContext(
+        actor_id="actor:test",
+        correlation_id="corr:test",
+        idempotency_key="github-draft-0001",
+        authorization_id="auth:test",
+    )
+    release = adapter.create_draft_release(
+        "owner/repo",
+        tag_name="v0.9.0-rc.aaaaaaaaaaaa",
+        name="draft",
+        body="body",
+        target_commitish=SHA1,
+        context=context,
+    )
+    assert release.draft is True
+    assert release.api_id == 11
+    asset = adapter.upload_release_asset(
+        "owner/repo",
+        release_id=11,
+        name="source.zip",
+        content=b"data",
+        content_type="application/zip",
+        context=context,
+    )
+    assert asset.name == "source.zip"
+    assert adapter.download_release_asset("owner/repo", asset_id=22) == b"data"
+    with pytest.raises(GitHubAdapterError) as caught:
+        adapter.finalize_release(
+            "owner/repo",
+            release_id=11,
+            expected_target_commitish=SHA1,
+            context=context,
+        )
+    assert caught.value.payload.category is AdapterErrorCategory.CONFLICT

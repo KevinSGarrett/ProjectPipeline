@@ -14,7 +14,7 @@ from project_pipeline.domain.base import DomainModel, utc_now
 HEX_SHA = re.compile(r"^[0-9a-f]{7,64}$")
 REPOSITORY_SLUG = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 GITHUB_RECORD_ID = re.compile(
-    r"^(GHREP|GHBR|GHWT|GHOWN|GHPR|GHREV|GHCHK|GHGATE|GHOP|GHREC|GHARV|GHDRF|GHCON|GHLIF)-[A-F0-9]{20}$"
+    r"^(GHREP|GHBR|GHWT|GHOWN|GHPR|GHREV|GHCHK|GHGATE|GHOP|GHREC|GHARV|GHDRF|GHCON|GHLIF|GHREL)-[A-F0-9]{20}$"
 )
 
 
@@ -38,6 +38,7 @@ def github_identifier(
         "GHDRF",
         "GHCON",
         "GHLIF",
+        "GHREL",
     ],
     *parts: str,
 ) -> str:
@@ -145,6 +146,9 @@ class GitOperationType(StrEnum):
     SUPERSEDE_PULL_REQUEST = "SUPERSEDE_PULL_REQUEST"
     RECORD_REVIEW = "RECORD_REVIEW"
     VERIFY_INTEGRATED_TREE = "VERIFY_INTEGRATED_TREE"
+    CREATE_DRAFT_RELEASE = "CREATE_DRAFT_RELEASE"
+    UPLOAD_RELEASE_ASSET = "UPLOAD_RELEASE_ASSET"
+    FINALIZE_RELEASE = "FINALIZE_RELEASE"
 
 
 class GuardianFindingSeverity(StrEnum):
@@ -386,6 +390,7 @@ class GitHubAdapterCapabilities(DomainModel):
     supports_merge: bool = True
     supports_delete_branch: bool = True
     supports_branch_protection: bool = True
+    supports_releases: bool = True
     maximum_page_size: int = Field(default=100, ge=1, le=100)
 
 
@@ -419,6 +424,55 @@ class GitHubBranchProtection(DomainModel):
     require_conversation_resolution: bool = True
     allow_force_pushes: bool = False
     allow_deletions: bool = False
+
+
+class GitHubReleaseAsset(DomainModel):
+    asset_id: str
+    api_id: int = Field(ge=1)
+    name: str = Field(min_length=1, max_length=255)
+    sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    size_bytes: int = Field(ge=0)
+    content_type: str = Field(default="application/octet-stream", min_length=1, max_length=127)
+    browser_download_url: str | None = None
+
+    @field_validator("asset_id")
+    @classmethod
+    def validate_id(cls, value: str) -> str:
+        if not GITHUB_RECORD_ID.fullmatch(value) or not value.startswith("GHREL-"):
+            raise ValueError("invalid GitHub release asset identifier")
+        return value
+
+
+class GitHubReleaseSnapshot(DomainModel):
+    record_id: str
+    repository_slug: str
+    api_id: int = Field(ge=1)
+    tag_name: str = Field(min_length=1, max_length=128)
+    name: str = Field(min_length=1, max_length=255)
+    draft: bool = True
+    prerelease: bool = True
+    target_commitish: str
+    html_url: str | None = None
+    upload_url: str | None = None
+    body: str = ""
+    assets: tuple[GitHubReleaseAsset, ...] = ()
+
+    @field_validator("record_id")
+    @classmethod
+    def validate_id(cls, value: str) -> str:
+        if not GITHUB_RECORD_ID.fullmatch(value) or not value.startswith("GHREL-"):
+            raise ValueError("invalid GitHub release identifier")
+        return value
+
+    @field_validator("target_commitish")
+    @classmethod
+    def validate_target(cls, value: str) -> str:
+        normalized = value.strip()
+        if not normalized:
+            raise ValueError("release target_commitish must be non-empty")
+        if HEX_SHA.fullmatch(normalized.lower()):
+            return normalized.lower()
+        return normalized
 
 
 class GitHubOperation(DomainModel):

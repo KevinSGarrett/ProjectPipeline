@@ -10,6 +10,8 @@ from project_pipeline.domain.github import (
     GitBranch,
     GitHubAdapterCapabilities,
     GitHubBranchProtection,
+    GitHubReleaseAsset,
+    GitHubReleaseSnapshot,
     GitHubRepositoryMetadata,
     PullRequestCheck,
     PullRequestReview,
@@ -17,6 +19,7 @@ from project_pipeline.domain.github import (
     PullRequestState,
     github_identifier,
 )
+from project_pipeline.github_steward.draft_release import bound_asset
 from project_pipeline.github_steward.errors import GitHubAdapterError
 from project_pipeline.github_steward.ports import GitHubRemotePort, GitHubWriteContext
 
@@ -50,6 +53,10 @@ class MockGitHubAdapter(GitHubRemotePort):
         self.calls: list[tuple[str, str]] = []
         self.pages_observed = 0
         self._next_pull = max(self._pulls, default=0) + 1
+        self._releases: dict[int, GitHubReleaseSnapshot] = {}
+        self._asset_bytes: dict[int, bytes] = {}
+        self._next_release = 1
+        self._next_asset = 1
 
     def schedule_failure(self, operation: str, category: AdapterErrorCategory) -> None:
         self._failures.setdefault(operation, []).append(category)
@@ -277,6 +284,172 @@ class MockGitHubAdapter(GitHubRemotePort):
         self.calls.append(("delete_branch", branch))
         self._persist_then_fail("delete_branch", context, {"deleted": branch}, branch)
         self._idempotency[context.idempotency_key] = {"deleted": branch}
+
+    def list_releases(
+        self, repository_slug: str, *, page_size: int = 100
+    ) -> Iterable[GitHubReleaseSnapshot]:
+        del repository_slug
+        self._maybe_fail("releases", "corr:mock-github-releases")
+        ordered = [self._releases[key] for key in sorted(self._releases)]
+        for start in range(0, len(ordered), max(1, page_size)):
+            self.pages_observed += 1
+            yield from ordered[start : start + page_size]
+
+    def get_release(self, repository_slug: str, release_id: int) -> GitHubReleaseSnapshot | None:
+        del repository_slug
+        self._maybe_fail("release", f"corr:mock-github-release-{release_id}")
+        return self._releases.get(release_id)
+
+    def create_draft_release(
+        self,
+        repository_slug: str,
+        *,
+        tag_name: str,
+        name: str,
+        body: str,
+        target_commitish: str,
+        context: GitHubWriteContext,
+    ) -> GitHubReleaseSnapshot:
+        replay = self._replay(context.idempotency_key)
+        if replay is not None:
+            return replay
+        for item in self._releases.values():
+            if item.tag_name != tag_name:
+                continue
+            if not item.draft:
+                raise self._error(
+                    AdapterErrorCategory.CONFLICT,
+                    "MOCK_RELEASE_PUBLISHED",
+                    "Published release already exists for tag",
+                    context.correlation_id,
+                    "github.release.create",
+                    retryable=False,
+                )
+            if item.target_commitish.lower() != target_commitish.lower():
+                raise self._error(
+                    AdapterErrorCategory.CONFLICT,
+                    "MOCK_RELEASE_HEAD_CHANGED",
+                    "Draft tag is bound to a different candidate",
+                    context.correlation_id,
+                    "github.release.create",
+                    retryable=False,
+                )
+            return item
+        api_id = self._next_release
+        self._next_release += 1
+        item = GitHubReleaseSnapshot(
+            record_id=github_identifier("GHREL", repository_slug, tag_name, str(api_id)),
+            repository_slug=repository_slug,
+            api_id=api_id,
+            tag_name=tag_name,
+            name=name,
+            draft=True,
+            prerelease=True,
+            target_commitish=target_commitish,
+            html_url=f"https://github.com/{repository_slug}/releases/{api_id}",
+            upload_url=f"https://uploads.github.test/repos/{repository_slug}/releases/{api_id}/assets",
+            body=body,
+        )
+        self._releases[api_id] = item
+        self.calls.append(("create_draft_release", tag_name))
+        self._persist_then_fail("create_draft_release", context, item, str(api_id))
+        self._idempotency[context.idempotency_key] = item
+        return item
+
+    def upload_release_asset(
+        self,
+        repository_slug: str,
+        *,
+        release_id: int,
+        name: str,
+        content: bytes,
+        content_type: str,
+        context: GitHubWriteContext,
+    ) -> GitHubReleaseAsset:
+        replay = self._replay(context.idempotency_key)
+        if replay is not None:
+            return replay
+        release = self._releases.get(release_id)
+        if release is None:
+            raise self._error(
+                AdapterErrorCategory.NOT_FOUND,
+                "MOCK_RELEASE_MISSING",
+                "Release is missing",
+                context.correlation_id,
+                "github.release.upload",
+                retryable=False,
+            )
+        if any(asset.name == name for asset in release.assets):
+            raise self._error(
+                AdapterErrorCategory.CONFLICT,
+                "MOCK_ASSET_EXISTS",
+                "Asset already exists",
+                context.correlation_id,
+                "github.release.upload",
+                retryable=False,
+            )
+        api_id = self._next_asset
+        self._next_asset += 1
+        asset = bound_asset(name, content, api_id=api_id, content_type=content_type)
+        self._asset_bytes[api_id] = content
+        self._releases[release_id] = release.model_copy(update={"assets": (*release.assets, asset)})
+        self.calls.append(("upload_release_asset", name))
+        self._persist_then_fail("upload_release_asset", context, asset, str(api_id))
+        self._idempotency[context.idempotency_key] = asset
+        del repository_slug
+        return asset
+
+    def download_release_asset(self, repository_slug: str, *, asset_id: int) -> bytes:
+        del repository_slug
+        self._maybe_fail("download", f"corr:mock-github-download-{asset_id}")
+        if asset_id not in self._asset_bytes:
+            raise self._error(
+                AdapterErrorCategory.NOT_FOUND,
+                "MOCK_ASSET_MISSING",
+                "Asset is missing",
+                "corr:mock-github-download",
+                "github.release.download",
+                retryable=False,
+            )
+        return self._asset_bytes[asset_id]
+
+    def finalize_release(
+        self,
+        repository_slug: str,
+        *,
+        release_id: int,
+        expected_target_commitish: str,
+        context: GitHubWriteContext,
+    ) -> GitHubReleaseSnapshot:
+        replay = self._replay(context.idempotency_key)
+        if replay is not None:
+            return replay
+        release = self._releases.get(release_id)
+        if release is None:
+            raise self._error(
+                AdapterErrorCategory.NOT_FOUND,
+                "MOCK_RELEASE_MISSING",
+                "Release is missing",
+                context.correlation_id,
+                "github.release.finalize",
+                retryable=False,
+            )
+        if release.target_commitish.lower() != expected_target_commitish.lower():
+            raise self._error(
+                AdapterErrorCategory.CONFLICT,
+                "MOCK_RELEASE_HEAD_CHANGED",
+                "Release target changed",
+                context.correlation_id,
+                "github.release.finalize",
+                retryable=False,
+            )
+        published = release.model_copy(update={"draft": False})
+        self._releases[release_id] = published
+        self.calls.append(("finalize_release", str(release_id)))
+        self._persist_then_fail("finalize_release", context, published, str(release_id))
+        self._idempotency[context.idempotency_key] = published
+        del repository_slug
+        return published
 
     def seed_review(self, number: int, review: PullRequestReview) -> None:
         self._reviews.setdefault(number, []).append(review)

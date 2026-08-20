@@ -8,6 +8,8 @@ from project_pipeline.domain.github import (
     GitBranch,
     GitHubAdapterCapabilities,
     GitHubBranchProtection,
+    GitHubReleaseAsset,
+    GitHubReleaseSnapshot,
     GitHubRepositoryMetadata,
     PullRequestCheck,
     PullRequestReview,
@@ -85,3 +87,38 @@ class GitHubRemotePort(Protocol):
     def delete_branch(
         self, repository_slug: str, *, branch: str, context: GitHubWriteContext
     ) -> None: ...
+    def list_releases(
+        self, repository_slug: str, *, page_size: int = 100
+    ) -> Iterable[GitHubReleaseSnapshot]: ...
+    def get_release(
+        self, repository_slug: str, release_id: int
+    ) -> GitHubReleaseSnapshot | None: ...
+    def create_draft_release(
+        self,
+        repository_slug: str,
+        *,
+        tag_name: str,
+        name: str,
+        body: str,
+        target_commitish: str,
+        context: GitHubWriteContext,
+    ) -> GitHubReleaseSnapshot: ...
+    def upload_release_asset(
+        self,
+        repository_slug: str,
+        *,
+        release_id: int,
+        name: str,
+        content: bytes,
+        content_type: str,
+        context: GitHubWriteContext,
+    ) -> GitHubReleaseAsset: ...
+    def download_release_asset(self, repository_slug: str, *, asset_id: int) -> bytes: ...
+    def finalize_release(
+        self,
+        repository_slug: str,
+        *,
+        release_id: int,
+        expected_target_commitish: str,
+        context: GitHubWriteContext,
+    ) -> GitHubReleaseSnapshot: ...

@@ -26,7 +26,10 @@
         "CLOSE_PULL_REQUEST",
         "SUPERSEDE_PULL_REQUEST",
         "RECORD_REVIEW",
-        "VERIFY_INTEGRATED_TREE"
+        "VERIFY_INTEGRATED_TREE",
+        "CREATE_DRAFT_RELEASE",
+        "UPLOAD_RELEASE_ASSET",
+        "FINALIZE_RELEASE"
       ],
       "title": "GitOperationType",
       "type": "string"
