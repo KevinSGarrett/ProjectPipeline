@@ -96,10 +96,27 @@ def validate_command_center_application(root: Path) -> list[str]:
             errors.append(
                 "Tauri runner must execute the CLI with cwd set to apps/desktop_shell so src-tauri/tauri.conf.json is discoverable"
             )
+        if "TAURI_FRONTEND_PATH: frontendRoot" not in runner:
+            errors.append("Tauri runner must set TAURI_FRONTEND_PATH to apps/command_center")
+        if "TAURI_APP_PATH" not in runner:
+            errors.append("Tauri runner must set TAURI_APP_PATH to apps/desktop_shell/src-tauri")
 
     tauri_path = root / "apps/desktop_shell/src-tauri/tauri.conf.json"
     if tauri_path.is_file():
         tauri = json.loads(tauri_path.read_text(encoding="utf-8"))
+        build = tauri.get("build") or {}
+        frontend = (root / "apps/command_center").resolve()
+        if build.get("beforeDevCommand") != "npm run dev":
+            errors.append("Tauri beforeDevCommand must run npm run dev in TAURI_FRONTEND_PATH")
+        if build.get("beforeBuildCommand") != "npm run build":
+            errors.append("Tauri beforeBuildCommand must run npm run build in TAURI_FRONTEND_PATH")
+        frontend_dist = build.get("frontendDist")
+        if not isinstance(frontend_dist, str) or (tauri_path.parent / frontend_dist).resolve() != (
+            frontend / "dist"
+        ):
+            errors.append(
+                "Tauri frontendDist must resolve from src-tauri to apps/command_center/dist"
+            )
         security = tauri.get("app", {}).get("security", {})
         csp = str(security.get("csp", ""))
         if "127.0.0.1:8765" not in csp:

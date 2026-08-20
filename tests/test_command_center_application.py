@@ -139,3 +139,10 @@ def test_tauri_cli_discovers_project_from_desktop_shell_not_command_center(proje
     assert "run-tauri.mjs" in package["scripts"]["tauri:build"]
     runner = (frontend / "scripts/run-tauri.mjs").read_text(encoding="utf-8")
     assert "cwd: desktopRoot" in runner
+    assert "TAURI_FRONTEND_PATH: frontendRoot" in runner
+    assert "TAURI_APP_PATH" in runner
+    tauri = json.loads((desktop / "src-tauri/tauri.conf.json").read_text(encoding="utf-8"))
+    assert tauri["build"]["beforeBuildCommand"] == "npm run build"
+    assert (desktop / "src-tauri" / tauri["build"]["frontendDist"]).resolve() == (
+        frontend / "dist"
+    ).resolve()

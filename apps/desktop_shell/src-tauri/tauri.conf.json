@@ -4,8 +4,8 @@
   "version": "0.10.0",
   "identifier": "com.projectpipeline.commandcenter",
   "build": {
-    "beforeDevCommand": "npm --prefix ../../command_center run dev",
-    "beforeBuildCommand": "npm --prefix ../../command_center run build",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build",
     "devUrl": "http://127.0.0.1:4173",
     "frontendDist": "../../command_center/dist"
   },

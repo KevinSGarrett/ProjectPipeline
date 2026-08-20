@@ -17,9 +17,15 @@ if (!fs.existsSync(cliPath)) {
   process.exit(1);
 }
 
+const env = {
+  ...process.env,
+  TAURI_FRONTEND_PATH: frontendRoot,
+  TAURI_APP_PATH: path.join(desktopRoot, "src-tauri"),
+};
+
 const result = spawnSync(process.execPath, [cliPath, ...process.argv.slice(2)], {
   cwd: desktopRoot,
-  env: process.env,
+  env,
   stdio: "inherit",
   windowsHide: true,
 });
