@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 684,
+  "test_count": 688,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -1536,6 +1536,26 @@
       "callable": "test_pass23_report_is_persisted_with_digest",
       "path": "tests/test_pass23_full_e2e.py",
       "test_id": "TEST-E2E-P23-006"
+    },
+    {
+      "callable": "test_playwright_status_does_not_invent_a_live_browser",
+      "path": "tests/integration/test_playwright_testcontainers_infra.py",
+      "test_id": "TEST-E2E-PW-001"
+    },
+    {
+      "callable": "test_docker_engine_probe_is_structured",
+      "path": "tests/e2e/test_pgvector_container_recovery.py",
+      "test_id": "TEST-E2E-TC-001"
+    },
+    {
+      "callable": "test_pgvector_container_persists_across_kill_and_records_image_identity",
+      "path": "tests/e2e/test_pgvector_container_recovery.py",
+      "test_id": "TEST-E2E-TC-002"
+    },
+    {
+      "callable": "test_testcontainers_python_package_is_optional_and_docker_probe_is_explicit",
+      "path": "tests/integration/test_playwright_testcontainers_infra.py",
+      "test_id": "TEST-E2E-TC-003"
     },
     {
       "callable": "test_canonical_ledger_has_no_inline_subject_bindings",

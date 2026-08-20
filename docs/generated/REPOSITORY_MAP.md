@@ -1,7 +1,7 @@
 # Generated Repository Map
 
-- Files: `3007`
-- Generated: `2026-08-20T19:45:56.717860+00:00`
+- Files: `3012`
+- Generated: `2026-08-20T21:50:18.610328+00:00`
 
 ## Top-level counts
 
@@ -16,9 +16,9 @@
 - `config`: 42
 - `contracts`: 5
 - `database`: 102
-- `docs`: 75
+- `docs`: 76
 - `dummy`: 429
-- `evidence`: 253
+- `evidence`: 254
 - `fixtures`: 25
 - `infrastructure`: 11
 - `instructions`: 46
@@ -31,8 +31,8 @@
 - `runbooks`: 28
 - `schemas`: 209
 - `scripts`: 44
-- `src`: 340
-- `tests`: 231
+- `src`: 341
+- `tests`: 233
 - `third_party`: 1
 
 ## Semantic indexes
@@ -319,6 +319,7 @@
 - `evidence/verification/pass25_convergence_audit_summary.json`
 - `evidence/verification/pass25_external_qualification.json`
 - `evidence/verification/performance_results.json`
+- `evidence/verification/pgvector_container_runtime.json`
 - `evidence/verification/post_merge_report.json`
 - `evidence/verification/property_probes.json`
 - `evidence/verification/runs/VCHK-35E1CF03F3DF07A722A4.stdout.txt`

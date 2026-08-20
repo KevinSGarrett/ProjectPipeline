@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import html
+import importlib.util
 import os
 import shutil
 import time
@@ -123,6 +124,30 @@ def find_chromium(candidates: tuple[str, ...] = ()) -> str | None:
         if path:
             return path
     return None
+
+
+def playwright_runtime_status() -> dict[str, Any]:
+    """Report Playwright availability without inventing a live browser measurement."""
+
+    package_present = importlib.util.find_spec("playwright") is not None
+    chromium_path = find_chromium()
+    if package_present and chromium_path:
+        status = "MEASURED"
+        reason = "playwright_package_and_chromium_present"
+    elif package_present:
+        status = "UNAVAILABLE_IN_EXECUTION_ENVIRONMENT"
+        reason = "chromium_executable_missing"
+    else:
+        status = "UNAVAILABLE_IN_EXECUTION_ENVIRONMENT"
+        reason = "playwright_package_missing"
+    return {
+        "runtime": "playwright",
+        "package_present": package_present,
+        "chromium_present": chromium_path is not None,
+        "chromium_path": chromium_path,
+        "status": status,
+        "reason": reason,
+    }
 
 
 def _accessibility_violations(page: Any) -> tuple[list[str], int]:

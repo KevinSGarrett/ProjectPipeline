@@ -1,5 +1,6 @@
 from project_pipeline.verification.browser import (
     find_chromium,
+    playwright_runtime_status,
     render_verification_report,
     verify_report,
 )
@@ -26,6 +27,7 @@ __all__ = [
     "find_chromium",
     "golden_journey_definitions",
     "load_verification_policy",
+    "playwright_runtime_status",
     "render_verification_report",
     "run_golden_journeys",
     "simulate_scenario",
