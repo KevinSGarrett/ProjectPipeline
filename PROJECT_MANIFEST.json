@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "0a090a462c2800381dbe0f501a1a11d0402305792aaad4a6712b3ee60ebdf651",
+  "aggregate_sha256": "d4d8a488adb7150fb55aab72661a8dfdbc8c39e882e4e97fc861f7a7efa2fb59",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12487,13 +12487,13 @@
     },
     {
       "path": "src/project_pipeline/command_center/desktop_reproducibility.py",
-      "sha256": "f6dd637854c2bd9db003b8633648207c7f0f62260fbc9d46fc7f5373c0e532a1",
-      "size_bytes": 5038
+      "sha256": "35604fa58e4ad8f2d8209645cb0d51a49935c9b718094d919d96f84a786d2fd8",
+      "size_bytes": 5254
     },
     {
       "path": "src/project_pipeline/command_center/desktop_session.py",
-      "sha256": "f17f79c158f592dae33a242929a71cbabab789293ec94b07019b764fd5cbb6fa",
-      "size_bytes": 7692
+      "sha256": "34352d4e6ca9c8db0fbac5410720ef1588b8e176ed4a999314acb4e29d8c1fcb",
+      "size_bytes": 7828
     },
     {
       "path": "src/project_pipeline/command_center/director.py",
@@ -14267,13 +14267,13 @@
     },
     {
       "path": "tests/test_desktop_reproducibility.py",
-      "sha256": "f7ecb7a12bbbb995fab141e5e6156e9c122c8063afd1dd9ee2da23a47d57c84d",
-      "size_bytes": 2446
+      "sha256": "7beace0a0d576463bb925bbabdaf8fe63322233a8b99c7265511500d1a36a0f1",
+      "size_bytes": 3172
     },
     {
       "path": "tests/test_desktop_session.py",
-      "sha256": "9d7f4275b30e334d5309a3c520d98b99c2bdbb23c53633b1d38eec100c0e93b4",
-      "size_bytes": 4189
+      "sha256": "12af237c2f64934b2a7a0ade1c81dc4fb62a74f7a25141222d26e3f1e4efbd29",
+      "size_bytes": 4990
     },
     {
       "path": "tests/test_director_intelligence.py",
@@ -14936,7 +14936,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T08:30:32.823783+00:00",
+  "generated_at_utc": "2026-08-20T08:45:15.970747+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14945,5 +14945,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29909574
+  "total_bytes": 29911453
 }

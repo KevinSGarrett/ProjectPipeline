@@ -51,6 +51,22 @@ def test_normalized_pe_comparison_ignores_only_allowlisted_fields(tmp_path: Path
     assert result["passed"] is True
 
 
+def test_compare_ignores_raw_hash_sidecars(tmp_path: Path) -> None:
+    schema = load_nondeterminism_schema(ROOT)
+    left_dir = tmp_path / "A"
+    right_dir = tmp_path / "B"
+    left_dir.mkdir()
+    right_dir.mkdir()
+    payload = _minimal_pe(timestamp=1)
+    (left_dir / "app.exe").write_bytes(payload)
+    (right_dir / "app.exe").write_bytes(payload)
+    (left_dir / "hashes.json").write_text('{"lane":"A","sha256":"aaa"}\n', encoding="utf-8")
+    (right_dir / "hashes.json").write_text('{"lane":"B","sha256":"bbb"}\n', encoding="utf-8")
+    result = compare_normalized_trees(left_dir, right_dir, schema)
+    assert result["passed"] is True
+    assert all(item["name"] != "hashes.json" for item in result["comparisons"])
+
+
 def test_unallowlisted_payload_difference_fails(tmp_path: Path) -> None:
     schema = load_nondeterminism_schema(ROOT)
     left_dir = tmp_path / "A"

@@ -8,6 +8,7 @@ from typing import Any
 
 SCHEMA_RELATIVE = "config/desktop_nondeterminism_schema.json"
 SCHEMA_ID = "PP-DESKTOP-NONDET-001"
+COMPARE_EXCLUDED_NAMES = frozenset({"hashes.json", "compare.json"})
 
 
 @dataclass(frozen=True, slots=True)
@@ -97,8 +98,16 @@ def compare_normalized_trees(
     right_root: Path,
     schema: dict[str, Any],
 ) -> dict[str, Any]:
-    left_files = {path.name: path for path in left_root.rglob("*") if path.is_file()}
-    right_files = {path.name: path for path in right_root.rglob("*") if path.is_file()}
+    left_files = {
+        path.name: path
+        for path in left_root.rglob("*")
+        if path.is_file() and path.name not in COMPARE_EXCLUDED_NAMES
+    }
+    right_files = {
+        path.name: path
+        for path in right_root.rglob("*")
+        if path.is_file() and path.name not in COMPARE_EXCLUDED_NAMES
+    }
     names = sorted(set(left_files) | set(right_files))
     comparisons: list[dict[str, Any]] = []
     mismatches: list[str] = []

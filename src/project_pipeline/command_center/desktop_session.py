@@ -6,6 +6,7 @@ import json
 import os
 import secrets
 import stat
+import threading
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -110,6 +111,7 @@ class EphemeralSessionIssuer:
         self.ttl_seconds = ttl_seconds
         self.bootstrap_nonce = secrets.token_urlsafe(32)
         self._nonce_used = False
+        self._lock = threading.Lock()
         self._sessions: dict[str, _SessionRecord] = {}
         self._handshake_path: Path | None = None
 
@@ -159,24 +161,25 @@ class EphemeralSessionIssuer:
     ) -> SessionGrant:
         if not is_loopback_host(peer_host):
             raise DesktopSessionError("bootstrap is loopback-only")
-        if self._nonce_used:
-            raise DesktopSessionError("bootstrap nonce already redeemed")
-        if not nonce or not secrets.compare_digest(nonce, self.bootstrap_nonce):
-            raise DesktopSessionError("invalid bootstrap nonce")
         if os_identity != self.os_identity:
             raise DesktopSessionError("os identity mismatch")
-        self._nonce_used = True
-        self._unlink_handshake()
-        token = secrets.token_urlsafe(32)
-        grant = SessionGrant(
-            token=token,
-            actor_id=f"{SESSION_ACTOR_PREFIX}:{self.os_identity}",
-            os_identity=self.os_identity,
-            session_id=f"session:{uuid4().hex}",
-            expires_at_utc=datetime.now(UTC) + timedelta(seconds=self.ttl_seconds),
-        )
-        self._sessions[token] = _SessionRecord(grant=grant)
-        return grant
+        if not nonce or not secrets.compare_digest(nonce, self.bootstrap_nonce):
+            raise DesktopSessionError("invalid bootstrap nonce")
+        with self._lock:
+            if self._nonce_used:
+                raise DesktopSessionError("bootstrap nonce already redeemed")
+            self._nonce_used = True
+            self._unlink_handshake()
+            token = secrets.token_urlsafe(32)
+            grant = SessionGrant(
+                token=token,
+                actor_id=f"{SESSION_ACTOR_PREFIX}:{self.os_identity}",
+                os_identity=self.os_identity,
+                session_id=f"session:{uuid4().hex}",
+                expires_at_utc=datetime.now(UTC) + timedelta(seconds=self.ttl_seconds),
+            )
+            self._sessions[token] = _SessionRecord(grant=grant)
+            return grant
 
     def authenticate(self, token: str) -> str | None:
         record = self._sessions.get(token)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 import pytest
@@ -75,6 +76,25 @@ def test_live_preview_html_does_not_embed_token() -> None:
     assert "secret-token" not in html
     assert "CC_LIVE_TOKEN=" not in html
     assert issuer.authenticate("secret-token") == "actor:command-center"
+
+
+def test_concurrent_bootstrap_redeems_nonce_once() -> None:
+    issuer = EphemeralSessionIssuer(os_identity="desktop-operator")
+    nonce = issuer.bootstrap_nonce
+
+    def attempt() -> str:
+        try:
+            grant = issuer.redeem(nonce, peer_host="127.0.0.1", os_identity="desktop-operator")
+            return grant.token
+        except DesktopSessionError as exc:
+            return f"error:{exc}"
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        results = list(pool.map(lambda _: attempt(), range(8)))
+    tokens = [item for item in results if not str(item).startswith("error:")]
+    assert len(tokens) == 1
+    assert issuer.authenticate(tokens[0])
+    assert sum(1 for item in results if str(item).startswith("error:")) == 7
 
 
 def test_loopback_bootstrap_http_and_residue_scan(tmp_path: Path) -> None:
