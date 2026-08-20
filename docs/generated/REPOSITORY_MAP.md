@@ -1,7 +1,7 @@
 # Generated Repository Map
 
-- Files: `2994`
-- Generated: `2026-08-20T16:35:26.371194+00:00`
+- Files: `2995`
+- Generated: `2026-08-20T18:06:33.717609+00:00`
 
 ## Top-level counts
 
@@ -17,7 +17,7 @@
 - `database`: 98
 - `docs`: 74
 - `dummy`: 429
-- `evidence`: 251
+- `evidence`: 252
 - `fixtures`: 25
 - `infrastructure`: 11
 - `instructions`: 46
@@ -107,6 +107,7 @@
 - `evidence/budget_simulation_snapshot.json`
 - `evidence/budget_upstream_gate_snapshot.json`
 - `evidence/catalog_test_suite.txt`
+- `evidence/command_center/exact_main_desktop_journey.json`
 - `evidence/command_center_application_completion_gate_snapshot.json`
 - `evidence/command_center_application_focused_suite.txt`
 - `evidence/command_center_application_partitioned_regression.txt`

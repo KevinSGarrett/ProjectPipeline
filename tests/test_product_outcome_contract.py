@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import shutil
 from pathlib import Path
 
@@ -14,6 +15,7 @@ from project_pipeline.validation.product_model_audit import (
 )
 from project_pipeline.validation.product_outcome import (
     CORE_REQUIREMENT_ID,
+    runtime_qualification_is_bound,
     validate_product_outcome,
 )
 from project_pipeline.validation.registries import check_plan_registry
@@ -109,6 +111,35 @@ def test_command_center_director_chat_cannot_qualify_persistent_director(
         jira_ids=["PP-EPIC-000007", "PP-STORY-000065"],
     )
 
+    errors = validate_product_outcome(product_root)
+    assert any("persistent Autonomy Director must remain incomplete" in error for error in errors)
+
+
+def test_bound_runtime_qualification_may_close_persistent_director(product_root: Path) -> None:
+    evidence = (
+        product_root
+        / "evidence/autonomy_runtime/live_qualification/live_qualification_latest.json"
+    )
+    evidence.parent.mkdir(parents=True, exist_ok=True)
+    evidence.write_text(
+        json.dumps(
+            {
+                "bound_head": "a" * 40,
+                "bound_tree": "b" * 40,
+                "stages": [
+                    {"stage_id": "windows_service_foreground", "outcome": "PASSED"},
+                    {"stage_id": "command_center_truth", "outcome": "PASSED"},
+                    {"stage_id": "local_provider_dispatch", "outcome": "PASSED"},
+                    {"stage_id": "github_jira_governance", "outcome": "PASSED"},
+                    {"stage_id": "cursor_cli_provider_dispatch", "outcome": "PASSED"},
+                ],
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    _rewrite_requirement(product_root, "REQ-CTRL-0004", implementation_state="IMPLEMENTED")
+    assert runtime_qualification_is_bound(product_root) is False
     errors = validate_product_outcome(product_root)
     assert any("persistent Autonomy Director must remain incomplete" in error for error in errors)
 

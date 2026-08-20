@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import re
+import subprocess
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +27,14 @@ PURSUING_MILESTONES = (
     "Pass unattended 24-hour and then 72-hour operating-loop qualifications.",
     "Complete security, resilience, deployment, release, and post-release verification.",
     "Keep the pursuing goal INCOMPLETE until all terminal conditions pass.",
+)
+_FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
+_REQUIRED_LIVE_STAGES = (
+    "windows_service_foreground",
+    "command_center_truth",
+    "local_provider_dispatch",
+    "github_jira_governance",
+    "cursor_cli_provider_dispatch",
 )
 ORIGINAL_USER_INTENT_SECTION_IDS = {
     "SRC-002-SEC-001",
@@ -52,6 +61,70 @@ _QUALIFICATION_LADDER = (
     "RELEASED_POST_RELEASE_COMPLETION_GATE",
 )
 _SOURCE = re.compile(r"^(SRC-[0-9]{3}):L([0-9]{6})-L([0-9]{6})$")
+
+
+def runtime_qualification_is_bound(root: Path) -> bool:
+    """True when PP-384 live qualification is ancestor-bound to this checkout."""
+
+    path = root / "evidence/autonomy_runtime/live_qualification/live_qualification_latest.json"
+    if not path.is_file():
+        return False
+    try:
+        body = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    stages = {
+        str(item.get("stage_id")): str(item.get("outcome"))
+        for item in body.get("stages") or []
+        if isinstance(item, dict)
+    }
+    if any(stages.get(stage_id) != "PASSED" for stage_id in _REQUIRED_LIVE_STAGES):
+        return False
+    head = str(body.get("bound_head") or "").strip().lower()
+    tree = str(body.get("bound_tree") or "").strip().lower()
+    if _FULL_SHA.fullmatch(head) is None or _FULL_SHA.fullmatch(tree) is None:
+        return False
+    try:
+        ancestor = subprocess.run(
+            ["git", "-C", str(root), "merge-base", "--is-ancestor", head, "HEAD"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            shell=False,
+        )
+        tree_probe = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", f"{head}^{{tree}}"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            shell=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    recorded_tree = tree_probe.stdout.strip().lower()
+    if ancestor.returncode != 0 or recorded_tree != tree:
+        return False
+    return _desktop_exact_main_is_bound(root, head=head, tree=tree)
+
+
+def _desktop_exact_main_is_bound(root: Path, *, head: str, tree: str) -> bool:
+    path = root / "evidence/command_center/exact_main_desktop_journey.json"
+    if not path.is_file():
+        return False
+    try:
+        body = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return False
+    return (
+        str(body.get("bound_head") or "").strip().lower() == head
+        and str(body.get("bound_tree") or "").strip().lower() == tree
+        and body.get("native_window_observed") is True
+        and body.get("bootstrap_ok") is True
+        and body.get("installer_executed") is True
+        and int(body.get("stale_token_status") or 0) == 401
+    )
 
 
 def _issue_sources(root: Path) -> dict[str, dict[str, Any]]:
@@ -168,12 +241,31 @@ def validate_product_outcome(root: Path) -> list[str]:
             "narrow intake requirement REQ-PDEF-0006 may not claim the autonomous-loop source range"
         )
     director = requirements.get("REQ-CTRL-0004")
-    if director is None or director.get("implementation_state") != "PARTIALLY_IMPLEMENTED":
+    if director is None:
         errors.append(
             "persistent Autonomy Director must remain incomplete until runtime qualification"
         )
-    elif contract.get("epic_id") not in director.get("jira_ids", []):
-        errors.append("persistent Autonomy Director must link to the autonomous-runtime epic")
+    else:
+        director_state = director.get("implementation_state")
+        epic_linked = contract.get("epic_id") in director.get("jira_ids", [])
+        if director_state == "IMPLEMENTED":
+            if not runtime_qualification_is_bound(root):
+                errors.append(
+                    "persistent Autonomy Director must remain incomplete until runtime qualification"
+                )
+            if not epic_linked:
+                errors.append(
+                    "persistent Autonomy Director must link to the autonomous-runtime epic"
+                )
+        elif director_state == "PARTIALLY_IMPLEMENTED":
+            if not epic_linked:
+                errors.append(
+                    "persistent Autonomy Director must link to the autonomous-runtime epic"
+                )
+        else:
+            errors.append(
+                "persistent Autonomy Director must remain incomplete until runtime qualification"
+            )
     for source_contract in contract.get("broad_source_contracts", []):
         if not isinstance(source_contract, dict):
             errors.append("broad source contract entries must be objects")

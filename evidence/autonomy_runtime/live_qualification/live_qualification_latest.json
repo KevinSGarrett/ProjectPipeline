@@ -5,9 +5,13 @@
     "items": [],
     "owner": "autonomy-runtime"
   },
-  "disposable_root": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\.local\\live_qualification_runtime",
-  "generated_at_utc": "2026-08-18T21:44:36.987275+00:00",
-  "report_sha256": "f7e0c3d02f588480b4fd87d12af72728f4a0360dceebbcf845766904d6ea35aa",
+  "bound_head": "ced2563a2a0d0060be557b569b07432d352acdbc",
+  "bound_tree": "6d1c22ea125b2ff25f5aa151230f9416f928b9be",
+  "disposable_root": "C:\\Project_X_worktrees\\cycle-016-int\\.local\\live_qualification_runtime",
+  "generated_at_utc": "2026-08-20T17:41:46.168074+00:00",
+  "git_head": "ced2563a2a0d0060be557b569b07432d352acdbc",
+  "git_tree": "6d1c22ea125b2ff25f5aa151230f9416f928b9be",
+  "report_sha256": "fb502cc2a1db1bb50674a10c0b5f752bd3ce4ddda514228efff06b9a45a3cfd6",
   "schema_version": "1.0.0",
   "stages": [
     {
@@ -16,11 +20,11 @@
         "first_exit_code": 0,
         "first_health": {
           "checkpoint_exists": true,
-          "log_path": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\.local\\live_qualification_runtime\\state\\autonomy-service.log",
+          "log_path": "C:\\Project_X_worktrees\\cycle-016-int\\.local\\live_qualification_runtime\\state\\autonomy-service.log",
           "pid": null,
           "service_name": "ProjectPipelineAutonomy",
           "stale_pid": false,
-          "state_path": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\.local\\live_qualification_runtime\\state\\autonomy-supervisor.db",
+          "state_path": "C:\\Project_X_worktrees\\cycle-016-int\\.local\\live_qualification_runtime\\state\\autonomy-supervisor.db",
           "stop_requested": false
         },
         "plan_keys": [
@@ -35,11 +39,11 @@
         "recovery_exit_code": 0,
         "recovery_health": {
           "checkpoint_exists": true,
-          "log_path": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\.local\\live_qualification_runtime\\state\\autonomy-service.log",
+          "log_path": "C:\\Project_X_worktrees\\cycle-016-int\\.local\\live_qualification_runtime\\state\\autonomy-service.log",
           "pid": null,
           "service_name": "ProjectPipelineAutonomy",
           "stale_pid": false,
-          "state_path": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\.local\\live_qualification_runtime\\state\\autonomy-supervisor.db",
+          "state_path": "C:\\Project_X_worktrees\\cycle-016-int\\.local\\live_qualification_runtime\\state\\autonomy-supervisor.db",
           "stop_requested": false
         },
         "stale_pid_detected": true
@@ -59,6 +63,10 @@
             "items": [],
             "owner": "autonomy-runtime"
           },
+          "campaign": {
+            "active": false,
+            "label": "absent"
+          },
           "continuing_lane_ids": [],
           "last_verified_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
           "next_eligible_task_id": "PP-TASK-000385",
@@ -67,11 +75,11 @@
           "unavailable_capabilities": [],
           "windows_service": {
             "checkpoint_exists": true,
-            "log_path": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\.local\\live_qualification_runtime\\state\\live-qualification-service\\state\\autonomy-service.log",
+            "log_path": "C:\\Project_X_worktrees\\cycle-016-int\\.local\\live_qualification_runtime\\state\\live-qualification-service\\state\\autonomy-service.log",
             "pid": null,
             "service_name": "ProjectPipelineAutonomy",
             "stale_pid": false,
-            "state_path": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\.local\\live_qualification_runtime\\state\\live-qualification-service\\state\\autonomy-supervisor.db",
+            "state_path": "C:\\Project_X_worktrees\\cycle-016-int\\.local\\live_qualification_runtime\\state\\live-qualification-service\\state\\autonomy-supervisor.db",
             "stop_requested": false
           }
         },
@@ -104,7 +112,7 @@
         "github_write_probe": {
           "base_branch": "main",
           "branch": "qual/pp384-live-probe",
-          "created_sha_prefix": "99d1c83025e3",
+          "created_sha_prefix": "ced2563a2a0d",
           "observed_after_create": true,
           "observed_after_delete": true,
           "provider_id": "github-rest",
@@ -140,7 +148,7 @@
       "observations": {
         "expected_public_attestation_sha256": "b47d6d76d6eb7221e1d5d074f22b3793714ca120487314dd3816394f3745c32f",
         "expected_public_qualification_sha256": "99b41e93da8c59d111a77ddd02784da1904cbfaa95c99cb95d4b0573cc0ae00a",
-        "generated_at_utc": "2026-08-18T21:44:36.987275+00:00",
+        "generated_at_utc": "2026-08-20T17:41:46.165951+00:00",
         "outcome": "PASSED",
         "phases": [
           {
@@ -167,11 +175,11 @@
                   "kind": "privacy_attestation",
                   "preserved_sha256": "b47d6d76d6eb7221e1d5d074f22b3793714ca120487314dd3816394f3745c32f",
                   "public_schema_valid": true,
-                  "source_path": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\evidence\\pp379_writer_attestation_evidence.json",
+                  "source_path": "C:\\Project_X_worktrees\\cycle-016-int\\evidence\\pp379_writer_attestation_evidence.json",
                   "validator_reasons": [],
                   "validator_state": "VALID",
                   "validator_valid": true,
-                  "verification_path": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\tests\\.pp384_cursor_cli_runtime\\evidence-verify\\pp379_writer_attestation_evidence.json"
+                  "verification_path": "C:\\Project_X_worktrees\\cycle-016-int\\tests\\.pp384_cursor_cli_runtime\\evidence-verify\\pp379_writer_attestation_evidence.json"
                 },
                 {
                   "byte_length": 186,
@@ -185,11 +193,11 @@
                   "kind": "provider_qualification",
                   "preserved_sha256": "99b41e93da8c59d111a77ddd02784da1904cbfaa95c99cb95d4b0573cc0ae00a",
                   "public_schema_valid": true,
-                  "source_path": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\evidence\\pp379_writer_provider_qualification_evidence.json",
+                  "source_path": "C:\\Project_X_worktrees\\cycle-016-int\\evidence\\pp379_writer_provider_qualification_evidence.json",
                   "validator_reasons": [],
                   "validator_state": "QUALIFIED",
                   "validator_valid": true,
-                  "verification_path": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\tests\\.pp384_cursor_cli_runtime\\evidence-verify\\pp379_writer_provider_qualification_evidence.json"
+                  "verification_path": "C:\\Project_X_worktrees\\cycle-016-int\\tests\\.pp384_cursor_cli_runtime\\evidence-verify\\pp379_writer_provider_qualification_evidence.json"
                 }
               ]
             },
@@ -206,13 +214,13 @@
                 "--"
               ],
               "distribution": "Cursor-Agent-WSL1",
-              "enabled": false,
+              "enabled": true,
               "executable": "/home/kevin/.local/bin/cursor-agent",
               "executable_available": true,
               "execution_mode": "WSL",
               "found": true,
               "provider_id": "provider:cursor-cli",
-              "qualification": "QUARANTINED",
+              "qualification": "QUALIFIED",
               "resolved_executable": "/home/kevin/.local/bin/cursor-agent",
               "version": "2026.08.11-e8db854"
             },
@@ -225,7 +233,7 @@
               "finish_reason": "completed",
               "model_id": "auto",
               "provider_id": "provider:cursor-cli",
-              "provider_request_id": "44857e02-5fea-4930-b0b6-d302202136d5",
+              "provider_request_id": "c276cc94-fe1c-4c50-9a30-59de74d7d2ca",
               "usage": {
                 "cached_input_units": 0,
                 "cost_microunits": null,
@@ -239,25 +247,25 @@
           },
           {
             "observations": {
-              "digest": "2952394cc082fbe3d74336514f3c8c5e4e48f04d111157755ec2ea6f0352d283",
+              "digest": "67b84af700d0f178cdcce1e4f65af75c672e7a9288acd1efd89bb9054c09f676",
               "extras": [],
               "ok": true,
-              "path": "C:\\Project_X_worktrees\\codex-pp384-autonomy-final\\tests\\.pp384_cursor_cli_runtime\\cursor-cli-qualification\\pp384_cursor_cli_qualification_artifact.json",
+              "path": "C:\\Project_X_worktrees\\cycle-016-int\\tests\\.pp384_cursor_cli_runtime\\cursor-cli-qualification\\pp384_cursor_cli_qualification_artifact.json",
               "payload_matches": true
             },
             "phase": "RESULT_READBACK"
           },
           {
             "observations": {
-              "first_digest": "2952394cc082fbe3d74336514f3c8c5e4e48f04d111157755ec2ea6f0352d283",
+              "first_digest": "67b84af700d0f178cdcce1e4f65af75c672e7a9288acd1efd89bb9054c09f676",
               "ok": true,
-              "second_digest": "2952394cc082fbe3d74336514f3c8c5e4e48f04d111157755ec2ea6f0352d283"
+              "second_digest": "67b84af700d0f178cdcce1e4f65af75c672e7a9288acd1efd89bb9054c09f676"
             },
             "phase": "REPLAY"
           },
           {
             "observations": {
-              "captured_digest": "2952394cc082fbe3d74336514f3c8c5e4e48f04d111157755ec2ea6f0352d283",
+              "captured_digest": "67b84af700d0f178cdcce1e4f65af75c672e7a9288acd1efd89bb9054c09f676",
               "removed": true
             },
             "phase": "CLEANUP"

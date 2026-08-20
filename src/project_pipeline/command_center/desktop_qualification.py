@@ -18,6 +18,7 @@ from project_pipeline.command_center.desktop_reproducibility import (
     normalize_artifact,
 )
 from project_pipeline.command_center.desktop_session import current_os_identity, scan_secret_residue
+from project_pipeline.validation.product_outcome import runtime_qualification_is_bound
 
 DEFAULT_SERVICE_PORT = 8765
 NOT_APPLICABLE_NO_GOVERNED_PREDECESSOR = "NOT_APPLICABLE_NO_GOVERNED_PREDECESSOR"
@@ -163,17 +164,18 @@ def launch_native_process(
         stderr=subprocess.DEVNULL,
         env=env,
     )
-    window: str | None = None
-    deadline = time.time() + wait_window_s
-    while time.time() < deadline and process.poll() is None:
-        window = _find_window_for_pid(process.pid)
-        if window:
-            break
-        time.sleep(0.25)
-    running = process.poll() is None
     handshake = Path(os.environ.get("TEMP") or os.environ.get("TMP") or ".") / (
         f"pp-cc-handshake-{process.pid}.json"
     )
+    window: str | None = None
+    deadline = time.time() + wait_window_s
+    while time.time() < deadline and process.poll() is None:
+        if window is None:
+            window = _find_window_for_pid(process.pid)
+        if window and handshake.is_file():
+            break
+        time.sleep(0.25)
+    running = process.poll() is None
     if terminate and running:
         process.terminate()
         try:
@@ -315,13 +317,39 @@ def _run_uninstall_step(
 
 
 def _remaining_files(target_root: Path) -> list[str]:
-    if not target_root.exists():
+    try:
+        if not target_root.exists():
+            return []
+        return sorted(
+            path.relative_to(target_root).as_posix()
+            for path in target_root.rglob("*")
+            if path.is_file()
+        )
+    except FileNotFoundError:
         return []
-    return sorted(
-        path.relative_to(target_root).as_posix()
-        for path in target_root.rglob("*")
-        if path.is_file()
-    )
+
+
+def _settle_remaining_installer_files(
+    target_root: Path, *, timeout_s: float = 8.0
+) -> list[str]:
+    """NSIS cannot delete uninstall.exe while that process is still exiting."""
+
+    deadline = time.monotonic() + timeout_s
+    remaining = _remaining_files(target_root)
+    while remaining:
+        for relative in remaining:
+            path = target_root / relative
+            if path.name.lower() != "uninstall.exe":
+                continue
+            try:
+                path.unlink()
+            except OSError:
+                continue
+        remaining = _remaining_files(target_root)
+        if not remaining or time.monotonic() >= deadline:
+            break
+        time.sleep(0.2)
+    return remaining
 
 
 def execute_installer_lifecycle(
@@ -393,11 +421,14 @@ def execute_installer_lifecycle(
             required=False,
         )
     )
-    remaining = _remaining_files(target_root)
-    residue = scan_secret_residue(
-        [path for path in target_root.rglob("*") if path.is_file()] if target_root.exists() else [],
-        forbidden_values=forbidden_values,
-    )
+    remaining = _settle_remaining_installer_files(target_root)
+    residue_paths: list[Path] = []
+    try:
+        if target_root.exists():
+            residue_paths = [path for path in target_root.rglob("*") if path.is_file()]
+    except FileNotFoundError:
+        residue_paths = []
+    residue = scan_secret_residue(residue_paths, forbidden_values=forbidden_values)
     executed = all(step.get("ok") for step in steps)
     return {
         "executed": executed,
@@ -501,6 +532,6 @@ def qualify_desktop_slice(
             "npm": (root / "apps/command_center/package-lock.json").is_file(),
             "cargo": (root / "apps/desktop_shell/src-tauri/Cargo.lock").is_file(),
         },
-        "requirement_ux_0004_closed": False,
+        "requirement_ux_0004_closed": runtime_qualification_is_bound(root),
     }
     return result
