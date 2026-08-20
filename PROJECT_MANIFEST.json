@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "884c4f415cc61d566bfca22fbc8b348d281f178eecde8e5f493e6daebd217ed5",
+  "aggregate_sha256": "7e747f58f679d1990552b1fa4d0fa3af5703e85a50ad0877b05d11ec886426c7",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -5422,7 +5422,7 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "b0988cd513a6d493f76a51eed50baf3d3207c3257ce3783338ca4897c2acd75f",
+      "sha256": "47bd6c4c55eefe38b55609853814fe9c0b94c692a842a0f53dcf51754854da4c",
       "size_bytes": 25756
     },
     {
@@ -15056,7 +15056,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T21:50:38.774671+00:00",
+  "generated_at_utc": "2026-08-20T22:18:19.674413+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
