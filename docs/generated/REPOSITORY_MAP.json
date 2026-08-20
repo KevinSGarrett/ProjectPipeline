@@ -7212,7 +7212,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "a693bdd1af2d0f9ee67773ea4718a92518273a99ad850a1ab916244a342ba667",
+      "sha256": "78476be1adfd12d91b1436f7dd7f46f0c441b6b6e411bed12d990069e43f4e73",
       "size_bytes": 344629,
       "top_level": "_root"
     },
@@ -8010,7 +8010,7 @@
     {
       "extension": ".json",
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "0fa141a99457be5f374c6b7a849694a900f17505e265debbf6c1d6d00aa650c9",
+      "sha256": "3eafbe42b005c25b57baffba5448a859fc7146178025c4604d36f68064bd858d",
       "size_bytes": 5786,
       "top_level": "jira"
     },
@@ -14436,7 +14436,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "f3b333d50714d28d251d56f2c446c515a1784bed750a6a567dd113fd44bb774d",
+      "sha256": "33ab7407f8a73a7d6c153f7e0df4947cab39038eaef86be560479cc0bec73016",
       "size_bytes": 564197,
       "top_level": "_root"
     },
@@ -19406,8 +19406,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/verification/containers.py",
-      "sha256": "0d0ed985fb324930810eed3e8c7b55faaaff3f74dbae6e080b812843f3120c1f",
-      "size_bytes": 6567,
+      "sha256": "d9878d3026f015b431d46ab6074d5720465fc79d8a8a8d8c3c7b11c285e2c7c3",
+      "size_bytes": 6577,
       "top_level": "src"
     },
     {
@@ -19581,8 +19581,8 @@
     {
       "extension": ".py",
       "path": "tests/integration/test_playwright_testcontainers_infra.py",
-      "sha256": "f5615a1d938707d0be8d5192f2cb024989c6d6da837d77314b1a7b9d17d9a52e",
-      "size_bytes": 1267,
+      "sha256": "a3ba789ce689f5ec397631dd5163b7bcff645761b61a42793239cc85a2524a33",
+      "size_bytes": 1686,
       "top_level": "tests"
     },
     {
@@ -21154,7 +21154,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-20T22:24:30.875840+00:00",
+  "generated_at_utc": "2026-08-20T22:33:40.193248+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

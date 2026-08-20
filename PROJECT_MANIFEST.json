@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "c39bfd00d37a78b706af21d93c5aa81b3764b3409c6d197214132d534dbc3544",
+  "aggregate_sha256": "63e1ca691ac5fa099e6a5f8bac8d5304946c9cb53323540208b4e8dd5f0adb89",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -5672,7 +5672,7 @@
     },
     {
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "0fa141a99457be5f374c6b7a849694a900f17505e265debbf6c1d6d00aa650c9",
+      "sha256": "3eafbe42b005c25b57baffba5448a859fc7146178025c4604d36f68064bd858d",
       "size_bytes": 5786
     },
     {
@@ -13807,8 +13807,8 @@
     },
     {
       "path": "src/project_pipeline/verification/containers.py",
-      "sha256": "0d0ed985fb324930810eed3e8c7b55faaaff3f74dbae6e080b812843f3120c1f",
-      "size_bytes": 6567
+      "sha256": "d9878d3026f015b431d46ab6074d5720465fc79d8a8a8d8c3c7b11c285e2c7c3",
+      "size_bytes": 6577
     },
     {
       "path": "src/project_pipeline/verification/e2e.py",
@@ -13932,8 +13932,8 @@
     },
     {
       "path": "tests/integration/test_playwright_testcontainers_infra.py",
-      "sha256": "f5615a1d938707d0be8d5192f2cb024989c6d6da837d77314b1a7b9d17d9a52e",
-      "size_bytes": 1267
+      "sha256": "a3ba789ce689f5ec397631dd5163b7bcff645761b61a42793239cc85a2524a33",
+      "size_bytes": 1686
     },
     {
       "path": "tests/pp379_recovery_support.py",
@@ -15056,7 +15056,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T22:24:33.724682+00:00",
+  "generated_at_utc": "2026-08-20T22:33:44.611712+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15065,5 +15065,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30069735
+  "total_bytes": 30070164
 }

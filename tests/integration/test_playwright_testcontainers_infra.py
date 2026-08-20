@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 import importlib.util
+from pathlib import Path
 
 from project_pipeline.verification.browser import playwright_runtime_status
-from project_pipeline.verification.containers import docker_engine_ready
+from project_pipeline.verification.containers import (
+    PostgresVectorContainer,
+    docker_engine_ready,
+)
 
 
 def test_playwright_status_does_not_invent_a_live_browser() -> None:
@@ -21,6 +25,13 @@ def test_playwright_status_does_not_invent_a_live_browser() -> None:
 
 
 def test_testcontainers_python_package_is_optional_and_docker_probe_is_explicit() -> None:
+    argv = PostgresVectorContainer(name="pp-assert-tcp")._client_exec(
+        "psql", "-v", "ON_ERROR_STOP=1"
+    )
+    assert argv[argv.index("-h") + 1] == "127.0.0.1"
+    source = Path(__file__).resolve().parents[2] / "src/project_pipeline/verification/containers.py"
+    text = source.read_text(encoding="utf-8")
+    assert "self.password" not in text
     testcontainers_present = importlib.util.find_spec("testcontainers") is not None
     probe = docker_engine_ready()
     assert isinstance(testcontainers_present, bool)

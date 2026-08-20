@@ -112,10 +112,7 @@ class PostgresVectorContainer:
             raise RuntimeError(created.stderr.strip() or "docker run failed")
         deadline = time.monotonic() + 60.0
         while time.monotonic() < deadline:
-            ready = _run_docker(
-                ["exec", self.name, "pg_isready", "-U", "postgres", "-d", self.database],
-                timeout_s=10.0,
-            )
+            ready = _run_docker(self._client_exec("pg_isready"), timeout_s=10.0)
             if ready.returncode == 0:
                 return
             time.sleep(0.5)
@@ -143,21 +140,28 @@ class PostgresVectorContainer:
             "requested_image": self.image,
         }
 
+    def _client_exec(self, tool: str, *extra: str) -> list[str]:
+        return [
+            "exec",
+            "-e",
+            f"PGPASSWORD={self.db_auth}",
+            "-u",
+            "postgres",
+            "-i",
+            self.name,
+            tool,
+            "-h",
+            "127.0.0.1",
+            "-U",
+            "postgres",
+            "-d",
+            self.database,
+            *extra,
+        ]
+
     def exec_sql(self, sql: str) -> str:
         result = _run_docker(
-            [
-                "exec",
-                "-i",
-                self.name,
-                "psql",
-                "-U",
-                "postgres",
-                "-d",
-                self.database,
-                "-v",
-                "ON_ERROR_STOP=1",
-                "-q",
-            ],
+            self._client_exec("psql", "-v", "ON_ERROR_STOP=1", "-q"),
             timeout_s=60.0,
             stdin=sql,
         )
@@ -176,10 +180,7 @@ class PostgresVectorContainer:
             raise RuntimeError(result.stderr.strip() or "docker start failed")
         deadline = time.monotonic() + 45.0
         while time.monotonic() < deadline:
-            ready = _run_docker(
-                ["exec", self.name, "pg_isready", "-U", "postgres", "-d", self.database],
-                timeout_s=10.0,
-            )
+            ready = _run_docker(self._client_exec("pg_isready"), timeout_s=10.0)
             if ready.returncode == 0:
                 return
             time.sleep(0.5)
