@@ -73,6 +73,8 @@ def test_current_head_evaluation_rejects_unbound_definitions() -> None:
         or " test " in row["reason"]
         or "MISSING" in row["reason"]
         or "FAIL" in row["reason"]
+        or "desktop" in row["reason"]
+        or "not built" in row["reason"]
         for row in rejected
     )
 

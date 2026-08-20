@@ -35,10 +35,15 @@ def _candidate_row() -> dict:
         and row.get("implementation_paths")
         and row.get("test_ids")
         and row.get("evidence_ids")
-        and row["requirement_id"] not in {"REQ-PDEF-0011", "REQ-CTRL-0004"}
+        and row["requirement_id"]
+        not in {"REQ-PDEF-0011", "REQ-CTRL-0004", "REQ-UX-0004", "REQ-INFRA-0010"}
         and not contains_external_marker(
             " ".join(str(row.get(key, "")) for key in ("statement", "title", "acceptance_summary"))
         )
+        and "desktop application"
+        not in " ".join(
+            str(row.get(key, "")) for key in ("statement", "title", "acceptance_summary")
+        ).casefold()
     )
 
 
@@ -47,6 +52,34 @@ def test_deliver_is_not_an_external_live_marker() -> None:
     assert contains_external_marker("final Completion Gate")
     assert not contains_external_marker("Deliver the accepted requirements")
     assert not contains_external_marker("delivery progress and olive-colored UI")
+    assert not contains_external_marker("Command Center desktop and network access")
+    assert not contains_external_marker("Jira and GitHub reconciliation view")
+
+
+def test_duration_and_desktop_remain_fail_closed(tmp_path: Path) -> None:
+    candidate = _candidate_row()
+    duration = dict(candidate)
+    duration["requirement_id"] = "REQ-TEST-DURATION"
+    duration["statement"] = "Prove the real 24-hour unattended campaign"
+    duration["title"] = "Duration"
+    duration["acceptance_summary"] = "24-hour soak"
+    duration_root = tmp_path / "duration"
+    _seed_valid(duration_root, duration)
+    duration_ledger = evaluate_requirement_reconciliation(
+        duration_root, current_sha=CURRENT_SHA, current_tree=CURRENT_TREE
+    )
+    assert "timed" in duration_ledger[0]["reason"]
+    desktop = dict(candidate)
+    desktop["requirement_id"] = "REQ-UX-0004"
+    desktop["statement"] = "usable as a Windows-capable desktop application"
+    desktop["title"] = "Desktop and network access"
+    desktop["acceptance_summary"] = "desktop application"
+    desktop_root = tmp_path / "desktop"
+    _seed_valid(desktop_root, desktop)
+    desktop_ledger = evaluate_requirement_reconciliation(
+        desktop_root, current_sha=CURRENT_SHA, current_tree=CURRENT_TREE
+    )
+    assert "desktop application artifact" in desktop_ledger[0]["reason"]
 
 
 def test_catalog_callable_present_accepts_unittest_class_methods() -> None:
@@ -314,13 +347,13 @@ def test_reconciliation_rejects_false_positive_classes(tmp_path: Path) -> None:
     live_reason = reason_for(
         _space="mock",
         _row={
-            "acceptance_summary": "Verified when live unattended Windows behavior holds",
-            "title": "live unattended",
-            "statement": "live unattended",
+            "acceptance_summary": "Verified when live loopback behavior holds",
+            "title": "live loopback",
+            "statement": "live loopback",
         },
         _evidence={"environment": "mock"},
     )
-    assert "live" in live_reason or "mock-only" in live_reason
+    assert "mock-only" in live_reason
     assert "empty, or unfingerprintable" in reason_for(_space="emptydir", _empty_dir=True)
     protected = dict(candidate)
     protected["requirement_id"] = "REQ-PDEF-0011"

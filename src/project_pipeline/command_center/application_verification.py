@@ -37,11 +37,39 @@ def evaluate_loaded_command_center_page(
     name_prefix: str,
 ) -> dict[str, Any]:
     checks: dict[str, bool] = {}
+    page.wait_for_function(
+        "() => document.body.dataset.liveHydrated === 'true' || document.body.dataset.liveHydrated === 'skipped' || !window.CC_LIVE_TOKEN",
+        timeout=8000,
+    )
     checks["single_main"] = page.locator("main").count() == 1
     checks["single_h1"] = page.locator("h1").count() == 1
     checks["all_surfaces"] = all(
         page.locator(f"#{section}").count() == 1 for section in COMMAND_CENTER_REQUIRED_SECTIONS
     )
+    budgets = page.locator("#budgets").inner_text().casefold()
+    providers = page.locator("#providers").inner_text().casefold()
+    approvals = page.locator("#approvals").inner_text().casefold()
+    recovery = page.locator("#recovery").inner_text().casefold()
+    context = page.locator("#context").inner_text().casefold()
+    evidence = page.locator("#evidence").inner_text().casefold()
+    sync = page.locator("#sync").inner_text().casefold()
+    work = page.locator("#work").inner_text().casefold()
+    graph = page.locator("#graph").inner_text().casefold()
+    checks["cost_drilldown"] = "forecast" in budgets and "openai" in budgets
+    checks["agent_performance"] = "success" in providers and "latency" in providers
+    checks["approval_center"] = "risk" in approvals and "requester" in approvals
+    checks["recovery_center"] = "checkpoint" in recovery and "runbook" in recovery
+    checks["context_health"] = "freshness" in context and "coverage" in context
+    checks["visual_qa_evidence"] = "evid-" in evidence and "verified" in evidence
+    checks["jira_github_sync"] = "jira" in sync and "github" in sync
+    checks["live_work_fields"] = all(
+        token in work for token in ("worker", "workspace", "lease", "next")
+    )
+    checks["interactive_graph"] = all(
+        token in graph for token in ("requirement", "story", "task", "evidence")
+    )
+    if page.evaluate("() => Boolean(window.CC_LIVE_TOKEN)"):
+        checks["hydrated_in_progress_work"] = "pp-task-000385" in work
     checks["no_horizontal_overflow"] = not bool(
         page.evaluate(
             "() => document.documentElement.scrollWidth > document.documentElement.clientWidth"

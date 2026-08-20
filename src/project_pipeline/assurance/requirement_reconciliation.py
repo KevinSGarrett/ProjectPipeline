@@ -34,16 +34,22 @@ PROTECTED_REQUIREMENT_IDS = {
     "REQ-REL-0005",
     "REQ-REL-0006",
 }
-EXTERNAL_MARKERS = (
-    "live",
+DURATION_MARKERS = (
     "24-hour",
     "72-hour",
     "unattended",
-    "windows service",
-    "command center",
     "completion gate",
     "final completion",
 )
+LIVE_OBSERVATION_MARKERS = (
+    "live",
+    "windows service",
+)
+DESKTOP_APPLICATION_MARKERS = (
+    "desktop application",
+    "tauri",
+)
+EXTERNAL_MARKERS = DURATION_MARKERS + LIVE_OBSERVATION_MARKERS
 
 
 def catalog_callable_present(source: str, callable_name: str) -> bool:
@@ -330,11 +336,20 @@ def _evaluate_requirement(
     statement = " ".join(
         str(item.get(key, "")) for key in ("statement", "title", "acceptance_summary")
     ).lower()
-    if contains_external_marker(statement):
+    if text_contains_whole_markers(statement, DURATION_MARKERS):
         return {
             **base,
-            "reason": "live, timed, or Completion Gate behavior cannot use presence-only proof",
+            "reason": "timed, unattended, or Completion Gate behavior cannot use presence-only proof",
         }
+    if text_contains_whole_markers(statement, DESKTOP_APPLICATION_MARKERS) and not (
+        (root / "apps/desktop_shell/src-tauri/target/release").exists()
+        and any((root / "apps/desktop_shell/src-tauri/target/release").glob("*.exe"))
+    ):
+        return {
+            **base,
+            "reason": "Windows desktop application artifact is not built; network UI is not the desktop contract",
+        }
+    live_required = text_contains_whole_markers(statement, LIVE_OBSERVATION_MARKERS)
     paths = [str(path) for path in item.get("implementation_paths", [])]
     if not paths:
         return {**base, "reason": "no implementation paths"}
@@ -383,7 +398,7 @@ def _evaluate_requirement(
             current_sha=current_sha,
             current_tree=current_tree,
             acceptance_fingerprint=fingerprint,
-            live_required=contains_external_marker(statement),
+            live_required=live_required,
         )
         if reason:
             return {**base, "reason": reason}
@@ -429,6 +444,10 @@ def _evidence_rejection(
     environment = str(record.get("environment") or "").casefold()
     if "generated" in method or "generated-only" in environment:
         return f"evidence {evidence_id} is generated-only and cannot prove the behavior that generated it"
+    if live_required and any(
+        token in environment for token in ("mock", "simulated", "fixture", "dry-run")
+    ):
+        return f"evidence {evidence_id} is mock-only and cannot prove live behavior"
     if not current_sha or not current_tree:
         return "current repository SHA/tree is required to prove current-head behavior"
     observation = select_current_observation(

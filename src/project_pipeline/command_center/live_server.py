@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import socket
 import threading
 import time
@@ -10,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, Response
+from fastapi.responses import HTMLResponse, Response
 
 try:
     from uvicorn import Config, Server
@@ -127,17 +128,28 @@ def create_live_command_center_app(
     )
     preview = root / "apps/command_center/preview/index.html"
 
+    def _hydrated_preview() -> str:
+        html = preview.read_text(encoding="utf-8")
+        bootstrap = (
+            "<script>window.CC_LIVE_TOKEN="
+            + json.dumps(token)
+            + ";document.documentElement.dataset.liveToken='1';</script>"
+        )
+        if "</head>" in html:
+            return html.replace("</head>", bootstrap + "</head>", 1)
+        return bootstrap + html
+
     @app.get("/favicon.ico", include_in_schema=False)
     def favicon() -> Response:
         return Response(status_code=204)
 
     @app.get("/", include_in_schema=False)
-    def preview_index() -> FileResponse:
-        return FileResponse(preview, media_type="text/html")
+    def preview_index() -> HTMLResponse:
+        return HTMLResponse(_hydrated_preview())
 
     @app.get("/command-center", include_in_schema=False)
-    def preview_alias() -> FileResponse:
-        return FileResponse(preview, media_type="text/html")
+    def preview_alias() -> HTMLResponse:
+        return HTMLResponse(_hydrated_preview())
 
     return app, broker
 

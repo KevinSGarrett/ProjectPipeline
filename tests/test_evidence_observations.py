@@ -8,6 +8,7 @@ from pathlib import Path
 from project_pipeline.assurance.observation import (
     _node_runner,
     _parse_node_tap,
+    _pytest_runner,
     evidence_status,
     generate_observation,
     record_observation,
@@ -352,3 +353,39 @@ def test_node_runner_records_missing_when_node_binary_is_absent(
         ["apps/command_center/tests/appModel.test.mjs"],
     )
     assert results == {"TEST-CC-UI-001": "MISSING"}
+
+
+def test_pytest_runner_uses_interpreter_and_isolates_script_failures(tmp_path: Path) -> None:
+    passing = tmp_path / "tests" / "test_pass.py"
+    passing.parent.mkdir(parents=True)
+    passing.write_text("def test_pass() -> None:\n    assert 1 == 1\n", encoding="utf-8")
+    script = tmp_path / "scripts" / "verify_ok.py"
+    script.parent.mkdir(parents=True)
+    script.write_text("raise SystemExit(0)\n", encoding="utf-8")
+    catalog = tmp_path / "tests" / "TEST_CATALOG.json"
+    catalog.write_text(
+        json.dumps(
+            {
+                "schema_version": "2.0.0",
+                "test_count": 2,
+                "tests": [
+                    {
+                        "test_id": "TEST-PASS",
+                        "path": "tests/test_pass.py",
+                        "callable": "test_pass",
+                    },
+                    {
+                        "test_id": "TEST-SCRIPT",
+                        "path": "scripts/verify_ok.py",
+                        "callable": "main",
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    outcomes = _pytest_runner(tmp_path)(
+        ["TEST-PASS", "TEST-SCRIPT"],
+        ["tests/test_pass.py", "scripts/verify_ok.py"],
+    )
+    assert outcomes == {"TEST-PASS": "PASS", "TEST-SCRIPT": "PASS"}

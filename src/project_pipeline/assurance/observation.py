@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from collections.abc import Callable, Iterable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -79,8 +80,15 @@ def observation_rejection(
     if observation.verification_status != "VERIFIED":
         return f"observation {observation.observation_id} is not independently verified"
     outcomes = observation.test_outcomes
+    requirement_tests = {str(item) for item in test_ids}
+    defined_tests = [
+        str(item)
+        for item in ((definition or {}).get("test_ids") or observation.test_ids)
+        if str(item)
+    ]
+    owned_tests = [item for item in defined_tests if item in requirement_tests] or defined_tests
     if outcomes:
-        for test_id in test_ids:
+        for test_id in owned_tests:
             outcome = outcomes.get(test_id)
             if outcome != "PASS":
                 return (
@@ -92,7 +100,7 @@ def observation_rejection(
             return f"observation {observation.observation_id} records FAIL"
         if observation.result is not ObservationResult.PASS:
             return f"observation {observation.observation_id} does not record PASS"
-        missing_tests = [test_id for test_id in test_ids if test_id not in observation.test_ids]
+        missing_tests = [test_id for test_id in owned_tests if test_id not in observation.test_ids]
         if missing_tests:
             return f"observation {observation.observation_id} is missing cataloged tests"
     age = max(0, int((now - observation.recorded_at_utc.astimezone(UTC)).total_seconds()))
@@ -505,18 +513,32 @@ def _catalog_paths(root: Path, test_ids: list[str]) -> list[str]:
 
 def _pytest_runner(root: Path) -> TestRunner:
     def run(test_ids: list[str], paths: list[str]) -> dict[str, str]:
-        if not paths:
-            return {test_id: "FAIL" for test_id in test_ids}
-        completed = subprocess.run(
-            ["pytest", "-q", *paths],
-            cwd=str(root),
-            check=False,
-            capture_output=True,
-            text=True,
-            shell=False,
-        )
-        outcome = "PASS" if completed.returncode == 0 else "FAIL"
-        return {test_id: outcome for test_id in test_ids}
+        catalog = _test_catalog_map(root)
+        outcomes: dict[str, str] = {}
+        grouped: dict[str, list[str]] = {}
+        for test_id in test_ids:
+            path = str((catalog.get(test_id) or {}).get("path") or "").replace("\\", "/")
+            grouped.setdefault(path, []).append(test_id)
+        for path, grouped_ids in grouped.items():
+            if not path:
+                outcomes.update({test_id: "FAIL" for test_id in grouped_ids})
+                continue
+            command = (
+                [sys.executable, str(root / path)]
+                if path.startswith("scripts/")
+                else [sys.executable, "-m", "pytest", "-q", path]
+            )
+            completed = subprocess.run(
+                command,
+                cwd=str(root),
+                check=False,
+                capture_output=True,
+                text=True,
+                shell=False,
+            )
+            outcome = "PASS" if completed.returncode == 0 else "FAIL"
+            outcomes.update({test_id: outcome for test_id in grouped_ids})
+        return outcomes
 
     return run
 
