@@ -13,6 +13,13 @@ from project_pipeline.command_center.live_server import LiveCommandCenterServer
 from project_pipeline.verification.browser import find_chromium
 
 
+def _display_path(path: Path, root: Path) -> str:
+    try:
+        return path.resolve().relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return path.name
+
+
 def _http_status(url: str, *, token: str | None = None) -> tuple[int, Any]:
     request = urllib.request.Request(url)
     if token:
@@ -38,6 +45,8 @@ def verify_live_command_center(
     token: str = "cc-local-loopback",
     chromium_path: str | None = None,
     viewports: tuple[tuple[int, int], ...] = ((1440, 900), (1024, 768), (390, 844)),
+    write_evidence: bool = True,
+    output_dir: Path | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
     chrome = chromium_path or find_chromium()
@@ -50,7 +59,7 @@ def verify_live_command_center(
 
     server = LiveCommandCenterServer(root, token=token)
     base_url = server.start()
-    output = root / "evidence/verification/command_center_live"
+    output = output_dir or (root / "evidence/verification/command_center_live")
     output.mkdir(parents=True, exist_ok=True)
     checks: dict[str, bool] = {}
     unauthorized_status, _ = _http_status(f"{base_url}/api/v1/command-center/application")
@@ -160,7 +169,7 @@ def verify_live_command_center(
         "viewports": viewport_results,
         "forced_colors": {
             "overflow": forced_colors_overflow,
-            "screenshot_path": forced_colors_screenshot.relative_to(root).as_posix(),
+            "screenshot_path": _display_path(forced_colors_screenshot, root),
             "passed": not forced_colors_overflow,
         },
         "console_errors": console_errors,
@@ -177,9 +186,10 @@ def verify_live_command_center(
             and not console_errors
         ),
     }
-    (root / "evidence/command_center_live_browser.json").write_text(
-        json.dumps(result, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
-        newline="\n",
-    )
+    if write_evidence:
+        (root / "evidence/command_center_live_browser.json").write_text(
+            json.dumps(result, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+            newline="\n",
+        )
     return result

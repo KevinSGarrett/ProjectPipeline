@@ -112,16 +112,21 @@ def evaluate_loaded_command_center_page(
     page.screenshot(path=str(viewport_screenshot), full_page=False)
     full_screenshot = output_dir / f"{name_prefix}_{width}x{height}_full.png"
     page.screenshot(path=str(full_screenshot), full_page=True)
+
+    def relative(path: Path) -> str:
+        try:
+            return path.resolve().relative_to(root.resolve()).as_posix()
+        except ValueError:
+            return path.name
+
     return {
         "viewport": {"width": width, "height": height},
         "checks": checks,
-        "initial_screenshot_path": initial_screenshot.relative_to(root).as_posix(),
+        "initial_screenshot_path": relative(initial_screenshot),
         "initial_screenshot_sha256": _sha256(initial_screenshot),
-        "post_interaction_viewport_screenshot_path": viewport_screenshot.relative_to(
-            root
-        ).as_posix(),
+        "post_interaction_viewport_screenshot_path": relative(viewport_screenshot),
         "post_interaction_viewport_screenshot_sha256": _sha256(viewport_screenshot),
-        "full_screenshot_path": full_screenshot.relative_to(root).as_posix(),
+        "full_screenshot_path": relative(full_screenshot),
         "full_screenshot_sha256": _sha256(full_screenshot),
         "passed": all(checks.values()),
     }

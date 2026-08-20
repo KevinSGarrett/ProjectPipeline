@@ -64,10 +64,16 @@ def test_live_websocket_reconnects_after_disconnect() -> None:
         assert message["event"]["payload"]["reconnect"] is True
 
 
-def test_live_browser_against_loopback_command_center() -> None:
+def test_live_browser_against_loopback_command_center(tmp_path: Path) -> None:
+    pytest.importorskip("playwright.sync_api")
     if find_chromium() is None:
         pytest.skip("system Chrome/Edge is required for live Command Center browser proof")
-    result = verify_live_command_center(ROOT, token="good")
+    result = verify_live_command_center(
+        ROOT,
+        token="good",
+        write_evidence=False,
+        output_dir=tmp_path,
+    )
     assert result["passed"] is True
     assert result["checks"]["live_work_includes_pp385"] is True
     assert result["checks"]["websocket_reconnect"] is True
