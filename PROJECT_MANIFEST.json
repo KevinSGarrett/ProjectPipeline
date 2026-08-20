@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "7a6c49fe8e184fded0cd5e57086d4314e056e62436fd717790ce5557dbc8fe21",
+  "aggregate_sha256": "25709c2378c01e7d74f8812638fcb86d512e3e55685260cf5734f51d1d22df53",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12307,8 +12307,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/windows_service.py",
-      "sha256": "9c25791bec798fd333edfdfdece3b24c550413ee945af0865febdfed46bcc7b0",
-      "size_bytes": 9786
+      "sha256": "4acbfdc4b7fea0fbb3790f89068d7c2c73ad8cb8c7fdd5e9b233ac76c725ece1",
+      "size_bytes": 10088
     },
     {
       "path": "src/project_pipeline/budget/__init__.py",
@@ -13582,8 +13582,8 @@
     },
     {
       "path": "src/project_pipeline/validation/product_outcome.py",
-      "sha256": "064bab5d163363595071d7621e65e9e9fdcd77e84c39c80c65477c66c3c8dbb1",
-      "size_bytes": 17184
+      "sha256": "01bb6b47a90dd0f9e1016f1170e5bba1efce90eed97d54ac80ffa1daa4bcd13e",
+      "size_bytes": 16470
     },
     {
       "path": "src/project_pipeline/validation/registries.py",
@@ -13892,8 +13892,8 @@
     },
     {
       "path": "tests/test_autonomy_windows_service.py",
-      "sha256": "ff132f3e2831c921b3fc6382a465d40933c0b779ef9e8850f341c4d0c1159e96",
-      "size_bytes": 2074
+      "sha256": "92109b383884d908a2e512bb4981217dc41b4a40de3caec1a71698ec48cc0e7e",
+      "size_bytes": 2125
     },
     {
       "path": "tests/test_budget_advanced.py",
@@ -14811,7 +14811,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T01:18:07.089068+00:00",
+  "generated_at_utc": "2026-08-20T01:29:49.185553+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14820,5 +14820,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29395608
+  "total_bytes": 29395247
 }

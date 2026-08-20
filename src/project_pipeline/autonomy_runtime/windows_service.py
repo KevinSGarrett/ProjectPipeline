@@ -211,14 +211,23 @@ def probe_namespaced_windows_service(service_name: str) -> dict[str, Any]:
 
     if not service_name.startswith("ProjectPipelineCycle"):
         raise ValueError("disposable Windows service names must be cycle-namespaced")
-    query = subprocess.run(
-        ["sc.exe", "query", service_name],
-        capture_output=True,
-        text=True,
-        shell=False,
-        timeout=15,
-        check=False,
-    )
+    try:
+        query = subprocess.run(
+            ["sc.exe", "query", service_name],
+            capture_output=True,
+            text=True,
+            shell=False,
+            timeout=15,
+            check=False,
+        )
+    except FileNotFoundError:
+        return {
+            "service_name": service_name,
+            "attempted": True,
+            "installed": False,
+            "precondition": "MACHINE_PRECONDITION_SC_UNAVAILABLE",
+            "query_exit": None,
+        }
     combined = f"{query.stdout or ''}\n{query.stderr or ''}"
     if query.returncode == 5 or "access is denied" in combined.casefold():
         return {

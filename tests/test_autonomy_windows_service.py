@@ -47,4 +47,5 @@ def test_namespaced_windows_service_probe_does_not_leave_residue() -> None:
         assert result.get("precondition") in {
             None,
             "MACHINE_PRECONDITION_ELEVATION_UNAVAILABLE",
+            "MACHINE_PRECONDITION_SC_UNAVAILABLE",
         }

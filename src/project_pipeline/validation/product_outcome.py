@@ -100,18 +100,6 @@ def _reconciliation_findings(root: Path) -> set[str]:
     }
 
 
-def _director_runtime_qualified(director: dict[str, Any]) -> bool:
-    tests = {str(item) for item in director.get("test_ids", [])}
-    paths = {str(item).replace("\\", "/") for item in director.get("implementation_paths", [])}
-    evidence = [str(item) for item in director.get("evidence_ids", []) if str(item)]
-    return (
-        "TEST-CTRL-DIRECTOR-001" in tests
-        and "TEST-CTRL-DIRECTOR-002" in tests
-        and any(path.endswith("autonomy_director.py") for path in paths)
-        and bool(evidence)
-    )
-
-
 def validate_product_outcome(root: Path) -> list[str]:
     """Fail closed when the original autonomous product outcome is lost or overclaimed."""
 
@@ -180,14 +168,7 @@ def validate_product_outcome(root: Path) -> list[str]:
             "narrow intake requirement REQ-PDEF-0006 may not claim the autonomous-loop source range"
         )
     director = requirements.get("REQ-CTRL-0004")
-    if (
-        director is None
-        or (
-            director.get("implementation_state") == "IMPLEMENTED"
-            and not _director_runtime_qualified(director)
-        )
-        or director.get("implementation_state") not in {"PARTIALLY_IMPLEMENTED", "IMPLEMENTED"}
-    ):
+    if director is None or director.get("implementation_state") != "PARTIALLY_IMPLEMENTED":
         errors.append(
             "persistent Autonomy Director must remain incomplete until runtime qualification"
         )
