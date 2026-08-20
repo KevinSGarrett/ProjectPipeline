@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "ff92ea1fd702ae5314d802645c8e812e539eff2aab4d20d71c6a9bf1ccfc3e2a",
+  "aggregate_sha256": "6d7cd01b6c39a7c321a564a91b71738aa43eb11224bce23a805c608703197557",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12027,8 +12027,8 @@
     },
     {
       "path": "scripts/verify_command_center_ui.py",
-      "sha256": "da6b756a2d61558e97de7638bf4456e7e7739922d0849d99ada041085233cb9b",
-      "size_bytes": 1084
+      "sha256": "8385bca89122638d0bf5403c9d28cc24457f313d55ffc9232a36dd9835c59a6b",
+      "size_bytes": 1106
     },
     {
       "path": "scripts/windows/install.ps1",
@@ -12392,8 +12392,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
-      "sha256": "e1c2a7b92cdd8707c4c33e79fc8a343e14da37e38b0f77dd8be398a571338dc3",
-      "size_bytes": 2943
+      "sha256": "28f810970a14672979e3384b2f98c655a9aaf45a6b89530f19036f8de7c4358a",
+      "size_bytes": 4520
     },
     {
       "path": "src/project_pipeline/command_center/agui.py",
@@ -12417,8 +12417,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/application_verification.py",
-      "sha256": "4636b65109599db3fbb123130625767f831b3541b279c4b6533b104470b0ef35",
-      "size_bytes": 10782
+      "sha256": "aae49a924b5009541d7ed2926ec3ec061c6cc16d04904175d4ddd92c951f2361",
+      "size_bytes": 11331
     },
     {
       "path": "src/project_pipeline/command_center/autonomy.py",
@@ -14851,7 +14851,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T03:51:37.959586+00:00",
+  "generated_at_utc": "2026-08-20T04:23:58.695784+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14860,5 +14860,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29576541
+  "total_bytes": 29578689
 }
