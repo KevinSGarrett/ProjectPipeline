@@ -72,6 +72,7 @@ class LiveWorkItem(ContractModel):
     title: str = Field(min_length=1, max_length=300)
     state: str = Field(min_length=1, max_length=100)
     owner: str | None = Field(default=None, max_length=191)
+    worker: str | None = Field(default=None, max_length=191)
     workspace: str | None = Field(default=None, max_length=512)
     current_stage: str | None = Field(default=None, max_length=191)
     resource_lease_id: str | None = Field(default=None, max_length=191)

@@ -61,7 +61,11 @@ class ApplicationWorkItem(ContractModel):
     title: str = Field(min_length=1, max_length=500)
     state: str = Field(min_length=1, max_length=100)
     owner: str | None = Field(default=None, max_length=191)
+    worker: str | None = Field(default=None, max_length=191)
+    workspace: str | None = Field(default=None, max_length=512)
     stage: str | None = Field(default=None, max_length=191)
+    resource_lease_id: str | None = Field(default=None, max_length=191)
+    last_progress_at_utc: datetime | None = None
     next_transition: str | None = Field(default=None, max_length=500)
     critical_path: bool = False
 
@@ -84,6 +88,39 @@ class CommandCenterApplicationProjection(ContractModel):
     provider_detail: dict[str, Any] = Field(default_factory=dict)
     context_detail: dict[str, Any] = Field(default_factory=dict)
     generated_at_utc: datetime = Field(default_factory=utc_now)
+
+
+def _workspace_for_issue(item: dict[str, Any]) -> str:
+    locations = [str(path) for path in (item.get("expected_file_locations") or []) if str(path)]
+    if locations:
+        return locations[0][:512]
+    return f"repository:{item.get('local_id', 'UNKNOWN')}"
+
+
+def _lease_id_for_issue(item: dict[str, Any]) -> str | None:
+    observation = item.get("last_remote_observation")
+    if isinstance(observation, dict) and observation.get("lease_id"):
+        return str(observation["lease_id"])[:191]
+    labels = [str(label) for label in (item.get("labels") or [])]
+    for label in labels:
+        if label.startswith("lease:"):
+            return label.split(":", 1)[1][:191]
+    local_id = str(item.get("local_id") or "")
+    return f"repo-claim:{local_id}" if local_id else None
+
+
+def _observation_time(item: dict[str, Any]) -> datetime | None:
+    observation = item.get("last_remote_observation")
+    raw = None
+    if isinstance(observation, dict):
+        raw = observation.get("observed_at_utc")
+    raw = raw or item.get("updated_at_utc")
+    if not raw:
+        return None
+    try:
+        return datetime.fromisoformat(str(raw).replace("Z", "+00:00")).astimezone(UTC)
+    except ValueError:
+        return None
 
 
 def _read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -128,7 +165,15 @@ class RepositoryApplicationProjectionBuilder:
                     if item.get("owner_required_capability")
                     else None
                 ),
+                worker=(
+                    str(item["owner_required_capability"])
+                    if item.get("owner_required_capability")
+                    else "repository"
+                ),
+                workspace=_workspace_for_issue(item),
                 stage=str(item.get("implementation_state", "UNKNOWN")),
+                resource_lease_id=_lease_id_for_issue(item),
+                last_progress_at_utc=_observation_time(item),
                 next_transition=self._next_transition(item),
                 critical_path=bool("critical-path" in (item.get("labels") or [])),
             )

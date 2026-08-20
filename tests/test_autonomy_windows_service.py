@@ -6,6 +6,7 @@ from project_pipeline.autonomy_runtime.windows_service import (
     AutonomyRuntimeWindowsService,
     build_paths,
     plan_service_commands,
+    probe_namespaced_windows_service,
     quote_windows,
 )
 
@@ -32,3 +33,19 @@ def test_foreground_lifecycle_and_stale_pid(tmp_path: Path) -> None:
     assert service.health()["stale_pid"] is True
     missing = build_paths(root=tmp_path / "missing", executable=tmp_path / "no-python.exe")
     assert AutonomyRuntimeWindowsService(missing).run_foreground(max_seconds=0.1) == 2
+
+
+def test_namespaced_windows_service_probe_does_not_leave_residue() -> None:
+    namespaced = build_paths(root=Path("."), service_name="ProjectPipelineCycle015Probe")
+    assert namespaced.service_name == "ProjectPipelineCycle015Probe"
+    result = probe_namespaced_windows_service(namespaced.service_name)
+    assert result["attempted"] is True
+    assert result["service_name"].startswith("ProjectPipelineCycle")
+    if result.get("installed"):
+        assert result.get("cleaned") is True
+    else:
+        assert result.get("precondition") in {
+            None,
+            "MACHINE_PRECONDITION_ELEVATION_UNAVAILABLE",
+            "MACHINE_PRECONDITION_SC_UNAVAILABLE",
+        }

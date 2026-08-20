@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import PurePosixPath
 
-from project_pipeline.domain.control import ControlSnapshot
+from project_pipeline.domain.control import ControlSnapshot, ReadinessState
 from project_pipeline.domain.scheduler import (
     AccessMode,
     ResourceClaim,
@@ -23,6 +23,19 @@ _EXCLUDED_PREFIXES = (
 def profiles_from_repository(root, control: ControlSnapshot) -> tuple[SchedulerTaskProfile, ...]:
     """Derive conservative scheduler inputs from the current Jira execution contract."""
     issues = {item["local_id"]: item for item in load_issues(root)}
+    waiting = {
+        item.task_id
+        for item in control.readiness
+        if item.state
+        in {
+            ReadinessState.WAITING_DEPENDENCIES,
+            ReadinessState.BLOCKED,
+            ReadinessState.WAITING_APPROVAL,
+            ReadinessState.WAITING_CONTEXT,
+            ReadinessState.WAITING_RESOURCES,
+            ReadinessState.WAITING_ENVIRONMENT,
+        }
+    }
     profiles: list[SchedulerTaskProfile] = []
     for item in control.sequence.ordered_ready_work:
         issue = issues.get(item.task_id, {})
@@ -85,6 +98,8 @@ def profiles_from_repository(root, control: ControlSnapshot) -> tuple[SchedulerT
                 owner_id=issue.get("owner_required_capability"),
                 workspace_isolated=True,
                 policy_eligible=True,
+                productive_idle=bool(waiting) and item.task_id not in waiting,
+                protected_capacity_consumption=False,
             )
         )
     return tuple(profiles)
