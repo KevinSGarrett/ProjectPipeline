@@ -212,13 +212,13 @@
 {"implementation_paths": ["src/project_pipeline/governance/product_profile.py", "config/project.json"], "requirement_id": "REQ-PDEF-0008"}
 {"implementation_paths": ["src/project_pipeline", "docs/development/source_layout.md", "tests/test_platform_project_separation.py"], "requirement_id": "REQ-PDEF-0009"}
 {"implementation_paths": ["src/project_pipeline/governance/product_profile.py", "config/project.json"], "requirement_id": "REQ-PDEF-0010"}
-{"implementation_paths": [], "requirement_id": "REQ-PDEF-0011"}
+{"implementation_paths": ["src/project_pipeline/autonomy_runtime/nonduration.py", "src/project_pipeline/autonomy_runtime/live_qualification.py", "src/project_pipeline/autonomy_runtime/qualification.py", "src/project_pipeline/command_center/autonomy_director.py", "src/project_pipeline/release_hardening/disposable_rehearsal.py", "src/project_pipeline/lifecycle/cycle_handoff.py"], "requirement_id": "REQ-PDEF-0011"}
 {"implementation_paths": ["runbooks/create_release_archive.md", "scripts/create_project_archive.py", "src/project_pipeline/archive.py"], "requirement_id": "REQ-REL-0001"}
 {"implementation_paths": ["docs/CONTINUATION_PACKAGE.md", "plans/17_release_and_handoff/PLAN-REL-001_release_handoff.md"], "requirement_id": "REQ-REL-0002"}
 {"implementation_paths": ["release/final_convergence_audit_r25.json", "src/project_pipeline/convergence/audit.py", "src/project_pipeline/convergence/validation.py"], "requirement_id": "REQ-REL-0003"}
-{"implementation_paths": ["release/release_candidate_r24.json", "src/project_pipeline/release_hardening/candidate.py"], "requirement_id": "REQ-REL-0004"}
-{"implementation_paths": ["config/release_policy.json", "docs/release/RELEASE_PROCEDURE.md", "release/hardening_report_r24.json", "src/project_pipeline/release_hardening/hardening.py"], "requirement_id": "REQ-REL-0005"}
-{"implementation_paths": ["src/project_pipeline/release_hardening/post_deploy.py"], "requirement_id": "REQ-REL-0006"}
+{"implementation_paths": ["release/release_candidate_r24.json", "src/project_pipeline/release_hardening/candidate.py", "src/project_pipeline/release_hardening/disposable_rehearsal.py"], "requirement_id": "REQ-REL-0004"}
+{"implementation_paths": ["config/release_policy.json", "docs/release/RELEASE_PROCEDURE.md", "release/hardening_report_r24.json", "src/project_pipeline/release_hardening/hardening.py", "src/project_pipeline/release_hardening/disposable_rehearsal.py"], "requirement_id": "REQ-REL-0005"}
+{"implementation_paths": ["src/project_pipeline/release_hardening/post_deploy.py", "src/project_pipeline/release_hardening/disposable_rehearsal.py"], "requirement_id": "REQ-REL-0006"}
 {"implementation_paths": ["runbooks/release_upgrade_and_rollback.md", "scripts/windows/rollback.ps1", "scripts/windows/upgrade.ps1"], "requirement_id": "REQ-REL-0007"}
 {"implementation_paths": ["docs/api/API_REFERENCE.md", "docs/architecture/FINAL_ARCHITECTURE.md", "docs/development/DEVELOPER_GUIDE.md", "docs/operations/INSTALLATION_AND_OPERATIONS.md", "docs/release/RELEASE_PROCEDURE.md"], "requirement_id": "REQ-REL-0008"}
 {"implementation_paths": ["src/project_pipeline/release_hardening/continuation.py"], "requirement_id": "REQ-REL-0009"}

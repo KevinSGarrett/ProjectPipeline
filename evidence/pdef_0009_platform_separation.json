@@ -1,0 +1,9 @@
+{
+  "claim": "Platform package is independent of portable project fixtures on current main.",
+  "requirement_id": "REQ-PDEF-0009",
+  "result": "PASS",
+  "test_ids": [
+    "TEST-PDEF-ISOLATION-001",
+    "TEST-REPOSITORY-001"
+  ]
+}

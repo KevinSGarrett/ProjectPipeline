@@ -48,10 +48,10 @@
     "implemented"
   ],
   "last_observed_remote_state": {
-    "observed_at_utc": "2026-08-18T12:48:28.022032-05:00",
+    "observed_at_utc": "2026-08-19T22:28:01Z",
     "remote_id": "25363",
     "remote_key": "PP-389",
-    "snapshot_id": "C11-LIVE-PP389",
+    "snapshot_id": "JSNAP-CYCLE015-20260819T222801Z",
     "status_name": "Done"
   },
   "local_id": "PP-TASK-000382",

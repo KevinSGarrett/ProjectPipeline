@@ -1,12 +1,12 @@
 {
   "board_id": "PROJECT-PIPELINE-LOCAL",
   "counts_by_state": {
-    "BACKLOG": 373,
+    "BACKLOG": 360,
     "BLOCKED": 1,
     "CANCELLED": 1,
-    "DONE": 5,
-    "IN_PROGRESS": 5,
-    "MERGE_READY": 8
+    "DONE": 26,
+    "IN_PROGRESS": 4,
+    "MERGE_READY": 1
   },
   "counts_by_type": {
     "BUG": 0,

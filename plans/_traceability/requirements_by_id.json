@@ -14027,7 +14027,8 @@
     "domain": "PDEF",
     "evidence_ids": [
       "EVID-000022",
-      "EVID-000027"
+      "EVID-000027",
+      "EVID-000208"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -14035,7 +14036,7 @@
       "docs/development/source_layout.md",
       "tests/test_platform_project_separation.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000001",
       "PP-STORY-000049",
@@ -14133,18 +14134,27 @@
     "verification_expectation": "Verify the stated behavior against the cited source, linked acceptance criteria, applicable tests, and current evidence before completion."
   },
   "REQ-PDEF-0011": {
-    "acceptance_summary": "Verified only when a complete local-real project journey and each ordered live, Windows, recovery, 24-hour, 72-hour, release, and post-release qualification stage observably execute the continuous loop and the deterministic Completion Gate passes.",
+    "acceptance_summary": "Non-duration behaviors are verified on current integrated evidence. Remaining acceptance is exactly real 24h qualification, subsequent real 72h qualification, release publication, post-release verification, and the deterministic Completion Gate.",
     "authority_classification": "SOURCE_DERIVED",
     "decision_ids": [],
     "disposition": "ACCEPTED",
     "disposition_reason": "Accepted because the original source explicitly defines the complete perpetual autonomous engineering loop and scoped human-escalation continuation behavior.",
     "domain": "PDEF",
-    "evidence_ids": [],
+    "evidence_ids": [
+      "EVID-000211"
+    ],
     "evolution_ids": [
       "SOURCE-EVOLUTION-0008"
     ],
-    "implementation_paths": [],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_paths": [
+      "src/project_pipeline/autonomy_runtime/nonduration.py",
+      "src/project_pipeline/autonomy_runtime/live_qualification.py",
+      "src/project_pipeline/autonomy_runtime/qualification.py",
+      "src/project_pipeline/command_center/autonomy_director.py",
+      "src/project_pipeline/release_hardening/disposable_rehearsal.py",
+      "src/project_pipeline/lifecycle/cycle_handoff.py"
+    ],
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000036",
       "PP-STORY-000138",
@@ -14197,7 +14207,11 @@
       "product-outcome",
       "unattended-qualification"
     ],
-    "test_ids": [],
+    "test_ids": [
+      "TEST-PDEF-NONDUR-001",
+      "TEST-PDEF-NONDUR-002",
+      "TEST-PDEF-NONDUR-003"
+    ],
     "title": "Continuous autonomous engineering organization",
     "verification_class": "INDEPENDENT_MULTI_EVIDENCE",
     "verification_expectation": "Verify observable end-to-end behavior at every ordered qualification environment; lower stages and mocks cannot substitute for live, duration, release, or post-release proof."
@@ -14383,14 +14397,16 @@
     "domain": "REL",
     "evidence_ids": [
       "EVID-000164",
-      "EVID-000165"
+      "EVID-000165",
+      "EVID-000209"
     ],
     "evolution_ids": [],
     "implementation_paths": [
       "release/release_candidate_r24.json",
-      "src/project_pipeline/release_hardening/candidate.py"
+      "src/project_pipeline/release_hardening/candidate.py",
+      "src/project_pipeline/release_hardening/disposable_rehearsal.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000035",
       "PP-STORY-000135",
@@ -14425,7 +14441,8 @@
     ],
     "test_ids": [
       "TEST-REL-HARDEN-011",
-      "TEST-REL-HARDEN-012"
+      "TEST-REL-HARDEN-012",
+      "TEST-REL-REHEARSE-001"
     ],
     "title": "Release candidate identity",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -14440,16 +14457,18 @@
     "domain": "REL",
     "evidence_ids": [
       "EVID-000164",
-      "EVID-000165"
+      "EVID-000165",
+      "EVID-000209"
     ],
     "evolution_ids": [],
     "implementation_paths": [
       "config/release_policy.json",
       "docs/release/RELEASE_PROCEDURE.md",
       "release/hardening_report_r24.json",
-      "src/project_pipeline/release_hardening/hardening.py"
+      "src/project_pipeline/release_hardening/hardening.py",
+      "src/project_pipeline/release_hardening/disposable_rehearsal.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000035",
       "PP-STORY-000137",
@@ -14491,7 +14510,8 @@
       "TEST-REL-HARDEN-005",
       "TEST-REL-HARDEN-012",
       "TEST-REL-HARDEN-013",
-      "TEST-REL-HARDEN-015"
+      "TEST-REL-HARDEN-015",
+      "TEST-REL-REHEARSE-001"
     ],
     "title": "Release criteria",
     "verification_class": "INDEPENDENT_MULTI_EVIDENCE",
@@ -14506,13 +14526,15 @@
     "domain": "REL",
     "evidence_ids": [
       "EVID-000169",
-      "EVID-000170"
+      "EVID-000170",
+      "EVID-000209"
     ],
     "evolution_ids": [],
     "implementation_paths": [
-      "src/project_pipeline/release_hardening/post_deploy.py"
+      "src/project_pipeline/release_hardening/post_deploy.py",
+      "src/project_pipeline/release_hardening/disposable_rehearsal.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000035",
       "PP-STORY-000137",
@@ -14546,7 +14568,8 @@
       "verification"
     ],
     "test_ids": [
-      "TEST-CONV-P25-005"
+      "TEST-CONV-P25-005",
+      "TEST-REL-REHEARSE-001"
     ],
     "title": "Post-deployment verification",
     "verification_class": "INDEPENDENT_MULTI_EVIDENCE",
@@ -18630,7 +18653,8 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "SCHED",
     "evidence_ids": [
-      "EVID-000061"
+      "EVID-000061",
+      "EVID-000210"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -18638,7 +18662,7 @@
       "src/project_pipeline/scheduler/engine.py",
       "src/project_pipeline/scheduler/productive_idle.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000009",
       "PP-STORY-000071",
