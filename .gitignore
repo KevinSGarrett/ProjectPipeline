@@ -146,7 +146,9 @@ terraform.rc
 .DS_Store
 .AppleDouble
 .LSOverride
-Icon?
+# macOS custom-folder icon is "Icon" plus CR; do not use Icon? because that
+# also matches the Tauri icons/ directory on case-insensitive Windows.
+Icon[\r]
 ._*
 Thumbs.db
 ehthumbs.db

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "a462c5c15328d00e64a903b72dfff684ae47b790f67406d16daa89b25681056c",
+  "aggregate_sha256": "14f8f9d9957eb7e688b5d683ddc0ad0097b78cb9d4f6294767bfa339c39cdbc1",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2985,
+  "file_count": 2988,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -167,8 +167,8 @@
     },
     {
       "path": ".gitignore",
-      "sha256": "0832410857050f9b2cb81e8d810a53f98d8c8ccc3fc4a3cee7a1f8fb2be66281",
-      "size_bytes": 2224
+      "sha256": "e1804be64e6fff73feec4d0a9f4e4f87a01235cf67d6d42e672e2acbdde82fd9",
+      "size_bytes": 2374
     },
     {
       "path": ".pre-commit-config.yaml",
@@ -426,14 +426,29 @@
       "size_bytes": 417
     },
     {
+      "path": "apps/desktop_shell/src-tauri/icons/128x128.png",
+      "sha256": "f58174e61701b5e4d10ecd0099a8311af662ecf9ab1d929d29d3f7ba7e08527e",
+      "size_bytes": 300
+    },
+    {
+      "path": "apps/desktop_shell/src-tauri/icons/32x32.png",
+      "sha256": "f97ed06f73fb345796560671bf883f278b412f066807f2ccb7568c4334f6d4e2",
+      "size_bytes": 105
+    },
+    {
+      "path": "apps/desktop_shell/src-tauri/icons/icon.ico",
+      "sha256": "1928a24a8f14e69f4c01d28f3839bc5b4b701abdeac18fd5fdd2b9a7667fe0a3",
+      "size_bytes": 127
+    },
+    {
       "path": "apps/desktop_shell/src-tauri/src/main.rs",
       "sha256": "d5e2ff131c782f251a3ee8b5c5c18b688c406e3400341e388a64f81d17b06ab7",
       "size_bytes": 4304
     },
     {
       "path": "apps/desktop_shell/src-tauri/tauri.conf.json",
-      "sha256": "86003f363e12dc1c7cd051f5d0e62d436a60a199bc782da355c57ea3428538f6",
-      "size_bytes": 1073
+      "sha256": "9036c47e0674f2cb798fea577cadd365593043ad8b79e76db82071448b003289",
+      "size_bytes": 1169
     },
     {
       "path": "architecture/architecture_summary.json",
@@ -5347,7 +5362,7 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "ba4feb521e15b534dd10d45c4929aa0e72b59f23c1fbc46c463d2ba9af0cc0ba",
+      "sha256": "37cc97d6b2de8ab971ae1f272ec9ceb0a2460cb336b41750a71e60d5a977b5e0",
       "size_bytes": 25756
     },
     {
@@ -10632,8 +10647,8 @@
     },
     {
       "path": "pyproject.toml",
-      "sha256": "e95c1ba49b58ec00f82cecfcea594f475f0bb44f169beb265d796958751a9a32",
-      "size_bytes": 3673
+      "sha256": "944ffa6579f37051497b81e2cd9a700cd6d427d3c55f6e52a6c8b93f23fb17be",
+      "size_bytes": 3695
     },
     {
       "path": "README.md",
@@ -10667,13 +10682,13 @@
     },
     {
       "path": "requirements/development.txt",
-      "sha256": "96492b74442742826818f6aca2836a8c20ae8856fda3e93459821025d41106c3",
-      "size_bytes": 743
+      "sha256": "3df47ca5aa8c5484a3669c7be58a5a3307d9c82149c16b9dc111087954622301",
+      "size_bytes": 772
     },
     {
       "path": "requirements/environment.lock.json",
-      "sha256": "4342cd2f160193cf11cccce99dacb6f351ea1addbd02565464b3b9af8841c777",
-      "size_bytes": 11755
+      "sha256": "3bac473dd4560b723b7815b8f80394d20e2d2f20d70ccbb1443259edf35f0f99",
+      "size_bytes": 12469
     },
     {
       "path": "requirements/quality-tools.txt",
@@ -14936,7 +14951,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T11:02:52.273141+00:00",
+  "generated_at_utc": "2026-08-20T11:11:28.083700+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14945,5 +14960,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29924766
+  "total_bytes": 29926309
 }

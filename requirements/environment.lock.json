@@ -10,6 +10,7 @@
       "anyio",
       "attrs",
       "certifi",
+      "click",
       "colorama",
       "coverage",
       "fastapi",
@@ -31,7 +32,8 @@
       "rpds-py",
       "starlette",
       "typing-extensions",
-      "typing-inspection"
+      "typing-inspection",
+      "uvicorn"
     ],
     "runtime": [
       "annotated-types",
@@ -51,7 +53,8 @@
       "httpx",
       "jsonschema",
       "pytest",
-      "pytest-cov"
+      "pytest-cov",
+      "uvicorn"
     ],
     "runtime": [
       "networkx",
@@ -61,7 +64,7 @@
     ]
   },
   "lock_kind": "OBSERVED_ENVIRONMENT",
-  "package_count": 31,
+  "package_count": 33,
   "packages": [
     {
       "closure_groups": [
@@ -116,6 +119,18 @@
       "name": "certifi",
       "requires_dist": [],
       "version": "2026.7.22"
+    },
+    {
+      "closure_groups": [
+        "group:test"
+      ],
+      "direct_groups": [],
+      "metadata_sha256": "194c9dd81d567f9081f026c7e401060fbafa7bc147c8e0a58b3668b40a64c031",
+      "name": "click",
+      "requires_dist": [
+        "colorama; platform_system == \"Windows\""
+      ],
+      "version": "8.4.2"
     },
     {
       "closure_groups": [
@@ -454,6 +469,21 @@
         "typing-extensions>=4.15.0"
       ],
       "version": "0.4.4"
+    },
+    {
+      "closure_groups": [
+        "group:test"
+      ],
+      "direct_groups": [
+        "group:test"
+      ],
+      "metadata_sha256": "1df2c18ce1cd176adcada42e9960997703575101738207182f28ff14c36536b9",
+      "name": "uvicorn",
+      "requires_dist": [
+        "click>=7.0",
+        "h11>=0.8"
+      ],
+      "version": "0.52.3"
     }
   ],
   "python": {
