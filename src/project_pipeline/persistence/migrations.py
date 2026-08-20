@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sqlite3
+import time
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -418,28 +420,93 @@ def _split_sql(text: str) -> list[str]:
     return statements
 
 
-class SQLiteMigrationRunner:
-    """Apply reversible migrations with one transaction per migration."""
+@dataclass(frozen=True, slots=True)
+class MigrationApplyHooks:
+    """Optional test-only fault points. Production callers leave this unset."""
 
-    def __init__(self, connection: sqlite3.Connection, root: Path) -> None:
+    fail_before_ddl_for: str | None = None
+    fail_after_ddl_for: str | None = None
+    fail_before_receipt_for: str | None = None
+    fail_before_commit_for: str | None = None
+    abort_process_after_ddl_for: str | None = None
+
+
+class SQLiteMigrationRunner:
+    """Apply reversible migrations with one writer transaction per admission."""
+
+    def __init__(
+        self,
+        connection: sqlite3.Connection,
+        root: Path,
+        *,
+        hooks: MigrationApplyHooks | None = None,
+    ) -> None:
         self.connection = connection
         self.root = root.resolve()
         self.catalog = load_migration_catalog(self.root)
+        self.hooks = hooks
+        self._configure_connection()
         self._ensure_control_table()
 
-    def _ensure_control_table(self) -> None:
-        self.connection.execute(
-            """
-            CREATE TABLE IF NOT EXISTS schema_migrations (
-                migration_id TEXT PRIMARY KEY,
-                sequence INTEGER NOT NULL UNIQUE,
-                name TEXT NOT NULL,
-                sql_sha256 TEXT NOT NULL,
-                applied_at_utc TEXT NOT NULL
+    def _configure_connection(self) -> None:
+        self._execute_with_busy_retry("PRAGMA foreign_keys = ON")
+        timeout_ms = 60000 if _is_shared_file_database(self.connection) else 30000
+        self._execute_with_busy_retry(f"PRAGMA busy_timeout = {timeout_ms}")
+        if _is_shared_file_database(self.connection):
+            self._execute_with_busy_retry("PRAGMA journal_mode = WAL")
+
+    def _execute_with_busy_retry(self, sql: str) -> sqlite3.Cursor:
+        last_error: sqlite3.OperationalError | None = None
+        for attempt in range(16):
+            try:
+                return self.connection.execute(sql)
+            except sqlite3.OperationalError as error:
+                if not _is_sqlite_busy(error):
+                    raise
+                last_error = error
+                time.sleep(0.05 * (attempt + 1))
+        raise MigrationError(f"sqlite remained busy: {last_error}") from last_error
+
+    def _begin_writer(self) -> None:
+        if self.connection.in_transaction:
+            raise MigrationError(
+                "cannot acquire a migration writer lock while another transaction is open"
             )
-            """
-        )
-        self.connection.commit()
+        self._execute_with_busy_retry("BEGIN IMMEDIATE")
+
+    def _catalog_by_id(self) -> dict[str, MigrationRecord]:
+        return {item.migration_id: item for item in self.catalog.migrations}
+
+    def _applied_checksums_locked(self) -> dict[str, str]:
+        rows = self.connection.execute(
+            "SELECT migration_id, sql_sha256 FROM schema_migrations"
+        ).fetchall()
+        return {str(row[0]): str(row[1]) for row in rows}
+
+    def _reject_checksum_mismatch(self, migration_id: str, stored: str, expected: str) -> None:
+        if stored != expected:
+            raise MigrationError(
+                f"migration {migration_id} checksum mismatch: stored={stored} catalog={expected}"
+            )
+
+    def _ensure_control_table(self) -> None:
+        try:
+            self._begin_writer()
+            self.connection.execute(
+                """
+                CREATE TABLE IF NOT EXISTS schema_migrations (
+                    migration_id TEXT PRIMARY KEY,
+                    sequence INTEGER NOT NULL UNIQUE,
+                    name TEXT NOT NULL,
+                    sql_sha256 TEXT NOT NULL,
+                    applied_at_utc TEXT NOT NULL
+                )
+                """
+            )
+            self.connection.commit()
+        except Exception as error:
+            self.connection.rollback()
+            raise MigrationError(f"schema_migrations control table failed: {error}") from error
 
     def applied(self) -> tuple[str, ...]:
         rows = self.connection.execute(
@@ -459,31 +526,43 @@ class SQLiteMigrationRunner:
         )
 
     def apply_all(self, *, target: str | None = None) -> MigrationStatus:
-        applied = set(self.applied())
+        known = {item.migration_id for item in self.catalog.migrations}
+        if target is not None and target not in known:
+            raise MigrationError(f"unknown migration target: {target}")
         for migration in self.catalog.migrations:
+            self._admit_or_apply(migration)
+            if target == migration.migration_id:
+                break
+        return self.status()
+
+    def _admit_or_apply(self, migration: MigrationRecord) -> None:
+        timestamp = datetime.now(UTC).isoformat()
+        text = (self.root / migration.sqlite_up_path).read_text(encoding="utf-8")
+        try:
+            self._begin_writer()
+            applied = self._applied_checksums_locked()
             if migration.migration_id in applied:
-                if target == migration.migration_id:
-                    break
-                continue
+                self._reject_checksum_mismatch(
+                    migration.migration_id,
+                    applied[migration.migration_id],
+                    migration.sqlite_up_sha256,
+                )
+                self.connection.commit()
+                return
             if any(dependency not in applied for dependency in migration.depends_on):
                 raise MigrationError(
                     f"migration dependency is not applied: {migration.migration_id}"
                 )
-            self._apply(migration)
-            applied.add(migration.migration_id)
-            if target == migration.migration_id:
-                break
-        if target is not None and target not in applied:
-            raise MigrationError(f"unknown migration target: {target}")
-        return self.status()
-
-    def _apply(self, migration: MigrationRecord) -> None:
-        text = (self.root / migration.sqlite_up_path).read_text(encoding="utf-8")
-        timestamp = datetime.now(UTC).isoformat()
-        try:
-            self.connection.execute("BEGIN IMMEDIATE")
+            self._run_hook("fail_before_ddl_for", migration.migration_id)
             for statement in _split_sql(text):
                 self.connection.execute(statement)
+            self._run_hook("fail_after_ddl_for", migration.migration_id)
+            if (
+                self.hooks is not None
+                and self.hooks.abort_process_after_ddl_for == migration.migration_id
+            ):
+                os._exit(1)
+            self._run_hook("fail_before_receipt_for", migration.migration_id)
             self.connection.execute(
                 """
                 INSERT INTO schema_migrations
@@ -498,24 +577,47 @@ class SQLiteMigrationRunner:
                     timestamp,
                 ),
             )
+            self._run_hook("fail_before_commit_for", migration.migration_id)
             self.connection.commit()
         except Exception as error:
             self.connection.rollback()
+            if isinstance(error, MigrationError):
+                raise
             raise MigrationError(f"migration {migration.migration_id} failed: {error}") from error
 
+    def _run_hook(self, field: str, migration_id: str) -> None:
+        if self.hooks is None:
+            return
+        if getattr(self.hooks, field) == migration_id:
+            raise MigrationError(f"injected fault {field} for {migration_id}")
+
     def rollback_last(self) -> MigrationStatus:
-        applied = self.applied()
-        if not applied:
-            return self.status()
-        migration_id = applied[-1]
-        migration = next(
-            item for item in self.catalog.migrations if item.migration_id == migration_id
-        )
-        if not migration.reversible or migration.sqlite_down_path is None:
-            raise MigrationError(f"migration is not reversible: {migration_id}")
-        text = (self.root / migration.sqlite_down_path).read_text(encoding="utf-8")
+        catalog = self._catalog_by_id()
         try:
-            self.connection.execute("BEGIN IMMEDIATE")
+            self._begin_writer()
+            applied_ids = tuple(
+                str(row[0])
+                for row in self.connection.execute(
+                    "SELECT migration_id FROM schema_migrations ORDER BY sequence"
+                ).fetchall()
+            )
+            if not applied_ids:
+                self.connection.commit()
+                return self.status()
+            migration_id = applied_ids[-1]
+            migration = catalog.get(migration_id)
+            if migration is None:
+                raise MigrationError(f"applied migration is absent from catalog: {migration_id}")
+            stored = self.connection.execute(
+                "SELECT sql_sha256 FROM schema_migrations WHERE migration_id = ?",
+                (migration_id,),
+            ).fetchone()
+            if stored is None:
+                raise MigrationError(f"applied migration vanished under lock: {migration_id}")
+            self._reject_checksum_mismatch(migration_id, str(stored[0]), migration.sqlite_up_sha256)
+            if not migration.reversible or migration.sqlite_down_path is None:
+                raise MigrationError(f"migration is not reversible: {migration_id}")
+            text = (self.root / migration.sqlite_down_path).read_text(encoding="utf-8")
             for statement in _split_sql(text):
                 self.connection.execute(statement)
             self.connection.execute(
@@ -524,8 +626,24 @@ class SQLiteMigrationRunner:
             self.connection.commit()
         except Exception as error:
             self.connection.rollback()
-            raise MigrationError(f"rollback {migration_id} failed: {error}") from error
+            if isinstance(error, MigrationError):
+                raise
+            raise MigrationError(f"rollback failed: {error}") from error
         return self.status()
+
+
+def _is_sqlite_busy(error: BaseException) -> bool:
+    text = str(error).lower()
+    return "locked" in text or "busy" in text
+
+
+def _is_shared_file_database(connection: sqlite3.Connection) -> bool:
+    for row in connection.execute("PRAGMA database_list").fetchall():
+        name = str(row[1])
+        file_name = str(row[2] or "")
+        if name == "main" and file_name:
+            return True
+    return False
 
 
 def migration_catalog_fingerprint(root: Path) -> str:
