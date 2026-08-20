@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "d69eb60b3d650ae46ff1305b5aa40c7500aff012d8658a4d9175833471101b10",
+  "aggregate_sha256": "4574c39fb4e33e7116f2f9e5bca1b328515c2895ecf8be1244f0562c20c0d312",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -13207,13 +13207,13 @@
     },
     {
       "path": "src/project_pipeline/persistence/__init__.py",
-      "sha256": "d5dd2629a23c9493bf2c29fc74e4567dcc6e106bc3d7547c2cb3594a04631490",
-      "size_bytes": 1077
+      "sha256": "1c530b22dfb737061ecda0502b37e0331d1933abd7951acbb6f06f7a7c81c041",
+      "size_bytes": 1129
     },
     {
       "path": "src/project_pipeline/persistence/migrations.py",
-      "sha256": "4cd7dab9765377020a4ab282e94cdd29702dd82cc0e77d2b4075dbdf77438238",
-      "size_bytes": 19774
+      "sha256": "469c0d45ca8cd140c9a179425e36fd066cd611079fe45845fd2703c1166954d9",
+      "size_bytes": 24713
     },
     {
       "path": "src/project_pipeline/persistence/ports.py",
@@ -14377,8 +14377,8 @@
     },
     {
       "path": "tests/test_migrations.py",
-      "sha256": "fa1b7851acc7f46a1110eca62c0fd6050638b8c7ac1dc77d4215f2e910cd5209",
-      "size_bytes": 7189
+      "sha256": "060de450522c1d86625c272cf7f30b5538b402c3530433efa551d8c3e111e0aa",
+      "size_bytes": 17115
     },
     {
       "path": "tests/test_observability.py",
@@ -14861,7 +14861,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T07:34:01.717968+00:00",
+  "generated_at_utc": "2026-08-20T07:43:14.959495+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14870,5 +14870,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29646716
+  "total_bytes": 29661633
 }

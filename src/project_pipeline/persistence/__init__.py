@@ -3,6 +3,7 @@ from project_pipeline.jira_steward.persistence import (
     JiraSyncStore,
 )
 from project_pipeline.persistence.migrations import (
+    MigrationApplyHooks,
     MigrationCatalog,
     MigrationError,
     MigrationRecord,
@@ -26,6 +27,7 @@ __all__ = [
     "ConcurrentStateChangeError",
     "JiraSyncPersistenceError",
     "JiraSyncStore",
+    "MigrationApplyHooks",
     "MigrationCatalog",
     "MigrationError",
     "MigrationRecord",
