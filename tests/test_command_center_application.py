@@ -1,3 +1,6 @@
+import json
+from pathlib import Path
+
 from fastapi.testclient import TestClient
 
 from project_pipeline.command_center import (
@@ -125,3 +128,14 @@ def test_application_endpoint_fails_closed_without_projection_provider():
 
 def test_command_center_application_repository_contract_is_clean(project_root):
     assert validate_command_center_application(project_root) == []
+
+
+def test_tauri_cli_discovers_project_from_desktop_shell_not_command_center(project_root):
+    desktop = Path(project_root) / "apps/desktop_shell"
+    frontend = Path(project_root) / "apps/command_center"
+    assert (desktop / "src-tauri/tauri.conf.json").is_file()
+    assert list(frontend.rglob("tauri.conf.json")) == []
+    package = json.loads((frontend / "package.json").read_text(encoding="utf-8"))
+    assert "run-tauri.mjs" in package["scripts"]["tauri:build"]
+    runner = (frontend / "scripts/run-tauri.mjs").read_text(encoding="utf-8")
+    assert "cwd: desktopRoot" in runner

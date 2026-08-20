@@ -18,6 +18,8 @@ _REQUIRED_FILES = (
     "apps/desktop_shell/src-tauri/src/main.rs",
     "apps/desktop_shell/src-tauri/tauri.conf.json",
     "apps/desktop_shell/src-tauri/capabilities/main.json",
+    "apps/desktop_shell/src-tauri/icons/icon.ico",
+    "apps/command_center/scripts/run-tauri.mjs",
     "config/desktop_nondeterminism_schema.json",
     "rust-toolchain.toml",
     ".github/workflows/desktop-windows.yml",
@@ -44,6 +46,13 @@ def validate_command_center_application(root: Path) -> list[str]:
             errors.append("Command Center application must declare Vite")
         if "@tauri-apps/cli" not in dev_dependencies:
             errors.append("Command Center application must declare the Tauri v2 CLI boundary")
+        scripts = package.get("scripts") or {}
+        for name in ("tauri:dev", "tauri:build"):
+            command = str(scripts.get(name, ""))
+            if "run-tauri.mjs" not in command:
+                errors.append(
+                    f"Command Center {name} must invoke scripts/run-tauri.mjs from the desktop_shell cwd"
+                )
         if "@tauri-apps/plugin-notification" not in dependencies:
             errors.append(
                 "Command Center desktop boundary must declare the official notification plugin"
@@ -79,6 +88,14 @@ def validate_command_center_application(root: Path) -> list[str]:
             errors.append("Command Center desktop_auth must forbid persisted secrets")
         if desktop_auth.get("allow_nonloopback") is not False:
             errors.append("Command Center desktop_auth must reject non-loopback binds by default")
+
+    runner_path = root / "apps/command_center/scripts/run-tauri.mjs"
+    if runner_path.is_file():
+        runner = runner_path.read_text(encoding="utf-8")
+        if "desktop_shell" not in runner or "cwd: desktopRoot" not in runner:
+            errors.append(
+                "Tauri runner must execute the CLI with cwd set to apps/desktop_shell so src-tauri/tauri.conf.json is discoverable"
+            )
 
     tauri_path = root / "apps/desktop_shell/src-tauri/tauri.conf.json"
     if tauri_path.is_file():
