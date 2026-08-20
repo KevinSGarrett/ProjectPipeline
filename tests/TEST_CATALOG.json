@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 654,
+  "test_count": 658,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -691,6 +691,26 @@
       "callable": "verify_command_center_ui",
       "path": "scripts/verify_command_center_ui.py",
       "test_id": "TEST-CC-BROWSER-001"
+    },
+    {
+      "callable": "test_repository_snapshot_includes_bound_in_progress_work",
+      "path": "tests/test_command_center_live.py",
+      "test_id": "TEST-CC-LIVE-001"
+    },
+    {
+      "callable": "test_live_app_requires_bearer_and_projects_jira_readback",
+      "path": "tests/test_command_center_live.py",
+      "test_id": "TEST-CC-LIVE-002"
+    },
+    {
+      "callable": "test_live_websocket_reconnects_after_disconnect",
+      "path": "tests/test_command_center_live.py",
+      "test_id": "TEST-CC-LIVE-003"
+    },
+    {
+      "callable": "test_live_browser_against_loopback_command_center",
+      "path": "tests/test_command_center_live.py",
+      "test_id": "TEST-CC-LIVE-004"
     },
     {
       "callable": "test_control_gateway_requires_typed_action_intent",

@@ -3,7 +3,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import secrets
 import sqlite3
+import time
 from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
@@ -67,6 +69,14 @@ from project_pipeline.budget.simulation import (
 from project_pipeline.budget.simulation import (
     supported_scenarios as supported_budget_scenarios,
 )
+
+try:
+    from project_pipeline.command_center.live_browser import verify_live_command_center
+    from project_pipeline.command_center.live_server import LiveCommandCenterServer
+except ImportError:
+    # optional:api extra is not part of the active lock groups used by CI.
+    verify_live_command_center = None
+    LiveCommandCenterServer = None
 from project_pipeline.configuration import (
     ConfigurationError,
     ExternalWriteMode,
@@ -391,6 +401,16 @@ def build_parser() -> argparse.ArgumentParser:
     quality.add_argument("--strict-tools", action="store_true")
     quality.add_argument("--coverage", action="store_true")
     quality.add_argument("--json-output", type=Path)
+
+    command_center = commands.add_parser(
+        "command-center", help="Serve or verify the loopback Command Center"
+    )
+    command_center.add_argument("action", choices=("serve", "verify-live"))
+    command_center.add_argument("--root", type=_root, default=Path.cwd())
+    command_center.add_argument("--host", default="127.0.0.1")
+    command_center.add_argument("--port", type=int, default=8765)
+    command_center.add_argument("--token-file", type=Path)
+    command_center.add_argument("--json-output", type=Path)
 
     release_hardening = commands.add_parser(
         "release-hardening",
@@ -1401,6 +1421,41 @@ def _jira_adapter(args: argparse.Namespace, configuration: Any):
         user_email=settings.jira_user_email,
         api_token=token,
     )
+
+
+def _run_command_center_command(args: argparse.Namespace) -> int:
+    if verify_live_command_center is None or LiveCommandCenterServer is None:
+        raise ConfigurationError(
+            "command-center serve/verify-live requires the optional api extra (fastapi, uvicorn, websockets)"
+        )
+    token_path = args.token_file or (args.root / ".local" / "command_center_loopback_token")
+    if args.action == "verify-live":
+        token = (
+            token_path.read_text(encoding="utf-8").strip()
+            if token_path.exists()
+            else "cc-local-loopback"
+        )
+        result = verify_live_command_center(args.root, token=token)
+        _write_json_output(result, args.json_output)
+        return 0 if result["passed"] else 1
+    if args.host not in {"127.0.0.1", "localhost", "::1"}:
+        raise ConfigurationError("command-center serve is loopback-only")
+    token_path.parent.mkdir(parents=True, exist_ok=True)
+    if not token_path.exists():
+        token_path.write_text(secrets.token_urlsafe(24), encoding="utf-8")
+    token = token_path.read_text(encoding="utf-8").strip()
+    server = LiveCommandCenterServer(args.root, token=token, host=args.host, port=args.port)
+    url = server.start()
+    _write_json_output(
+        {"url": url, "token_file": str(token_path), "loopback": True},
+        args.json_output,
+    )
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        server.stop()
+        return 0
 
 
 def _repository_root(args: argparse.Namespace) -> Path:
@@ -3505,6 +3560,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             result["ok"] = not result["errors"]
             _write_json_output(result, args.json_output)
             return 0 if result["ok"] else 1
+        if args.command == "command-center":
+            return _run_command_center_command(args)
         if args.command == "quality":
             report = run_quality(args.root, strict_tools=args.strict_tools, coverage=args.coverage)
             if args.json_output:

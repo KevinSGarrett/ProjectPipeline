@@ -4,6 +4,17 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Any
 
+from fastapi import (
+    Depends,
+    FastAPI,
+    Header,
+    HTTPException,
+    Query,
+    WebSocket,
+    WebSocketDisconnect,
+)
+from fastapi.responses import StreamingResponse
+
 from project_pipeline.command_center.application import CommandCenterApplicationProjection
 from project_pipeline.command_center.director import (
     CommandCenterControlGateway,
@@ -53,16 +64,6 @@ def create_command_center_app(
     notification_service: NotificationDeliveryService | None = None,
     auth: CommandCenterAuth | None = None,
 ):
-    from fastapi import (
-        Depends,
-        FastAPI,
-        Header,
-        HTTPException,
-        Query,
-        WebSocketDisconnect,
-    )
-    from fastapi.responses import StreamingResponse
-
     app = FastAPI(title="Project Pipeline Command Center API", version="1.1.0")
     auth = auth or CommandCenterAuth.deny_all()
     director = DirectorContextBuilder()
@@ -177,9 +178,15 @@ def create_command_center_app(
         )
 
     @app.websocket("/api/v1/command-center/ws")
-    async def websocket_events(websocket: Any, after_sequence: int = 0):
+    async def websocket_events(
+        websocket: WebSocket, after_sequence: int = 0, token: str | None = None
+    ):
+        query_token = token or websocket.query_params.get("token")
+        authorization = websocket.headers.get("authorization")
+        if not authorization and query_token:
+            authorization = f"Bearer {query_token}"
         try:
-            actor = auth.authenticate(websocket.headers.get("authorization"))
+            actor = auth.authenticate(authorization)
         except PermissionError:
             await websocket.close(code=4401)
             return

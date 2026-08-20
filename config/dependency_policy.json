@@ -27,6 +27,14 @@
       "rationale": "FastAPI TestClient requires HTTPX during test collection and execution.",
       "requirement": "httpx>=0.28,<1",
       "source": "https://pypi.org/project/httpx/"
+    },
+    {
+      "license": "BSD-3-Clause",
+      "name": "websockets",
+      "provenance": "Installed distribution metadata and the project API optional-dependency declaration.",
+      "rationale": "Uvicorn needs a WebSocket implementation to serve the Command Center realtime path advertised by the API.",
+      "requirement": "websockets>=15,<16",
+      "source": "https://pypi.org/project/websockets/"
     }
   ],
   "environment_lock": {
