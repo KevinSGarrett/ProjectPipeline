@@ -9,7 +9,7 @@
     "metadata": "NO_DIFFERENCE",
     "status": "RECONCILIATION_REQUIRED"
   },
-  "generated_at_utc": "2026-08-19T22:28:01Z",
+  "generated_at_utc": "2026-08-20T02:19:11Z",
   "identity_parity": "NO_DIFFERENCE",
   "instruction_citations": [
     "instructions/06_JIRA_OPERATING_PROTOCOL.md",
@@ -21,7 +21,7 @@
   ],
   "local_edge_count": 890,
   "local_issue_count": 393,
-  "local_mirror_fingerprint": "a426c27d045d6cdb2473de49f5f77b431ed0ebba2aaddcc1b647105082b7658f",
+  "local_mirror_fingerprint": "cae3893b142506381526eb4c1dd4abcccf5cc40f092986487e3cdfe72b28bc93",
   "local_reconciliation_pending_remote": false,
   "parity_status": "PARITY_CONFIRMED",
   "plan_id": "JPLAN-CYCLE015-PP385-OBS",

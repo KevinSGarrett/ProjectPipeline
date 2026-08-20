@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "6335c0b4743e75c2c03a528a310100282dbdd0a14a3f83072a3f7959d830951b",
+  "aggregate_sha256": "0564ca0cf39eab88763b5b4dc3042852969a20c18b8c4e9be0e9609d3bb661fb",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -337,8 +337,8 @@
     },
     {
       "path": "apps/command_center/preview/index.html",
-      "sha256": "5bb042a6a4587c7e4c88a20c7bf0327540121b8009ab1822e906242cb74a8014",
-      "size_bytes": 39364
+      "sha256": "430604299e1f42998f73c78b47ccf6635dd824d634f86e37f7b7bd7bd19d038e",
+      "size_bytes": 39404
     },
     {
       "path": "apps/command_center/README.md",
@@ -352,8 +352,8 @@
     },
     {
       "path": "apps/command_center/src/app.css",
-      "sha256": "af02039d0abbd3684f81ec8972e9759cba8334a6895d1c1352b562083b57dfd2",
-      "size_bytes": 17807
+      "sha256": "264aca35d72f0dc90542d4442a48eab8cdd95601e2a592097a994ce7505ef8c1",
+      "size_bytes": 17847
     },
     {
       "path": "apps/command_center/src/App.jsx",
@@ -5572,7 +5572,7 @@
     },
     {
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "11b4e292e069c38ef0cf5d012d0016bbe604123b8ae708fd904ed192a0c8051e",
+      "sha256": "0d9fa72b446f08676ed5475faa7ad3ce258c299715d862158a9a1c5d4929ed1b",
       "size_bytes": 5786
     },
     {
@@ -14127,8 +14127,8 @@
     },
     {
       "path": "tests/test_control_kernel.py",
-      "sha256": "badab24a89fb37cacd76f3f16f89adbcd3905c3a503814e63d8b11960ee139e5",
-      "size_bytes": 13530
+      "sha256": "8c497288e46377dc1977b9882d3e82c99d8e524721f2f4d9003b593da86607bd",
+      "size_bytes": 14092
     },
     {
       "path": "tests/test_control_persistence.py",
@@ -14851,7 +14851,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T01:52:59.865111+00:00",
+  "generated_at_utc": "2026-08-20T02:29:41.728448+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14860,5 +14860,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29439467
+  "total_bytes": 29440109
 }
