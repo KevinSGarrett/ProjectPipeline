@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 from subprocess import CompletedProcess
 
@@ -13,6 +14,7 @@ from project_pipeline.command_center.desktop_qualification import (
     qualify_desktop_slice,
     resolve_predecessor_release,
 )
+from project_pipeline.validation.product_outcome import runtime_qualification_is_bound
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -38,7 +40,7 @@ def test_qualify_desktop_slice_reports_lockfiles_and_keeps_ux_open() -> None:
     result = qualify_desktop_slice(ROOT)
     assert result["lockfiles"]["npm"] is True
     assert result["lockfiles"]["cargo"] is True
-    assert result["requirement_ux_0004_closed"] is False
+    assert result["requirement_ux_0004_closed"] is runtime_qualification_is_bound(ROOT)
     assert result["installer_lifecycle"]["upgrade_credit"] is False
 
 
@@ -85,6 +87,60 @@ def test_execute_installer_lifecycle_uses_injected_runner(tmp_path: Path) -> Non
     ]
     assert result["steps"][3]["reason"] == "ALREADY_REMOVED"
     assert len(calls) == 3
+
+
+def test_execute_installer_lifecycle_removes_nsis_self_leftover(tmp_path: Path) -> None:
+    installer = tmp_path / "ProjectPipeline_0.10.0_x64-setup.exe"
+    installer.write_bytes(b"nsis")
+    target = tmp_path / "install-root"
+
+    def runner(command, **kwargs):
+        if command[0].endswith("-setup.exe"):
+            target.mkdir(parents=True, exist_ok=True)
+            (target / "uninstall.exe").write_bytes(b"uninst")
+            return CompletedProcess(command, 0, b"", b"")
+        if str(command[0]).endswith("uninstall.exe"):
+            return CompletedProcess(command, 0, b"", b"")
+        return CompletedProcess(command, 1, b"failed", b"")
+
+    result = evaluate_installer_lifecycle(
+        artifacts={"nsis": installer},
+        predecessor=resolve_predecessor_release(tmp_path),
+        execute=True,
+        target_root=target,
+        runner=runner,
+    )
+    assert result["executed"] is True
+    assert result["clean_removal"] is True
+    assert result["remaining_files"] == []
+    assert not (target / "uninstall.exe").exists()
+
+
+def test_execute_installer_lifecycle_treats_removed_root_as_clean(tmp_path: Path) -> None:
+    installer = tmp_path / "ProjectPipeline_0.10.0_x64-setup.exe"
+    installer.write_bytes(b"nsis")
+    target = tmp_path / "install-root"
+
+    def runner(command, **kwargs):
+        if command[0].endswith("-setup.exe"):
+            target.mkdir(parents=True, exist_ok=True)
+            (target / "uninstall.exe").write_bytes(b"uninst")
+            return CompletedProcess(command, 0, b"", b"")
+        if str(command[0]).endswith("uninstall.exe"):
+            shutil.rmtree(target, ignore_errors=True)
+            return CompletedProcess(command, 0, b"", b"")
+        return CompletedProcess(command, 1, b"failed", b"")
+
+    result = evaluate_installer_lifecycle(
+        artifacts={"nsis": installer},
+        predecessor=resolve_predecessor_release(tmp_path),
+        execute=True,
+        target_root=target,
+        runner=runner,
+    )
+    assert result["executed"] is True
+    assert result["clean_removal"] is True
+    assert result["remaining_files"] == []
 
 
 def test_hosted_setup_exe_is_nsis_not_native_executable(tmp_path: Path) -> None:

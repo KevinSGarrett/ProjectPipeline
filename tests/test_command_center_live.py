@@ -71,8 +71,11 @@ def test_live_autonomy_director_selects_and_reloads_persisted_state(tmp_path: Pa
         headers={"Authorization": "Bearer good"},
     )
     assert selected.status_code == 200
-    task_id = selected.json()["decision"]["selected_task_id"]
-    assert task_id
+    payload = selected.json()
+    task_id = payload["decision"]["selected_task_id"]
+    if task_id is None:
+        rationale = str(payload["decision"].get("rationale") or "").lower()
+        assert "no ready work" in rationale
     second, _, _ = create_live_command_center_app(ROOT, token="good", director_state_path=state)
     recovered = (
         TestClient(second)

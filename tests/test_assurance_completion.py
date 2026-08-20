@@ -107,10 +107,11 @@ def test_current_repository_cannot_self_certify_complete_before_later_passes():
     assert decision.state is GateState.NOT_COMPLETE
     assert decision.final_complete is False
     failed = {q.question_number for q in decision.questions if not q.passed}
-    assert 5 in failed
+    assert failed == {2, 5, 16}
     golden = next(q for q in decision.questions if q.question_number == 5)
     assert "EVID-000116" in golden.evidence_ids
-    assert 13 in failed  # Command Center remains later in the schedule.
+    command_center = next(q for q in decision.questions if q.question_number == 13)
+    assert command_center.passed is True
     assert 16 in failed  # A real 72-hour unattended qualification has not run yet.
 
 

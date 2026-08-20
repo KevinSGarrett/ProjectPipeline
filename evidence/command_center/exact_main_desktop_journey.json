@@ -1,0 +1,18 @@
+{
+  "bootstrap_ok": true,
+  "bound_head": "ced2563a2a0d0060be557b569b07432d352acdbc",
+  "bound_tree": "6d1c22ea125b2ff25f5aa151230f9416f928b9be",
+  "hashes_json_head": "ced2563a2a0d0060be557b569b07432d352acdbc",
+  "hosted_run_id": "32395867278",
+  "installer_clean_removal": true,
+  "installer_executed": true,
+  "installer_reason": "INSTALLER_LIFECYCLE_EXECUTED",
+  "native_window_observed": true,
+  "pe_sha256": "29ca3cddc908d3d7c9344778a6c61b156feb7ac587f4b7156b95261c5c5a6c32",
+  "schema_version": "1.0.0",
+  "secret_residue": [],
+  "service_after_process_kill": false,
+  "service_before": false,
+  "stale_token_status": 401,
+  "window_title": "Project Pipeline Command Center"
+}

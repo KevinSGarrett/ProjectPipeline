@@ -90,7 +90,7 @@
 {"evidence_ids": ["EVID-000030", "EVID-000032", "EVID-000055", "EVID-000056", "EVID-000059", "EVID-000060"], "requirement_id": "REQ-CTRL-0001"}
 {"evidence_ids": ["EVID-000159"], "requirement_id": "REQ-CTRL-0002"}
 {"evidence_ids": ["EVID-000029", "EVID-000030", "EVID-000096", "EVID-000098", "EVID-000099", "EVID-000100", "EVID-000101"], "requirement_id": "REQ-CTRL-0003"}
-{"evidence_ids": ["EVID-000169"], "requirement_id": "REQ-CTRL-0004"}
+{"evidence_ids": ["EVID-000169", "EVID-000178"], "requirement_id": "REQ-CTRL-0004"}
 {"evidence_ids": ["EVID-000055"], "requirement_id": "REQ-CTRL-0005"}
 {"evidence_ids": ["EVID-000202"], "requirement_id": "REQ-CTRL-0006"}
 {"evidence_ids": ["EVID-000203"], "requirement_id": "REQ-CTRL-0007"}
@@ -327,7 +327,7 @@
 {"evidence_ids": ["EVID-000136", "EVID-000141", "EVID-000143", "EVID-000207"], "requirement_id": "REQ-UX-0001"}
 {"evidence_ids": ["EVID-000136", "EVID-000147", "EVID-000149", "EVID-000150"], "requirement_id": "REQ-UX-0002"}
 {"evidence_ids": ["EVID-000136", "EVID-000147", "EVID-000148", "EVID-000149", "EVID-000150"], "requirement_id": "REQ-UX-0003"}
-{"evidence_ids": ["EVID-000136", "EVID-000141", "EVID-000142", "EVID-000143", "EVID-000207"], "requirement_id": "REQ-UX-0004"}
+{"evidence_ids": ["EVID-000136", "EVID-000141", "EVID-000142", "EVID-000143", "EVID-000207", "EVID-000178", "EVID-000212"], "requirement_id": "REQ-UX-0004"}
 {"evidence_ids": ["EVID-000136"], "requirement_id": "REQ-UX-0005"}
 {"evidence_ids": ["EVID-000136", "EVID-000141"], "requirement_id": "REQ-UX-0006"}
 {"evidence_ids": ["EVID-000136", "EVID-000141"], "requirement_id": "REQ-UX-0007"}

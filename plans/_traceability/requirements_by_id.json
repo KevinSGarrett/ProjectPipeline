@@ -6388,7 +6388,8 @@
     "disposition_reason": "Accepted because the cited source defines required behavior, a controlling constraint, or a mandatory implementation boundary.",
     "domain": "CTRL",
     "evidence_ids": [
-      "EVID-000169"
+      "EVID-000169",
+      "EVID-000178"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -6396,7 +6397,7 @@
       "src/project_pipeline/command_center/autonomy_director.py",
       "src/project_pipeline/command_center/director_runtime.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000007",
       "PP-STORY-000065",
@@ -22630,7 +22631,9 @@
       "EVID-000141",
       "EVID-000142",
       "EVID-000143",
-      "EVID-000207"
+      "EVID-000207",
+      "EVID-000178",
+      "EVID-000212"
     ],
     "evolution_ids": [],
     "implementation_paths": [
@@ -22656,7 +22659,7 @@
       "tests/test_desktop_session.py",
       "adr/ADR-0028_command_center_os_identity_and_loopback_session_auth.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000115"

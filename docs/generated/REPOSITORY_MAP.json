@@ -8,7 +8,7 @@
     ".html": 3,
     ".ico": 1,
     ".ini": 1,
-    ".json": 1125,
+    ".json": 1126,
     ".jsonl": 63,
     ".jsx": 2,
     ".lock": 1,
@@ -49,7 +49,7 @@
     "database": 98,
     "docs": 74,
     "dummy": 429,
-    "evidence": 251,
+    "evidence": 252,
     "fixtures": 25,
     "infrastructure": 11,
     "instructions": 46,
@@ -66,7 +66,7 @@
     "tests": 230,
     "third_party": 1
   },
-  "file_count": 2994,
+  "file_count": 2995,
   "files": [
     {
       "extension": ".md",
@@ -232,8 +232,8 @@
     {
       "extension": "[none]",
       "path": ".git",
-      "sha256": "05b664d89fd5c2100c0ad43cabc8dbc8c300407d77e005bf0d6b99990774c1c4",
-      "size_bytes": 50,
+      "sha256": "ed44ae7aa84faa8b403e7c02efd21e68fd8d36507a48d301cf674bbf445d2b5e",
+      "size_bytes": 55,
       "top_level": "_root"
     },
     {
@@ -5510,8 +5510,8 @@
     {
       "extension": ".json",
       "path": "evidence/autonomy_runtime/live_qualification/live_qualification_latest.json",
-      "sha256": "1ca0d241d38960ac8e88bf13d0f87b05541d8e29f749339a49c683f5dbf7f838",
-      "size_bytes": 11079,
+      "sha256": "46c663477e3ce9b335b7e5b3be1da3e70a7b729cdfee6eb5aad0eb53e330a48f",
+      "size_bytes": 11252,
       "top_level": "evidence"
     },
     {
@@ -5554,6 +5554,13 @@
       "path": "evidence/catalog_test_suite.txt",
       "sha256": "1b1e69966a96ecee87223da7de1d299569b0c428ec4dcc1ae043e2b4deb56e16",
       "size_bytes": 2645,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".json",
+      "path": "evidence/command_center/exact_main_desktop_journey.json",
+      "sha256": "18efcdad8fc3f0ba0c9818d3fef6090c38ceeeb349407c497a84ffbb9c98cf8f",
+      "size_bytes": 684,
       "top_level": "evidence"
     },
     {
@@ -5867,14 +5874,14 @@
     {
       "extension": ".jsonl",
       "path": "evidence/EVIDENCE_LEDGER.jsonl",
-      "sha256": "43fe3bf9cd7231011e12f07440f7bd7f8a87a16dc32a0cf166d6d05b52e54cd2",
-      "size_bytes": 163425,
+      "sha256": "5a9842756e7e5754deeb9fcfd0ac84e68ec7be486abd638b91f8800df5091c90",
+      "size_bytes": 164152,
       "top_level": "evidence"
     },
     {
       "extension": ".json",
       "path": "evidence/EVIDENCE_SUMMARY.json",
-      "sha256": "fea8ca507eaf62c321cb61a0685efcfe01de8b8ae6f0e330df8de00fc37aeadf",
+      "sha256": "adc49950e0c536149a0285ae36d4878b7973071d09da6a1903246f9e61eb2c48",
       "size_bytes": 289,
       "top_level": "evidence"
     },
@@ -7141,8 +7148,8 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "04b93aa6a653410ed0e00c519a0cffce4573f72b4891b1553f1bdd8d80d8b11b",
-      "size_bytes": 342471,
+      "sha256": "809c59bd412437353c3801737b233912fdee003b50b38a35b915d0f43b9f98d1",
+      "size_bytes": 342593,
       "top_level": "_root"
     },
     {
@@ -13469,7 +13476,7 @@
     {
       "extension": ".md",
       "path": "plans/01_requirements/REQUIREMENT_CATALOG_STATUS.md",
-      "sha256": "b6b1016f5869411d79cc37d757e4bc5be6faac108ab45f1966e5a4a29f1c959d",
+      "sha256": "710256512fc820f3a6d81e7ef9b7fdaf581061753adc9d9eba406fc7ea5253a4",
       "size_bytes": 777,
       "top_level": "plans"
     },
@@ -14176,14 +14183,14 @@
     {
       "extension": ".json",
       "path": "plans/_traceability/coverage_report.json",
-      "sha256": "e2eeff9ffe1e205bb03b4f0e4425bfe93e877a6553c4dd91c9c14408f0160bc3",
+      "sha256": "c2b215072139c59329fdc03cdc5db288bf6021612b9d9acab5b703e4e821bc99",
       "size_bytes": 2447,
       "top_level": "plans"
     },
     {
       "extension": ".md",
       "path": "plans/_traceability/coverage_report.md",
-      "sha256": "a0782333e0dd0e07e4f8cfbdb0e52614575dcae39821951a87cebd8fca56ec57",
+      "sha256": "02c0dbf8a0ffd20919a2fd23b0d7913cc9d9cdf0517f026d1d9cc7ae9ceb877c",
       "size_bytes": 730,
       "top_level": "plans"
     },
@@ -14197,15 +14204,15 @@
     {
       "extension": ".json",
       "path": "plans/_traceability/requirement_registry_summary.json",
-      "sha256": "6356992ae777615c26c0a568b42969a2542c7e1bbcb32b257b230a2abade6799",
+      "sha256": "a74cb06aa1e1fcc02bb3c904b0d626d26083b9a87e4a7e9372cf4be515e74664",
       "size_bytes": 885,
       "top_level": "plans"
     },
     {
       "extension": ".jsonl",
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "04e00bfd84128e79f570182b61b2a077a5155d036ae562db6286f1ed9c344dd5",
-      "size_bytes": 746033,
+      "sha256": "ff9f0dd4e382bde2b5ad089e321476bfda212c1c819890a96f97f9e22aa54479",
+      "size_bytes": 746058,
       "top_level": "plans"
     },
     {
@@ -14218,8 +14225,8 @@
     {
       "extension": ".json",
       "path": "plans/_traceability/requirements_by_id.json",
-      "sha256": "e35c13f5089f5223baae16d8a5747e4518da000b5f7b14ae33a35bfd3532ca50",
-      "size_bytes": 872795,
+      "sha256": "9800ce4e12a35465e6013460ab82114b0a650e4a7a171aba3bd90f97b8a3b2e9",
+      "size_bytes": 872838,
       "top_level": "plans"
     },
     {
@@ -14239,8 +14246,8 @@
     {
       "extension": ".jsonl",
       "path": "plans/_traceability/requirements_to_evidence.jsonl",
-      "sha256": "9aa7f2d0aebff147ccf88c43244b4902d59d2aaaa3e4b9beaeba0c2e71bbbd61",
-      "size_bytes": 36958,
+      "sha256": "b1d7b530be4ce0fa6bf3d7a1cf46069ad68b0c5d114c9a85466762e88d5cb390",
+      "size_bytes": 37003,
       "top_level": "plans"
     },
     {
@@ -14365,8 +14372,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "400ffc47db0382df8eb21bd213d14c32c3a9e2bfea1901fe689f56cb742a2c78",
-      "size_bytes": 560733,
+      "sha256": "5380287530bf07f2d25f7eb7ed9d95796e98df7bf40a447d05e8b804c2e66ecd",
+      "size_bytes": 560927,
       "top_level": "_root"
     },
     {
@@ -17375,8 +17382,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
-      "sha256": "f125d7449abc2a763aedb6068379ef483dd887906d8b40893db24715a7f54ab9",
-      "size_bytes": 29855,
+      "sha256": "9b1c0693150836896f51759a0dde06076c655e8c20d132bd9afcfb8856bad83e",
+      "size_bytes": 30775,
       "top_level": "src"
     },
     {
@@ -17585,8 +17592,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/desktop_qualification.py",
-      "sha256": "36dff9d79407a99e0a76fa166979a7f4f9b6ca4a7c48b683d46f769ae65039c9",
-      "size_bytes": 16813,
+      "sha256": "4401132f4337ee0f4c9d518f66125d0b22db730c6f9e36d63516e29f83388203",
+      "size_bytes": 17927,
       "top_level": "src"
     },
     {
@@ -19265,8 +19272,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/validation/product_outcome.py",
-      "sha256": "01bb6b47a90dd0f9e1016f1170e5bba1efce90eed97d54ac80ffa1daa4bcd13e",
-      "size_bytes": 16470,
+      "sha256": "0328b2477d47506f4cd725734d71631bf2a86008442193f744ac3038dde65481",
+      "size_bytes": 19839,
       "top_level": "src"
     },
     {
@@ -19566,8 +19573,8 @@
     {
       "extension": ".py",
       "path": "tests/test_assurance_cli.py",
-      "sha256": "9c2a5da56bbd638dc24daa2a278788aecbee73f08c566a609d9442fdebf19db9",
-      "size_bytes": 4395,
+      "sha256": "c212cb9f66479f84aca5c5b78f0423b09971367bb321b17373ba8a1fa1e10afc",
+      "size_bytes": 4555,
       "top_level": "tests"
     },
     {
@@ -19580,8 +19587,8 @@
     {
       "extension": ".py",
       "path": "tests/test_assurance_completion.py",
-      "sha256": "e542d0d14558a66812b84e1bd90674826f1956f42011dcd3c0daa90faf855e4b",
-      "size_bytes": 4657,
+      "sha256": "3b06d22a1d9dfeecb4da506f9ba6a2acd5934cce30bef822560365bff4e74de7",
+      "size_bytes": 4718,
       "top_level": "tests"
     },
     {
@@ -19671,8 +19678,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_live_qualification.py",
-      "sha256": "45c9b7eec42d9ec78c1006bfd25b92b39e3ae4445c00de14735a9cbb4f1aee06",
-      "size_bytes": 3072,
+      "sha256": "4e6000ab5da3bda52f578fab71721a2c62a26fccf6567f633821d0e60f2859c8",
+      "size_bytes": 3142,
       "top_level": "tests"
     },
     {
@@ -19839,8 +19846,8 @@
     {
       "extension": ".py",
       "path": "tests/test_command_center_live.py",
-      "sha256": "24cd9b1548ae445fa15490825f8c4e2f66abdd50276b4f9e99a3510d3853fec0",
-      "size_bytes": 5907,
+      "sha256": "045bac9ae454f7e35593741795b64b5d1a338281685b0d42407535e7a275758f",
+      "size_bytes": 6054,
       "top_level": "tests"
     },
     {
@@ -19965,8 +19972,8 @@
     {
       "extension": ".py",
       "path": "tests/test_control_cli.py",
-      "sha256": "6b8eef04e8372273fe69804f5efd9bf48af88784551f28d13130a41b64f8f9d1",
-      "size_bytes": 4689,
+      "sha256": "42bdfa8723c62cb7d79ed9394e76746d071bfee20ad846f8657804e167389f38",
+      "size_bytes": 4666,
       "top_level": "tests"
     },
     {
@@ -19986,8 +19993,8 @@
     {
       "extension": ".py",
       "path": "tests/test_control_kernel.py",
-      "sha256": "8c497288e46377dc1977b9882d3e82c99d8e524721f2f4d9003b593da86607bd",
-      "size_bytes": 14092,
+      "sha256": "6f16f778f28695cdc2c4d7b738092e68ad51e10ef56f9ad158d71a6721b6712f",
+      "size_bytes": 14335,
       "top_level": "tests"
     },
     {
@@ -20084,8 +20091,8 @@
     {
       "extension": ".py",
       "path": "tests/test_desktop_qualification.py",
-      "sha256": "a41a12082ae97a59003e972c65d7505d9435855181e2f000728930e6e06a8f72",
-      "size_bytes": 4031,
+      "sha256": "6ac722657b4447510cfbec41b1d930c4168b11e0de3decd8e592db2ead52872b",
+      "size_bytes": 6278,
       "top_level": "tests"
     },
     {
@@ -20483,8 +20490,8 @@
     {
       "extension": ".py",
       "path": "tests/test_product_outcome_contract.py",
-      "sha256": "bf3594203efdb91231fd8ed08cc6dbe2f7c07f4f01177a9b51183ca7b9cb33b4",
-      "size_bytes": 13004,
+      "sha256": "9c04aabd3bb91351d0878292dd3d86f8888b32e3c5bc9ad4e5217cdae077e093",
+      "size_bytes": 14309,
       "top_level": "tests"
     },
     {
@@ -21027,7 +21034,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-20T16:35:26.371194+00:00",
+  "generated_at_utc": "2026-08-20T18:49:28.034719+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {
@@ -21099,6 +21106,7 @@
       "evidence/budget_simulation_snapshot.json",
       "evidence/budget_upstream_gate_snapshot.json",
       "evidence/catalog_test_suite.txt",
+      "evidence/command_center/exact_main_desktop_journey.json",
       "evidence/command_center_application_completion_gate_snapshot.json",
       "evidence/command_center_application_focused_suite.txt",
       "evidence/command_center_application_partitioned_regression.txt",
