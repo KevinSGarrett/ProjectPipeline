@@ -80,8 +80,15 @@ def observation_rejection(
     if observation.verification_status != "VERIFIED":
         return f"observation {observation.observation_id} is not independently verified"
     outcomes = observation.test_outcomes
+    requirement_tests = {str(item) for item in test_ids}
+    defined_tests = [
+        str(item)
+        for item in ((definition or {}).get("test_ids") or observation.test_ids)
+        if str(item)
+    ]
+    owned_tests = [item for item in defined_tests if item in requirement_tests] or defined_tests
     if outcomes:
-        for test_id in test_ids:
+        for test_id in owned_tests:
             outcome = outcomes.get(test_id)
             if outcome != "PASS":
                 return (
@@ -93,7 +100,7 @@ def observation_rejection(
             return f"observation {observation.observation_id} records FAIL"
         if observation.result is not ObservationResult.PASS:
             return f"observation {observation.observation_id} does not record PASS"
-        missing_tests = [test_id for test_id in test_ids if test_id not in observation.test_ids]
+        missing_tests = [test_id for test_id in owned_tests if test_id not in observation.test_ids]
         if missing_tests:
             return f"observation {observation.observation_id} is missing cataloged tests"
     age = max(0, int((now - observation.recorded_at_utc.astimezone(UTC)).total_seconds()))

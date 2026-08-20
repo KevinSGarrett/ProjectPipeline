@@ -4202,10 +4202,11 @@
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md",
       "plans/_traceability/requirements.jsonl"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "domain-story",
+      "implemented",
       "plan-ux-001"
     ],
     "last_observed_remote_state": {
@@ -12577,12 +12578,13 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-operator-inbox",
       "domain-ux",
+      "implemented",
       "pass-20",
       "pass-21"
     ],
@@ -21067,7 +21069,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "behavior_and_traceability_validation",
           "path": "src/project_pipeline/command_center",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -21077,7 +21079,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "src/project_pipeline/command_center",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -21112,7 +21114,7 @@
       "src/project_pipeline/command_center/models.py",
       "tests/test_command_center_api.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "architecture",
@@ -21896,7 +21898,7 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "behavior_and_traceability_validation",
           "path": "apps/command_center/",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       },
       {
@@ -21906,7 +21908,7 @@
           "command": "PYTHONPATH=src python -m unittest discover -s tests -v",
           "method": "tests_and_evidence_review",
           "path": "evidence/EVIDENCE_LEDGER.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
@@ -21944,7 +21946,7 @@
       "src/project_pipeline/command_center/application_validation.py",
       "src/project_pipeline/command_center/application_verification.py"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
       "backlog",
