@@ -70,20 +70,38 @@ def _run_version(executable: str | None, args: list[str] | None = None) -> str |
     return output.splitlines()[0] if output else None
 
 
+def classify_desktop_artifact(path: Path) -> str | None:
+    """Classify a staged PE, MSI, or NSIS file without depending on walk order."""
+
+    if not path.is_file():
+        return None
+    suffix = path.suffix.lower()
+    name = path.name.lower()
+    parent = path.parent.name.lower()
+    if suffix == ".msi":
+        return "msi"
+    if suffix != ".exe":
+        return None
+    if "uninstall" in name:
+        return None
+    if parent in {"identity", "nsis"} or "setup" in name:
+        return "nsis"
+    return "executable"
+
+
 def discover_desktop_artifacts(root: Path, *, hosted_dir: Path | None = None) -> dict[str, Path]:
-    candidates = {
-        "executable": list((root / "apps/desktop_shell/src-tauri/target/release").glob("*.exe")),
-        "msi": list(
-            (root / "apps/desktop_shell/src-tauri/target/release/bundle/msi").glob("*.msi")
-        ),
-        "nsis": list(
-            (root / "apps/desktop_shell/src-tauri/target/release/bundle/nsis").glob("*.exe")
-        ),
-    }
     found: dict[str, Path] = {}
-    for kind, matches in candidates.items():
-        if matches:
-            found[kind] = matches[0]
+    local_kinds = (
+        ("executable", root / "apps/desktop_shell/src-tauri/target/release", "*.exe"),
+        ("msi", root / "apps/desktop_shell/src-tauri/target/release/bundle/msi", "*.msi"),
+        ("nsis", root / "apps/desktop_shell/src-tauri/target/release/bundle/nsis", "*.exe"),
+    )
+    for kind, directory, pattern in local_kinds:
+        for path in directory.glob(pattern):
+            classified = classify_desktop_artifact(path)
+            if classified == kind:
+                found[kind] = path
+                break
     hosted_dirs = [
         hosted_dir,
         root / "evidence/desktop/hosted_artifacts",
@@ -92,13 +110,9 @@ def discover_desktop_artifacts(root: Path, *, hosted_dir: Path | None = None) ->
         if hosted is None or not hosted.is_dir():
             continue
         for path in hosted.rglob("*"):
-            posix = path.as_posix().lower()
-            if path.suffix.lower() == ".exe" and "nsis" not in posix and "uninstall" not in posix:
-                found["executable"] = path
-            elif path.suffix.lower() == ".msi":
-                found["msi"] = path
-            elif path.suffix.lower() == ".exe" and ("nsis" in posix or "setup" in posix):
-                found["nsis"] = path
+            classified = classify_desktop_artifact(path)
+            if classified is not None:
+                found[classified] = path
     return found
 
 
@@ -258,6 +272,48 @@ def _run_installer_command(
     }
 
 
+_MSI_ALREADY_REMOVED_CODES = frozenset({1605, 1614})
+
+
+def _run_uninstall_step(
+    *,
+    name: str,
+    kind: str,
+    uninstall_cmd: list[str],
+    uninstaller: Path | None,
+    runner: Callable[..., subprocess.CompletedProcess[bytes]] | None,
+    required: bool,
+) -> dict[str, Any]:
+    missing = kind == "nsis" and uninstaller is not None and not uninstaller.is_file()
+    if missing and not required:
+        return {
+            "name": name,
+            "ok": True,
+            "reason": "ALREADY_REMOVED",
+            "command": uninstall_cmd,
+        }
+    if missing and runner is None:
+        return {
+            "name": name,
+            "ok": False,
+            "reason": "UNINSTALLER_MISSING",
+            "command": uninstall_cmd,
+        }
+    result = _run_installer_command(uninstall_cmd, runner=runner)
+    if result["ok"]:
+        return {"name": name, **result}
+    if required:
+        return {"name": name, **result}
+    already_removed = (
+        missing
+        or result.get("reason") in {"FileNotFoundError", "OSError"}
+        or (kind == "msi" and result.get("returncode") in _MSI_ALREADY_REMOVED_CODES)
+    )
+    if already_removed:
+        return {"name": name, **result, "ok": True, "reason": "ALREADY_REMOVED"}
+    return {"name": name, **result}
+
+
 def _remaining_files(target_root: Path) -> list[str]:
     if not target_root.exists():
         return []
@@ -316,18 +372,27 @@ def execute_installer_lifecycle(
 
     steps.append({"name": "clean_install", **_run_installer_command(install_cmd, runner=runner)})
     steps.append({"name": "repair", **_run_installer_command(install_cmd, runner=runner)})
-    if kind == "nsis" and not uninstaller.is_file() and runner is None:
-        steps.append(
-            {
-                "name": "rollback",
-                "ok": False,
-                "reason": "UNINSTALLER_MISSING",
-                "command": uninstall_cmd,
-            }
+    nsis_uninstaller = uninstaller if kind == "nsis" else None
+    steps.append(
+        _run_uninstall_step(
+            name="rollback",
+            kind=kind,
+            uninstall_cmd=uninstall_cmd,
+            uninstaller=nsis_uninstaller,
+            runner=runner,
+            required=True,
         )
-    else:
-        steps.append({"name": "rollback", **_run_installer_command(uninstall_cmd, runner=runner)})
-    steps.append({"name": "uninstall", **_run_installer_command(uninstall_cmd, runner=runner)})
+    )
+    steps.append(
+        _run_uninstall_step(
+            name="uninstall",
+            kind=kind,
+            uninstall_cmd=uninstall_cmd,
+            uninstaller=nsis_uninstaller,
+            runner=runner,
+            required=False,
+        )
+    )
     remaining = _remaining_files(target_root)
     residue = scan_secret_residue(
         [path for path in target_root.rglob("*") if path.is_file()] if target_root.exists() else [],
