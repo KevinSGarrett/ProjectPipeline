@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 669,
+  "test_count": 672,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -763,6 +763,11 @@
       "test_id": "TEST-CC-LIVE-004"
     },
     {
+      "test_id": "TEST-CC-LIVE-005",
+      "path": "tests/test_command_center_live.py",
+      "callable": "test_live_autonomy_director_selects_and_reloads_persisted_state"
+    },
+    {
       "callable": "test_director_chat_is_grounded_and_never_mutates_from_raw_text",
       "path": "tests/test_command_center_pass21.py",
       "test_id": "TEST-CC-P21-001"
@@ -1161,6 +1166,16 @@
       "test_id": "TEST-CTRL-DIRECTOR-003",
       "path": "tests/test_autonomy_director.py",
       "callable": "test_director_does_not_invent_work_when_control_has_none"
+    },
+    {
+      "test_id": "TEST-CTRL-DIRECTOR-004",
+      "path": "tests/test_autonomy_director.py",
+      "callable": "test_director_survives_os_process_exit"
+    },
+    {
+      "test_id": "TEST-CTRL-DIRECTOR-005",
+      "path": "tests/test_command_center_api.py",
+      "callable": "test_autonomy_director_api_selects_from_control_and_rejects_chat_mutation"
     },
     {
       "callable": "test_context_cli_compile_status_pack_and_receipt",

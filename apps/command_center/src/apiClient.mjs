@@ -33,6 +33,8 @@ export class CommandCenterClient {
   dispatchInbox(inboxId, localHour = new Date().getHours()) { return this.request(`/command-center/inbox/${encodeURIComponent(inboxId)}/dispatch?local_hour=${Number(localHour)}`, { method: "POST" }); }
   directorChat(request) { return this.request("/director/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(request) }); }
   directorHistory(conversationId) { return this.request(`/director/conversations/${encodeURIComponent(conversationId)}`); }
+  autonomyDirector() { return this.request("/director/autonomy"); }
+  selectAutonomyWork() { return this.request("/director/autonomy/select", { method: "POST" }); }
   incidents() { return this.request("/command-center/incidents"); }
   acknowledgeIncident(incidentId) { return this.request(`/command-center/incidents/${encodeURIComponent(incidentId)}/ack`, { method: "POST" }); }
   startIncidentRecovery(incidentId) { return this.request(`/command-center/incidents/${encodeURIComponent(incidentId)}/recovery/start`, { method: "POST" }); }

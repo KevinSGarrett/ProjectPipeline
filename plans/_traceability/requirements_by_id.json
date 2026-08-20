@@ -6431,11 +6431,14 @@
       "ctrl"
     ],
     "test_ids": [
+      "TEST-CC-LIVE-005",
       "TEST-CC-P21-001",
       "TEST-CC-P21-002",
       "TEST-CTRL-DIRECTOR-001",
       "TEST-CTRL-DIRECTOR-002",
-      "TEST-CTRL-DIRECTOR-003"
+      "TEST-CTRL-DIRECTOR-003",
+      "TEST-CTRL-DIRECTOR-004",
+      "TEST-CTRL-DIRECTOR-005"
     ],
     "title": "Persistent Autonomy Director",
     "verification_class": "AUTOMATED_WITH_REVIEW",

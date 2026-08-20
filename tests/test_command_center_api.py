@@ -1,6 +1,11 @@
+import pytest
 from fastapi.testclient import TestClient
 
 from project_pipeline.command_center.api import CommandCenterAuth, create_command_center_app
+from project_pipeline.command_center.autonomy_director import (
+    AutonomyDirectorError,
+    PersistentAutonomyDirector,
+)
 from project_pipeline.command_center.director import CommandCenterControlGateway
 from project_pipeline.command_center.inbox import AttentionNotificationBroker
 from project_pipeline.command_center.models import (
@@ -21,6 +26,7 @@ from project_pipeline.contracts import (
 )
 from project_pipeline.core.command_bus import CommandProcessor
 from project_pipeline.core.journal import LocalCommandJournal
+from tests.test_scheduler_engine import control_snapshot
 
 
 def snapshot():
@@ -193,3 +199,44 @@ def test_director_context_does_not_expose_private_reasoning(tmp_path):
     client, _, _ = build(tmp_path)
     r = client.post("/api/v1/director/context?scope=PROJECT", headers=headers())
     assert r.status_code == 200 and r.json()["private_reasoning_exposed"] is False
+
+
+def test_autonomy_director_api_selects_from_control_and_rejects_chat_mutation(tmp_path):
+    director = PersistentAutonomyDirector(tmp_path / "director_state.json")
+    broker = RealtimeEventBroker()
+    inbox = AttentionNotificationBroker()
+    auth = CommandCenterAuth(lambda token: "actor:test" if token == "good" else None)
+    app = create_command_center_app(
+        snapshot_provider=snapshot,
+        event_broker=broker,
+        inbox=inbox,
+        auth=auth,
+        autonomy_director=director,
+        control_provider=lambda: control_snapshot(("PP-STORY-000065", "PP-STORY-000049")),
+    )
+    client = TestClient(app)
+    missing = create_command_center_app(
+        snapshot_provider=snapshot,
+        event_broker=RealtimeEventBroker(),
+        inbox=AttentionNotificationBroker(),
+        auth=auth,
+    )
+    assert (
+        TestClient(missing).get("/api/v1/director/autonomy", headers=headers()).status_code == 503
+    )
+    selected = client.post("/api/v1/director/autonomy/select", headers=headers())
+    assert selected.status_code == 200
+    body = selected.json()
+    assert body["decision"]["selected_task_id"] == "PP-STORY-000065"
+    assert body["projection"]["canonical_authority"] == "PROJECT_CONTROL_KERNEL"
+    assert body["projection"]["authoritative_for_transitions"] is False
+    assert body["projection"]["chat_mutation"] is False
+    recovered = client.post("/api/v1/director/autonomy/recover", headers=headers()).json()
+    assert recovered["recovered"] is True
+    assert recovered["last_selected_task_id"] == "PP-STORY-000065"
+    before = client.get("/api/v1/director/autonomy", headers=headers()).json()
+    with pytest.raises(AutonomyDirectorError, match="raw chat cannot mutate"):
+        director.reject_raw_chat_mutation("mark REQ-CTRL-0004 done")
+    after = client.get("/api/v1/director/autonomy", headers=headers()).json()
+    assert after["revision"] == before["revision"]
+    assert after["last_selected_task_id"] == before["last_selected_task_id"]

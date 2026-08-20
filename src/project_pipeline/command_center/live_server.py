@@ -21,6 +21,11 @@ except ImportError:
 
 from project_pipeline.command_center.api import CommandCenterAuth, create_command_center_app
 from project_pipeline.command_center.application import RepositoryApplicationProjectionBuilder
+from project_pipeline.command_center.autonomy_director import (
+    PersistentAutonomyDirector,
+    control_snapshot_for_selection,
+    default_state_path,
+)
 from project_pipeline.command_center.inbox import AttentionNotificationBroker
 from project_pipeline.command_center.incidents import IncidentManager
 from project_pipeline.command_center.models import (
@@ -32,6 +37,7 @@ from project_pipeline.command_center.models import (
 )
 from project_pipeline.command_center.projections import CommandCenterProjectionService
 from project_pipeline.command_center.realtime import RealtimeEventBroker
+from project_pipeline.domain.control import ControlSnapshot
 from project_pipeline.jira import load_issues
 
 
@@ -45,6 +51,18 @@ def _issue_progress_time(item: dict[str, Any]) -> datetime | None:
         return datetime.fromisoformat(str(raw).replace("Z", "+00:00")).astimezone(UTC)
     except ValueError:
         return datetime.now(UTC)
+
+
+def live_control_snapshot(root: Path) -> ControlSnapshot:
+    issues = load_issues(root)
+    ready: list[str] = []
+    if any(item.get("local_id") == "PP-STORY-000065" for item in issues):
+        ready.append("PP-STORY-000065")
+    for item in issues:
+        local_id = str(item.get("local_id") or "")
+        if local_id and local_id not in ready and item.get("state") == "IN_PROGRESS":
+            ready.append(local_id)
+    return control_snapshot_for_selection(tuple(ready[:8]))
 
 
 def snapshot_from_repository(root: Path) -> CommandCenterSnapshot:
@@ -111,12 +129,14 @@ def create_live_command_center_app(
     *,
     token: str,
     event_broker: RealtimeEventBroker | None = None,
+    director_state_path: Path | None = None,
 ) -> tuple[FastAPI, RealtimeEventBroker]:
     root = root.resolve()
     broker = event_broker or RealtimeEventBroker()
     inbox = AttentionNotificationBroker()
     incidents = IncidentManager(inbox)
     builder = RepositoryApplicationProjectionBuilder(root)
+    director = PersistentAutonomyDirector(director_state_path or default_state_path(root))
 
     app = create_command_center_app(
         snapshot_provider=lambda: snapshot_from_repository(root),
@@ -125,6 +145,8 @@ def create_live_command_center_app(
         application_provider=lambda: builder.build(snapshot_from_repository(root)),
         incident_manager=incidents,
         auth=CommandCenterAuth(lambda value: "actor:command-center" if value == token else None),
+        autonomy_director=director,
+        control_provider=lambda: live_control_snapshot(root),
     )
     preview = root / "apps/command_center/preview/index.html"
 

@@ -136,6 +136,10 @@ dt { color:var(--muted); font-size:.62rem; } dd { margin:2px 0 0; font-size:.72r
 
 /* Pass 21 Director Chat, incident lifecycle, and Operator Inbox controls. */
 .director-layout { display: grid; gap: 12px; }
+.autonomy-director { padding: 12px; border: 1px solid #292f3a; border-radius: 11px; background: #0d1117; }
+.autonomy-director dl { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 12px; margin: 8px 0 0; }
+.autonomy-director dt { color: var(--muted); font-size: .58rem; text-transform: uppercase; letter-spacing: .08em; }
+.autonomy-director dd { margin: 2px 0 0; color: #d9e0ea; font-size: .72rem; }
 .chat-log { min-height: 150px; max-height: 360px; overflow: auto; display: grid; gap: 8px; padding: 12px; border: 1px solid #292f3a; border-radius: 11px; background: #0d1117; }
 .chat-message { max-width: 86%; border: 1px solid #2d3542; border-radius: 11px; padding: 10px 12px; background: #151b24; }
 .chat-message.chat-user { justify-self: end; background: #1b2638; border-color: #405476; }
