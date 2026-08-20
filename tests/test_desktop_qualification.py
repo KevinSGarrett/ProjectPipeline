@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 from pathlib import Path
+from subprocess import CompletedProcess
 
 from project_pipeline.command_center.desktop_qualification import (
     NOT_APPLICABLE_NO_GOVERNED_PREDECESSOR,
+    classify_desktop_artifact,
+    discover_desktop_artifacts,
     evaluate_installer_lifecycle,
     observe_desktop_toolchain,
     probe_loopback_service,
@@ -41,3 +44,65 @@ def test_qualify_desktop_slice_reports_lockfiles_and_keeps_ux_open() -> None:
 
 def test_loopback_probe_does_not_raise() -> None:
     assert probe_loopback_service(port=1) is False
+
+
+def test_execute_installer_lifecycle_uses_injected_runner(tmp_path: Path) -> None:
+    installer = tmp_path / "ProjectPipeline_0.10.0_x64-setup.exe"
+    installer.write_bytes(b"nsis")
+    target = tmp_path / "install-root"
+    calls: list[list[str]] = []
+
+    def runner(command, **kwargs):
+        calls.append(list(command))
+        if command[0].endswith("-setup.exe"):
+            target.mkdir(parents=True, exist_ok=True)
+            (target / "uninstall.exe").write_bytes(b"uninst")
+            return CompletedProcess(command, 0, b"", b"")
+        if str(command[0]).endswith("uninstall.exe"):
+            uninstaller = Path(command[0])
+            if not uninstaller.is_file():
+                raise FileNotFoundError(command[0])
+            for child in target.rglob("*"):
+                if child.is_file():
+                    child.unlink()
+            return CompletedProcess(command, 0, b"", b"")
+        return CompletedProcess(command, 1, b"failed", b"")
+
+    result = evaluate_installer_lifecycle(
+        artifacts={"nsis": installer},
+        predecessor=resolve_predecessor_release(tmp_path),
+        execute=True,
+        target_root=target,
+        runner=runner,
+    )
+    assert result["executed"] is True
+    assert result["clean_removal"] is True
+    assert [step["name"] for step in result["steps"]] == [
+        "clean_install",
+        "repair",
+        "rollback",
+        "uninstall",
+    ]
+    assert result["steps"][3]["reason"] == "ALREADY_REMOVED"
+    assert len(calls) == 3
+
+
+def test_hosted_setup_exe_is_nsis_not_native_executable(tmp_path: Path) -> None:
+    hosted = tmp_path / "desktop-windows-A"
+    compare = hosted / "compare"
+    identity = hosted / "identity"
+    compare.mkdir(parents=True)
+    identity.mkdir(parents=True)
+    pe = compare / "Project Pipeline Command Center.exe"
+    setup = identity / "ProjectPipeline_0.10.0_x64-setup.exe"
+    msi = identity / "Project Pipeline Command Center_0.10.0_x64_en-US.msi"
+    pe.write_bytes(b"pe")
+    setup.write_bytes(b"nsis")
+    msi.write_bytes(b"msi")
+    assert classify_desktop_artifact(setup) == "nsis"
+    assert classify_desktop_artifact(pe) == "executable"
+    assert classify_desktop_artifact(msi) == "msi"
+    found = discover_desktop_artifacts(tmp_path, hosted_dir=hosted)
+    assert found["executable"] == pe
+    assert found["nsis"] == setup
+    assert found["msi"] == msi

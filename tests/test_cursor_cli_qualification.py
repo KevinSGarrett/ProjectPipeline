@@ -8,6 +8,7 @@ from subprocess import CompletedProcess
 import pytest
 
 from project_pipeline.agent_router.adapters import ProviderAdapterError
+from project_pipeline.autonomy_runtime import cursor_cli_qualification as cursor_cli_module
 from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
     ARTIFACT_NAME,
     IDEMPOTENCY_KEY,
@@ -273,7 +274,7 @@ def test_out_of_scope_mutation_fails(tmp_path: Path) -> None:
     assert "out-of-scope mutation" in report["reasons"]
 
 
-def test_conflicting_replay_fails(tmp_path: Path) -> None:
+def test_idempotent_replay_does_not_rewrite(tmp_path: Path) -> None:
     repo = _repo_with_evidence(tmp_path)
     calls = {"n": 0}
 
@@ -291,6 +292,56 @@ def test_conflicting_replay_fails(tmp_path: Path) -> None:
         source_root=source_root(),
         durable_dir=durable_dir(),
         runner=replay_runner,
+        executable="agent",
+    )
+    assert report["outcome"] == "PASSED"
+    assert calls["n"] == 1
+    replay = next(item for item in report["phases"] if item["phase"] == "REPLAY")
+    assert replay["observations"]["ok"] is True
+
+
+def test_conflicting_replay_fails(tmp_path: Path) -> None:
+    repo = _repo_with_evidence(tmp_path)
+
+    def conflicting_runner(*args: object, **kwargs: object) -> CompletedProcess[bytes]:
+        workspace = tmp_path / "runtime" / "cursor-cli-qualification"
+        _write_expected_artifact(workspace, "other-key")
+        return _cli_result()
+
+    report = qualify_cursor_cli_provider(
+        repository_root=repo,
+        disposable_root=tmp_path / "runtime",
+        source_root=source_root(),
+        durable_dir=durable_dir(),
+        runner=conflicting_runner,
+        executable="agent",
+    )
+    assert report["outcome"] == "FAILED"
+    assert "readback_failed" in report["reasons"]
+
+
+def test_conflicting_replay_digest_mismatch_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = _repo_with_evidence(tmp_path)
+    original = cursor_cli_module._dispatch_via_registered_adapter
+    calls = {"n": 0}
+
+    def mutating_dispatch(**kwargs: object):
+        result = original(**kwargs)
+        calls["n"] += 1
+        if calls["n"] > 1:
+            workspace = Path(str(kwargs["workspace"]))
+            (workspace / ARTIFACT_NAME).write_text('{"conflict":true}', encoding="utf-8")
+        return result
+
+    monkeypatch.setattr(cursor_cli_module, "_dispatch_via_registered_adapter", mutating_dispatch)
+    report = qualify_cursor_cli_provider(
+        repository_root=repo,
+        disposable_root=tmp_path / "runtime",
+        source_root=source_root(),
+        durable_dir=durable_dir(),
+        runner=_success_runner(tmp_path / "runtime"),
         executable="agent",
     )
     assert report["outcome"] == "FAILED"

@@ -232,8 +232,8 @@
     {
       "extension": "[none]",
       "path": ".git",
-      "sha256": "e4780583d83d39c6417c819a9539a31820ea5f26003069c9281cb298e7b17eed",
-      "size_bytes": 51,
+      "sha256": "05b664d89fd5c2100c0ad43cabc8dbc8c300407d77e005bf0d6b99990774c1c4",
+      "size_bytes": 50,
       "top_level": "_root"
     },
     {
@@ -7141,7 +7141,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "03d41a72a88d6a92c9229c6a45e1822959abaf88ed8f6943f9741c2b6ea44c21",
+      "sha256": "04b93aa6a653410ed0e00c519a0cffce4573f72b4891b1553f1bdd8d80d8b11b",
       "size_bytes": 342471,
       "top_level": "_root"
     },
@@ -14204,8 +14204,8 @@
     {
       "extension": ".jsonl",
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "37c1f681cb3cfac675363bf8501493b546e299763dad90baa9b467ed5a75c71b",
-      "size_bytes": 746385,
+      "sha256": "04e00bfd84128e79f570182b61b2a077a5155d036ae562db6286f1ed9c344dd5",
+      "size_bytes": 746033,
       "top_level": "plans"
     },
     {
@@ -14365,8 +14365,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "96b67e64c625a518324f6a6ec1a0069eaf1340728107526cdfd34eabd1f77650",
-      "size_bytes": 560730,
+      "sha256": "400ffc47db0382df8eb21bd213d14c32c3a9e2bfea1901fe689f56cb742a2c78",
+      "size_bytes": 560733,
       "top_level": "_root"
     },
     {
@@ -16843,8 +16843,8 @@
     {
       "extension": ".py",
       "path": "scripts/qualify_desktop_windows.py",
-      "sha256": "b65dd9e92857cd840b11180db9924ee975f46b0970335c7d110d7598f0db91bd",
-      "size_bytes": 871,
+      "sha256": "b01b480f44ded7449217603ee549dffc8eb143dc1af5537d9bf458bf93a87ea8",
+      "size_bytes": 1467,
       "top_level": "scripts"
     },
     {
@@ -17081,8 +17081,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/agent_router/adapters.py",
-      "sha256": "53ecdee1997a486571c6e1ccafdcef0c614553f24efc175032459e91694c2ed4",
-      "size_bytes": 23323,
+      "sha256": "41861d5527672728c402e0f1dd8d3465e2f81115d439b701fbf2ef6dae81080a",
+      "size_bytes": 24933,
       "top_level": "src"
     },
     {
@@ -17585,8 +17585,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/desktop_qualification.py",
-      "sha256": "4e3326beac4cc1aa1fc51bf788b88eed60a4b2ea91fd9fe70c2a2a3206651734",
-      "size_bytes": 8922,
+      "sha256": "36dff9d79407a99e0a76fa166979a7f4f9b6ca4a7c48b683d46f769ae65039c9",
+      "size_bytes": 16813,
       "top_level": "src"
     },
     {
@@ -19475,8 +19475,8 @@
     {
       "extension": ".py",
       "path": "tests/test_agent_router_adapters.py",
-      "sha256": "d1aa209e3ec7a7d81cac5c40e24d1a8a16e2724c6e16e57b46c2f390c3210371",
-      "size_bytes": 7769,
+      "sha256": "f240995564bee613a755213e0b8a4eb5662db4e2817b4ebe51968ef4848396a2",
+      "size_bytes": 10099,
       "top_level": "tests"
     },
     {
@@ -20014,8 +20014,8 @@
     {
       "extension": ".py",
       "path": "tests/test_cursor_cli_qualification.py",
-      "sha256": "3296b48a204429b9e95694d468097d17a53f37f1b234704578d6dedf6b1529b1",
-      "size_bytes": 12978,
+      "sha256": "294f632cecd39e57227a3b03aa3087b093fac18466bc698e818db8c779fc11e1",
+      "size_bytes": 14893,
       "top_level": "tests"
     },
     {
@@ -20084,8 +20084,8 @@
     {
       "extension": ".py",
       "path": "tests/test_desktop_qualification.py",
-      "sha256": "24e3a65059878b639f5084ee1d42c8df6b7395d5ba8a4116772f1526085f5700",
-      "size_bytes": 1544,
+      "sha256": "a41a12082ae97a59003e972c65d7505d9435855181e2f000728930e6e06a8f72",
+      "size_bytes": 4031,
       "top_level": "tests"
     },
     {
@@ -21027,7 +21027,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-20T12:32:42.130528+00:00",
+  "generated_at_utc": "2026-08-20T16:35:26.371194+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

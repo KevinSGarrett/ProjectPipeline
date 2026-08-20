@@ -460,6 +460,37 @@ class CursorCliProviderAdapter:
     def execute(
         self, contract: ExecutionTaskContract, *, model_name: str
     ) -> ProviderInvocationResult:
+        artifact_name = str(contract.context.get("artifact") or "").strip()
+        idempotency_key = str(contract.context.get("idempotency_key") or "").strip()
+        if artifact_name and idempotency_key:
+            existing = os.path.join(self.workspace, artifact_name)
+            if os.path.isfile(existing):
+                try:
+                    with open(existing, encoding="utf-8") as handle:
+                        payload = json.load(handle)
+                except (OSError, UnicodeDecodeError, json.JSONDecodeError) as error:
+                    raise ProviderAdapterError(
+                        "existing idempotent artifact is unreadable",
+                        kind="CONFLICTING_REPLAY",
+                    ) from error
+                existing_key = (
+                    str(payload.get("idempotency_key") or "").strip()
+                    if isinstance(payload, dict)
+                    else ""
+                )
+                if existing_key != idempotency_key:
+                    raise ProviderAdapterError(
+                        "existing artifact conflicts with idempotency key",
+                        kind="CONFLICTING_REPLAY",
+                    )
+                return ProviderInvocationResult(
+                    provider_id="provider:cursor-cli",
+                    model_id=model_name,
+                    output={"text": "replayed existing idempotent artifact", "replayed": True},
+                    usage=NormalizedUsage(),
+                    provider_request_id=f"replay:{idempotency_key}",
+                    finish_reason="replayed",
+                )
         argv = [
             *self.command_prefix,
             self.executable,
