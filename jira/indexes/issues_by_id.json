@@ -1796,7 +1796,7 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PLANNED_ONLY",
+    "implementation_state": "PARTIALLY_IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
@@ -2070,12 +2070,30 @@
           "command": "PYTHONPATH=src python -m project_pipeline validate --root .",
           "method": "automated_graph_and_traceability_check",
           "path": "plans/_traceability/requirements_to_jira.jsonl",
-          "status": "PLANNED"
+          "status": "VERIFIED"
         }
       }
     ],
     "blockers": [],
-    "completion_evidence": [],
+    "completion_evidence": [
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000007",
+      "EVID-000008",
+      "EVID-000022",
+      "EVID-000023",
+      "EVID-000024",
+      "EVID-000027",
+      "EVID-000075",
+      "EVID-000129",
+      "EVID-000132",
+      "EVID-000164",
+      "EVID-000195",
+      "EVID-000196",
+      "EVID-000197",
+      "EVID-000198",
+      "EVID-000199"
+    ],
     "definition_of_done": [
       "Applicable implementation is complete or accurately dispositioned.",
       "Acceptance criteria have current verification evidence.",
@@ -2098,10 +2116,11 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "EPIC",
     "labels": [
       "domain-epic",
+      "implemented",
       "plan-infra-001"
     ],
     "last_observed_remote_state": {
@@ -12689,12 +12708,13 @@
     "expected_implementation_artifacts": [
       "plans/12_command_center_and_operator_experience/PLAN-UX-001_command_center_operator.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-project-intelligence",
       "domain-ux",
+      "implemented",
       "partially-implemented",
       "pass-20"
     ],
@@ -13796,12 +13816,13 @@
     "expected_implementation_artifacts": [
       "plans/14_deployment_and_infrastructure/PLAN-INFRA-001_deployment_infrastructure.md"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "issue_type": "STORY",
     "labels": [
       "capability-story",
       "cluster-packaging",
-      "domain-infra"
+      "domain-infra",
+      "implemented"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-16T03:25:32.135977Z",
@@ -48661,6 +48682,13 @@
     ],
     "blockers": [],
     "completion_evidence": [
+      "EVID-000005",
+      "EVID-000006",
+      "EVID-000008",
+      "EVID-000024",
+      "EVID-000027",
+      "EVID-000129",
+      "EVID-000132",
       "EVID-000164"
     ],
     "definition_of_done": [
@@ -48692,8 +48720,9 @@
     "implementation_state": "IMPLEMENTED",
     "issue_type": "TASK",
     "labels": [
-      "pass-24",
-      "hardening"
+      "done",
+      "hardening",
+      "pass-24"
     ],
     "last_observed_remote_state": {
       "observed_at_utc": "2026-08-19T22:28:01Z",
@@ -48751,7 +48780,7 @@
     "source_references": [
       "SRC-017:L001774-L001792"
     ],
-    "state": "BACKLOG",
+    "state": "DONE",
     "title": "Implement bounded Windows-service and Docker packaging sources",
     "upstream_dependencies": []
   },

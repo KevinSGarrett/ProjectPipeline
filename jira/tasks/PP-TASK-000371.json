@@ -23,6 +23,13 @@
   ],
   "blockers": [],
   "completion_evidence": [
+    "EVID-000005",
+    "EVID-000006",
+    "EVID-000008",
+    "EVID-000024",
+    "EVID-000027",
+    "EVID-000129",
+    "EVID-000132",
     "EVID-000164"
   ],
   "definition_of_done": [
@@ -54,8 +61,9 @@
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
   "labels": [
-    "pass-24",
-    "hardening"
+    "done",
+    "hardening",
+    "pass-24"
   ],
   "last_observed_remote_state": {
     "observed_at_utc": "2026-08-19T22:28:01Z",
@@ -113,7 +121,7 @@
   "source_references": [
     "SRC-017:L001774-L001792"
   ],
-  "state": "BACKLOG",
+  "state": "DONE",
   "title": "Implement bounded Windows-service and Docker packaging sources",
   "upstream_dependencies": []
 }

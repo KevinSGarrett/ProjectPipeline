@@ -28,11 +28,10 @@ CURRENT_TREE = "d" * 40
 
 def _candidate_row() -> dict:
     source = read_jsonl(ROOT / "plans/_traceability/requirements.jsonl")
-    return next(
+    template = next(
         row
         for row in source
-        if row.get("implementation_state") == "PARTIALLY_IMPLEMENTED"
-        and row.get("implementation_paths")
+        if row.get("implementation_paths")
         and row.get("test_ids")
         and row.get("evidence_ids")
         and row["requirement_id"]
@@ -45,6 +44,9 @@ def _candidate_row() -> dict:
             str(row.get(key, "")) for key in ("statement", "title", "acceptance_summary")
         ).casefold()
     )
+    candidate = dict(template)
+    candidate["implementation_state"] = "PARTIALLY_IMPLEMENTED"
+    return candidate
 
 
 def test_deliver_is_not_an_external_live_marker() -> None:

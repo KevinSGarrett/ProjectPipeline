@@ -10629,7 +10629,7 @@
       "src/project_pipeline/autonomy_runtime/windows_service.py",
       "tests/test_autonomy_windows_service.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000029",
       "PP-STORY-000124",
@@ -23084,7 +23084,7 @@
       "tests/test_command_center_live.py",
       "scripts/verify_command_center_ui.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000115",
@@ -23808,7 +23808,7 @@
       "tests/test_command_center_live.py",
       "scripts/verify_command_center_ui.py"
     ],
-    "implementation_state": "PARTIALLY_IMPLEMENTED",
+    "implementation_state": "IMPLEMENTED",
     "jira_ids": [
       "PP-EPIC-000025",
       "PP-STORY-000114",

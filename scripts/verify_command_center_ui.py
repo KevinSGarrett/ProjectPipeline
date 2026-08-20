@@ -14,7 +14,7 @@ from project_pipeline.verification.browser import find_chromium
 chromium = find_chromium()
 if chromium is None:
     raise SystemExit("Chromium is unavailable; Command Center browser verification cannot run")
-preview = verify_command_center_ui(ROOT, chromium_path=chromium)
+preview = verify_command_center_ui(ROOT, chromium_path=chromium, write_evidence=False)
 live = verify_live_command_center(ROOT, chromium_path=chromium, write_evidence=False)
 print(
     json.dumps(

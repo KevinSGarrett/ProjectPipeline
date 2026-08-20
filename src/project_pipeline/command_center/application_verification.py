@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -165,6 +166,7 @@ def verify_command_center_ui(
     *,
     chromium_path: str,
     viewports: tuple[tuple[int, int], ...] = ((1440, 900), (1024, 768), (390, 844)),
+    write_evidence: bool = False,
 ) -> dict[str, Any]:
     try:
         from playwright.sync_api import sync_playwright
@@ -174,8 +176,13 @@ def verify_command_center_ui(
     root = root.resolve()
     preview = root / "apps/command_center/preview/index.html"
     html = preview.read_text(encoding="utf-8")
-    output_dir = root / "evidence/verification/command_center_ui_cycle015"
-    output_dir.mkdir(parents=True, exist_ok=True)
+    staged_dir: tempfile.TemporaryDirectory[str] | None = None
+    if write_evidence:
+        output_dir = root / "evidence/verification/command_center_ui_cycle015"
+        output_dir.mkdir(parents=True, exist_ok=True)
+    else:
+        staged_dir = tempfile.TemporaryDirectory(prefix="cc-ui-preview-")
+        output_dir = Path(staged_dir.name)
     viewport_results: list[dict[str, Any]] = []
 
     with sync_playwright() as playwright:
@@ -225,6 +232,12 @@ def verify_command_center_ui(
         finally:
             browser.close()
 
+    def relative_artifact(path: Path) -> str:
+        try:
+            return path.resolve().relative_to(root.resolve()).as_posix()
+        except ValueError:
+            return path.name
+
     result = {
         "schema_version": "1.0.0",
         "target": preview.relative_to(root).as_posix(),
@@ -232,7 +245,7 @@ def verify_command_center_ui(
         "viewports": viewport_results,
         "forced_colors": {
             "overflow": forced_colors_overflow,
-            "screenshot_path": forced_colors_screenshot.relative_to(root).as_posix(),
+            "screenshot_path": relative_artifact(forced_colors_screenshot),
             "screenshot_sha256": _sha256(forced_colors_screenshot),
             "passed": not forced_colors_overflow,
         },
@@ -245,8 +258,11 @@ def verify_command_center_ui(
     result["passed"] = (
         all(item["passed"] for item in viewport_results) and result["forced_colors"]["passed"]
     )
-    target = root / "evidence/command_center_ui_browser_accessibility_cycle015.json"
-    target.write_text(
-        json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n"
-    )
+    if write_evidence:
+        target = root / "evidence/command_center_ui_browser_accessibility_cycle015.json"
+        target.write_text(
+            json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n"
+        )
+    if staged_dir is not None:
+        staged_dir.cleanup()
     return result

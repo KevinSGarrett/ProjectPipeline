@@ -6724,7 +6724,7 @@
     },
     {
       "id": "PP-TASK-000371",
-      "state": "BACKLOG",
+      "state": "DONE",
       "title": "Implement bounded Windows-service and Docker packaging sources",
       "type": "TASK"
     },
