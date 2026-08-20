@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "7e747f58f679d1990552b1fa4d0fa3af5703e85a50ad0877b05d11ec886426c7",
+  "aggregate_sha256": "c39bfd00d37a78b706af21d93c5aa81b3764b3409c6d197214132d534dbc3544",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -5637,13 +5637,13 @@
     },
     {
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "2facec2441442f79e0be15fa8ed1c1cfe231c3e3d7c4667445c8cf256a5f1ba9",
-      "size_bytes": 1684478
+      "sha256": "4329470e6cfdedf9347ee6c64867da8adc7b30743f4c6df5f038345233cd1e04",
+      "size_bytes": 1685059
     },
     {
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "5bf2bc05fc06374a1e890a4bc975b1fcc0b63d01f54c44a8c61d1b16f11b44f8",
-      "size_bytes": 1997387
+      "sha256": "4dc06444b9cc94eed0cc1e750bfdd5602688313fb8c6931cd4a1e2718fb9313c",
+      "size_bytes": 1998022
     },
     {
       "path": "jira/README.md",
@@ -8502,8 +8502,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000172.json",
-      "sha256": "c186be516ae0d006df73dd293f4651538689b17fa3f0132e40972e1ca043cf97",
-      "size_bytes": 4340
+      "sha256": "9b52c678373e4cb821ea942bf1260381d3f4d91299af11afbb58d9627fd02012",
+      "size_bytes": 4702
     },
     {
       "path": "jira/tasks/PP-TASK-000173.json",
@@ -8542,8 +8542,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000180.json",
-      "sha256": "2f1163a9a7acf0baf558ef2095f68e2dfc778ea2aeb3bfe79bae927a63f3afb4",
-      "size_bytes": 4606
+      "sha256": "e43b0c306c2dc03f57d5c2b82258c4d0e94e76dc245e7006ce180bc12180124b",
+      "size_bytes": 4861
     },
     {
       "path": "jira/tasks/PP-TASK-000181.json",
@@ -15056,7 +15056,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T22:18:19.674413+00:00",
+  "generated_at_utc": "2026-08-20T22:24:33.724682+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15065,5 +15065,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30067902
+  "total_bytes": 30069735
 }

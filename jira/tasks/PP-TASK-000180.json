@@ -44,12 +44,17 @@
     "No external write or source incorporation is authorized by this item."
   ],
   "expected_file_locations": [
-    "benchmarks/retrieval/",
-    "docs/retrieval_benchmark.md"
+    "benchmarks/retrieval/corpus.jsonl",
+    "docs/retrieval_benchmark.md",
+    "src/project_pipeline/retrieval/service.py",
+    "tests/test_retrieval_benchmark.py"
   ],
   "expected_implementation_artifacts": [
-    "benchmarks/retrieval/",
-    "docs/retrieval_benchmark.md"
+    "src/project_pipeline/retrieval/service.py",
+    "src/project_pipeline/retrieval/benchmark.py",
+    "docs/retrieval_benchmark.md",
+    "tests/test_retrieval_benchmark.py",
+    "benchmarks/retrieval/corpus.jsonl"
   ],
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",

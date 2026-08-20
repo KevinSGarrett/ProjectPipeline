@@ -41,12 +41,16 @@
     "No external write or source incorporation is authorized by this item."
   ],
   "expected_file_locations": [
-    "tests/e2e/",
-    "tests/integration/"
+    "src/project_pipeline/verification/containers.py",
+    "src/project_pipeline/verification/browser.py",
+    "tests/e2e/test_pgvector_container_recovery.py",
+    "tests/integration/test_playwright_testcontainers_infra.py"
   ],
   "expected_implementation_artifacts": [
-    "tests/e2e/",
-    "tests/integration/"
+    "src/project_pipeline/verification/containers.py",
+    "src/project_pipeline/verification/browser.py",
+    "tests/e2e/test_pgvector_container_recovery.py",
+    "tests/integration/test_playwright_testcontainers_infra.py"
   ],
   "implementation_state": "IMPLEMENTED",
   "issue_type": "TASK",
