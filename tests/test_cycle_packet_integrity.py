@@ -117,11 +117,56 @@ def _write(tmp_path: Path, **overrides: object) -> Path:
 
 
 def test_atomic_packet_from_one_observation_passes(tmp_path: Path) -> None:
+    git_root, base, head, tree = _catalog_repo(tmp_path)
+    packet = tmp_path / "packet"
+    _write(
+        packet,
+        **{
+            "DELIVERY_METER.json": {"main_sha": head, "observed_at_utc": "2026-08-19T23:00:00Z"},
+            "FRESH_DELIVERY_PROOF.json": {
+                "main_sha": head,
+                "observed_at_utc": "2026-08-19T23:00:00Z",
+            },
+            "git_identity_verification.json": {"main_sha": head, "tree": tree},
+            "validation_matrix.json": {"main_sha": head},
+            "front_status.json": {"main_sha": head, "open_prs": []},
+            "requirement_movement_ledger.json": {
+                "main_sha": head,
+                "base_sha": base,
+                "head_sha": head,
+                "head_tree": tree,
+                "rows": [
+                    {
+                        "requirement_id": "REQ-A",
+                        "before": "PARTIALLY_IMPLEMENTED",
+                        "after": "IMPLEMENTED",
+                    }
+                ],
+            },
+            "external_write_receipts.json": {"main_sha": head, "receipts": [{"id": "JREC-1"}]},
+            "cleanup_inventory.json": {"main_sha": head, "rows": []},
+            "handoffs/Combined-Agent.md": REQUIRED_BODY + f"\nExact integrated main SHA {head}\n",
+        },
+    )
+    result = validate_cycle_packet_integrity(
+        directory=packet,
+        observation=_observation(
+            origin_main=head,
+            origin_main_tree=tree,
+            git_root=str(git_root),
+            base_sha=base,
+        ),
+    )
+    assert result["valid"] is True, result["findings"]
+    sidecar = (packet / "handoffs" / "Combined-Agent.md.sha256").read_text(encoding="utf-8")
+    assert sidecar.strip() == result["handoff_sha256"]
+
+
+def test_nonempty_movement_ledger_without_catalog_derivation_fails(tmp_path: Path) -> None:
     _write(tmp_path)
     result = validate_cycle_packet_integrity(directory=tmp_path, observation=_observation())
-    assert result["valid"] is True, result["findings"]
-    sidecar = (tmp_path / "handoffs" / "Combined-Agent.md.sha256").read_text(encoding="utf-8")
-    assert sidecar.strip() == result["handoff_sha256"]
+    assert result["valid"] is False
+    assert any("catalog-derived requirement movement" in item for item in result["findings"])
 
 
 def test_packet_main_differs_from_fetched_remote_fails(tmp_path: Path) -> None:

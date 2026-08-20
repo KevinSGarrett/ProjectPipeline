@@ -332,7 +332,12 @@ def validate_cycle_packet_integrity(
         findings.append("required ledger is empty despite observed movements/writes")
     git_root = observation.get("git_root")
     base_sha = str(observation.get("base_sha") or "")
-    if git_root and fetched_main and base_sha:
+    if not (git_root and fetched_main and base_sha):
+        findings.append(
+            "catalog-derived requirement movement validation requires git_root, "
+            "base_sha, and fetched main"
+        )
+    else:
         expected_movements = derive_requirement_movements(
             Path(str(git_root)),
             base_ref=base_sha,

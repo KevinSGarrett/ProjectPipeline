@@ -278,9 +278,10 @@ def evaluate_cycle_workload(
 ) -> CycleWorkloadDecision:
     policy = policy or load_cycle_workload_policy(root)
     findings: list[CycleWorkloadFinding] = []
-    ledger = ledger or {}
+    supplied_ledger = ledger
+    ledger = dict(ledger or {})
     base_ref = str(base_ref or ledger.get("base_sha") or "")
-    head_ref = str(head_ref or ledger.get("head_sha") or "HEAD")
+    head_ref = str(head_ref or ledger.get("head_sha") or "")
     try:
         head_sha = _git_rev_parse(root, head_ref) if head_ref else ""
         head_tree = _git_rev_parse(root, f"{head_ref}^{{tree}}") if head_ref else ""
@@ -314,7 +315,7 @@ def evaluate_cycle_workload(
             CycleWorkloadFinding(code="STALE_HEAD", message="ledger head is stale relative to git")
         )
 
-    units = _unit_rows(ledger) if ledger else ()
+    units = _unit_rows(ledger) if supplied_ledger else ()
     unit_ids: set[str] = set()
     rollback_ids: set[str] = set()
     fingerprints: set[str] = set()
@@ -401,8 +402,29 @@ def evaluate_cycle_workload(
                 message="administrative_credit must be 0",
             )
         )
+    if ledger.get("invalid_ledger_document"):
+        findings.append(
+            CycleWorkloadFinding(
+                code="LEDGER_INVALID",
+                message="cycle workload ledger must be a JSON object",
+            )
+        )
+    if ledger.get("allow_missing_movement_ledger"):
+        findings.append(
+            CycleWorkloadFinding(
+                code="MOVEMENT_LEDGER_BYPASS",
+                message="allow_missing_movement_ledger is not a valid exemption",
+            )
+        )
 
     expected_movements: tuple[RequirementMovement, ...] = ()
+    if units and (not base_sha or not head_sha):
+        findings.append(
+            CycleWorkloadFinding(
+                code="GIT_RANGE_REQUIRED",
+                message="substantive units require a resolvable base_sha and head_sha",
+            )
+        )
     if base_sha and head_sha:
         try:
             expected_movements = derive_requirement_movements(
@@ -414,7 +436,7 @@ def evaluate_cycle_workload(
         findings.extend(
             validate_requirement_movement_ledger(requirement_ledger, expected_movements)
         )
-    elif expected_movements and not ledger.get("allow_missing_movement_ledger"):
+    elif expected_movements:
         findings.append(
             CycleWorkloadFinding(
                 code="MOVEMENT_LEDGER_MISSING",
@@ -424,7 +446,7 @@ def evaluate_cycle_workload(
 
     below_minimum = counted < policy.minimum_units or score < policy.minimum_score
     endgame = bool(ledger.get("endgame_saturation"))
-    if below_minimum and not endgame and ledger:
+    if below_minimum and not endgame:
         findings.append(
             CycleWorkloadFinding(
                 code="ENDGAME_SATURATION_REQUIRED",
@@ -468,15 +490,16 @@ def evaluate_cycle_workload_from_root(
     head_ref: str | None = None,
 ) -> CycleWorkloadDecision:
     ledger: Mapping[str, Any] | None = None
-    requirement_ledger: Mapping[str, Any] | None = None
+    requirement_ledger: Mapping[str, Any] | Sequence[Any] | None = None
     if ledger_path is not None and ledger_path.is_file():
         payload = read_json(ledger_path)
         if isinstance(payload, dict):
             ledger = payload
+        else:
+            ledger = {"units": [], "invalid_ledger_document": True}
     if requirement_ledger_path is not None and requirement_ledger_path.is_file():
         payload = read_json(requirement_ledger_path)
-        if isinstance(payload, dict):
-            requirement_ledger = payload
+        requirement_ledger = payload if isinstance(payload, (dict, list)) else {"rows": "invalid"}
     return evaluate_cycle_workload(
         root=root,
         ledger=ledger,

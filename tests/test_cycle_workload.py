@@ -288,7 +288,7 @@ def test_endgame_saturation_requires_complete_gate(tmp_path: Path) -> None:
     assert "ENDGAME_SATURATION_INCOMPLETE" in codes
 
 
-def test_cli_reads_policy(tmp_path: Path) -> None:
+def test_cli_reads_policy_and_rejects_empty_evaluation(tmp_path: Path) -> None:
     root, _, _ = _repo(tmp_path)
     _write_json(
         root / "config" / "assurance_policy.json",
@@ -299,8 +299,40 @@ def test_cli_reads_policy(tmp_path: Path) -> None:
         ),
     )
     code = main(["assurance", "cycle-workload", "--root", str(root)])
-    assert code == 0
+    assert code == 1
+    decision = evaluate_cycle_workload(root=root)
+    assert decision.accepted is False
+    assert {item.code for item in decision.findings} >= {"ENDGAME_SATURATION_REQUIRED"}
     policy = load_cycle_workload_policy(root)
     assert policy.minimum_score == 48
     assert policy.minimum_units == 14
     assert policy.non_compounding is True
+
+
+def test_missing_git_range_and_bypass_flag_are_rejected(tmp_path: Path) -> None:
+    root, base, head = _repo(tmp_path)
+    tree = _git(root, "rev-parse", "HEAD^{tree}")
+    no_range = evaluate_cycle_workload(
+        root=root,
+        policy=CycleWorkloadPolicy(),
+        ledger={"units": [_unit("C16-A")]},
+    )
+    assert "GIT_RANGE_REQUIRED" in {item.code for item in no_range.findings}
+    assert no_range.accepted is False
+    bypass = evaluate_cycle_workload(
+        root=root,
+        policy=CycleWorkloadPolicy(),
+        ledger={
+            "base_sha": base,
+            "head_sha": head,
+            "head_tree": tree,
+            "allow_missing_movement_ledger": True,
+            "units": [_unit("C16-A", integrated_sha=head, integrated_tree=tree)],
+        },
+        base_ref=base,
+        head_ref=head,
+    )
+    codes = {item.code for item in bypass.findings}
+    assert "MOVEMENT_LEDGER_BYPASS" in codes
+    assert "MOVEMENT_LEDGER_MISSING" in codes
+    assert bypass.accepted is False
