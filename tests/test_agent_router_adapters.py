@@ -229,3 +229,59 @@ def test_cursor_cli_adapter_supports_shell_free_wsl_prefix(tmp_path: Path):
         "/home/kevin/.local/bin/cursor-agent",
     ]
     assert observed["kwargs"]["shell"] is False
+
+
+def test_cursor_cli_adapter_replays_existing_idempotent_artifact(tmp_path: Path):
+    artifact = tmp_path / "pp384_cursor_cli_qualification_artifact.json"
+    artifact.write_text(
+        '{"idempotency_key":"pp384-cursor-cli-qualification-v1"}\n', encoding="utf-8"
+    )
+    calls = 0
+
+    def runner(argv, **kwargs):
+        nonlocal calls
+        calls += 1
+        return subprocess.CompletedProcess(argv, 0, b'{"type":"result","result":"mutated"}', b"")
+
+    adapter = CursorCliProviderAdapter(str(tmp_path), allow_write=True, runner=runner)
+    replay_contract = ExecutionTaskContract(
+        task_id="PP-TASK-000384",
+        task_class="qualification",
+        required_capabilities=("code_implementation",),
+        instructions="do not rewrite",
+        context={
+            "idempotency_key": "pp384-cursor-cli-qualification-v1",
+            "artifact": "pp384_cursor_cli_qualification_artifact.json",
+        },
+    )
+    first = adapter.execute(replay_contract, model_name="auto")
+    second = adapter.execute(replay_contract, model_name="auto")
+    assert calls == 0
+    assert first.finish_reason == "replayed"
+    assert second.finish_reason == "replayed"
+    assert artifact.read_text(encoding="utf-8") == (
+        '{"idempotency_key":"pp384-cursor-cli-qualification-v1"}\n'
+    )
+
+
+def test_cursor_cli_adapter_rejects_conflicting_idempotent_artifact(tmp_path: Path):
+    artifact = tmp_path / "pp384_cursor_cli_qualification_artifact.json"
+    artifact.write_text('{"idempotency_key":"other-key"}\n', encoding="utf-8")
+
+    def runner(argv, **kwargs):
+        raise AssertionError("conflicting replay must not invoke the CLI")
+
+    adapter = CursorCliProviderAdapter(str(tmp_path), allow_write=True, runner=runner)
+    replay_contract = ExecutionTaskContract(
+        task_id="PP-TASK-000384",
+        task_class="qualification",
+        required_capabilities=("code_implementation",),
+        instructions="do not rewrite",
+        context={
+            "idempotency_key": "pp384-cursor-cli-qualification-v1",
+            "artifact": "pp384_cursor_cli_qualification_artifact.json",
+        },
+    )
+    with pytest.raises(ProviderAdapterError, match="conflicts with idempotency key") as error:
+        adapter.execute(replay_contract, model_name="auto")
+    assert error.value.kind == "CONFLICTING_REPLAY"
