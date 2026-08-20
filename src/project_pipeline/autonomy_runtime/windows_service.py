@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import signal
+import subprocess
 import sys
 import time
 from dataclasses import dataclass
@@ -203,3 +204,87 @@ class AutonomyRuntimeWindowsService:
             if self.paths.stop_flag_path.exists():
                 self.paths.stop_flag_path.unlink()
         return exit_code
+
+
+def probe_namespaced_windows_service(service_name: str) -> dict[str, Any]:
+    """Exercise sc.exe against a disposable namespaced name without leaving residue."""
+
+    if not service_name.startswith("ProjectPipelineCycle"):
+        raise ValueError("disposable Windows service names must be cycle-namespaced")
+    query = subprocess.run(
+        ["sc.exe", "query", service_name],
+        capture_output=True,
+        text=True,
+        shell=False,
+        timeout=15,
+        check=False,
+    )
+    combined = f"{query.stdout or ''}\n{query.stderr or ''}"
+    if query.returncode == 5 or "access is denied" in combined.casefold():
+        return {
+            "service_name": service_name,
+            "attempted": True,
+            "installed": False,
+            "precondition": "MACHINE_PRECONDITION_ELEVATION_UNAVAILABLE",
+            "query_exit": query.returncode,
+        }
+    created = subprocess.run(
+        [
+            "sc.exe",
+            "create",
+            service_name,
+            f"binPath={sys.executable}",
+            "start=demand",
+        ],
+        capture_output=True,
+        text=True,
+        shell=False,
+        timeout=15,
+        check=False,
+    )
+    create_text = f"{created.stdout or ''}\n{created.stderr or ''}"
+    if created.returncode != 0:
+        precondition = None
+        if created.returncode == 5 or "access is denied" in create_text.casefold():
+            precondition = "MACHINE_PRECONDITION_ELEVATION_UNAVAILABLE"
+        return {
+            "service_name": service_name,
+            "attempted": True,
+            "installed": False,
+            "precondition": precondition,
+            "create_exit": created.returncode,
+            "query_exit": query.returncode,
+        }
+    status = subprocess.run(
+        ["sc.exe", "query", service_name],
+        capture_output=True,
+        text=True,
+        shell=False,
+        timeout=15,
+        check=False,
+    )
+    subprocess.run(
+        ["sc.exe", "delete", service_name],
+        capture_output=True,
+        text=True,
+        shell=False,
+        timeout=15,
+        check=False,
+    )
+    residue = subprocess.run(
+        ["sc.exe", "query", service_name],
+        capture_output=True,
+        text=True,
+        shell=False,
+        timeout=15,
+        check=False,
+    )
+    return {
+        "service_name": service_name,
+        "attempted": True,
+        "installed": True,
+        "precondition": None,
+        "query_exit": status.returncode,
+        "residue_query_exit": residue.returncode,
+        "cleaned": residue.returncode != 0,
+    }

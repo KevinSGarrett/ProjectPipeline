@@ -22,6 +22,12 @@ def test_repository_snapshot_includes_bound_in_progress_work() -> None:
     work_ids = {item.work_id for item in snapshot.live_work}
     assert "PP-TASK-000385" in work_ids
     assert snapshot.ui_state_authoritative is False
+    pp385 = next(item for item in snapshot.live_work if item.work_id == "PP-TASK-000385")
+    assert pp385.worker
+    assert pp385.workspace
+    assert pp385.resource_lease_id
+    assert pp385.last_progress_at_utc is not None
+    assert pp385.next_expected_transition
 
 
 def test_live_app_requires_bearer_and_projects_jira_readback() -> None:

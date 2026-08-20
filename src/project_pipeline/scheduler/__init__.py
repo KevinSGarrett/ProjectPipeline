@@ -7,6 +7,11 @@ from project_pipeline.scheduler.conflicts import (
 )
 from project_pipeline.scheduler.engine import DynamicLaneScheduler
 from project_pipeline.scheduler.persistence import SchedulerStore
+from project_pipeline.scheduler.productive_idle import (
+    apply_productive_idle_progress,
+    evaluate_productive_idle,
+    waiting_lane_ids,
+)
 from project_pipeline.scheduler.resources import (
     ResourceAdmissionError,
     active_leases,
@@ -23,12 +28,15 @@ __all__ = [
     "SchedulerStore",
     "active_leases",
     "admission_reasons",
+    "apply_productive_idle_progress",
     "build_conflict_graph",
     "capacity_usage",
     "claims_conflict",
     "claims_for_task",
     "evaluate_backpressure",
+    "evaluate_productive_idle",
     "profiles_from_repository",
     "simulate_scenario",
     "validate_scheduler_foundation",
+    "waiting_lane_ids",
 ]

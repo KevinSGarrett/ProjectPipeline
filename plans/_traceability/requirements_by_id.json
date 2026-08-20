@@ -6392,7 +6392,8 @@
     ],
     "evolution_ids": [],
     "implementation_paths": [
-      "src/project_pipeline/command_center/director.py"
+      "src/project_pipeline/command_center/director.py",
+      "src/project_pipeline/command_center/autonomy_director.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -6431,7 +6432,10 @@
     ],
     "test_ids": [
       "TEST-CC-P21-001",
-      "TEST-CC-P21-002"
+      "TEST-CC-P21-002",
+      "TEST-CTRL-DIRECTOR-001",
+      "TEST-CTRL-DIRECTOR-002",
+      "TEST-CTRL-DIRECTOR-003"
     ],
     "title": "Persistent Autonomy Director",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -10621,7 +10625,9 @@
       "scripts/run_command_center_service.py",
       "scripts/windows/install.ps1",
       "scripts/windows/uninstall.ps1",
-      "scripts/windows/verify.ps1"
+      "scripts/windows/verify.ps1",
+      "src/project_pipeline/autonomy_runtime/windows_service.py",
+      "tests/test_autonomy_windows_service.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -10663,7 +10669,8 @@
     "test_ids": [
       "TEST-REL-HARDEN-005",
       "TEST-REL-HARDEN-006",
-      "TEST-REL-HARDEN-008"
+      "TEST-REL-HARDEN-008",
+      "TEST-INFRA-SVC-001"
     ],
     "title": "Windows service operation",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -14025,7 +14032,8 @@
     "evolution_ids": [],
     "implementation_paths": [
       "src/project_pipeline",
-      "docs/development/source_layout.md"
+      "docs/development/source_layout.md",
+      "tests/test_platform_project_separation.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -14063,7 +14071,8 @@
       "platform-boundary"
     ],
     "test_ids": [
-      "TEST-REPOSITORY-001"
+      "TEST-REPOSITORY-001",
+      "TEST-PDEF-ISOLATION-001"
     ],
     "title": "Platform and project separation",
     "verification_class": "AUTOMATED_WITH_REVIEW",
@@ -18626,7 +18635,8 @@
     "evolution_ids": [],
     "implementation_paths": [
       "src/project_pipeline/scheduler/bridge.py",
-      "src/project_pipeline/scheduler/engine.py"
+      "src/project_pipeline/scheduler/engine.py",
+      "src/project_pipeline/scheduler/productive_idle.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -18664,7 +18674,9 @@
       "sequencing"
     ],
     "test_ids": [
-      "TEST-SCHED-PARALLEL-001"
+      "TEST-SCHED-PARALLEL-001",
+      "TEST-SCHED-IDLE-001",
+      "TEST-SCHED-IDLE-002"
     ],
     "title": "Productive idle work",
     "verification_class": "AUTOMATED_WITH_REVIEW",

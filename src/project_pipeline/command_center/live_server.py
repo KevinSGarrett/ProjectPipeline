@@ -5,7 +5,9 @@ import threading
 import time
 import urllib.error
 import urllib.request
+from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, Response
@@ -32,6 +34,18 @@ from project_pipeline.command_center.realtime import RealtimeEventBroker
 from project_pipeline.jira import load_issues
 
 
+def _issue_progress_time(item: dict[str, Any]) -> datetime | None:
+    observation = item.get("last_remote_observation")
+    raw = observation.get("observed_at_utc") if isinstance(observation, dict) else None
+    raw = raw or item.get("updated_at_utc")
+    if not raw:
+        return datetime.now(UTC)
+    try:
+        return datetime.fromisoformat(str(raw).replace("Z", "+00:00")).astimezone(UTC)
+    except ValueError:
+        return datetime.now(UTC)
+
+
 def snapshot_from_repository(root: Path) -> CommandCenterSnapshot:
     issues = load_issues(root)
     in_progress = [item for item in issues if item.get("state") == "IN_PROGRESS"]
@@ -41,7 +55,20 @@ def snapshot_from_repository(root: Path) -> CommandCenterSnapshot:
             title=str(item.get("title") or item["local_id"])[:300],
             state="IN_PROGRESS",
             owner=str(item.get("owner_required_capability") or "repository"),
+            worker=str(item.get("owner_required_capability") or "repository"),
+            workspace=(
+                str((item.get("expected_file_locations") or [f"repository:{item['local_id']}"])[0])[
+                    :512
+                ]
+            ),
             current_stage=str(item.get("implementation_state") or "UNKNOWN"),
+            resource_lease_id=f"repo-claim:{item['local_id']}",
+            last_progress_at_utc=_issue_progress_time(item),
+            next_expected_transition=(
+                "Complete acceptance criteria and attach evidence"
+                if item.get("state") == "IN_PROGRESS"
+                else None
+            ),
         )
         for item in in_progress
     )
