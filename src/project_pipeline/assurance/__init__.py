@@ -4,6 +4,7 @@ from project_pipeline.assurance.completion import (
     build_repository_gate_facts,
     evaluate_completion_gate,
 )
+from project_pipeline.assurance.cycle_workload import evaluate_cycle_workload
 from project_pipeline.assurance.delivery_progress import (
     calculate_progress_delta,
     evaluate_delivery_gate,
@@ -18,12 +19,13 @@ from project_pipeline.assurance.evidence import (
 )
 from project_pipeline.assurance.loop_guard import evaluate_loop
 from project_pipeline.assurance.persistence import AssuranceStore
-from project_pipeline.assurance.policy import AssurancePolicy
+from project_pipeline.assurance.policy import AssurancePolicy, CycleWorkloadPolicy
 from project_pipeline.assurance.scope import evaluate_scope_change
 
 __all__ = [
     "AssurancePolicy",
     "AssuranceStore",
+    "CycleWorkloadPolicy",
     "assess_candidate_completion",
     "assess_evidence_for_criterion",
     "build_repository_gate_facts",
@@ -31,6 +33,7 @@ __all__ = [
     "compile_issue_criteria",
     "compile_repository_plan",
     "evaluate_completion_gate",
+    "evaluate_cycle_workload",
     "evaluate_delivery_gate",
     "evaluate_loop",
     "evaluate_scope_change",

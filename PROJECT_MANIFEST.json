@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "abfc405b57b42976e9e4ee7403a511361a177064fc251937b7a834a97a55c503",
+  "aggregate_sha256": "d69eb60b3d650ae46ff1305b5aa40c7500aff012d8658a4d9175833471101b10",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 2968,
+  "file_count": 2970,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -542,8 +542,8 @@
     },
     {
       "path": "config/assurance_policy.json",
-      "sha256": "cd0971a7025eb7c8348c0d3fcbfb261f9b63f7e74bf83b298abee46c92dcb627",
-      "size_bytes": 843
+      "sha256": "fba3410206603cc59192ca110508bb0ef60e2d962687c38ce26541a1725317cc",
+      "size_bytes": 1285
     },
     {
       "path": "config/budget_policy.json",
@@ -5197,8 +5197,8 @@
     },
     {
       "path": "instructions/02_AUTONOMOUS_OPERATING_CONTRACT.md",
-      "sha256": "1d47cf675cd695da5fca9c37158174c6b227ab2918fa70723a8188db38d794be",
-      "size_bytes": 5870
+      "sha256": "2920f1e932e7567334b3743ac0b496eca96addf27673f4baea26d4bae4dcfe13",
+      "size_bytes": 7518
     },
     {
       "path": "instructions/03_SESSION_BOOTSTRAP_AND_PREFLIGHT.md",
@@ -5212,8 +5212,8 @@
     },
     {
       "path": "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
-      "sha256": "63b418d8236effff4cf1c9d6603e7f3a518d1db561ad062668c4f45ed77f3987",
-      "size_bytes": 4710
+      "sha256": "842ba712228070506f675274fac652b46359d0e6be9c3bbc12b6abffcea39480",
+      "size_bytes": 5252
     },
     {
       "path": "instructions/06_JIRA_OPERATING_PROTOCOL.md",
@@ -5242,8 +5242,8 @@
     },
     {
       "path": "instructions/11_ANTI_LOOP_AND_ANTI_OVERENGINEERING.md",
-      "sha256": "43f9ad2a632b9b639a1a701647351ff4afef6289a31b5cf12c37b675dad4b3d5",
-      "size_bytes": 4288
+      "sha256": "bdd0b1f91b02c8e529a46370074ba71054f57488b7806d7ac492541c6aa70c80",
+      "size_bytes": 4592
     },
     {
       "path": "instructions/12_TESTING_VERIFICATION_AND_COMPLETION.md",
@@ -5287,8 +5287,8 @@
     },
     {
       "path": "instructions/20_INSTRUCTION_MAINTENANCE.md",
-      "sha256": "00136f3af50beb6f10ddcdbdbc6aa2070cf3ca37e2a79479482312a5eb6823d4",
-      "size_bytes": 4410
+      "sha256": "60cead401e21672c59d56468311c3125b91cb65119a96aa4406d2c01f8575f52",
+      "size_bytes": 4697
     },
     {
       "path": "instructions/AUTHORITY_MAP.json",
@@ -5297,8 +5297,8 @@
     },
     {
       "path": "instructions/CHANGELOG.md",
-      "sha256": "b8cbb9fa2f27179b69b7f6ba7facef83395decb1043a8b6583147d5a23f1c300",
-      "size_bytes": 2856
+      "sha256": "b5058e8fa8b44f1b4e6c98dac5c0e7d62a22f414c8af58a324627e9dce9699ac",
+      "size_bytes": 3519
     },
     {
       "path": "instructions/CREATION_REPORT.md",
@@ -5322,8 +5322,8 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "06cbd4826ef1588dce4eb9134651695353cdd6cc2b44ef7c9f775e2ec3fdbf2d",
-      "size_bytes": 25491
+      "sha256": "fc35816feb9dbc6caa0f05b6d12440648211391c640733f35e27c8d532edad15",
+      "size_bytes": 25756
     },
     {
       "path": "instructions/policies/BRANCH_PR_POLICY.json",
@@ -5362,8 +5362,8 @@
     },
     {
       "path": "instructions/policies/VALIDATION_SCENARIOS.json",
-      "sha256": "43631d0fcefd8a844b0983191cc180290eabaf7ee6a9352caa4ca6f534386b9f",
-      "size_bytes": 3553
+      "sha256": "5b7bf60c4846648bace85b1c8a0a76c25f57b609b490f4dd0972e9c21bc0c965",
+      "size_bytes": 7029
     },
     {
       "path": "instructions/README.md",
@@ -12007,8 +12007,8 @@
     },
     {
       "path": "scripts/validate_instructions.py",
-      "sha256": "0ba2c754085c0a36635f01f42cc44f49a86a40321f0db7decca0dfad12ee17c8",
-      "size_bytes": 40664
+      "sha256": "33269d63d3e3a5cc1d95acd0e3b992649a29663a98fa67c627f2abaa58baee0c",
+      "size_bytes": 41751
     },
     {
       "path": "scripts/validate_jira_operational_alignment.py",
@@ -12157,8 +12157,8 @@
     },
     {
       "path": "src/project_pipeline/assurance/__init__.py",
-      "sha256": "01074cb83b5c851d6889b32a77e35bfafb90d8bff4036ea8cab9c56ef9d28ff5",
-      "size_bytes": 1315
+      "sha256": "c26785140e3e60cfef920830ab1dac65dc13cdce3eb1a9658228fc4b52c28e75",
+      "size_bytes": 1472
     },
     {
       "path": "src/project_pipeline/assurance/acceptance_scope.py",
@@ -12174,6 +12174,11 @@
       "path": "src/project_pipeline/assurance/completion.py",
       "sha256": "6986e2be547991c52dca5498f4b4294ccbbd5effe1aa6d236866aade7db77271",
       "size_bytes": 17799
+    },
+    {
+      "path": "src/project_pipeline/assurance/cycle_workload.py",
+      "sha256": "37d0b8f8619c3d1e1f296d052ead2983d564bce6e5e1fb260f9cf929f4343ea5",
+      "size_bytes": 18432
     },
     {
       "path": "src/project_pipeline/assurance/delivery_progress.py",
@@ -12212,8 +12217,8 @@
     },
     {
       "path": "src/project_pipeline/assurance/policy.py",
-      "sha256": "c64df363a7f5a9a708e461c1fb289a3d90d0cc0ef3b5287834ebe95891c1dfb4",
-      "size_bytes": 1648
+      "sha256": "f55c704e54f9ddc28759a7608d9ea3d1ac0f285d741637161f26164b0375be13",
+      "size_bytes": 3125
     },
     {
       "path": "src/project_pipeline/assurance/repository_identity.py",
@@ -12387,8 +12392,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "a427019afeb6c1f33797ccc3ef4088be856d77ffb0cba0fc3a7f5202a7141805",
-      "size_bytes": 172297
+      "sha256": "baf3db8ac89d2f6076eac68ef3a92322b10e96ab88d649d712156058202a0095",
+      "size_bytes": 173189
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -13052,8 +13057,8 @@
     },
     {
       "path": "src/project_pipeline/lifecycle/cycle_handoff.py",
-      "sha256": "5b69e8a0a6d53923631275e979a87d704af2b41ab4b2150e40216047d34f441d",
-      "size_bytes": 13728
+      "sha256": "0f2cceb6b95745a87f895edff6df1349efc64b7be154327626b146beafa616cf",
+      "size_bytes": 16575
     },
     {
       "path": "src/project_pipeline/lifecycle/environments.py",
@@ -14172,8 +14177,13 @@
     },
     {
       "path": "tests/test_cycle_packet_integrity.py",
-      "sha256": "c68a6f53a8e4e71c8aee26eb9be18743124cd09507e0caad5eef8a9b6187da53",
-      "size_bytes": 5874
+      "sha256": "5db2d585f7c7049cc939674ca3b3a7839acc4d024d13bf2fc365d74cd0352c8a",
+      "size_bytes": 11752
+    },
+    {
+      "path": "tests/test_cycle_workload.py",
+      "sha256": "c29c79c13b6a24a123c00ab674e4aa19f5b52ec725f85b5bc05fd590a9d6f5dd",
+      "size_bytes": 11231
     },
     {
       "path": "tests/test_decision_resolution.py",
@@ -14267,8 +14277,8 @@
     },
     {
       "path": "tests/test_instruction_system.py",
-      "sha256": "87fdebea25094ee889ec2742f985f4eec919bf9df1a5210ed4eb65543471edd8",
-      "size_bytes": 9403
+      "sha256": "8319b1cefa1e892b5bcc5203759e99a727644b16ff18f4bda70a88b9da534cc9",
+      "size_bytes": 9514
     },
     {
       "path": "tests/test_intake_cli.py",
@@ -14851,7 +14861,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T05:09:47.491264+00:00",
+  "generated_at_utc": "2026-08-20T07:34:01.717968+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14860,5 +14870,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29596977
+  "total_bytes": 29646716
 }

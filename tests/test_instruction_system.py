@@ -33,7 +33,7 @@ def test_cold_start_is_complete_and_chat_independent() -> None:
     assert payload["missing"] == []
     assert payload["first_read"][0] == "AGENTS.md"
     assert "completion" in payload["routing"]
-    assert payload["scenario_ids"] == list("ABCDEFGHIJKL")
+    assert payload["scenario_ids"] == list("ABCDEFGHIJKLMNOPQRSTUVW")
 
 
 def test_coverage_has_one_primary_per_domain() -> None:
@@ -193,9 +193,10 @@ def test_delivery_progress_policy_weakening_is_rejected() -> None:
     weakened[module.ASSURANCE_POLICY_PATH]["delivery_progress"][
         "maximum_noncritical_administrative_ratio_milli"
     ] = 1000
+    weakened[module.ASSURANCE_POLICY_PATH]["cycle_workload"]["administrative_credit"] = 1
     report = module.Report(root=str(ROOT))
     module.check_policies(ROOT, report, weakened)
-    assert {item.code for item in report.errors}.issuperset({"POL010", "POL011"})
+    assert {item.code for item in report.errors}.issuperset({"POL010", "POL011", "POL013"})
 
 
 def test_quality_workflow_enforces_exact_head_delivery_progress() -> None:

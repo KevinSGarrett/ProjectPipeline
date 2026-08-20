@@ -13,6 +13,10 @@ import re
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.assurance.cycle_workload import (
+    derive_requirement_movements,
+    validate_requirement_movement_ledger,
+)
 from project_pipeline.io import read_json
 from project_pipeline.jira_steward.identity import parse_utc
 
@@ -308,11 +312,13 @@ def validate_cycle_packet_integrity(
     }
     named_heads = {name: value for name, value in heads.items() if value}
     if fetched_main:
-        named_heads["handoffs/Combined-Agent.md"] = (
+        handoff_head = (
             fetched_main
-            if fetched_main in payloads["handoffs/Combined-Agent.md"]
+            if fetched_main in str(payloads["handoffs/Combined-Agent.md"])
             else named_heads.get("git_identity_verification.json")
         )
+        if handoff_head:
+            named_heads["handoffs/Combined-Agent.md"] = handoff_head
     unique_heads = {value for value in named_heads.values() if value}
     if len(unique_heads) > 1:
         findings.append(
@@ -324,12 +330,61 @@ def validate_cycle_packet_integrity(
     movement_rows = movements.get("rows") if isinstance(movements, dict) else movements
     if observation.get("requirement_movements") and not movement_rows:
         findings.append("required ledger is empty despite observed movements/writes")
+    git_root = observation.get("git_root")
+    base_sha = str(observation.get("base_sha") or "")
+    if not (git_root and fetched_main and base_sha):
+        findings.append(
+            "catalog-derived requirement movement validation requires git_root, "
+            "base_sha, and fetched main"
+        )
+    else:
+        expected_movements = derive_requirement_movements(
+            Path(str(git_root)),
+            base_ref=base_sha,
+            head_ref=fetched_main,
+        )
+        if not isinstance(movements, dict):
+            findings.append("requirement movement ledger is not an object")
+        else:
+            movement_findings = validate_requirement_movement_ledger(movements, expected_movements)
+            findings.extend(item.message for item in movement_findings)
+            ledger_base = str(movements.get("base_sha") or movements.get("base") or "")
+            ledger_head = str(movements.get("head_sha") or movements.get("head") or "")
+            ledger_tree = str(movements.get("head_tree") or movements.get("tree") or "")
+            if ledger_base and ledger_base != base_sha:
+                findings.append("stale-head or wrong-base requirement ledger")
+            if ledger_head and ledger_head != fetched_main:
+                findings.append("stale-head or wrong-head requirement ledger")
+            if fetched_tree and ledger_tree and ledger_tree != fetched_tree:
+                findings.append("contradictory-tree requirement ledger")
     receipts = payloads["external_write_receipts.json"]
     receipt_rows = receipts.get("receipts") if isinstance(receipts, dict) else receipts
     if observation.get("external_writes") and not receipt_rows:
         findings.append("required ledger is empty despite observed movements/writes")
+    expected_prs = observation.get("required_pr_numbers")
+    if expected_prs:
+        observed_prs: set[int] = set()
+        if isinstance(receipt_rows, list):
+            for row in receipt_rows:
+                if not isinstance(row, dict):
+                    continue
+                number = row.get("pr") or row.get("number") or row.get("pull_request")
+                if number is not None:
+                    observed_prs.add(int(number))
+        missing_prs = sorted(int(item) for item in expected_prs if int(item) not in observed_prs)
+        if missing_prs:
+            findings.append(f"incomplete PR receipt range: missing {missing_prs}")
+    sidecar_path = directory / "handoffs" / "Combined-Agent.md.sha256"
+    payload_path = files["handoffs/Combined-Agent.md"]
+    if (
+        sidecar_path.is_file()
+        and payload_path.is_file()
+        and sidecar_path.stat().st_mtime_ns < payload_path.stat().st_mtime_ns
+    ):
+        findings.append("sidecar-written-before-payload")
 
-    github = observation.get("github") if isinstance(observation.get("github"), dict) else {}
+    github_raw = observation.get("github")
+    github: dict[str, Any] = github_raw if isinstance(github_raw, dict) else {}
     listed_open = github.get("open_pull_numbers")
     packet_open = (payloads["front_status.json"] or {}).get("open_prs")
     if listed_open is not None and packet_open is not None and listed_open != packet_open:
@@ -339,23 +394,18 @@ def validate_cycle_packet_integrity(
     ):
         findings.append("a listed PR/open lane contradicts GitHub")
 
-    live = observation.get("live") if isinstance(observation.get("live"), dict) else {}
+    live_raw = observation.get("live")
+    live: dict[str, Any] = live_raw if isinstance(live_raw, dict) else {}
     for key in ("jira", "campaign", "worktrees"):
-        recorded = live.get(f"packet_{key}")
-        observed = live.get(f"observed_{key}")
-        if recorded is not None and observed is not None and recorded != observed:
+        packet_fact: Any = live.get(f"packet_{key}")
+        observed_fact: Any = live.get(f"observed_{key}")
+        if packet_fact is not None and observed_fact is not None and packet_fact != observed_fact:
             findings.append("a live Jira/campaign/worktree fact contradicts readback")
 
-    compact = validate_cycle_handoff(
-        handoff_text=str(payloads["handoffs/Combined-Agent.md"]),
-        meter=payloads["DELIVERY_METER.json"]
-        if isinstance(payloads["DELIVERY_METER.json"], dict)
-        else {},
-        proof=payloads["FRESH_DELIVERY_PROOF.json"]
-        if isinstance(payloads["FRESH_DELIVERY_PROOF.json"], dict)
-        else {},
-        packet=observation.get("compact_packet")
-        if isinstance(observation.get("compact_packet"), dict)
+    compact_raw = observation.get("compact_packet")
+    compact_packet: dict[str, Any] = (
+        compact_raw
+        if isinstance(compact_raw, dict)
         else {
             "origin_main_heads": [fetched_main] if fetched_main else [],
             "pull_requests": [],
@@ -364,7 +414,17 @@ def validate_cycle_packet_integrity(
             "stale_dependency_projection": False,
             "claims_floor_pass": False,
             "superseded_claims": ["cycle-14-accounting-correction"],
-        },
+        }
+    )
+    compact = validate_cycle_handoff(
+        handoff_text=str(payloads["handoffs/Combined-Agent.md"]),
+        meter=payloads["DELIVERY_METER.json"]
+        if isinstance(payloads["DELIVERY_METER.json"], dict)
+        else {},
+        proof=payloads["FRESH_DELIVERY_PROOF.json"]
+        if isinstance(payloads["FRESH_DELIVERY_PROOF.json"], dict)
+        else {},
+        packet=compact_packet,
     )
     if not compact["valid"]:
         findings.extend(str(item) for item in compact["findings"])

@@ -253,7 +253,7 @@ def check_manifest(root: Path, report: Report, manifest: dict[str, Any]) -> None
     report.checks.append("manifest")
     expected_identity = {
         "schema_version": "1.0.0",
-        "instruction_pack_version": "1.2.0",
+        "instruction_pack_version": "1.3.0",
         "project_id": "PROJECT-PIPELINE",
         "project_name": "ProjectPipeline",
         "repository_url": "https://github.com/KevinSGarrett/ProjectPipeline",
@@ -820,6 +820,28 @@ def check_policies(root: Path, report: Report, documents: dict[Path, Any]) -> No
             "Objective progress, reconciliation batching, and administration limits were weakened",
             ASSURANCE_POLICY_PATH,
         )
+    cycle_workload = (
+        assurance_policy.get("cycle_workload", {}) if isinstance(assurance_policy, dict) else {}
+    )
+    if (
+        not isinstance(cycle_workload, dict)
+        or cycle_workload.get("baseline_id") != "CURSOR_CYCLES_001_015_HIGH_WATER"
+        or cycle_workload.get("independently_validated_baseline_score") != 24
+        or cycle_workload.get("independently_validated_baseline_units") != 7
+        or cycle_workload.get("multiplier_milli") != 2000
+        or cycle_workload.get("minimum_score") != 48
+        or cycle_workload.get("minimum_units") != 14
+        or cycle_workload.get("maximum_unit_weight") != 4
+        or cycle_workload.get("non_compounding") is not True
+        or cycle_workload.get("administrative_credit") != 0
+        or cycle_workload.get("endgame_saturation_required_when_below_minimum") is not True
+    ):
+        report.add(
+            "ERROR",
+            "POL013",
+            "Cycle workload policy must retain the fixed Cycle 1-15 high-water 2x noncompounding contract",
+            ASSURANCE_POLICY_PATH,
+        )
 
     workflow_path = root / ".github/workflows/quality.yml"
     workflow = workflow_path.read_text(encoding="utf-8") if workflow_path.is_file() else ""
@@ -937,12 +959,12 @@ def check_scenarios(report: Report, scenarios: dict[str, Any]) -> None:
         report.add("ERROR", "SCEN001", "Scenario registry is missing", SCENARIOS_PATH)
         return
     ids = {row.get("id") for row in rows if isinstance(row, dict)}
-    expected = set("ABCDEFGHIJKL")
+    expected = set("ABCDEFGHIJKLMNOPQRSTUVW")
     if ids != expected:
         report.add(
             "ERROR",
             "SCEN002",
-            f"Scenario IDs must be A through L; observed {sorted(ids)}",
+            f"Scenario IDs must be A through W; observed {sorted(ids)}",
             SCENARIOS_PATH,
         )
     for row in rows:

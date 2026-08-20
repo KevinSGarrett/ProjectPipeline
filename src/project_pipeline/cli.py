@@ -1023,6 +1023,7 @@ def build_parser() -> argparse.ArgumentParser:
             "candidate",
             "loop-guard",
             "delivery-gate",
+            "cycle-workload",
             "scope-change",
             "simulate",
         ),
@@ -1033,6 +1034,8 @@ def build_parser() -> argparse.ArgumentParser:
     assurance.add_argument("--input", type=Path)
     assurance.add_argument("--base-ref")
     assurance.add_argument("--head-ref", default="HEAD")
+    assurance.add_argument("--ledger", type=Path)
+    assurance.add_argument("--requirement-ledger", type=Path)
     assurance.add_argument("--scope", type=Path)
     assurance.add_argument("--requested-behavior", action="append", default=[])
     assurance.add_argument("--requested-path", action="append", default=[])
@@ -2731,6 +2734,25 @@ def _run_assurance_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             "delivery_gate": delivery_decision.model_dump(mode="json"),
             "policy": delivery_policy,
         }, 0 if delivery_decision.state.value == "PASS" else 1
+
+    if args.action == "cycle-workload":
+        from project_pipeline.assurance.cycle_workload import (
+            evaluate_cycle_workload_from_root,
+            load_cycle_workload_policy,
+        )
+
+        policy = load_cycle_workload_policy(args.root)
+        decision = evaluate_cycle_workload_from_root(
+            args.root,
+            ledger_path=args.ledger,
+            requirement_ledger_path=args.requirement_ledger,
+            base_ref=args.base_ref,
+            head_ref=None if args.head_ref == "HEAD" and not args.base_ref else args.head_ref,
+        )
+        return {
+            "cycle_workload": decision.model_dump(mode="json"),
+            "policy": policy.model_dump(mode="json"),
+        }, 0 if decision.accepted else 1
 
     database = _assurance_database(args)
     store = AssuranceStore(database)

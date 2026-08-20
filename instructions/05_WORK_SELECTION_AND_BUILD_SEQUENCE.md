@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-05` |
 | Status | `ACTIVE` |
-| Pack version | `1.2.0` |
+| Pack version | `1.3.0` |
 | Primary domains | `work_selection`, `budgeting` |
 | Governing entry point | `AGENTS.md` |
 
@@ -61,6 +61,10 @@ If the top-ranked item is blocked, record the blocker and select the next indepe
 Prefer a complete behavior with code, tests, generated artifacts, documentation, traceability, and evidence over scattered partial edits across unrelated components. One cohesive PR may satisfy multiple linked tasks when acceptance and rollback boundaries align.
 
 The unit of delivery is the cohesive vertical slice, not a Jira lifecycle arrow. Compatible transitions inside a slice are bookkeeping and share one branch, PR, expensive gate, independent review, merge, and post-merge reconciliation. Never advance one already-complete item through a branch or PR per state.
+
+Admit a candidate only at an acceptance boundary: exact criterion, falsifier, distinct rollback/deduplication identity, and exact-main evidence. If two proposed units share that identity, merge them and count once. Shared files or a shared parent requirement do not create credit.
+
+Prefer one cohesive vertical slice over file-sized or lifecycle-sized tasks. Do not split one behavior into material, process, reconciliation, and cleanup PRs. WIP remains the scheduler-safe default of two implementation lanes and at most one merge-ready PR.
 
 Do not bounce between unrelated components to maximize apparent activity.
 

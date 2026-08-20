@@ -59,6 +59,14 @@
         "config/assurance_policy.json",
         "src/project_pipeline/assurance/delivery_progress.py"
       ]
+    },
+    {
+      "command": "python -m project_pipeline assurance cycle-workload --root .",
+      "name": "cycle_workload_gate",
+      "requires_paths": [
+        "config/assurance_policy.json",
+        "src/project_pipeline/assurance/cycle_workload.py"
+      ]
     }
   ],
   "entry_point": "AGENTS.md",
@@ -172,8 +180,8 @@
       "instruction_id": "PP-ASSET-CONFIG-ASSURANCE-POLICY-JSON",
       "kind": "CONFIGURATION",
       "path": "config/assurance_policy.json",
-      "sha256": "cd0971a7025eb7c8348c0d3fcbfb261f9b63f7e74bf83b298abee46c92dcb627",
-      "size_bytes": 843
+      "sha256": "fba3410206603cc59192ca110508bb0ef60e2d962687c38ce26541a1725317cc",
+      "size_bytes": 1285
     },
     {
       "instruction_id": "PP-ASSET-CONFIG-JIRA-SYNC-POLICY-JSON",
@@ -242,8 +250,8 @@
       "instruction_id": "PP-INST-02",
       "kind": "INSTRUCTION",
       "path": "instructions/02_AUTONOMOUS_OPERATING_CONTRACT.md",
-      "sha256": "1d47cf675cd695da5fca9c37158174c6b227ab2918fa70723a8188db38d794be",
-      "size_bytes": 5870
+      "sha256": "2920f1e932e7567334b3743ac0b496eca96addf27673f4baea26d4bae4dcfe13",
+      "size_bytes": 7518
     },
     {
       "instruction_id": "PP-INST-03",
@@ -263,8 +271,8 @@
       "instruction_id": "PP-INST-05",
       "kind": "INSTRUCTION",
       "path": "instructions/05_WORK_SELECTION_AND_BUILD_SEQUENCE.md",
-      "sha256": "63b418d8236effff4cf1c9d6603e7f3a518d1db561ad062668c4f45ed77f3987",
-      "size_bytes": 4710
+      "sha256": "842ba712228070506f675274fac652b46359d0e6be9c3bbc12b6abffcea39480",
+      "size_bytes": 5252
     },
     {
       "instruction_id": "PP-INST-06",
@@ -305,8 +313,8 @@
       "instruction_id": "PP-INST-11",
       "kind": "INSTRUCTION",
       "path": "instructions/11_ANTI_LOOP_AND_ANTI_OVERENGINEERING.md",
-      "sha256": "43f9ad2a632b9b639a1a701647351ff4afef6289a31b5cf12c37b675dad4b3d5",
-      "size_bytes": 4288
+      "sha256": "bdd0b1f91b02c8e529a46370074ba71054f57488b7806d7ac492541c6aa70c80",
+      "size_bytes": 4592
     },
     {
       "instruction_id": "PP-INST-12",
@@ -368,8 +376,8 @@
       "instruction_id": "PP-INST-20",
       "kind": "INSTRUCTION",
       "path": "instructions/20_INSTRUCTION_MAINTENANCE.md",
-      "sha256": "00136f3af50beb6f10ddcdbdbc6aa2070cf3ca37e2a79479482312a5eb6823d4",
-      "size_bytes": 4410
+      "sha256": "60cead401e21672c59d56468311c3125b91cb65119a96aa4406d2c01f8575f52",
+      "size_bytes": 4697
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-AUTHORITY-MAP-JSON",
@@ -382,8 +390,8 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-CHANGELOG-MD",
       "kind": "INSTRUCTION",
       "path": "instructions/CHANGELOG.md",
-      "sha256": "b8cbb9fa2f27179b69b7f6ba7facef83395decb1043a8b6583147d5a23f1c300",
-      "size_bytes": 2856
+      "sha256": "b5058e8fa8b44f1b4e6c98dac5c0e7d62a22f414c8af58a324627e9dce9699ac",
+      "size_bytes": 3519
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-CREATION-REPORT-MD",
@@ -466,8 +474,8 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-VALIDATION-SCENARIOS-JSON",
       "kind": "MACHINE_POLICY",
       "path": "instructions/policies/VALIDATION_SCENARIOS.json",
-      "sha256": "43631d0fcefd8a844b0983191cc180290eabaf7ee6a9352caa4ca6f534386b9f",
-      "size_bytes": 3553
+      "sha256": "5b7bf60c4846648bace85b1c8a0a76c25f57b609b490f4dd0972e9c21bc0c965",
+      "size_bytes": 7029
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-README-MD",
@@ -578,8 +586,8 @@
       "instruction_id": "PP-ASSET-SCRIPTS-VALIDATE-INSTRUCTIONS-PY",
       "kind": "VALIDATION_TOOL",
       "path": "scripts/validate_instructions.py",
-      "sha256": "0ba2c754085c0a36635f01f42cc44f49a86a40321f0db7decca0dfad12ee17c8",
-      "size_bytes": 40664
+      "sha256": "33269d63d3e3a5cc1d95acd0e3b992649a29663a98fa67c627f2abaa58baee0c",
+      "size_bytes": 41751
     },
     {
       "instruction_id": "PP-ASSET-SRC-PROJECT-PIPELINE-CONFIGURATION-MODELS-PY",
@@ -613,8 +621,8 @@
       "instruction_id": "PP-ASSET-TESTS-TEST-INSTRUCTION-SYSTEM-PY",
       "kind": "TEST",
       "path": "tests/test_instruction_system.py",
-      "sha256": "87fdebea25094ee889ec2742f985f4eec919bf9df1a5210ed4eb65543471edd8",
-      "size_bytes": 9403
+      "sha256": "8319b1cefa1e892b5bcc5203759e99a727644b16ff18f4bda70a88b9da534cc9",
+      "size_bytes": 9514
     },
     {
       "instruction_id": "PP-ASSET-TESTS-TEST-SECURITY-UPSTREAM-ADAPTERS-PY",
@@ -631,7 +639,7 @@
       "size_bytes": 4697
     }
   ],
-  "instruction_pack_version": "1.2.0",
+  "instruction_pack_version": "1.3.0",
   "instruction_root": "instructions",
   "managed_support_paths": [
     ".gitignore",

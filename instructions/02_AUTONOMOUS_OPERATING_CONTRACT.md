@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-02` |
 | Status | `ACTIVE` |
-| Pack version | `1.2.0` |
+| Pack version | `1.3.0` |
 | Primary domains | `autonomous_cycle`, `definition_of_ready` |
 | Governing entry point | `AGENTS.md` |
 
@@ -81,6 +81,16 @@ Use scheduler-safe lanes and the policy in `policies/BRANCH_PR_POLICY.json`. The
 Housekeeping is bounded. Perform it after merge, when hygiene creates real risk, during a scheduled maintenance window, or before release. Renaming, reorganizing, regenerating, or reporting without accepted progress is not a substitute for implementation.
 
 Measure sustained work using objective before/after repository facts. A positive progress delta requires newly satisfied acceptance, eliminated failure or blocker, newly passing required behavior, integrated implementation, or durable evidence for one of those changes. Jira state movement, branches, PRs, repeated validation, regenerated projections, claims, snapshots, and bookkeeping are activity with zero progress unless they accompany such an objective change. Enforce the administrative-work budget in `config/assurance_policy.json` and stop or change strategy when the zero-progress limit is reached.
+
+## Cycle workload (Cursor cycles 16+)
+
+Cursor combined-agent cycles use a fixed Cycle 1-15 high-water baseline identified as `CURSOR_CYCLES_001_015_HIGH_WATER`. The independently validated baseline is 24 weighted substantive points across 7 distinct units. Later cycles apply a noncompounding 2000-milli (2x) multiplier, requiring at least 48 weighted points and 14 distinct substantive acceptance units unless deterministic endgame saturation completes the project with less remaining legitimate scope.
+
+A substantive acceptance unit is one unique accepted production behavior with a falsifiable before/after boundary, a distinct rollback/deduplication identity, and exact-main evidence. Weight is 1-4: production behavior, plus a real OS/process/network/external/persistent boundary, plus P0/critical/security/recovery/concurrency/release risk, plus closure of an accepted requirement or mandatory Completion Gate environment.
+
+Zero credit: commits, PRs, branches, worktrees, Jira transitions/comments, manifests, checksums, generated projections, handoff prose, dependency installation by itself, repeated validations, cleanup, lifecycle-only reconciliation, timers, heartbeats, or splitting one behavior across files/PRs. Administrative credit is always 0.
+
+If fewer legitimate units or points remain, finish every remaining accepted requirement, every mandatory qualification environment, the governed 4h → 24h → 72h ladder, release, post-release verification, Jira/GitHub convergence, and the deterministic Completion Gate. Never invent or micro-split work to hit the meter. Do not stop for a person; continue through autonomous policy.
 
 ## Autonomous decisions and routine-action grant
 

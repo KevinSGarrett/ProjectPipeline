@@ -1,11 +1,53 @@
 from __future__ import annotations
 
+import json
+import os
+import subprocess
 from pathlib import Path
 
 from project_pipeline.lifecycle.cycle_handoff import (
     validate_cycle_packet_integrity,
     write_cycle_packet_atomically,
 )
+
+
+def _git(root: Path, *args: str) -> str:
+    result = subprocess.run(
+        ["git", "-C", str(root), *args],
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    return result.stdout.strip()
+
+
+def _catalog_repo(tmp_path: Path) -> tuple[Path, str, str, str]:
+    root = tmp_path / "git"
+    root.mkdir()
+    _git(root, "init", "-b", "main")
+    _git(root, "config", "user.email", "test@example.invalid")
+    _git(root, "config", "user.name", "Test")
+    catalog = root / "plans" / "_traceability" / "requirements_by_id.json"
+    catalog.parent.mkdir(parents=True)
+    catalog.write_text(
+        json.dumps({"requirements": {"REQ-A": {"implementation_state": "PARTIALLY_IMPLEMENTED"}}})
+        + "\n",
+        encoding="utf-8",
+    )
+    _git(root, "add", "plans/_traceability/requirements_by_id.json")
+    _git(root, "commit", "-m", "base")
+    base = _git(root, "rev-parse", "HEAD")
+    catalog.write_text(
+        json.dumps({"requirements": {"REQ-A": {"implementation_state": "IMPLEMENTED"}}}) + "\n",
+        encoding="utf-8",
+    )
+    _git(root, "add", "plans/_traceability/requirements_by_id.json")
+    _git(root, "commit", "-m", "head")
+    head = _git(root, "rev-parse", "HEAD")
+    tree = _git(root, "rev-parse", "HEAD^{tree}")
+    return root, base, head, tree
+
 
 REQUIRED_BODY = """
 Exact integrated main SHA abb9f8578fb41af4a51c769446e1caacd4769d30 tree 45587c78
@@ -75,11 +117,56 @@ def _write(tmp_path: Path, **overrides: object) -> Path:
 
 
 def test_atomic_packet_from_one_observation_passes(tmp_path: Path) -> None:
+    git_root, base, head, tree = _catalog_repo(tmp_path)
+    packet = tmp_path / "packet"
+    _write(
+        packet,
+        **{
+            "DELIVERY_METER.json": {"main_sha": head, "observed_at_utc": "2026-08-19T23:00:00Z"},
+            "FRESH_DELIVERY_PROOF.json": {
+                "main_sha": head,
+                "observed_at_utc": "2026-08-19T23:00:00Z",
+            },
+            "git_identity_verification.json": {"main_sha": head, "tree": tree},
+            "validation_matrix.json": {"main_sha": head},
+            "front_status.json": {"main_sha": head, "open_prs": []},
+            "requirement_movement_ledger.json": {
+                "main_sha": head,
+                "base_sha": base,
+                "head_sha": head,
+                "head_tree": tree,
+                "rows": [
+                    {
+                        "requirement_id": "REQ-A",
+                        "before": "PARTIALLY_IMPLEMENTED",
+                        "after": "IMPLEMENTED",
+                    }
+                ],
+            },
+            "external_write_receipts.json": {"main_sha": head, "receipts": [{"id": "JREC-1"}]},
+            "cleanup_inventory.json": {"main_sha": head, "rows": []},
+            "handoffs/Combined-Agent.md": REQUIRED_BODY + f"\nExact integrated main SHA {head}\n",
+        },
+    )
+    result = validate_cycle_packet_integrity(
+        directory=packet,
+        observation=_observation(
+            origin_main=head,
+            origin_main_tree=tree,
+            git_root=str(git_root),
+            base_sha=base,
+        ),
+    )
+    assert result["valid"] is True, result["findings"]
+    sidecar = (packet / "handoffs" / "Combined-Agent.md.sha256").read_text(encoding="utf-8")
+    assert sidecar.strip() == result["handoff_sha256"]
+
+
+def test_nonempty_movement_ledger_without_catalog_derivation_fails(tmp_path: Path) -> None:
     _write(tmp_path)
     result = validate_cycle_packet_integrity(directory=tmp_path, observation=_observation())
-    assert result["valid"] is True, result["findings"]
-    sidecar = (tmp_path / "handoffs" / "Combined-Agent.md.sha256").read_text(encoding="utf-8")
-    assert sidecar.strip() == result["handoff_sha256"]
+    assert result["valid"] is False
+    assert any("catalog-derived requirement movement" in item for item in result["findings"])
 
 
 def test_packet_main_differs_from_fetched_remote_fails(tmp_path: Path) -> None:
@@ -140,6 +227,71 @@ def test_listed_pr_contradicts_github_fails(tmp_path: Path) -> None:
         observation=_observation(github={"open_pull_numbers": [80], "remote_heads": ["main"]}),
     )
     assert any("contradicts GitHub" in item for item in result["findings"])
+
+
+def test_catalog_derived_noop_and_missing_movements_fail(tmp_path: Path) -> None:
+    git_root, base, head, tree = _catalog_repo(tmp_path)
+    packet = tmp_path / "packet"
+    _write(
+        packet,
+        **{
+            "DELIVERY_METER.json": {"main_sha": head, "observed_at_utc": "2026-08-20T00:00:00Z"},
+            "FRESH_DELIVERY_PROOF.json": {
+                "main_sha": head,
+                "observed_at_utc": "2026-08-20T00:00:00Z",
+            },
+            "git_identity_verification.json": {"main_sha": head, "tree": tree},
+            "validation_matrix.json": {"main_sha": head},
+            "front_status.json": {"main_sha": head, "open_prs": []},
+            "requirement_movement_ledger.json": {
+                "main_sha": head,
+                "base_sha": base,
+                "head_sha": head,
+                "head_tree": tree,
+                "rows": [
+                    {
+                        "requirement_id": "REQ-A",
+                        "before": "PARTIALLY_IMPLEMENTED",
+                        "after": "PARTIALLY_IMPLEMENTED",
+                    }
+                ],
+            },
+            "external_write_receipts.json": {
+                "main_sha": head,
+                "receipts": [{"id": "R1", "pr": 80}],
+            },
+            "cleanup_inventory.json": {"main_sha": head, "rows": []},
+            "handoffs/Combined-Agent.md": REQUIRED_BODY + f"\nExact integrated main SHA {head}\n",
+        },
+    )
+    result = validate_cycle_packet_integrity(
+        directory=packet,
+        observation=_observation(
+            origin_main=head,
+            origin_main_tree=tree,
+            git_root=str(git_root),
+            base_sha=base,
+            required_pr_numbers=[80, 81],
+        ),
+    )
+    assert any("no-op" in item for item in result["findings"])
+    assert any("missing requirement movement" in item for item in result["findings"])
+    assert any("incomplete PR receipt range" in item for item in result["findings"])
+
+
+def test_sidecar_written_before_payload_fails(tmp_path: Path) -> None:
+    _write(tmp_path)
+    payload = tmp_path / "handoffs" / "Combined-Agent.md"
+    sidecar = tmp_path / "handoffs" / "Combined-Agent.md.sha256"
+    payload.write_text(REQUIRED_BODY + "\nLater payload\n", encoding="utf-8")
+    sidecar.touch()
+    sidecar_stat = sidecar.stat()
+    payload.touch()
+    sidecar.chmod(sidecar.stat().st_mode)
+    os.utime(sidecar, ns=(sidecar_stat.st_atime_ns, 1_000_000_000))
+    os.utime(payload, ns=(sidecar_stat.st_atime_ns, 2_000_000_000))
+    result = validate_cycle_packet_integrity(directory=tmp_path, observation=_observation())
+    assert any("sidecar-written-before-payload" in item for item in result["findings"])
 
 
 def test_live_jira_fact_contradicts_readback_fails(tmp_path: Path) -> None:
