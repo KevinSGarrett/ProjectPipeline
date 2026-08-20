@@ -9,7 +9,12 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.responses import FileResponse, Response
-from uvicorn import Config, Server
+
+try:
+    from uvicorn import Config, Server
+except ImportError:
+    Config = None
+    Server = None
 
 from project_pipeline.command_center.api import CommandCenterAuth, create_command_center_app
 from project_pipeline.command_center.application import RepositoryApplicationProjectionBuilder
@@ -118,6 +123,8 @@ class LiveCommandCenterServer:
         self.token = token
         self.host = host
         self.app, self.broker = create_live_command_center_app(self.root, token=token)
+        if Config is None or Server is None:
+            raise RuntimeError("uvicorn is required to serve the live Command Center")
         bind_host = "127.0.0.1" if host == "localhost" else host
         chosen = port
         if chosen == 0:
