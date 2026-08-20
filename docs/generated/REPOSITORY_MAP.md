@@ -1,7 +1,7 @@
 # Generated Repository Map
 
-- Files: `2995`
-- Generated: `2026-08-20T18:49:28.034719+00:00`
+- Files: `3006`
+- Generated: `2026-08-20T19:35:07.237506+00:00`
 
 ## Top-level counts
 
@@ -12,10 +12,11 @@
 - `adr`: 30
 - `apps`: 25
 - `architecture`: 19
+- `benchmarks`: 1
 - `config`: 42
 - `contracts`: 5
-- `database`: 98
-- `docs`: 74
+- `database`: 102
+- `docs`: 75
 - `dummy`: 429
 - `evidence`: 252
 - `fixtures`: 25
@@ -30,8 +31,8 @@
 - `runbooks`: 28
 - `schemas`: 209
 - `scripts`: 44
-- `src`: 336
-- `tests`: 230
+- `src`: 340
+- `tests`: 231
 - `third_party`: 1
 
 ## Semantic indexes

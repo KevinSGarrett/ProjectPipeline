@@ -54,29 +54,35 @@ class MigrationTests(unittest.TestCase):
         status = runner.rollback_last()
         self.assertEqual(status.applied, expected[:-1])
         with self.assertRaises(sqlite3.OperationalError):
+            connection.execute("SELECT COUNT(*) FROM retrieval_chunks").fetchone()
+        connection.execute("SELECT COUNT(*) FROM evidence_observations").fetchone()
+
+        status = runner.rollback_last()
+        self.assertEqual(status.applied, expected[:-2])
+        with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM evidence_observations").fetchone()
         connection.execute("SELECT COUNT(*) FROM campaign_owner_bindings").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-2])
+        self.assertEqual(status.applied, expected[:-3])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM campaign_owner_bindings").fetchone()
         connection.execute("SELECT COUNT(*) FROM campaign_runs").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-3])
+        self.assertEqual(status.applied, expected[:-4])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM campaign_runs").fetchone()
         connection.execute("SELECT COUNT(*) FROM qualification_runs").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-4])
+        self.assertEqual(status.applied, expected[:-5])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM qualification_runs").fetchone()
         connection.execute("SELECT COUNT(*) FROM autonomy_runtime_operations").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-5])
+        self.assertEqual(status.applied, expected[:-6])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM autonomy_runtime_operations").fetchone()
         connection.execute("SELECT COUNT(*) FROM jira_sync_operations").fetchone()
@@ -95,11 +101,11 @@ class MigrationTests(unittest.TestCase):
         connection.execute("SELECT COUNT(*) FROM lifecycle_portfolio_projects").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-6])
+        self.assertEqual(status.applied, expected[:-7])
         connection.execute("SELECT COUNT(*) FROM lifecycle_portfolio_projects").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-7])
+        self.assertEqual(status.applied, expected[:-8])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM lifecycle_portfolio_projects").fetchone()
         connection.execute("SELECT COUNT(*) FROM command_center_director_messages").fetchone()
@@ -107,20 +113,20 @@ class MigrationTests(unittest.TestCase):
         connection.execute("SELECT COUNT(*) FROM resilience_machines").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-8])
+        self.assertEqual(status.applied, expected[:-9])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM command_center_director_messages").fetchone()
         connection.execute("SELECT COUNT(*) FROM command_center_events").fetchone()
         connection.execute("SELECT COUNT(*) FROM resilience_machines").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-9])
+        self.assertEqual(status.applied, expected[:-10])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM command_center_events").fetchone()
         connection.execute("SELECT COUNT(*) FROM resilience_machines").fetchone()
 
         status = runner.rollback_last()
-        self.assertEqual(status.applied, expected[:-10])
+        self.assertEqual(status.applied, expected[:-11])
         with self.assertRaises(sqlite3.OperationalError):
             connection.execute("SELECT COUNT(*) FROM resilience_machines").fetchone()
         connection.execute("SELECT COUNT(*) FROM security_identities").fetchone()

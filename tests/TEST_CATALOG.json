@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 677,
+  "test_count": 683,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -2686,6 +2686,36 @@
       "callable": "DetailedRequirementTests.test_requirement_plan_jira_test_and_evidence_links_resolve",
       "path": "tests/test_requirements_detailed.py",
       "test_id": "TEST-REQUIREMENTS-002"
+    },
+    {
+      "callable": "test_ppdb_0025_applies_retrieval_tables",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-001"
+    },
+    {
+      "callable": "test_exact_source_address_and_lexical_fallback",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-002"
+    },
+    {
+      "callable": "test_backup_restore_and_benchmark_recall",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-003"
+    },
+    {
+      "callable": "test_retrieval_cli_benchmark",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-004"
+    },
+    {
+      "callable": "test_semantic_status_ignores_unset_or_dead_dsn",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-005"
+    },
+    {
+      "callable": "test_postgresql_retrieval_sql_enables_vector_and_indexes",
+      "path": "tests/test_retrieval_benchmark.py",
+      "test_id": "TEST-RETRIEVAL-006"
     },
     {
       "callable": "test_aws_blueprint_keeps_local_primary",

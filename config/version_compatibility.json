@@ -8,7 +8,7 @@
   "compiled_repository_map_schema": "1.0.0",
   "domain_project_manifest_schema": "1.0.0",
   "event_contract_schema": "1.0.0",
-  "latest_database_migration": "PPDB-0024",
+  "latest_database_migration": "PPDB-0025",
   "migration_catalog_schema": "1.0.0",
   "platform_version": "0.9.0",
   "project_gap_report_schema": "1.0.0",

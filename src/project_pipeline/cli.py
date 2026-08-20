@@ -244,6 +244,7 @@ from project_pipeline.resilience.wip_preserve import (
     preserve_uncommitted_work,
     restore_uncommitted_work,
 )
+from project_pipeline.retrieval import run_retrieval_benchmark
 from project_pipeline.runtime import run_bootstrap, run_foundation_smoke
 from project_pipeline.scheduler import (
     DynamicLaneScheduler,
@@ -913,6 +914,16 @@ def build_parser() -> argparse.ArgumentParser:
     context.add_argument("--artifact-root", type=Path)
     context.add_argument("--json-output", type=Path)
     _add_configuration_arguments(context)
+
+    retrieval = commands.add_parser(
+        "retrieval",
+        help="Run exact-fallback retrieval benchmarks and record pgvector availability",
+    )
+    retrieval.add_argument("action", choices=("benchmark",))
+    retrieval.add_argument("--root", type=_root, default=Path.cwd())
+    retrieval.add_argument("--database", type=Path)
+    retrieval.add_argument("--output-dir", type=Path)
+    retrieval.add_argument("--json-output", type=Path)
 
     orchestration = commands.add_parser(
         "orchestration", help="Inspect and operate durable workflow/recovery state"
@@ -2380,6 +2391,18 @@ def _load_context_candidates(path: Path | None) -> tuple[ContextCandidate, ...]:
         return tuple(ContextCandidate.model_validate(item) for item in payload)
     except Exception as error:
         raise ConfigurationError(f"invalid candidates file: {error}") from error
+
+
+def _run_retrieval_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    if args.action != "benchmark":
+        raise ConfigurationError(f"unsupported retrieval action: {args.action}")
+    report = run_retrieval_benchmark(
+        args.root,
+        database=args.database,
+        output_dir=args.output_dir,
+    )
+    code = 0 if report.get("exact_recall_at_1") == 1.0 else 1
+    return report, code
 
 
 def _run_context_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -3868,6 +3891,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             return code
         if args.command == "context":
             result, code = _run_context_command(args)
+            _write_json_output(result, args.json_output)
+            return code
+        if args.command == "retrieval":
+            result, code = _run_retrieval_command(args)
             _write_json_output(result, args.json_output)
             return code
         if args.command == "orchestration":
