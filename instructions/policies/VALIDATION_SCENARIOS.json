@@ -121,6 +121,116 @@
       "id": "L",
       "name": "external_precondition",
       "trigger": "MFA or credential rotation is required."
+    },
+    {
+      "expected": [
+        "rejects the duplicate unit",
+        "counts the acceptance boundary once",
+        "records a content-addressed collision"
+      ],
+      "id": "M",
+      "name": "duplicate_unit",
+      "trigger": "A cycle ledger lists the same substantive unit ID twice."
+    },
+    {
+      "expected": [
+        "rejects identical rollback identities",
+        "does not award a second weight",
+        "keeps one rollback boundary"
+      ],
+      "id": "N",
+      "name": "identical_rollback_boundary",
+      "trigger": "Two ledger rows share the same rollback or deduplication identity."
+    },
+    {
+      "expected": [
+        "merges the rows",
+        "counts the behavior once",
+        "refuses split credit"
+      ],
+      "id": "O",
+      "name": "one_behavior_across_prs",
+      "trigger": "One accepted behavior is split across multiple pull requests."
+    },
+    {
+      "expected": [
+        "assigns zero credit",
+        "records an administrative ledger row",
+        "does not increase the weighted score"
+      ],
+      "id": "P",
+      "name": "bookkeeping_credit",
+      "trigger": "A Jira transition, manifest refresh, or receipt index is submitted as a substantive unit."
+    },
+    {
+      "expected": [
+        "assigns zero credit",
+        "keeps the unit administrative",
+        "continues the real implementation front"
+      ],
+      "id": "Q",
+      "name": "dependency_install_credit",
+      "trigger": "A toolchain or package installation is submitted as a substantive unit."
+    },
+    {
+      "expected": [
+        "rejects the row",
+        "requires the missing evidence fields",
+        "does not award weight"
+      ],
+      "id": "R",
+      "name": "incomplete_evidence",
+      "trigger": "A substantive unit lacks a falsifier, integrated SHA/tree, or rollback identity."
+    },
+    {
+      "expected": [
+        "rejects the ledger",
+        "requires the exact evaluated base and head",
+        "does not accept a stale identity"
+      ],
+      "id": "S",
+      "name": "wrong_base_head",
+      "trigger": "A cycle ledger names a base or head that is not the evaluated Git range."
+    },
+    {
+      "expected": [
+        "rejects the no-op row",
+        "does not treat a nonempty file as proof",
+        "requires a real before/after state change"
+      ],
+      "id": "T",
+      "name": "no_op_movement",
+      "trigger": "A requirement movement ledger repeats the same before and after state."
+    },
+    {
+      "expected": [
+        "rejects the ledger",
+        "lists the missing catalog movement",
+        "derives expected rows from exact base/head catalogs"
+      ],
+      "id": "U",
+      "name": "missing_movement",
+      "trigger": "An exact Git requirement catalog diff contains a movement omitted from the ledger."
+    },
+    {
+      "expected": [
+        "rejects the extra row",
+        "keeps catalog truth authoritative",
+        "does not accept invented movements"
+      ],
+      "id": "V",
+      "name": "extra_movement",
+      "trigger": "A movement ledger contains a requirement change absent from the exact catalog diff."
+    },
+    {
+      "expected": [
+        "requires Completion Gate COMPLETE",
+        "rejects a floor packet as saturation",
+        "continues remaining legitimate work"
+      ],
+      "id": "W",
+      "name": "endgame_saturation",
+      "trigger": "A cycle is below the doubled high-water minimum and claims endgame saturation without a complete gate."
     }
   ],
   "schema_version": "1.0.0"

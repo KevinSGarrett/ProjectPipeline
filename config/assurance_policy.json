@@ -19,5 +19,18 @@
     "maximum_noncritical_administrative_ratio_milli": 100,
     "already_implemented_selection": "RECONCILIATION_REQUIRED",
     "expensive_gate_boundary": "COHESIVE_VERTICAL_SLICE"
+  },
+  "cycle_workload": {
+    "schema_version": "1.0.0",
+    "baseline_id": "CURSOR_CYCLES_001_015_HIGH_WATER",
+    "independently_validated_baseline_score": 24,
+    "independently_validated_baseline_units": 7,
+    "multiplier_milli": 2000,
+    "minimum_score": 48,
+    "minimum_units": 14,
+    "maximum_unit_weight": 4,
+    "non_compounding": true,
+    "administrative_credit": 0,
+    "endgame_saturation_required_when_below_minimum": true
   }
 }

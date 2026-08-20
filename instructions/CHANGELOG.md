@@ -1,5 +1,11 @@
 # Instruction System Changelog
 
+## 1.3.0 — 2026-08-20
+
+- Promoted the recurring Cycle 1-15 high-water workload correction into primary instruction and machine policy: fixed baseline `CURSOR_CYCLES_001_015_HIGH_WATER`, noncompounding 2x SAU metric, zero administrative credit, and endgame saturation.
+- Required content-addressed substantive-unit ledgers and exact base/head requirement-movement proof so a nonempty packet cannot hide no-op, missing, extra, or stale catalog rows.
+- Added validator scenarios M–W for duplicate units, shared rollback identities, micro-split PRs, bookkeeping/dependency-install credit, incomplete evidence, wrong Git range, and incomplete endgame saturation.
+
 ## 1.2.0 — 2026-08-17
 
 - Removed mandatory human approval from routine ProjectPipeline development actions, including evidence-backed Jira `Done`, eligible PR merge, release publication, and branch/worktree cleanup.

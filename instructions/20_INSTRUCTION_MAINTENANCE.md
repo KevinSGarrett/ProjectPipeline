@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-20` |
 | Status | `ACTIVE` |
-| Pack version | `1.2.0` |
+| Pack version | `1.3.0` |
 | Primary domains | `instruction_maintenance` |
 | Governing entry point | `AGENTS.md` |
 
@@ -21,6 +21,8 @@ Do not duplicate the entire pack into `AGENTS.md`, skills, README, or templates.
 ## Change triggers
 
 Update durable instructions when accepted project authority, architecture, workflow, safety, external mutation, recovery, completion, benchmark, machine, or recurring operator correction changes. Do not append every one-off comment. Promote a correction only when it is intended to recur, compatible with stronger authority, and placed at the correct scope.
+
+Recurring operator workload corrections, including the Cycle 1-15 high-water 2x SAU contract, must be promoted into the primary instruction and machine policy. A handoff, PM review, or `.local` execution record cannot remain the only copy of a rule that later cold starts must enforce.
 
 ## Versioning
 

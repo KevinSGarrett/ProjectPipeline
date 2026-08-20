@@ -4,7 +4,7 @@
 |---|---|
 | Instruction ID | `PP-INST-11` |
 | Status | `ACTIVE` |
-| Pack version | `1.2.0` |
+| Pack version | `1.3.0` |
 | Primary domains | `anti_loop`, `anti_overengineering` |
 | Governing entry point | `AGENTS.md` |
 
@@ -62,6 +62,8 @@ When a change exceeds the accepted item, classify it as necessary implementation
 Cleanup follows merge, real hygiene risk, periodic bounded maintenance, or release preparation. Set a clear objective and stop condition. Do not spend an autonomous session continuously reorganizing while implementation remains ready.
 
 Noncritical administration may consume at most the machine-policy ratio of a sustained delivery window (normally ten percent). Once exceeded without objective progress, block further noncritical housekeeping until implementation, acceptance, blocker reduction, or durable evidence advances. Never create a branch, PR, full gate, independent review, merge, or reconciliation merely to move one lifecycle arrow.
+
+Do not inflate progress through bookkeeping, micro-PRs, repeated unchanged validation, or cycling blocker reports. A nonempty movement ledger, a second PR for the same rollback identity, another pytest run of an unchanged suite, or a restated external-precondition report is not a new substantive unit.
 
 ## Review-loop limit
 
