@@ -7141,7 +7141,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "db62f147559030136376cb2dd4d72704d9125bf30c46e26249661a39a70f1478",
+      "sha256": "03d41a72a88d6a92c9229c6a45e1822959abaf88ed8f6943f9741c2b6ea44c21",
       "size_bytes": 342471,
       "top_level": "_root"
     },
@@ -14365,7 +14365,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "cb1eda598c0e7142b8a8b2d22ea21e383079a7a7fa16fbb14f9ef12e861bd700",
+      "sha256": "96b67e64c625a518324f6a6ec1a0069eaf1340728107526cdfd34eabd1f77650",
       "size_bytes": 560730,
       "top_level": "_root"
     },
@@ -17543,8 +17543,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/api.py",
-      "sha256": "5d6a8f6b6075cb6f64c34b28c33b6e298a5110fe82a9b33afabadb31a2e12746",
-      "size_bytes": 18398,
+      "sha256": "497b98762df006d1523c637a57a6f9afc2744ec937b8d6330b427fe7dd612431",
+      "size_bytes": 18882,
       "top_level": "src"
     },
     {
@@ -17578,8 +17578,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/autonomy_director.py",
-      "sha256": "77b7583a55601887c0727c2e63c2abea6c891fa5ffd9e73f4465c1b749d68a79",
-      "size_bytes": 25361,
+      "sha256": "9dc33f97630f65b0ce1a94125e1554b5713e45f97ccd5e8dd2f6fc52d18a2dea",
+      "size_bytes": 27316,
       "top_level": "src"
     },
     {
@@ -19657,8 +19657,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_director.py",
-      "sha256": "50e253432a0d2d55ab51474cde914996d77291ba433bded0d59796e0828e0dba",
-      "size_bytes": 10211,
+      "sha256": "9a56264b7ee1912c211c7b73a51a4a4ab4a5550825637f6a4e11268f52e816d3",
+      "size_bytes": 12198,
       "top_level": "tests"
     },
     {
@@ -21027,7 +21027,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-20T12:21:39.539441+00:00",
+  "generated_at_utc": "2026-08-20T12:32:42.130528+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

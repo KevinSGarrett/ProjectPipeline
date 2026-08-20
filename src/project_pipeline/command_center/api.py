@@ -225,7 +225,12 @@ def create_command_center_app(
                 detail="Persistent Autonomy Director not configured",
             )
         try:
-            decision = autonomy_director.select_next_work(control_provider())
+            control = control_provider()
+            expected = autonomy_director.projection().get("control_fingerprint")
+            decision = autonomy_director.select_next_work(
+                control,
+                expected_fingerprint=str(expected) if expected else None,
+            )
         except AutonomyDirectorError as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc
         return {
@@ -263,7 +268,12 @@ def create_command_center_app(
     def autonomy_coordinate(
         payload: dict[str, Any], _actor: str = Depends(principal)
     ) -> dict[str, Any]:
-        if autonomy_director is None or repository_root is None or runtime_database is None:
+        if (
+            autonomy_director is None
+            or repository_root is None
+            or runtime_database is None
+            or control_provider is None
+        ):
             raise HTTPException(
                 status_code=503,
                 detail="Persistent Autonomy Director runtime is not configured",
@@ -273,6 +283,7 @@ def create_command_center_app(
                 provider=str(payload.get("provider") or "local"),
                 root=repository_root,
                 database=runtime_database,
+                control=control_provider(),
                 blocked_lanes=tuple(payload.get("blocked_lanes") or ()),
             )
         except AutonomyDirectorError as exc:
@@ -304,6 +315,8 @@ def create_command_center_app(
                 retry_authorized=bool(payload.get("retry_authorized")),
                 root=repository_root,
                 database=runtime_database,
+                expected_head_sha=payload.get("expected_head_sha"),
+                expected_tree_sha=payload.get("expected_tree_sha"),
             )
         except AutonomyDirectorError as exc:
             raise HTTPException(status_code=409, detail=str(exc)) from exc

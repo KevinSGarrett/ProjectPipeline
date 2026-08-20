@@ -247,6 +247,7 @@ class PersistentAutonomyDirector:
                 "last_selected_task_id": selected,
                 "last_control_fingerprint": control.snapshot_fingerprint,
                 "last_decision_id": decision.decision_id,
+                "readmission_required": False,
                 "last_observation": {
                     "snapshot_id": control.snapshot_id,
                     "fingerprint": control.snapshot_fingerprint,
@@ -321,24 +322,43 @@ class PersistentAutonomyDirector:
         self._save()
         return accepted
 
+    def admit_current_selection(self, control: ControlSnapshot) -> str:
+        selected = self._state.get("last_selected_task_id")
+        fingerprint = self._state.get("last_control_fingerprint")
+        if not selected or not self._state.get("last_decision_id"):
+            raise AutonomyDirectorError(
+                "execution coordination requires a selected Control-ready unit"
+            )
+        if self._state.get("readmission_required"):
+            raise AutonomyDirectorError(
+                "restart recovery requires Control readmission before dispatch"
+            )
+        if fingerprint and fingerprint != control.snapshot_fingerprint:
+            raise AutonomyDirectorError(
+                "stale control fingerprint; refusing changed-head continuation"
+            )
+        ready = self._eligible_ready(control)
+        if selected not in ready:
+            raise AutonomyDirectorError(
+                f"rejected selection {selected}: not Control-ready and eligible"
+            )
+        return str(selected)
+
     def coordinate_execution(
         self,
         *,
         provider: str,
         root: Path,
         database: Path,
+        control: ControlSnapshot,
         blocked_lanes: tuple[str, ...] = (),
         claims: tuple[ResourceClaim, ...] | None = None,
         now: datetime | None = None,
     ) -> dict[str, Any]:
         now = now or datetime.now(UTC)
+        selected = self.admit_current_selection(control)
         decision_id = self._state.get("last_decision_id")
-        selected = self._state.get("last_selected_task_id")
         fingerprint = str(self._state.get("last_control_fingerprint") or "")
-        if not decision_id or not selected:
-            raise AutonomyDirectorError(
-                "execution coordination requires a selected Control-ready unit"
-            )
         if self._state.get("fence_token"):
             raise AutonomyDirectorError("stale fence still held; recover before dispatch")
         for lane in blocked_lanes:
@@ -429,6 +449,8 @@ class PersistentAutonomyDirector:
         retry_authorized: bool,
         root: Path | None = None,
         database: Path | None = None,
+        expected_head_sha: str | None = None,
+        expected_tree_sha: str | None = None,
         now: datetime | None = None,
     ) -> dict[str, Any]:
         now = now or datetime.now(UTC)
@@ -446,6 +468,19 @@ class PersistentAutonomyDirector:
             raise AutonomyDirectorError(
                 "unknown GitHub/Jira outcome must be read back before retry"
             )
+        observed_head, observed_tree = (
+            repository_identity(root) if root is not None else (None, None)
+        )
+        changed_head = bool(
+            expected_head_sha and observed_head and expected_head_sha.lower() != observed_head
+        ) or bool(
+            expected_tree_sha and observed_tree and expected_tree_sha.lower() != observed_tree
+        )
+        if changed_head:
+            raise AutonomyDirectorError(
+                "changed HEAD/tree; refusing recovery continuation without a new Control selection"
+            )
+        retryable = external_readback in {"ABSENT", "FAILED", "NOT_APPLIED"}
         if root is not None and database is not None:
             runtime = DirectorRuntime(root, database)
             leases = list(self._state.get("active_leases") or [])
@@ -461,9 +496,11 @@ class PersistentAutonomyDirector:
             "stage": stage,
             "fence_token": self._state.get("fence_token"),
             "external_readback": external_readback,
-            "retry_authorized": retry_authorized and external_readback != "UNKNOWN",
-            "double_merge_rejected": True,
-            "changed_head_rejected": True,
+            "retry_authorized": bool(retry_authorized and retryable),
+            "double_merge_rejected": external_readback == "APPLIED",
+            "changed_head_rejected": changed_head,
+            "observed_head_sha": observed_head,
+            "observed_tree_sha": observed_tree,
             "recorded_at_utc": now.isoformat(),
         }
         recoveries = list(self._state.get("recoveries") or [])
@@ -479,12 +516,14 @@ class PersistentAutonomyDirector:
     def recover(self) -> dict[str, Any]:
         self._state = self._load()
         self._state["recovered"] = True
+        self._state["readmission_required"] = True
         self._save()
         return {
             "revision": int(self._state.get("revision") or 0),
             "last_selected_task_id": self._state.get("last_selected_task_id"),
             "decision_count": len(self._state.get("decisions") or []),
             "recovered": True,
+            "readmission_required": True,
         }
 
     def projection(self) -> dict[str, Any]:
@@ -522,6 +561,7 @@ class PersistentAutonomyDirector:
             "execution_count": len(executions),
             "recovery_count": len(recoveries),
             "recovered": bool(self._state.get("recovered")),
+            "readmission_required": bool(self._state.get("readmission_required")),
             "chat_mutation": False,
             "typed_controls": (
                 "select",

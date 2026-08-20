@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "fffa425bdd9f7d56beb293937bde52745c760591fbe79a156892d335e975d43a",
+  "aggregate_sha256": "7b1c36c8785ac8dd560a5faa6e624ffeae9d85f1738cb0a9e1651a8f38ee01a0",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12477,8 +12477,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/api.py",
-      "sha256": "5d6a8f6b6075cb6f64c34b28c33b6e298a5110fe82a9b33afabadb31a2e12746",
-      "size_bytes": 18398
+      "sha256": "497b98762df006d1523c637a57a6f9afc2744ec937b8d6330b427fe7dd612431",
+      "size_bytes": 18882
     },
     {
       "path": "src/project_pipeline/command_center/application.py",
@@ -12502,8 +12502,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/autonomy_director.py",
-      "sha256": "77b7583a55601887c0727c2e63c2abea6c891fa5ffd9e73f4465c1b749d68a79",
-      "size_bytes": 25361
+      "sha256": "9dc33f97630f65b0ce1a94125e1554b5713e45f97ccd5e8dd2f6fc52d18a2dea",
+      "size_bytes": 27316
     },
     {
       "path": "src/project_pipeline/command_center/desktop_qualification.py",
@@ -13987,8 +13987,8 @@
     },
     {
       "path": "tests/test_autonomy_director.py",
-      "sha256": "50e253432a0d2d55ab51474cde914996d77291ba433bded0d59796e0828e0dba",
-      "size_bytes": 10211
+      "sha256": "9a56264b7ee1912c211c7b73a51a4a4ab4a5550825637f6a4e11268f52e816d3",
+      "size_bytes": 12198
     },
     {
       "path": "tests/test_autonomy_language_gate.py",
@@ -14966,7 +14966,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T12:21:36.735827+00:00",
+  "generated_at_utc": "2026-08-20T12:32:39.407046+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14975,5 +14975,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29977457
+  "total_bytes": 29981883
 }

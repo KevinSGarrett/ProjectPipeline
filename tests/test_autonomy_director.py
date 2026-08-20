@@ -212,12 +212,14 @@ def test_director_coordinates_fenced_runtime_and_continues_around_blocked_lane(
     tmp_path,
 ) -> None:
     director = PersistentAutonomyDirector(tmp_path / "director_state.json")
-    director.select_next_work(control_snapshot(("PP-STORY-000065", "PP-STORY-000049")))
+    control = control_snapshot(("PP-STORY-000065", "PP-STORY-000049"))
+    director.select_next_work(control)
     database = tmp_path / "runtime.db"
     first = director.coordinate_execution(
         provider="local",
         root=ROOT,
         database=database,
+        control=control,
         blocked_lanes=("PP-STORY-000049",),
     )
     assert first["status"] == "DISPATCHED"
@@ -227,7 +229,9 @@ def test_director_coordinates_fenced_runtime_and_continues_around_blocked_lane(
     assert first["blocked_lanes"] == ["PP-STORY-000049"]
     assert first["continuing_lanes"] == ["PP-STORY-000065"]
     with pytest.raises(AutonomyDirectorError, match="stale fence"):
-        director.coordinate_execution(provider="local", root=ROOT, database=database)
+        director.coordinate_execution(
+            provider="local", root=ROOT, database=database, control=control
+        )
     recovered = director.recover_boundary(
         stage="unknown_external_write",
         external_readback="ABSENT",
@@ -249,6 +253,61 @@ def test_director_coordinates_fenced_runtime_and_continues_around_blocked_lane(
             provider="cursor-cli",
             root=ROOT,
             database=database,
+            control=control,
+        )
+    director.recover()
+    with pytest.raises(AutonomyDirectorError, match="readmission"):
+        director.coordinate_execution(
+            provider="local",
+            root=ROOT,
+            database=database,
+            control=control,
+        )
+    denied = control.model_copy(
+        update={
+            "eligibility": (
+                TaskEligibility(
+                    task_id="PP-STORY-000065",
+                    state="TERMINAL",
+                    eligible=False,
+                    reasons=("already complete",),
+                ),
+                TaskEligibility(
+                    task_id="PP-STORY-000049",
+                    state="ELIGIBLE",
+                    eligible=True,
+                ),
+            ),
+            "readiness": (
+                TaskReadiness(
+                    task_id="PP-STORY-000065",
+                    state="TERMINAL",
+                    ready=False,
+                    reasons=("already complete",),
+                ),
+                TaskReadiness(task_id="PP-STORY-000049", state="READY", ready=True),
+            ),
+            "snapshot_fingerprint": "1" * 64,
+        }
+    )
+    director.select_next_work(denied)
+    assert director.projection()["last_selected_task_id"] == "PP-STORY-000049"
+    with pytest.raises(AutonomyDirectorError, match="stale control fingerprint"):
+        director.coordinate_execution(
+            provider="local",
+            root=ROOT,
+            database=database,
+            control=control,
+        )
+    with pytest.raises(AutonomyDirectorError, match="changed HEAD/tree"):
+        director.recover_boundary(
+            stage="dispatched",
+            external_readback="ABSENT",
+            retry_authorized=True,
+            root=ROOT,
+            database=database,
+            expected_head_sha="0" * 40,
+            expected_tree_sha="0" * 40,
         )
     projection = director.projection()
     assert projection["control_fingerprint"]
