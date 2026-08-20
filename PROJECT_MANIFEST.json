@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "4b5829681de397d8dca9107626e88c88ad729f49173d0f7762b4762879668ca3",
+  "aggregate_sha256": "439866d560a669b6f9e78c533f92981f0ca8dba33b486b16608a3b1c13a283dc",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -11977,8 +11977,8 @@
     },
     {
       "path": "scripts/qualify_desktop_windows.py",
-      "sha256": "b65dd9e92857cd840b11180db9924ee975f46b0970335c7d110d7598f0db91bd",
-      "size_bytes": 871
+      "sha256": "b01b480f44ded7449217603ee549dffc8eb143dc1af5537d9bf458bf93a87ea8",
+      "size_bytes": 1467
     },
     {
       "path": "scripts/README.md",
@@ -12507,8 +12507,8 @@
     },
     {
       "path": "src/project_pipeline/command_center/desktop_qualification.py",
-      "sha256": "4e3326beac4cc1aa1fc51bf788b88eed60a4b2ea91fd9fe70c2a2a3206651734",
-      "size_bytes": 8922
+      "sha256": "6922191e4bfaba0ff97baba2ed543d68bd001e8b249a2a4b487614de444d6eba",
+      "size_bytes": 15112
     },
     {
       "path": "src/project_pipeline/command_center/desktop_reproducibility.py",
@@ -14292,8 +14292,8 @@
     },
     {
       "path": "tests/test_desktop_qualification.py",
-      "sha256": "24e3a65059878b639f5084ee1d42c8df6b7395d5ba8a4116772f1526085f5700",
-      "size_bytes": 1544
+      "sha256": "cde552bb5d05f433ec6caac13d46b67a15b14142803560b1509d62753317e386",
+      "size_bytes": 2778
     },
     {
       "path": "tests/test_desktop_reproducibility.py",
@@ -14966,7 +14966,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T12:53:22.199231+00:00",
+  "generated_at_utc": "2026-08-20T12:56:45.527844+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -14975,5 +14975,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 29987738
+  "total_bytes": 29995758
 }

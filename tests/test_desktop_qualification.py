@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from subprocess import CompletedProcess
 
 from project_pipeline.command_center.desktop_qualification import (
     NOT_APPLICABLE_NO_GOVERNED_PREDECESSOR,
@@ -41,3 +42,38 @@ def test_qualify_desktop_slice_reports_lockfiles_and_keeps_ux_open() -> None:
 
 def test_loopback_probe_does_not_raise() -> None:
     assert probe_loopback_service(port=1) is False
+
+
+def test_execute_installer_lifecycle_uses_injected_runner(tmp_path: Path) -> None:
+    installer = tmp_path / "ProjectPipeline_0.10.0_x64-setup.exe"
+    installer.write_bytes(b"nsis")
+    target = tmp_path / "install-root"
+    calls: list[list[str]] = []
+
+    def runner(command, **kwargs):
+        calls.append(list(command))
+        if command[0].endswith("-setup.exe"):
+            target.mkdir(parents=True, exist_ok=True)
+            (target / "uninstall.exe").write_bytes(b"uninst")
+        elif str(command[0]).endswith("uninstall.exe"):
+            for child in target.rglob("*"):
+                if child.is_file():
+                    child.unlink()
+        return CompletedProcess(command, 0, b"", b"")
+
+    result = evaluate_installer_lifecycle(
+        artifacts={"nsis": installer},
+        predecessor=resolve_predecessor_release(tmp_path),
+        execute=True,
+        target_root=target,
+        runner=runner,
+    )
+    assert result["executed"] is True
+    assert result["clean_removal"] is True
+    assert [step["name"] for step in result["steps"]] == [
+        "clean_install",
+        "repair",
+        "rollback",
+        "uninstall",
+    ]
+    assert len(calls) == 4

@@ -7141,7 +7141,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "aeb51bcdd1e810243e004bc3170ca19176e46a613ce54d58b3f68f942ae93104",
+      "sha256": "25125abe7e5aaaf960dc929646e5ac1bdb6cf1795f05737d4476c54feac190b9",
       "size_bytes": 342471,
       "top_level": "_root"
     },
@@ -14365,8 +14365,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "7d72890e44c550c8d1267b98b84e962953f0e989682fbe5f6a1dda0e916e6c52",
-      "size_bytes": 560731,
+      "sha256": "f586ebb1101512dca7ad9c57bfba20cdefec2c9147bf96706d2114b9329c6d81",
+      "size_bytes": 560733,
       "top_level": "_root"
     },
     {
@@ -16843,8 +16843,8 @@
     {
       "extension": ".py",
       "path": "scripts/qualify_desktop_windows.py",
-      "sha256": "b65dd9e92857cd840b11180db9924ee975f46b0970335c7d110d7598f0db91bd",
-      "size_bytes": 871,
+      "sha256": "b01b480f44ded7449217603ee549dffc8eb143dc1af5537d9bf458bf93a87ea8",
+      "size_bytes": 1467,
       "top_level": "scripts"
     },
     {
@@ -17585,8 +17585,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/command_center/desktop_qualification.py",
-      "sha256": "4e3326beac4cc1aa1fc51bf788b88eed60a4b2ea91fd9fe70c2a2a3206651734",
-      "size_bytes": 8922,
+      "sha256": "6922191e4bfaba0ff97baba2ed543d68bd001e8b249a2a4b487614de444d6eba",
+      "size_bytes": 15112,
       "top_level": "src"
     },
     {
@@ -20084,8 +20084,8 @@
     {
       "extension": ".py",
       "path": "tests/test_desktop_qualification.py",
-      "sha256": "24e3a65059878b639f5084ee1d42c8df6b7395d5ba8a4116772f1526085f5700",
-      "size_bytes": 1544,
+      "sha256": "cde552bb5d05f433ec6caac13d46b67a15b14142803560b1509d62753317e386",
+      "size_bytes": 2778,
       "top_level": "tests"
     },
     {
@@ -21027,7 +21027,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-20T12:53:24.988664+00:00",
+  "generated_at_utc": "2026-08-20T12:56:48.381393+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {
