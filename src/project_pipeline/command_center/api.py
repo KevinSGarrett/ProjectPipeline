@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 from fastapi import (
@@ -16,7 +17,10 @@ from fastapi import (
 from fastapi.responses import StreamingResponse
 
 from project_pipeline.command_center.application import CommandCenterApplicationProjection
-from project_pipeline.command_center.autonomy_director import PersistentAutonomyDirector
+from project_pipeline.command_center.autonomy_director import (
+    AutonomyDirectorError,
+    PersistentAutonomyDirector,
+)
 from project_pipeline.command_center.director import (
     CommandCenterControlGateway,
     DirectorChatService,
@@ -67,6 +71,8 @@ def create_command_center_app(
     auth: CommandCenterAuth | None = None,
     autonomy_director: PersistentAutonomyDirector | None = None,
     control_provider: Callable[[], ControlSnapshot] | None = None,
+    repository_root: Path | None = None,
+    runtime_database: Path | None = None,
 ):
     app = FastAPI(title="Project Pipeline Command Center API", version="1.1.0")
     auth = auth or CommandCenterAuth.deny_all()
@@ -218,11 +224,71 @@ def create_command_center_app(
                 status_code=503,
                 detail="Persistent Autonomy Director not configured",
             )
-        decision = autonomy_director.select_next_work(control_provider())
+        try:
+            control = control_provider()
+            expected = autonomy_director.projection().get("control_fingerprint")
+            decision = autonomy_director.select_next_work(
+                control,
+                expected_fingerprint=str(expected) if expected else None,
+            )
+        except AutonomyDirectorError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
         return {
             "decision": decision.as_dict(),
             "projection": autonomy_director.projection(),
         }
+
+    @app.post("/api/v1/director/autonomy/strategy")
+    def autonomy_strategy(
+        payload: dict[str, Any], _actor: str = Depends(principal)
+    ) -> dict[str, Any]:
+        if autonomy_director is None:
+            raise HTTPException(
+                status_code=503,
+                detail="Persistent Autonomy Director not configured",
+            )
+        try:
+            record = autonomy_director.record_strategy(
+                goal=str(payload.get("goal") or ""),
+                plan_steps=tuple(payload.get("plan_steps") or ()),
+                alternatives=tuple(payload.get("alternatives") or ()),
+                assumptions=tuple(payload.get("assumptions") or ()),
+                ambiguity=str(payload.get("ambiguity") or "RESOLVED"),
+                risk=str(payload.get("risk") or "MEDIUM"),
+                resource_claims=tuple(payload.get("resource_claims") or ()),
+                evidence_citations=tuple(payload.get("evidence_citations") or ()),
+                acceptance_checks=tuple(payload.get("acceptance_checks") or ()),
+                rollback_boundary=str(payload.get("rollback_boundary") or ""),
+            )
+        except AutonomyDirectorError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        return {"strategy": record, "projection": autonomy_director.projection()}
+
+    @app.post("/api/v1/director/autonomy/coordinate")
+    def autonomy_coordinate(
+        payload: dict[str, Any], _actor: str = Depends(principal)
+    ) -> dict[str, Any]:
+        if (
+            autonomy_director is None
+            or repository_root is None
+            or runtime_database is None
+            or control_provider is None
+        ):
+            raise HTTPException(
+                status_code=503,
+                detail="Persistent Autonomy Director runtime is not configured",
+            )
+        try:
+            record = autonomy_director.coordinate_execution(
+                provider=str(payload.get("provider") or "local"),
+                root=repository_root,
+                database=runtime_database,
+                control=control_provider(),
+                blocked_lanes=tuple(payload.get("blocked_lanes") or ()),
+            )
+        except AutonomyDirectorError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        return {"execution": record, "projection": autonomy_director.projection()}
 
     @app.post("/api/v1/director/autonomy/recover")
     def autonomy_recover(_actor: str = Depends(principal)) -> dict[str, Any]:
@@ -232,6 +298,29 @@ def create_command_center_app(
                 detail="Persistent Autonomy Director not configured",
             )
         return autonomy_director.recover()
+
+    @app.post("/api/v1/director/autonomy/recover-boundary")
+    def autonomy_recover_boundary(
+        payload: dict[str, Any], _actor: str = Depends(principal)
+    ) -> dict[str, Any]:
+        if autonomy_director is None:
+            raise HTTPException(
+                status_code=503,
+                detail="Persistent Autonomy Director not configured",
+            )
+        try:
+            record = autonomy_director.recover_boundary(
+                stage=str(payload.get("stage") or ""),
+                external_readback=str(payload.get("external_readback") or "UNKNOWN"),
+                retry_authorized=bool(payload.get("retry_authorized")),
+                root=repository_root,
+                database=runtime_database,
+                expected_head_sha=payload.get("expected_head_sha"),
+                expected_tree_sha=payload.get("expected_tree_sha"),
+            )
+        except AutonomyDirectorError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        return {"recovery": record, "projection": autonomy_director.projection()}
 
     @app.post("/api/v1/director/context")
     def director_context(

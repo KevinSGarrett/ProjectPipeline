@@ -6393,7 +6393,8 @@
     "evolution_ids": [],
     "implementation_paths": [
       "src/project_pipeline/command_center/director.py",
-      "src/project_pipeline/command_center/autonomy_director.py"
+      "src/project_pipeline/command_center/autonomy_director.py",
+      "src/project_pipeline/command_center/director_runtime.py"
     ],
     "implementation_state": "PARTIALLY_IMPLEMENTED",
     "jira_ids": [
@@ -6438,7 +6439,12 @@
       "TEST-CTRL-DIRECTOR-002",
       "TEST-CTRL-DIRECTOR-003",
       "TEST-CTRL-DIRECTOR-004",
-      "TEST-CTRL-DIRECTOR-005"
+      "TEST-CTRL-DIRECTOR-005",
+      "TEST-CTRL-DIRECTOR-006",
+      "TEST-CTRL-DIRECTOR-007",
+      "TEST-CTRL-DIRECTOR-008",
+      "TEST-CTRL-DIRECTOR-009",
+      "TEST-CTRL-DIRECTOR-010"
     ],
     "title": "Persistent Autonomy Director",
     "verification_class": "AUTOMATED_WITH_REVIEW",

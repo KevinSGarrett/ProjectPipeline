@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 672,
+  "test_count": 677,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -1176,6 +1176,31 @@
       "test_id": "TEST-CTRL-DIRECTOR-005",
       "path": "tests/test_command_center_api.py",
       "callable": "test_autonomy_director_api_selects_from_control_and_rejects_chat_mutation"
+    },
+    {
+      "test_id": "TEST-CTRL-DIRECTOR-006",
+      "path": "tests/test_autonomy_director.py",
+      "callable": "test_director_rejects_stale_fingerprint_and_ineligible_selection"
+    },
+    {
+      "test_id": "TEST-CTRL-DIRECTOR-007",
+      "path": "tests/test_autonomy_director.py",
+      "callable": "test_director_records_strategy_and_rejects_conflicting_replay"
+    },
+    {
+      "test_id": "TEST-CTRL-DIRECTOR-008",
+      "path": "tests/test_autonomy_director.py",
+      "callable": "test_director_coordinates_fenced_runtime_and_continues_around_blocked_lane"
+    },
+    {
+      "test_id": "TEST-CTRL-DIRECTOR-009",
+      "path": "tests/test_autonomy_director.py",
+      "callable": "test_evaluate_live_control_persists_kernel_snapshot"
+    },
+    {
+      "test_id": "TEST-CTRL-DIRECTOR-010",
+      "path": "tests/test_command_center_api.py",
+      "callable": "test_autonomy_director_api_strategy_coordinate_and_boundary"
     },
     {
       "callable": "test_context_cli_compile_status_pack_and_receipt",
