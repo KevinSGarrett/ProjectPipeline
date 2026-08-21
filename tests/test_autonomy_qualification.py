@@ -25,6 +25,21 @@ class AdvanceableClock:
         self._now = self._now + timedelta(**kwargs)
 
 
+def _attest_four_hour(store: QualificationStore, tmp_path: Path) -> dict:
+    run = store.start("UNATTENDED_4_HOUR", state_path=tmp_path / "state-4h")
+    store._db.execute(
+        """
+        UPDATE qualification_runs
+        SET status = 'ATTESTED', window_broken = 0, attested_elapsed_seconds = ?
+        WHERE run_id = ?
+        """,
+        (4 * 3600, run["run_id"]),
+    )
+    store._db.execute("DELETE FROM qualification_locks WHERE lock_name = 'active-qualification'")
+    store._db.commit()
+    return store.get(run["run_id"])
+
+
 def test_qualification_rejects_simulated_completion_and_72h_before_24h(tmp_path: Path):
     clock = AdvanceableClock()
     store = QualificationStore(tmp_path / "qualify.sqlite3", clock=clock, repository_root=ROOT)
@@ -33,6 +48,26 @@ def test_qualification_rejects_simulated_completion_and_72h_before_24h(tmp_path:
     store.heartbeat(recovery["run_id"])
     completed = store.complete(recovery["run_id"])
     assert completed["status"] == "ATTESTED"
+
+    four = store.start("UNATTENDED_4_HOUR", state_path=tmp_path / "state")
+    with pytest.raises(ValueError, match="cannot be simulated"):
+        store.complete(four["run_id"])
+    with pytest.raises(ValueError, match="4-hour"):
+        store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
+    clock.advance(hours=5)
+    store.heartbeat(four["run_id"])
+    with pytest.raises(ValueError, match="cannot be simulated"):
+        store.complete(four["run_id"])
+    store._db.execute(
+        """
+        UPDATE qualification_runs
+        SET status = 'ATTESTED', window_broken = 0, attested_elapsed_seconds = ?
+        WHERE run_id = ?
+        """,
+        (4 * 3600, four["run_id"]),
+    )
+    store._db.execute("DELETE FROM qualification_locks WHERE lock_name = 'active-qualification'")
+    store._db.commit()
 
     day = store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
     with pytest.raises(ValueError, match="cannot be simulated"):
@@ -118,6 +153,7 @@ def test_24h_resume_breaks_uninterrupted_window(tmp_path: Path):
         repository_root=ROOT,
         heartbeat_seconds=0.2,
     )
+    _attest_four_hour(store, tmp_path)
     run = store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
     store.fail(run["run_id"], reason="process-loss")
     resumed = store.resume(run["run_id"])
@@ -133,6 +169,7 @@ def test_heartbeat_gap_disqualifies_unattended_window(tmp_path: Path):
         repository_root=ROOT,
         heartbeat_seconds=1.0,
     )
+    _attest_four_hour(store, tmp_path)
     run = store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
     store._db.execute(
         "UPDATE qualification_runs SET last_heartbeat_utc = ? WHERE run_id = ?",
@@ -147,6 +184,7 @@ def test_heartbeat_gap_disqualifies_unattended_window(tmp_path: Path):
 
 def test_clock_rollback_and_fence_mismatch_disqualify(tmp_path: Path):
     store = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
+    _attest_four_hour(store, tmp_path)
     run = store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
     store._db.execute(
         "UPDATE qualification_runs SET last_heartbeat_utc = ? WHERE run_id = ?",
@@ -158,6 +196,7 @@ def test_clock_rollback_and_fence_mismatch_disqualify(tmp_path: Path):
     store.close()
 
     store = QualificationStore(tmp_path / "qualify2.sqlite3", repository_root=ROOT)
+    _attest_four_hour(store, tmp_path)
     run = store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
     with pytest.raises(ValueError, match="fence mismatch"):
         store.heartbeat(run["run_id"], fence="QFENCE-forged")
@@ -167,6 +206,7 @@ def test_clock_rollback_and_fence_mismatch_disqualify(tmp_path: Path):
 
 def test_event_chain_edit_is_detected(tmp_path: Path):
     store = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
+    _attest_four_hour(store, tmp_path)
     run = store.start("UNATTENDED_24_HOUR", state_path=tmp_path / "state")
     store._db.execute(
         "UPDATE qualification_runs SET last_event_sha256 = 'tampered' WHERE run_id = ?",

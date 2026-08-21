@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 700,
+  "test_count": 703,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -2456,6 +2456,21 @@
       "test_id": "TEST-PDEF-NONDUR-003",
       "path": "tests/test_pdef_0011_nonduration.py",
       "callable": "test_pdef_0011_cannot_claim_implemented_before_duration_stages"
+    },
+    {
+      "test_id": "TEST-PDEF-QUAL-001",
+      "path": "tests/test_qualification_environments.py",
+      "callable": "test_compiler_rejects_ancestor_live_qualification"
+    },
+    {
+      "test_id": "TEST-PDEF-QUAL-002",
+      "path": "tests/test_qualification_environments.py",
+      "callable": "test_compiler_maps_matching_head_stages"
+    },
+    {
+      "test_id": "TEST-PDEF-QUAL-003",
+      "path": "tests/test_qualification_environments.py",
+      "callable": "test_compiler_fails_closed_on_dirty_worktree"
     },
     {
       "callable": "test_repaired_product_outcome_contract_is_fail_closed_and_valid",

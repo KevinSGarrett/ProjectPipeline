@@ -87,6 +87,8 @@ def _ready_after_72h(controller: CampaignController, tmp_path: Path) -> dict:
         evidence_path=tmp_path / "evidence",
         pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
     )
+    admitted4 = controller.admit_4h(started["campaign_id"])
+    _seed_attested(controller, admitted4["qualification_run_id"], 4)
     admitted = controller.admit_24h(started["campaign_id"])
     _seed_attested(controller, admitted["qualification_run_id"], 24)
     hour72 = controller.admit_72h(started["campaign_id"])
@@ -136,7 +138,13 @@ def test_campaign_runs_recovery_and_admits_24h(tmp_path: Path):
     assert started["integrated_sha"] == "a" * 40
     assert started["fence"].startswith("CFENCE-")
     assert started["lease_id"].startswith("CLEASE-")
-    assert started["next_transition"] == "UNATTENDED_24_HOUR"
+    assert started["next_transition"] == "UNATTENDED_4_HOUR"
+    admitted4 = controller.admit_4h(started["campaign_id"])
+    assert admitted4["stage"] == "UNATTENDED_4_HOUR"
+    assert admitted4["status"] == "RUNNING"
+    with pytest.raises(ValueError, match="4-hour"):
+        controller.admit_24h(started["campaign_id"])
+    _seed_attested(controller, admitted4["qualification_run_id"], 4)
     admitted = controller.admit_24h(started["campaign_id"])
     assert admitted["stage"] == "UNATTENDED_24_HOUR"
     assert admitted["status"] == "RUNNING"
@@ -153,9 +161,9 @@ def test_advance_does_not_shorten_24h(tmp_path: Path):
         pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
     )
     admitted = controller.advance(started["campaign_id"])
-    assert admitted["stage"] == "UNATTENDED_24_HOUR"
+    assert admitted["stage"] == "UNATTENDED_4_HOUR"
     again = controller.advance(admitted["campaign_id"])
-    assert again["stage"] == "UNATTENDED_24_HOUR"
+    assert again["stage"] == "UNATTENDED_4_HOUR"
     assert again["status"] == "RUNNING"
     controller.close()
 
@@ -167,6 +175,8 @@ def test_seeded_attested_24h_auto_admits_72h(tmp_path: Path):
         evidence_path=tmp_path / "evidence",
         pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
     )
+    admitted4 = controller.admit_4h(started["campaign_id"])
+    _seed_attested(controller, admitted4["qualification_run_id"], 4)
     admitted = controller.admit_24h(started["campaign_id"])
     _seed_attested(controller, admitted["qualification_run_id"], 24)
     advanced = controller.admit_72h(started["campaign_id"])
@@ -230,7 +240,7 @@ def test_stale_timed_runner_preserves_disqualified_and_starts_fresh(tmp_path: Pa
         pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
         retry_budget=2,
     )
-    admitted = controller.admit_24h(started["campaign_id"])
+    admitted = controller.admit_4h(started["campaign_id"])
     controller._db.execute(
         "UPDATE campaign_locks SET process_id = 2147000000 WHERE lock_name = 'active-campaign'"
     )
@@ -1075,7 +1085,7 @@ def test_recover_refuses_live_foreign_qualification_owner(
         evidence_path=tmp_path / "evidence",
         pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
     )
-    started = controller.admit_24h(started["campaign_id"])
+    started = controller.admit_4h(started["campaign_id"])
     foreign = {
         "process_id": 777001,
         "executable": "python.exe",
@@ -1114,7 +1124,7 @@ def test_recover_takes_over_reused_shared_qualification_pid(
         pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
         retry_budget=2,
     )
-    started = controller.admit_24h(started["campaign_id"])
+    started = controller.admit_4h(started["campaign_id"])
     reused = {
         "process_id": 424242,
         "executable": "other.exe",

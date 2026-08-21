@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "68581e430d71ecc3e7d9d5eab8a39c2ccbbf56f67f97df73da6cad645b5ca2eb",
+  "aggregate_sha256": "831fb23651c34bc6e28a31be87fccd1179bb9b057aa10177f086f8c5c1852ace",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 3019,
+  "file_count": 3021,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -5647,13 +5647,13 @@
     },
     {
       "path": "jira/indexes/issues.jsonl",
-      "sha256": "4329470e6cfdedf9347ee6c64867da8adc7b30743f4c6df5f038345233cd1e04",
-      "size_bytes": 1685059
+      "sha256": "9f98f8dd9c0851f3d00e01b59602308ba49cd0b7ce3a55c9605d4253943ed01c",
+      "size_bytes": 1685260
     },
     {
       "path": "jira/indexes/issues_by_id.json",
-      "sha256": "4dc06444b9cc94eed0cc1e750bfdd5602688313fb8c6931cd4a1e2718fb9313c",
-      "size_bytes": 1998022
+      "sha256": "36e9e054474ceca3241837f4dd469050b9375d40410ef5fe508f3d42ce322e5d",
+      "size_bytes": 1998241
     },
     {
       "path": "jira/README.md",
@@ -5682,7 +5682,7 @@
     },
     {
       "path": "jira/reports/jira_sync_guard.json",
-      "sha256": "3eafbe42b005c25b57baffba5448a859fc7146178025c4604d36f68064bd858d",
+      "sha256": "b9cc40bbccd591d8cb7943e4e997e85c18fab81bcf05cc31413b4c335cb4b2b5",
       "size_bytes": 5786
     },
     {
@@ -8247,8 +8247,8 @@
     },
     {
       "path": "jira/stories/PP-STORY-000143.json",
-      "sha256": "c86d0ed4d39d878273249c7a9fc9ac0e1704c407b5e04a9adf4895681efa119c",
-      "size_bytes": 3695
+      "sha256": "18f48f18cf824deebabc19830407715d134968afa681c3f51463de08bafbf39f",
+      "size_bytes": 3710
     },
     {
       "path": "jira/stories/README.md",
@@ -9557,8 +9557,8 @@
     },
     {
       "path": "jira/tasks/PP-TASK-000385.json",
-      "sha256": "103947fb7672dd5447eb2db175a69a3c41523e3059e65373a02c4e1c4a544c75",
-      "size_bytes": 4235
+      "sha256": "8260d7d57b394587d344673b6d6de4fb26b59dbfed7f9bcbed97a1914d879744",
+      "size_bytes": 4433
     },
     {
       "path": "jira/tasks/README.md",
@@ -12072,13 +12072,13 @@
     },
     {
       "path": "scripts/run_autonomy_campaign.py",
-      "sha256": "b238d656bd5812a1ed5df8c44667b4325d68e35bd175c2a952e469d5a1119bec",
-      "size_bytes": 4062
+      "sha256": "8e9f95d2b656459d2be941caa7345550e7a0b4e10c255251aa25fc066ac43704",
+      "size_bytes": 4168
     },
     {
       "path": "scripts/run_autonomy_qualification.py",
-      "sha256": "79d3709aba733e55a12920fd3adae5574a54f4e3efe892d8880cf6c669783408",
-      "size_bytes": 3783
+      "sha256": "ddd5ebdf5136592a212f8f0979e400833b19d30af207bdaaf1cf24e532ad37b8",
+      "size_bytes": 3827
     },
     {
       "path": "scripts/run_autonomy_runtime_service.py",
@@ -12127,8 +12127,8 @@
     },
     {
       "path": "scripts/start_autonomy_qualification_hidden.ps1",
-      "sha256": "090e55f44289925a46d887cf2ca43a62efc3ba7c4252d074163b7fed7c8d0df0",
-      "size_bytes": 2859
+      "sha256": "667d6d47f61662924d033438f341f6a28e98c9588dedb0f109e3abba375b82b4",
+      "size_bytes": 2882
     },
     {
       "path": "scripts/steward_create_pull.py",
@@ -12351,6 +12351,11 @@
       "size_bytes": 3125
     },
     {
+      "path": "src/project_pipeline/assurance/qualification_environments.py",
+      "sha256": "532817250918248d58d35d985cfd7066ce8b6ce4dbc676ecbe2f21f307264e6b",
+      "size_bytes": 8366
+    },
+    {
       "path": "src/project_pipeline/assurance/repository_identity.py",
       "sha256": "10909d8efd467d0e3accc2b16390a9af109a870fb0c44ff2685a504322be90f6",
       "size_bytes": 849
@@ -12387,8 +12392,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/campaign.py",
-      "sha256": "0a61b6ce5a068d5ebf06b84f5beb9887826a9e61eaafc3bb7d7239292a04a8eb",
-      "size_bytes": 55596
+      "sha256": "da471ba7a5e47894239f4ffd4301846418fb8d77046d81d312da7d4f7f75207e",
+      "size_bytes": 57648
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/campaign_status.py",
@@ -12422,8 +12427,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/nonduration.py",
-      "sha256": "6d5751960562d74836c54f6a853bf1b789b8f61aadea87cb75fdbd7234c57855",
-      "size_bytes": 5058
+      "sha256": "649d7c3dd3a02365546dc897ea2be40472fd73eb6e0511b7cb38b02b3e145a23",
+      "size_bytes": 5087
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/process_identity.py",
@@ -12442,8 +12447,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/qualification.py",
-      "sha256": "ec3524ed664a1cb4285b2969706c09b901cafa7289d3ea052f2e2bfe563b612d",
-      "size_bytes": 19182
+      "sha256": "8b7ea590074e49fe3d58c2b1581924005e0e2dfb8a7647a56ab998888df9a401",
+      "size_bytes": 19849
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/recheck.py",
@@ -12522,8 +12527,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "7b4235abc1814f964cb60db619fd1ca300b59ac98cf816f472d317b343697111",
-      "size_bytes": 185206
+      "sha256": "fe46e3415d3276e57ada5eee2e9c290c0d8b559115735a87c70ed2f7b13c35ce",
+      "size_bytes": 186124
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -14107,8 +14112,8 @@
     },
     {
       "path": "tests/test_autonomy_campaign.py",
-      "sha256": "6a2527366f60f449d65976ce65f8b98c0c787ff065cb75f54235b02a082e8ccd",
-      "size_bytes": 45782
+      "sha256": "faf7fa48b0dedbaa511f186e9c97a291e925500f55d8a5c733cf226c8d23728c",
+      "size_bytes": 46365
     },
     {
       "path": "tests/test_autonomy_campaign_windows.py",
@@ -14137,13 +14142,13 @@
     },
     {
       "path": "tests/test_autonomy_qualification.py",
-      "sha256": "f7859b4ba944299e5f810be8ada6ca5e13a6e884c692f82bfdc2dedc4edfaa31",
-      "size_bytes": 11994
+      "sha256": "5543171b77a4971399e4be626f1ad040b7e4dea0027e131393d991ea2819f851",
+      "size_bytes": 13551
     },
     {
       "path": "tests/test_autonomy_qualification_windows.py",
-      "sha256": "72c945f4dc28a6cecf5c10f269bec0edb34603d47dd806c47b822b57c3fc1c05",
-      "size_bytes": 3119
+      "sha256": "dba008119dc251ba164e583aed6cceeead2470cbe684029193cc0ab50f670cfb",
+      "size_bytes": 3158
     },
     {
       "path": "tests/test_autonomy_windows_service.py",
@@ -14207,8 +14212,8 @@
     },
     {
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "fb897de28a8c9f3e74e9876eadbf3a106add413b4d7c14f596ebed3359cc7d1b",
-      "size_bytes": 128417
+      "sha256": "17eea4aab45fa767d8b6c65b693653f3a3e2c35b444909e209e05e87123e5af3",
+      "size_bytes": 128942
     },
     {
       "path": "tests/test_cli_foundation.py",
@@ -14741,6 +14746,11 @@
       "size_bytes": 2504
     },
     {
+      "path": "tests/test_qualification_environments.py",
+      "sha256": "129ac66f21fd3f5eced6943acf99abc1d66f08b8403bdc5062ca1aab9a855d1b",
+      "size_bytes": 3230
+    },
+    {
       "path": "tests/test_release_continuation_and_post_deploy.py",
       "sha256": "42e74b4dc80266208e318d576dea00b4e94ccebced2501bc203c147de0277088",
       "size_bytes": 5876
@@ -15106,7 +15116,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-20T23:54:01.882080+00:00",
+  "generated_at_utc": "2026-08-21T00:58:18.767949+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15115,5 +15125,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30169937
+  "total_bytes": 30188709
 }

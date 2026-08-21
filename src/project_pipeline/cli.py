@@ -1089,6 +1089,7 @@ def build_parser() -> argparse.ArgumentParser:
             "loop-guard",
             "delivery-gate",
             "cycle-workload",
+            "qualify-environments",
             "scope-change",
             "simulate",
         ),
@@ -2815,6 +2816,27 @@ def _run_assurance_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             "delivery_gate": delivery_decision.model_dump(mode="json"),
             "policy": delivery_policy,
         }, 0 if delivery_decision.state.value == "PASS" else 1
+
+    if args.action == "qualify-environments":
+        from project_pipeline.assurance.qualification_environments import (
+            compile_qualification_environments,
+            write_qualification_environment_report,
+        )
+
+        live_payload = None
+        if args.input is not None:
+            live_payload = _load_json_object(args.input, argument="input")
+        report = compile_qualification_environments(
+            args.root,
+            live_qualification=live_payload,
+        )
+        if args.apply:
+            destination = args.json_output or (
+                args.root / "evidence" / "qualification" / "c16_qual_01.json"
+            )
+            write_qualification_environment_report(destination, report)
+            report = {**report, "written_to": str(destination)}
+        return {"qualification_environments": report}, 0 if report["ok"] else 1
 
     if args.action == "cycle-workload":
         from project_pipeline.assurance.cycle_workload import (

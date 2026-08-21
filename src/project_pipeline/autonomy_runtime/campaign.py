@@ -26,6 +26,7 @@ from project_pipeline.autonomy_runtime.process_identity import (
 )
 from project_pipeline.autonomy_runtime.qualification import (
     ACTIVE,
+    TIMED_STAGES,
     QualificationStore,
     SystemClock,
 )
@@ -33,6 +34,7 @@ from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 
 CAMPAIGN_STAGES = (
     "RECOVERY",
+    "UNATTENDED_4_HOUR",
     "UNATTENDED_24_HOUR",
     "UNATTENDED_72_HOUR",
     "RELEASE",
@@ -63,7 +65,6 @@ TABLE_INTRODUCED_BY = {
     "campaign_owner_bindings": "PPDB-0023",
 }
 REQUIRED_CAMPAIGN_MIGRATION = "PPDB-0023"
-TIMED_STAGES = {"UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR"}
 IdentityInspector = Callable[[Path], dict[str, Any]]
 
 
@@ -449,7 +450,7 @@ class CampaignController:
                     next_transition, retry_budget, last_probe, evidence_path,
                     pp384_evidence_path, status, window_broken, prior_campaign_id, lock_token
                 ) VALUES (?, ?, ?, ?, 'RECOVERY', NULL, ?, ?, ?, ?, ?, NULL, ?, ?,
-                          'UNATTENDED_24_HOUR', ?, NULL, ?, ?, 'RUNNING', 0, ?, ?)
+                          'UNATTENDED_4_HOUR', ?, NULL, ?, ?, 'RUNNING', 0, ?, ?)
                 """,
                 (
                     campaign_id,
@@ -495,7 +496,12 @@ class CampaignController:
                 campaign_id,
                 "START",
                 "RUNNING",
-                {"stage": "RECOVERY", "admission": admission, "bootstrap_pid": pid},
+                {
+                    "stage": "RECOVERY",
+                    "next": "UNATTENDED_4_HOUR",
+                    "admission": admission,
+                    "bootstrap_pid": pid,
+                },
                 now,
             )
         attested = self.qualification.recovery_drill(state_path=state_path)
@@ -524,16 +530,61 @@ class CampaignController:
             )
         return self.get(campaign_id)
 
-    def admit_24h(self, campaign_id: str) -> dict[str, Any]:
+    def admit_4h(self, campaign_id: str) -> dict[str, Any]:
         row = self._require(campaign_id)
         self._assert_identity(row)
         if str(row["stage"]) != "RECOVERY" or str(row["status"]) != "ATTESTED":
-            raise ValueError("24-hour admission requires an attested recovery drill")
+            raise ValueError("4-hour admission requires an attested recovery drill")
+        admission = evaluate_pp384_admission(Path(str(row["pp384_evidence_path"])))
+        if not admission["admitted"]:
+            raise ValueError(
+                "4-hour admission requires PP-384 integrated-main qualification PASSED"
+            )
+        started = self.qualification.start(
+            "UNATTENDED_4_HOUR",
+            state_path=Path(str(row["state_path"])),
+            prior_run_id=str(row["qualification_run_id"]) if row["qualification_run_id"] else None,
+        )
+        now = datetime.now(UTC)
+        with self._db:
+            self._db.execute(
+                """
+                UPDATE campaign_runs
+                SET stage = 'UNATTENDED_4_HOUR', qualification_run_id = ?, status = 'RUNNING',
+                    next_transition = 'UNATTENDED_24_HOUR', last_heartbeat_utc = ?,
+                    last_probe = ?
+                WHERE campaign_id = ?
+                """,
+                (
+                    started["run_id"],
+                    now.isoformat(),
+                    "4h-admitted",
+                    campaign_id,
+                ),
+            )
+            self._append_event(
+                campaign_id,
+                "ADMIT_4H",
+                "RUNNING",
+                {"qualification_run_id": started["run_id"]},
+                now,
+            )
+        return self.get(campaign_id)
+
+    def admit_24h(self, campaign_id: str) -> dict[str, Any]:
+        row = self._require(campaign_id)
+        self._assert_identity(row)
+        if not self.qualification._four_hour_attested():
+            raise ValueError("24-hour admission requires a prior attested 4-hour run")
         admission = evaluate_pp384_admission(Path(str(row["pp384_evidence_path"])))
         if not admission["admitted"]:
             raise ValueError(
                 "24-hour admission requires PP-384 integrated-main qualification PASSED"
             )
+        self.qualification._db.execute(
+            "DELETE FROM qualification_locks WHERE lock_name = 'active-qualification'"
+        )
+        self.qualification._db.commit()
         started = self.qualification.start(
             "UNATTENDED_24_HOUR",
             state_path=Path(str(row["state_path"])),
@@ -648,13 +699,15 @@ class CampaignController:
         if status == "READY_TO_FINALIZE":
             return self.finalize(campaign_id)
         if stage == "RECOVERY" and status == "ATTESTED":
-            return self.admit_24h(campaign_id)
+            return self.admit_4h(campaign_id)
         if stage in TIMED_STAGES and row["qualification_run_id"]:
             run_id = str(row["qualification_run_id"])
             try:
                 attested = self.qualification.complete(run_id)
             except ValueError:
                 return self.heartbeat(campaign_id)
+            if attested["status"] == "ATTESTED" and stage == "UNATTENDED_4_HOUR":
+                return self.admit_24h(campaign_id)
             if attested["status"] == "ATTESTED" and stage == "UNATTENDED_24_HOUR":
                 return self.admit_72h(campaign_id)
             if attested["status"] == "ATTESTED" and stage == "UNATTENDED_72_HOUR":

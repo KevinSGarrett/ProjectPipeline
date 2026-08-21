@@ -1,5 +1,5 @@
 # Launch the unattended qualification runner in a hidden Windows process.
-# Does not fabricate elapsed time. 24/72-hour attestation remains wall-clock only.
+# Does not fabricate elapsed time. 4/24/72-hour attestation remains wall-clock only.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]
@@ -13,7 +13,7 @@ param(
     [Parameter(Mandatory = $true)]
     [string]$LogDirectory,
     [Parameter(Mandatory = $true)]
-    [ValidateSet("RECOVERY", "UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR")]
+    [ValidateSet("RECOVERY", "UNATTENDED_4_HOUR", "UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR")]
     [string]$Stage,
     [double]$HeartbeatSeconds = 30,
     [int]$Cycles = 0,
