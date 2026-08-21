@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
+import stat
 import subprocess
 import time
 from collections.abc import Callable
@@ -155,24 +157,34 @@ def locate_cursor_cli_launch(explicit: str | None = None) -> dict[str, Any] | No
                 check=False,
                 shell=False,
             )
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        if version.returncode != 0:
+            continue
+        status_ok = False
+        status_timed_out = False
+        try:
             status = subprocess.run(
                 [wsl, "-d", distribution, "--", agent_path, "status"],
                 capture_output=True,
-                timeout=15,
+                timeout=30,
                 check=False,
                 shell=False,
             )
-        except (OSError, subprocess.TimeoutExpired):
+            status_ok = status.returncode == 0
+        except subprocess.TimeoutExpired:
+            status_timed_out = True
+        except OSError:
             continue
-        if version.returncode == 0 and status.returncode == 0:
-            return {
-                "executable": agent_path,
-                "command_prefix": (wsl, "-d", distribution, "--"),
-                "execution_mode": "WSL",
-                "distribution": distribution,
-                "version": _decode_wsl_output(version.stdout).strip(),
-                "authenticated": True,
-            }
+        return {
+            "executable": agent_path,
+            "command_prefix": (wsl, "-d", distribution, "--"),
+            "execution_mode": "WSL",
+            "distribution": distribution,
+            "version": _decode_wsl_output(version.stdout).strip(),
+            "authenticated": True if status_ok else None,
+            "status_timed_out": status_timed_out,
+        }
     return None
 
 
@@ -245,6 +257,42 @@ def _workspace_relatives(workspace: Path) -> set[str]:
     }
 
 
+def _windows_path_to_wsl(path: Path) -> str | None:
+    resolved = path.resolve()
+    as_posix = resolved.as_posix()
+    if len(as_posix) >= 3 and as_posix[1] == ":" and as_posix[0].isalpha():
+        return "/mnt/" + as_posix[0].lower() + as_posix[2:]
+    return None
+
+
+def _chmod_writable(path: Path) -> None:
+    if not path.exists():
+        return
+    for item in [path, *path.rglob("*")]:
+        try:
+            os.chmod(item, stat.S_IRWXU)
+        except OSError:
+            continue
+
+
+def _wsl_remove(path: Path) -> bool:
+    wsl = shutil.which("wsl.exe") or shutil.which("wsl")
+    mapped = _windows_path_to_wsl(path)
+    if not wsl or mapped is None:
+        return not path.exists()
+    try:
+        subprocess.run(
+            [wsl, "--", "rm", "-rf", "--", mapped],
+            capture_output=True,
+            timeout=30,
+            check=False,
+            shell=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return not path.exists()
+    return not path.exists()
+
+
 def _remove_workspace(workspace: Path, *, attempts: int = 40) -> bool:
     """Remove a disposable workspace after provider subprocess handles settle.
 
@@ -255,6 +303,7 @@ def _remove_workspace(workspace: Path, *, attempts: int = 40) -> bool:
     for attempt in range(attempts):
         if not workspace.exists():
             return True
+        _chmod_writable(workspace)
         try:
             shutil.rmtree(workspace)
         except OSError:
@@ -262,7 +311,14 @@ def _remove_workspace(workspace: Path, *, attempts: int = 40) -> bool:
                 time.sleep(0.25)
         else:
             return True
+    if workspace.exists():
+        _wsl_remove(workspace)
     return not workspace.exists()
+
+
+def remove_disposable_workspace(workspace: Path, *, attempts: int = 40) -> bool:
+    """Remove a disposable qualification workspace using the production protocol."""
+    return _remove_workspace(workspace, attempts=attempts)
 
 
 def _contains_forbidden_text(value: Any) -> bool:

@@ -73,3 +73,14 @@ def test_write_live_qualification_evidence(tmp_path: Path) -> None:
     assert payload["report_sha256"]
     assert "bound_head" in payload
     assert "bound_tree" in payload
+
+
+def test_live_qualification_rerun_clears_same_disposable_root(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    _scaffold_repo(repo)
+    runtime = tmp_path / "runtime"
+    first = run_live_qualification(repository_root=repo, disposable_root=runtime)
+    assert first["stages"][1]["outcome"] == StageOutcome.PASSED.value
+    second = run_live_qualification(repository_root=repo, disposable_root=runtime)
+    assert second["stages"][1]["stage_id"] == "command_center_truth"
+    assert second["stages"][1]["outcome"] == StageOutcome.PASSED.value
