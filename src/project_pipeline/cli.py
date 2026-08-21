@@ -1554,7 +1554,8 @@ def _github_adapter(args: argparse.Namespace, configuration: Any):
             "GitHub provider requires integrations.github_token as a secret reference"
         )
     token = _secret_resolver(args).resolve(token_ref)
-    return GitHubRestAdapter(token=token)
+    timeout_seconds = 180.0 if getattr(args, "command", "") == "release-factory" else 20.0
+    return GitHubRestAdapter(token=token, timeout_seconds=timeout_seconds)
 
 
 def _run_governance_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:

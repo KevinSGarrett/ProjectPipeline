@@ -188,6 +188,30 @@ def test_seeded_attested_24h_auto_admits_72h(tmp_path: Path):
     controller.close()
 
 
+def test_timed_stage_heartbeat_runs_allowlisted_duration_probe(tmp_path: Path):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=0.05,
+        inspect_identity=lambda _root: _identity(),
+        finalize_commands=[_probe_command()],
+        duration_probe_commands=[_probe_command()],
+        probe_interval_seconds=0.0,
+    )
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    beat = controller.heartbeat(admitted["campaign_id"])
+    assert str(beat["last_probe"]).startswith("probe:")
+    receipts = controller.receipts(admitted["campaign_id"])
+    assert receipts
+    assert receipts[0]["result"] == "PASSED"
+    controller.close()
+
+
 def test_identity_drift_disqualifies(tmp_path: Path):
     current = {"value": _identity()}
 

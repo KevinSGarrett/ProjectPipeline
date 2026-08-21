@@ -378,6 +378,8 @@ class CampaignController:
         heartbeat_seconds: float = 30.0,
         inspect_identity: IdentityInspector | None = None,
         finalize_commands: list[list[str]] | None = None,
+        duration_probe_commands: list[list[str]] | None = None,
+        probe_interval_seconds: float = 900.0,
     ) -> None:
         self.path = path
         self.repository_root = repository_root.resolve()
@@ -385,8 +387,12 @@ class CampaignController:
         self.heartbeat_seconds = float(heartbeat_seconds)
         if self.heartbeat_seconds <= 0:
             raise ValueError("heartbeat cadence must be positive")
+        if probe_interval_seconds < 0:
+            raise ValueError("probe interval cannot be negative")
         self._inspect_identity = inspect_identity or inspect_worktree_identity
         self._finalize_commands = finalize_commands
+        self._duration_probe_commands = duration_probe_commands
+        self.probe_interval_seconds = float(probe_interval_seconds)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.qualification = QualificationStore(
             path,
@@ -688,6 +694,9 @@ class CampaignController:
                     str(row["qualification_run_id"]), fence=str(qual["fence"])
                 )
             qual_status = qual["status"]
+        probe_label = f"heartbeat:{qual_status or row['status']}"
+        if str(row["stage"]) in TIMED_STAGES:
+            probe_label = self._run_due_duration_probes(campaign_id, row, now, probe_label)
         with self._db:
             self._db.execute(
                 """
@@ -695,13 +704,13 @@ class CampaignController:
                 SET last_heartbeat_utc = ?, last_probe = ?
                 WHERE campaign_id = ?
                 """,
-                (now.isoformat(), f"heartbeat:{qual_status or row['status']}", campaign_id),
+                (now.isoformat(), probe_label, campaign_id),
             )
             self._append_event(
                 campaign_id,
                 "HEARTBEAT",
                 str(row["status"]),
-                {"qualification_status": qual_status},
+                {"qualification_status": qual_status, "last_probe": probe_label},
                 now,
             )
         return self.get(campaign_id)
@@ -1113,6 +1122,65 @@ class CampaignController:
 
     def _python(self) -> str:
         return str(Path(__import__("sys").executable))
+
+    def _default_duration_probes(self) -> list[list[str]]:
+        python = self._python()
+        root = str(self.repository_root)
+        return [
+            [python, "-m", "project_pipeline", "doctor", "--root", root],
+            [python, "-m", "project_pipeline", "control", "evaluate", "--root", root],
+            [python, "-m", "project_pipeline", "jira", "validate", "--root", root],
+        ]
+
+    def _last_duration_probe_at(self, campaign_id: str) -> datetime | None:
+        row = self._db.execute(
+            """
+            SELECT created_at_utc FROM campaign_events
+            WHERE campaign_id = ? AND action = 'PROBE'
+            ORDER BY created_at_utc DESC LIMIT 1
+            """,
+            (campaign_id,),
+        ).fetchone()
+        if row is None:
+            return None
+        stamp = datetime.fromisoformat(str(row["created_at_utc"]))
+        if stamp.tzinfo is None:
+            stamp = stamp.replace(tzinfo=UTC)
+        return stamp
+
+    def _run_due_duration_probes(
+        self,
+        campaign_id: str,
+        row: sqlite3.Row | dict[str, Any],
+        now: datetime,
+        fallback_label: str,
+    ) -> str:
+        started = datetime.fromisoformat(str(row["started_at_utc"]))
+        if started.tzinfo is None:
+            started = started.replace(tzinfo=UTC)
+        anchor = self._last_duration_probe_at(campaign_id) or started
+        if (now - anchor).total_seconds() < self.probe_interval_seconds:
+            return fallback_label
+        commands = self._duration_probe_commands
+        if commands is None:
+            commands = self._default_duration_probes()
+        receipt_ids: list[str] = []
+        for argv in commands:
+            receipt = self.execute(campaign_id, argv)
+            if receipt.get("result") != "PASSED":
+                self._disqualify(campaign_id, "duration-probe-failed")
+                raise ValueError("duration probe failed")
+            receipt_ids.append(str(receipt["receipt_id"]))
+        label = "probe:" + ",".join(receipt_ids)
+        with self._db:
+            self._append_event(
+                campaign_id,
+                "PROBE",
+                str(row["status"]),
+                {"receipt_ids": receipt_ids, "last_probe": label},
+                now,
+            )
+        return label
 
     def _default_finalize_commands(
         self, row: sqlite3.Row | dict[str, Any] | None = None

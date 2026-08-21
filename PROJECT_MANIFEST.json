@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "55d01b50012e5b87f4c80ea9cc65e95ffc5c6525f765c1ed2e2025edf601631c",
+  "aggregate_sha256": "c5607e139318d80755da45eab9dfdcc086be8e40ec30143cd7d2a5fda4fad072",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -127,8 +127,8 @@
     },
     {
       "path": ".gitattributes",
-      "sha256": "b9f5176edd41da492419a490eb9a1e2cc3282e0d3df69e9cfd6050f0929de8e3",
-      "size_bytes": 126
+      "sha256": "80def01d981d66be6cf453324ff0d8d27ad3de70914ae427880cad4a74203a66",
+      "size_bytes": 147
     },
     {
       "path": ".github/CODEOWNERS",
@@ -12392,8 +12392,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/campaign.py",
-      "sha256": "d2b345f2d06d0324421eabf3f1c742c5c3b4910306d39bb139ebeefb4e2429e5",
-      "size_bytes": 58260
+      "sha256": "2c4e8b11c27f0a32e8f185e220f15985ff98bd555133d1b52702ab4e7af3bdd8",
+      "size_bytes": 61100
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/campaign_status.py",
@@ -12527,8 +12527,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "fe46e3415d3276e57ada5eee2e9c290c0d8b559115735a87c70ed2f7b13c35ce",
-      "size_bytes": 186124
+      "sha256": "82e6ef8525887e25efb3f9c8e70f5c765cb571486c6d3a6214ff97898c3d30c6",
+      "size_bytes": 186248
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -13417,8 +13417,8 @@
     },
     {
       "path": "src/project_pipeline/release_factory/supply.py",
-      "sha256": "828b728d19b75b32188f263a3fefc2d4ebc9d03afe5a3546a766cd3ede9de417",
-      "size_bytes": 6227
+      "sha256": "0ba68005699afb7f7becd4ffbc5f05825f08ce080d40b01abf139fdff41b2daa",
+      "size_bytes": 7041
     },
     {
       "path": "src/project_pipeline/release_factory/validation.py",
@@ -14112,8 +14112,8 @@
     },
     {
       "path": "tests/test_autonomy_campaign.py",
-      "sha256": "76edeee936cdb78235f8fd2e3debd4d0ab6eec26f4677872f1c418a1fa256cb2",
-      "size_bytes": 46492
+      "sha256": "2297a8ec3aca46240bec2d51cc592f40bf7290d34912e5ecd1c24aa8da95ca45",
+      "size_bytes": 47411
     },
     {
       "path": "tests/test_autonomy_campaign_windows.py",
@@ -14762,8 +14762,8 @@
     },
     {
       "path": "tests/test_release_factory.py",
-      "sha256": "2ebd815187f2118d743ebd93e8bf4bc0c5e8c9c30df0e3e1fa53e4b99896fea8",
-      "size_bytes": 14534
+      "sha256": "c9bf6d34c5bfdfdd7e5c0e93760276fe23a81840227eb7141918e7ff6633a583",
+      "size_bytes": 16395
     },
     {
       "path": "tests/test_repository_contract.py",
@@ -15116,7 +15116,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-21T03:04:12.836168+00:00",
+  "generated_at_utc": "2026-08-21T03:53:30.841142+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15125,5 +15125,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30203592
+  "total_bytes": 30210171
 }
