@@ -7226,7 +7226,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "d080fb8a43da82f4f614cad876616f1b30039e5325014647dacec65915d04c38",
+      "sha256": "caac3955c15eb5bde4271bf6f077fab95375fae545e7015431400291150942d1",
       "size_bytes": 345980,
       "top_level": "_root"
     },
@@ -14450,7 +14450,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "a221785dbb57e4ac4b93ef3c63eb70a4ddbfc24f346028caf3c23cee4a538cf2",
+      "sha256": "1653e050c384988f40fc9184b6037569fbeda7bb530ef7585c49d5471b3910cc",
       "size_bytes": 566424,
       "top_level": "_root"
     },
@@ -19833,8 +19833,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_campaign.py",
-      "sha256": "2297a8ec3aca46240bec2d51cc592f40bf7290d34912e5ecd1c24aa8da95ca45",
-      "size_bytes": 47411,
+      "sha256": "1bc62a3ea36dde4f4e94de50d290a141f7d903ca88a644090ad14b7e09cbd9ff",
+      "size_bytes": 48543,
       "top_level": "tests"
     },
     {
@@ -20743,8 +20743,8 @@
     {
       "extension": ".py",
       "path": "tests/test_release_factory.py",
-      "sha256": "c9bf6d34c5bfdfdd7e5c0e93760276fe23a81840227eb7141918e7ff6633a583",
-      "size_bytes": 16395,
+      "sha256": "9f8ce1c690b5965fd16123b09d9456381492cf820fe145f0954d2bf59db2ada5",
+      "size_bytes": 16462,
       "top_level": "tests"
     },
     {
@@ -21238,7 +21238,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-21T03:53:34.662740+00:00",
+  "generated_at_utc": "2026-08-21T04:08:32.742987+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

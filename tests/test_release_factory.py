@@ -216,12 +216,13 @@ def test_git_archive_omits_export_ignored_dummy(tmp_path):
     (repo / "README.md").write_text("ok\n", encoding="utf-8")
     _git_repo(repo)
     bundle = build_release_bundle(
-        repo, tmp_path / "out", fixture_desktop=True, use_git_archive=True
+        repo, tmp_path / "out", fixture_desktop=False, use_git_archive=True
     )
     archive = Path(bundle.output_dir) / f"project-pipeline-{bundle.version.source_sha[:12]}.zip"
     with zipfile.ZipFile(archive) as payload:
         names = tuple(name.replace("\\", "/") for name in payload.namelist())
     assert any(name.endswith("README.md") for name in names)
+    assert any(name.endswith("pyproject.toml") for name in names)
     assert not any("dummy/" in name or name.endswith("oracle.txt") for name in names)
 
 
