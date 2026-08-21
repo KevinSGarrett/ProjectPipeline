@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 703,
+  "test_count": 706,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -276,6 +276,11 @@
       "callable": "test_current_repository_cannot_self_certify_complete_before_later_passes",
       "path": "tests/test_assurance_completion.py",
       "test_id": "TEST-ASSURE-GATE-002"
+    },
+    {
+      "callable": "test_completion_gate_rejects_ancestor_live_qualification_receipt",
+      "path": "tests/test_assurance_completion.py",
+      "test_id": "TEST-ASSURE-GATE-003"
     },
     {
       "callable": "test_repeated_failure_escalates",
@@ -2471,6 +2476,16 @@
       "test_id": "TEST-PDEF-QUAL-003",
       "path": "tests/test_qualification_environments.py",
       "callable": "test_compiler_fails_closed_on_dirty_worktree"
+    },
+    {
+      "test_id": "TEST-PDEF-QUAL-004",
+      "path": "tests/test_qualification_environments.py",
+      "callable": "test_compiler_loads_default_live_qualification_path"
+    },
+    {
+      "test_id": "TEST-PDEF-QUAL-005",
+      "path": "tests/test_qualification_environments.py",
+      "callable": "test_runtime_qualification_rejects_ancestor_receipt_on_current_checkout"
     },
     {
       "callable": "test_repaired_product_outcome_contract_is_fail_closed_and_valid",

@@ -1,5 +1,5 @@
 # Launch or recover the autonomous campaign controller in a hidden Windows process.
-# Does not fabricate elapsed time. 24/72-hour attestation remains wall-clock only.
+# Does not fabricate elapsed time. 4/24/72-hour attestation remains wall-clock only.
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)]

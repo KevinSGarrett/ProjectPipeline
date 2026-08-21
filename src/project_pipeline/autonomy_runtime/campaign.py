@@ -26,6 +26,8 @@ from project_pipeline.autonomy_runtime.process_identity import (
 )
 from project_pipeline.autonomy_runtime.qualification import (
     ACTIVE,
+    H4,
+    H24,
     TIMED_STAGES,
     QualificationStore,
     SystemClock,
@@ -574,21 +576,28 @@ class CampaignController:
     def admit_24h(self, campaign_id: str) -> dict[str, Any]:
         row = self._require(campaign_id)
         self._assert_identity(row)
-        if not self.qualification._four_hour_attested():
+        if str(row["stage"]) != "UNATTENDED_4_HOUR":
+            raise ValueError("24-hour admission requires a prior attested 4-hour run")
+        run_id = str(row["qualification_run_id"] or "")
+        if not run_id:
+            raise ValueError("24-hour admission requires a prior attested 4-hour run")
+        four = self.qualification.get(run_id)
+        if (
+            str(four["stage"]) != "UNATTENDED_4_HOUR"
+            or str(four["status"]) != "ATTESTED"
+            or int(four["window_broken"]) != 0
+            or float(four["attested_elapsed_seconds"]) < H4.total_seconds()
+        ):
             raise ValueError("24-hour admission requires a prior attested 4-hour run")
         admission = evaluate_pp384_admission(Path(str(row["pp384_evidence_path"])))
         if not admission["admitted"]:
             raise ValueError(
                 "24-hour admission requires PP-384 integrated-main qualification PASSED"
             )
-        self.qualification._db.execute(
-            "DELETE FROM qualification_locks WHERE lock_name = 'active-qualification'"
-        )
-        self.qualification._db.commit()
         started = self.qualification.start(
             "UNATTENDED_24_HOUR",
             state_path=Path(str(row["state_path"])),
-            prior_run_id=str(row["qualification_run_id"]) if row["qualification_run_id"] else None,
+            prior_run_id=run_id,
         )
         now = datetime.now(UTC)
         with self._db:
@@ -619,16 +628,23 @@ class CampaignController:
     def admit_72h(self, campaign_id: str) -> dict[str, Any]:
         row = self._require(campaign_id)
         self._assert_identity(row)
-        if not self.qualification._twenty_four_hour_attested():
+        if str(row["stage"]) != "UNATTENDED_24_HOUR":
             raise ValueError("72-hour admission requires a prior attested 24-hour run")
-        self.qualification._db.execute(
-            "DELETE FROM qualification_locks WHERE lock_name = 'active-qualification'"
-        )
-        self.qualification._db.commit()
+        run_id = str(row["qualification_run_id"] or "")
+        if not run_id:
+            raise ValueError("72-hour admission requires a prior attested 24-hour run")
+        day = self.qualification.get(run_id)
+        if (
+            str(day["stage"]) != "UNATTENDED_24_HOUR"
+            or str(day["status"]) != "ATTESTED"
+            or int(day["window_broken"]) != 0
+            or float(day["attested_elapsed_seconds"]) < H24.total_seconds()
+        ):
+            raise ValueError("72-hour admission requires a prior attested 24-hour run")
         started = self.qualification.start(
             "UNATTENDED_72_HOUR",
             state_path=Path(str(row["state_path"])),
-            prior_run_id=str(row["qualification_run_id"]) if row["qualification_run_id"] else None,
+            prior_run_id=run_id,
         )
         now = datetime.now(UTC)
         with self._db:

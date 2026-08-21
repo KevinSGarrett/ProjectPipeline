@@ -7226,8 +7226,8 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "d9058340b4b8ba76a1632388ce5378000d0624c82c6ab9d3cda4396f3bdc7370",
-      "size_bytes": 345746,
+      "sha256": "6f030d6745e4538bcfcf2d02284b5b73776f19031a2188b2bf406d0481cfb001",
+      "size_bytes": 345980,
       "top_level": "_root"
     },
     {
@@ -13554,7 +13554,7 @@
     {
       "extension": ".md",
       "path": "plans/01_requirements/REQUIREMENT_CATALOG_STATUS.md",
-      "sha256": "710256512fc820f3a6d81e7ef9b7fdaf581061753adc9d9eba406fc7ea5253a4",
+      "sha256": "1abd023d9ded0fd733661d29d9b09296b4af0b10f04e0bf6e5c17d1b343d8aae",
       "size_bytes": 777,
       "top_level": "plans"
     },
@@ -14261,14 +14261,14 @@
     {
       "extension": ".json",
       "path": "plans/_traceability/coverage_report.json",
-      "sha256": "c2b215072139c59329fdc03cdc5db288bf6021612b9d9acab5b703e4e821bc99",
+      "sha256": "ba1b06bd23fa633f54ddabb6832238d74b86b72f8ed5606289f11b230ed51248",
       "size_bytes": 2447,
       "top_level": "plans"
     },
     {
       "extension": ".md",
       "path": "plans/_traceability/coverage_report.md",
-      "sha256": "02c0dbf8a0ffd20919a2fd23b0d7913cc9d9cdf0517f026d1d9cc7ae9ceb877c",
+      "sha256": "da163f81589a2a1c6a1c05c0e186d98bdf034fba23885535a7ec833acd3fdc26",
       "size_bytes": 730,
       "top_level": "plans"
     },
@@ -14282,15 +14282,15 @@
     {
       "extension": ".json",
       "path": "plans/_traceability/requirement_registry_summary.json",
-      "sha256": "a74cb06aa1e1fcc02bb3c904b0d626d26083b9a87e4a7e9372cf4be515e74664",
+      "sha256": "79c6f83396156ce31fb11b42940d95458917b79c55881556704fea39bce9ea9a",
       "size_bytes": 885,
       "top_level": "plans"
     },
     {
       "extension": ".jsonl",
       "path": "plans/_traceability/requirements.jsonl",
-      "sha256": "ff9f0dd4e382bde2b5ad089e321476bfda212c1c819890a96f97f9e22aa54479",
-      "size_bytes": 746058,
+      "sha256": "0da1334c5943bea7badd5ee83bf85d372048a037f7ffbad15117fdbdc17bbdf8",
+      "size_bytes": 746068,
       "top_level": "plans"
     },
     {
@@ -14303,8 +14303,8 @@
     {
       "extension": ".json",
       "path": "plans/_traceability/requirements_by_id.json",
-      "sha256": "9800ce4e12a35465e6013460ab82114b0a650e4a7a171aba3bd90f97b8a3b2e9",
-      "size_bytes": 872838,
+      "sha256": "959f8edf48879e4f06c024b19a202da6a530613aefa078ae43bffe1d05147daf",
+      "size_bytes": 872848,
       "top_level": "plans"
     },
     {
@@ -14450,8 +14450,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "3c4c833eef7cc0422e6948a10f3b022b5aab41ea2fdd695f600007e0678cc76c",
-      "size_bytes": 566044,
+      "sha256": "cb86065cdff5be1307e294684e99e75ce15cd608868a761a2df312ff0143aa9d",
+      "size_bytes": 566424,
       "top_level": "_root"
     },
     {
@@ -17047,8 +17047,8 @@
     {
       "extension": ".ps1",
       "path": "scripts/start_autonomy_campaign_hidden.ps1",
-      "sha256": "8e60565bf914faa3f9d56755d56fe62d4f5a980fb0b78d00d7c5c8fdd6d0ff4d",
-      "size_bytes": 5305,
+      "sha256": "277eb4b84439d89b4febb0202ebb2460e0f632ff3f6cfd3d89abc2b1ba6bff5a",
+      "size_bytes": 5307,
       "top_level": "scripts"
     },
     {
@@ -17299,8 +17299,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/assurance/completion.py",
-      "sha256": "6986e2be547991c52dca5498f4b4294ccbbd5effe1aa6d236866aade7db77271",
-      "size_bytes": 17799,
+      "sha256": "bc3e30e48361a3b6d462d5af0b5fa35d7ce3e70cbf04e0d9c977bf1171cae5d7",
+      "size_bytes": 20582,
       "top_level": "src"
     },
     {
@@ -17369,8 +17369,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/assurance/qualification_environments.py",
-      "sha256": "532817250918248d58d35d985cfd7066ce8b6ce4dbc676ecbe2f21f307264e6b",
-      "size_bytes": 8366,
+      "sha256": "f13f4b91415082acaeeabd9cc03f2629396e85103d0912d16b439e8b3ea8d034",
+      "size_bytes": 8631,
       "top_level": "src"
     },
     {
@@ -17425,8 +17425,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/campaign.py",
-      "sha256": "da471ba7a5e47894239f4ffd4301846418fb8d77046d81d312da7d4f7f75207e",
-      "size_bytes": 57648,
+      "sha256": "d2b345f2d06d0324421eabf3f1c742c5c3b4910306d39bb139ebeefb4e2429e5",
+      "size_bytes": 58260,
       "top_level": "src"
     },
     {
@@ -19434,8 +19434,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/validation/product_outcome.py",
-      "sha256": "0328b2477d47506f4cd725734d71631bf2a86008442193f744ac3038dde65481",
-      "size_bytes": 19839,
+      "sha256": "1049760c77712db6ef29be3637410b6291a5653fea745400804552584911e053",
+      "size_bytes": 20275,
       "top_level": "src"
     },
     {
@@ -19770,8 +19770,8 @@
     {
       "extension": ".py",
       "path": "tests/test_assurance_completion.py",
-      "sha256": "3b06d22a1d9dfeecb4da506f9ba6a2acd5934cce30bef822560365bff4e74de7",
-      "size_bytes": 4718,
+      "sha256": "33c00430710c5f16820827ea8a7782a70de3a8bce542f9a125f74fdb91f3c886",
+      "size_bytes": 5214,
       "top_level": "tests"
     },
     {
@@ -19833,8 +19833,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_campaign.py",
-      "sha256": "faf7fa48b0dedbaa511f186e9c97a291e925500f55d8a5c733cf226c8d23728c",
-      "size_bytes": 46365,
+      "sha256": "76edeee936cdb78235f8fd2e3debd4d0ab6eec26f4677872f1c418a1fa256cb2",
+      "size_bytes": 46492,
       "top_level": "tests"
     },
     {
@@ -19973,8 +19973,8 @@
     {
       "extension": ".json",
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "17eea4aab45fa767d8b6c65b693653f3a3e2c35b444909e209e05e87123e5af3",
-      "size_bytes": 128942,
+      "sha256": "edd6703f289418850ca6684b753ebc657a29bea9449d9e812db46b34b61948a3",
+      "size_bytes": 129517,
       "top_level": "tests"
     },
     {
@@ -20722,8 +20722,8 @@
     {
       "extension": ".py",
       "path": "tests/test_qualification_environments.py",
-      "sha256": "129ac66f21fd3f5eced6943acf99abc1d66f08b8403bdc5062ca1aab9a855d1b",
-      "size_bytes": 3230,
+      "sha256": "e2c349774aae991848c19e6c77cc994ee972088694a6da44c823cf8d301fa0ee",
+      "size_bytes": 4130,
       "top_level": "tests"
     },
     {
@@ -21238,7 +21238,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-21T00:58:16.621801+00:00",
+  "generated_at_utc": "2026-08-21T01:33:44.977518+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

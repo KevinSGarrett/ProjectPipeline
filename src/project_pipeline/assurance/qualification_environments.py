@@ -16,7 +16,11 @@ from project_pipeline.autonomy_runtime.campaign import (
     inspect_worktree_identity,
 )
 from project_pipeline.autonomy_runtime.nonduration import evaluate_nonduration_qualification
-from project_pipeline.io import write_json
+from project_pipeline.io import read_json, write_json
+
+DEFAULT_LIVE_QUALIFICATION_PATH = (
+    "evidence/autonomy_runtime/live_qualification/live_qualification_latest.json"
+)
 
 NON_DURATION_ENVIRONMENTS = (
     "authorized_github_jira_sandbox_or_live",
@@ -45,6 +49,10 @@ def compile_qualification_environments(
     unit_contract_probe: UnitContractProbe | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
+    if live_qualification is None:
+        default_live = root / DEFAULT_LIVE_QUALIFICATION_PATH
+        if default_live.is_file():
+            live_qualification = read_json(default_live)
     observed = dict(identity) if identity is not None else inspect_worktree_identity(root)
     sha = str(observed.get("sha") or "")
     tree = str(observed.get("tree") or "")
@@ -86,11 +94,7 @@ def compile_qualification_environments(
     if environments[-1]["outcome"] != "PASSED":
         missing.append("isolated_real_git_worktree_journey")
 
-    mapped = _map_live_qualification(
-        live_qualification if identity_ok else None,
-        sha,
-        tree,
-    )
+    mapped = _map_live_qualification(live_qualification, sha, tree)
     for name in (
         "authorized_github_jira_sandbox_or_live",
         "local_real_integrated_journey",

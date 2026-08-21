@@ -78,6 +78,10 @@ def _seed_attested(controller: CampaignController, run_id: str, hours: int) -> N
         """,
         (hours * 3600, datetime.now(UTC).isoformat(), run_id),
     )
+    controller.qualification._db.execute(
+        "DELETE FROM qualification_locks WHERE run_id = ?",
+        (run_id,),
+    )
     controller.qualification._db.commit()
 
 
