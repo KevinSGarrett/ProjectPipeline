@@ -3,6 +3,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
+from project_pipeline.autonomy_runtime import live_qualification as live_qualification_module
 from project_pipeline.autonomy_runtime.live_qualification import (
     StageOutcome,
     run_live_qualification,
@@ -73,3 +76,30 @@ def test_write_live_qualification_evidence(tmp_path: Path) -> None:
     assert payload["report_sha256"]
     assert "bound_head" in payload
     assert "bound_tree" in payload
+
+
+def test_live_qualification_rerun_clears_same_disposable_root(tmp_path: Path) -> None:
+    repo = tmp_path / "repo"
+    _scaffold_repo(repo)
+    runtime = tmp_path / "runtime"
+    first = run_live_qualification(repository_root=repo, disposable_root=runtime)
+    assert first["stages"][1]["outcome"] == StageOutcome.PASSED.value
+    second = run_live_qualification(repository_root=repo, disposable_root=runtime)
+    assert second["stages"][1]["stage_id"] == "command_center_truth"
+    assert second["stages"][1]["outcome"] == StageOutcome.PASSED.value
+
+
+def test_live_qualification_fails_closed_when_runtime_root_stays_locked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = tmp_path / "repo"
+    _scaffold_repo(repo)
+    runtime = tmp_path / "runtime"
+    runtime.mkdir()
+    monkeypatch.setattr(
+        live_qualification_module,
+        "remove_disposable_workspace",
+        lambda _path, **_kwargs: False,
+    )
+    with pytest.raises(RuntimeError, match="still locked"):
+        run_live_qualification(repository_root=repo, disposable_root=runtime)

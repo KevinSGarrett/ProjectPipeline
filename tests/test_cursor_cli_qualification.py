@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import shutil
+import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 from subprocess import CompletedProcess
@@ -13,7 +15,9 @@ from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
     ARTIFACT_NAME,
     IDEMPOTENCY_KEY,
     _write_expected_artifact,
+    locate_cursor_cli_launch,
     qualify_cursor_cli_provider,
+    remove_disposable_workspace,
 )
 from project_pipeline.lifecycle import attestation_recovery as attestation_recovery_module
 from project_pipeline.lifecycle.attestation_recovery import (
@@ -419,3 +423,127 @@ def test_worktree_without_repo_durable_uses_canonical_private_records(
         for artifact in validation["observations"]["artifacts"]
     }
     assert all(path.parent == durable_dir() for path in durable_paths)
+
+
+def test_locate_wsl_agent_survives_status_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_which(name: str) -> str | None:
+        if name in {"wsl.exe", "wsl"}:
+            return r"C:\Windows\System32\wsl.exe"
+        return None
+
+    def fake_run(args: object, **kwargs: object) -> CompletedProcess[bytes]:
+        argv = [str(item) for item in list(args)]  # type: ignore[arg-type]
+        if "--list" in argv:
+            return CompletedProcess(argv, 0, stdout=b"Cursor-Agent-WSL1\n", stderr=b"")
+        if "-lc" in argv:
+            return CompletedProcess(
+                argv, 0, stdout=b"/home/kevin/.local/bin/cursor-agent\n", stderr=b""
+            )
+        if "--version" in argv:
+            return CompletedProcess(argv, 0, stdout=b"2026.08.11-e8db854\n", stderr=b"")
+        if "status" in argv:
+            raise subprocess.TimeoutExpired(argv, 30)
+        return CompletedProcess(argv, 1, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(cursor_cli_module.shutil, "which", fake_which)
+    monkeypatch.setattr(cursor_cli_module.subprocess, "run", fake_run)
+    launch = locate_cursor_cli_launch()
+    assert launch is not None
+    assert launch["execution_mode"] == "WSL"
+    assert launch["distribution"] == "Cursor-Agent-WSL1"
+    assert launch["executable"] == "/home/kevin/.local/bin/cursor-agent"
+    assert launch["status_timed_out"] is True
+    assert launch["authenticated"] is None
+
+
+def test_locate_skips_distro_when_status_fails_without_timeout(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fake_which(name: str) -> str | None:
+        if name in {"wsl.exe", "wsl"}:
+            return r"C:\Windows\System32\wsl.exe"
+        return None
+
+    def fake_run(args: object, **kwargs: object) -> CompletedProcess[bytes]:
+        argv = [str(item) for item in list(args)]  # type: ignore[arg-type]
+        if "--list" in argv:
+            return CompletedProcess(argv, 0, stdout=b"BadDistro\nGoodDistro\n", stderr=b"")
+        distro = argv[argv.index("-d") + 1] if "-d" in argv else ""
+        if "-lc" in argv:
+            return CompletedProcess(
+                argv, 0, stdout=f"/home/{distro}/cursor-agent\n".encode(), stderr=b""
+            )
+        if "--version" in argv:
+            return CompletedProcess(argv, 0, stdout=b"2026.08.11-e8db854\n", stderr=b"")
+        if "status" in argv:
+            code = 1 if distro == "BadDistro" else 0
+            return CompletedProcess(argv, code, stdout=b"", stderr=b"")
+        return CompletedProcess(argv, 1, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(cursor_cli_module.shutil, "which", fake_which)
+    monkeypatch.setattr(cursor_cli_module.subprocess, "run", fake_run)
+    launch = locate_cursor_cli_launch()
+    assert launch is not None
+    assert launch["distribution"] == "GoodDistro"
+    assert launch["executable"] == "/home/GoodDistro/cursor-agent"
+    assert launch["authenticated"] is True
+    assert launch["status_timed_out"] is False
+
+
+def test_remove_workspace_retries_locked_tree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    workspace = tmp_path / "locked-ws"
+    workspace.mkdir()
+    (workspace / "artifact.json").write_text("{}", encoding="utf-8")
+    attempts = {"n": 0}
+    real_rmtree = shutil.rmtree
+
+    def flaky(path: object, *args: object, **kwargs: object) -> None:
+        attempts["n"] += 1
+        if attempts["n"] < 3:
+            raise OSError("WinError 32")
+        real_rmtree(path)
+
+    monkeypatch.setattr(cursor_cli_module.shutil, "rmtree", flaky)
+    monkeypatch.setattr(cursor_cli_module.time, "sleep", lambda _seconds: None)
+    assert remove_disposable_workspace(workspace, attempts=5) is True
+    assert not workspace.exists()
+    assert attempts["n"] >= 3
+
+
+def test_remove_workspace_falls_back_to_wsl_rm(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    workspace = tmp_path / "wsl-ws"
+    workspace.mkdir()
+    (workspace / "artifact.json").write_text("{}", encoding="utf-8")
+
+    real_rmtree = shutil.rmtree
+
+    def always_locked(path: object, *args: object, **kwargs: object) -> None:
+        raise OSError("WinError 32")
+
+    def fake_which(name: str) -> str | None:
+        if "wsl" in name:
+            return r"C:\Windows\System32\wsl.exe"
+        return None
+
+    def fake_run(args: object, **kwargs: object) -> CompletedProcess[bytes]:
+        argv = [str(item) for item in list(args)]  # type: ignore[arg-type]
+        assert argv[:4] == [r"C:\Windows\System32\wsl.exe", "--", "rm", "-rf"]
+        assert argv[-1] == "/mnt/c/tmp/wsl-ws"
+        real_rmtree(workspace)
+        return CompletedProcess(argv, 0, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(cursor_cli_module.shutil, "rmtree", always_locked)
+    monkeypatch.setattr(cursor_cli_module.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(cursor_cli_module.shutil, "which", fake_which)
+    monkeypatch.setattr(
+        cursor_cli_module,
+        "_windows_path_to_wsl",
+        lambda _path: "/mnt/c/tmp/wsl-ws",
+    )
+    monkeypatch.setattr(cursor_cli_module.subprocess, "run", fake_run)
+    assert remove_disposable_workspace(workspace, attempts=2) is True
+    assert not workspace.exists()
