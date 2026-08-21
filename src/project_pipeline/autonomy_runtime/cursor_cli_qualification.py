@@ -176,6 +176,8 @@ def locate_cursor_cli_launch(explicit: str | None = None) -> dict[str, Any] | No
             status_timed_out = True
         except OSError:
             continue
+        if not status_ok and not status_timed_out:
+            continue
         return {
             "executable": agent_path,
             "command_prefix": (wsl, "-d", distribution, "--"),

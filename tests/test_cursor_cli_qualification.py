@@ -456,6 +456,40 @@ def test_locate_wsl_agent_survives_status_timeout(monkeypatch: pytest.MonkeyPatc
     assert launch["authenticated"] is None
 
 
+def test_locate_skips_distro_when_status_fails_without_timeout(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def fake_which(name: str) -> str | None:
+        if name in {"wsl.exe", "wsl"}:
+            return r"C:\Windows\System32\wsl.exe"
+        return None
+
+    def fake_run(args: object, **kwargs: object) -> CompletedProcess[bytes]:
+        argv = [str(item) for item in list(args)]  # type: ignore[arg-type]
+        if "--list" in argv:
+            return CompletedProcess(argv, 0, stdout=b"BadDistro\nGoodDistro\n", stderr=b"")
+        distro = argv[argv.index("-d") + 1] if "-d" in argv else ""
+        if "-lc" in argv:
+            return CompletedProcess(
+                argv, 0, stdout=f"/home/{distro}/cursor-agent\n".encode(), stderr=b""
+            )
+        if "--version" in argv:
+            return CompletedProcess(argv, 0, stdout=b"2026.08.11-e8db854\n", stderr=b"")
+        if "status" in argv:
+            code = 1 if distro == "BadDistro" else 0
+            return CompletedProcess(argv, code, stdout=b"", stderr=b"")
+        return CompletedProcess(argv, 1, stdout=b"", stderr=b"")
+
+    monkeypatch.setattr(cursor_cli_module.shutil, "which", fake_which)
+    monkeypatch.setattr(cursor_cli_module.subprocess, "run", fake_run)
+    launch = locate_cursor_cli_launch()
+    assert launch is not None
+    assert launch["distribution"] == "GoodDistro"
+    assert launch["executable"] == "/home/GoodDistro/cursor-agent"
+    assert launch["authenticated"] is True
+    assert launch["status_timed_out"] is False
+
+
 def test_remove_workspace_retries_locked_tree(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
