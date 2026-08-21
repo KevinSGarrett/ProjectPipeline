@@ -28,7 +28,7 @@ from project_pipeline.release_factory import (
     write_fixture_artifacts,
 )
 from project_pipeline.release_factory.bundle import BoundArtifact, ReleaseBundle
-from project_pipeline.release_factory.supply import _scan_secrets
+from project_pipeline.release_factory.supply import _os_path, _scan_secrets
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -182,6 +182,48 @@ def test_zip_slip_and_secret_residue_are_rejected(tmp_path):
     written = extract_zip_safely(secret_zip, tmp_path / "secret-out")
     with pytest.raises(ValueError, match="secret residue"):
         _scan_secrets(written)
+    detector = tmp_path / "registry.py"
+    detector.write_text(
+        r"(?i)(sk-[a-z0-9]{16,}|ghp_[a-z0-9]{20,}|xoxb-[a-z0-9-]{20,}|api[_-]?key\s*[:=]\s*\S+)",
+        encoding="utf-8",
+    )
+    _scan_secrets((detector,))
+    token_leak = tmp_path / "leak.env"
+    token_leak.write_text("GITHUB_TOKEN=" + "ghp_" + ("A" * 36) + "\n", encoding="utf-8")
+    with pytest.raises(ValueError, match="secret residue"):
+        _scan_secrets((token_leak,))
+
+
+def test_extract_zip_safely_writes_windows_long_paths(tmp_path):
+    dest = tmp_path / ("n" * 90) / ("n" * 90)
+    archive = tmp_path / "long.zip"
+    member = "payload/" + ("d" * 40) + "/" + ("f" * 40) + ".txt"
+    with zipfile.ZipFile(archive, "w") as payload:
+        payload.writestr(member, "ok-long-path")
+    written = extract_zip_safely(archive, dest)
+    assert len(written) == 1
+    assert _os_path(written[0]).read_text(encoding="utf-8") == "ok-long-path"
+
+
+def test_git_archive_omits_export_ignored_dummy(tmp_path):
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    _write_version_tree(repo)
+    (repo / ".gitattributes").write_text("dummy/ export-ignore\n", encoding="utf-8")
+    nested = repo / "dummy" / "PPQS-pack"
+    nested.mkdir(parents=True)
+    (nested / "oracle.txt").write_text("oracle\n", encoding="utf-8")
+    (repo / "README.md").write_text("ok\n", encoding="utf-8")
+    _git_repo(repo)
+    bundle = build_release_bundle(
+        repo, tmp_path / "out", fixture_desktop=False, use_git_archive=True
+    )
+    archive = Path(bundle.output_dir) / f"project-pipeline-{bundle.version.source_sha[:12]}.zip"
+    with zipfile.ZipFile(archive) as payload:
+        names = tuple(name.replace("\\", "/") for name in payload.namelist())
+    assert any(name.endswith("README.md") for name in names)
+    assert any(name.endswith("pyproject.toml") for name in names)
+    assert not any("dummy/" in name or name.endswith("oracle.txt") for name in names)
 
 
 def test_desktop_dir_fails_closed_without_exact_match(tmp_path):

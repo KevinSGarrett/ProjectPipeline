@@ -188,6 +188,57 @@ def test_seeded_attested_24h_auto_admits_72h(tmp_path: Path):
     controller.close()
 
 
+def test_timed_stage_heartbeat_runs_allowlisted_duration_probe(tmp_path: Path):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=0.05,
+        inspect_identity=lambda _root: _identity(),
+        finalize_commands=[_probe_command()],
+        duration_probe_commands=[_probe_command()],
+        probe_interval_seconds=0.0,
+    )
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    beat = controller.heartbeat(admitted["campaign_id"])
+    assert str(beat["last_probe"]).startswith("probe:")
+    receipts = controller.receipts(admitted["campaign_id"])
+    assert receipts
+    assert receipts[0]["result"] == "PASSED"
+    controller.close()
+
+
+def test_timed_stage_failed_duration_probe_disqualifies(tmp_path: Path):
+    failing = [sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=0.05,
+        inspect_identity=lambda _root: _identity(),
+        finalize_commands=[_probe_command()],
+        duration_probe_commands=[failing],
+        probe_interval_seconds=0.0,
+    )
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    with pytest.raises(ValueError, match="duration probe failed"):
+        controller.heartbeat(admitted["campaign_id"])
+    row = controller.get(admitted["campaign_id"])
+    assert row["status"] == "DISQUALIFIED"
+    assert int(row["window_broken"]) == 1
+    assert str(row["last_probe"]).startswith("disqualify:duration-probe-failed")
+    assert row["stage"] == "UNATTENDED_4_HOUR"
+    controller.close()
+
+
 def test_identity_drift_disqualifies(tmp_path: Path):
     current = {"value": _identity()}
 

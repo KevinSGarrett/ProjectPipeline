@@ -7,3 +7,4 @@
 *.jpeg binary
 *.gif binary
 *.zip binary
+dummy/ export-ignore

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+import re
 import zipfile
 from pathlib import Path
 from typing import Literal
@@ -20,13 +22,14 @@ from project_pipeline.release_factory.bundle import ReleaseBundle
 from project_pipeline.security.supply_chain import build_repository_sbom
 
 BLOCKED_EXTERNAL_SIGNING_IDENTITY_MISSING = "BLOCKED_EXTERNAL_SIGNING_IDENTITY_MISSING"
-_SECRET_MARKERS = (
-    "BEGIN OPENSSH PRIVATE " + "KEY",
-    "BEGIN RSA PRIVATE " + "KEY",
-    "BEGIN EC PRIVATE " + "KEY",
-    "github_pat_",
-    "ghp_",
-    "xoxb-",
+# Concatenate PEM headers so this module is not itself flagged as residue.
+_SECRET_PATTERNS = (
+    re.compile("BEGIN OPENSSH PRIVATE " + "KEY"),
+    re.compile("BEGIN RSA PRIVATE " + "KEY"),
+    re.compile("BEGIN EC PRIVATE " + "KEY"),
+    re.compile(r"github_pat_[A-Za-z0-9_]{20,}"),
+    re.compile(r"ghp_[A-Za-z0-9]{20,}"),
+    re.compile(r"xoxb-[A-Za-z0-9-]{20,}"),
 )
 
 
@@ -56,9 +59,28 @@ def _zip_member_is_escaped(name: str, root: Path) -> bool:
         return True
 
 
+def _os_path(path: Path) -> Path:
+    """Return a filesystem path that can exceed the legacy Windows MAX_PATH limit."""
+    if os.name != "nt":
+        return path
+    raw = os.fspath(path)
+    if raw.startswith("\\\\?\\") or raw.startswith("//?/"):
+        return path
+    text = os.path.abspath(os.fspath(path))
+    if text.startswith("\\\\?\\"):
+        return Path(text)
+    if text.startswith("\\\\"):
+        return Path("\\\\?\\UNC\\" + text[2:])
+    return Path("\\\\?\\" + text)
+
+
+def _mkdir_p(path: Path) -> None:
+    os.makedirs(os.fspath(_os_path(path)), exist_ok=True)
+
+
 def extract_zip_safely(archive: Path, dest: Path) -> tuple[Path, ...]:
-    dest.mkdir(parents=True, exist_ok=True)
-    root = dest.resolve()
+    _mkdir_p(dest)
+    root = Path(os.path.abspath(os.fspath(dest)))
     written: list[Path] = []
     with zipfile.ZipFile(archive) as payload:
         for info in payload.infolist():
@@ -68,25 +90,25 @@ def extract_zip_safely(archive: Path, dest: Path) -> tuple[Path, ...]:
             if _zip_member_is_escaped(info.filename, root):
                 raise ValueError(f"archive traversal rejected: {info.filename}")
             parts = [part for part in name.split("/") if part not in {"", "."}]
-            target = root.joinpath(*parts).resolve()
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(payload.read(info))
+            target = root.joinpath(*parts)
+            _mkdir_p(target.parent)
+            _os_path(target).write_bytes(payload.read(info))
             written.append(target)
     return tuple(written)
 
 
 def _scan_secrets(paths: tuple[Path, ...]) -> None:
     for path in paths:
-        if not path.is_file():
+        os_path = _os_path(path)
+        if not os_path.is_file():
             continue
-        text = path.read_bytes()
+        text = os_path.read_bytes()
         try:
             decoded = text.decode("utf-8")
         except UnicodeDecodeError:
             continue
-        for marker in _SECRET_MARKERS:
-            if marker in decoded:
-                raise ValueError(f"secret residue rejected in {path.name}")
+        if any(pattern.search(decoded) for pattern in _SECRET_PATTERNS):
+            raise ValueError(f"secret residue rejected in {path.name}")
 
 
 def _authenticode_state() -> str:
