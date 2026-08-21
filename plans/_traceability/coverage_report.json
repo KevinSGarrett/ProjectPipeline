@@ -27,8 +27,8 @@
     "UX": 26
   },
   "by_implementation_state": {
-    "IMPLEMENTED": 351,
-    "PARTIALLY_IMPLEMENTED": 1
+    "IMPLEMENTED": 350,
+    "PARTIALLY_IMPLEMENTED": 2
   },
   "by_priority": {
     "P0": 238,

@@ -19,6 +19,7 @@ def test_hidden_launcher_declares_required_windows_contract():
     assert "RedirectStandardOutput" in text
     assert "RedirectStandardError" in text
     assert "simulated_elapsed = $false" in text
+    assert "UNATTENDED_4_HOUR" in text
     assert "UNATTENDED_24_HOUR" in text
 
 

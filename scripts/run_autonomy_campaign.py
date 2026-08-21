@@ -13,6 +13,7 @@ def main() -> int:
         "action",
         choices=(
             "start",
+            "admit-4h",
             "admit-24h",
             "admit-72h",
             "run",
@@ -71,6 +72,8 @@ def _dispatch(controller: CampaignController, args: argparse.Namespace) -> dict:
     campaign_id = str(args.campaign_id or "")
     if not campaign_id:
         raise SystemExit(f"{args.action} requires --campaign-id")
+    if args.action == "admit-4h":
+        return controller.admit_4h(campaign_id)
     if args.action == "admit-24h":
         return controller.admit_24h(campaign_id)
     if args.action == "admit-72h":

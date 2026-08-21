@@ -11,9 +11,16 @@ from typing import Any, Protocol, cast
 
 from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 
-STAGES = ("RECOVERY", "UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR")
+STAGES = ("RECOVERY", "UNATTENDED_4_HOUR", "UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR")
+H4 = timedelta(hours=4)
 H24 = timedelta(hours=24)
 H72 = timedelta(hours=72)
+TIMED_STAGES = frozenset({"UNATTENDED_4_HOUR", "UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR"})
+DURATION_SECONDS = {
+    "UNATTENDED_4_HOUR": H4.total_seconds(),
+    "UNATTENDED_24_HOUR": H24.total_seconds(),
+    "UNATTENDED_72_HOUR": H72.total_seconds(),
+}
 REQUIRED_TABLES = ("qualification_runs", "qualification_events", "qualification_locks")
 ACTIVE = {"RUNNING", "RESUMED"}
 
@@ -115,6 +122,8 @@ class QualificationStore:
     ) -> dict[str, Any]:
         if stage not in STAGES:
             raise ValueError(f"unsupported qualification stage: {stage}")
+        if stage == "UNATTENDED_24_HOUR" and not self._four_hour_attested():
+            raise ValueError("24-hour admission requires a prior attested 4-hour run")
         if stage == "UNATTENDED_72_HOUR" and not self._twenty_four_hour_attested():
             raise ValueError("72-hour admission requires a prior attested 24-hour run")
         self._reject_concurrent_lock()
@@ -196,7 +205,7 @@ class QualificationStore:
         if str(row["status"]) not in {"RUNNING", "RESUMED", "FAILED", "DISQUALIFIED"}:
             raise ValueError("only an interrupted, failed, or disqualified run can resume")
         now = self._attestation_now(str(row["stage"]))
-        broken = 1 if str(row["stage"]) in {"UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR"} else 0
+        broken = 1 if str(row["stage"]) in TIMED_STAGES else 0
         with self._db:
             self._db.execute(
                 "DELETE FROM qualification_locks WHERE lock_name = 'active-qualification'"
@@ -241,15 +250,14 @@ class QualificationStore:
             return self.get(run_id)
         stage = str(row["stage"])
         now = self._attestation_now(stage)
-        if int(row["window_broken"]) == 1 and stage in {"UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR"}:
+        if int(row["window_broken"]) == 1 and stage in TIMED_STAGES:
             raise ValueError("uninterrupted window was broken and cannot be accumulated")
         elapsed = self._elapsed_seconds(row, now)
-        required = H24 if stage == "UNATTENDED_24_HOUR" else H72
-        if (
-            stage in {"UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR"}
-            and elapsed < required.total_seconds()
-        ):
+        required = DURATION_SECONDS.get(stage)
+        if required is not None and elapsed < required:
             raise ValueError("elapsed time cannot be simulated or shortened")
+        if stage == "UNATTENDED_24_HOUR" and not self._four_hour_attested():
+            raise ValueError("24-hour completion requires attested 4-hour admission")
         if stage == "UNATTENDED_72_HOUR" and not self._twenty_four_hour_attested():
             raise ValueError("72-hour completion requires attested 24-hour admission")
         with self._db:
@@ -356,9 +364,7 @@ class QualificationStore:
             raise ValueError("clock rollback detected")
         cadence = float(row["heartbeat_cadence_seconds"])
         gap = (now - last).total_seconds()
-        if str(row["stage"]) in {"UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR"} and gap > max(
-            cadence * 3, cadence + 1
-        ):
+        if str(row["stage"]) in TIMED_STAGES and gap > max(cadence * 3, cadence + 1):
             self._disqualify(str(row["run_id"]), "heartbeat-gap")
             raise ValueError("heartbeat gap broke the uninterrupted window")
         lock = self._db.execute(
@@ -406,22 +412,29 @@ class QualificationStore:
             )
 
     def _attestation_now(self, stage: str) -> datetime:
-        if stage in {"UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR"}:
+        if stage in TIMED_STAGES:
             return datetime.now(UTC)
         return self.clock.now()
 
+    def _four_hour_attested(self) -> bool:
+        return self._timed_stage_attested("UNATTENDED_4_HOUR", H4.total_seconds())
+
     def _twenty_four_hour_attested(self) -> bool:
+        return self._timed_stage_attested("UNATTENDED_24_HOUR", H24.total_seconds())
+
+    def _timed_stage_attested(self, stage: str, minimum_seconds: float) -> bool:
         row = self._db.execute(
             """
             SELECT attested_elapsed_seconds, window_broken FROM qualification_runs
-            WHERE stage = 'UNATTENDED_24_HOUR' AND status = 'ATTESTED'
+            WHERE stage = ? AND status = 'ATTESTED'
             ORDER BY started_at_utc DESC LIMIT 1
-            """
+            """,
+            (stage,),
         ).fetchone()
         return (
             row is not None
             and int(row["window_broken"]) == 0
-            and float(row["attested_elapsed_seconds"]) >= H24.total_seconds()
+            and float(row["attested_elapsed_seconds"]) >= minimum_seconds
         )
 
     def _elapsed_seconds(self, row: sqlite3.Row, now: datetime) -> float:

@@ -63,8 +63,37 @@ _QUALIFICATION_LADDER = (
 _SOURCE = re.compile(r"^(SRC-[0-9]{3}):L([0-9]{6})-L([0-9]{6})$")
 
 
+def _current_git_identity(root: Path) -> tuple[str | None, str | None]:
+    try:
+        head_probe = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            shell=False,
+        )
+        tree_probe = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "HEAD^{tree}"],
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            shell=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None, None
+    head = head_probe.stdout.strip().lower()
+    tree = tree_probe.stdout.strip().lower()
+    if head_probe.returncode != 0 or tree_probe.returncode != 0:
+        return None, None
+    if _FULL_SHA.fullmatch(head) is None or _FULL_SHA.fullmatch(tree) is None:
+        return None, None
+    return head, tree
+
+
 def runtime_qualification_is_bound(root: Path) -> bool:
-    """True when PP-384 live qualification is ancestor-bound to this checkout."""
+    """True when PP-384 live qualification matches this checkout SHA and tree."""
 
     path = root / "evidence/autonomy_runtime/live_qualification/live_qualification_latest.json"
     if not path.is_file():
@@ -84,27 +113,10 @@ def runtime_qualification_is_bound(root: Path) -> bool:
     tree = str(body.get("bound_tree") or "").strip().lower()
     if _FULL_SHA.fullmatch(head) is None or _FULL_SHA.fullmatch(tree) is None:
         return False
-    try:
-        ancestor = subprocess.run(
-            ["git", "-C", str(root), "merge-base", "--is-ancestor", head, "HEAD"],
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=30,
-            shell=False,
-        )
-        tree_probe = subprocess.run(
-            ["git", "-C", str(root), "rev-parse", f"{head}^{{tree}}"],
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=30,
-            shell=False,
-        )
-    except (OSError, subprocess.TimeoutExpired):
+    current_head, current_tree = _current_git_identity(root)
+    if current_head is None or current_tree is None:
         return False
-    recorded_tree = tree_probe.stdout.strip().lower()
-    if ancestor.returncode != 0 or recorded_tree != tree:
+    if head != current_head or tree != current_tree:
         return False
     return _desktop_exact_main_is_bound(root, head=head, tree=tree)
 

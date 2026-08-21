@@ -29,7 +29,10 @@ def main() -> int:
     )
     parser.add_argument("--database", type=Path, required=True)
     parser.add_argument("--state-path", type=Path)
-    parser.add_argument("--stage", choices=("RECOVERY", "UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR"))
+    parser.add_argument(
+        "--stage",
+        choices=("RECOVERY", "UNATTENDED_4_HOUR", "UNATTENDED_24_HOUR", "UNATTENDED_72_HOUR"),
+    )
     parser.add_argument("--run-id")
     parser.add_argument("--reason", default="operator-stop")
     parser.add_argument("--heartbeat-seconds", type=float, default=30.0)

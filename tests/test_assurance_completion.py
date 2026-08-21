@@ -115,6 +115,16 @@ def test_current_repository_cannot_self_certify_complete_before_later_passes():
     assert 16 in failed  # A real 72-hour unattended qualification has not run yet.
 
 
+def test_completion_gate_rejects_ancestor_live_qualification_receipt():
+    root = Path(__file__).resolve().parents[1]
+    current = build_repository_gate_facts(root, "PROJECT-PIPELINE")
+    assert current.autonomous_runtime_qualified is False
+    decision = evaluate_completion_gate(current)
+    golden = next(q for q in decision.questions if q.question_number == 5)
+    assert golden.passed is False
+    assert any("ancestor_or_different_head_receipt" in reason for reason in golden.reasons)
+
+
 def test_unattended_operating_loop_is_a_non_optional_completion_fact():
     decision = evaluate_completion_gate(facts(unattended_operating_loop_qualified=False))
     assert decision.state is GateState.NOT_COMPLETE

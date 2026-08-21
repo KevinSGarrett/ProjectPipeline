@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.assurance.qualification_environments import compile_qualification_environments
+from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
 from project_pipeline.domain.assurance import (
     CandidateCompletionAssessment,
     CandidateCompletionState,
@@ -227,6 +229,19 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         item.get("test_ids") and item.get("evidence_ids") for item in critical
     )
     evidence_rows = _evidence_rows(root)
+    identity = inspect_worktree_identity(root)
+    compiler = compile_qualification_environments(root, identity=identity)
+    current_sha = str(identity.get("sha") or "").lower()
+    current_tree = str(identity.get("tree") or "").lower()
+    ancestor_blocked = bool(compiler.get("inherited_ancestor"))
+    compiler_unbound = (
+        not bool(identity.get("ok"))
+        or bool(identity.get("dirty"))
+        or compiler.get("bound_head") != current_sha
+        or compiler.get("bound_tree") != current_tree
+        or len(current_sha) != 40
+        or len(current_tree) != 40
+    )
     golden_evidence = tuple(
         sorted(
             item["evidence_id"]
@@ -248,6 +263,7 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         if item.get("evidence_id") in core_evidence_ids
         and item.get("result") == "PASS"
         and item.get("verification_status") == "VERIFIED"
+        and _evidence_matches_current_identity(root, item, current_sha, current_tree)
     )
     runtime_environments = {str(item.get("environment")) for item in runtime_evidence}
     missing_runtime_environments = sorted(
@@ -256,6 +272,9 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
     autonomous_runtime_qualified = core_requirement is not None and (
         core_requirement.get("implementation_state") == ImplementationState.LIVE_VERIFIED.value
         and not missing_runtime_environments
+        and compiler.get("ok") is True
+        and not ancestor_blocked
+        and not compiler_unbound
     )
     sec = [item for item in accepted if item.get("domain") == "SEC"]
     security = bool(sec) and all(
@@ -319,12 +338,12 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         if not critical_tested
         else ("critical requirement set has test/evidence mappings",),
         "5": (
-            "integrated autonomous-runtime qualification is incomplete; missing verified stages: "
-            + ", ".join(missing_runtime_environments),
-        )
-        if not autonomous_runtime_qualified
-        else (
-            "the integrated autonomous runtime has verified evidence for every required qualification stage",
+            _question_five_reason(
+                autonomous_runtime_qualified=autonomous_runtime_qualified,
+                missing_runtime_environments=missing_runtime_environments,
+                ancestor_blocked=ancestor_blocked,
+                compiler_unbound=compiler_unbound,
+            ),
         ),
         "13": ("Command Center requirements are not yet complete",)
         if not command_center
@@ -408,6 +427,55 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
         reasons_by_question=reasons,
         snapshot_fingerprint=assurance_fingerprint(payload),
     )
+
+
+def _question_five_reason(
+    *,
+    autonomous_runtime_qualified: bool,
+    missing_runtime_environments: list[str],
+    ancestor_blocked: bool,
+    compiler_unbound: bool,
+) -> str:
+    if autonomous_runtime_qualified:
+        return (
+            "the integrated autonomous runtime has verified evidence for every "
+            "required qualification stage"
+        )
+    parts: list[str] = []
+    if ancestor_blocked:
+        parts.append("ancestor_or_different_head_receipt")
+    if compiler_unbound:
+        parts.append("current_sha_tree_binding_missing")
+    if missing_runtime_environments:
+        parts.append("missing verified stages: " + ", ".join(missing_runtime_environments))
+    if not parts:
+        parts.append("integrated autonomous-runtime qualification is incomplete")
+    return "integrated autonomous-runtime qualification is incomplete; " + "; ".join(parts)
+
+
+def _evidence_matches_current_identity(
+    root: Path, row: dict[str, Any], sha: str, tree: str
+) -> bool:
+    environment = str(row.get("environment") or "")
+    if environment not in _AUTONOMOUS_RUNTIME_EVIDENCE_ENVIRONMENTS:
+        return True
+    artifact_path = row.get("artifact_path")
+    if not isinstance(artifact_path, str):
+        return False
+    path = (root / artifact_path).resolve()
+    try:
+        path.relative_to(root.resolve())
+    except ValueError:
+        return False
+    if not path.is_file() or path.suffix.lower() != ".json":
+        return False
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    bound_head = str(payload.get("bound_head") or "").strip().lower()
+    bound_tree = str(payload.get("bound_tree") or "").strip().lower()
+    return bound_head == sha and bound_tree == tree and len(sha) == 40 and len(tree) == 40
 
 
 def _evidence_rows(root: Path) -> tuple[dict[str, Any], ...]:

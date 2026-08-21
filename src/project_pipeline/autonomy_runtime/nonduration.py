@@ -23,6 +23,7 @@ NON_DURATION_STAGES = (
 )
 
 REMAINING_ACCEPTANCE = (
+    "real 4h qualification",
     "real 24h qualification",
     "subsequent real 72h qualification",
     "release publication",

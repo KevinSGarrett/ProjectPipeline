@@ -4,7 +4,7 @@
       "criterion_id": "AC-PP-900143-01",
       "statement": "The integrated released runtime passes restart/recovery, uninterrupted 24-hour and 72-hour operation, post-release verification, and the deterministic Completion Gate without unresolved blockers.",
       "verification": {
-        "command": "PYTHONPATH=src python -m project_pipeline completion --root .",
+        "command": "PYTHONPATH=src python -m project_pipeline assurance completion-gate --root .",
         "method": "unattended_release_completion_qualification",
         "path": "evidence/autonomy_runtime/unattended",
         "status": "PLANNED"

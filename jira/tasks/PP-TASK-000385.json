@@ -4,7 +4,7 @@
       "criterion_id": "AC-PP-000385-01",
       "statement": "The released runtime passes recovery, a real uninterrupted 24-hour run, a subsequent real uninterrupted 72-hour run, post-release verification, and the deterministic Completion Gate with no hidden blocker.",
       "verification": {
-        "command": "PYTHONPATH=src python -m project_pipeline completion --root .",
+        "command": "PYTHONPATH=src python -m project_pipeline assurance completion-gate --root .",
         "method": "unattended_release_completion_qualification",
         "path": "evidence/autonomy_runtime/unattended",
         "status": "PLANNED"
@@ -15,6 +15,7 @@
   "completion_evidence": [],
   "definition_of_done": [
     "Recovery drills pass.",
+    "4-hour trial passes before 24-hour admission.",
     "24-hour qualification passes before 72-hour admission.",
     "72-hour qualification passes without simulated duration.",
     "Released post-release verification passes.",
@@ -36,6 +37,8 @@
   ],
   "expected_implementation_artifacts": [
     "src/project_pipeline/autonomy_runtime/campaign.py",
+    "src/project_pipeline/autonomy_runtime/qualification.py",
+    "src/project_pipeline/assurance/qualification_environments.py",
     "src/project_pipeline/autonomy_runtime/command_execution.py",
     "scripts/run_autonomy_campaign.py",
     "scripts/start_autonomy_campaign_hidden.ps1",

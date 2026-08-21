@@ -1,7 +1,7 @@
 # Generated Repository Map
 
-- Files: `3022`
-- Generated: `2026-08-20T23:53:34.997042+00:00`
+- Files: `3024`
+- Generated: `2026-08-21T01:33:44.977518+00:00`
 
 ## Top-level counts
 
@@ -31,8 +31,8 @@
 - `runbooks`: 28
 - `schemas`: 209
 - `scripts`: 44
-- `src`: 348
-- `tests`: 234
+- `src`: 349
+- `tests`: 235
 - `third_party`: 1
 
 ## Semantic indexes
