@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import time
@@ -18,6 +19,8 @@ from project_pipeline.domain.github import (
     GitBranch,
     GitHubAdapterCapabilities,
     GitHubBranchProtection,
+    GitHubReleaseAsset,
+    GitHubReleaseSnapshot,
     GitHubRepositoryMetadata,
     PullRequestCheck,
     PullRequestReview,
@@ -40,6 +43,7 @@ class GitHubRestAdapter(GitHubRemotePort):
         *,
         token: str | None = None,
         base_url: str = "https://api.github.com",
+        upload_base_url: str = "https://uploads.github.com",
         timeout_seconds: float = 20.0,
         maximum_attempts: int = 3,
         retry_base_seconds: float = 0.05,
@@ -48,7 +52,11 @@ class GitHubRestAdapter(GitHubRemotePort):
         parsed = urllib_parse.urlparse(base_url)
         if parsed.scheme != "https" or not parsed.netloc:
             raise ValueError("GitHub REST base URL must be HTTPS")
+        upload_parsed = urllib_parse.urlparse(upload_base_url)
+        if upload_parsed.scheme != "https" or not upload_parsed.netloc:
+            raise ValueError("GitHub upload base URL must be HTTPS")
         self.base_url = base_url.rstrip("/")
+        self.upload_base_url = upload_base_url.rstrip("/")
         self._token = token
         self.timeout_seconds = timeout_seconds
         self.maximum_attempts = max(1, maximum_attempts)
@@ -411,6 +419,133 @@ class GitHubRestAdapter(GitHubRemotePort):
                 allow_empty=True,
             )
 
+    def list_releases(
+        self, repository_slug: str, *, page_size: int = 100
+    ) -> Iterable[GitHubReleaseSnapshot]:
+        for item in self._iter_pages(
+            f"/repos/{self._repo_path(repository_slug)}/releases",
+            page_size=page_size,
+            operation="github.releases.read",
+        ):
+            yield self._parse_release(repository_slug, item)
+
+    def get_release(self, repository_slug: str, release_id: int) -> GitHubReleaseSnapshot | None:
+        try:
+            payload = self._request_json(
+                "GET",
+                f"/repos/{self._repo_path(repository_slug)}/releases/{release_id}",
+                operation="github.release.read",
+                correlation_id=f"corr:github-release-{release_id}",
+            )
+        except GitHubAdapterError as exc:
+            if exc.payload.category is AdapterErrorCategory.NOT_FOUND:
+                return None
+            raise
+        if not isinstance(payload, dict):
+            return None
+        return self._parse_release(repository_slug, payload)
+
+    def create_draft_release(
+        self,
+        repository_slug: str,
+        *,
+        tag_name: str,
+        name: str,
+        body: str,
+        target_commitish: str,
+        context: GitHubWriteContext,
+    ) -> GitHubReleaseSnapshot:
+        payload = self._request_json(
+            "POST",
+            f"/repos/{self._repo_path(repository_slug)}/releases",
+            body={
+                "tag_name": tag_name,
+                "name": name,
+                "body": body,
+                "draft": True,
+                "prerelease": True,
+                "target_commitish": target_commitish,
+            },
+            operation="github.release.create",
+            correlation_id=context.correlation_id,
+            is_write=True,
+        )
+        return self._parse_release(repository_slug, payload)
+
+    def upload_release_asset(
+        self,
+        repository_slug: str,
+        *,
+        release_id: int,
+        name: str,
+        content: bytes,
+        content_type: str,
+        context: GitHubWriteContext,
+    ) -> GitHubReleaseAsset:
+        quoted = urllib_parse.quote(name, safe="")
+        path = (
+            f"/repos/{self._repo_path(repository_slug)}/releases/{release_id}/assets?name={quoted}"
+        )
+        payload = self._request_raw(
+            "POST",
+            self.upload_base_url + path,
+            data=content,
+            extra_headers={"Content-Type": content_type},
+            operation="github.release.upload",
+            correlation_id=context.correlation_id,
+            is_write=True,
+        )
+        document = json.loads(payload.decode("utf-8")) if payload else {}
+        return self._parse_asset(
+            repository_slug, document, content_sha256=hashlib.sha256(content).hexdigest()
+        )
+
+    def download_release_asset(self, repository_slug: str, *, asset_id: int) -> bytes:
+        return self._request_raw(
+            "GET",
+            f"/repos/{self._repo_path(repository_slug)}/releases/assets/{asset_id}",
+            extra_headers={"Accept": "application/octet-stream"},
+            operation="github.release.download",
+            correlation_id=f"corr:github-asset-{asset_id}",
+        )
+
+    def finalize_release(
+        self,
+        repository_slug: str,
+        *,
+        release_id: int,
+        expected_target_commitish: str,
+        context: GitHubWriteContext,
+    ) -> GitHubReleaseSnapshot:
+        current = self.get_release(repository_slug, release_id)
+        if current is None:
+            raise self._error(
+                AdapterErrorCategory.NOT_FOUND,
+                "GITHUB_RELEASE_MISSING",
+                "Release is missing",
+                context.correlation_id,
+                "github.release.finalize",
+                retryable=False,
+            )
+        if current.target_commitish.lower() != expected_target_commitish.lower():
+            raise self._error(
+                AdapterErrorCategory.CONFLICT,
+                "GITHUB_RELEASE_HEAD_CHANGED",
+                "Release target changed",
+                context.correlation_id,
+                "github.release.finalize",
+                retryable=False,
+            )
+        payload = self._request_json(
+            "PATCH",
+            f"/repos/{self._repo_path(repository_slug)}/releases/{release_id}",
+            body={"draft": False},
+            operation="github.release.finalize",
+            correlation_id=context.correlation_id,
+            is_write=True,
+        )
+        return self._parse_release(repository_slug, payload)
+
     def _iter_pages(self, path: str, *, page_size: int, operation: str) -> Iterable[dict[str, Any]]:
         if page_size < 1 or page_size > 100:
             raise ValueError("GitHub page_size must be between 1 and 100")
@@ -464,6 +599,79 @@ class GitHubRestAdapter(GitHubRemotePort):
                 if not raw and allow_empty:
                     return {}
                 return json.loads(raw.decode("utf-8")) if raw else {}
+            except urllib_error.HTTPError as exc:
+                payload = self._read_error(exc)
+                category, retryable = self._classify_status(exc.code)
+                if is_write and category in {
+                    AdapterErrorCategory.TIMEOUT,
+                    AdapterErrorCategory.TRANSIENT,
+                    AdapterErrorCategory.UNAVAILABLE,
+                    AdapterErrorCategory.RATE_LIMIT,
+                }:
+                    category = AdapterErrorCategory.UNKNOWN_OUTCOME
+                    retryable = True
+                error = self._error(
+                    category,
+                    f"GITHUB_HTTP_{exc.code}",
+                    self._message(payload, exc.reason),
+                    correlation_id,
+                    operation,
+                    retryable=retryable,
+                    unknown_outcome=category is AdapterErrorCategory.UNKNOWN_OUTCOME,
+                    details={"status": exc.code},
+                )
+                if not is_write and retryable and attempt < attempts:
+                    time.sleep(self.retry_base_seconds * attempt)
+                    continue
+                raise error from exc
+            except (urllib_error.URLError, TimeoutError, ConnectionError) as exc:
+                category = (
+                    AdapterErrorCategory.UNKNOWN_OUTCOME
+                    if is_write
+                    else AdapterErrorCategory.UNAVAILABLE
+                )
+                error = self._error(
+                    category,
+                    "GITHUB_TRANSPORT_FAILURE",
+                    str(getattr(exc, "reason", exc)),
+                    correlation_id,
+                    operation,
+                    retryable=True,
+                    unknown_outcome=is_write,
+                )
+                if not is_write and attempt < attempts:
+                    time.sleep(self.retry_base_seconds * attempt)
+                    continue
+                raise error from exc
+        raise AssertionError("unreachable")
+
+    def _request_raw(
+        self,
+        method: str,
+        url_or_path: str,
+        *,
+        data: bytes | None = None,
+        extra_headers: dict[str, str] | None = None,
+        operation: str,
+        correlation_id: str,
+        is_write: bool = False,
+    ) -> bytes:
+        url = url_or_path if url_or_path.startswith("https://") else self.base_url + url_or_path
+        headers = {
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": _API_VERSION,
+            "User-Agent": "Project-Pipeline-Repository-Steward",
+        }
+        if self._token:
+            headers["Authorization"] = f"Bearer {self._token}"
+        if extra_headers:
+            headers.update(extra_headers)
+        request = urllib_request.Request(url, data=data, headers=headers, method=method)
+        attempts = 1 if is_write else self.maximum_attempts
+        for attempt in range(1, attempts + 1):
+            try:
+                response = self._opener.open(request, timeout=self.timeout_seconds)
+                return response.read() or b""
             except urllib_error.HTTPError as exc:
                 payload = self._read_error(exc)
                 category, retryable = self._classify_status(exc.code)
@@ -706,4 +914,51 @@ class GitHubRestAdapter(GitHubRemotePort):
             additions=int(payload.get("additions") or 0),
             deletions=int(payload.get("deletions") or 0),
             updated_at_utc=payload.get("updated_at") or utc_now(),
+        )
+
+    @classmethod
+    def _parse_release(
+        cls, repository_slug: str, payload: Mapping[str, Any]
+    ) -> GitHubReleaseSnapshot:
+        api_id = int(payload.get("id") or 0)
+        tag_name = str(payload.get("tag_name") or "")
+        assets = tuple(
+            cls._parse_asset(repository_slug, item)
+            for item in (payload.get("assets") or ())
+            if isinstance(item, dict)
+        )
+        return GitHubReleaseSnapshot(
+            record_id=github_identifier("GHREL", repository_slug, tag_name, str(api_id)),
+            repository_slug=repository_slug,
+            api_id=api_id,
+            tag_name=tag_name,
+            name=str(payload.get("name") or tag_name or "untitled-release"),
+            draft=bool(payload.get("draft", True)),
+            prerelease=bool(payload.get("prerelease", True)),
+            target_commitish=str(payload.get("target_commitish") or ""),
+            html_url=str(payload.get("html_url") or "") or None,
+            upload_url=str(payload.get("upload_url") or "").split("{", 1)[0] or None,
+            body=str(payload.get("body") or ""),
+            assets=assets,
+        )
+
+    @staticmethod
+    def _parse_asset(
+        repository_slug: str,
+        payload: Mapping[str, Any],
+        *,
+        content_sha256: str | None = None,
+    ) -> GitHubReleaseAsset:
+        api_id = int(payload.get("id") or 0)
+        name = str(payload.get("name") or "")
+        raw = str(payload.get("digest") or payload.get("sha256") or "").replace("sha256:", "")
+        digest = content_sha256 or (raw.lower() if len(raw) == 64 else "0" * 64)
+        return GitHubReleaseAsset(
+            asset_id=github_identifier("GHREL", repository_slug, "asset", name, str(api_id)),
+            api_id=api_id,
+            name=name,
+            sha256=digest,
+            size_bytes=int(payload.get("size") or 0),
+            content_type=str(payload.get("content_type") or "application/octet-stream"),
+            browser_download_url=str(payload.get("browser_download_url") or "") or None,
         )

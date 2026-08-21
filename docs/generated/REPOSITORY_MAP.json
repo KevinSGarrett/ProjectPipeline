@@ -8,18 +8,18 @@
     ".html": 3,
     ".ico": 1,
     ".ini": 1,
-    ".json": 1128,
+    ".json": 1129,
     ".jsonl": 64,
     ".jsx": 2,
     ".lock": 1,
-    ".md": 800,
+    ".md": 801,
     ".mdc": 6,
     ".mjs": 6,
     ".mmd": 6,
     ".mod": 1,
     ".png": 28,
     ".ps1": 10,
-    ".py": 630,
+    ".py": 638,
     ".rego": 1,
     ".rs": 2,
     ".sha256": 1,
@@ -48,9 +48,9 @@
     "config": 42,
     "contracts": 5,
     "database": 102,
-    "docs": 76,
+    "docs": 77,
     "dummy": 429,
-    "evidence": 254,
+    "evidence": 255,
     "fixtures": 25,
     "infrastructure": 11,
     "instructions": 46,
@@ -63,11 +63,11 @@
     "runbooks": 28,
     "schemas": 209,
     "scripts": 44,
-    "src": 341,
-    "tests": 233,
+    "src": 348,
+    "tests": 234,
     "third_party": 1
   },
-  "file_count": 3012,
+  "file_count": 3022,
   "files": [
     {
       "extension": ".md",
@@ -233,8 +233,8 @@
     {
       "extension": "[none]",
       "path": ".git",
-      "sha256": "b50cc840eb315e1dd95184e72eaa463bec7dca2966917a1e386d77b4224abb84",
-      "size_bytes": 51,
+      "sha256": "0ce55fed32ad949096552587950f5bdf7f447b28467960159d185dd8fd64c2d9",
+      "size_bytes": 50,
       "top_level": "_root"
     },
     {
@@ -842,8 +842,8 @@
     {
       "extension": ".jsonl",
       "path": "benchmarks/retrieval/corpus.jsonl",
-      "sha256": "4eb113f3cdf7d6c0748bdb90b3f2e015331f07a66e34680b4f1d6ca825be958c",
-      "size_bytes": 1096,
+      "sha256": "65d599d2a1252e6d0d61bcd4ba83f027159dfa362052e7a947078568b5f29211",
+      "size_bytes": 1093,
       "top_level": "benchmarks"
     },
     {
@@ -1528,15 +1528,15 @@
     {
       "extension": ".sql",
       "path": "database/migrations/postgresql/PPDB-0025_retrieval_pgvector_and_exact_fallback.down.sql",
-      "sha256": "e963093ba6708366aa00ef6a49918ae55d4f968b3eeb3bf7c28fbe1ed05a055d",
-      "size_bytes": 143,
+      "sha256": "30c8efa1d3a6c61abeb30302116786dc64fff5c2db88e04f2e72d1e8560f253a",
+      "size_bytes": 140,
       "top_level": "database"
     },
     {
       "extension": ".sql",
       "path": "database/migrations/postgresql/PPDB-0025_retrieval_pgvector_and_exact_fallback.up.sql",
-      "sha256": "9357c3cc148c8cf9363a9caafda509eff329c7fe85bbb6cc41cb9fb89fd57aa2",
-      "size_bytes": 904,
+      "sha256": "c2739e91fccf4171c54e4a2bbcc47fd871071302fa998e9c8e25d238e00bdc92",
+      "size_bytes": 876,
       "top_level": "database"
     },
     {
@@ -1878,15 +1878,15 @@
     {
       "extension": ".sql",
       "path": "database/migrations/sqlite/PPDB-0025_retrieval_pgvector_and_exact_fallback.down.sql",
-      "sha256": "742a83e14ba37374ed5ff3b716c233acfdfe985f97c2dbf13814e2580470ce7e",
-      "size_bytes": 89,
+      "sha256": "f0b80995b228eb0ba9781a321a6d5461a98aca220c0d8445da3ed1a639165009",
+      "size_bytes": 87,
       "top_level": "database"
     },
     {
       "extension": ".sql",
       "path": "database/migrations/sqlite/PPDB-0025_retrieval_pgvector_and_exact_fallback.up.sql",
-      "sha256": "096f72581917dca9bca2364c022539980c86682cb3daf5b2332eea827de98024",
-      "size_bytes": 714,
+      "sha256": "79320bf3457bc1823c42da869375b79ab24b48f8ebda815b5c64327c58bd6dac",
+      "size_bytes": 691,
       "top_level": "database"
     },
     {
@@ -2332,6 +2332,13 @@
     },
     {
       "extension": ".md",
+      "path": "docs/release/draft_release_factory.md",
+      "sha256": "4cd51a27fde49021e2112e27b6ff88bb3895f25265c2156476b1c8a441c6c746",
+      "size_bytes": 1385,
+      "top_level": "docs"
+    },
+    {
+      "extension": ".md",
       "path": "docs/release/FINAL_CONVERGENCE_HANDOFF.md",
       "sha256": "f88b5c94c59cc2d744ecf069b33e6460e416ef459422f61893d3771064fd87ee",
       "size_bytes": 1362,
@@ -2361,8 +2368,8 @@
     {
       "extension": ".md",
       "path": "docs/retrieval_benchmark.md",
-      "sha256": "dc114d221f8c18b1252b52c7309682a48268cc7e7ad002bfe16c6c3a2d1ecb8c",
-      "size_bytes": 2106,
+      "sha256": "1dff8a36706b54fe4276ca7a238a3514d716720051789f6f72b6d4fcac2d7bd6",
+      "size_bytes": 2079,
       "top_level": "docs"
     },
     {
@@ -2424,8 +2431,8 @@
     {
       "extension": ".md",
       "path": "docs/verification/testcontainers_and_playwright.md",
-      "sha256": "8de18d295736d13fafcd653a7e7e55ae4685b52cc8809a077d4d5bde31fb9042",
-      "size_bytes": 1627,
+      "sha256": "67ca7001d0001d2ebc1af48df2fddc1e7b8801d49b7fe1b9bb6bea40f5d8a3da",
+      "size_bytes": 1601,
       "top_level": "docs"
     },
     {
@@ -5924,15 +5931,15 @@
     {
       "extension": ".jsonl",
       "path": "evidence/EVIDENCE_LEDGER.jsonl",
-      "sha256": "1125c52369287443240d4913c83a63a7b55d695e508b4792ccca9c60d9b15421",
-      "size_bytes": 167221,
+      "sha256": "9b789101df393f857bc67dfda319a9e4643af5c730ef766bd48585b3932ecb59",
+      "size_bytes": 168562,
       "top_level": "evidence"
     },
     {
       "extension": ".json",
       "path": "evidence/EVIDENCE_SUMMARY.json",
-      "sha256": "521d852b9df70b2d3dffe6c652cf364e9d4fbe5da01bb15eab5becbe7886eb51",
-      "size_bytes": 289,
+      "sha256": "6424c639495df15e647b71e40a46718de4dc41caf5e7608272f9197e251801f4",
+      "size_bytes": 296,
       "top_level": "evidence"
     },
     {
@@ -6465,6 +6472,13 @@
       "path": "evidence/rel_disposable_rehearsal.json",
       "sha256": "018462012a7b88c4fdba14c7c9187f5d17dce68f336584cc044827486f5fe589",
       "size_bytes": 352,
+      "top_level": "evidence"
+    },
+    {
+      "extension": ".json",
+      "path": "evidence/release/draft_release_factory.json",
+      "sha256": "204249148adf350d3ce9aa57f47d35fe1e0da324162b6881aa58912a38eaa74a",
+      "size_bytes": 474,
       "top_level": "evidence"
     },
     {
@@ -7212,8 +7226,8 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "78476be1adfd12d91b1436f7dd7f46f0c441b6b6e411bed12d990069e43f4e73",
-      "size_bytes": 344629,
+      "sha256": "e7394218bdcd1885fb4c4e9f2e909d783401ba891559ee5ba48507fed0bdc8da",
+      "size_bytes": 345746,
       "top_level": "_root"
     },
     {
@@ -7660,7 +7674,7 @@
     {
       "extension": ".json",
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "47bd6c4c55eefe38b55609853814fe9c0b94c692a842a0f53dcf51754854da4c",
+      "sha256": "c600906128ee60795f32ee134e95763c73198db7f3cbd53e381b5cd7ff9a60bf",
       "size_bytes": 25756,
       "top_level": "instructions"
     },
@@ -14436,8 +14450,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "33ab7407f8a73a7d6c153f7e0df4947cab39038eaef86be560479cc0bec73016",
-      "size_bytes": 564197,
+      "sha256": "9efa5bcd765e5851a214cfacd390e46f18a29332bbae64d190c927c4b44de67c",
+      "size_bytes": 566044,
       "top_level": "_root"
     },
     {
@@ -15983,8 +15997,8 @@
     {
       "extension": ".json",
       "path": "schemas/github_adapter_capabilities.schema.json",
-      "sha256": "86ba964f90e04d0e56d05f3bcee86a75015cf19e3e2204fe71f1206813e9f5d0",
-      "size_bytes": 1484,
+      "sha256": "8489c30f6853ef702cb3211b85d327ad5931284c6edad9626213fbbec2520a9f",
+      "size_bytes": 1601,
       "top_level": "schemas"
     },
     {
@@ -16025,8 +16039,8 @@
     {
       "extension": ".json",
       "path": "schemas/github_lifecycle_record.schema.json",
-      "sha256": "9b2d05ef314d15c458a8cb61983335aabf4bed0780830981a7ea1037e4caf59f",
-      "size_bytes": 3274,
+      "sha256": "ef88249c0024f8c69ad9ff9d12613b6a1e9fa7543f389f38e8373771d336eb03",
+      "size_bytes": 3366,
       "top_level": "schemas"
     },
     {
@@ -16039,8 +16053,8 @@
     {
       "extension": ".json",
       "path": "schemas/github_operation.schema.json",
-      "sha256": "6e3dbf8d328835f12f7e1845bd62ad96b977407d1f81d287eef83de031a4584a",
-      "size_bytes": 3021,
+      "sha256": "f5e1b03a7aa7a47410427e3b61bb69f25386f87fd74269b866df4836da100918",
+      "size_bytes": 3113,
       "top_level": "schemas"
     },
     {
@@ -17593,8 +17607,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/cli.py",
-      "sha256": "fec577c1c51c1a24d2792f96fa483b5116abc9c0a6130489af73ffbae47610b0",
-      "size_bytes": 174314,
+      "sha256": "7b4235abc1814f964cb60db619fd1ca300b59ac98cf816f472d317b343697111",
+      "size_bytes": 185206,
       "top_level": "src"
     },
     {
@@ -18069,8 +18083,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/domain/github.py",
-      "sha256": "77ee25b4100a9757d37f92a4365a6afe52a5aeca61958c5f84571fffb9c1727a",
-      "size_bytes": 19852,
+      "sha256": "f3d07f691107daf63c4798cbdd52ee99c50f3e8d47cd2540511eb58df5992ea9",
+      "size_bytes": 21754,
       "top_level": "src"
     },
     {
@@ -18174,15 +18188,15 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/github_steward/__init__.py",
-      "sha256": "66151c730920bf897d01c00a261cc0a96212276482626e2a07fceb5b6b4050cb",
-      "size_bytes": 2048,
+      "sha256": "075d1b6b2e69724fe70d92eeb927e4dc42576a46cb98698856f648a04e2b7f59",
+      "size_bytes": 2165,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/github_steward/adapter.py",
-      "sha256": "000d59db4122030695fe857321001d1ba9be96c03b82a775fef65dfa82e45519",
-      "size_bytes": 27628,
+      "sha256": "3b4b32dbd25486893f3b25dec5506a51c589b1b529d2257003cd71ddffc514d0",
+      "size_bytes": 37760,
       "top_level": "src"
     },
     {
@@ -18197,6 +18211,13 @@
       "path": "src/project_pipeline/github_steward/consolidation.py",
       "sha256": "3ec7079f684ea7f3763428ef00009ca90afc5dc2e023e14076d548d7fcf18009",
       "size_bytes": 2116,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/github_steward/draft_release.py",
+      "sha256": "1287bba546f23bcf3f66fdaf2a38078843ed6100e8876a5f559afd66544da4dc",
+      "size_bytes": 20165,
       "top_level": "src"
     },
     {
@@ -18230,8 +18251,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/github_steward/mock.py",
-      "sha256": "38ad897c840c61e8d69a6295f6bc526c74445cec743a1dddf02589e60365268e",
-      "size_bytes": 14487,
+      "sha256": "516d1c11bdef781cf4ea5ec4be9167a74e4d7a116c9dd147be171e52860be0b3",
+      "size_bytes": 21304,
       "top_level": "src"
     },
     {
@@ -18251,8 +18272,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/github_steward/ports.py",
-      "sha256": "e2e69fdcec859e623838dff00d19a69459b6fc3d794b889ca8fc6080444c1def",
-      "size_bytes": 2726,
+      "sha256": "d07eebdb029695d88868b05138ef01c3b679121944dbe2f2b3a6e0eb85d859d4",
+      "size_bytes": 3832,
       "top_level": "src"
     },
     {
@@ -18272,8 +18293,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/github_steward/validation.py",
-      "sha256": "ee57f980fe6cd533948c7e8c21d7786526db1a0a8870564d49026002b7475f71",
-      "size_bytes": 1227,
+      "sha256": "1465f00841744c9f9f9d629af0673685b8b6d2735da6da58d25d14895b4c67d9",
+      "size_bytes": 1287,
       "top_level": "src"
     },
     {
@@ -18806,6 +18827,48 @@
       "path": "src/project_pipeline/quality.py",
       "sha256": "3798a8146f0ac26b723a4cf05bfaec5231be9008ee5c8db41b58a9c94c64889a",
       "size_bytes": 5270,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/release_factory/__init__.py",
+      "sha256": "3675668d6b8d87ef21bdc7ffe55efd8a9f9e67a9ebee15453c75fc2aff59dc03",
+      "size_bytes": 1228,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/release_factory/bundle.py",
+      "sha256": "756d56605875e5323a944fade0c2dae049f33822536cf999457fcd622401e9e0",
+      "size_bytes": 9204,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/release_factory/lifecycle.py",
+      "sha256": "87612aa72601d44f2d4ff5b26893622ac80a28e611305b1833db715c83ebbcf1",
+      "size_bytes": 5322,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/release_factory/supply.py",
+      "sha256": "828b728d19b75b32188f263a3fefc2d4ebc9d03afe5a3546a766cd3ede9de417",
+      "size_bytes": 6227,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/release_factory/validation.py",
+      "sha256": "8bdc49a7a8839019308833e0da32d2daf6c28c2e761d7e869ebfbb41388cf68b",
+      "size_bytes": 655,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/release_factory/version.py",
+      "sha256": "30b983061ceee3ec44c7f8b7fdced8246f1c08b25ae565b9b5143dcbfba92840",
+      "size_bytes": 3482,
       "top_level": "src"
     },
     {
@@ -19378,8 +19441,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/validation/repository.py",
-      "sha256": "364eb247a2123ff992025bee5cb9c55c045f49b200d9b5ed371f320570ebb45c",
-      "size_bytes": 16649,
+      "sha256": "fc3604b12d3396c392ce60ba35a704b15bd2650824b00809f0f298e35ec00faf",
+      "size_bytes": 16923,
       "top_level": "src"
     },
     {
@@ -19903,8 +19966,8 @@
     {
       "extension": ".json",
       "path": "tests/TEST_CATALOG.json",
-      "sha256": "5342e7c4d953b81bf704ac09ab3c9d2a48aecab439a545160fad3818c9fa77e1",
-      "size_bytes": 126327,
+      "sha256": "0981ad9c71f34a9a412e23ca7969e84e431eb32e67c806eef216fc0f994283ee",
+      "size_bytes": 131923,
       "top_level": "tests"
     },
     {
@@ -20281,8 +20344,8 @@
     {
       "extension": ".py",
       "path": "tests/test_github_rest_adapter.py",
-      "sha256": "209985290ae363085f5442d571dcc34b6ba6c279264fd3d383499de7087a5b15",
-      "size_bytes": 11654,
+      "sha256": "59caefcb74d3ec67005dee6d9ba973ecb029ddd1169771a7ae9a65b41a96bd94",
+      "size_bytes": 13969,
       "top_level": "tests"
     },
     {
@@ -20661,6 +20724,13 @@
       "path": "tests/test_release_disposable_rehearsal.py",
       "sha256": "74c21f3eddc4587315e8e82819d60b8941ab64dc90ec149c60350795e4c6afbb",
       "size_bytes": 1049,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_release_factory.py",
+      "sha256": "2ebd815187f2118d743ebd93e8bf4bc0c5e8c9c30df0e3e1fa53e4b99896fea8",
+      "size_bytes": 14534,
       "top_level": "tests"
     },
     {
@@ -21154,7 +21224,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-20T22:33:40.193248+00:00",
+  "generated_at_utc": "2026-08-20T23:53:34.997042+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {
@@ -21346,6 +21416,7 @@
       "evidence/project_intake_integrated_suite.txt",
       "evidence/project_pipeline_intake_snapshot.json",
       "evidence/rel_disposable_rehearsal.json",
+      "evidence/release/draft_release_factory.json",
       "evidence/repository_foundation_full_suite.txt",
       "evidence/repository_foundation_smoke.json",
       "evidence/repository_foundation_tests.txt",

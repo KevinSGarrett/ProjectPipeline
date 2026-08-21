@@ -26,6 +26,7 @@ from project_pipeline.lifecycle import validate_lifecycle_foundation
 from project_pipeline.manifest import verify_manifest
 from project_pipeline.orchestration import validate_orchestration_foundation
 from project_pipeline.persistence import validate_migration_catalog
+from project_pipeline.release_factory.validation import validate_release_factory
 from project_pipeline.release_hardening import validate_release_hardening
 from project_pipeline.resilience import validate_resilience_foundation
 from project_pipeline.scheduler import validate_scheduler_foundation
@@ -279,6 +280,10 @@ class RepositoryValidator:
     def _check_release_hardening(self) -> None:
         for error in validate_release_hardening(self.root):
             self.report.add("ERROR", "RELEASEHARDEN001", error, "release")
+        for error in validate_release_factory(self.root):
+            self.report.add(
+                "ERROR", "RELEASEFACTORY001", error, "src/project_pipeline/release_factory"
+            )
 
     def _check_final_convergence(self) -> None:
         for error in validate_final_convergence(self.root):

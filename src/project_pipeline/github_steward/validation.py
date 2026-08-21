@@ -14,6 +14,7 @@ _REQUIRED = (
     "src/project_pipeline/github_steward/protection_drift.py",
     "src/project_pipeline/github_steward/consolidation.py",
     "src/project_pipeline/github_steward/lifecycle.py",
+    "src/project_pipeline/github_steward/draft_release.py",
     "src/project_pipeline/github_steward/adapter.py",
     "src/project_pipeline/github_steward/mock.py",
     "src/project_pipeline/github_steward/persistence.py",

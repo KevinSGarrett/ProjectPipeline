@@ -48,6 +48,11 @@
       "title": "Supports Pull Requests",
       "type": "boolean"
     },
+    "supports_releases": {
+      "default": true,
+      "title": "Supports Releases",
+      "type": "boolean"
+    },
     "supports_reviews": {
       "default": true,
       "title": "Supports Reviews",

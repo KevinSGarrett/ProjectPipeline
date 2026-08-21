@@ -140,7 +140,11 @@ from project_pipeline.domain.context import (
     ProviderEgress,
     ReceiptStatus,
 )
-from project_pipeline.domain.github import AutonomousReviewReceipt
+from project_pipeline.domain.github import (
+    AutonomousReviewReceipt,
+    GitOperationState,
+    GitOperationType,
+)
 from project_pipeline.domain.orchestration import (
     DurableBackendKind,
     WorkflowDefinition,
@@ -151,6 +155,7 @@ from project_pipeline.domain.orchestration import (
 from project_pipeline.domain.security import RootOfTrust, SecurityIdentity
 from project_pipeline.github_steward import (
     ClosedLoopLifecycle,
+    GitHubDraftReleaseService,
     GitHubRestAdapter,
     GitHubStewardError,
     GitHubStewardStore,
@@ -211,6 +216,15 @@ from project_pipeline.orchestration.simulation import (
 from project_pipeline.persistence import PersistenceError, SQLiteStateStore
 from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 from project_pipeline.quality import run_quality, write_quality_report
+from project_pipeline.release_factory import (
+    ReleaseBundle,
+    artifact_sha256s,
+    bind_bundle_supply_chain,
+    build_release_bundle,
+    exercise_acquired_lifecycle,
+    resolve_release_version_authority,
+    write_acquired_assets,
+)
 from project_pipeline.release_hardening import (
     build_continuation_package,
     build_release_candidate,
@@ -423,6 +437,46 @@ def build_parser() -> argparse.ArgumentParser:
     release_hardening.add_argument("--live-target", action="store_true")
     release_hardening.add_argument("--evidence-id", action="append", default=[])
     release_hardening.add_argument("--json-output", type=Path)
+
+    release_factory = commands.add_parser(
+        "release-factory",
+        help="Build content-addressed bundles and governed GitHub draft releases",
+    )
+    release_factory.add_argument(
+        "action",
+        choices=(
+            "version",
+            "bundle",
+            "supply",
+            "draft-plan",
+            "draft-apply",
+            "draft-upload",
+            "draft-reconcile",
+            "draft-acquire",
+            "lifecycle",
+            "finalize",
+        ),
+    )
+    release_factory.add_argument("--root", type=_root, default=Path.cwd())
+    release_factory.add_argument("--output-dir", type=Path)
+    release_factory.add_argument("--desktop-dir", type=Path)
+    release_factory.add_argument("--bundle-dir", type=Path)
+    release_factory.add_argument("--acquire-dir", type=Path)
+    release_factory.add_argument("--work-dir", type=Path)
+    release_factory.add_argument("--repository-slug")
+    release_factory.add_argument("--database", type=Path)
+    release_factory.add_argument("--provider", choices=("mock", "github"), default="mock")
+    release_factory.add_argument("--release-id", type=int)
+    release_factory.add_argument("--asset", type=Path)
+    release_factory.add_argument("--fixture-desktop", action="store_true")
+    release_factory.add_argument("--campaign-complete", action="store_true")
+    release_factory.add_argument("--apply", action="store_true")
+    release_factory.add_argument("--approve", action="store_true")
+    release_factory.add_argument("--authorization-id")
+    release_factory.add_argument("--actor-id", default="actor:local-github")
+    release_factory.add_argument("--correlation-id", default="corr:local-release-factory")
+    release_factory.add_argument("--json-output", type=Path)
+    _add_configuration_arguments(release_factory)
 
     governance = commands.add_parser(
         "governance",
@@ -1692,8 +1746,6 @@ def _run_github_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         number = int(_require_argument(args, "pull_number"))
         review = None
         if args.review_receipt:
-            from project_pipeline.domain.github import AutonomousReviewReceipt
-
             review = AutonomousReviewReceipt.model_validate_json(
                 Path(args.review_receipt).read_text(encoding="utf-8")
             )
@@ -3203,6 +3255,198 @@ def _run_release_hardening_command(args: argparse.Namespace) -> tuple[dict[str, 
     }, 0 if decision.state != "FAIL" else 1
 
 
+def _load_release_bundle(path: Path) -> ReleaseBundle:
+    candidate = path / "candidate.json" if path.is_dir() else path
+    return ReleaseBundle.model_validate_json(candidate.read_text(encoding="utf-8"))
+
+
+def _release_factory_intent(
+    args: argparse.Namespace, *, target: str, operation: str, idempotency_key: str
+) -> ActionIntent:
+    return ActionIntent(
+        actor_id=args.actor_id,
+        authority="github.steward",
+        target=target,
+        operation=operation,
+        idempotency_key=idempotency_key,
+        approval_state=ApprovalState.APPROVED,
+        correlation_id=args.correlation_id,
+        risk=RiskLevel.HIGH,
+    )
+
+
+def _require_live_github_write_gate(args: argparse.Namespace, configuration: Any) -> None:
+    if args.provider != "github":
+        return
+    if (
+        configuration.settings.security.external_writes_default
+        is not ExternalWriteMode.REQUIRE_APPROVAL
+    ):
+        raise ConfigurationError(
+            "live GitHub writes require security.external_writes_default=REQUIRE_APPROVAL"
+        )
+
+
+def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    root = args.root
+    if args.action == "version":
+        return {
+            "version_authority": resolve_release_version_authority(root).model_dump(mode="json")
+        }, 0
+    output_dir = args.output_dir or (root / "dist" / "release-factory")
+    if args.action == "bundle":
+        bundle = build_release_bundle(
+            root,
+            output_dir,
+            desktop_artifact_dir=args.desktop_dir,
+            fixture_desktop=bool(args.fixture_desktop),
+        )
+        return {"bundle": bundle.model_dump(mode="json")}, 0
+    if args.action == "supply":
+        bundle = _load_release_bundle(Path(_require_argument(args, "bundle_dir")))
+        binding = bind_bundle_supply_chain(root, bundle)
+        return {"supply": binding.model_dump(mode="json")}, 0
+    if args.action == "lifecycle":
+        acquired = Path(_require_argument(args, "acquire_dir"))
+        work = args.work_dir or (acquired.parent / "lifecycle-work")
+        report = exercise_acquired_lifecycle(acquired, work)
+        return {"lifecycle": report.model_dump(mode="json")}, 0
+
+    configuration = _load_configuration(args)
+    if args.action in {"draft-apply", "draft-upload", "finalize"}:
+        if not args.apply or not args.approve or not args.authorization_id:
+            raise ConfigurationError(
+                f"{args.action} requires --apply, --approve, and --authorization-id"
+            )
+        _require_live_github_write_gate(args, configuration)
+    database = _state_database_path(args, configuration)
+    adapter = _github_adapter(args, configuration)
+    local = LocalGitRepository(root)
+    repository_slug = args.repository_slug or local.repository_slug()
+    bundle = _load_release_bundle(Path(_require_argument(args, "bundle_dir")))
+    hashes = artifact_sha256s(bundle)
+    with GitHubStewardStore(database, root) as store:
+        service = GitHubDraftReleaseService(remote=adapter, store=store)
+        if args.action == "draft-plan":
+            operation = service.plan_create_draft(
+                repository_slug,
+                tag_name=bundle.version.tag_name,
+                name=f"ProjectPipeline {bundle.version.bundle_version} draft",
+                body="Governed draft candidate. Do not publish before duration qualification.",
+                target_commitish=bundle.version.source_sha,
+                source_tree=bundle.version.source_tree,
+                artifact_sha256s=hashes,
+                actor_id=args.actor_id,
+                correlation_id=args.correlation_id,
+            )
+            return {"operation": operation.model_dump(mode="json")}, 0
+        if args.action == "draft-apply":
+            planned = service.plan_create_draft(
+                repository_slug,
+                tag_name=bundle.version.tag_name,
+                name=f"ProjectPipeline {bundle.version.bundle_version} draft",
+                body="Governed draft candidate. Do not publish before duration qualification.",
+                target_commitish=bundle.version.source_sha,
+                source_tree=bundle.version.source_tree,
+                artifact_sha256s=hashes,
+                actor_id=args.actor_id,
+                correlation_id=args.correlation_id,
+            )
+            intent = _release_factory_intent(
+                args,
+                target=repository_slug,
+                operation="github.draft-release.create",
+                idempotency_key=planned.idempotency_key,
+            )
+            receipt = service.apply_create_draft(
+                planned, action_intent=intent, authorization_id=str(args.authorization_id)
+            )
+            return {"receipt": receipt.model_dump(mode="json")}, (
+                0 if receipt.state.value in {"APPLIED", "RECONCILED"} else 1
+            )
+        if args.action == "draft-reconcile":
+            pending = [
+                item
+                for item in store.pending_operations(repository_slug)
+                if item.operation_type is GitOperationType.CREATE_DRAFT_RELEASE
+                and item.state is GitOperationState.UNKNOWN_OUTCOME
+            ]
+            if not pending:
+                raise ConfigurationError("no unknown-outcome draft create operation to reconcile")
+            receipt = service.reconcile_create_draft(pending[0])
+            return {"receipt": receipt.model_dump(mode="json")}, 0
+        if args.action == "draft-upload":
+            asset_path = Path(_require_argument(args, "asset"))
+            release_id = int(_require_argument(args, "release_id"))
+            content = asset_path.read_bytes()
+            digest = next(
+                item.sha256
+                for item in bundle.artifacts
+                if item.name == asset_path.name and item.bound
+            )
+            planned = service.plan_upload_asset(
+                repository_slug,
+                release_id=release_id,
+                name=asset_path.name,
+                sha256=digest,
+                source_sha=bundle.version.source_sha,
+                actor_id=args.actor_id,
+                correlation_id=args.correlation_id,
+            )
+            intent = _release_factory_intent(
+                args,
+                target=repository_slug,
+                operation="github.draft-release.upload",
+                idempotency_key=planned.idempotency_key,
+            )
+            receipt = service.apply_upload_asset(
+                planned,
+                content=content,
+                content_type="application/octet-stream",
+                action_intent=intent,
+                authorization_id=str(args.authorization_id),
+            )
+            return {"receipt": receipt.model_dump(mode="json")}, (
+                0 if receipt.state.value in {"APPLIED", "RECONCILED"} else 1
+            )
+        if args.action == "draft-acquire":
+            release_id = int(_require_argument(args, "release_id"))
+            dest = args.acquire_dir or (output_dir / "acquired")
+            assets = service.acquire_assets(
+                repository_slug,
+                release_id=release_id,
+                expected_sha256s=hashes,
+                expected_head_sha=bundle.version.source_sha,
+            )
+            write_acquired_assets(Path(dest), assets)
+            return {"acquired": str(Path(dest)), "assets": sorted(assets)}, 0
+        if args.action == "finalize":
+            if not args.campaign_complete:
+                raise ConfigurationError("finalize requires --campaign-complete")
+            release_id = int(_require_argument(args, "release_id"))
+            planned = service.plan_finalize(
+                repository_slug,
+                release_id=release_id,
+                expected_head_sha=bundle.version.source_sha,
+                campaign_complete=True,
+                actor_id=args.actor_id,
+                correlation_id=args.correlation_id,
+            )
+            intent = _release_factory_intent(
+                args,
+                target=repository_slug,
+                operation="github.draft-release.finalize",
+                idempotency_key=planned.idempotency_key,
+            )
+            receipt = service.apply_finalize(
+                planned, action_intent=intent, authorization_id=str(args.authorization_id)
+            )
+            return {"receipt": receipt.model_dump(mode="json")}, (
+                0 if receipt.state.value in {"APPLIED", "RECONCILED"} else 1
+            )
+    raise ConfigurationError(f"unsupported release-factory action: {args.action}")
+
+
 def _run_resilience_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     if args.action == "simulate":
         result = simulate_resilience_scenario(args.root, str(_require_argument(args, "scenario")))
@@ -3625,6 +3869,10 @@ def main(argv: Sequence[str] | None = None) -> int:
             return code
         if args.command == "release-hardening":
             result, code = _run_release_hardening_command(args)
+            _write_json_output(result, args.json_output)
+            return code
+        if args.command == "release-factory":
+            result, code = _run_release_factory_command(args)
             _write_json_output(result, args.json_output)
             return code
         if args.command == "ops-intelligence":
