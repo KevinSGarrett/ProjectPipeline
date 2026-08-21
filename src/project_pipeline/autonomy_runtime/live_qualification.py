@@ -739,12 +739,19 @@ def run_live_qualification(
     repository_root = repository_root.resolve()
     default_root = repository_root / ".local" / "live_qualification_runtime"
     root = (disposable_root or default_root).resolve()
-    if root.exists():
-        remove_disposable_workspace(root)
+    if root.exists() and not remove_disposable_workspace(root):
+        raise RuntimeError(f"disposable live qualification root is still locked: {root}")
     root.mkdir(parents=True, exist_ok=True)
     cursor_root = _cursor_cli_disposable_root(repository_root, root, cursor_cli_runner)
-    if cursor_cli_runner is None and cursor_root.exists() and cursor_root != root:
-        remove_disposable_workspace(cursor_root)
+    if (
+        cursor_cli_runner is None
+        and cursor_root.exists()
+        and cursor_root != root
+        and not remove_disposable_workspace(cursor_root)
+    ):
+        raise RuntimeError(
+            f"disposable cursor-cli qualification workspace is still locked: {cursor_root}"
+        )
     stages = (
         _qualify_windows_service(repository_root=repository_root, disposable_root=root),
         _qualify_command_center(disposable_root=root),
