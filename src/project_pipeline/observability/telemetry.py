@@ -1,9 +1,8 @@
 from __future__ import annotations
 
+import importlib
 from dataclasses import asdict, dataclass
-
-from opentelemetry.sdk.resources import Resource
-from opentelemetry.sdk.trace import TracerProvider
+from typing import Any
 
 from project_pipeline.configuration.models import TelemetryExporter, TelemetrySettings
 
@@ -20,17 +19,24 @@ class TelemetryBootstrapStatus:
         return asdict(self)
 
 
-def build_tracer_provider(settings: TelemetrySettings, environment: str) -> TracerProvider | None:
+def build_tracer_provider(settings: TelemetrySettings, environment: str) -> Any | None:
     if not settings.enabled:
         return None
-    resource = Resource.create(
+    try:
+        resource_module = importlib.import_module("opentelemetry.sdk.resources")
+        trace_module = importlib.import_module("opentelemetry.sdk.trace")
+    except ImportError:
+        return None
+    resource_type = resource_module.Resource
+    tracer_provider_type = trace_module.TracerProvider
+    resource = resource_type.create(
         {
             "service.name": settings.service_name,
             "service.namespace": settings.service_namespace,
             "deployment.environment.name": environment,
         }
     )
-    return TracerProvider(resource=resource)
+    return tracer_provider_type(resource=resource)
 
 
 def telemetry_status(settings: TelemetrySettings) -> TelemetryBootstrapStatus:

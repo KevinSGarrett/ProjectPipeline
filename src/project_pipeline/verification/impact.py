@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+from typing import Literal, cast
 
 from project_pipeline.domain.verification import (
     VerificationCategory,
     VerificationImpactSet,
     verification_identifier,
 )
+
+RiskLevel = Literal["LOW", "MEDIUM", "HIGH", "CRITICAL"]
 
 
 def _normalized_paths(paths: Iterable[str]) -> tuple[str, ...]:
@@ -118,6 +121,7 @@ def derive_test_impact(
     risk_value = str(risk).strip().upper()
     if risk_value not in {"LOW", "MEDIUM", "HIGH", "CRITICAL"}:
         raise ValueError(f"unsupported verification risk: {risk}")
+    typed_risk = cast(RiskLevel, risk_value)
     paths = _normalized_paths(changed_paths)
     dependencies = _normalized_paths(dependency_paths)
     requirements = tuple(
@@ -185,7 +189,7 @@ def derive_test_impact(
         *paths,
         *dependencies,
         *requirements,
-        risk_value,
+        typed_risk,
         *methods,
         *(item.value for item in profile),
         *(item.value for item in ordered_categories),
@@ -195,7 +199,7 @@ def derive_test_impact(
         changed_paths=paths,
         dependency_paths=dependencies,
         requirement_ids=requirements,
-        risk=risk_value,
+        risk=typed_risk,
         acceptance_methods=methods,
         profile_categories=profile,
         required_categories=ordered_categories,

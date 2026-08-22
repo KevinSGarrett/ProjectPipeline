@@ -203,7 +203,9 @@ def evaluate_completion_gate(facts: CompletionGateFacts) -> CompletionGateDecisi
     )
 
 
-def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFacts:
+def build_repository_gate_facts(
+    root: Path, project_id: str, *, external_live_qualification: Path | None = None
+) -> CompletionGateFacts:
     requirements = load_requirement_catalog(root)
     accepted = [
         item
@@ -230,7 +232,11 @@ def build_repository_gate_facts(root: Path, project_id: str) -> CompletionGateFa
     )
     evidence_rows = _evidence_rows(root)
     identity = inspect_worktree_identity(root)
-    compiler = compile_qualification_environments(root, identity=identity)
+    compiler = compile_qualification_environments(
+        root,
+        identity=identity,
+        live_qualification_path=external_live_qualification,
+    )
     current_sha = str(identity.get("sha") or "").lower()
     current_tree = str(identity.get("tree") or "").lower()
     ancestor_blocked = bool(compiler.get("inherited_ancestor"))

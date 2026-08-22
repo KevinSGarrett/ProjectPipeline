@@ -3,7 +3,8 @@ from __future__ import annotations
 import json
 from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
-from typing import Protocol
+from importlib import import_module
+from typing import Protocol, cast
 from urllib import request as urllib_request
 from uuid import uuid4
 
@@ -32,11 +33,22 @@ class AppriseNotificationAdapter:
         self.urls = urls
 
     def deliver(self, item: InboxItem, *, action_link: str | None = None) -> bool:
+        class _AppriseClient(Protocol):
+            def add(self, url: str) -> bool: ...
+            def notify(self, *, title: str, body: str) -> bool: ...
+
+        class _AppriseFactory(Protocol):
+            def __call__(self) -> _AppriseClient: ...
+
         try:
-            import apprise
-        except ImportError as exc:
+            module = import_module("apprise")
+        except ModuleNotFoundError as exc:
             raise RuntimeError("apprise optional dependency is unavailable") from exc
-        client = apprise.Apprise()
+        constructor = getattr(module, "Apprise", None)
+        if constructor is None or not callable(constructor):
+            raise RuntimeError("apprise optional dependency is unavailable")
+        factory = cast(_AppriseFactory, constructor)
+        client = factory()
         for url in self.urls:
             client.add(url)
         body = (

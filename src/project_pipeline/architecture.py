@@ -4,7 +4,7 @@ import re
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from project_pipeline.io import read_json, read_jsonl, write_json, write_jsonl
 
@@ -20,11 +20,11 @@ def _architecture_path(root: Path, name: str) -> Path:
 
 
 def load_component_catalog(root: Path) -> dict[str, Any]:
-    return read_json(_architecture_path(root, "component_catalog.json"))
+    return cast(dict[str, Any], read_json(_architecture_path(root, "component_catalog.json")))
 
 
 def load_technology_stack(root: Path) -> dict[str, Any]:
-    return read_json(_architecture_path(root, "technology_stack.json"))
+    return cast(dict[str, Any], read_json(_architecture_path(root, "technology_stack.json")))
 
 
 def component_index(root: Path) -> dict[str, dict[str, Any]]:

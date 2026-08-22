@@ -17,17 +17,17 @@ def supported_scenarios() -> tuple[str, ...]:
 
 def simulate_scenario(root: Path, scenario: str) -> dict[str, object]:
     if scenario == "golden":
-        results = run_golden_journeys(root)
-        passed = all(item.state is VerificationResultState.PASS for item in results)
-        payload = [item.model_dump(mode="json") for item in results]
+        golden_results = run_golden_journeys(root)
+        passed = all(item.state is VerificationResultState.PASS for item in golden_results)
+        payload: list[object] = [item.model_dump(mode="json") for item in golden_results]
     elif scenario == "property":
-        results = run_properties(root, seed=16016, cases=25)
-        passed = all(item.passed for item in results)
-        payload = [item.model_dump(mode="json") for item in results]
+        property_results = run_properties(root, seed=16016, cases=25)
+        passed = all(item.passed for item in property_results)
+        payload = [item.model_dump(mode="json") for item in property_results]
     elif scenario == "fault":
-        results = run_fault_scenarios(root)
-        passed = all(item.passed for item in results)
-        payload = [item.model_dump(mode="json") for item in results]
+        fault_results = run_fault_scenarios(root)
+        passed = all(item.passed for item in fault_results)
+        payload = [item.model_dump(mode="json") for item in fault_results]
     else:
         raise ValueError(f"unsupported verification scenario: {scenario}")
     return {

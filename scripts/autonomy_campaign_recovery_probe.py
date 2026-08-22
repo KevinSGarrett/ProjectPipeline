@@ -7,15 +7,54 @@ import json
 import os
 import sqlite3
 import subprocess
+import sys
 import time
 from pathlib import Path
 
-from project_pipeline.autonomy_runtime.campaign import (
-    CampaignController,
-    evaluate_campaign_aware_health,
-)
-from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusError
-from project_pipeline.autonomy_runtime.process_identity import inspect_process
+try:
+    from project_pipeline.autonomy_runtime.campaign import (
+        CampaignController,
+        evaluate_campaign_aware_health,
+    )
+    from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusError
+    from project_pipeline.autonomy_runtime.process_identity import inspect_process
+except ModuleNotFoundError:
+    # Scheduled tasks run with minimal environment, so bootstrap src/ explicitly.
+    _REPO_ROOT = Path(__file__).resolve().parents[1]
+    _SRC_ROOT = _REPO_ROOT / "src"
+    _src_str = str(_SRC_ROOT)
+    filtered: list[str] = []
+    for _entry in sys.path:
+        if not _entry:
+            filtered.append(_entry)
+            continue
+        try:
+            resolved = Path(_entry).resolve()
+        except OSError:
+            filtered.append(_entry)
+            continue
+        if resolved == _SRC_ROOT:
+            continue
+        if resolved.name.casefold() == "src":
+            continue
+        filtered.append(_entry)
+    sys.path[:] = filtered
+    sys.path.insert(0, _src_str)
+    for _name in (
+        "project_pipeline",
+        "project_pipeline.autonomy_runtime",
+        "project_pipeline.autonomy_runtime.campaign",
+        "project_pipeline.autonomy_runtime.campaign_status",
+        "project_pipeline.autonomy_runtime.process_identity",
+        "project_pipeline.autonomy_runtime.qualification",
+    ):
+        sys.modules.pop(_name, None)
+    from project_pipeline.autonomy_runtime.campaign import (
+        CampaignController,
+        evaluate_campaign_aware_health,
+    )
+    from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusError
+    from project_pipeline.autonomy_runtime.process_identity import inspect_process
 
 
 def _load_config(path: Path) -> dict:

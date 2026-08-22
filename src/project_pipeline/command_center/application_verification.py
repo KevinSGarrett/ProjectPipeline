@@ -4,7 +4,10 @@ import hashlib
 import json
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from playwright.sync_api import ConsoleMessage
 
 from project_pipeline.command_center.desktop_qualification import observe_desktop_toolchain
 
@@ -199,12 +202,14 @@ def verify_command_center_ui(
             for width, height in viewports:
                 page = browser.new_page(viewport={"width": width, "height": height})
                 console_errors: list[str] = []
-                page.on(
-                    "console",
-                    lambda message, console_errors=console_errors: (
-                        console_errors.append(message.text) if message.type == "error" else None
-                    ),
-                )
+
+                def _on_console(
+                    message: ConsoleMessage, _errors: list[str] = console_errors
+                ) -> None:
+                    if message.type == "error":
+                        _errors.append(message.text)
+
+                page.on("console", _on_console)
                 page.set_content(html, wait_until="load", timeout=15000)
                 result = evaluate_loaded_command_center_page(
                     page,

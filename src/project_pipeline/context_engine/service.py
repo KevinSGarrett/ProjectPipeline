@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import TracebackType
+from typing import Self
 
 from project_pipeline.artifacts import LocalContentAddressedStore
 from project_pipeline.context_engine.broker import ContextBroker
@@ -28,12 +30,17 @@ class ContextService:
         self.broker = ContextBroker()
         self.compiler = ContextCompiler()
 
-    def __enter__(self):
+    def __enter__(self) -> Self:
         self.store.__enter__()
         return self
 
-    def __exit__(self, *args):
-        self.store.__exit__(*args)
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None:
+        self.store.__exit__(exc_type, exc, tb)
 
     def compile(
         self,

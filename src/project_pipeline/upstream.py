@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import Counter
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from project_pipeline.io import read_json, read_jsonl, sha256_file, write_json
 
@@ -26,7 +26,7 @@ ALLOWED_USAGE_STATES = IMPLEMENTED_USAGE_STATES | {
 
 
 def load_upstream_registry(root: Path) -> dict[str, Any]:
-    return read_json(root / "provenance" / "upstream_registry.json")
+    return cast(dict[str, Any], read_json(root / "provenance" / "upstream_registry.json"))
 
 
 def load_p0_convergence(root: Path) -> dict[str, Any]:

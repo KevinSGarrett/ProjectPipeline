@@ -24,7 +24,8 @@ def simulate_security(scenario: str) -> dict[str, object]:
     if scenario not in supported_security_scenarios():
         raise ValueError(f"unsupported security scenario: {scenario}")
     authority = IdentityAuthority()
-    [authority.register_role(r) for r in default_roles()]
+    for role in default_roles():
+        authority.register_role(role)
     identity = SecurityIdentity(
         identity_id=security_identifier("IDENT", "sim-agent"),
         kind=IdentityKind.AGENT,

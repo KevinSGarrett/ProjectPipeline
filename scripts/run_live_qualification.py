@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from project_pipeline.autonomy_runtime.live_qualification import (
+from project_pipeline.autonomy_runtime.live_qualification import (  # noqa: E402
     run_live_qualification,
     write_live_qualification_evidence,
 )

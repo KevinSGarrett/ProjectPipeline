@@ -32,7 +32,7 @@ def run_adversarial_checks(root: Path) -> tuple[str, ...]:
     else:
         raise AssertionError("required verification check accepted SKIPPED")
 
-    values = {
+    values: dict[str, object] = {
         "source_requirements_dispositioned": True,
         "accepted_requirements_complete_or_external": True,
         "implementation_traceability_complete": True,
@@ -54,7 +54,23 @@ def run_adversarial_checks(root: Path) -> tuple[str, ...]:
     decision = evaluate_completion_gate(
         CompletionGateFacts(
             project_id="PROJECT-PIPELINE",
-            **values,
+            source_requirements_dispositioned=True,
+            accepted_requirements_complete_or_external=True,
+            implementation_traceability_complete=True,
+            critical_paths_tested=True,
+            golden_journeys_pass=True,
+            autonomous_runtime_qualified=True,
+            security_gates_satisfied=True,
+            resilience_verified=True,
+            deployment_reproducible=True,
+            rollback_verified=True,
+            engineer_operable_from_docs=True,
+            ai_continuable_from_repo_and_jira=True,
+            unresolved_items_truthful=True,
+            command_center_truthful=False,
+            jira_truthful=True,
+            unattended_operating_loop_qualified=True,
+            unexplained_gap_count=0,
             snapshot_fingerprint=assurance_fingerprint(values),
         )
     )

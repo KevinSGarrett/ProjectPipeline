@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import shutil
 import tempfile
+from collections.abc import Callable
 from pathlib import Path
 
 from project_pipeline.domain.verification import MutationProbeResult, verification_identifier
@@ -37,7 +38,7 @@ def run_mutation_probes(root: Path) -> tuple[MutationProbeResult, ...]:
     if not baseline.ok:
         raise ValueError("mutation probes require a clean repository-validation baseline")
     results: list[MutationProbeResult] = []
-    mutations = (
+    mutations: tuple[tuple[str, Callable[[Path], object], str], ...] = (
         (
             "missing-required-assurance-policy",
             lambda copy: (copy / "config" / "assurance_policy.json").unlink(),

@@ -5,7 +5,6 @@ import hashlib
 import json
 from pathlib import Path
 
-
 ISSUE_DIRS = ("epics", "stories", "tasks", "subtasks")
 
 
@@ -20,7 +19,11 @@ def main() -> int:
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     root = args.root.resolve()
-    verification_path = args.verification_results if args.verification_results.is_absolute() else root / args.verification_results
+    verification_path = (
+        args.verification_results
+        if args.verification_results.is_absolute()
+        else root / args.verification_results
+    )
     output = args.output if args.output.is_absolute() else root / args.output
     verification = json.loads(verification_path.read_text(encoding="utf-8"))
 
@@ -37,7 +40,9 @@ def main() -> int:
             children.setdefault(item["parent"], []).append(item["local_id"])
 
     evidence: dict[str, dict] = {}
-    for line in (root / "evidence" / "EVIDENCE_LEDGER.jsonl").read_text(encoding="utf-8").splitlines():
+    for line in (
+        (root / "evidence" / "EVIDENCE_LEDGER.jsonl").read_text(encoding="utf-8").splitlines()
+    ):
         if line.strip():
             row = json.loads(line)
             evidence[row["evidence_id"]] = row
@@ -51,7 +56,9 @@ def main() -> int:
         criterion_results: list[dict] = []
         for criterion in item.get("acceptance_criteria", []):
             verification_fact = criterion["verification"]
-            command_result = verification["command_results"].get(verification_fact["command"], {"status": "NOT_RUN"})
+            command_result = verification["command_results"].get(
+                verification_fact["command"], {"status": "NOT_RUN"}
+            )
             criterion_results.append(
                 {
                     "criterion_id": criterion["criterion_id"],
@@ -63,24 +70,48 @@ def main() -> int:
                 }
             )
             if verification_fact["status"] != "VERIFIED":
-                item_reasons.append({"code": "ACCEPTANCE_NOT_VERIFIED", "criterion_id": criterion["criterion_id"], "status": verification_fact["status"]})
+                item_reasons.append(
+                    {
+                        "code": "ACCEPTANCE_NOT_VERIFIED",
+                        "criterion_id": criterion["criterion_id"],
+                        "status": verification_fact["status"],
+                    }
+                )
             if command_result["status"] != "PASS":
-                item_reasons.append({"code": "FRESH_ACCEPTANCE_COMMAND_FAILED", "criterion_id": criterion["criterion_id"], "status": command_result["status"], "command": verification_fact["command"]})
+                item_reasons.append(
+                    {
+                        "code": "FRESH_ACCEPTANCE_COMMAND_FAILED",
+                        "criterion_id": criterion["criterion_id"],
+                        "status": command_result["status"],
+                        "command": verification_fact["command"],
+                    }
+                )
 
         required_tests = item.get("required_tests", [])
-        test_results = {test_id: verification["test_results"].get(test_id, {"status": "NOT_RUN"}) for test_id in required_tests}
+        test_results = {
+            test_id: verification["test_results"].get(test_id, {"status": "NOT_RUN"})
+            for test_id in required_tests
+        }
         if not required_tests:
             item_reasons.append({"code": "NO_REQUIRED_TESTS"})
         for test_id, result in test_results.items():
             if result["status"] != "PASS":
-                item_reasons.append({"code": "FRESH_REQUIRED_TEST_FAILED", "test_id": test_id, "status": result["status"]})
+                item_reasons.append(
+                    {
+                        "code": "FRESH_REQUIRED_TEST_FAILED",
+                        "test_id": test_id,
+                        "status": result["status"],
+                    }
+                )
 
         completion_ids = item.get("completion_evidence", [])
         if not completion_ids:
             item_reasons.append({"code": "NO_COMPLETION_EVIDENCE"})
         for evidence_id in item.get("evidence_required", []):
             if evidence_id not in completion_ids:
-                item_reasons.append({"code": "REQUIRED_EVIDENCE_NOT_ATTACHED", "evidence_id": evidence_id})
+                item_reasons.append(
+                    {"code": "REQUIRED_EVIDENCE_NOT_ATTACHED", "evidence_id": evidence_id}
+                )
         evidence_results: dict[str, dict] = {}
         for evidence_id in completion_ids:
             row = evidence.get(evidence_id)
@@ -98,13 +129,28 @@ def main() -> int:
                 "sha256_matches": hash_matches,
                 "observed_at_utc": row["observed_at_utc"],
             }
-            if row["result"] != "PASS" or row["verification_status"] != "VERIFIED" or not hash_matches:
-                item_reasons.append({"code": "EVIDENCE_NOT_VERIFIED_CURRENT", "evidence_id": evidence_id, "result": row["result"], "verification_status": row["verification_status"], "artifact_exists": artifact_exists, "sha256_matches": hash_matches})
+            if (
+                row["result"] != "PASS"
+                or row["verification_status"] != "VERIFIED"
+                or not hash_matches
+            ):
+                item_reasons.append(
+                    {
+                        "code": "EVIDENCE_NOT_VERIFIED_CURRENT",
+                        "evidence_id": evidence_id,
+                        "result": row["result"],
+                        "verification_status": row["verification_status"],
+                        "artifact_exists": artifact_exists,
+                        "sha256_matches": hash_matches,
+                    }
+                )
 
         for field in ("expected_implementation_artifacts", "expected_file_locations"):
             for value in item.get(field, []):
                 if not (root / value).exists():
-                    item_reasons.append({"code": "EXPECTED_PATH_MISSING", "field": field, "path": value})
+                    item_reasons.append(
+                        {"code": "EXPECTED_PATH_MISSING", "field": field, "path": value}
+                    )
         if item.get("blockers"):
             item_reasons.append({"code": "UNRESOLVED_BLOCKERS", "blockers": item["blockers"]})
         proof[local_id] = {
@@ -119,13 +165,21 @@ def main() -> int:
         changed = False
         for local_id in sorted(tuple(actual_done)):
             item = by_id[local_id]
-            dependencies = set(item.get("dependencies", [])) | set(item.get("upstream_dependencies", []))
+            dependencies = set(item.get("dependencies", [])) | set(
+                item.get("upstream_dependencies", [])
+            )
             failed_dependencies = sorted(dep for dep in dependencies if dep not in actual_done)
-            failed_children = sorted(child for child in children.get(local_id, []) if child not in actual_done)
+            failed_children = sorted(
+                child for child in children.get(local_id, []) if child not in actual_done
+            )
             if failed_dependencies:
-                reasons[local_id].append({"code": "DEPENDENCY_NOT_VERIFIED_DONE", "local_ids": failed_dependencies})
+                reasons[local_id].append(
+                    {"code": "DEPENDENCY_NOT_VERIFIED_DONE", "local_ids": failed_dependencies}
+                )
             if failed_children:
-                reasons[local_id].append({"code": "CHILD_NOT_VERIFIED_DONE", "local_ids": failed_children})
+                reasons[local_id].append(
+                    {"code": "CHILD_NOT_VERIFIED_DONE", "local_ids": failed_children}
+                )
             if failed_dependencies or failed_children:
                 actual_done.remove(local_id)
                 changed = True
@@ -138,7 +192,10 @@ def main() -> int:
         rows.append(
             {
                 "schema_version": "1.0.0",
-                "audit_id": "JAUD-" + hashlib.sha256((local_id + verification["generated_at_utc"]).encode()).hexdigest()[:20].upper(),
+                "audit_id": "JAUD-"
+                + hashlib.sha256((local_id + verification["generated_at_utc"]).encode())
+                .hexdigest()[:20]
+                .upper(),
                 "audited_at_utc": generated,
                 "local_id": local_id,
                 "remote_jira_key": item.get("remote_jira_key"),
@@ -152,7 +209,9 @@ def main() -> int:
             }
         )
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text("".join(json.dumps(row, sort_keys=True) + "\n" for row in rows), encoding="utf-8")
+    output.write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in rows), encoding="utf-8"
+    )
     summary = {
         "audited": len(rows),
         "confirmed_done": sum(row["verdict"] == "CONFIRMED_DONE" for row in rows),

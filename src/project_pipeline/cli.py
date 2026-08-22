@@ -8,7 +8,7 @@ import time
 from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from project_pipeline import __version__
 from project_pipeline.agent_router import (
@@ -68,14 +68,6 @@ from project_pipeline.budget.simulation import (
 from project_pipeline.budget.simulation import (
     supported_scenarios as supported_budget_scenarios,
 )
-
-try:
-    from project_pipeline.command_center.live_browser import verify_live_command_center
-    from project_pipeline.command_center.live_server import LiveCommandCenterServer
-except ImportError:
-    # optional:api extra is not part of the active lock groups used by CI.
-    verify_live_command_center = None
-    LiveCommandCenterServer = None
 from project_pipeline.configuration import (
     ConfigurationError,
     ExternalWriteMode,
@@ -206,6 +198,7 @@ from project_pipeline.orchestration import (
     RecoveryManager,
     TemporalFallbackAdapter,
 )
+from project_pipeline.orchestration.ports import DurableExecutionPort
 from project_pipeline.orchestration.service import OrchestrationService
 from project_pipeline.orchestration.simulation import (
     simulate_scenario as simulate_orchestration_scenario,
@@ -340,6 +333,23 @@ from project_pipeline.verification import (
 from project_pipeline.verification.impact import (
     derive_test_impact as verification_derive_test_impact,
 )
+
+_verify_live_command_center: Any | None
+_LiveCommandCenterServer: Any | None
+try:
+    from project_pipeline.command_center.live_browser import (
+        verify_live_command_center as _verify_live_command_center,
+    )
+    from project_pipeline.command_center.live_server import (
+        LiveCommandCenterServer as _LiveCommandCenterServer,
+    )
+except ImportError:
+    # optional:api extra is not part of the active lock groups used by CI.
+    _verify_live_command_center = None
+    _LiveCommandCenterServer = None
+
+verify_live_command_center: Any | None = _verify_live_command_center
+LiveCommandCenterServer: Any | None = _LiveCommandCenterServer
 
 
 def _root(value: str) -> Path:
@@ -1098,6 +1108,7 @@ def build_parser() -> argparse.ArgumentParser:
     assurance.add_argument("--database", type=Path)
     assurance.add_argument("--project-id", default="PROJECT-PIPELINE")
     assurance.add_argument("--input", type=Path)
+    assurance.add_argument("--external-evidence", type=Path)
     assurance.add_argument("--base-ref")
     assurance.add_argument("--head-ref", default="HEAD")
     assurance.add_argument("--ledger", type=Path)
@@ -1288,7 +1299,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def _load_configuration(args: argparse.Namespace):
+def _load_configuration(args: argparse.Namespace) -> Any:
     return load_runtime_configuration(
         args.root,
         profile=args.profile,
@@ -1312,11 +1323,11 @@ def _state_database_path(args: argparse.Namespace, configuration: Any) -> Path |
             "the PostgreSQL production port and migrations are defined but not live-verified."
         )
     if args.database is not None:
-        candidate = args.database
+        candidate = args.database if isinstance(args.database, Path) else Path(str(args.database))
         if str(candidate) == ":memory:":
             return ":memory:"
         return candidate.resolve() if candidate.is_absolute() else (args.root / candidate).resolve()
-    return configuration.settings.database_path(args.root)
+    return cast(Path, configuration.settings.database_path(args.root))
 
 
 def _require_argument(args: argparse.Namespace, name: str) -> Any:
@@ -1362,11 +1373,11 @@ def _run_state_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             }, 0 if state else 1
         if args.action == "task":
             task_id = str(_require_argument(args, "task_id"))
-            state = store.get_task_state(task_id)
+            task_state = store.get_task_state(task_id)
             return {
                 "database": str(database),
-                "task_state": None if state is None else state.model_dump(mode="json"),
-            }, 0 if state else 1
+                "task_state": None if task_state is None else task_state.model_dump(mode="json"),
+            }, 0 if task_state else 1
         if args.action == "transition-project":
             next_state = ProjectLifecycleState(str(_require_argument(args, "next_state")))
             expected = int(_require_argument(args, "expected_version"))
@@ -1381,11 +1392,11 @@ def _run_state_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             )
             return {"database": str(database), "project_state": state.model_dump(mode="json")}, 0
         task_id = str(_require_argument(args, "task_id"))
-        next_state = TaskLifecycleState(str(_require_argument(args, "next_state")))
+        task_next_state = TaskLifecycleState(str(_require_argument(args, "next_state")))
         expected = int(_require_argument(args, "expected_version"))
-        state = store.transition_task(
+        task_state = store.transition_task(
             task_id=task_id,
-            next_state=next_state,
+            next_state=task_next_state,
             expected_version=expected,
             reason=args.reason,
             actor_id=args.actor_id,
@@ -1393,7 +1404,7 @@ def _run_state_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
             blocked_reason=args.blocked_reason,
             owner_id=args.owner_id,
         )
-        return {"database": str(database), "task_state": state.model_dump(mode="json")}, 0
+        return {"database": str(database), "task_state": task_state.model_dump(mode="json")}, 0
 
 
 def _run_trace_store_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -1417,8 +1428,8 @@ def _run_trace_store_command(args: argparse.Namespace) -> tuple[dict[str, Any], 
             ] else 1
         if args.action == "requirement":
             requirement_id = str(_require_argument(args, "requirement_id"))
-            result = service.trace_requirement(requirement_id)
-            return {"database": str(database), "trace": result}, 0 if result else 1
+            trace = service.trace_requirement(requirement_id)
+            return {"database": str(database), "trace": trace}, 0 if trace else 1
         if args.action == "source":
             source = str(_require_argument(args, "source_reference"))
             return {
@@ -1460,7 +1471,7 @@ def _run_trace_store_command(args: argparse.Namespace) -> tuple[dict[str, Any], 
         return {"database": str(database), "mutation": service.mutate(mutation)}, 0
 
 
-def _jira_adapter(args: argparse.Namespace, configuration: Any):
+def _jira_adapter(args: argparse.Namespace, configuration: Any) -> Any:
     if args.provider == "mock":
         adapter = MockJiraAdapter(project_key=args.project_key)
         if args.remote_snapshot is not None:
@@ -1545,7 +1556,7 @@ def _repository_root(args: argparse.Namespace) -> Path:
     return path
 
 
-def _github_adapter(args: argparse.Namespace, configuration: Any):
+def _github_adapter(args: argparse.Namespace, configuration: Any) -> Any:
     if args.provider == "mock":
         return MockGitHubAdapter(repository_slug=args.repository_slug or "example/project")
     token_ref = configuration.settings.integrations.github_token
@@ -2259,8 +2270,8 @@ def _run_jira_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                 else (args.root / args.plan_file).resolve()
             )
             plan = JiraReconciliationPlan.model_validate_json(path.read_text(encoding="utf-8"))
-            snapshot = store.get_snapshot(plan.remote_snapshot_id)
-            if snapshot is None:
+            stored_snapshot = store.get_snapshot(plan.remote_snapshot_id)
+            if stored_snapshot is None:
                 raise ConfigurationError(
                     f"plan snapshot is not present in synchronization store: {plan.remote_snapshot_id}"
                 )
@@ -2491,21 +2502,21 @@ def _run_context_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]
         if args.action == "status":
             return {"database": str(database), "context": store.status()}, 0
         pack_id = str(_require_argument(args, "pack_id"))
-        pack = store.get_pack(pack_id)
-        if pack is None:
+        stored_pack = store.get_pack(pack_id)
+        if stored_pack is None:
             return {
                 "database": str(database),
                 "error": "context_pack_not_found",
                 "pack_id": pack_id,
             }, 1
         if args.action == "pack":
-            return {"database": str(database), "pack": pack.model_dump(mode="json")}, 0
+            return {"database": str(database), "pack": stored_pack.model_dump(mode="json")}, 0
         compiler = ContextCompiler()
         if args.action == "telemetry":
-            telemetry = compiler.telemetry(pack)
+            telemetry = compiler.telemetry(stored_pack)
             return {"database": str(database), "telemetry": telemetry.model_dump(mode="json")}, 0
         if args.action == "review":
-            review = compiler.reviewer_package(pack)
+            review = compiler.reviewer_package(stored_pack)
             return {"database": str(database), "review_package": review.model_dump(mode="json")}, 0
 
     worker_id = str(_require_argument(args, "worker_id"))
@@ -2594,7 +2605,7 @@ def _run_orchestration_command(args: argparse.Namespace) -> tuple[dict[str, Any]
                 input_payload=_load_json_object(args.input, argument="input"),
                 backend=backend,
             )
-            backends = {
+            backends: dict[DurableBackendKind, DurableExecutionPort] = {
                 DurableBackendKind.HATCHET: HatchetDurableAdapter(),
                 DurableBackendKind.DBOS: DBOSFallbackAdapter(),
                 DurableBackendKind.TEMPORAL: TemporalFallbackAdapter(),
@@ -2671,8 +2682,8 @@ def _run_budget_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     if args.action == "preflight":
         target = Path(_require_argument(args, "path"))
         adapter = InfracostAdapter(allow_external_read=bool(args.allow_external_read))
-        result = adapter.estimate(args.root, target)
-        return {"infracost": result.model_dump(mode="json")}, 0 if result.available else 1
+        estimate = adapter.estimate(args.root, target)
+        return {"infracost": estimate.model_dump(mode="json")}, 0 if estimate.available else 1
 
     configuration = _load_configuration(args)
     database = _state_database_path(args, configuration)
@@ -2703,7 +2714,7 @@ def _run_budget_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                 "decision": decision.model_dump(mode="json"),
             }, 0 if decision.admitted else 2
         if args.action == "forecast":
-            result = governor.forecast(
+            forecast = governor.forecast(
                 project_id=args.project_id,
                 task_class=args.task_class,
                 provider_id=args.provider_id,
@@ -2714,7 +2725,7 @@ def _run_budget_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
                 pace_ratio_milli=max(0, args.pace_ratio_milli),
                 remaining_budget_microunits=args.remaining_budget_microunits,
             )
-            return {"database": str(database), "forecast": result.model_dump(mode="json")}, 0
+            return {"database": str(database), "forecast": forecast.model_dump(mode="json")}, 0
         if args.action == "impact":
             old_limit = _load_json_model(args.old_limit, BudgetLimit, argument="old_limit")
             new_limit = _load_json_model(args.limit, BudgetLimit, argument="limit")
@@ -2777,6 +2788,8 @@ def _require_assurance_record_apply(args: argparse.Namespace) -> None:
 def _assurance_database(args: argparse.Namespace) -> Path:
     configuration = _load_configuration(args)
     database = _state_database_path(args, configuration)
+    if isinstance(database, str):
+        raise ConfigurationError("assurance commands require a filesystem-backed database path")
     database.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(database)
     try:
@@ -2794,10 +2807,10 @@ def _run_assurance_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
 
     if args.action == "candidate":
         payload = _load_json_object(args.input, argument="input")
-        result = assess_candidate_completion(**payload)
+        candidate_assessment = assess_candidate_completion(**payload)
         return {
-            "candidate_completion": result.model_dump(mode="json")
-        }, 0 if result.state.value == "READY_FOR_COMPLETION_GATE" else 1
+            "candidate_completion": candidate_assessment.model_dump(mode="json")
+        }, 0 if candidate_assessment.state.value == "READY_FOR_COMPLETION_GATE" else 1
 
     if args.action == "delivery-gate":
         base_ref = str(_require_argument(args, "base_ref"))
@@ -2875,16 +2888,20 @@ def _run_assurance_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
         }, 0
 
     if args.action == "completion-gate":
-        facts = build_repository_gate_facts(args.root, args.project_id)
-        decision = evaluate_completion_gate(facts)
+        facts = build_repository_gate_facts(
+            args.root,
+            args.project_id,
+            external_live_qualification=args.external_evidence,
+        )
+        completion_decision = evaluate_completion_gate(facts)
         if args.record:
-            store.save_gate(decision)
+            store.save_gate(completion_decision)
         return {
             "database": str(database),
             "mode": "RECORDED" if args.record else "DRY_RUN",
             "facts": facts.model_dump(mode="json"),
-            "completion_gate": decision.model_dump(mode="json"),
-        }, 0 if decision.final_complete else 1
+            "completion_gate": completion_decision.model_dump(mode="json"),
+        }, 0 if completion_decision.final_complete else 1
 
     if args.action == "loop-guard":
         payload = _load_json_object(args.input, argument="input")
@@ -2903,30 +2920,30 @@ def _run_assurance_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             **payload.get("budget", {}),
         }
         budget = AttemptBudget.model_validate(budget_payload)
-        decision = evaluate_loop(observations, budget)
+        loop_decision = evaluate_loop(observations, budget)
         if args.record:
-            store.save_loop(args.project_id, decision)
+            store.save_loop(args.project_id, loop_decision)
         return {
             "database": str(database),
             "mode": "RECORDED" if args.record else "DRY_RUN",
-            "loop_guard": decision.model_dump(mode="json"),
-        }, 0 if decision.disposition.value == "CONTINUE" else 1
+            "loop_guard": loop_decision.model_dump(mode="json"),
+        }, 0 if loop_decision.disposition.value == "CONTINUE" else 1
 
     if args.action == "scope-change":
         contract = _load_json_model(args.scope, ScopeContract, argument="scope")
-        decision = evaluate_scope_change(
+        scope_decision = evaluate_scope_change(
             contract,
             requested_behavior=tuple(args.requested_behavior),
             requested_paths=tuple(args.requested_path),
         )
         if args.record:
             store.save_scope(args.project_id, contract)
-            store.save_scope_change(args.project_id, decision)
+            store.save_scope_change(args.project_id, scope_decision)
         return {
             "database": str(database),
             "mode": "RECORDED" if args.record else "DRY_RUN",
-            "scope_change": decision.model_dump(mode="json"),
-        }, 0 if decision.disposition.value == "WITHIN_FROZEN_SCOPE" else 1
+            "scope_change": scope_decision.model_dump(mode="json"),
+        }, 0 if scope_decision.disposition.value == "WITHIN_FROZEN_SCOPE" else 1
 
     raise ConfigurationError(f"unsupported assurance action: {args.action}")
 
@@ -2934,6 +2951,8 @@ def _run_assurance_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
 def _verification_database(args: argparse.Namespace) -> Path:
     configuration = _load_configuration(args)
     database = _state_database_path(args, configuration)
+    if isinstance(database, str):
+        raise ConfigurationError("verification commands require a filesystem-backed database path")
     database.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(database)
     try:
@@ -2948,16 +2967,11 @@ def _require_verification_apply(args: argparse.Namespace, action: str) -> None:
         raise ConfigurationError(f"verification {action} requires both --apply and --approve")
 
 
-def _security_database(args: argparse.Namespace) -> Path | str:
+def _security_database(args: argparse.Namespace) -> Path:
     if args.database is not None:
-        return (
-            args.database
-            if str(args.database) == ":memory:"
-            else (
-                args.database if args.database.is_absolute() else args.root / args.database
-            ).resolve()
-        )
-    return (args.root / ".local/state/security.sqlite3").resolve()
+        candidate = args.database if isinstance(args.database, Path) else Path(str(args.database))
+        return candidate if candidate.is_absolute() else (args.root / candidate).resolve()
+    return cast(Path, (args.root / ".local/state/security.sqlite3").resolve())
 
 
 def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -2983,19 +2997,19 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
             "live_external_claim": False,
         }, 0
     if args.action == "root-trust":
-        value = RootOfTrust.model_validate(
+        root_of_trust = RootOfTrust.model_validate(
             json.loads((args.root / "config/root_of_trust.json").read_text(encoding="utf-8"))
         )
-        return {"root_of_trust": value.model_dump(mode="json")}, 0
+        return {"root_of_trust": root_of_trust.model_dump(mode="json")}, 0
     if args.action == "sbom":
-        sbom = build_repository_sbom(args.root, project_id=args.project_id)
-        return {"sbom": sbom.model_dump(mode="json")}, 0
+        repository_sbom = build_repository_sbom(args.root, project_id=args.project_id)
+        return {"sbom": repository_sbom.model_dump(mode="json")}, 0
     if args.action == "supply-chain":
-        gate, sbom = evaluate_supply_chain(args.root)
+        supply_chain_gate, supply_chain_sbom = evaluate_supply_chain(args.root)
         return {
-            "supply_chain_gate": gate.model_dump(mode="json"),
-            "sbom_id": sbom.sbom_id if sbom else None,
-        }, 0 if gate.state.value == "PASS" else 1
+            "supply_chain_gate": supply_chain_gate.model_dump(mode="json"),
+            "sbom_id": supply_chain_sbom.sbom_id if supply_chain_sbom else None,
+        }, 0 if supply_chain_gate.state.value == "PASS" else 1
     if args.action == "self-modification":
         assessment = assess_self_modification(tuple(args.changed_path))
         return {"self_modification": assessment.model_dump(mode="json")}, 0
@@ -3005,7 +3019,7 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
             if args.database is not None
             else (args.root / ".local/state/artifact_bindings.sqlite3").resolve()
         )
-        store = ArtifactBindingStore(binding_db)
+        binding_store = ArtifactBindingStore(binding_db)
         try:
             if args.action == "bind-artifact":
                 if not args.apply or not args.approve:
@@ -3013,27 +3027,32 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
                 if args.input is None:
                     raise ConfigurationError("security bind-artifact requires --input")
                 payload = json.loads(Path(args.input).read_text(encoding="utf-8"))
-                return {"artifact_binding": store.bind(payload)}, 0
+                return {"artifact_binding": binding_store.bind(payload)}, 0
             if args.action == "revoke-artifact":
                 if not args.apply or not args.approve:
                     raise ConfigurationError("security revoke-artifact requires --apply --approve")
                 if not args.binding_id:
                     raise ConfigurationError("security revoke-artifact requires --binding-id")
-                return {"artifact_binding": store.revoke(str(args.binding_id))}, 0
-            return {"artifact_bindings": store.query(limit=args.limit, offset=args.offset)}, 0
+                return {"artifact_binding": binding_store.revoke(str(args.binding_id))}, 0
+            return {
+                "artifact_bindings": binding_store.query(limit=args.limit, offset=args.offset)
+            }, 0
         finally:
-            store.close()
+            binding_store.close()
     if args.action == "identities":
         database = _security_database(args)
         with SecurityStore(database, args.root) as store:
             if args.identity_id:
                 identity = store.get_identity(str(args.identity_id))
-                identities = () if identity is None else (identity,)
+                identity_payload = [] if identity is None else [identity.model_dump(mode="json")]
             else:
-                identities = store.list_identities(limit=args.limit, offset=args.offset)
+                identity_payload = [
+                    item.model_dump(mode="json")
+                    for item in store.list_identities(limit=args.limit, offset=args.offset)
+                ]
         return {
             "database": str(database),
-            "identities": [item.model_dump(mode="json") for item in identities],
+            "identities": identity_payload,
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
@@ -3042,12 +3061,15 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
         with SecurityStore(database, args.root) as store:
             if args.grant_id:
                 grant = store.get_grant(str(args.grant_id))
-                grants = () if grant is None else (grant,)
+                grant_payload = [] if grant is None else [grant.model_dump(mode="json")]
             else:
-                grants = store.list_grants(limit=args.limit, offset=args.offset)
+                grant_payload = [
+                    item.model_dump(mode="json")
+                    for item in store.list_grants(limit=args.limit, offset=args.offset)
+                ]
         return {
             "database": str(database),
-            "grants": [item.model_dump(mode="json") for item in grants],
+            "grants": grant_payload,
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
@@ -3055,13 +3077,16 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
         database = _security_database(args)
         with SecurityStore(database, args.root) as store:
             if args.approval_id:
-                value = store.get_approval(str(args.approval_id))
-                values = () if value is None else (value,)
+                approval = store.get_approval(str(args.approval_id))
+                approval_payload = [] if approval is None else [approval.model_dump(mode="json")]
             else:
-                values = store.list_approvals(limit=args.limit, offset=args.offset)
+                approval_payload = [
+                    item.model_dump(mode="json")
+                    for item in store.list_approvals(limit=args.limit, offset=args.offset)
+                ]
         return {
             "database": str(database),
-            "approvals": [item.model_dump(mode="json") for item in values],
+            "approvals": approval_payload,
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
@@ -3072,26 +3097,36 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
     if args.action == "policy-decisions":
         with SecurityStore(database, args.root) as store:
             if args.decision_id:
-                value = store.get_policy_decision(str(args.decision_id))
-                values = () if value is None else (value,)
+                policy_decision = store.get_policy_decision(str(args.decision_id))
+                policy_payload = (
+                    [] if policy_decision is None else [policy_decision.model_dump(mode="json")]
+                )
             else:
-                values = store.list_policy_decisions(limit=args.limit, offset=args.offset)
+                policy_payload = [
+                    item.model_dump(mode="json")
+                    for item in store.list_policy_decisions(limit=args.limit, offset=args.offset)
+                ]
         return {
             "database": str(database),
-            "policy_decisions": [item.model_dump(mode="json") for item in values],
+            "policy_decisions": policy_payload,
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
     if args.action == "egress-decisions":
         with SecurityStore(database, args.root) as store:
             if args.decision_id:
-                value = store.get_egress_decision(str(args.decision_id))
-                values = () if value is None else (value,)
+                egress_decision = store.get_egress_decision(str(args.decision_id))
+                egress_payload = (
+                    [] if egress_decision is None else [egress_decision.model_dump(mode="json")]
+                )
             else:
-                values = store.list_egress_decisions(limit=args.limit, offset=args.offset)
+                egress_payload = [
+                    item.model_dump(mode="json")
+                    for item in store.list_egress_decisions(limit=args.limit, offset=args.offset)
+                ]
         return {
             "database": str(database),
-            "egress_decisions": [item.model_dump(mode="json") for item in values],
+            "egress_decisions": egress_payload,
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
@@ -3099,12 +3134,15 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
         with SecurityStore(database, args.root) as store:
             if args.secret_ref_id:
                 ref = store.get_secret_reference(str(args.secret_ref_id))
-                refs = () if ref is None else (ref,)
+                refs_payload = [] if ref is None else [ref.model_dump(mode="json")]
             else:
-                refs = store.list_secret_references(limit=args.limit, offset=args.offset)
+                refs_payload = [
+                    item.model_dump(mode="json")
+                    for item in store.list_secret_references(limit=args.limit, offset=args.offset)
+                ]
         return {
             "database": str(database),
-            "secret_references": [item.model_dump(mode="json") for item in refs],
+            "secret_references": refs_payload,
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
@@ -3112,51 +3150,63 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
         with SecurityStore(database, args.root) as store:
             if args.lease_id:
                 lease = store.get_secret_lease(str(args.lease_id))
-                leases = () if lease is None else (lease,)
+                lease_payload = [] if lease is None else [lease.model_dump(mode="json")]
             else:
-                leases = store.list_secret_leases(limit=args.limit, offset=args.offset)
+                lease_payload = [
+                    item.model_dump(mode="json")
+                    for item in store.list_secret_leases(limit=args.limit, offset=args.offset)
+                ]
         return {
             "database": str(database),
-            "secret_leases": [item.model_dump(mode="json") for item in leases],
+            "secret_leases": lease_payload,
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
     if args.action == "audit-events":
         with SecurityStore(database, args.root) as store:
             if args.audit_id:
-                value = store.get_audit_event(str(args.audit_id))
-                values = () if value is None else (value,)
+                audit_event = store.get_audit_event(str(args.audit_id))
+                audit_payload = [] if audit_event is None else [audit_event.model_dump(mode="json")]
             else:
-                values = store.list_audit_events(limit=args.limit, offset=args.offset)
+                audit_payload = [
+                    item.model_dump(mode="json")
+                    for item in store.list_audit_events(limit=args.limit, offset=args.offset)
+                ]
         return {
             "database": str(database),
-            "audit_events": [item.model_dump(mode="json") for item in values],
+            "audit_events": audit_payload,
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
     if args.action == "sboms":
         with SecurityStore(database, args.root) as store:
             if args.sbom_id:
-                value = store.get_sbom(str(args.sbom_id))
-                values = () if value is None else (value,)
+                sbom = store.get_sbom(str(args.sbom_id))
+                sbom_payload = [] if sbom is None else [sbom.model_dump(mode="json")]
             else:
-                values = store.list_sboms(limit=args.limit, offset=args.offset)
+                sbom_payload = [
+                    item.model_dump(mode="json")
+                    for item in store.list_sboms(limit=args.limit, offset=args.offset)
+                ]
         return {
             "database": str(database),
-            "sboms": [item.model_dump(mode="json") for item in values],
+            "sboms": sbom_payload,
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
     if args.action == "supply-chain-gates":
         with SecurityStore(database, args.root) as store:
             if args.gate_id:
-                value = store.get_supply_chain_gate(str(args.gate_id))
-                values = () if value is None else (value,)
+                gate = store.get_supply_chain_gate(str(args.gate_id))
+                gate_payload = [] if gate is None else [gate.model_dump(mode="json")]
             else:
-                values = store.list_supply_chain_gates(limit=args.limit, offset=args.offset)
+                gate_payload = [
+                    item.model_dump(mode="json")
+                    for item in store.list_supply_chain_gates(limit=args.limit, offset=args.offset)
+                ]
         return {
             "database": str(database),
-            "supply_chain_gates": [item.model_dump(mode="json") for item in values],
+            "supply_chain_gates": gate_payload,
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
@@ -3164,12 +3214,15 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
         with SecurityStore(database, args.root) as store:
             if args.root_id:
                 root_record = store.get_root_of_trust(str(args.root_id))
-                records = () if root_record is None else (root_record,)
+                root_payload = [] if root_record is None else [root_record.model_dump(mode="json")]
             else:
-                records = store.list_root_of_trust(limit=args.limit, offset=args.offset)
+                root_payload = [
+                    item.model_dump(mode="json")
+                    for item in store.list_root_of_trust(limit=args.limit, offset=args.offset)
+                ]
         return {
             "database": str(database),
-            "root_of_trust_records": [item.model_dump(mode="json") for item in records],
+            "root_of_trust_records": root_payload,
             "limit": max(1, min(args.limit, 500)),
             "offset": max(0, int(args.offset)),
         }, 0
@@ -3177,23 +3230,18 @@ def _run_security_command(args: argparse.Namespace) -> tuple[dict[str, Any], int
         if not (args.apply and args.approve):
             raise ConfigurationError("security record-identity requires --apply --approve")
         path = _require_argument(args, "input")
-        value = SecurityIdentity.model_validate(json.loads(path.read_text(encoding="utf-8")))
+        identity = SecurityIdentity.model_validate(json.loads(path.read_text(encoding="utf-8")))
         with SecurityStore(database, args.root) as store:
-            store.save_identity(value)
-        return {"database": str(database), "recorded_identity_id": value.identity_id}, 0
+            store.save_identity(identity)
+        return {"database": str(database), "recorded_identity_id": identity.identity_id}, 0
     raise ConfigurationError(f"unsupported security action: {args.action}")
 
 
-def _resilience_database(args: argparse.Namespace) -> Path | str:
+def _resilience_database(args: argparse.Namespace) -> Path:
     if args.database is not None:
-        return (
-            args.database
-            if str(args.database) == ":memory:"
-            else (
-                args.database if args.database.is_absolute() else args.root / args.database
-            ).resolve()
-        )
-    return (args.root / ".local/state/resilience.sqlite3").resolve()
+        candidate = args.database if isinstance(args.database, Path) else Path(str(args.database))
+        return candidate if candidate.is_absolute() else (args.root / candidate).resolve()
+    return cast(Path, (args.root / ".local/state/resilience.sqlite3").resolve())
 
 
 def _run_restore_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
@@ -3444,14 +3492,11 @@ def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, An
             write_acquired_assets(Path(dest), assets)
             return {"acquired": str(Path(dest)), "assets": sorted(assets)}, 0
         if args.action == "finalize":
-            if not args.campaign_complete:
-                raise ConfigurationError("finalize requires --campaign-complete")
             release_id = int(_require_argument(args, "release_id"))
             planned = service.plan_finalize(
                 repository_slug,
                 release_id=release_id,
                 expected_head_sha=bundle.version.source_sha,
-                campaign_complete=True,
                 actor_id=args.actor_id,
                 correlation_id=args.correlation_id,
             )
@@ -3544,7 +3589,7 @@ def _run_resilience_command(args: argparse.Namespace) -> tuple[dict[str, Any], i
         )
         return {"wip_restore": payload}, 0
     if args.action == "provider-removal":
-        payload = simulate_provider_removal(
+        removal = simulate_provider_removal(
             provider_id="cloud-a",
             required_capabilities=tuple(args.capability or ["reasoning"]),
             providers=(
@@ -3557,7 +3602,7 @@ def _run_resilience_command(args: argparse.Namespace) -> tuple[dict[str, Any], i
                 },
             ),
         )
-        return {"provider_removal": payload.model_dump(mode="json")}, 0
+        return {"provider_removal": removal.model_dump(mode="json")}, 0
     if args.action == "gpu-wait":
         decision = evaluate_gpu_wait(
             [
@@ -3676,8 +3721,10 @@ def _run_verification_command(args: argparse.Namespace) -> tuple[dict[str, Any],
         _require_verification_apply(args, "run")
         harness = VerificationHarness(args.root, policy)
         run, details = harness.run()
-        activations = details.get("activations") or ()
-        journeys = details.get("golden_journeys") or ()
+        raw_activations = details.get("activations")
+        activations = raw_activations if isinstance(raw_activations, tuple) else ()
+        raw_journeys = details.get("golden_journeys")
+        journeys = raw_journeys if isinstance(raw_journeys, tuple) else ()
         with VerificationStore(database, args.root) as store:
             for activation in activations:
                 store.save_activation(args.project_id, activation)
@@ -3846,9 +3893,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             _write_json_output(report.as_dict(), args.json_output)
             return 0 if report.ok else 1
         if args.command == "smoke":
-            report = run_foundation_smoke(args.root, _load_configuration(args))
-            _write_json_output(report.as_dict(), args.json_output)
-            return 0 if report.ok else 1
+            smoke_report = run_foundation_smoke(args.root, _load_configuration(args))
+            _write_json_output(smoke_report.as_dict(), args.json_output)
+            return 0 if smoke_report.ok else 1
         if args.command == "schemas":
             if args.action == "write":
                 _write_json_output({"written": write_schemas(args.root)}, None)
@@ -3881,11 +3928,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "command-center":
             return _run_command_center_command(args)
         if args.command == "quality":
-            report = run_quality(args.root, strict_tools=args.strict_tools, coverage=args.coverage)
+            quality_report = run_quality(
+                args.root, strict_tools=args.strict_tools, coverage=args.coverage
+            )
             if args.json_output:
-                write_quality_report(report, args.json_output)
-            _write_json_output(report.as_dict(), None)
-            return 0 if report.ok else 1
+                write_quality_report(quality_report, args.json_output)
+            _write_json_output(quality_report.as_dict(), None)
+            return 0 if quality_report.ok else 1
         if args.command == "governance":
             payload, code = _run_governance_command(args)
             _write_json_output(payload, args.json_output)
@@ -3899,14 +3948,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             _write_json_output(result, args.json_output)
             return code
         if args.command == "ops-intelligence":
-            payload = None
+            ops_payload: dict[str, Any] | None = None
             if args.payload is not None:
-                payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
+                ops_payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
             try:
                 result = run_ops_action(
                     args.root,
                     args.action,
-                    payload=payload,
+                    payload=ops_payload,
                     freshness_seconds=int(args.freshness_seconds),
                 )
             except ValueError as error:
@@ -3918,11 +3967,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             _write_json_output(result, args.json_output)
             return 0
         if args.command == "infra-boundaries":
-            payload = None
+            infra_payload: dict[str, Any] | None = None
             if args.payload is not None:
-                payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
+                infra_payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
             try:
-                result = run_infra_action(args.root, args.action, payload=payload)
+                result = run_infra_action(args.root, args.action, payload=infra_payload)
             except ValueError as error:
                 _write_json_output(
                     {"ok": False, "error": str(error), "user_action_required": False},
@@ -3932,11 +3981,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             _write_json_output(result, args.json_output)
             return 0
         if args.command == "director-intelligence":
-            payload = None
+            director_payload: dict[str, Any] | None = None
             if args.payload is not None:
-                payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
+                director_payload = json.loads(Path(args.payload).read_text(encoding="utf-8"))
             try:
-                result = run_director_action(args.root, args.action, payload=payload)
+                result = run_director_action(args.root, args.action, payload=director_payload)
             except ValueError as error:
                 _write_json_output(
                     {"ok": False, "error": str(error), "user_action_required": False},
@@ -3946,11 +3995,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             _write_json_output(result, args.json_output)
             return 0
         if args.command == "validate":
-            report = RepositoryValidator(args.root).validate()
-            print(report.render())
+            validation_report = RepositoryValidator(args.root).validate()
+            print(validation_report.render())
             if args.json_output:
-                _write_json_output(report.as_dict(), args.json_output)
-            return 0 if report.ok else 1
+                _write_json_output(validation_report.as_dict(), args.json_output)
+            return 0 if validation_report.ok else 1
         if args.command == "manifest":
             manifest = write_manifest(args.root)
             _write_json_output(
@@ -4241,18 +4290,18 @@ def main(argv: Sequence[str] | None = None) -> int:
             return 0 if result["valid"] else 1
         if args.command == "archive":
             output = create_archive(args.root, args.output)
-            report = verify_archive(output, args.root.name, source_root=args.root)
-            _write_json_output(report.as_dict(), None)
-            return 0 if report.ok else 1
+            archive_report = verify_archive(output, args.root.name, source_root=args.root)
+            _write_json_output(archive_report.as_dict(), None)
+            return 0 if archive_report.ok else 1
         if args.command == "verify-archive":
-            report = verify_archive(
+            archive_report = verify_archive(
                 args.archive,
                 args.expected_root,
                 enforce_repository_policy=not args.source_bearing,
                 source_root=args.source_root,
             )
-            _write_json_output(report.as_dict(), None)
-            return 0 if report.ok else 1
+            _write_json_output(archive_report.as_dict(), None)
+            return 0 if archive_report.ok else 1
     except (
         BootstrapError,
         ControlGraphError,

@@ -40,7 +40,7 @@ def _machine(machine_id: str, role: MachineRole, healthy: bool, token: int) -> M
     )
 
 
-def simulate_scenario(root, scenario: str) -> dict[str, object]:
+def simulate_scenario(root: Path, scenario: str) -> dict[str, object]:
     if scenario not in _SCENARIOS:
         raise ValueError(f"unknown resilience scenario: {scenario}")
     director = RecoveryDirector()
@@ -60,36 +60,36 @@ def simulate_scenario(root, scenario: str) -> dict[str, object]:
         passed = result["selected_provider_id"] == "local" and result["task_semantics_preserved"]
         details = result
     elif scenario == "control-machine-loss":
-        decision = director.decide_failover(
+        failover_decision = director.decide_failover(
             _machine("control-a", MachineRole.PRIMARY_CONTROL, False, 7),
             _machine("control-b", MachineRole.STANDBY_CONTROL, True, 7),
             witness_confirmed=True,
             active_lease_expired=True,
         )
         passed = (
-            decision.eligible
-            and decision.required_fencing_token == 8
-            and decision.reconcile_before_commit
+            failover_decision.eligible
+            and failover_decision.required_fencing_token == 8
+            and failover_decision.reconcile_before_commit
         )
-        details = decision.model_dump(mode="json")
+        details = failover_decision.model_dump(mode="json")
     elif scenario == "split-brain":
-        decision = director.decide_failover(
+        failover_decision = director.decide_failover(
             _machine("control-a", MachineRole.PRIMARY_CONTROL, False, 7),
             _machine("control-b", MachineRole.STANDBY_CONTROL, True, 7),
             witness_confirmed=False,
             active_lease_expired=False,
         )
-        passed = not decision.eligible and decision.witness_required
-        details = decision.model_dump(mode="json")
+        passed = not failover_decision.eligible and failover_decision.witness_required
+        details = failover_decision.model_dump(mode="json")
     elif scenario == "aws-outage":
-        decision = decide_operating_mode(
+        mode_decision = decide_operating_mode(
             (FailureDomain.CLOUD, FailureDomain.NETWORK), canonical_state_available=True
         )
         passed = (
-            decision.mode.value == "LOCAL_FIRST"
-            and "deterministic_control" in decision.allowed_capabilities
+            mode_decision.mode.value == "LOCAL_FIRST"
+            and "deterministic_control" in mode_decision.allowed_capabilities
         )
-        details = decision.model_dump(mode="json")
+        details = mode_decision.model_dump(mode="json")
     elif scenario == "backup-restore":
         planner = BackupPlanner(load_recovery_objectives(root))
         isolated = (
@@ -112,15 +112,15 @@ def simulate_scenario(root, scenario: str) -> dict[str, object]:
             ("summarization",),
             available_kinds=(RuntimeKind.LLAMA_CPP, RuntimeKind.OLLAMA, RuntimeKind.LLAMA_SWAP),
         )
-        decision = decide_operating_mode((FailureDomain.GPU,), canonical_state_available=True)
+        mode_decision = decide_operating_mode((FailureDomain.GPU,), canonical_state_available=True)
         passed = (
             runtime is not None
-            and decision.mode.value == "DEGRADED"
-            and "deterministic_control" in decision.allowed_capabilities
+            and mode_decision.mode.value == "DEGRADED"
+            and "deterministic_control" in mode_decision.allowed_capabilities
         )
         details = {
             "selected_runtime": runtime.model_dump(mode="json") if runtime else None,
-            "mode": decision.model_dump(mode="json"),
+            "mode": mode_decision.model_dump(mode="json"),
         }
     return {
         "scenario": scenario,

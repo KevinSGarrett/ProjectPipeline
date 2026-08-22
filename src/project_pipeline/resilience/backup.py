@@ -109,6 +109,7 @@ class BackupPlanner:
             raise ValueError("backup source must be non-empty")
         if not repository.strip():
             raise ValueError("backup repository must be non-empty")
+        argv: tuple[str, ...]
         if domain == "canonical_state":
             tool = BackupTool.PGBACKREST
             argv = ("pgbackrest", "--stanza=project-pipeline", "backup", "--type=incr")
@@ -136,6 +137,7 @@ class BackupPlanner:
             raise ValueError("restore target must be an explicit isolated target")
         if self.restore_policy is not None:
             isolated_target = str(self.restore_policy.resolve(isolated_target))
+        argv: tuple[str, ...]
         if domain == "canonical_state":
             tool = BackupTool.PGBACKREST
             argv = (

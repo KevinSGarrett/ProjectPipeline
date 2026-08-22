@@ -97,7 +97,7 @@ def _ready_after_72h(controller: CampaignController, tmp_path: Path) -> dict:
     _seed_attested(controller, admitted["qualification_run_id"], 24)
     hour72 = controller.admit_72h(started["campaign_id"])
     _seed_attested(controller, hour72["qualification_run_id"], 72)
-    return controller._mark_ready_to_finalize(started["campaign_id"])
+    return controller._mark_72h_attested(started["campaign_id"])
 
 
 def test_pp384_admission_requires_all_five_stages(tmp_path: Path):
@@ -349,33 +349,108 @@ def test_finalize_after_seeded_72h(tmp_path: Path):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
     assert ready["stage"] == "RELEASE"
-    finalized = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
-    assert finalized["status"] == "FINALIZED"
-    assert finalized["stage"] == "COMPLETE"
-    assert finalized["finalization_receipts"][0]["executed"] is True
+    assert ready["status"] == "72H_ATTESTED"
+    ready = controller.advance(ready["campaign_id"])
+    assert ready["status"] == "READY_TO_PUBLISH"
+    published = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    assert published["status"] == "PUBLISHED"
+    assert published["stage"] == "POST_RELEASE"
+    assert published["publication_receipts"][0]["executed"] is True
     controller.close()
 
 
-def test_advance_auto_finalizes_after_ready(tmp_path: Path):
+def test_advance_auto_finalizes_after_ready(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
+    monkeypatch.setattr(
+        controller,
+        "_default_reconcile_commands",
+        lambda: [_probe_command()],
+    )
+    monkeypatch.setattr(
+        controller,
+        "_default_completion_gate_commands",
+        lambda: [_probe_command()],
+    )
     finalized = controller.advance(ready["campaign_id"])
+    finalized = controller.advance(finalized["campaign_id"])
+    finalized = controller.advance(finalized["campaign_id"])
+    finalized = controller.advance(finalized["campaign_id"])
+    finalized = controller.advance(finalized["campaign_id"])
     assert finalized["status"] == "FINALIZED"
     assert finalized["stage"] == "COMPLETE"
-    assert finalized["finalization_receipts"][0]["result"] == "PASSED"
+    assert finalized["completion_gate_receipts"][0]["result"] == "PASSED"
     controller.close()
 
 
 def test_failed_finalize_does_not_claim_complete(tmp_path: Path):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
+    ready = controller.advance(ready["campaign_id"])
     failed = controller.finalize(
         ready["campaign_id"],
         commands=[[sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]],
     )
     assert failed["status"] == "FAILED"
     assert failed["stage"] == "RELEASE"
-    assert failed["finalization_receipts"][0]["result"] == "FAILED"
+    assert failed["publication_receipts"][0]["result"] == "FAILED"
+    controller.close()
+
+
+def test_post_release_verify_failure_marks_campaign_failed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = _ready_after_72h(controller, tmp_path)
+    ready = controller.advance(ready["campaign_id"])
+    published = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    assert published["status"] == "PUBLISHED"
+    monkeypatch.setattr(
+        controller,
+        "_default_post_release_commands",
+        lambda: [[sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]],
+    )
+    failed = controller.advance(published["campaign_id"])
+    assert failed["status"] == "FAILED"
+    assert failed["stage"] == "POST_RELEASE"
+    assert failed["post_release_receipts"][0]["result"] == "FAILED"
+    controller.close()
+
+
+def test_reconcile_failure_marks_campaign_failed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    controller = _controller(tmp_path)
+    ready = _ready_after_72h(controller, tmp_path)
+    ready = controller.advance(ready["campaign_id"])
+    published = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    verified = controller.advance(published["campaign_id"])
+    assert verified["status"] == "RECONCILING"
+    monkeypatch.setattr(
+        controller,
+        "_default_reconcile_commands",
+        lambda: [[sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]],
+    )
+    failed = controller.advance(verified["campaign_id"])
+    assert failed["status"] == "FAILED"
+    assert failed["stage"] == "POST_RELEASE"
+    assert failed["reconcile_receipts"][0]["result"] == "FAILED"
+    controller.close()
+
+
+def test_publish_to_completion_gate_transition_is_durable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = _ready_after_72h(controller, tmp_path)
+    monkeypatch.setattr(controller, "_default_post_release_commands", lambda: [_probe_command()])
+    monkeypatch.setattr(controller, "_default_reconcile_commands", lambda: [_probe_command()])
+    ready = controller.advance(ready["campaign_id"])
+    published = controller.advance(ready["campaign_id"])
+    assert published["status"] == "PUBLISHED"
+    reconciling = controller.advance(published["campaign_id"])
+    assert reconciling["status"] == "RECONCILING"
+    completion = controller.advance(reconciling["campaign_id"])
+    assert completion["status"] == "COMPLETION_GATE"
+    assert completion["stage"] == "COMPLETION_GATE"
     controller.close()
 
 
@@ -511,15 +586,19 @@ def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):
         inspect_identity=lambda _root: _identity(),
     )
     try:
-        commands = controller._default_finalize_commands()
+        commands = controller._default_publish_commands()
+        gate = controller._default_completion_gate_commands()
     finally:
         controller.close()
     rendered = [" ".join(item) for item in commands]
-    assert any(" -m project_pipeline control completion --root " in row for row in rendered)
-    assert any(" -m project_pipeline assurance completion-gate --root " in row for row in rendered)
+    rendered_gate = [" ".join(item) for item in gate]
+    assert any(" -m project_pipeline validate --root " in row for row in rendered)
+    assert any(
+        " -m project_pipeline assurance completion-gate --root " in row for row in rendered_gate
+    )
     assert all(" project_pipeline completion " not in row for row in rendered)
-    assert command_kind(commands[-1]) == "assurance.completion-gate"
-    assert command_is_allowlisted(commands[-1], repository_root=ROOT) is True
+    assert command_kind(gate[-1]) == "assurance.completion-gate"
+    assert command_is_allowlisted(gate[-1], repository_root=ROOT) is True
     assert (
         command_is_allowlisted(
             [sys.executable, "-m", "project_pipeline", "completion", "--root", str(ROOT)],
@@ -535,6 +614,65 @@ def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):
         check=False,
     )
     assert missing.returncode != 0
+
+
+def test_duration_probe_default_surface_is_risk_based(tmp_path: Path):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        plan = controller._default_duration_probe_plan()
+    finally:
+        controller.close()
+    assert controller._probe_surface_complete(plan) is True
+    probe_ids = {str(item["probe_id"]) for item in plan}
+    assert {
+        "runtime_doctor",
+        "repository_validate",
+        "jira_validate",
+        "control_evaluate",
+        "control_sequence",
+    } <= probe_ids
+
+
+def test_duration_probe_surface_rejects_doctor_control_jira_only(tmp_path: Path):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        cadence = max(controller.probe_interval_seconds, controller.heartbeat_seconds)
+        plan = [
+            controller._build_duration_probe_entry(
+                "runtime_doctor",
+                [sys.executable, "-m", "project_pipeline", "doctor", "--root", str(ROOT)],
+                cadence_seconds=cadence,
+            ),
+            controller._build_duration_probe_entry(
+                "control_evaluate",
+                [
+                    sys.executable,
+                    "-m",
+                    "project_pipeline",
+                    "control",
+                    "evaluate",
+                    "--root",
+                    str(ROOT),
+                ],
+                cadence_seconds=cadence,
+            ),
+            controller._build_duration_probe_entry(
+                "jira_validate",
+                [sys.executable, "-m", "project_pipeline", "jira", "validate", "--root", str(ROOT)],
+                cadence_seconds=cadence,
+            ),
+        ]
+    finally:
+        controller.close()
+    assert controller._probe_surface_complete(plan) is False
 
 
 def test_production_defaults_incomplete_cannot_finalize(
@@ -606,13 +744,17 @@ def test_production_defaults_incomplete_cannot_finalize(
         inspect_identity=lambda _root: _identity(),
     )
     ready = _ready_after_72h(controller, tmp_path)
-    finalized = controller.finalize(ready["campaign_id"])
+    ready = controller.advance(ready["campaign_id"])
+    published = controller.finalize(ready["campaign_id"])
+    assert published["status"] == "PUBLISHED"
+    step = controller.advance(published["campaign_id"])
+    step = controller.advance(step["campaign_id"])
+    finalized = controller.advance(step["campaign_id"])
     assert finalized["status"] == "FAILED"
-    assert finalized["stage"] == "RELEASE"
-    kinds = [command_kind(item["command"]) for item in finalized["finalization_receipts"]]
+    assert finalized["stage"] == "COMPLETION_GATE"
+    kinds = [command_kind(item["command"]) for item in finalized["completion_gate_receipts"]]
     assert kinds[-1] == "assurance.completion-gate"
-    assert "control.completion" in kinds
-    last = finalized["finalization_receipts"][-1]
+    last = finalized["completion_gate_receipts"][-1]
     assert last["exit_code"] == 0
     assert last["result"] == "FAILED"
     assert last["semantic_state"] != "COMPLETE"
@@ -815,6 +957,7 @@ def test_missing_owner_binding_blocks_heartbeat_and_recover_takes_over(tmp_path:
 def test_execute_and_finalize_require_live_owner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
+    ready = controller.advance(ready["campaign_id"])
     binding = controller._owner_binding()
     assert binding is not None
     monkeypatch.setattr(

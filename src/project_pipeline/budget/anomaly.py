@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from datetime import UTC, datetime
+from typing import Literal
 
 from project_pipeline.domain.budget import (
     BudgetAnomaly,
@@ -26,6 +27,7 @@ def detect_cost_anomaly(
     policy = policy or BudgetPolicy()
     now = (now or datetime.now(UTC)).astimezone(UTC)
     reasons: list[str] = []
+    severity: Literal["NORMAL", "WARN", "BLOCK"]
     if expected_p90_microunits <= 0:
         ratio = 1_000_000 if observed_microunits > 0 else 0
         severity = "BLOCK" if observed_microunits > 0 else "NORMAL"

@@ -95,7 +95,7 @@ class RunbookExecutor:
         if not runbook.approved:
             raise PermissionError("recovery automation requires an approved runbook")
         context = dict(context or {})
-        mode = "APPLY" if apply else "DRY_RUN"
+        mode: Literal["APPLY", "DRY_RUN"] = "APPLY" if apply else "DRY_RUN"
         results: list[RunbookActionResult] = []
         stopped: str | None = None
         for step in runbook.steps:

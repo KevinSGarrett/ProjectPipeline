@@ -131,6 +131,40 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
     assert "autonomy_campaign_recovery_probe.py" in RECOVERY.read_text(encoding="utf-8")
 
 
+def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
+    config_path = tmp_path / "recovery_probe.json"
+    status_path = tmp_path / "status.json"
+    payload = {
+        "repository_root": str(ROOT),
+        "python_exe": sys.executable,
+        "database": str(tmp_path / "campaign.sqlite3"),
+        "campaign_id": "",
+        "status_path": str(status_path),
+        "pid_path": str(tmp_path / "campaign.pid"),
+        "log_directory": str(tmp_path),
+        "heartbeat_seconds": 0.2,
+        "heartbeat_max_age_seconds": 1.0,
+    }
+    config_path.write_text(json.dumps(payload), encoding="utf-8")
+    env = {
+        "PATH": os.environ.get("PATH", ""),
+        "SYSTEMROOT": os.environ.get("SYSTEMROOT", ""),
+        "WINDIR": os.environ.get("WINDIR", ""),
+    }
+    result = subprocess.run(
+        [sys.executable, str(PROBE), "--config", str(config_path)],
+        cwd=str(tmp_path),
+        capture_output=True,
+        text=True,
+        check=False,
+        env=env,
+    )
+    assert result.returncode == 0, result.stderr
+    written = json.loads(status_path.read_text(encoding="utf-8"))
+    assert written["action"] == "no-campaign"
+    assert written["user_action_required"] is False
+
+
 def _register(
     action: str,
     tmp_path: Path,

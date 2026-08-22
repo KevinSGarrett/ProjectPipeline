@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 from contextlib import closing
 from pathlib import Path
+from typing import Any
 
 from project_pipeline.persistence.migrations import load_migration_catalog, split_sql_statements
 from project_pipeline.retrieval.service import (
@@ -15,9 +16,10 @@ from project_pipeline.retrieval.service import (
 )
 
 try:
-    import psycopg
+    import psycopg as _psycopg  # type: ignore[import-not-found]
 except ImportError:  # optional database extra; absence is an observed runtime fact
-    psycopg = None
+    _psycopg = None
+psycopg: Any = _psycopg
 
 
 def apply_postgresql_migrations(

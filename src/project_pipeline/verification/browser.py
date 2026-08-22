@@ -8,7 +8,10 @@ import shutil
 import time
 from http.server import SimpleHTTPRequestHandler
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from playwright.sync_api import ConsoleMessage
 
 from project_pipeline.domain.verification import (
     AccessibilityEvidence,
@@ -216,12 +219,14 @@ def verify_report(
             for width, height in viewports:
                 page = browser.new_page(viewport={"width": width, "height": height})
                 console_errors: list[str] = []
-                page.on(
-                    "console",
-                    lambda message, console_errors=console_errors: (
-                        console_errors.append(message.text) if message.type == "error" else None
-                    ),
-                )
+
+                def _on_console(
+                    message: ConsoleMessage, _errors: list[str] = console_errors
+                ) -> None:
+                    if message.type == "error":
+                        _errors.append(message.text)
+
+                page.on("console", _on_console)
                 started = time.perf_counter()
                 # The execution sandbox blocks browser URL navigation, including file:// and localhost.
                 # set_content still exercises the real Chromium DOM/layout/rendering engine using the

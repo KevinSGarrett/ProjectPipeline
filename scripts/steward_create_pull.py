@@ -105,7 +105,9 @@ def _pull_url(repository_slug: str, number: int) -> str:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Push a feature branch and create a governed GitHub pull request")
+    parser = argparse.ArgumentParser(
+        description="Push a feature branch and create a governed GitHub pull request"
+    )
     parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument("--title", required=True)
     parser.add_argument("--body", required=True)

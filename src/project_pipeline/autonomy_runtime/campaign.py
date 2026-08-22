@@ -186,7 +186,17 @@ def evaluate_campaign_aware_health(
     reasons: list[str] = []
     current = now or datetime.now(UTC)
     status = str(campaign.get("status") or "")
-    if status not in {"RUNNING", "ATTESTED", "READY_TO_FINALIZE"}:
+    if status not in {
+        "RUNNING",
+        "ATTESTED",
+        "72H_ATTESTED",
+        "READY_TO_PUBLISH",
+        "PUBLISHING",
+        "PUBLISHED",
+        "POST_RELEASE_VERIFYING",
+        "RECONCILING",
+        "COMPLETION_GATE",
+    }:
         reasons.append("inactive_status")
     last = campaign.get("last_heartbeat_utc")
     heartbeat_fresh = False
@@ -411,6 +421,43 @@ class CampaignController:
         missing = [name for name in REQUIRED_TABLES if name not in present]
         if missing:
             raise CampaignSchemaError(missing, required_migrations_for_missing_tables(missing))
+
+    @staticmethod
+    def _build_duration_probe_entry(
+        probe_id: str,
+        argv: list[str],
+        *,
+        cadence_seconds: float,
+        timeout_seconds: float = 120.0,
+        retry_budget: int = 0,
+        required: bool = True,
+    ) -> dict[str, Any]:
+        return {
+            "probe_id": str(probe_id),
+            "argv": list(argv),
+            "cadence_seconds": float(cadence_seconds),
+            "timeout_seconds": float(timeout_seconds),
+            "retry_budget": int(retry_budget),
+            "required": bool(required),
+        }
+
+    @staticmethod
+    def _required_duration_probe_surface() -> frozenset[str]:
+        return frozenset(
+            {
+                "runtime_doctor",
+                "repository_validate",
+                "jira_validate",
+                "control_evaluate",
+                "control_sequence",
+            }
+        )
+
+    def _probe_surface_complete(self, plan: list[dict[str, Any]]) -> bool:
+        probe_ids = {
+            str(item.get("probe_id") or "") for item in plan if bool(item.get("required", True))
+        }
+        return self._required_duration_probe_surface().issubset(probe_ids)
 
     def close(self) -> None:
         self.qualification.close()
@@ -721,8 +768,16 @@ class CampaignController:
         status = str(row["status"])
         if status in {"DISQUALIFIED", "FAILED", "STOPPED", "FINALIZED"}:
             return row
-        if status == "READY_TO_FINALIZE":
+        if status == "72H_ATTESTED":
+            return self._mark_ready_to_publish(campaign_id)
+        if status in {"READY_TO_PUBLISH", "READY_TO_FINALIZE"}:
             return self.finalize(campaign_id)
+        if status == "PUBLISHED":
+            return self._post_release_verify(campaign_id)
+        if status in {"POST_RELEASE_VERIFYING", "RECONCILING"}:
+            return self._reconcile_release(campaign_id)
+        if status == "COMPLETION_GATE":
+            return self._run_completion_gate_phase(campaign_id)
         if stage == "RECOVERY" and status == "ATTESTED":
             return self.admit_4h(campaign_id)
         if stage in TIMED_STAGES and row["qualification_run_id"]:
@@ -736,8 +791,8 @@ class CampaignController:
             if attested["status"] == "ATTESTED" and stage == "UNATTENDED_24_HOUR":
                 return self.admit_72h(campaign_id)
             if attested["status"] == "ATTESTED" and stage == "UNATTENDED_72_HOUR":
-                self._mark_ready_to_finalize(campaign_id)
-                return self.finalize(campaign_id)
+                self._mark_72h_attested(campaign_id)
+                return self.advance(campaign_id)
         return self.heartbeat(campaign_id)
 
     def recover(self, campaign_id: str) -> dict[str, Any]:
@@ -812,6 +867,7 @@ class CampaignController:
         *,
         idempotency_key: str | None = None,
         evidence_links: list[str] | None = None,
+        timeout_seconds: float = 120.0,
     ) -> dict[str, Any]:
         row = self._require(campaign_id)
         if idempotency_key:
@@ -833,6 +889,7 @@ class CampaignController:
             argv,
             cwd=self.repository_root,
             repository_root=self.repository_root,
+            timeout_seconds=timeout_seconds,
             idempotency_key=idempotency_key,
             evidence_links=evidence_links,
             expected_sha=str(row["integrated_sha"]),
@@ -903,19 +960,30 @@ class CampaignController:
 
     def finalize(self, campaign_id: str, commands: list[list[str]] | None = None) -> dict[str, Any]:
         row = self._require(campaign_id)
-        if str(row["stage"]) != "RELEASE" or str(row["status"]) != "READY_TO_FINALIZE":
-            raise ValueError("finalize requires an attested 72-hour campaign ready for release")
+        if str(row["stage"]) != "RELEASE" or str(row["status"]) not in {
+            "READY_TO_PUBLISH",
+            "READY_TO_FINALIZE",
+        }:
+            raise ValueError("finalize requires an attested 72-hour campaign ready to publish")
         self._assert_live_ownership(row, require_current_process=True)
         self._assert_identity(row)
-        explicit = commands is not None or self._finalize_commands is not None
-        planned = commands or self._finalize_commands or self._default_finalize_commands(row)
+        planned = commands or self._finalize_commands or self._default_publish_commands(row)
+        with self._db:
+            self._db.execute(
+                """
+                UPDATE campaign_runs
+                SET status = 'PUBLISHING', last_heartbeat_utc = ?, last_probe = ?
+                WHERE campaign_id = ?
+                """,
+                (datetime.now(UTC).isoformat(), "publish-started", campaign_id),
+            )
+        row = self._require(campaign_id)
         receipts = []
         for argv in planned:
             receipts.append(self.execute(campaign_id, argv))
         now = datetime.now(UTC)
         failed = [item for item in receipts if item.get("result") != "PASSED"]
-        gate_ok = self._finalization_gate_satisfied(receipts, explicit=explicit)
-        if failed or not gate_ok:
+        if failed:
             with self._db:
                 self._db.execute(
                     """
@@ -932,32 +1000,32 @@ class CampaignController:
                     {
                         "receipts": [item.get("receipt_id") for item in receipts],
                         "failed": [item.get("receipt_id") for item in failed],
-                        "gate_ok": gate_ok,
                     },
                     now,
                 )
             result = self.get(campaign_id)
-            result["finalization_receipts"] = receipts
+            result["publication_receipts"] = receipts
             return result
         with self._db:
             self._db.execute(
                 """
                 UPDATE campaign_runs
-                SET stage = 'COMPLETE', status = 'FINALIZED', next_transition = NULL,
+                SET stage = 'POST_RELEASE', status = 'PUBLISHED',
+                    next_transition = 'POST_RELEASE_VERIFYING',
                     last_heartbeat_utc = ?, last_probe = ?
                 WHERE campaign_id = ?
                 """,
-                (now.isoformat(), "finalize-executed", campaign_id),
+                (now.isoformat(), "publish-executed", campaign_id),
             )
             self._append_event(
                 campaign_id,
-                "FINALIZE",
-                "FINALIZED",
+                "PUBLISHED",
+                "PUBLISHED",
                 {"receipts": [item.get("receipt_id") for item in receipts]},
                 now,
             )
         result = self.get(campaign_id)
-        result["finalization_receipts"] = receipts
+        result["publication_receipts"] = receipts
         return result
 
     def run_loop(
@@ -1046,19 +1114,34 @@ class CampaignController:
         ).fetchall()
         return [dict(row) for row in rows]
 
-    def _mark_ready_to_finalize(self, campaign_id: str) -> dict[str, Any]:
+    def _mark_72h_attested(self, campaign_id: str) -> dict[str, Any]:
         now = datetime.now(UTC)
         with self._db:
             self._db.execute(
                 """
                 UPDATE campaign_runs
-                SET stage = 'RELEASE', status = 'READY_TO_FINALIZE',
-                    next_transition = 'POST_RELEASE', last_heartbeat_utc = ?, last_probe = ?
+                SET stage = 'RELEASE', status = '72H_ATTESTED',
+                    next_transition = 'READY_TO_PUBLISH', last_heartbeat_utc = ?, last_probe = ?
                 WHERE campaign_id = ?
                 """,
                 (now.isoformat(), "72h-attested", campaign_id),
             )
-            self._append_event(campaign_id, "READY_TO_FINALIZE", "READY_TO_FINALIZE", {}, now)
+            self._append_event(campaign_id, "72H_ATTESTED", "72H_ATTESTED", {}, now)
+        return self.get(campaign_id)
+
+    def _mark_ready_to_publish(self, campaign_id: str) -> dict[str, Any]:
+        now = datetime.now(UTC)
+        with self._db:
+            self._db.execute(
+                """
+                UPDATE campaign_runs
+                SET stage = 'RELEASE', status = 'READY_TO_PUBLISH',
+                    next_transition = 'PUBLISHING', last_heartbeat_utc = ?, last_probe = ?
+                WHERE campaign_id = ?
+                """,
+                (now.isoformat(), "ready-to-publish", campaign_id),
+            )
+            self._append_event(campaign_id, "READY_TO_PUBLISH", "READY_TO_PUBLISH", {}, now)
         return self.get(campaign_id)
 
     def _require_clean_identity(self) -> dict[str, Any]:
@@ -1128,9 +1211,77 @@ class CampaignController:
         root = str(self.repository_root)
         return [
             [python, "-m", "project_pipeline", "doctor", "--root", root],
+            [python, "-m", "project_pipeline", "validate", "--root", root],
             [python, "-m", "project_pipeline", "control", "evaluate", "--root", root],
+            [python, "-m", "project_pipeline", "control", "sequence", "--root", root],
             [python, "-m", "project_pipeline", "jira", "validate", "--root", root],
         ]
+
+    def _default_duration_probe_plan(self) -> list[dict[str, Any]]:
+        python = self._python()
+        root = str(self.repository_root)
+        cadence = max(0.0, self.probe_interval_seconds)
+        return [
+            self._build_duration_probe_entry(
+                "runtime_doctor",
+                [python, "-m", "project_pipeline", "doctor", "--root", root],
+                cadence_seconds=cadence,
+                timeout_seconds=180.0,
+                retry_budget=0,
+                required=True,
+            ),
+            self._build_duration_probe_entry(
+                "repository_validate",
+                [python, "-m", "project_pipeline", "validate", "--root", root],
+                cadence_seconds=cadence,
+                timeout_seconds=180.0,
+                retry_budget=0,
+                required=True,
+            ),
+            self._build_duration_probe_entry(
+                "jira_validate",
+                [python, "-m", "project_pipeline", "jira", "validate", "--root", root],
+                cadence_seconds=cadence,
+                timeout_seconds=180.0,
+                retry_budget=0,
+                required=True,
+            ),
+            self._build_duration_probe_entry(
+                "control_evaluate",
+                [python, "-m", "project_pipeline", "control", "evaluate", "--root", root],
+                cadence_seconds=cadence,
+                timeout_seconds=180.0,
+                retry_budget=0,
+                required=True,
+            ),
+            self._build_duration_probe_entry(
+                "control_sequence",
+                [python, "-m", "project_pipeline", "control", "sequence", "--root", root],
+                cadence_seconds=cadence,
+                timeout_seconds=180.0,
+                retry_budget=0,
+                required=True,
+            ),
+        ]
+
+    def _duration_probe_plan(self) -> list[dict[str, Any]]:
+        commands = self._duration_probe_commands
+        if commands is None:
+            return self._default_duration_probe_plan()
+        cadence = max(0.0, self.probe_interval_seconds)
+        plan: list[dict[str, Any]] = []
+        for idx, argv in enumerate(commands):
+            plan.append(
+                self._build_duration_probe_entry(
+                    f"custom_probe_{idx + 1}",
+                    argv,
+                    cadence_seconds=cadence,
+                    timeout_seconds=120.0,
+                    retry_budget=0,
+                    required=True,
+                )
+            )
+        return plan
 
     def _last_duration_probe_at(self, campaign_id: str) -> datetime | None:
         row = self._db.execute(
@@ -1158,26 +1309,69 @@ class CampaignController:
         started = datetime.fromisoformat(str(row["started_at_utc"]))
         if started.tzinfo is None:
             started = started.replace(tzinfo=UTC)
+        plan = self._duration_probe_plan()
+        if self._duration_probe_commands is None and not self._probe_surface_complete(plan):
+            self._disqualify(campaign_id, "duration-probe-surface-incomplete")
+            raise ValueError("duration probe surface incomplete")
         anchor = self._last_duration_probe_at(campaign_id) or started
         if (now - anchor).total_seconds() < self.probe_interval_seconds:
             return fallback_label
-        commands = self._duration_probe_commands
-        if commands is None:
-            commands = self._default_duration_probes()
         receipt_ids: list[str] = []
-        for argv in commands:
-            receipt = self.execute(campaign_id, argv)
-            if receipt.get("result") != "PASSED":
-                self._disqualify(campaign_id, "duration-probe-failed")
-                raise ValueError("duration probe failed")
+        probe_results: list[dict[str, Any]] = []
+        for item in plan:
+            probe_id = str(item.get("probe_id") or "probe")
+            cadence_seconds = float(item.get("cadence_seconds", self.probe_interval_seconds))
+            if (now - anchor).total_seconds() < cadence_seconds:
+                continue
+            argv = [str(token) for token in item.get("argv", [])]
+            timeout_seconds = float(item.get("timeout_seconds", 120.0))
+            retries = max(0, int(item.get("retry_budget", 0)))
+            required = bool(item.get("required", True))
+            attempt = 0
+            receipt: dict[str, Any] | None = None
+            while attempt <= retries:
+                receipt = self.execute(
+                    campaign_id,
+                    argv,
+                    timeout_seconds=timeout_seconds,
+                    idempotency_key=(
+                        f"CIDEMP:{campaign_id}:{probe_id}:{anchor.isoformat()}:{attempt}"
+                    ),
+                    evidence_links=[
+                        f"probe:{probe_id}",
+                        f"attempt:{attempt + 1}",
+                        f"required:{str(required).lower()}",
+                    ],
+                )
+                if receipt.get("result") == "PASSED":
+                    break
+                attempt += 1
+            if receipt is None:
+                continue
             receipt_ids.append(str(receipt["receipt_id"]))
+            probe_results.append(
+                {
+                    "probe_id": probe_id,
+                    "required": required,
+                    "result": receipt.get("result"),
+                    "receipt_id": receipt.get("receipt_id"),
+                    "result_semantics": receipt.get("result_semantics"),
+                    "semantic_state": receipt.get("semantic_state"),
+                    "final_completion_gate_satisfied": bool(
+                        receipt.get("final_completion_gate_satisfied")
+                    ),
+                }
+            )
+            if required and receipt.get("result") != "PASSED":
+                self._disqualify(campaign_id, "duration-probe-failed")
+                raise ValueError(f"duration probe failed: {probe_id}")
         label = "probe:" + ",".join(receipt_ids)
         with self._db:
             self._append_event(
                 campaign_id,
                 "PROBE",
                 str(row["status"]),
-                {"receipt_ids": receipt_ids, "last_probe": label},
+                {"receipt_ids": receipt_ids, "last_probe": label, "probes": probe_results},
                 now,
             )
         return label
@@ -1206,9 +1400,28 @@ class CampaignController:
             [python, "-m", "project_pipeline", "resilience", "status", "--root", root],
             [python, "-m", "project_pipeline", "validate", "--root", root],
             [python, "-m", "project_pipeline", "jira", "validate", "--root", root],
-            [python, "-m", "project_pipeline", "control", "completion", "--root", root],
-            [python, "-m", "project_pipeline", "assurance", "completion-gate", "--root", root],
         ]
+
+    def _default_publish_commands(
+        self, row: sqlite3.Row | dict[str, Any] | None = None
+    ) -> list[list[str]]:
+        return self._default_finalize_commands(row)
+
+    def _default_post_release_commands(self) -> list[list[str]]:
+        return [[self._python(), str(self.repository_root / "scripts" / "campaign_probe.py")]]
+
+    def _default_reconcile_commands(self) -> list[list[str]]:
+        python = self._python()
+        root = str(self.repository_root)
+        return [
+            [python, "-m", "project_pipeline", "control", "completion", "--root", root],
+            [python, "-m", "project_pipeline", "jira", "validate", "--root", root],
+        ]
+
+    def _default_completion_gate_commands(self) -> list[list[str]]:
+        python = self._python()
+        root = str(self.repository_root)
+        return [[python, "-m", "project_pipeline", "assurance", "completion-gate", "--root", root]]
 
     def claim_runner_ownership(self, campaign_id: str) -> dict[str, Any]:
         row = self._require(campaign_id)
@@ -1323,6 +1536,161 @@ class CampaignController:
                 and last.get("final_completion_gate_satisfied") is True
             )
         return explicit and last.get("result") == "PASSED"
+
+    def _post_release_verify(self, campaign_id: str) -> dict[str, Any]:
+        row = self._require(campaign_id)
+        if str(row["status"]) != "PUBLISHED":
+            raise ValueError("post-release verification requires PUBLISHED state")
+        with self._db:
+            self._db.execute(
+                """
+                UPDATE campaign_runs
+                SET status = 'POST_RELEASE_VERIFYING', last_heartbeat_utc = ?, last_probe = ?
+                WHERE campaign_id = ?
+                """,
+                (datetime.now(UTC).isoformat(), "post-release-verify-started", campaign_id),
+            )
+        receipts: list[dict[str, Any]] = []
+        for argv in self._default_post_release_commands():
+            receipts.append(self.execute(campaign_id, argv))
+        now = datetime.now(UTC)
+        if any(item.get("result") != "PASSED" for item in receipts):
+            with self._db:
+                self._db.execute(
+                    "UPDATE campaign_runs SET status = 'FAILED', last_heartbeat_utc = ?, last_probe = ? WHERE campaign_id = ?",
+                    (now.isoformat(), "post-release-verify-failed", campaign_id),
+                )
+                self._append_event(
+                    campaign_id,
+                    "POST_RELEASE_VERIFY_FAILED",
+                    "FAILED",
+                    {"receipts": [item.get("receipt_id") for item in receipts]},
+                    now,
+                )
+            result = self.get(campaign_id)
+            result["post_release_receipts"] = receipts
+            return result
+        with self._db:
+            self._db.execute(
+                """
+                UPDATE campaign_runs
+                SET status = 'RECONCILING', next_transition = 'COMPLETION_GATE',
+                    last_heartbeat_utc = ?, last_probe = ?
+                WHERE campaign_id = ?
+                """,
+                (now.isoformat(), "post-release-verified", campaign_id),
+            )
+            self._append_event(
+                campaign_id,
+                "POST_RELEASE_VERIFIED",
+                "RECONCILING",
+                {"receipts": [item.get("receipt_id") for item in receipts]},
+                now,
+            )
+        result = self.get(campaign_id)
+        result["post_release_receipts"] = receipts
+        return result
+
+    def _reconcile_release(self, campaign_id: str) -> dict[str, Any]:
+        row = self._require(campaign_id)
+        if str(row["status"]) not in {"POST_RELEASE_VERIFYING", "RECONCILING"}:
+            raise ValueError("reconciliation requires POST_RELEASE_VERIFYING/RECONCILING state")
+        with self._db:
+            self._db.execute(
+                """
+                UPDATE campaign_runs
+                SET status = 'RECONCILING', last_heartbeat_utc = ?, last_probe = ?
+                WHERE campaign_id = ?
+                """,
+                (datetime.now(UTC).isoformat(), "reconcile-started", campaign_id),
+            )
+        receipts: list[dict[str, Any]] = []
+        for argv in self._default_reconcile_commands():
+            receipts.append(self.execute(campaign_id, argv))
+        now = datetime.now(UTC)
+        if any(item.get("result") != "PASSED" for item in receipts):
+            with self._db:
+                self._db.execute(
+                    "UPDATE campaign_runs SET status = 'FAILED', last_heartbeat_utc = ?, last_probe = ? WHERE campaign_id = ?",
+                    (now.isoformat(), "reconcile-failed", campaign_id),
+                )
+                self._append_event(
+                    campaign_id,
+                    "RECONCILE_FAILED",
+                    "FAILED",
+                    {"receipts": [item.get("receipt_id") for item in receipts]},
+                    now,
+                )
+            result = self.get(campaign_id)
+            result["reconcile_receipts"] = receipts
+            return result
+        with self._db:
+            self._db.execute(
+                """
+                UPDATE campaign_runs
+                SET stage = 'COMPLETION_GATE', status = 'COMPLETION_GATE', next_transition = 'FINALIZED',
+                    last_heartbeat_utc = ?, last_probe = ?
+                WHERE campaign_id = ?
+                """,
+                (now.isoformat(), "reconciled", campaign_id),
+            )
+            self._append_event(
+                campaign_id,
+                "RECONCILED",
+                "COMPLETION_GATE",
+                {"receipts": [item.get("receipt_id") for item in receipts]},
+                now,
+            )
+        result = self.get(campaign_id)
+        result["reconcile_receipts"] = receipts
+        return result
+
+    def _run_completion_gate_phase(self, campaign_id: str) -> dict[str, Any]:
+        row = self._require(campaign_id)
+        if str(row["status"]) != "COMPLETION_GATE":
+            raise ValueError("completion gate phase requires COMPLETION_GATE state")
+        receipts: list[dict[str, Any]] = []
+        for argv in self._default_completion_gate_commands():
+            receipts.append(self.execute(campaign_id, argv))
+        now = datetime.now(UTC)
+        passed = all(item.get("result") == "PASSED" for item in receipts)
+        with self._db:
+            if passed:
+                self._db.execute(
+                    """
+                    UPDATE campaign_runs
+                    SET stage = 'COMPLETE', status = 'FINALIZED', next_transition = NULL,
+                        last_heartbeat_utc = ?, last_probe = ?
+                    WHERE campaign_id = ?
+                    """,
+                    (now.isoformat(), "completion-gate-passed", campaign_id),
+                )
+                self._append_event(
+                    campaign_id,
+                    "COMPLETION_GATE_PASSED",
+                    "FINALIZED",
+                    {"receipts": [item.get("receipt_id") for item in receipts]},
+                    now,
+                )
+            else:
+                self._db.execute(
+                    """
+                    UPDATE campaign_runs
+                    SET status = 'FAILED', last_heartbeat_utc = ?, last_probe = ?
+                    WHERE campaign_id = ?
+                    """,
+                    (now.isoformat(), "completion-gate-failed", campaign_id),
+                )
+                self._append_event(
+                    campaign_id,
+                    "COMPLETION_GATE_FAILED",
+                    "FAILED",
+                    {"receipts": [item.get("receipt_id") for item in receipts]},
+                    now,
+                )
+        result = self.get(campaign_id)
+        result["completion_gate_receipts"] = receipts
+        return result
 
     def _owner_binding(self) -> dict[str, Any] | None:
         row = self._db.execute(

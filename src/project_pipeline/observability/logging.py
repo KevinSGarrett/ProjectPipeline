@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib
 import json
 import logging
 import sys
@@ -7,11 +8,17 @@ from collections.abc import Mapping
 from datetime import UTC, datetime
 from typing import Any, TextIO
 
-from opentelemetry import trace
 from pydantic import SecretBytes, SecretStr
 
 from project_pipeline.configuration.models import LogFormat, LoggingSettings
 from project_pipeline.observability.context import current_context
+
+_get_current_span: Any | None
+try:
+    _trace_module = importlib.import_module("opentelemetry.trace")
+    _get_current_span = getattr(_trace_module, "get_current_span", None)
+except ImportError:
+    _get_current_span = None
 
 REDACTED_VALUE = "<redacted>"
 _STANDARD_FIELDS = frozenset(logging.makeLogRecord({}).__dict__)
@@ -42,7 +49,9 @@ def sanitize(value: Any, redacted_fields: frozenset[str], key: str = "") -> Any:
 
 
 def _trace_attributes() -> dict[str, str]:
-    span_context = trace.get_current_span().get_span_context()
+    if _get_current_span is None:
+        return {}
+    span_context = _get_current_span().get_span_context()
     if not span_context.is_valid:
         return {}
     return {

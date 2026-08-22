@@ -15,9 +15,10 @@ from typing import Any
 from project_pipeline.io import sha256_canonical_file
 
 try:
-    import psycopg
+    import psycopg as _psycopg  # type: ignore[import-not-found]
 except ImportError:  # optional database extra; absence is an observed runtime fact
-    psycopg = None
+    _psycopg = None
+psycopg: Any = _psycopg
 
 PathLike = str | os.PathLike[str]
 

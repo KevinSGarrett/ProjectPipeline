@@ -12,12 +12,6 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, Response
 
-try:
-    from uvicorn import Config, Server
-except ImportError:
-    Config = None
-    Server = None
-
 from project_pipeline.command_center.api import CommandCenterAuth, create_command_center_app
 from project_pipeline.command_center.application import RepositoryApplicationProjectionBuilder
 from project_pipeline.command_center.autonomy_director import (
@@ -47,6 +41,12 @@ from project_pipeline.command_center.realtime import RealtimeEventBroker
 from project_pipeline.configuration import load_runtime_configuration
 from project_pipeline.domain.control import ControlSnapshot
 from project_pipeline.jira import load_issues
+
+_uvicorn: Any
+try:
+    import uvicorn as _uvicorn
+except ImportError:
+    _uvicorn = None
 
 _LIVE_CONTROL_LOCK = threading.Lock()
 
@@ -222,17 +222,17 @@ class LiveCommandCenterServer:
         )
         self.token = token
         self.handshake_path = handshake_path
-        if Config is None or Server is None:
+        if _uvicorn is None:
             raise RuntimeError("uvicorn is required to serve the live Command Center")
         chosen = port
         if chosen == 0:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as probe:
                 probe.bind((bind_host, 0))
                 chosen = int(probe.getsockname()[1])
-        self._config = Config(
+        self._config = _uvicorn.Config(
             self.app, host=bind_host, port=chosen, log_level="error", access_log=False
         )
-        self._server = Server(self._config)
+        self._server = _uvicorn.Server(self._config)
         self._thread: threading.Thread | None = None
 
     @property

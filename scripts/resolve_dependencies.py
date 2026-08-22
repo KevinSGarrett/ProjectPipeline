@@ -10,7 +10,9 @@ from project_pipeline.dependencies import build_environment_lock, validate_depen
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Generate local dependency evidence or a portable uv lock")
+    parser = argparse.ArgumentParser(
+        description="Generate local dependency evidence or a portable uv lock"
+    )
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--portable", action="store_true")
     args = parser.parse_args()
@@ -23,8 +25,27 @@ def main() -> int:
         return 0 if not errors else 1
     commands = [
         ["uv", "lock"],
-        ["uv", "export", "--locked", "--no-dev", "--no-emit-project", "--output-file", "requirements/runtime.txt"],
-        ["uv", "export", "--locked", "--group", "test", "--group", "quality", "--no-emit-project", "--output-file", "requirements/development.txt"],
+        [
+            "uv",
+            "export",
+            "--locked",
+            "--no-dev",
+            "--no-emit-project",
+            "--output-file",
+            "requirements/runtime.txt",
+        ],
+        [
+            "uv",
+            "export",
+            "--locked",
+            "--group",
+            "test",
+            "--group",
+            "quality",
+            "--no-emit-project",
+            "--output-file",
+            "requirements/development.txt",
+        ],
     ]
     environment = {**os.environ, "UV_NO_MANAGED_PYTHON": "1"}
     for command in commands:

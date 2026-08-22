@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
+import sys
 import zipfile
 from pathlib import Path
 from typing import Literal
@@ -116,6 +117,21 @@ def write_fixture_artifacts(
     return paths
 
 
+def _write_source_fixture_archive(dest: Path, *, version: ReleaseVersionAuthority) -> Path:
+    source_name = f"project-pipeline-{version.source_sha[:12]}.zip"
+    source = dest / source_name
+    _write_zip(
+        {
+            "README.md": b"release candidate source archive\n",
+            "VERSION": f"{version.bundle_version}\n".encode(),
+            "SOURCE_SHA": f"{version.source_sha}\n".encode(),
+            "SOURCE_TREE": f"{version.source_tree}\n".encode(),
+        },
+        source,
+    )
+    return source
+
+
 def _git_archive(root: Path, dest: Path, *, source_sha: str) -> Path:
     dest.parent.mkdir(parents=True, exist_ok=True)
     completed = subprocess.run(
@@ -138,6 +154,35 @@ def _git_archive(root: Path, dest: Path, *, source_sha: str) -> Path:
     if completed.returncode != 0 or not dest.is_file():
         raise ValueError("git archive failed for the exact candidate SHA")
     return dest
+
+
+def _build_python_distributions(root: Path, dest: Path) -> dict[str, Path]:
+    for stale in (*dest.glob("*.whl"), *dest.glob("*.tar.gz")):
+        stale.unlink(missing_ok=True)
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "build",
+            "--wheel",
+            "--sdist",
+            "--outdir",
+            str(dest),
+            str(root),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+        shell=False,
+        cwd=str(root),
+    )
+    if completed.returncode != 0:
+        raise ValueError("python distribution build failed for release candidate")
+    wheels = sorted(path for path in dest.glob("*.whl") if path.is_file())
+    sdists = sorted(path for path in dest.glob("*.tar.gz") if path.is_file())
+    if len(wheels) != 1 or len(sdists) != 1:
+        raise ValueError("release candidate requires exactly one wheel and one sdist")
+    return {"wheel": wheels[0], "sdist": sdists[0]}
 
 
 def _sidecar_path(artifact: Path) -> Path:
@@ -190,17 +235,19 @@ def build_release_bundle(
             return existing.model_copy(update={"resumable": True, "output_dir": str(dest)})
 
     if fixture_desktop:
-        paths = write_fixture_artifacts(
+        # Test-only path for fixture desktop binaries; Python package artifacts stay real.
+        paths = _build_python_distributions(root, dest)
+        fixture_paths = write_fixture_artifacts(
             dest,
             version=version,
             desktop_executable=b"MZ-fixture-desktop-exe",
             desktop_installer=b"MZ-fixture-desktop-installer",
         )
+        for key in ("windows_executable", "windows_installer"):
+            if key in fixture_paths:
+                paths[key] = fixture_paths[key]
     else:
-        paths = write_fixture_artifacts(dest, version=version)
-        if use_git_archive:
-            archive = dest / f"project-pipeline-{version.source_sha[:12]}.zip"
-            paths["source_archive"] = _git_archive(root, archive, source_sha=version.source_sha)
+        paths = _build_python_distributions(root, dest)
         if desktop_artifact_dir is not None:
             for kind, pattern in (
                 ("windows_executable", "*.exe"),
@@ -218,6 +265,12 @@ def build_release_bundle(
                 copied = dest / matches[0].name
                 copied.write_bytes(matches[0].read_bytes())
                 paths[kind] = copied
+
+    if use_git_archive:
+        archive = dest / f"project-pipeline-{version.source_sha[:12]}.zip"
+        paths["source_archive"] = _git_archive(root, archive, source_sha=version.source_sha)
+    else:
+        paths["source_archive"] = _write_source_fixture_archive(dest, version=version)
 
     artifacts: list[BoundArtifact] = []
     for kind, path in paths.items():

@@ -273,12 +273,9 @@ class GitHubDraftReleaseService:
         *,
         release_id: int,
         expected_head_sha: str,
-        campaign_complete: bool,
         actor_id: str,
         correlation_id: str,
     ) -> GitHubOperation:
-        if not campaign_complete:
-            raise GitHubStewardError("finalize-before-campaign")
         release = self._required_release(repository_slug, release_id)
         if release.target_commitish.lower() != expected_head_sha.lower():
             raise GitHubStewardError("changed-head publication is rejected")
@@ -294,7 +291,7 @@ class GitHubDraftReleaseService:
             ),
             actor_id=actor_id,
             correlation_id=correlation_id,
-            payload={"release_id": release_id, "campaign_complete": True},
+            payload={"release_id": release_id},
             expected_head_sha=expected_head_sha.lower(),
         )
         self.store.save_operation(operation)

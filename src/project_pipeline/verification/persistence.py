@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import sqlite3
 from pathlib import Path
+from types import TracebackType
 
 from project_pipeline.domain.verification import (
     GoldenJourneyResult,
@@ -26,7 +27,12 @@ class VerificationStore:
         self.initialize()
         return self
 
-    def __exit__(self, exc_type, exc, tb) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None:
         if self.connection is not None:
             self.connection.close()
             self.connection = None

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from importlib import import_module
 from pathlib import Path
+from typing import Protocol, cast
 
 from project_pipeline.upstream_integrations.common import (
     CommandOutcome,
@@ -71,8 +73,8 @@ class MarkItDownAdapter:
 
     def available(self) -> bool:
         try:
-            import markitdown  # noqa: F401
-        except ImportError:
+            import_module("markitdown")
+        except ModuleNotFoundError:
             return False
         return True
 
@@ -80,11 +82,25 @@ class MarkItDownAdapter:
         source = source.resolve()
         if not source.is_file():
             raise ValueError("MarkItDown source must be a file")
+
+        class _MarkItDownResult(Protocol):
+            text_content: str
+
+        class _MarkItDownConverter(Protocol):
+            def convert(self, source: Path) -> _MarkItDownResult: ...
+
+        class _MarkItDownFactory(Protocol):
+            def __call__(self, *, enable_plugins: bool = False) -> _MarkItDownConverter: ...
+
         try:
-            from markitdown import MarkItDown
-        except ImportError as exc:
+            module = import_module("markitdown")
+        except ModuleNotFoundError as exc:
             raise RuntimeError("markitdown dependency is unavailable") from exc
-        converter = MarkItDown(enable_plugins=False)
+        constructor = getattr(module, "MarkItDown", None)
+        if constructor is None or not callable(constructor):
+            raise RuntimeError("markitdown dependency is unavailable")
+        factory = cast(_MarkItDownFactory, constructor)
+        converter = factory(enable_plugins=False)
         result = converter.convert(source)
         text = getattr(result, "text_content", None)
         if not isinstance(text, str):
@@ -101,8 +117,8 @@ class DoclingAdapter:
 
     def available(self) -> bool:
         try:
-            import docling  # noqa: F401
-        except ImportError:
+            import_module("docling")
+        except ModuleNotFoundError:
             return False
         return True
 
@@ -112,11 +128,30 @@ class DoclingAdapter:
             raise ValueError("Docling source must be a file")
         if source.stat().st_size > self.max_file_size:
             raise ValueError("document exceeds Docling adapter size policy")
+
+        class _DoclingDocument(Protocol):
+            def export_to_markdown(self) -> str: ...
+
+        class _DoclingResult(Protocol):
+            document: _DoclingDocument | None
+
+        class _DoclingConverter(Protocol):
+            def convert(
+                self, source: Path, *, max_num_pages: int, max_file_size: int
+            ) -> _DoclingResult: ...
+
+        class _DoclingConverterFactory(Protocol):
+            def __call__(self) -> _DoclingConverter: ...
+
         try:
-            from docling.document_converter import DocumentConverter
-        except ImportError as exc:
+            module = import_module("docling.document_converter")
+        except ModuleNotFoundError as exc:
             raise RuntimeError("docling dependency is unavailable") from exc
-        converter = DocumentConverter()
+        constructor = getattr(module, "DocumentConverter", None)
+        if constructor is None or not callable(constructor):
+            raise RuntimeError("docling dependency is unavailable")
+        factory = cast(_DoclingConverterFactory, constructor)
+        converter = factory()
         result = converter.convert(
             source, max_num_pages=self.max_num_pages, max_file_size=self.max_file_size
         )

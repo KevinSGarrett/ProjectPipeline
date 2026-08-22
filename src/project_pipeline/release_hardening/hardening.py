@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import shutil
 from pathlib import Path
+from typing import Any
 
 from project_pipeline.release_hardening.models import (
     HardeningReport,
@@ -28,7 +29,7 @@ PASS24_TOOLS = (
 )
 
 
-def _registry(root: Path) -> dict[str, dict]:
+def _registry(root: Path) -> dict[str, dict[str, Any]]:
     document = json.loads((root / "provenance/upstream_registry.json").read_text(encoding="utf-8"))
     return {item["upstream_id"]: item for item in document["entries"]}
 

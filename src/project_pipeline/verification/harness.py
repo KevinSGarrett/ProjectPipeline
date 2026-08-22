@@ -10,6 +10,7 @@ import time
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from project_pipeline.domain.verification import (
     AccessibilityEvidence,
@@ -274,7 +275,7 @@ class VerificationHarness:
             completed_at_utc=datetime.now(UTC),
         )
 
-    def _json_worker(self, worker: str, args: tuple[str, ...], *, timeout: int) -> object:
+    def _json_worker(self, worker: str, args: tuple[str, ...], *, timeout: int) -> Any:
         # Use files rather than PIPEs: optional runtime helpers may inherit stdout/stderr.
         # A descendant that keeps a pipe open must never hold the verification parent hostage.
         with tempfile.TemporaryDirectory(prefix="project-pipeline-worker-") as temp:
@@ -356,7 +357,7 @@ __import__('os')._exit(0)
         )
         return PostMergeReport.model_validate(payload)
 
-    def _browser_preflight(self) -> tuple[str | None, dict[str, object] | None, int, str | None]:
+    def _browser_preflight(self) -> tuple[str | None, dict[str, Any] | None, int, str | None]:
         manifest = json.loads((self.root / "PROJECT_MANIFEST.json").read_text(encoding="utf-8"))
         coverage = json.loads(
             (self.root / "plans/_traceability/coverage_report.json").read_text(encoding="utf-8")
@@ -435,12 +436,12 @@ __import__('os')._exit(0)
 
         def direct(
             category: VerificationCategory,
-            callback: Callable[[], object],
-            serializer: Callable[[object], object],
+            callback: Callable[[], Any],
+            serializer: Callable[[Any], Any],
             *,
             evidence_name: str,
-            success: Callable[[object], bool] | None = None,
-        ) -> object:
+            success: Callable[[Any], bool] | None = None,
+        ) -> Any:
             spec = by_category[category]
             started_at = datetime.now(UTC)
             started = time.perf_counter()

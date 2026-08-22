@@ -3,6 +3,7 @@ from __future__ import annotations
 import sqlite3
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from types import TracebackType
 
 from project_pipeline.budget.policy import build_snapshot
 from project_pipeline.domain.budget import (
@@ -38,7 +39,12 @@ class BudgetStore:
         self.initialize()
         return self
 
-    def __exit__(self, exc_type, exc, tb) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None:
         if self.connection is not None:
             self.connection.close()
             self.connection = None
@@ -388,13 +394,13 @@ class BudgetStore:
                 item.quota_id: item for item in self.list_quota_limits() if item.enabled
             }
             for quota_id, units in request.quota_requirements.items():
-                limit = quota_limits.get(quota_id)
-                if limit is None:
+                quota_limit = quota_limits.get(quota_id)
+                if quota_limit is None:
                     raise ValueError(f"quota limit unavailable: {quota_id}")
                 used = sum(item.quota_units.get(quota_id, 0) for item in ledger)
                 reserved = sum(item.quota_reservations.get(quota_id, 0) for item in active)
-                protected = 0 if decision.reserve_authorized else limit.protected_units
-                if used + reserved + units > limit.capacity_units - protected:
+                protected = 0 if decision.reserve_authorized else quota_limit.protected_units
+                if used + reserved + units > quota_limit.capacity_units - protected:
                     raise ValueError(f"atomic quota reservation would exceed {quota_id}")
 
             self.db.execute(

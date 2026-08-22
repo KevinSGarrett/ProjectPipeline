@@ -243,9 +243,7 @@ def repair(root: Path) -> tuple[int, int]:
         ]
     for requirement_id in ("REQ-SEC-0004", "REQ-SEC-0009"):
         requirement = by_id[requirement_id]
-        requirement["jira_ids"] = sorted(
-            set(requirement["jira_ids"]) | {"PP-TASK-000168"}
-        )
+        requirement["jira_ids"] = sorted(set(requirement["jira_ids"]) | {"PP-TASK-000168"})
 
     for requirement in requirements:
         _repair_source_references(requirement)

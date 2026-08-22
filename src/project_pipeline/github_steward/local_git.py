@@ -269,7 +269,7 @@ class LocalGitRepository:
         sha = self._run("rev-parse", name).stdout.strip().lower()
         tree = self._run("rev-parse", f"{name}^{{tree}}").stdout.strip().lower()
         spec = f"refs/heads/{name}:refs/heads/{name}"
-        payload = {
+        payload: dict[str, str | bool] = {
             "remote": remote,
             "branch": name,
             "sha": sha,

@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from project_pipeline.contracts.envelopes import ActionIntent
 from project_pipeline.upstream_integrations.common import require_action_intent
@@ -33,7 +33,7 @@ class SwerexRuntimeAdapter:
         if self._deployment_factory is not None:
             return True
         try:
-            import swerex  # noqa: F401
+            import swerex  # type: ignore[import-not-found]  # noqa: F401
         except ImportError:
             return False
         return True
@@ -70,18 +70,20 @@ class SwerexRuntimeAdapter:
             )
         if self._deployment_factory is None:
             try:
-                from swerex.deployment.local import LocalDeployment
-                from swerex.runtime.abstract import Command
+                from swerex.deployment.local import LocalDeployment  # type: ignore[import-not-found]  # noqa: I001
+                from swerex.runtime.abstract import Command  # type: ignore[import-not-found]
             except ImportError as error:
                 raise SwerexUnavailableError("swe-rex is not installed") from error
             deployment = LocalDeployment()
             command_factory: Callable[..., Any] = Command
         else:
             deployment = self._deployment_factory()
-            command_factory = getattr(deployment, "command_factory", None)
-            if command_factory is None:
+            candidate_factory = getattr(deployment, "command_factory", None)
+            if callable(candidate_factory):
+                command_factory = cast(Callable[..., Any], candidate_factory)
+            else:
 
-                def command_factory(**kwargs):
+                def command_factory(**kwargs: Any) -> dict[str, Any]:
                     return kwargs
 
         await deployment.start()
@@ -95,10 +97,16 @@ class SwerexRuntimeAdapter:
                     cwd=plan.cwd,
                 )
             )
+            payload: dict[str, object]
             if hasattr(response, "model_dump"):
-                payload = response.model_dump(mode="json")
+                raw_payload: object = response.model_dump(mode="json")
+                payload = (
+                    dict(raw_payload)
+                    if isinstance(raw_payload, dict)
+                    else {"response": raw_payload}
+                )
             elif isinstance(response, dict):
-                payload = dict(response)
+                payload = {str(key): value for key, value in response.items()}
             else:
                 payload = {
                     "stdout": getattr(response, "stdout", ""),

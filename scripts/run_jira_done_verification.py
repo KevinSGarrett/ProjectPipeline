@@ -4,13 +4,12 @@ import argparse
 import hashlib
 import json
 import os
-from pathlib import Path
 import shlex
 import subprocess
 import sys
 import time
 import xml.etree.ElementTree as ET
-
+from pathlib import Path
 
 ISSUE_DIRS = ("epics", "stories", "tasks", "subtasks")
 
@@ -91,10 +90,14 @@ def main() -> int:
     output = args.output if args.output.is_absolute() else root / args.output
     run_dir = output.parent / "completion_verification_runs"
     run_dir.mkdir(parents=True, exist_ok=True)
-    generated_at = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()
+    generated_at = (
+        __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()
+    )
 
     done = [item for item in _issues(root) if item["state"] == "DONE"]
-    catalog = json.loads((root / "tests" / "TEST_CATALOG.json").read_text(encoding="utf-8"))["tests"]
+    catalog = json.loads((root / "tests" / "TEST_CATALOG.json").read_text(encoding="utf-8"))[
+        "tests"
+    ]
     required_ids = {test_id for item in done for test_id in item.get("required_tests", [])}
     selected = [entry for entry in catalog if entry["test_id"] in required_ids]
     by_file: dict[str, list[dict]] = {}
@@ -129,8 +132,19 @@ def main() -> int:
             run_argv = [sys.executable, "-m", "pytest", "-q", path, f"--junitxml={xml_path}"]
         if args.reuse_junit and xml_path.exists() and path.startswith("tests/"):
             cases = list(ET.parse(xml_path).iter("testcase"))
-            status = "FAIL" if any(case.find("failure") is not None or case.find("error") is not None for case in cases) else "PASS"
-            returncode, duration, detail = (1 if status == "FAIL" else 0), 0.0, "reused prior fresh JUnit result"
+            status = (
+                "FAIL"
+                if any(
+                    case.find("failure") is not None or case.find("error") is not None
+                    for case in cases
+                )
+                else "PASS"
+            )
+            returncode, duration, detail = (
+                (1 if status == "FAIL" else 0),
+                0.0,
+                "reused prior fresh JUnit result",
+            )
         else:
             status, returncode, duration, detail = _run(
                 run_argv,

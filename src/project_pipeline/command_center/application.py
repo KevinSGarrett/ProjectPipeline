@@ -364,16 +364,16 @@ class RepositoryApplicationProjectionBuilder:
         }
         issue_by_id = {str(row.get("local_id")): row for row in issues if row.get("local_id")}
         for jid in sorted(linked_issue_ids):
-            row = issue_by_id.get(jid)
-            if not row:
+            issue_row = issue_by_id.get(jid)
+            if not issue_row:
                 continue
             nodes.append(
                 ApplicationGraphNode(
                     node_id=jid,
                     kind="jira",
-                    label=str(row.get("title") or jid)[:500],
-                    state=str(row.get("state", "UNKNOWN")),
-                    authoritative_path=f"jira/{str(row.get('issue_type', 'item')).lower()}s/{jid}.json",
+                    label=str(issue_row.get("title") or jid)[:500],
+                    state=str(issue_row.get("state", "UNKNOWN")),
+                    authoritative_path=f"jira/{str(issue_row.get('issue_type', 'item')).lower()}s/{jid}.json",
                 )
             )
         evidence_ids = {
@@ -381,18 +381,24 @@ class RepositoryApplicationProjectionBuilder:
         }
         evidence_by_id = {str(row.get("evidence_id") or row.get("id")): row for row in evidence}
         for eid in sorted(evidence_ids):
-            row = evidence_by_id.get(eid)
-            if not row:
+            evidence_row = evidence_by_id.get(eid)
+            if not evidence_row:
                 continue
             nodes.append(
                 ApplicationGraphNode(
                     node_id=eid,
                     kind="evidence",
-                    label=str(row.get("summary") or row.get("description") or eid)[:500],
-                    state=str(row.get("status") or row.get("verification_state") or "RECORDED"),
-                    authoritative_path=str(row.get("path") or "evidence/EVIDENCE_LEDGER.jsonl")[
-                        :600
-                    ],
+                    label=str(
+                        evidence_row.get("summary") or evidence_row.get("description") or eid
+                    )[:500],
+                    state=str(
+                        evidence_row.get("status")
+                        or evidence_row.get("verification_state")
+                        or "RECORDED"
+                    ),
+                    authoritative_path=str(
+                        evidence_row.get("path") or "evidence/EVIDENCE_LEDGER.jsonl"
+                    )[:600],
                 )
             )
         node_ids = {node.node_id for node in nodes}

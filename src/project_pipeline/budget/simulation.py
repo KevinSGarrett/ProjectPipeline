@@ -7,6 +7,7 @@ from pathlib import Path
 from project_pipeline.budget.persistence import BudgetStore
 from project_pipeline.budget.service import BudgetGovernor
 from project_pipeline.domain.budget import (
+    BudgetAdmissionDecision,
     BudgetAdmissionRequest,
     BudgetLimit,
     BudgetPolicy,
@@ -16,6 +17,7 @@ from project_pipeline.domain.budget import (
     CostEvidenceState,
     PressureMode,
     ReserveReason,
+    SpendLease,
     budget_identifier,
 )
 
@@ -45,20 +47,41 @@ def _limit(cap: int, reserve: int = 0) -> BudgetLimit:
     )
 
 
-def _request(task_id: str, p90: int, **updates: object) -> BudgetAdmissionRequest:
-    data = dict(
+def _request(
+    task_id: str,
+    p90: int,
+    *,
+    task_class: str = "implementation",
+    provider_id: str | None = None,
+    scope_keys: tuple[str, ...] = ("GLOBAL:*",),
+    quota_requirements: dict[str, int] | None = None,
+    priority: str = "P2",
+    risk: str = "MEDIUM",
+    critical_path: bool = False,
+    required_verification: bool = False,
+    paid_incremental: bool = True,
+    local_or_subscription_alternative: bool = False,
+    reserve_reason: ReserveReason | None = None,
+    deadline_at_utc: datetime | None = None,
+) -> BudgetAdmissionRequest:
+    return BudgetAdmissionRequest(
         project_id="PROJECT-PIPELINE",
         task_id=task_id,
-        task_class="implementation",
-        scope_keys=("GLOBAL:*",),
+        task_class=task_class,
+        provider_id=provider_id,
+        scope_keys=scope_keys,
         estimated_p50_microunits=max(0, p90 * 2 // 3),
         estimated_p90_microunits=p90,
-        priority="P2",
-        risk="MEDIUM",
-        paid_incremental=True,
+        quota_requirements=quota_requirements or {},
+        priority=priority,
+        risk=risk,
+        critical_path=critical_path,
+        required_verification=required_verification,
+        paid_incremental=paid_incremental,
+        local_or_subscription_alternative=local_or_subscription_alternative,
+        reserve_reason=reserve_reason,
+        deadline_at_utc=deadline_at_utc,
     )
-    data.update(updates)
-    return BudgetAdmissionRequest(**data)
 
 
 def simulate_scenario(root: Path, scenario: str) -> BudgetSimulationResult:
@@ -74,7 +97,9 @@ def simulate_scenario(root: Path, scenario: str) -> BudgetSimulationResult:
             governor = BudgetGovernor(store, BudgetPolicy())
             governor.configure_limit(_limit(1_000_000, 200_000))
 
-            def run(request: BudgetAdmissionRequest, key: str, forecast: int = 0, pace: int = 1000):
+            def run(
+                request: BudgetAdmissionRequest, key: str, forecast: int = 0, pace: int = 1000
+            ) -> tuple[BudgetAdmissionDecision, SpendLease | None]:
                 decision = governor.admit(
                     request,
                     cycle_id="monthly-test",

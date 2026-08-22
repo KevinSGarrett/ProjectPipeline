@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable
+from typing import Any
 
 from project_pipeline.domain.resilience import (
     FailoverDecision,
@@ -31,6 +32,8 @@ def decide_operating_mode(
     emergency_stop: bool = False,
 ) -> OperatingModeDecision:
     domains = tuple(sorted(set(failures), key=lambda value: value.value))
+    allowed: tuple[str, ...]
+    blocked: tuple[str, ...]
     if emergency_stop:
         mode = OperatingMode.EMERGENCY_STOP
         allowed = ("read_state", "export_evidence", "notify")
@@ -139,18 +142,32 @@ class RecoveryDirector:
     def provider_substitution(
         required_capabilities: Iterable[str], providers: Iterable[dict[str, object]]
     ) -> dict[str, object]:
+        def _coerce_float(value: object, *, default: float = 1.0) -> float:
+            try:
+                return float(str(value))
+            except (TypeError, ValueError):
+                return default
+
         required = set(required_capabilities)
-        candidates = []
+        candidates: list[dict[str, object]] = []
         for provider in providers:
-            caps = set(str(x) for x in provider.get("capabilities", ()))
+            raw_caps = provider.get("capabilities", ())
+            capabilities: Iterable[Any] = (
+                raw_caps if isinstance(raw_caps, (list, tuple, set, frozenset)) else ()
+            )
+            caps = {str(item) for item in capabilities}
             if provider.get("available") and required.issubset(caps):
                 candidates.append(provider)
         candidates.sort(
-            key=lambda item: (float(item.get("cost_score", 1.0)), str(item.get("provider_id", "")))
+            key=lambda item: (
+                _coerce_float(item.get("cost_score", 1.0)),
+                str(item.get("provider_id", "")),
+            )
         )
+        selected = str(candidates[0].get("provider_id", "")) if candidates else None
         return {
             "required_capabilities": sorted(required),
-            "selected_provider_id": candidates[0].get("provider_id") if candidates else None,
+            "selected_provider_id": selected,
             "candidate_count": len(candidates),
             "task_semantics_preserved": True,
             "blocked": not candidates,

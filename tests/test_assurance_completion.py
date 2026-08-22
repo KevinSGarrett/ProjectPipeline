@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from project_pipeline.assurance.completion import (
@@ -131,3 +132,20 @@ def test_unattended_operating_loop_is_a_non_optional_completion_fact():
     assert decision.final_complete is False
     assert decision.failures[0].category is FailureCategory.GOLDEN_JOURNEY
     assert decision.failures[0].rework_route == "completion.question.16"
+
+
+def test_completion_gate_external_evidence_path_escape_fails_closed(tmp_path: Path):
+    root = Path(__file__).resolve().parents[1]
+    external = tmp_path / "external-live.json"
+    external.write_text(
+        json.dumps({"bound_head": "a" * 40, "bound_tree": "b" * 40}), encoding="utf-8"
+    )
+    current = build_repository_gate_facts(
+        root,
+        "PROJECT-PIPELINE",
+        external_live_qualification=external,
+    )
+    assert current.autonomous_runtime_qualified is False
+    decision = evaluate_completion_gate(current)
+    golden = next(q for q in decision.questions if q.question_number == 5)
+    assert golden.passed is False

@@ -4,8 +4,8 @@ import argparse
 from pathlib import Path
 from typing import Any
 
-from project_pipeline.io import read_json, read_jsonl, write_json
 from project_pipeline.control.kernel import issue_has_reconciliation_evidence
+from project_pipeline.io import read_json, read_jsonl, write_json
 
 
 def _issues(root: Path) -> dict[str, dict[str, Any]]:

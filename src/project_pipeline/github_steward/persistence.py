@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import sqlite3
 from pathlib import Path
+from types import TracebackType
 from typing import Any
 
 from project_pipeline.domain.github import (
@@ -28,7 +29,12 @@ class GitHubStewardStore:
         self.initialize()
         return self
 
-    def __exit__(self, exc_type, exc, tb) -> None:
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None:
         if self.connection is not None:
             self.connection.close()
             self.connection = None
