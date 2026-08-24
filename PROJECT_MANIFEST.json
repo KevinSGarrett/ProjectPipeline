@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "8769a13c14cf69020cd81293dd7782710e2b0801106fb8a74148cdb3678e1e17",
+  "aggregate_sha256": "c82a19b24cdacaa3c06f4d8ed2317404dd6687c1081a0fb9d5e6807136aad8b3",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12392,7 +12392,7 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/campaign.py",
-      "sha256": "e956effb40a3695e7711f1321f62c7e0be13cf7bfcf8d9b9280621598e8ebd03",
+      "sha256": "9105c28396a678ea368addcef47f395e5a03d2baa910dcc0b21ddfb080a6200a",
       "size_bytes": 76655
     },
     {
@@ -15116,7 +15116,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-24T08:16:17.119334+00:00",
+  "generated_at_utc": "2026-08-24T08:24:20.987915+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",

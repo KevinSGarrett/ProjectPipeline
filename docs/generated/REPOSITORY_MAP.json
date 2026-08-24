@@ -7226,7 +7226,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "d7d8819a61505b712f0a0104f4e2c3b68150325e9b273d53f4a28d874621aa0b",
+      "sha256": "9aa147e35ff86dc319ff469111e32aed837966eb40a8e827d54456634d5daba1",
       "size_bytes": 345980,
       "top_level": "_root"
     },
@@ -14450,7 +14450,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "eca56a3055f22915b625e508c529e1655d55f69b458769d8fed79951b5627961",
+      "sha256": "ea22fa554d62809790d4d5819258e2010f7507d0b714371809c7cec97a52d59c",
       "size_bytes": 566426,
       "top_level": "_root"
     },
@@ -17425,7 +17425,7 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/campaign.py",
-      "sha256": "e956effb40a3695e7711f1321f62c7e0be13cf7bfcf8d9b9280621598e8ebd03",
+      "sha256": "9105c28396a678ea368addcef47f395e5a03d2baa910dcc0b21ddfb080a6200a",
       "size_bytes": 76655,
       "top_level": "src"
     },
@@ -21238,7 +21238,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-24T08:16:16.735771+00:00",
+  "generated_at_utc": "2026-08-24T08:24:20.604135+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {
