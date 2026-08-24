@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "8e9216650fbd3085b152781d7b61e05ad5cb8149a54714a059ca6cf722407d48",
+  "aggregate_sha256": "6ab137496009a350226e3275cf137d468bfc2c701a9ea7b15fcf4442f86360a6",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 3032,
+  "file_count": 3036,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -167,8 +167,8 @@
     },
     {
       "path": ".gitignore",
-      "sha256": "32a5c09584dc86343d6ce0a419f9a3b7223efbc407cdd7c09c15179b2a069059",
-      "size_bytes": 2540
+      "sha256": "981d006dea5b39810bc0b6cec4171ba96b3e33d1914eb435e6eb6c3e95c2b790",
+      "size_bytes": 2636
     },
     {
       "path": ".pre-commit-config.yaml",
@@ -434,6 +434,26 @@
       "path": "apps/desktop_shell/src-tauri/Cargo.toml",
       "sha256": "297f81f7a901cf9c843a64894bed28d647fbc7d9ec6b909daa578bb7221fbcbf",
       "size_bytes": 417
+    },
+    {
+      "path": "apps/desktop_shell/src-tauri/gen/schemas/acl-manifests.json",
+      "sha256": "2a97280a4ab4ff26618f7c565c7c95fbf4b4fd58729b584670ec6381e36e919d",
+      "size_bytes": 72687
+    },
+    {
+      "path": "apps/desktop_shell/src-tauri/gen/schemas/capabilities.json",
+      "sha256": "5d272bde552cb860bf7bb31290f973d298cf6fc1ca26cec3bd353bb3ae3ab305",
+      "size_bytes": 239
+    },
+    {
+      "path": "apps/desktop_shell/src-tauri/gen/schemas/desktop-schema.json",
+      "sha256": "8c9ca7f1bdfd57dde47a543a903ca7601b4d3ff881198c44c5934de9ca629d40",
+      "size_bytes": 127056
+    },
+    {
+      "path": "apps/desktop_shell/src-tauri/gen/schemas/windows-schema.json",
+      "sha256": "8c9ca7f1bdfd57dde47a543a903ca7601b4d3ff881198c44c5934de9ca629d40",
+      "size_bytes": 127056
     },
     {
       "path": "apps/desktop_shell/src-tauri/icons/128x128.png",
@@ -11987,8 +12007,8 @@
     },
     {
       "path": "scripts/build_campaign_desktop_artifacts.py",
-      "sha256": "640a6b91628728edcaafcccaf134cf86a571cbf1d8e84ebcf78df5a6a7df1674",
-      "size_bytes": 5561
+      "sha256": "4ccaf5a3285d2e5743efcec4934f34d8b4aba77bb08ab52fbd86cb0aad8ae803",
+      "size_bytes": 8944
     },
     {
       "path": "scripts/bulk_reconcile_implemented_jira.py",
@@ -14247,8 +14267,8 @@
     },
     {
       "path": "tests/test_campaign_desktop_artifacts.py",
-      "sha256": "3f248520fce54bf34d55951196c341ba98fb3163331d0132341ad513ae45fe0d",
-      "size_bytes": 2887
+      "sha256": "090ba40f72bf6e37f1e1c2be86e6be9d87f42fe924dae6b500d2b153678d7263",
+      "size_bytes": 6030
     },
     {
       "path": "tests/test_campaign_duration_probes.py",
@@ -15171,7 +15191,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-24T18:12:40.477394+00:00",
+  "generated_at_utc": "2026-08-24T19:41:28.003631+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15180,5 +15200,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30435770
+  "total_bytes": 30769430
 }

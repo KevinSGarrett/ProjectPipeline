@@ -39,6 +39,8 @@ MANIFEST
 
 # Rust and Tauri build output
 target/
+# Tauri generates this schema directory during native builds.
+apps/desktop_shell/src-tauri/gen/
 
 # JavaScript, browser-test, and frontend output
 node_modules/
