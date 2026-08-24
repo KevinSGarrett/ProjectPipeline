@@ -166,8 +166,8 @@
       "instruction_id": "PP-ASSET-GITIGNORE",
       "kind": "INTEGRATION_SUPPORT",
       "path": ".gitignore",
-      "sha256": "32a5c09584dc86343d6ce0a419f9a3b7223efbc407cdd7c09c15179b2a069059",
-      "size_bytes": 2540
+      "sha256": "981d006dea5b39810bc0b6cec4171ba96b3e33d1914eb435e6eb6c3e95c2b790",
+      "size_bytes": 2636
     },
     {
       "instruction_id": "PP-ENTRY-ROOT",
