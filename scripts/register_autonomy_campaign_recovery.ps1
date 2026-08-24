@@ -71,9 +71,6 @@ $config = [ordered]@{
     cycles = $Cycles
     simulated_elapsed = $false
 }
-$utf8NoBom = New-Object System.Text.UTF8Encoding $false
-[System.IO.File]::WriteAllText($configPath, (($config | ConvertTo-Json -Depth 6) + [Environment]::NewLine), $utf8NoBom)
-
 $payload = [ordered]@{
     task_name = $TaskName
     interval_minutes = $IntervalMinutes
@@ -122,6 +119,12 @@ if ($Action -eq "uninstall") {
     [ordered]@{ task_name = $TaskName; registered = $false; user_action_required = $false } | ConvertTo-Json
     exit 0
 }
+
+# The recovery probe retargets this file atomically after a legitimate
+# stale-runner takeover.  Only installation may author a new binding; read and
+# uninstall operations must not silently restore an obsolete parent campaign.
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
+[System.IO.File]::WriteAllText($configPath, (($config | ConvertTo-Json -Depth 6) + [Environment]::NewLine), $utf8NoBom)
 
 if ($RepetitionDays -lt 1 -or $RepetitionDays -gt 31) {
     throw "repetition duration must be a finite 1-31 day value accepted by Windows Task Scheduler"

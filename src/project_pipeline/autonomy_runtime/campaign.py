@@ -928,6 +928,11 @@ class CampaignController:
 
     def recover(self, campaign_id: str) -> dict[str, Any]:
         row = self._require(campaign_id)
+        if str(row["status"]) in {"DISQUALIFIED", "FAILED", "STOPPED", "FINALIZED"}:
+            raise ValueError(
+                "terminal campaign cannot recover; preserve its evidence and start a "
+                "fresh candidate only after corrective governance"
+            )
         lock = self._db.execute(
             "SELECT * FROM campaign_locks WHERE lock_name = 'active-campaign'"
         ).fetchone()
