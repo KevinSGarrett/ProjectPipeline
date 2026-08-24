@@ -128,3 +128,16 @@ class ManifestTests(unittest.TestCase):
                     ".cursor/rules/authority.mdc",
                 },
             )
+
+    def test_manifest_excludes_generated_desktop_schemas(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            generated = root / "apps/desktop_shell/src-tauri/gen/schemas/desktop-schema.json"
+            generated.parent.mkdir(parents=True)
+            generated.write_text("generated\n", encoding="utf-8")
+            tracked = root / "apps/desktop_shell/src-tauri/tauri.conf.json"
+            tracked.write_text("{}\n", encoding="utf-8")
+
+            paths = {item["path"] for item in build_manifest(root)["files"]}
+
+            self.assertEqual(paths, {"apps/desktop_shell/src-tauri/tauri.conf.json"})

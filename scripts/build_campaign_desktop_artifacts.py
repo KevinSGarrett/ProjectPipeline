@@ -9,6 +9,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tomllib
 from pathlib import Path
 from typing import Any
 
@@ -18,6 +19,11 @@ sys.path.insert(0, str(ROOT / "src"))
 from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity  # noqa: E402
 from project_pipeline.github_steward.asset_names import canonical_release_asset_name  # noqa: E402
 from project_pipeline.release_factory.bundle import BoundArtifact  # noqa: E402
+from project_pipeline.resilience.host_safety import require_safe_local_host  # noqa: E402
+
+_GNU_TARGET = "x86_64-pc-windows-gnu"
+_MSVC_TARGET = "x86_64-pc-windows-msvc"
+_GNU_GCC = "x86_64-w64-mingw32-gcc.exe"
 
 
 def _sha256(path: Path) -> str:
@@ -65,6 +71,67 @@ def _run(command: list[str], *, cwd: Path, environment: dict[str, str]) -> None:
         raise RuntimeError("desktop-native-build-failed")
 
 
+def _winget_winlibs_bin(environment: dict[str, str]) -> Path | None:
+    """Locate the user-scoped WinLibs package without persisting a toolchain path."""
+
+    local_app_data = environment.get("LOCALAPPDATA")
+    if not local_app_data:
+        return None
+    package_root = Path(local_app_data) / "Microsoft" / "WinGet" / "Packages"
+    for candidate in sorted(package_root.glob("BrechtSanders.WinLibs.POSIX.UCRT_*/mingw64/bin")):
+        if (candidate / _GNU_GCC).is_file():
+            return candidate
+    return None
+
+
+def _prepare_native_build_environment(
+    environment: dict[str, str],
+) -> tuple[dict[str, str], str, str]:
+    """Choose a native Windows toolchain and return its isolated build environment."""
+
+    configured = dict(environment)
+    requested_target = configured.get("PROJECT_PIPELINE_DESKTOP_TARGET", "").strip()
+    if requested_target and requested_target not in {_GNU_TARGET, _MSVC_TARGET}:
+        raise RuntimeError("desktop-build-target-unsupported")
+
+    path_value = configured.get("PATH", "")
+    target = requested_target or (
+        _MSVC_TARGET if shutil.which("link.exe", path=path_value) else _GNU_TARGET
+    )
+    if target == _MSVC_TARGET:
+        if not shutil.which("link.exe", path=path_value):
+            raise RuntimeError("desktop-build-msvc-linker-unavailable")
+        return configured, target, "MSVC link.exe"
+
+    compiler = shutil.which(_GNU_GCC, path=path_value)
+    if compiler:
+        compiler_path = Path(compiler)
+    else:
+        winlibs_bin = _winget_winlibs_bin(configured)
+        if winlibs_bin is None:
+            raise RuntimeError("desktop-build-gnu-linker-unavailable")
+        configured["PATH"] = str(winlibs_bin) + os.pathsep + path_value
+        compiler_path = winlibs_bin / _GNU_GCC
+    configured["CARGO_BUILD_TARGET"] = _GNU_TARGET
+    return configured, target, str(compiler_path)
+
+
+def _gnu_rust_toolchain(root: Path) -> str:
+    """Derive the installed GNU toolchain from the repository's pinned Rust channel."""
+
+    toolchain_path = root / "rust-toolchain.toml"
+    try:
+        payload = tomllib.loads(toolchain_path.read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError) as error:
+        raise RuntimeError("desktop-build-rust-toolchain-unavailable") from error
+    toolchain = payload.get("toolchain")
+    channel = toolchain.get("channel") if isinstance(toolchain, dict) else None
+    if not isinstance(channel, str) or not channel.strip():
+        raise RuntimeError("desktop-build-rust-toolchain-unavailable")
+    suffix = "-x86_64-pc-windows-gnu"
+    return channel if channel.endswith(suffix) else f"{channel}{suffix}"
+
+
 def build_artifacts(
     *, root: Path, output_dir: Path, expected_sha: str, expected_tree: str
 ) -> dict[str, Any]:
@@ -80,6 +147,7 @@ def build_artifacts(
         raise RuntimeError("desktop-build-candidate-identity-drift")
     if output.exists() and any(output.iterdir()):
         raise RuntimeError("desktop-build-output-conflict")
+    host_safety = require_safe_local_host(root)
     output.mkdir(parents=True, exist_ok=True)
 
     frontend = root / "apps" / "command_center"
@@ -88,12 +156,23 @@ def build_artifacts(
     npm = shutil.which("npm.cmd") or shutil.which("npm")
     if not npm:
         raise RuntimeError("desktop-build-npm-unavailable")
-    environment = dict(os.environ)
+    environment, build_target, compiler = _prepare_native_build_environment(dict(os.environ))
+    rust_toolchain = None
+    if build_target == _GNU_TARGET:
+        rust_toolchain = _gnu_rust_toolchain(root)
+        environment["RUSTUP_TOOLCHAIN"] = rust_toolchain
     environment["CARGO_TARGET_DIR"] = str(output / "cargo-target")
     _run([npm, "ci"], cwd=frontend, environment=environment)
-    _run([npm, "run", "tauri:build", "--", "--", "--locked"], cwd=frontend, environment=environment)
+    tauri_command = [npm, "run", "tauri:build", "--"]
+    if build_target != _MSVC_TARGET:
+        tauri_command.extend(["--target", build_target])
+    tauri_command.extend(["--", "--locked"])
+    _run(tauri_command, cwd=frontend, environment=environment)
 
-    release_dir = output / "cargo-target" / "release"
+    release_dir = output / "cargo-target"
+    if build_target != _MSVC_TARGET:
+        release_dir = release_dir / build_target
+    release_dir = release_dir / "release"
     executable = release_dir / "project-pipeline-command-center.exe"
     installers = sorted(
         path for path in (release_dir / "bundle" / "nsis").glob("*setup.exe") if path.is_file()
@@ -125,6 +204,10 @@ def build_artifacts(
     payload = {
         "state": "BUILT",
         "real_native_build": True,
+        "build_target": build_target,
+        "compiler": compiler,
+        "rust_toolchain": rust_toolchain,
+        "host_safety": host_safety,
         "source_sha": expected_sha,
         "source_tree": expected_tree,
         "artifacts": artifacts,

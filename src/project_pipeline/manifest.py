@@ -17,6 +17,11 @@ MANIFEST_EXCLUSIONS = frozenset(
         "docs/generated/REPOSITORY_MAP.md",
     }
 )
+MANIFEST_GENERATED_DIRECTORY_EXCLUSIONS = frozenset(
+    {
+        "apps/desktop_shell/src-tauri/gen",
+    }
+)
 ENV_TEMPLATE_NAMES = frozenset({".env.example", ".env.sample", ".env.template"})
 LOCAL_SECRET_SUFFIXES = frozenset({".pem", ".key", ".p12", ".pfx"})
 
@@ -55,13 +60,20 @@ def is_local_only_manifest_path(relative: str) -> bool:
     return path.suffix.lower() in LOCAL_SECRET_SUFFIXES
 
 
+def is_generated_manifest_path(relative: str) -> bool:
+    return any(
+        relative == directory or relative.startswith(f"{directory}/")
+        for directory in MANIFEST_GENERATED_DIRECTORY_EXCLUSIONS
+    )
+
+
 def build_manifest(root: Path) -> dict[str, Any]:
     root = root.resolve()
     files: list[dict[str, Any]] = []
     aggregate = hashlib.sha256()
     for path in iter_repository_files(root, excluded_relative_paths=MANIFEST_EXCLUSIONS):
         relative = path.relative_to(root).as_posix()
-        if is_local_only_manifest_path(relative):
+        if is_local_only_manifest_path(relative) or is_generated_manifest_path(relative):
             continue
         content = _canonical_manifest_content(path)
         digest = hashlib.sha256(content).hexdigest()
@@ -85,6 +97,7 @@ def build_manifest(root: Path) -> dict[str, Any]:
             ".env and non-template .env.* files",
             "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
             "local assistant/runtime/upstream directories from project_pipeline.io",
+            "generated desktop schema directory: apps/desktop_shell/src-tauri/gen",
         ],
         "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
     }
