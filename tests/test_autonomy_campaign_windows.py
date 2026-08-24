@@ -255,6 +255,67 @@ def test_recovery_probe_atomically_retargets_the_successor_config(tmp_path: Path
     assert not list(tmp_path.glob(".recovery_probe.json.*.tmp"))
 
 
+def test_recovery_probe_reconciles_a_single_successor_after_retarget_failure(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=0.2,
+        inspect_identity=lambda _root: _identity(),
+        finalize_commands=[],
+        allow_unbound_candidate_for_tests=True,
+    )
+    parent = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+        service_identity="schtasks:test-recovery",
+    )
+    controller._disqualify(parent["campaign_id"], "stale-runner-broken-window")
+    successor = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+        service_identity="schtasks:test-recovery",
+        prior_campaign_id=parent["campaign_id"],
+    )
+    config_path = tmp_path / "recovery_probe.json"
+    config = {"campaign_id": parent["campaign_id"], "fence": parent["fence"]}
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+    probe = runpy.run_path(str(PROBE))
+
+    original_replace = probe["os"].replace
+
+    def fail_replace(_source: Path, _destination: Path) -> None:
+        raise OSError("injected retarget failure")
+
+    monkeypatch.setattr(probe["os"], "replace", fail_replace)
+    with pytest.raises(OSError, match="injected retarget failure"):
+        probe["_retarget_config"](config_path, config, successor)
+    assert (
+        json.loads(config_path.read_text(encoding="utf-8"))["campaign_id"] == parent["campaign_id"]
+    )
+    assert not list(tmp_path.glob(".recovery_probe.json.*.tmp"))
+
+    recovered = probe["_terminal_successor"](
+        controller,
+        controller.get(parent["campaign_id"]),
+        expected_sha="a" * 40,
+        expected_tree="b" * 40,
+    )
+    assert recovered is not None
+    assert recovered["campaign_id"] == successor["campaign_id"]
+
+    monkeypatch.setattr(probe["os"], "replace", original_replace)
+    probe["_retarget_config"](config_path, config, recovered)
+    assert (
+        json.loads(config_path.read_text(encoding="utf-8"))["campaign_id"]
+        == successor["campaign_id"]
+    )
+    controller.close()
+
+
 def _register(
     action: str,
     tmp_path: Path,

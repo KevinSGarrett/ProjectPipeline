@@ -55,6 +55,8 @@ from project_pipeline.autonomy_runtime.campaign import (  # noqa: E402
 from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusError  # noqa: E402
 from project_pipeline.autonomy_runtime.process_identity import inspect_process  # noqa: E402
 
+TERMINAL_CAMPAIGN_STATUSES = frozenset({"DISQUALIFIED", "FAILED", "STOPPED", "FINALIZED"})
+
 
 def _load_config(path: Path) -> dict:
     payload = json.loads(path.read_text(encoding="utf-8-sig"))
@@ -76,6 +78,38 @@ def _retarget_config(path: Path, config: dict, campaign: dict) -> None:
     finally:
         if temporary.exists():
             temporary.unlink()
+
+
+def _terminal_successor(
+    controller: CampaignController,
+    campaign: dict,
+    *,
+    expected_sha: str,
+    expected_tree: str,
+) -> dict | None:
+    """Return the single eligible child left by a failed retarget, if any."""
+
+    rows = controller._db.execute(
+        """
+        SELECT campaign_id
+        FROM campaign_runs
+        WHERE prior_campaign_id = ?
+          AND integrated_sha = ?
+          AND integrated_tree = ?
+          AND COALESCE(service_identity, '') = COALESCE(?, '')
+          AND status IN ('ATTESTED', 'RUNNING')
+        ORDER BY started_at_utc
+        """,
+        (
+            campaign["campaign_id"],
+            expected_sha,
+            expected_tree,
+            campaign.get("service_identity"),
+        ),
+    ).fetchall()
+    if len(rows) != 1:
+        return None
+    return controller.get(str(rows[0]["campaign_id"]))
 
 
 def _pid_file_identity(path: Path) -> dict | None:
@@ -276,24 +310,55 @@ def main() -> int:
         fence = str(config.get("fence") or "")
         if fence and campaign["fence"] != fence:
             raise SystemExit("campaign fence does not match bound fence")
-        if str(campaign["status"]) in {"DISQUALIFIED", "FAILED", "STOPPED", "FINALIZED"}:
-            controller.project_status(
-                campaign_id,
-                status_path=status_path,
-                task_health={"registered": True, "probe": "inactive"},
+        if str(campaign["status"]) in TERMINAL_CAMPAIGN_STATUSES:
+            successor = _terminal_successor(
+                controller,
+                campaign,
+                expected_sha=str(campaign["integrated_sha"]),
+                expected_tree=str(campaign["integrated_tree"]),
             )
-            print(
-                json.dumps(
-                    {
-                        "action": "inactive",
-                        "campaign_id": campaign_id,
-                        "status": campaign["status"],
-                        "user_action_required": False,
-                    },
-                    sort_keys=True,
+            if successor is not None:
+                try:
+                    _retarget_config(args.config, config, successor)
+                except OSError:
+                    controller.project_status(
+                        campaign_id,
+                        status_path=status_path,
+                        task_health={"registered": True, "probe": "retarget-pending"},
+                    )
+                    print(
+                        json.dumps(
+                            {
+                                "action": "retarget-pending",
+                                "campaign_id": campaign_id,
+                                "successor_campaign_id": successor["campaign_id"],
+                                "user_action_required": False,
+                            },
+                            sort_keys=True,
+                        )
+                    )
+                    return 0
+                campaign = successor
+                campaign_id = str(successor["campaign_id"])
+                fence = str(successor["fence"])
+            else:
+                controller.project_status(
+                    campaign_id,
+                    status_path=status_path,
+                    task_health={"registered": True, "probe": "inactive"},
                 )
-            )
-            return 0
+                print(
+                    json.dumps(
+                        {
+                            "action": "inactive",
+                            "campaign_id": campaign_id,
+                            "status": campaign["status"],
+                            "user_action_required": False,
+                        },
+                        sort_keys=True,
+                    )
+                )
+                return 0
         pid_identity = _pid_file_identity(pid_path)
         if _healthy(
             campaign,
@@ -337,7 +402,26 @@ def main() -> int:
         resume_id = _parse_campaign_id(recovered.stdout or "") or campaign_id
         resumed = controller.get(resume_id)
         if resume_id != campaign_id:
-            _retarget_config(args.config, config, resumed)
+            try:
+                _retarget_config(args.config, config, resumed)
+            except OSError:
+                controller.project_status(
+                    campaign_id,
+                    status_path=status_path,
+                    task_health={"registered": True, "probe": "retarget-pending"},
+                )
+                print(
+                    json.dumps(
+                        {
+                            "action": "retarget-pending",
+                            "campaign_id": campaign_id,
+                            "successor_campaign_id": resume_id,
+                            "user_action_required": False,
+                        },
+                        sort_keys=True,
+                    )
+                )
+                return 0
         extra: list[str] = []
         if int(config.get("cycles") or 0) > 0:
             extra.extend(["--cycles", str(int(config["cycles"]))])
