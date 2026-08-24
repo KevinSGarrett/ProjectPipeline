@@ -104,6 +104,8 @@ def evaluate_local_host_safety(
 
     blockers: list[dict[str, Any]] = []
     normalized_volumes: list[dict[str, Any]] = []
+    if not volumes:
+        blockers.append({"code": "mounted-volume-inspection-empty"})
     for volume in volumes:
         drive = str(volume.get("DriveLetter") or "").upper()
         health = str(volume.get("HealthStatus") or "Unknown")

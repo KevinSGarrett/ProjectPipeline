@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "7235b7b7459430051240cd209552980f16a4c39a2bf61608cb8c0762e31e8672",
+  "aggregate_sha256": "0e8e23c8347330f5996437e6d35b6327e69113e74c8127b068259382cffa6a20",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -13552,8 +13552,8 @@
     },
     {
       "path": "src/project_pipeline/resilience/host_safety.py",
-      "sha256": "389aaae190d65de8d6188c43083d47dcb593502e276b2ca92eec5d0edf71472a",
-      "size_bytes": 5611
+      "sha256": "ad99472ae46e065b658660123b98c987b8c96552e8ae3390d0816df70953b595",
+      "size_bytes": 5700
     },
     {
       "path": "src/project_pipeline/resilience/local_models.py",
@@ -14567,8 +14567,8 @@
     },
     {
       "path": "tests/test_host_safety.py",
-      "sha256": "078159734a83a7334cfaca7ff05aaf61d0597c7ed96f4066b16de4b30c9da3d4",
-      "size_bytes": 2871
+      "sha256": "2902386739059caaa0468c3f7633b4ec83cc0fb08f51439ba6191f2082aa7d34",
+      "size_bytes": 3216
     },
     {
       "path": "tests/test_ids.py",
@@ -15186,7 +15186,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-24T20:23:03.065015+00:00",
+  "generated_at_utc": "2026-08-24T20:35:55.045872+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15196,5 +15196,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30454538
+  "total_bytes": 30454972
 }

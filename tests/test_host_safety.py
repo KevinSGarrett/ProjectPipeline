@@ -66,6 +66,17 @@ def test_host_safety_blocks_unhealthy_volume_and_recent_storage_faults(tmp_path:
     }
 
 
+def test_host_safety_blocks_when_no_mounted_volumes_are_reported(tmp_path: Path):
+    report = evaluate_local_host_safety(
+        tmp_path,
+        system_name="Windows",
+        query=_query(volumes=[], events=[]),
+    )
+
+    assert report["state"] == "BLOCKED"
+    assert report["blockers"] == [{"code": "mounted-volume-inspection-empty"}]
+
+
 def test_host_safety_blocks_when_windows_inspection_is_unavailable(tmp_path: Path):
     def unavailable(_script: str) -> str:
         raise OSError("unavailable")
