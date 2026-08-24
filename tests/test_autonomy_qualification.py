@@ -218,6 +218,18 @@ def test_event_chain_edit_is_detected(tmp_path: Path):
     store.close()
 
 
+def test_event_chain_uses_insertion_order_when_timestamps_tie(tmp_path: Path):
+    clock = AdvanceableClock()
+    store = QualificationStore(tmp_path / "qualify.sqlite3", clock=clock, repository_root=ROOT)
+    run = store.start("RECOVERY", state_path=tmp_path / "state")
+
+    store.heartbeat(run["run_id"])
+    repeated = store.heartbeat(run["run_id"])
+
+    assert repeated["status"] == "RUNNING"
+    store.close()
+
+
 def test_concurrent_runner_is_rejected(tmp_path: Path):
     first = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)
     second = QualificationStore(tmp_path / "qualify.sqlite3", repository_root=ROOT)

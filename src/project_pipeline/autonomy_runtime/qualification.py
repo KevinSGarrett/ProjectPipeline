@@ -375,7 +375,7 @@ class QualificationStore:
             raise ValueError("qualification lock fence mismatch")
         expected = str(row["last_event_sha256"] or "")
         latest = self._db.execute(
-            "SELECT event_sha256 FROM qualification_events WHERE run_id = ? ORDER BY created_at_utc DESC LIMIT 1",
+            "SELECT event_sha256 FROM qualification_events WHERE run_id = ? ORDER BY rowid DESC LIMIT 1",
             (str(row["run_id"]),),
         ).fetchone()
         if latest is not None and expected and str(latest["event_sha256"]) != expected:

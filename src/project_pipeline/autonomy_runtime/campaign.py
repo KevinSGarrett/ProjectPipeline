@@ -870,37 +870,52 @@ class CampaignController:
         timeout_seconds: float = 120.0,
     ) -> dict[str, Any]:
         row = self._require(campaign_id)
-        if idempotency_key:
-            existing = self._db.execute(
-                """
-                SELECT * FROM campaign_command_receipts
-                WHERE campaign_id = ? AND idempotency_key = ?
-                ORDER BY created_at_utc
-                """,
-                (campaign_id, idempotency_key),
-            ).fetchone()
-            if existing is not None:
-                stored = dict(existing)
-                stored["command"] = json.loads(str(stored["command_json"]))
-                stored["executed"] = bool(stored["executed"])
-                return stored
+        command_sha256 = hashlib.sha256(json.dumps(argv, sort_keys=True).encode()).hexdigest()
+        effective_idempotency_key = idempotency_key or (
+            "CIDEMP:"
+            + hashlib.sha256(
+                json.dumps(
+                    {
+                        "campaign_id": campaign_id,
+                        "command_sha256": command_sha256,
+                        "stage": str(row["stage"]),
+                        "status": str(row["status"]),
+                    },
+                    sort_keys=True,
+                ).encode()
+            ).hexdigest()[:24]
+        )
+        existing = self._db.execute(
+            """
+            SELECT * FROM campaign_command_receipts
+            WHERE campaign_id = ? AND idempotency_key = ?
+            ORDER BY rowid
+            LIMIT 1
+            """,
+            (campaign_id, effective_idempotency_key),
+        ).fetchone()
+        if existing is not None:
+            stored = dict(existing)
+            stored["command"] = json.loads(str(stored["command_json"]))
+            stored["executed"] = bool(stored["executed"])
+            return stored
         self._assert_live_ownership(row, require_current_process=True)
         receipt = execute_allowlisted_command(
             argv,
             cwd=self.repository_root,
             repository_root=self.repository_root,
             timeout_seconds=timeout_seconds,
-            idempotency_key=idempotency_key,
+            idempotency_key=effective_idempotency_key,
             evidence_links=evidence_links,
             expected_sha=str(row["integrated_sha"]),
             expected_tree=str(row["integrated_tree"]),
         )
+        receipt["idempotency_key"] = effective_idempotency_key
         now = datetime.now(UTC)
         body = {
             "campaign_id": campaign_id,
-            "command_sha256": receipt["command_sha256"],
-            "idempotency_key": receipt["idempotency_key"],
-            "created_at_utc": now.isoformat(),
+            "command_sha256": command_sha256,
+            "idempotency_key": effective_idempotency_key,
         }
         receipt_id = (
             "CREC-" + hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()[:16]

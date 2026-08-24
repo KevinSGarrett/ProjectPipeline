@@ -345,6 +345,26 @@ def test_campaign_execute_persists_truthful_receipt(tmp_path: Path):
     controller.close()
 
 
+def test_campaign_execute_reuses_derived_idempotency_key(tmp_path: Path):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+
+    first = controller.execute(started["campaign_id"], _probe_command())
+    second = controller.execute(started["campaign_id"], _probe_command())
+
+    assert second["receipt_id"] == first["receipt_id"]
+    count = controller._db.execute(
+        "SELECT COUNT(*) FROM campaign_command_receipts WHERE campaign_id = ?",
+        (started["campaign_id"],),
+    ).fetchone()[0]
+    assert count == 1
+    controller.close()
+
+
 def test_finalize_after_seeded_72h(tmp_path: Path):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
