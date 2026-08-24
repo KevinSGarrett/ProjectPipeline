@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "f6ab3866698e2de2f847e405edb7449b7466b1dff733d03727f5d50c0c2d36fc",
+  "aggregate_sha256": "7235b7b7459430051240cd209552980f16a4c39a2bf61608cb8c0762e31e8672",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 3039,
+  "file_count": 3035,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -434,26 +434,6 @@
       "path": "apps/desktop_shell/src-tauri/Cargo.toml",
       "sha256": "297f81f7a901cf9c843a64894bed28d647fbc7d9ec6b909daa578bb7221fbcbf",
       "size_bytes": 417
-    },
-    {
-      "path": "apps/desktop_shell/src-tauri/gen/schemas/acl-manifests.json",
-      "sha256": "2a97280a4ab4ff26618f7c565c7c95fbf4b4fd58729b584670ec6381e36e919d",
-      "size_bytes": 72687
-    },
-    {
-      "path": "apps/desktop_shell/src-tauri/gen/schemas/capabilities.json",
-      "sha256": "5d272bde552cb860bf7bb31290f973d298cf6fc1ca26cec3bd353bb3ae3ab305",
-      "size_bytes": 239
-    },
-    {
-      "path": "apps/desktop_shell/src-tauri/gen/schemas/desktop-schema.json",
-      "sha256": "8c9ca7f1bdfd57dde47a543a903ca7601b4d3ff881198c44c5934de9ca629d40",
-      "size_bytes": 127056
-    },
-    {
-      "path": "apps/desktop_shell/src-tauri/gen/schemas/windows-schema.json",
-      "sha256": "8c9ca7f1bdfd57dde47a543a903ca7601b4d3ff881198c44c5934de9ca629d40",
-      "size_bytes": 127056
     },
     {
       "path": "apps/desktop_shell/src-tauri/icons/128x128.png",
@@ -13327,8 +13307,8 @@
     },
     {
       "path": "src/project_pipeline/manifest.py",
-      "sha256": "cc727d1c5e7776d7681a006e13b325177e0ce4ca2a609c5ebcf77e8c1daee3fb",
-      "size_bytes": 4835
+      "sha256": "b38815ab92c1b9da1e886b9ca2b982bb378e30643c142a18ff87297b75312b75",
+      "size_bytes": 5284
     },
     {
       "path": "src/project_pipeline/observability/__init__.py",
@@ -14697,8 +14677,8 @@
     },
     {
       "path": "tests/test_manifest.py",
-      "sha256": "566bc4aff366b2db8c52ec55565c5da14165e6f72a4ff1488d5e3ba202477eaf",
-      "size_bytes": 5932
+      "sha256": "75cf006b80ebfa3680c4d331ad7a1b7441a6ee2678b9093582fb60700fd798cf",
+      "size_bytes": 6604
     },
     {
       "path": "tests/test_migrations.py",
@@ -15206,14 +15186,15 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-24T20:10:57.200948+00:00",
+  "generated_at_utc": "2026-08-24T20:23:03.065015+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
-    "local assistant/runtime/upstream directories from project_pipeline.io"
+    "local assistant/runtime/upstream directories from project_pipeline.io",
+    "generated desktop schema directory: apps/desktop_shell/src-tauri/gen"
   ],
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30780455
+  "total_bytes": 30454538
 }
