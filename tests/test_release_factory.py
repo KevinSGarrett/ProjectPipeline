@@ -471,7 +471,12 @@ def test_native_uninstall_cleanup_allows_nsis_self_deletion(tmp_path: Path):
     install.mkdir()
     leftover = install / "uninstall.exe"
     leftover.write_bytes(b"nsis-self-delete")
-    cleanup = threading.Timer(0.02, leftover.unlink)
+
+    def delete_uninstaller_root() -> None:
+        leftover.unlink()
+        install.rmdir()
+
+    cleanup = threading.Timer(0.02, delete_uninstaller_root)
     cleanup.start()
     try:
         release_lifecycle._wait_for_native_uninstall_cleanup(
@@ -479,7 +484,17 @@ def test_native_uninstall_cleanup_allows_nsis_self_deletion(tmp_path: Path):
         )
     finally:
         cleanup.cancel()
-    assert not any(install.iterdir())
+    assert not install.exists()
+
+
+def test_native_uninstall_cleanup_rejects_persistent_residue(tmp_path: Path):
+    install = tmp_path / "native-install"
+    install.mkdir()
+    (install / "residue.txt").write_text("still installed", encoding="utf-8")
+    with pytest.raises(ValueError, match=r"residue\.txt"):
+        release_lifecycle._wait_for_native_uninstall_cleanup(
+            install, timeout_seconds=0.02, interval_seconds=0.001
+        )
 
 
 def test_acquired_remote_bytes_reject_stale_extra_asset(tmp_path: Path):

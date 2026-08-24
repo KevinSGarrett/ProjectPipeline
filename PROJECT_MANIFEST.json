@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "3cd1fbe965926fbcfc15b188e80a9fb4e30116b9f2cdc475334dcd062577f2fa",
+  "aggregate_sha256": "9efdfa9128ff058d82f8c9bb6f72b4138d0fbab9517fbf1a349aa96d35d63bd7",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -13447,8 +13447,8 @@
     },
     {
       "path": "src/project_pipeline/release_factory/lifecycle.py",
-      "sha256": "bc17fe494e145f561fd01ef7c59ec2a1cf4612ee28c291a0df7d95cec556108c",
-      "size_bytes": 19066
+      "sha256": "e8daeb21254e82704a4f83a101d17f48edb5e4e39aa6a2dcb635ad8f3a6b97ba",
+      "size_bytes": 19419
     },
     {
       "path": "src/project_pipeline/release_factory/supply.py",
@@ -14817,8 +14817,8 @@
     },
     {
       "path": "tests/test_release_factory.py",
-      "sha256": "3077412c0f315deb8cc6e0a19d32bf620d343a79209e8cb73b97fe2d6db72b79",
-      "size_bytes": 28383
+      "sha256": "e7ed492da71d165ca024ed775368cfccc7a0205b720e7af48bb83e832035d231",
+      "size_bytes": 28897
     },
     {
       "path": "tests/test_repository_contract.py",
@@ -15171,7 +15171,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-24T13:18:04.421907+00:00",
+  "generated_at_utc": "2026-08-24T13:20:30.018348+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15180,5 +15180,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30418177
+  "total_bytes": 30419044
 }

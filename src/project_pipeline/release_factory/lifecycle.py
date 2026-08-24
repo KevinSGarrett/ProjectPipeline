@@ -382,8 +382,16 @@ def _wait_for_native_uninstall_cleanup(
     """Allow NSIS's bounded self-deletion handoff before judging uninstall residue."""
 
     deadline = time.monotonic() + timeout_seconds
-    while install.exists():
-        remaining = tuple(install.iterdir())
+    while True:
+        try:
+            remaining = tuple(install.iterdir())
+        except FileNotFoundError:
+            return
+        except PermissionError as error:
+            if time.monotonic() >= deadline:
+                raise ValueError("native desktop uninstall cleanup could not be inspected") from error
+            time.sleep(min(interval_seconds, max(0.0, deadline - time.monotonic())))
+            continue
         if not remaining:
             return
         if time.monotonic() >= deadline:
