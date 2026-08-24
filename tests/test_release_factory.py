@@ -4,6 +4,7 @@ import hashlib
 import json
 import shutil
 import subprocess
+import threading
 import zipfile
 from argparse import Namespace
 from pathlib import Path
@@ -463,6 +464,37 @@ def test_native_lifecycle_receipt_requires_real_remote_byte_mode(
     assert report.execution_mode == "REAL_NATIVE_REMOTE_BYTES"
     assert report.checks["wheel_install"] == "PASS"
     assert report.checks["desktop_launch"] == "PASS"
+
+
+def test_native_uninstall_cleanup_allows_nsis_self_deletion(tmp_path: Path):
+    install = tmp_path / "native-install"
+    install.mkdir()
+    leftover = install / "uninstall.exe"
+    leftover.write_bytes(b"nsis-self-delete")
+
+    def delete_uninstaller_root() -> None:
+        leftover.unlink()
+        install.rmdir()
+
+    cleanup = threading.Timer(0.02, delete_uninstaller_root)
+    cleanup.start()
+    try:
+        release_lifecycle._wait_for_native_uninstall_cleanup(
+            install, timeout_seconds=1.0, interval_seconds=0.005
+        )
+    finally:
+        cleanup.cancel()
+    assert not install.exists()
+
+
+def test_native_uninstall_cleanup_rejects_persistent_residue(tmp_path: Path):
+    install = tmp_path / "native-install"
+    install.mkdir()
+    (install / "residue.txt").write_text("still installed", encoding="utf-8")
+    with pytest.raises(ValueError, match=r"residue\.txt"):
+        release_lifecycle._wait_for_native_uninstall_cleanup(
+            install, timeout_seconds=0.02, interval_seconds=0.001
+        )
 
 
 def test_acquired_remote_bytes_reject_stale_extra_asset(tmp_path: Path):

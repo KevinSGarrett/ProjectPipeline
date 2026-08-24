@@ -364,8 +364,7 @@ def _run_native_desktop_checks(acquired: Path, work: Path) -> dict[str, str]:
     if len(uninstallers) != 1:
         raise ValueError("native desktop install did not yield an uninstaller")
     _require_command([str(uninstallers[0]), "/S"])
-    if install.exists() and any(install.iterdir()):
-        raise ValueError("native desktop uninstall left installed files behind")
+    _wait_for_native_uninstall_cleanup(install)
     return {
         "desktop_install": "PASS",
         "desktop_launch": "PASS",
@@ -375,6 +374,32 @@ def _run_native_desktop_checks(acquired: Path, work: Path) -> dict[str, str]:
         "uninstall": "PASS",
         "state_restoration": "PASS",
     }
+
+
+def _wait_for_native_uninstall_cleanup(
+    install: Path, *, timeout_seconds: float = 30.0, interval_seconds: float = 0.25
+) -> None:
+    """Allow NSIS's bounded self-deletion handoff before judging uninstall residue."""
+
+    deadline = time.monotonic() + timeout_seconds
+    while True:
+        try:
+            remaining = tuple(install.iterdir())
+        except FileNotFoundError:
+            return
+        except PermissionError as error:
+            if time.monotonic() >= deadline:
+                raise ValueError(
+                    "native desktop uninstall cleanup could not be inspected"
+                ) from error
+            time.sleep(min(interval_seconds, max(0.0, deadline - time.monotonic())))
+            continue
+        if not remaining:
+            return
+        if time.monotonic() >= deadline:
+            names = ", ".join(sorted(item.name for item in remaining))
+            raise ValueError(f"native desktop uninstall left installed files behind: {names}")
+        time.sleep(min(interval_seconds, max(0.0, deadline - time.monotonic())))
 
 
 def exercise_acquired_lifecycle(
