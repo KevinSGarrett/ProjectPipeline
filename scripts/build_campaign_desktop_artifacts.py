@@ -19,6 +19,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity  # noqa: E402
 from project_pipeline.github_steward.asset_names import canonical_release_asset_name  # noqa: E402
 from project_pipeline.release_factory.bundle import BoundArtifact  # noqa: E402
+from project_pipeline.resilience.host_safety import require_safe_local_host  # noqa: E402
 
 _GNU_TARGET = "x86_64-pc-windows-gnu"
 _MSVC_TARGET = "x86_64-pc-windows-msvc"
@@ -146,6 +147,7 @@ def build_artifacts(
         raise RuntimeError("desktop-build-candidate-identity-drift")
     if output.exists() and any(output.iterdir()):
         raise RuntimeError("desktop-build-output-conflict")
+    host_safety = require_safe_local_host(root)
     output.mkdir(parents=True, exist_ok=True)
 
     frontend = root / "apps" / "command_center"
@@ -205,6 +207,7 @@ def build_artifacts(
         "build_target": build_target,
         "compiler": compiler,
         "rust_toolchain": rust_toolchain,
+        "host_safety": host_safety,
         "source_sha": expected_sha,
         "source_tree": expected_tree,
         "artifacts": artifacts,

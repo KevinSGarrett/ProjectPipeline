@@ -34,6 +34,7 @@ def test_campaign_desktop_builder_stages_candidate_bound_native_artifacts(tmp_pa
         "inspect_worktree_identity",
         lambda _root: {"ok": True, "dirty": False, "sha": sha, "tree": tree},
     )
+    monkeypatch.setattr(module, "require_safe_local_host", lambda _root: {"state": "SAFE"})
     monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: "npm")
 
     def fake_run(command, *, cwd, environment):
@@ -76,6 +77,7 @@ def test_campaign_desktop_builder_rejects_preseeded_output(tmp_path, monkeypatch
         "inspect_worktree_identity",
         lambda _root: {"ok": True, "dirty": False, "sha": sha, "tree": tree},
     )
+    monkeypatch.setattr(module, "require_safe_local_host", lambda _root: {"state": "SAFE"})
     with pytest.raises(RuntimeError, match="desktop-build-output-conflict"):
         module.build_artifacts(
             root=root,
@@ -91,9 +93,7 @@ def test_campaign_desktop_builder_stages_gnu_target_artifacts(tmp_path, monkeypa
     frontend = root / "apps" / "command_center"
     frontend.mkdir(parents=True)
     (frontend / "package-lock.json").write_text("{}\n", encoding="utf-8")
-    (root / "rust-toolchain.toml").write_text(
-        "[toolchain]\nchannel = \"1.97.1\"\n", encoding="utf-8"
-    )
+    (root / "rust-toolchain.toml").write_text('[toolchain]\nchannel = "1.97.1"\n', encoding="utf-8")
     output = tmp_path / "desktop-artifacts"
     sha = "a" * 40
     tree = "b" * 40
@@ -102,6 +102,7 @@ def test_campaign_desktop_builder_stages_gnu_target_artifacts(tmp_path, monkeypa
         "inspect_worktree_identity",
         lambda _root: {"ok": True, "dirty": False, "sha": sha, "tree": tree},
     )
+    monkeypatch.setattr(module, "require_safe_local_host", lambda _root: {"state": "SAFE"})
     monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: "npm")
     monkeypatch.setattr(
         module,

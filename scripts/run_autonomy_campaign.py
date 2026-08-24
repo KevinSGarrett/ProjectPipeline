@@ -5,6 +5,11 @@ import json
 from pathlib import Path
 
 from project_pipeline.autonomy_runtime.campaign import CampaignController
+from project_pipeline.resilience.host_safety import evaluate_local_host_safety
+
+_HOST_SAFETY_REQUIRED_ACTIONS = frozenset(
+    {"start", "admit-4h", "admit-24h", "admit-72h", "run", "advance", "execute", "finalize"}
+)
 
 
 def main() -> int:
@@ -45,6 +50,21 @@ def main() -> int:
     parser.add_argument("--status-path", type=Path)
     args = parser.parse_args()
     root = (args.repository_root or Path.cwd()).resolve()
+    host_safety = (
+        evaluate_local_host_safety(root) if args.action in _HOST_SAFETY_REQUIRED_ACTIONS else None
+    )
+    if host_safety is not None and host_safety["state"] == "BLOCKED":
+        print(
+            json.dumps(
+                {
+                    "campaign": {"state": "BLOCKED", "reason": "host-safety-blocked"},
+                    "host_safety": host_safety,
+                },
+                indent=2,
+                sort_keys=True,
+            )
+        )
+        return 2
     controller = CampaignController(
         args.database,
         repository_root=root,
@@ -52,6 +72,8 @@ def main() -> int:
     )
     try:
         result = _dispatch(controller, args)
+        if host_safety is not None:
+            result["host_safety"] = host_safety
         print(json.dumps(result, indent=2, sort_keys=True, default=str))
         return 0
     finally:

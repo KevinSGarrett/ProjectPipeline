@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "6ab137496009a350226e3275cf137d468bfc2c701a9ea7b15fcf4442f86360a6",
+  "aggregate_sha256": "2ed36ff7316c1802ac019957298a8355272dc378a42a7ca322bb46e3dfa54504",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 3036,
+  "file_count": 3039,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -12007,8 +12007,8 @@
     },
     {
       "path": "scripts/build_campaign_desktop_artifacts.py",
-      "sha256": "4ccaf5a3285d2e5743efcec4934f34d8b4aba77bb08ab52fbd86cb0aad8ae803",
-      "size_bytes": 8944
+      "sha256": "8ab59fde0781016bc6a2ddf761b3bddf78a513b572662da9c3079821d1c05f3a",
+      "size_bytes": 9118
     },
     {
       "path": "scripts/bulk_reconcile_implemented_jira.py",
@@ -12107,8 +12107,8 @@
     },
     {
       "path": "scripts/run_autonomy_campaign.py",
-      "sha256": "8e9f95d2b656459d2be941caa7345550e7a0b4e10c255251aa25fc066ac43704",
-      "size_bytes": 4168
+      "sha256": "b8c792cd013a430ed4f3f67cf3d03d09723518c2bb66e9ea1d26b708061d04a1",
+      "size_bytes": 4975
     },
     {
       "path": "scripts/run_autonomy_qualification.py",
@@ -13571,6 +13571,11 @@
       "size_bytes": 2818
     },
     {
+      "path": "src/project_pipeline/resilience/host_safety.py",
+      "sha256": "389aaae190d65de8d6188c43083d47dcb593502e276b2ca92eec5d0edf71472a",
+      "size_bytes": 5611
+    },
+    {
       "path": "src/project_pipeline/resilience/local_models.py",
       "sha256": "bbb4dfcb7d0208797c58de5ae528b9ff4835ce5a7cde677d81bd4b9dcb2988b8",
       "size_bytes": 3625
@@ -14267,8 +14272,8 @@
     },
     {
       "path": "tests/test_campaign_desktop_artifacts.py",
-      "sha256": "090ba40f72bf6e37f1e1c2be86e6be9d87f42fe924dae6b500d2b153678d7263",
-      "size_bytes": 6030
+      "sha256": "ada34f78847fbb258ce957e609988792dd8d08cd88521e92acac75700f050ec7",
+      "size_bytes": 6290
     },
     {
       "path": "tests/test_campaign_duration_probes.py",
@@ -14579,6 +14584,11 @@
       "path": "tests/test_governance_post_merge_refresh.py",
       "sha256": "82b18d614afdfc8b8ce16c430b53b1f25891d86810ecf1f6da36ee40aea6d118",
       "size_bytes": 2819
+    },
+    {
+      "path": "tests/test_host_safety.py",
+      "sha256": "078159734a83a7334cfaca7ff05aaf61d0597c7ed96f4066b16de4b30c9da3d4",
+      "size_bytes": 2871
     },
     {
       "path": "tests/test_ids.py",
@@ -14951,6 +14961,11 @@
       "size_bytes": 5721
     },
     {
+      "path": "tests/test_run_autonomy_campaign.py",
+      "sha256": "f1a001640c6c097c9e2026ea58a6a172b7a144af2a353c3b7e2adbf2bfcb81ee",
+      "size_bytes": 1302
+    },
+    {
       "path": "tests/test_runtime_foundation.py",
       "sha256": "049c37b6f74a29c1f10262e11a5a353442f2f525be7dccc2e4c2908da3170867",
       "size_bytes": 2896
@@ -15191,7 +15206,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-24T19:41:28.003631+00:00",
+  "generated_at_utc": "2026-08-24T20:04:55.744563+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15200,5 +15215,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30769430
+  "total_bytes": 30780455
 }
