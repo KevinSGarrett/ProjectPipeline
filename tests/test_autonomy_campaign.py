@@ -1373,6 +1373,40 @@ def test_recover_takes_over_reused_shared_qualification_pid(
     controller.close()
 
 
+def test_campaign_start_is_unique_when_clock_timestamps_tie(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    from project_pipeline.autonomy_runtime import campaign as campaign_module
+
+    fixed = datetime(2026, 8, 24, 8, 16, tzinfo=UTC)
+
+    class FixedDateTime:
+        @staticmethod
+        def now(_tz=UTC) -> datetime:
+            return fixed
+
+        @staticmethod
+        def fromisoformat(value: str) -> datetime:
+            return datetime.fromisoformat(value)
+
+    monkeypatch.setattr(campaign_module, "datetime", FixedDateTime)
+    controller = _controller(tmp_path)
+    first = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    controller.stop(first["campaign_id"], reason="test-restart")
+    second = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+
+    assert second["campaign_id"] != first["campaign_id"]
+    controller.close()
+
+
 def test_campaign_aware_health_requires_identity_not_pid_only():
     from project_pipeline.autonomy_runtime.campaign import evaluate_campaign_aware_health
 

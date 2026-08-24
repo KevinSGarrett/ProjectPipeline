@@ -10,6 +10,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
+from uuid import uuid4
 
 from project_pipeline.autonomy_runtime.campaign_status import (
     build_status_projection,
@@ -485,6 +486,7 @@ class CampaignController:
             "integrated_tree": identity["tree"],
             "started_at_utc": now.isoformat(),
             "state_path": str(state_path),
+            "campaign_nonce": uuid4().hex,
         }
         campaign_id = (
             "QCAMP-" + hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:16]
