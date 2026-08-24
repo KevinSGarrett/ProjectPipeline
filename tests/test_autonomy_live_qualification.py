@@ -8,6 +8,7 @@ import pytest
 from project_pipeline.autonomy_runtime import live_qualification as live_qualification_module
 from project_pipeline.autonomy_runtime.live_qualification import (
     StageOutcome,
+    _branch_absent_after_delete_readback,
     run_live_qualification,
     write_live_qualification_evidence,
 )
@@ -103,3 +104,27 @@ def test_live_qualification_fails_closed_when_runtime_root_stays_locked(
     )
     with pytest.raises(RuntimeError, match="still locked"):
         run_live_qualification(repository_root=repo, disposable_root=runtime)
+
+
+def test_github_branch_delete_readback_tolerates_a_stale_first_listing() -> None:
+    class Branch:
+        name = "qual/pp384-live-probe"
+
+    class Adapter:
+        def __init__(self) -> None:
+            self.calls = 0
+
+        def iter_branches(self, _repository_slug: str):
+            self.calls += 1
+            return (Branch(),) if self.calls == 1 else ()
+
+    delays: list[float] = []
+    assert _branch_absent_after_delete_readback(
+        Adapter(),
+        repository_slug="owner/repo",
+        branch_name="qual/pp384-live-probe",
+        attempts=2,
+        delay_seconds=0.01,
+        sleeper=delays.append,
+    )
+    assert delays == [0.01]
