@@ -38,7 +38,7 @@ def _unknown_prices(node: object) -> int:
 
 def parse_infracost_json(payload: str | bytes) -> InfracostEstimate:
     try:
-        data = json.loads(payload)
+        loaded: object = json.loads(payload)
     except (json.JSONDecodeError, UnicodeDecodeError, TypeError):
         return InfracostEstimate(
             available=False,
@@ -46,13 +46,14 @@ def parse_infracost_json(payload: str | bytes) -> InfracostEstimate:
             source_revision=INFRACOST_REVIEW_REVISION,
             reasons=("invalid_json",),
         )
-    if not isinstance(data, dict):
+    if not isinstance(loaded, dict):
         return InfracostEstimate(
             available=False,
             complete=False,
             source_revision=INFRACOST_REVIEW_REVISION,
             reasons=("root_not_object",),
         )
+    data: dict[str, object] = loaded
     currency = data.get("currency")
     if currency != "USD":
         return InfracostEstimate(
@@ -65,7 +66,8 @@ def parse_infracost_json(payload: str | bytes) -> InfracostEstimate:
     hourly = _money_to_microunits(data.get("totalHourlyCost"))
     monthly = _money_to_microunits(data.get("totalMonthlyCost"))
     monthly_usage = None
-    projects = data.get("projects") if isinstance(data.get("projects"), list) else []
+    projects_obj = data.get("projects")
+    projects: list[object] = projects_obj if isinstance(projects_obj, list) else []
     if projects:
         usage_values = []
         for project in projects:

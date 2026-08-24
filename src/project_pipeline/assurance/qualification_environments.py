@@ -46,13 +46,28 @@ def compile_qualification_environments(
     *,
     identity: Mapping[str, Any] | None = None,
     live_qualification: Mapping[str, Any] | None = None,
+    live_qualification_path: Path | None = None,
     unit_contract_probe: UnitContractProbe | None = None,
 ) -> dict[str, Any]:
     root = root.resolve()
     if live_qualification is None:
-        default_live = root / DEFAULT_LIVE_QUALIFICATION_PATH
-        if default_live.is_file():
-            live_qualification = read_json(default_live)
+        default_live = (
+            live_qualification_path.resolve()
+            if live_qualification_path is not None
+            else (root / DEFAULT_LIVE_QUALIFICATION_PATH)
+        )
+        try:
+            default_live.relative_to(root.resolve())
+        except ValueError:
+            live_qualification = {
+                "bound_head": "",
+                "bound_tree": "",
+                "stages": [],
+                "_path_error": "evidence_path_escape",
+            }
+        else:
+            if default_live.is_file():
+                live_qualification = read_json(default_live)
     observed = dict(identity) if identity is not None else inspect_worktree_identity(root)
     sha = str(observed.get("sha") or "")
     tree = str(observed.get("tree") or "")
@@ -141,7 +156,7 @@ def _map_live_qualification(
     sha: str,
     tree: str,
 ) -> dict[str, Any]:
-    failed = {
+    failed: dict[str, Any] = {
         name: _environment_row(
             name,
             False,
@@ -158,6 +173,13 @@ def _map_live_qualification(
         )
     }
     if live_qualification is None:
+        failed["_ancestor"] = False
+        return failed
+    if str(live_qualification.get("_path_error") or ""):
+        for name, row in failed.items():
+            if name.startswith("_"):
+                continue
+            row["observations"] = {"reason": str(live_qualification["_path_error"])}
         failed["_ancestor"] = False
         return failed
     bound_head = str(live_qualification.get("bound_head") or "").lower()

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 
 from project_pipeline.domain.control import ControlSnapshot, ReadinessState
 from project_pipeline.domain.scheduler import (
@@ -20,7 +20,9 @@ _EXCLUDED_PREFIXES = (
 )
 
 
-def profiles_from_repository(root, control: ControlSnapshot) -> tuple[SchedulerTaskProfile, ...]:
+def profiles_from_repository(
+    root: Path, control: ControlSnapshot
+) -> tuple[SchedulerTaskProfile, ...]:
     """Derive conservative scheduler inputs from the current Jira execution contract."""
     issues = {item["local_id"]: item for item in load_issues(root)}
     waiting = {
@@ -105,7 +107,7 @@ def profiles_from_repository(root, control: ControlSnapshot) -> tuple[SchedulerT
     return tuple(profiles)
 
 
-def claims_for_task(root, task_id: str) -> tuple[ResourceClaim, ...]:
+def claims_for_task(root: Path, task_id: str) -> tuple[ResourceClaim, ...]:
     """Recover deterministic claims for one task from Jira issue metadata."""
     issues = {item["local_id"]: item for item in load_issues(root)}
     issue = issues.get(task_id)

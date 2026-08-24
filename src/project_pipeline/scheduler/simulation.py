@@ -1,10 +1,27 @@
 from __future__ import annotations
 
-from project_pipeline.domain.scheduler import SchedulerSimulationResult, scheduler_identifier
+from collections.abc import Sequence
+
+from project_pipeline.domain.control import ControlSnapshot
+from project_pipeline.domain.scheduler import (
+    BackpressureSignals,
+    ResourceRegistrySnapshot,
+    SchedulerSimulationResult,
+    SchedulerTaskProfile,
+    scheduler_identifier,
+)
 from project_pipeline.scheduler.engine import DynamicLaneScheduler
 
 
-def simulate_scenario(*, name, control, profiles, registry, signals, expected_lane_count=None):
+def simulate_scenario(
+    *,
+    name: str,
+    control: ControlSnapshot,
+    profiles: Sequence[SchedulerTaskProfile],
+    registry: ResourceRegistrySnapshot,
+    signals: BackpressureSignals | None,
+    expected_lane_count: int | None = None,
+) -> SchedulerSimulationResult:
     plan = DynamicLaneScheduler().plan(control, profiles, registry, signals=signals)
     findings = []
     passed = True

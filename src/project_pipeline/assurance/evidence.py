@@ -18,9 +18,9 @@ from project_pipeline.domain.assurance import (
 )
 
 
-def load_evidence(root: Path) -> tuple[dict, ...]:
+def load_evidence(root: Path) -> tuple[dict[str, object], ...]:
     path = root / "evidence" / "EVIDENCE_LEDGER.jsonl"
-    rows: list[dict] = []
+    rows: list[dict[str, object]] = []
     if not path.exists():
         return ()
     for line in path.read_text(encoding="utf-8").splitlines():
@@ -29,7 +29,7 @@ def load_evidence(root: Path) -> tuple[dict, ...]:
     return tuple(rows)
 
 
-def infer_method(record: dict) -> VerificationMethod:
+def infer_method(record: dict[str, object]) -> VerificationMethod:
     text = " ".join(
         str(record.get(key, "")) for key in ("method", "claim", "artifact_path")
     ).lower()
@@ -66,7 +66,7 @@ def infer_method(record: dict) -> VerificationMethod:
 
 def assess_evidence_for_criterion(
     criterion: AcceptanceCriterion,
-    records: tuple[dict, ...],
+    records: tuple[dict[str, object], ...],
     *,
     now: datetime | None = None,
     policy: AssurancePolicy | None = None,
@@ -75,9 +75,16 @@ def assess_evidence_for_criterion(
     now = (now or datetime.now(UTC)).astimezone(UTC)
     assessments: list[EvidenceAssessment] = []
     for record in records:
-        if criterion.criterion_id not in record.get("criterion_ids", ()):
+        criterion_ids_obj = record.get("criterion_ids", ())
+        criterion_ids = (
+            criterion_ids_obj if isinstance(criterion_ids_obj, (list, tuple, set)) else ()
+        )
+        if criterion.criterion_id not in criterion_ids:
             continue
-        observed = datetime.fromisoformat(record["observed_at_utc"]).astimezone(UTC)
+        observed_raw = record.get("observed_at_utc")
+        if not isinstance(observed_raw, str):
+            continue
+        observed = datetime.fromisoformat(observed_raw).astimezone(UTC)
         age = max(0, int((now - observed).total_seconds()))
         if record.get("verification_status") != "VERIFIED":
             state = CriterionState.UNKNOWN
@@ -99,7 +106,7 @@ def assess_evidence_for_criterion(
             reason = "verified passing evidence is fresh"
         assessments.append(
             EvidenceAssessment(
-                evidence_id=record["evidence_id"],
+                evidence_id=str(record.get("evidence_id", "")),
                 criterion_id=criterion.criterion_id,
                 state=state,
                 method=infer_method(record),

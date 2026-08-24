@@ -31,6 +31,7 @@ from project_pipeline.domain.control import (
     CompletionProjectionState,
     ControlSnapshot,
     CriticalPathAnalysis,
+    EligibilityState,
     ReadinessState,
     ScopeReconciliationReport,
     SequenceItem,
@@ -357,7 +358,9 @@ class PersistentAutonomyDirector:
     ) -> dict[str, Any]:
         now = now or datetime.now(UTC)
         selected = self.admit_current_selection(control)
-        decision_id = self._state.get("last_decision_id")
+        decision_id = str(self._state.get("last_decision_id") or "")
+        if not decision_id:
+            raise AutonomyDirectorError("execution coordination requires a persisted decision id")
         fingerprint = str(self._state.get("last_control_fingerprint") or "")
         if self._state.get("fence_token"):
             raise AutonomyDirectorError("stale fence still held; recover before dispatch")
@@ -645,11 +648,12 @@ def control_snapshot_for_selection(task_ids: tuple[str, ...]) -> ControlSnapshot
             generated_at_utc=now,
         ),
         eligibility=tuple(
-            TaskEligibility(task_id=task_id, state="ELIGIBLE", eligible=True)
+            TaskEligibility(task_id=task_id, state=EligibilityState.ELIGIBLE, eligible=True)
             for task_id in task_ids
         ),
         readiness=tuple(
-            TaskReadiness(task_id=task_id, state="READY", ready=True) for task_id in task_ids
+            TaskReadiness(task_id=task_id, state=ReadinessState.READY, ready=True)
+            for task_id in task_ids
         ),
         snapshot_fingerprint="f" * 64,
         generated_at_utc=now,

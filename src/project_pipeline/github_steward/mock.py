@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping
-from typing import Any
+from typing import Any, cast
 
 from project_pipeline.contracts import AdapterErrorCategory, AdapterErrorPayload
 from project_pipeline.domain.base import utc_now
@@ -126,7 +126,7 @@ class MockGitHubAdapter(GitHubRemotePort):
     ) -> GitBranch:
         replay = self._replay(context.idempotency_key)
         if replay is not None:
-            return replay
+            return cast(GitBranch, replay)
         if branch in self._branches:
             raise self._error(
                 AdapterErrorCategory.CONFLICT,
@@ -175,7 +175,7 @@ class MockGitHubAdapter(GitHubRemotePort):
         del body
         replay = self._replay(context.idempotency_key)
         if replay is not None:
-            return replay
+            return cast(PullRequestSnapshot, replay)
         if head not in self._branches or base not in self._branches:
             raise self._error(
                 AdapterErrorCategory.NOT_FOUND,
@@ -221,7 +221,7 @@ class MockGitHubAdapter(GitHubRemotePort):
     ) -> PullRequestSnapshot:
         replay = self._replay(context.idempotency_key)
         if replay is not None:
-            return replay
+            return cast(PullRequestSnapshot, replay)
         current = self._required_pull(number)
         update: dict[str, Any] = {key: value for key, value in fields.items() if key in {"title"}}
         if "state" in fields:
@@ -244,7 +244,7 @@ class MockGitHubAdapter(GitHubRemotePort):
         del method
         replay = self._replay(context.idempotency_key)
         if replay is not None:
-            return replay
+            return cast(Mapping[str, Any], replay)
         current = self._required_pull(number)
         if current.head_sha != head_sha.lower():
             raise self._error(
@@ -312,7 +312,7 @@ class MockGitHubAdapter(GitHubRemotePort):
     ) -> GitHubReleaseSnapshot:
         replay = self._replay(context.idempotency_key)
         if replay is not None:
-            return replay
+            return cast(GitHubReleaseSnapshot, replay)
         for item in self._releases.values():
             if item.tag_name != tag_name:
                 continue
@@ -368,7 +368,7 @@ class MockGitHubAdapter(GitHubRemotePort):
     ) -> GitHubReleaseAsset:
         replay = self._replay(context.idempotency_key)
         if replay is not None:
-            return replay
+            return cast(GitHubReleaseAsset, replay)
         release = self._releases.get(release_id)
         if release is None:
             raise self._error(
@@ -423,7 +423,7 @@ class MockGitHubAdapter(GitHubRemotePort):
     ) -> GitHubReleaseSnapshot:
         replay = self._replay(context.idempotency_key)
         if replay is not None:
-            return replay
+            return cast(GitHubReleaseSnapshot, replay)
         release = self._releases.get(release_id)
         if release is None:
             raise self._error(

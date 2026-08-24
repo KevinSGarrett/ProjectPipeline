@@ -98,6 +98,16 @@ def test_qualification_resumes_after_failure_and_reports_health(tmp_path: Path):
     store.close()
 
 
+def test_qualification_start_is_unique_when_clock_timestamps_tie(tmp_path: Path):
+    clock = AdvanceableClock()
+    store = QualificationStore(tmp_path / "qualify.sqlite3", clock=clock, repository_root=ROOT)
+    first = store.start("RECOVERY", state_path=tmp_path / "state")
+    store.stop(first["run_id"], reason="test-restart")
+    second = store.start("RECOVERY", state_path=tmp_path / "state")
+    assert first["run_id"] != second["run_id"]
+    store.close()
+
+
 def test_reconstructed_store_preserves_checkpoint(tmp_path: Path):
     clock = AdvanceableClock()
     path = tmp_path / "qualify.sqlite3"
@@ -215,6 +225,18 @@ def test_event_chain_edit_is_detected(tmp_path: Path):
     store._db.commit()
     with pytest.raises(ValueError, match="event chain"):
         store.heartbeat(run["run_id"])
+    store.close()
+
+
+def test_event_chain_uses_insertion_order_when_timestamps_tie(tmp_path: Path):
+    clock = AdvanceableClock()
+    store = QualificationStore(tmp_path / "qualify.sqlite3", clock=clock, repository_root=ROOT)
+    run = store.start("RECOVERY", state_path=tmp_path / "state")
+
+    store.heartbeat(run["run_id"])
+    repeated = store.heartbeat(run["run_id"])
+
+    assert repeated["status"] == "RUNNING"
     store.close()
 
 

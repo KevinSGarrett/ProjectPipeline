@@ -248,7 +248,8 @@ def check_jira_registry(
         "SPIKE": "spikes",
     }
     for issue_id, issue in issues.items():
-        relative = f"jira/{directory.get(issue.get('issue_type'), 'unknown')}/{issue_id}.json"
+        issue_type = str(issue.get("issue_type", ""))
+        relative = f"jira/{directory.get(issue_type, 'unknown')}/{issue_id}.json"
         if not ISSUE_ID.fullmatch(issue_id):
             report.add(
                 "ERROR", "JIRA002", f"Invalid issue ID: {issue_id}", "jira/indexes/issues.jsonl"
@@ -279,7 +280,7 @@ def check_jira_registry(
                     "SPIKE": {"STORY", "EPIC"},
                 }
                 parent_type = issues[parent].get("issue_type")
-                if parent_type not in allowed.get(issue.get("issue_type"), set()):
+                if parent_type not in allowed.get(issue_type, set()):
                     report.add("ERROR", "JIRA008", f"Invalid parent type {parent_type}", relative)
         elif issue.get("issue_type") != "EPIC":
             report.add("ERROR", "JIRA009", "Non-epic issue has no parent", relative)

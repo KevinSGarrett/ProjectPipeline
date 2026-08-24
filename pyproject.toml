@@ -24,6 +24,7 @@ dependencies = [
   "networkx>=3.6,<4",
   "opentelemetry-api>=1.36,<2",
   "opentelemetry-sdk>=1.36,<2",
+  "packaging>=24,<27",
   "pydantic>=2.12,<3",
 ]
 

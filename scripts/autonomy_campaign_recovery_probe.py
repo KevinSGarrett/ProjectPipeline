@@ -7,15 +7,53 @@ import json
 import os
 import sqlite3
 import subprocess
+import sys
 import time
 from pathlib import Path
 
-from project_pipeline.autonomy_runtime.campaign import (
+# Scheduled tasks can inherit an unrelated checkout's PYTHONPATH.  Select the
+# candidate checkout before importing any project module, not only after an
+# import failure.
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+_SRC_ROOT = _REPO_ROOT / "src"
+_src_str = str(_SRC_ROOT)
+_filtered: list[str] = []
+for _entry in sys.path:
+    if not _entry:
+        _filtered.append(_entry)
+        continue
+    try:
+        _resolved = Path(_entry).resolve()
+    except OSError:
+        _filtered.append(_entry)
+        continue
+    if _resolved == _SRC_ROOT or _resolved.name.casefold() == "src":
+        continue
+    _filtered.append(_entry)
+sys.path[:] = _filtered
+sys.path.insert(0, _src_str)
+_loaded_root = sys.modules.get("project_pipeline")
+_loaded_file = getattr(_loaded_root, "__file__", None)
+_foreign_project_modules = False
+if _loaded_file:
+    try:
+        _foreign_project_modules = not Path(_loaded_file).resolve().is_relative_to(_SRC_ROOT)
+    except OSError:
+        _foreign_project_modules = True
+if _foreign_project_modules:
+    for _name in tuple(
+        name
+        for name in sys.modules
+        if name == "project_pipeline" or name.startswith("project_pipeline.")
+    ):
+        sys.modules.pop(_name, None)
+
+from project_pipeline.autonomy_runtime.campaign import (  # noqa: E402
     CampaignController,
     evaluate_campaign_aware_health,
 )
-from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusError
-from project_pipeline.autonomy_runtime.process_identity import inspect_process
+from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusError  # noqa: E402
+from project_pipeline.autonomy_runtime.process_identity import inspect_process  # noqa: E402
 
 
 def _load_config(path: Path) -> dict:
@@ -201,6 +239,9 @@ def main() -> int:
                     {
                         "healthy": False,
                         "action": "no-campaign",
+                        "campaign_module": str(
+                            Path(sys.modules[CampaignController.__module__].__file__).resolve()
+                        ),
                         "user_action_required": False,
                     },
                     indent=2,

@@ -19,4 +19,8 @@ If no authorized Authenticode identity is provisioned, the factory records `BLOC
 
 ## GitHub
 
-Create, upload, readback, unknown-outcome reconcile, and finalize are GitHub Steward operations. Finalize without `campaign_complete` fails closed as `finalize-before-campaign`.
+Create, upload, readback, unknown-outcome reconcile, and finalize are GitHub Steward operations. Every asset name is normalized once before the local manifest, upload, GitHub readback, and remote-byte acquisition; this accounts for GitHub's whitespace-to-dot filename rewrite without weakening exact asset-set or checksum checks.
+
+An uncertain create, upload, or finalization response is reconciled by remote readback before a fresh write is considered. Finalization re-reads the immutable campaign database immediately before the GitHub mutation and requires a clean, attested 72-hour campaign whose SHA/tree and event hashes exactly match the release candidate.
+
+After finalization, assets are downloaded into an immutable candidate-scoped remote-byte directory. Its manifest, publication receipt, and on-disk file set must agree exactly; stale extras and alternate archives are rejected. Wheel and source-distribution checks run in separate clean environments without inherited project import paths, install their declared runtime dependencies, and run the CLI doctor against source extracted from the acquired archive.

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 import subprocess
 import zipfile
 from argparse import Namespace
@@ -12,9 +13,15 @@ import pytest
 from project_pipeline.cli import _run_release_factory_command, main
 from project_pipeline.configuration import ConfigurationError
 from project_pipeline.contracts import ActionIntent, AdapterErrorCategory, ApprovalState, RiskLevel
-from project_pipeline.github_steward import GitHubDraftReleaseService, GitHubStewardStore
+from project_pipeline.github_steward import (
+    GitHubDraftReleaseService,
+    GitHubStewardStore,
+    draft_release,
+)
+from project_pipeline.github_steward.asset_names import canonical_release_asset_name
 from project_pipeline.github_steward.errors import GitHubStewardError
 from project_pipeline.github_steward.mock import MockGitHubAdapter
+from project_pipeline.github_steward.ports import GitHubWriteContext
 from project_pipeline.release_factory import (
     BLOCKED_EXTERNAL_SIGNING_IDENTITY_MISSING,
     MIXED_HEAD,
@@ -27,6 +34,7 @@ from project_pipeline.release_factory import (
     write_acquired_assets,
     write_fixture_artifacts,
 )
+from project_pipeline.release_factory import lifecycle as release_lifecycle
 from project_pipeline.release_factory.bundle import BoundArtifact, ReleaseBundle
 from project_pipeline.release_factory.supply import _os_path, _scan_secrets
 
@@ -237,7 +245,9 @@ def test_desktop_dir_fails_closed_without_exact_match(tmp_path):
         build_release_bundle(repo, tmp_path / "out", desktop_artifact_dir=empty)
 
 
-def test_draft_release_unknown_outcome_duplicate_and_finalize_guards(tmp_path):
+def test_draft_release_unknown_outcome_duplicate_and_finalize_guards(
+    tmp_path, monkeypatch: pytest.MonkeyPatch
+):
     adapter = MockGitHubAdapter(repository_slug="owner/repo")
     db = tmp_path / "state.db"
     authority = resolve_release_version_authority(ROOT)
@@ -249,6 +259,7 @@ def test_draft_release_unknown_outcome_duplicate_and_finalize_guards(tmp_path):
         desktop_installer=b"MZ-msi",
     )
     hashes = {path.name: hashlib.sha256(path.read_bytes()).hexdigest() for path in paths.values()}
+    adapter.provider_id = "github-rest"  # test seam for the finalize service boundary
     with GitHubStewardStore(db, ROOT) as store:
         service = GitHubDraftReleaseService(remote=adapter, store=store)
         planned = service.plan_create_draft(
@@ -329,21 +340,44 @@ def test_draft_release_unknown_outcome_duplicate_and_finalize_guards(tmp_path):
                 actor_id="actor:test",
                 correlation_id="corr:test",
             )
-        with pytest.raises(GitHubStewardError, match="finalize-before-campaign"):
+
+        def missing_campaign(*_args, **_kwargs):
+            raise GitHubStewardError("campaign evidence unavailable")
+
+        monkeypatch.setattr(draft_release, "_verify_campaign_publication", missing_campaign)
+        with pytest.raises(GitHubStewardError, match="campaign evidence unavailable"):
             service.plan_finalize(
                 "owner/repo",
                 release_id=release.api_id,
                 expected_head_sha=authority.source_sha,
-                campaign_complete=False,
+                expected_source_tree=authority.source_tree,
+                campaign_database=tmp_path / "campaign.sqlite3",
+                campaign_id="QCAMP-TEST",
+                repository_root=ROOT,
                 actor_id="actor:test",
                 correlation_id="corr:test",
             )
+
+        monkeypatch.setattr(
+            draft_release,
+            "_verify_campaign_publication",
+            lambda *_args, **_kwargs: {
+                "campaign_id": "QCAMP-TEST",
+                "integrated_sha": "e" * 40,
+                "integrated_tree": authority.source_tree,
+                "qualification_run_id": "QRUN-TEST",
+                "attested_elapsed_seconds": 72 * 3600,
+            },
+        )
         with pytest.raises(GitHubStewardError, match="changed-head"):
             service.plan_finalize(
                 "owner/repo",
                 release_id=release.api_id,
                 expected_head_sha="e" * 40,
-                campaign_complete=True,
+                expected_source_tree=authority.source_tree,
+                campaign_database=tmp_path / "campaign.sqlite3",
+                campaign_id="QCAMP-TEST",
+                repository_root=ROOT,
                 actor_id="actor:test",
                 correlation_id="corr:test",
             )
@@ -364,6 +398,7 @@ def test_acquired_remote_bytes_lifecycle_does_not_use_worktree(tmp_path):
         acquired, tmp_path / "work", expected_version=authority.bundle_version
     )
     assert report.worktree_bytes_used is False
+    assert report.execution_mode == "SIMULATED_REMOTE_BYTES"
     assert report.source == "REMOTE_DRAFT_BYTES"
     assert report.checks["uninstall"] == "PASS"
     assert report.checks["desktop_launch"] == "FIXTURE_BYTES_BOUND"
@@ -373,6 +408,266 @@ def test_acquired_remote_bytes_lifecycle_does_not_use_worktree(tmp_path):
     (worktree_like / "src" / "project_pipeline").mkdir(parents=True)
     with pytest.raises(ValueError, match="worktree_bytes_used"):
         exercise_acquired_lifecycle(worktree_like, tmp_path / "work2")
+
+
+def test_native_lifecycle_receipt_requires_real_remote_byte_mode(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    authority = resolve_release_version_authority(ROOT)
+    source = write_fixture_artifacts(
+        tmp_path / "source",
+        version=authority,
+        desktop_executable=b"MZ-exe",
+        desktop_installer=b"MZ-installer",
+    )
+    acquired = write_acquired_assets(
+        tmp_path / "acquired", {path.name: path.read_bytes() for path in source.values()}
+    )
+    monkeypatch.setattr(
+        release_lifecycle,
+        "_run_python_artifact_checks",
+        lambda *_args, **_kwargs: {
+            "wheel_install": "PASS",
+            "wheel_import": "PASS",
+            "wheel_doctor": "PASS",
+            "sdist_install": "PASS",
+            "sdist_import": "PASS",
+            "sdist_doctor": "PASS",
+        },
+    )
+    monkeypatch.setattr(
+        release_lifecycle,
+        "_run_native_desktop_checks",
+        lambda *_args, **_kwargs: {
+            "desktop_install": "PASS",
+            "desktop_launch": "PASS",
+            "command_center": "PASS_NATIVE_DESKTOP_LAUNCH",
+            "upgrade": "PASS_REINSTALL_FROM_REMOTE_BYTES",
+            "rollback": "PASS_RESTORE_REMOTE_INSTALL_SNAPSHOT",
+            "uninstall": "PASS",
+            "state_restoration": "PASS",
+        },
+    )
+    report = exercise_acquired_lifecycle(
+        acquired,
+        tmp_path / "native-work",
+        expected_version=authority.bundle_version,
+        execute_native=True,
+        expected_sha256s={
+            name: hashlib.sha256(payload).hexdigest()
+            for name, payload in (
+                {path.name: path.read_bytes() for path in source.values()}
+            ).items()
+        },
+    )
+    assert report.execution_mode == "REAL_NATIVE_REMOTE_BYTES"
+    assert report.checks["wheel_install"] == "PASS"
+    assert report.checks["desktop_launch"] == "PASS"
+
+
+def test_acquired_remote_bytes_reject_stale_extra_asset(tmp_path: Path):
+    authority = resolve_release_version_authority(ROOT)
+    source = write_fixture_artifacts(tmp_path / "source", version=authority)
+    assets = {path.name: path.read_bytes() for path in source.values()}
+    acquired = write_acquired_assets(tmp_path / "acquired", assets)
+    (acquired / "project-pipeline-old.zip").write_bytes(b"stale")
+    with pytest.raises(ValueError, match="unexpected files"):
+        exercise_acquired_lifecycle(acquired, tmp_path / "work")
+
+
+def test_acquired_remote_bytes_retry_after_interrupted_staging_write(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    dest = tmp_path / "remote-acquired" / "candidate-test"
+    assets = {"project-pipeline-test.zip": b"remote-byte-payload", "metadata.txt": b"bytes"}
+    write_file = release_lifecycle._write_file_fsynced
+    write_count = 0
+
+    def interrupt_second_write(path: Path, payload: bytes) -> None:
+        nonlocal write_count
+        write_count += 1
+        if write_count == 2:
+            raise OSError("simulated process interruption")
+        write_file(path, payload)
+
+    with monkeypatch.context() as context:
+        context.setattr(release_lifecycle, "_write_file_fsynced", interrupt_second_write)
+        with pytest.raises(OSError, match="simulated process interruption"):
+            write_acquired_assets(dest, assets)
+    assert not dest.exists()
+
+    acquired = write_acquired_assets(dest, assets)
+    assert acquired == dest
+    assert release_lifecycle.verify_acquired_assets(acquired) == {
+        name: hashlib.sha256(payload).hexdigest() for name, payload in assets.items()
+    }
+
+
+def test_remote_asset_name_rewrite_uses_canonical_manifest_name(tmp_path: Path):
+    adapter = MockGitHubAdapter(repository_slug="owner/repo")
+    payload = b"remote-installer"
+    raw_name = "Project Pipeline Command Center_0.10.0_x64-setup.exe"
+    canonical_name = canonical_release_asset_name(raw_name)
+    assert canonical_name == "Project.Pipeline.Command.Center_0.10.0_x64-setup.exe"
+    with GitHubStewardStore(tmp_path / "state.db", ROOT) as store:
+        service = GitHubDraftReleaseService(remote=adapter, store=store)
+        planned = service.plan_create_draft(
+            "owner/repo",
+            tag_name="v0.9.0-rc.test",
+            name="draft",
+            body="body",
+            target_commitish="a" * 40,
+            source_tree="b" * 40,
+            artifact_sha256s={canonical_name: hashlib.sha256(payload).hexdigest()},
+            actor_id="actor:test",
+            correlation_id="corr:test",
+        )
+        release = adapter.create_draft_release(
+            "owner/repo",
+            tag_name=str(planned.payload["tag_name"]),
+            name="draft",
+            body="body",
+            target_commitish="a" * 40,
+            context=GitHubWriteContext(
+                actor_id="actor:test",
+                correlation_id="corr:test",
+                idempotency_key="test:create-rewritten-name",
+                authorization_id="auth:test",
+                expected_head_sha="a" * 40,
+            ),
+        )
+        adapter.upload_release_asset(
+            "owner/repo",
+            release_id=release.api_id,
+            name=raw_name,
+            content=payload,
+            content_type="application/octet-stream",
+            context=GitHubWriteContext(
+                actor_id="actor:test",
+                correlation_id="corr:test",
+                idempotency_key="test:upload-rewritten-name",
+                authorization_id="auth:test",
+                expected_head_sha="a" * 40,
+            ),
+        )
+        acquired = service.acquire_assets(
+            "owner/repo",
+            release_id=release.api_id,
+            expected_sha256s={canonical_name: hashlib.sha256(payload).hexdigest()},
+            expected_head_sha="a" * 40,
+        )
+    assert acquired == {canonical_name: payload}
+
+
+def test_finalize_revalidates_campaign_at_remote_mutation_boundary(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    authority = resolve_release_version_authority(ROOT)
+    adapter = MockGitHubAdapter(repository_slug="owner/repo")
+    adapter.provider_id = "github-rest"
+    eligibility = {
+        "campaign_id": "QCAMP-TEST",
+        "integrated_sha": authority.source_sha,
+        "integrated_tree": authority.source_tree,
+        "qualification_run_id": "QRUN-TEST",
+        "attested_elapsed_seconds": 72 * 3600,
+    }
+    monkeypatch.setattr(
+        draft_release, "_verify_campaign_publication", lambda *_a, **_k: eligibility
+    )
+    create_intent = ActionIntent(
+        actor_id="actor:test",
+        authority="github.steward",
+        target="owner/repo",
+        operation="github.draft-release.create",
+        idempotency_key="placeholder",
+        approval_state=ApprovalState.APPROVED,
+        correlation_id="corr:test",
+        risk=RiskLevel.HIGH,
+    )
+    with GitHubStewardStore(tmp_path / "state.db", ROOT) as store:
+        service = GitHubDraftReleaseService(remote=adapter, store=store)
+        create = service.plan_create_draft(
+            "owner/repo",
+            tag_name=authority.tag_name,
+            name="draft",
+            body="body",
+            target_commitish=authority.source_sha,
+            source_tree=authority.source_tree,
+            artifact_sha256s={"candidate.zip": "a" * 64},
+            actor_id="actor:test",
+            correlation_id="corr:test",
+        )
+        service.apply_create_draft(
+            create,
+            action_intent=create_intent.model_copy(
+                update={"idempotency_key": create.idempotency_key}
+            ),
+            authorization_id="auth:test",
+        )
+        finalize = service.plan_finalize(
+            "owner/repo",
+            release_id=1,
+            expected_head_sha=authority.source_sha,
+            expected_source_tree=authority.source_tree,
+            campaign_database=tmp_path / "campaign.sqlite3",
+            campaign_id="QCAMP-TEST",
+            repository_root=ROOT,
+            actor_id="actor:test",
+            correlation_id="corr:test",
+        )
+        monkeypatch.setattr(
+            draft_release,
+            "_verify_campaign_publication",
+            lambda *_a, **_k: {**eligibility, "attested_elapsed_seconds": 71 * 3600},
+        )
+        with pytest.raises(GitHubStewardError, match="attestation changed"):
+            service.apply_finalize(
+                finalize,
+                action_intent=create_intent.model_copy(
+                    update={
+                        "operation": "github.draft-release.finalize",
+                        "idempotency_key": finalize.idempotency_key,
+                    }
+                ),
+                authorization_id="auth:test",
+            )
+    assert ("finalize_release", "1") not in adapter.calls
+
+
+def test_real_acquired_wheel_and_sdist_install_in_pristine_venvs(tmp_path: Path):
+    bundle = build_release_bundle(ROOT, tmp_path / "bundle", use_git_archive=True)
+    assets = {
+        item.name: (Path(bundle.output_dir) / item.name).read_bytes()
+        for item in bundle.artifacts
+        if item.bound
+    }
+    acquired = write_acquired_assets(tmp_path / "acquired", assets)
+    work = tmp_path / "lifecycle-work"
+    extract_root = work / "extract"
+    extracted = extract_zip_safely(release_lifecycle._find_archive(acquired), extract_root)
+    nested = [path for path in extract_root.iterdir() if path.is_dir()]
+    payload_root = nested[0] if len(nested) == 1 else extract_root
+    install = work / "remote-source"
+    shutil.copytree(payload_root, install)
+
+    checks = release_lifecycle._run_python_artifact_checks(
+        acquired,
+        work,
+        expected_version=bundle.version.bundle_version,
+        remote_install_root=install,
+        python_executable=None,
+    )
+
+    assert checks == {
+        "wheel_install": "PASS",
+        "wheel_import": "PASS",
+        "wheel_doctor": "PASS",
+        "sdist_install": "PASS",
+        "sdist_import": "PASS",
+        "sdist_doctor": "PASS",
+    }
+    assert extracted
 
 
 def test_release_factory_cli_version(capsys):
@@ -404,7 +699,6 @@ def test_live_draft_writes_require_approval_gate():
         database=None,
         actor_id="actor:test",
         correlation_id="corr:test",
-        campaign_complete=False,
         asset=None,
         release_id=None,
     )

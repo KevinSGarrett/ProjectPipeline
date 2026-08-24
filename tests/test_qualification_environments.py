@@ -108,5 +108,36 @@ def test_compiler_loads_default_live_qualification_path(tmp_path: Path) -> None:
     assert report["inherited_ancestor"] is False
 
 
+def test_compiler_uses_explicit_external_live_qualification_path(tmp_path: Path) -> None:
+    sha = "a" * 40
+    tree = "b" * 40
+    external = tmp_path / "external-live.json"
+    external.write_text(json.dumps(_live(sha, tree)), encoding="utf-8")
+    report = compile_qualification_environments(
+        tmp_path,
+        identity=_identity(sha, tree),
+        live_qualification_path=external,
+        unit_contract_probe=lambda: {"outcome": "PASSED"},
+    )
+    assert report["ok"] is True
+    assert report["inherited_ancestor"] is False
+
+
+def test_compiler_fails_closed_on_live_qualification_path_escape(tmp_path: Path) -> None:
+    sha = "a" * 40
+    tree = "b" * 40
+    outside = tmp_path.parent / "escaped-live.json"
+    outside.write_text(json.dumps(_live(sha, tree)), encoding="utf-8")
+    report = compile_qualification_environments(
+        tmp_path,
+        identity=_identity(sha, tree),
+        live_qualification_path=outside,
+        unit_contract_probe=lambda: {"outcome": "PASSED"},
+    )
+    assert report["ok"] is False
+    names = {item["environment"]: item["observations"] for item in report["environments"]}
+    assert names["local_real_integrated_journey"]["reason"] == "evidence_path_escape"
+
+
 def test_runtime_qualification_rejects_ancestor_receipt_on_current_checkout() -> None:
     assert runtime_qualification_is_bound(ROOT) is False

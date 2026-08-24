@@ -4,6 +4,7 @@ import math
 from collections.abc import Iterable
 from datetime import UTC, datetime
 from itertools import combinations
+from typing import Literal
 
 import networkx as nx
 
@@ -133,7 +134,7 @@ class DynamicLaneScheduler:
 
         if lane_limit <= 0 or not prelim:
             selected: tuple[SchedulerTaskProfile, ...] = ()
-            method = (
+            method: Literal["EXACT_BOUNDED", "DETERMINISTIC_GREEDY", "ORTOOLS_CP_SAT"] = (
                 "EXACT_BOUNDED"
                 if len(prelim) <= self.exact_candidate_limit
                 else "DETERMINISTIC_GREEDY"
@@ -143,10 +144,10 @@ class DynamicLaneScheduler:
             method = "EXACT_BOUNDED"
         elif self.ortools_optimizer.status().available:
             try:
-                selected_ids = self.ortools_optimizer.select(
+                selected_task_ids = self.ortools_optimizer.select(
                     prelim, graph, pools, base_usage, lane_limit
                 )
-                selected = tuple(item for item in prelim if item.task_id in set(selected_ids))
+                selected = tuple(item for item in prelim if item.task_id in set(selected_task_ids))
                 if not self._selection_is_valid(selected, graph, pools, base_usage, lane_limit):
                     raise OrToolsOptimizerError(
                         "OR-Tools selection failed Project Pipeline revalidation"
@@ -159,7 +160,7 @@ class DynamicLaneScheduler:
             selected = self._greedy_select(prelim, graph, pools, base_usage, lane_limit)
             method = "DETERMINISTIC_GREEDY"
 
-        selected_ids = {item.task_id for item in selected}
+        selected_ids: set[str] = {item.task_id for item in selected}
         for candidate in prelim:
             if candidate.task_id in selected_ids:
                 admissions[candidate.task_id] = AdmissionDecision(
@@ -203,13 +204,16 @@ class DynamicLaneScheduler:
             str(lane_limit),
             ",".join(lane.task_id for lane in lanes) or "none",
         ]
+        selection_method: Literal["EXACT_BOUNDED", "DETERMINISTIC_GREEDY", "ORTOOLS_CP_SAT"] = (
+            method
+        )
         return SchedulerPlan(
             plan_id=scheduler_identifier("SCHED", *plan_identity),
             project_id=control.project_id,
             control_snapshot_id=control.snapshot_id,
             registry_id=registry.registry_id,
             backpressure=decision,
-            selection_method=method,
+            selection_method=selection_method,
             candidate_count=len(candidates),
             lane_limit=lane_limit,
             lanes=lanes,
@@ -222,7 +226,9 @@ class DynamicLaneScheduler:
 
     @staticmethod
     def _compatible(
-        candidate: SchedulerTaskProfile, selected: tuple[SchedulerTaskProfile, ...], graph: nx.Graph
+        candidate: SchedulerTaskProfile,
+        selected: tuple[SchedulerTaskProfile, ...],
+        graph: nx.Graph[str],
     ) -> bool:
         return all(not graph.has_edge(candidate.task_id, item.task_id) for item in selected)
 
@@ -246,7 +252,7 @@ class DynamicLaneScheduler:
     def _selection_is_valid(
         cls,
         selected: tuple[SchedulerTaskProfile, ...],
-        graph: nx.Graph,
+        graph: nx.Graph[str],
         pools: dict[str, ResourcePool],
         base_usage: dict[str, int],
         lane_limit: int,
@@ -271,14 +277,14 @@ class DynamicLaneScheduler:
     def _exact_select(
         self,
         candidates: list[SchedulerTaskProfile],
-        graph: nx.Graph,
+        graph: nx.Graph[str],
         pools: dict[str, ResourcePool],
         base_usage: dict[str, int],
         lane_limit: int,
     ) -> tuple[SchedulerTaskProfile, ...]:
         ordered = tuple(sorted(candidates, key=lambda item: (item.sequence_rank, item.task_id)))
         best: tuple[SchedulerTaskProfile, ...] = ()
-        best_key = (-1, -1, ())
+        best_key: tuple[int, int, tuple[str, ...]] = (-1, -1, ())
         for size in range(1, min(lane_limit, len(ordered)) + 1):
             for combo in combinations(ordered, size):
                 if any(graph.has_edge(a.task_id, b.task_id) for a, b in combinations(combo, 2)):
@@ -314,7 +320,7 @@ class DynamicLaneScheduler:
     def _greedy_select(
         self,
         candidates: list[SchedulerTaskProfile],
-        graph: nx.Graph,
+        graph: nx.Graph[str],
         pools: dict[str, ResourcePool],
         base_usage: dict[str, int],
         lane_limit: int,

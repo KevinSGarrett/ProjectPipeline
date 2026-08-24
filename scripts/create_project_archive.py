@@ -1,15 +1,14 @@
-
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 import sys
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from project_pipeline.archive import create_archive, verify_archive
-from project_pipeline.validation.repository import RepositoryValidator
+from project_pipeline.archive import create_archive, verify_archive  # noqa: E402
+from project_pipeline.validation.repository import RepositoryValidator  # noqa: E402
 
 parser = argparse.ArgumentParser()
 parser.add_argument("output", type=Path)

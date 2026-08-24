@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 from collections.abc import Mapping
+from pathlib import Path
 from typing import Any
 
 from project_pipeline.contracts import ActionIntent, ApprovalState
@@ -15,6 +16,7 @@ from project_pipeline.domain.github import (
     GitOperationType,
     github_identifier,
 )
+from project_pipeline.github_steward.asset_names import canonical_release_asset_name
 from project_pipeline.github_steward.errors import GitHubAdapterError, GitHubStewardError
 from project_pipeline.github_steward.persistence import GitHubStewardStore
 from project_pipeline.github_steward.ports import GitHubRemotePort, GitHubWriteContext
@@ -22,6 +24,22 @@ from project_pipeline.github_steward.ports import GitHubRemotePort, GitHubWriteC
 _CREATE = GitOperationType.CREATE_DRAFT_RELEASE
 _UPLOAD = GitOperationType.UPLOAD_RELEASE_ASSET
 _FINALIZE = GitOperationType.FINALIZE_RELEASE
+
+
+def _verify_campaign_publication(
+    campaign_database: Path, *, repository_root: Path, campaign_id: str
+) -> dict[str, Any]:
+    """Resolve the campaign gate at the release-service mutation boundary."""
+
+    # Keep the dependency one-way at import time: the campaign runtime never
+    # needs GitHub release infrastructure to start or recover.
+    from project_pipeline.autonomy_runtime.campaign import (
+        verify_campaign_publication_eligibility,
+    )
+
+    return verify_campaign_publication_eligibility(
+        campaign_database, repository_root=repository_root, campaign_id=campaign_id
+    )
 
 
 class GitHubDraftReleaseService:
@@ -63,6 +81,12 @@ class GitHubDraftReleaseService:
             and existing.target_commitish.lower() != target_commitish.lower()
         ):
             raise GitHubStewardError("draft tag is bound to a different candidate head")
+        canonical_assets: dict[str, str] = {}
+        for raw_name, digest in artifact_sha256s.items():
+            asset_name = canonical_release_asset_name(raw_name)
+            if asset_name in canonical_assets:
+                raise GitHubStewardError("release assets collide after filename normalization")
+            canonical_assets[asset_name] = str(digest).lower()
         operation = GitHubOperation.create(
             operation_type=_CREATE,
             repository_slug=repository_slug,
@@ -78,7 +102,7 @@ class GitHubDraftReleaseService:
                 "body": body,
                 "target_commitish": target_commitish.lower(),
                 "source_tree": source_tree.lower(),
-                "artifact_sha256s": dict(sorted(artifact_sha256s.items())),
+                "artifact_sha256s": dict(sorted(canonical_assets.items())),
             },
             expected_head_sha=target_commitish.lower(),
         )
@@ -155,27 +179,31 @@ class GitHubDraftReleaseService:
         actor_id: str,
         correlation_id: str,
     ) -> GitHubOperation:
+        canonical_name = canonical_release_asset_name(name)
         release = self._required_release(repository_slug, release_id)
         if not release.draft:
             raise GitHubStewardError("assets may only be uploaded to a draft release")
         if release.target_commitish.lower() != source_sha.lower():
             raise GitHubStewardError("refusing to upload to a release for a different candidate")
         for asset in release.assets:
-            if asset.name == name and asset.sha256 != sha256.lower():
+            if (
+                canonical_release_asset_name(asset.name) == canonical_name
+                and asset.sha256 != sha256.lower()
+            ):
                 raise GitHubStewardError("duplicate asset name with a different checksum")
-        self._reject_unknown(_UPLOAD, repository_slug, f"{release_id}:{name}")
+        self._reject_unknown(_UPLOAD, repository_slug, f"{release_id}:{canonical_name}")
         operation = GitHubOperation.create(
             operation_type=_UPLOAD,
             repository_slug=repository_slug,
-            target=f"{release_id}:{name}",
+            target=f"{release_id}:{canonical_name}",
             idempotency_key=(
-                f"github.draft.upload:{repository_slug}:{release_id}:{name}:{sha256.lower()}"
+                f"github.draft.upload:{repository_slug}:{release_id}:{canonical_name}:{sha256.lower()}"
             ),
             actor_id=actor_id,
             correlation_id=correlation_id,
             payload={
                 "release_id": release_id,
-                "name": name,
+                "name": canonical_name,
                 "sha256": sha256.lower(),
                 "source_sha": source_sha.lower(),
             },
@@ -235,7 +263,7 @@ class GitHubDraftReleaseService:
             self.store.save_operation(failed)
             return self._receipt(failed, GitOperationState.FAILED, {"reconciled": "release_absent"})
         for asset in release.assets:
-            if asset.name != name:
+            if canonical_release_asset_name(asset.name) != name:
                 continue
             remote_bytes = self.remote.download_release_asset(
                 operation.repository_slug, asset_id=asset.api_id
@@ -273,12 +301,25 @@ class GitHubDraftReleaseService:
         *,
         release_id: int,
         expected_head_sha: str,
-        campaign_complete: bool,
+        expected_source_tree: str,
+        campaign_database: Path,
+        campaign_id: str,
+        repository_root: Path,
         actor_id: str,
         correlation_id: str,
     ) -> GitHubOperation:
-        if not campaign_complete:
-            raise GitHubStewardError("finalize-before-campaign")
+        if self.remote.provider_id != "github-rest":
+            raise GitHubStewardError("campaign finalization requires the GitHub REST adapter")
+        eligibility = _verify_campaign_publication(
+            campaign_database,
+            repository_root=repository_root,
+            campaign_id=campaign_id,
+        )
+        if (
+            eligibility["integrated_sha"].lower() != expected_head_sha.lower()
+            or eligibility["integrated_tree"].lower() != expected_source_tree.lower()
+        ):
+            raise GitHubStewardError("campaign identity differs from the release candidate")
         release = self._required_release(repository_slug, release_id)
         if release.target_commitish.lower() != expected_head_sha.lower():
             raise GitHubStewardError("changed-head publication is rejected")
@@ -294,7 +335,15 @@ class GitHubDraftReleaseService:
             ),
             actor_id=actor_id,
             correlation_id=correlation_id,
-            payload={"release_id": release_id, "campaign_complete": True},
+            payload={
+                "release_id": release_id,
+                "campaign_id": campaign_id,
+                "campaign_database": str(campaign_database.resolve()),
+                "repository_root": str(repository_root.resolve()),
+                "qualification_run_id": eligibility["qualification_run_id"],
+                "attested_elapsed_seconds": eligibility["attested_elapsed_seconds"],
+                "integrated_tree": eligibility["integrated_tree"],
+            },
             expected_head_sha=expected_head_sha.lower(),
         )
         self.store.save_operation(operation)
@@ -307,14 +356,18 @@ class GitHubDraftReleaseService:
         action_intent: ActionIntent,
         authorization_id: str,
     ) -> GitHubOperationReceipt:
-        self._guard_apply(operation, _FINALIZE, action_intent, "github.draft-release.finalize")
-        pending = self._mark_pending(operation, authorization_id)
+        stored = self.store.get_operation(operation.operation_id)
+        if stored is None:
+            raise GitHubStewardError("finalize operation was not persisted")
+        self._guard_apply(stored, _FINALIZE, action_intent, "github.draft-release.finalize")
+        self._assert_finalize_eligibility(stored)
+        pending = self._mark_pending(stored, authorization_id)
         context = self._context(pending, authorization_id)
         try:
             snapshot = self.remote.finalize_release(
-                operation.repository_slug,
-                release_id=int(operation.payload["release_id"]),
-                expected_target_commitish=str(operation.expected_head_sha),
+                stored.repository_slug,
+                release_id=int(stored.payload["release_id"]),
+                expected_target_commitish=str(stored.expected_head_sha),
                 context=context,
             )
         except GitHubAdapterError as exc:
@@ -324,6 +377,43 @@ class GitHubDraftReleaseService:
         return self._persist_applied(
             pending, snapshot.model_dump(mode="json"), str(snapshot.api_id)
         )
+
+    def reconcile_finalize(self, operation: GitHubOperation) -> GitHubOperationReceipt:
+        """Read back an uncertain finalization before any fresh PATCH attempt."""
+
+        stored = self._require_unknown(operation)
+        release = self.remote.get_release(stored.repository_slug, int(stored.payload["release_id"]))
+        if (
+            release is not None
+            and release.target_commitish.lower() == str(stored.expected_head_sha).lower()
+            and not release.draft
+        ):
+            reconciled = stored.model_copy(
+                update={
+                    "state": GitOperationState.RECONCILED,
+                    "observed_result": release.model_dump(mode="json"),
+                    "updated_at_utc": utc_now(),
+                }
+            )
+            self.store.save_operation(reconciled)
+            return self._receipt(
+                reconciled,
+                GitOperationState.RECONCILED,
+                release.model_dump(mode="json"),
+                str(release.api_id),
+            )
+        failed = stored.model_copy(
+            update={
+                "state": GitOperationState.FAILED,
+                "observed_result": {
+                    "reconciled": "release_absent_or_still_draft",
+                    "release_id": stored.payload["release_id"],
+                },
+                "updated_at_utc": utc_now(),
+            }
+        )
+        self.store.save_operation(failed)
+        return self._receipt(failed, GitOperationState.FAILED, dict(failed.observed_result or {}))
 
     def acquire_assets(
         self,
@@ -336,18 +426,63 @@ class GitHubDraftReleaseService:
         release = self._required_release(repository_slug, release_id)
         if release.target_commitish.lower() != expected_head_sha.lower():
             raise GitHubStewardError("acquired release is bound to a different candidate")
-        expected = {name: digest.lower() for name, digest in expected_sha256s.items()}
-        observed_names = {asset.name for asset in release.assets}
-        if observed_names != set(expected):
+        expected: dict[str, str] = {}
+        for raw_name, digest in expected_sha256s.items():
+            name = canonical_release_asset_name(raw_name)
+            if name in expected:
+                raise GitHubStewardError(
+                    "expected asset names collide after filename normalization"
+                )
+            expected[name] = digest.lower()
+        observed: dict[str, GitHubReleaseAsset] = {}
+        for asset in release.assets:
+            name = canonical_release_asset_name(asset.name)
+            if name in observed:
+                raise GitHubStewardError(
+                    "remote release assets collide after filename normalization"
+                )
+            observed[name] = asset
+        if set(observed) != set(expected):
             raise GitHubStewardError("acquired asset set does not match the candidate manifest")
         payload: dict[str, bytes] = {}
-        for asset in release.assets:
+        for name, asset in observed.items():
             content = self.remote.download_release_asset(repository_slug, asset_id=asset.api_id)
             digest = hashlib.sha256(content).hexdigest()
-            if digest != expected[asset.name]:
-                raise GitHubStewardError(f"acquired asset {asset.name} checksum mismatch")
-            payload[asset.name] = content
+            if digest != expected[name]:
+                raise GitHubStewardError(f"acquired asset {name} checksum mismatch")
+            payload[name] = content
         return payload
+
+    def _assert_finalize_eligibility(self, operation: GitHubOperation) -> None:
+        """Re-attest campaign and remote draft immediately before finalization."""
+
+        if self.remote.provider_id != "github-rest":
+            raise GitHubStewardError("campaign finalization requires the GitHub REST adapter")
+        try:
+            database = Path(str(operation.payload["campaign_database"]))
+            root = Path(str(operation.payload["repository_root"]))
+            campaign_id = str(operation.payload["campaign_id"])
+        except KeyError as exc:
+            raise GitHubStewardError("finalize operation lacks immutable campaign binding") from exc
+        eligibility = _verify_campaign_publication(
+            database, repository_root=root, campaign_id=campaign_id
+        )
+        if (
+            eligibility["integrated_sha"].lower() != str(operation.expected_head_sha).lower()
+            or eligibility["integrated_tree"].lower()
+            != str(operation.payload["integrated_tree"]).lower()
+            or eligibility["qualification_run_id"] != operation.payload["qualification_run_id"]
+            or float(eligibility["attested_elapsed_seconds"])
+            != float(operation.payload["attested_elapsed_seconds"])
+        ):
+            raise GitHubStewardError("campaign attestation changed after finalization was planned")
+        release = self._required_release(
+            operation.repository_slug, int(operation.payload["release_id"])
+        )
+        if release.target_commitish.lower() != str(operation.expected_head_sha).lower():
+            raise GitHubStewardError("changed-head publication is rejected")
+        if not release.draft:
+            raise GitHubStewardError("release is already published")
 
     def _existing_tag(self, repository_slug: str, tag_name: str) -> GitHubReleaseSnapshot | None:
         for item in self.remote.list_releases(repository_slug):
@@ -368,10 +503,10 @@ class GitHubDraftReleaseService:
             if (
                 pending.operation_type is operation_type
                 and pending.target == target
-                and pending.state is GitOperationState.UNKNOWN_OUTCOME
+                and pending.state in {GitOperationState.PENDING, GitOperationState.UNKNOWN_OUTCOME}
             ):
                 raise GitHubStewardError(
-                    "unknown-outcome operations must be reconciled before any retry"
+                    "pending or unknown-outcome operations must be reconciled before any retry"
                 )
 
     def _guard_apply(
@@ -382,9 +517,12 @@ class GitHubDraftReleaseService:
         operation_name: str,
     ) -> None:
         stored = self.store.get_operation(operation.operation_id)
-        if stored is not None and stored.state is GitOperationState.UNKNOWN_OUTCOME:
+        if stored is not None and stored.state in {
+            GitOperationState.PENDING,
+            GitOperationState.UNKNOWN_OUTCOME,
+        }:
             raise GitHubStewardError(
-                "unknown-outcome operations must be reconciled before any retry"
+                "pending or unknown-outcome operations must be reconciled before any retry"
             )
         if operation.operation_type is not expected:
             raise GitHubStewardError("operation type mismatch")

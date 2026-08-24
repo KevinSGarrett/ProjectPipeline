@@ -2,32 +2,38 @@ from __future__ import annotations
 
 import sqlite3
 from pathlib import Path
+from types import TracebackType
 
 from project_pipeline.domain.context import ContextPack, ContextReceipt, DelegationEnvelope
 from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 
 
 class ContextStore:
-    def __init__(self, database: Path | str, root: Path):
+    def __init__(self, database: Path | str, root: Path) -> None:
         self.root = root.resolve()
         self.database = database
         self.db = sqlite3.connect(str(database))
         self.db.row_factory = sqlite3.Row
 
-    def __enter__(self):
+    def __enter__(self) -> ContextStore:
         self.initialize()
         return self
 
-    def __exit__(self, *_):
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: TracebackType | None,
+    ) -> None:
         self.close()
 
-    def close(self):
+    def close(self) -> None:
         self.db.close()
 
-    def initialize(self):
+    def initialize(self) -> None:
         SQLiteMigrationRunner(self.db, self.root).apply_all()
 
-    def save_delegation(self, item: DelegationEnvelope):
+    def save_delegation(self, item: DelegationEnvelope) -> None:
         with self.db:
             self.db.execute(
                 "INSERT OR IGNORE INTO context_delegations(delegation_id,payload_json) VALUES(?,?)",
@@ -40,7 +46,7 @@ class ContextStore:
             if existing != item.model_dump_json():
                 raise ValueError("delegation identity collision")
 
-    def save_pack(self, item: ContextPack):
+    def save_pack(self, item: ContextPack) -> None:
         with self.db:
             self.db.execute(
                 "INSERT OR IGNORE INTO context_packs(pack_id,delegation_id,content_sha256,payload_json,created_at_utc) VALUES(?,?,?,?,?)",
@@ -58,7 +64,7 @@ class ContextStore:
             if existing != item.model_dump_json():
                 raise ValueError("immutable context pack identity collision")
 
-    def save_receipt(self, item: ContextReceipt):
+    def save_receipt(self, item: ContextReceipt) -> None:
         with self.db:
             self.db.execute(
                 "INSERT OR IGNORE INTO context_receipts(receipt_id,pack_id,status,payload_json,created_at_utc) VALUES(?,?,?,?,?)",
@@ -84,8 +90,11 @@ class ContextStore:
         return ContextReceipt.model_validate_json(row[0]) if row else None
 
     def status(self) -> dict[str, int | str]:
-        def c(t):
-            return int(self.db.execute(f"SELECT COUNT(*) FROM {t}").fetchone()[0])
+        def c(table: str) -> int:
+            row = self.db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()
+            if row is None:
+                return 0
+            return int(row[0])
 
         return {
             "schema_version": "1.0.0",

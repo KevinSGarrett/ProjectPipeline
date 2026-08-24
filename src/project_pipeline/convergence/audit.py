@@ -39,7 +39,8 @@ def _jsonl(path: Path) -> list[dict[str, Any]]:
 def _json(path: Path) -> dict[str, Any]:
     if not path.exists():
         return {}
-    return json.loads(path.read_text(encoding="utf-8"))
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    return payload if isinstance(payload, dict) else {}
 
 
 def _audit_dimensions(

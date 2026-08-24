@@ -5,9 +5,9 @@ import re
 from pathlib import Path
 from typing import Any
 
-from project_pipeline.io import read_jsonl, write_json
-
 from repair_product_outcome_traceability import SOURCE_REFERENCE_REPAIRS
+
+from project_pipeline.io import read_jsonl, write_json
 
 _SOURCE = re.compile(r"^(SRC-[0-9]{3}):L([0-9]{6})-L([0-9]{6})$")
 _MINIMUM_BROAD_LINES = 80
@@ -144,9 +144,7 @@ def build_audit(root: Path) -> dict[str, Any]:
                     "rationale": rationale,
                 }
             )
-    pending = sum(
-        item["status"] == "PENDING_INDEPENDENT_SEMANTIC_REVIEW" for item in findings
-    )
+    pending = sum(item["status"] == "PENDING_INDEPENDENT_SEMANTIC_REVIEW" for item in findings)
     return {
         "schema_version": "1.0.0",
         "audit_id": "BROAD-SOURCE-RANGE-AUDIT-001",

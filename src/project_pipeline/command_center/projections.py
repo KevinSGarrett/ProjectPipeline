@@ -61,7 +61,7 @@ class CommandCenterProjectionService:
         provider_summary: dict[str, Any] | None = None,
         context_summary: dict[str, Any] | None = None,
     ) -> CommandCenterSnapshot:
-        raw = {
+        raw: dict[str, Any] = {
             "snapshot_id": snapshot_id,
             "project_id": project_id,
             "operating_mode": operating_mode,

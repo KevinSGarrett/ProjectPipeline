@@ -7,7 +7,10 @@ from typing import Any
 
 def _load_json(name: str) -> dict[str, Any]:
     package = resources.files("project_pipeline.upstream_data")
-    return json.loads(package.joinpath(name).read_text(encoding="utf-8"))
+    payload: object = json.loads(package.joinpath(name).read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"upstream contract must be a JSON object: {name}")
+    return payload
 
 
 def pydantic_ai_provider_compatibility() -> dict[str, Any]:

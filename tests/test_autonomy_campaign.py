@@ -16,6 +16,7 @@ from project_pipeline.autonomy_runtime.campaign import (
     CampaignController,
     evaluate_pp384_admission,
     observe_windows_scheduled_task,
+    verify_campaign_publication_eligibility,
 )
 from project_pipeline.autonomy_runtime.campaign_status import (
     CampaignStatusError,
@@ -58,6 +59,51 @@ def _probe_command() -> list[str]:
     return [sys.executable, str(ROOT / "scripts" / "campaign_probe.py")]
 
 
+def _mock_next_verified_publication(
+    controller: CampaignController,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    provider: str = "github-rest",
+    fixture_desktop: bool = False,
+) -> None:
+    original_execute = controller.execute
+    consumed = False
+
+    def execute(campaign_id: str, argv: list[str], **kwargs: object) -> dict:
+        nonlocal consumed
+        if not consumed:
+            consumed = True
+            return {
+                "campaign_id": campaign_id,
+                "receipt_id": "CREC-REMOTE-PUBLICATION",
+                "command": list(argv),
+                "executed": True,
+                "result": "PASSED",
+                "result_semantics": "remote-publication-verified",
+                "parsed_result": {
+                    "publication": {
+                        "state": "PUBLISHED",
+                        "draft": False,
+                        "provider": provider,
+                        "fixture_desktop": fixture_desktop,
+                        "target_commitish": "a" * 40,
+                        "source_tree": "b" * 40,
+                        "assets": [
+                            {
+                                "name": "candidate.whl",
+                                "sha256": "c" * 64,
+                                "remote_sha256": "c" * 64,
+                                "bytes_verified": True,
+                            }
+                        ],
+                    }
+                },
+            }
+        return original_execute(campaign_id, argv, **kwargs)
+
+    monkeypatch.setattr(controller, "execute", execute)
+
+
 def _controller(tmp_path: Path, inspect=None) -> CampaignController:
     return CampaignController(
         tmp_path / "campaign.sqlite3",
@@ -97,7 +143,7 @@ def _ready_after_72h(controller: CampaignController, tmp_path: Path) -> dict:
     _seed_attested(controller, admitted["qualification_run_id"], 24)
     hour72 = controller.admit_72h(started["campaign_id"])
     _seed_attested(controller, hour72["qualification_run_id"], 72)
-    return controller._mark_ready_to_finalize(started["campaign_id"])
+    return controller._mark_72h_attested(started["campaign_id"])
 
 
 def test_pp384_admission_requires_all_five_stages(tmp_path: Path):
@@ -345,37 +391,214 @@ def test_campaign_execute_persists_truthful_receipt(tmp_path: Path):
     controller.close()
 
 
-def test_finalize_after_seeded_72h(tmp_path: Path):
+def test_campaign_execute_reuses_derived_idempotency_key(tmp_path: Path):
     controller = _controller(tmp_path)
-    ready = _ready_after_72h(controller, tmp_path)
-    assert ready["stage"] == "RELEASE"
-    finalized = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
-    assert finalized["status"] == "FINALIZED"
-    assert finalized["stage"] == "COMPLETE"
-    assert finalized["finalization_receipts"][0]["executed"] is True
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+
+    first = controller.execute(started["campaign_id"], _probe_command())
+    second = controller.execute(started["campaign_id"], _probe_command())
+
+    assert second["receipt_id"] == first["receipt_id"]
+    count = controller._db.execute(
+        "SELECT COUNT(*) FROM campaign_command_receipts WHERE campaign_id = ?",
+        (started["campaign_id"],),
+    ).fetchone()[0]
+    assert count == 1
     controller.close()
 
 
-def test_advance_auto_finalizes_after_ready(tmp_path: Path):
+def test_finalize_after_seeded_72h_requires_verified_remote_publication(tmp_path: Path):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
+    assert ready["stage"] == "RELEASE"
+    assert ready["status"] == "72H_ATTESTED"
+    ready = controller.advance(ready["campaign_id"])
+    assert ready["status"] == "READY_TO_PUBLISH"
+    failed = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    assert failed["status"] == "FAILED"
+    assert failed["stage"] == "RELEASE"
+    assert failed["publication_receipts"][0]["result_semantics"] == "probe"
+
+
+def test_finalize_after_seeded_72h_accepts_verified_remote_publication(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = controller.advance(_ready_after_72h(controller, tmp_path)["campaign_id"])
+    _mock_next_verified_publication(controller, monkeypatch)
+    published = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    assert published["status"] == "PUBLISHED"
+    assert published["stage"] == "POST_RELEASE"
+    assert published["publication_receipts"][0]["executed"] is True
+    controller.close()
+
+
+def test_finalize_rejects_mock_or_fixture_publication_receipts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = controller.advance(_ready_after_72h(controller, tmp_path)["campaign_id"])
+    _mock_next_verified_publication(controller, monkeypatch, provider="mock-github")
+    failed = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    assert failed["status"] == "FAILED"
+    assert failed["stage"] == "RELEASE"
+    controller.close()
+
+
+def test_campaign_publication_eligibility_requires_attested_72h(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = controller.advance(_ready_after_72h(controller, tmp_path)["campaign_id"])
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.campaign.inspect_worktree_identity",
+        lambda _root: _identity(),
+    )
+    eligibility = verify_campaign_publication_eligibility(
+        tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
+    )
+    assert eligibility["attested_elapsed_seconds"] == 72 * 3600
+    controller.qualification._db.execute(
+        "UPDATE qualification_runs SET attested_elapsed_seconds = ? WHERE run_id = ?",
+        (71 * 3600, ready["qualification_run_id"]),
+    )
+    controller.qualification._db.commit()
+    with pytest.raises(ValueError, match="completed 72-hour qualification"):
+        verify_campaign_publication_eligibility(
+            tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
+        )
+    controller.close()
+
+
+def test_campaign_publication_eligibility_recomputes_qualification_event_hashes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = controller.advance(_ready_after_72h(controller, tmp_path)["campaign_id"])
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.campaign.inspect_worktree_identity",
+        lambda _root: _identity(),
+    )
+    controller.qualification._db.execute(
+        "UPDATE qualification_events SET payload_json = ? WHERE run_id = ?",
+        ('{"forged":true}', ready["qualification_run_id"]),
+    )
+    controller.qualification._db.commit()
+    with pytest.raises(ValueError, match="event digest is invalid"):
+        verify_campaign_publication_eligibility(
+            tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
+        )
+    controller.close()
+
+
+def test_advance_auto_finalizes_after_ready(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    controller = _controller(tmp_path)
+    ready = _ready_after_72h(controller, tmp_path)
+    _mock_next_verified_publication(controller, monkeypatch)
+    monkeypatch.setattr(
+        controller, "_default_post_release_commands", lambda *_args: [_probe_command()]
+    )
+    monkeypatch.setattr(
+        controller,
+        "_default_reconcile_commands",
+        lambda: [_probe_command()],
+    )
+    monkeypatch.setattr(
+        controller,
+        "_default_completion_gate_commands",
+        lambda: [_probe_command()],
+    )
     finalized = controller.advance(ready["campaign_id"])
+    finalized = controller.advance(finalized["campaign_id"])
+    finalized = controller.advance(finalized["campaign_id"])
+    finalized = controller.advance(finalized["campaign_id"])
+    finalized = controller.advance(finalized["campaign_id"])
     assert finalized["status"] == "FINALIZED"
     assert finalized["stage"] == "COMPLETE"
-    assert finalized["finalization_receipts"][0]["result"] == "PASSED"
+    assert finalized["completion_gate_receipts"][0]["result"] == "PASSED"
     controller.close()
 
 
 def test_failed_finalize_does_not_claim_complete(tmp_path: Path):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
+    ready = controller.advance(ready["campaign_id"])
     failed = controller.finalize(
         ready["campaign_id"],
         commands=[[sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]],
     )
     assert failed["status"] == "FAILED"
     assert failed["stage"] == "RELEASE"
-    assert failed["finalization_receipts"][0]["result"] == "FAILED"
+    assert failed["publication_receipts"][0]["result"] == "FAILED"
+    controller.close()
+
+
+def test_post_release_verify_failure_marks_campaign_failed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = _ready_after_72h(controller, tmp_path)
+    ready = controller.advance(ready["campaign_id"])
+    _mock_next_verified_publication(controller, monkeypatch)
+    published = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    assert published["status"] == "PUBLISHED"
+    monkeypatch.setattr(
+        controller,
+        "_default_post_release_commands",
+        lambda *_args: [[sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]],
+    )
+    failed = controller.advance(published["campaign_id"])
+    assert failed["status"] == "FAILED"
+    assert failed["stage"] == "POST_RELEASE"
+    assert failed["post_release_receipts"][0]["result"] == "FAILED"
+    controller.close()
+
+
+def test_reconcile_failure_marks_campaign_failed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    controller = _controller(tmp_path)
+    ready = _ready_after_72h(controller, tmp_path)
+    ready = controller.advance(ready["campaign_id"])
+    _mock_next_verified_publication(controller, monkeypatch)
+    published = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    monkeypatch.setattr(
+        controller, "_default_post_release_commands", lambda *_args: [_probe_command()]
+    )
+    verified = controller.advance(published["campaign_id"])
+    assert verified["status"] == "RECONCILING"
+    monkeypatch.setattr(
+        controller,
+        "_default_reconcile_commands",
+        lambda: [[sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]],
+    )
+    failed = controller.advance(verified["campaign_id"])
+    assert failed["status"] == "FAILED"
+    assert failed["stage"] == "POST_RELEASE"
+    assert failed["reconcile_receipts"][0]["result"] == "FAILED"
+    controller.close()
+
+
+def test_publish_to_completion_gate_transition_is_durable(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = _ready_after_72h(controller, tmp_path)
+    _mock_next_verified_publication(controller, monkeypatch)
+    monkeypatch.setattr(
+        controller, "_default_post_release_commands", lambda *_args: [_probe_command()]
+    )
+    monkeypatch.setattr(controller, "_default_reconcile_commands", lambda: [_probe_command()])
+    ready = controller.advance(ready["campaign_id"])
+    published = controller.advance(ready["campaign_id"])
+    assert published["status"] == "PUBLISHED"
+    reconciling = controller.advance(published["campaign_id"])
+    assert reconciling["status"] == "RECONCILING"
+    completion = controller.advance(reconciling["campaign_id"])
+    assert completion["status"] == "COMPLETION_GATE"
+    assert completion["stage"] == "COMPLETION_GATE"
     controller.close()
 
 
@@ -511,15 +734,41 @@ def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):
         inspect_identity=lambda _root: _identity(),
     )
     try:
-        commands = controller._default_finalize_commands()
+        commands = controller._default_publish_commands(
+            {
+                "campaign_id": "QCAMP-TEST",
+                "evidence_path": str(tmp_path / "evidence"),
+                "integrated_sha": "a" * 40,
+                "integrated_tree": "b" * 40,
+            }
+        )
+        post_release = controller._default_post_release_commands(
+            {
+                "evidence_path": str(tmp_path / "evidence"),
+                "integrated_sha": "a" * 40,
+                "integrated_tree": "b" * 40,
+            }
+        )
+        gate = controller._default_completion_gate_commands()
     finally:
         controller.close()
     rendered = [" ".join(item) for item in commands]
-    assert any(" -m project_pipeline control completion --root " in row for row in rendered)
-    assert any(" -m project_pipeline assurance completion-gate --root " in row for row in rendered)
+    rendered_gate = [" ".join(item) for item in gate]
+    assert any(" -m project_pipeline validate --root " in row for row in rendered)
+    assert any("campaign_release_publication.py" in row for row in rendered)
+    assert any("build_campaign_desktop_artifacts.py" in row for row in rendered)
+    assert command_kind(post_release[0]) == "release.remote-lifecycle"
+    assert command_is_allowlisted(post_release[0], repository_root=ROOT) is True
+    acquired_dir = Path(post_release[0][post_release[0].index("--acquired-dir") + 1])
+    lifecycle_work_dir = Path(post_release[0][post_release[0].index("--work-dir") + 1])
+    assert lifecycle_work_dir.parent == acquired_dir.parent
+    assert lifecycle_work_dir != acquired_dir
+    assert any(
+        " -m project_pipeline assurance completion-gate --root " in row for row in rendered_gate
+    )
     assert all(" project_pipeline completion " not in row for row in rendered)
-    assert command_kind(commands[-1]) == "assurance.completion-gate"
-    assert command_is_allowlisted(commands[-1], repository_root=ROOT) is True
+    assert command_kind(gate[-1]) == "assurance.completion-gate"
+    assert command_is_allowlisted(gate[-1], repository_root=ROOT) is True
     assert (
         command_is_allowlisted(
             [sys.executable, "-m", "project_pipeline", "completion", "--root", str(ROOT)],
@@ -535,6 +784,65 @@ def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):
         check=False,
     )
     assert missing.returncode != 0
+
+
+def test_duration_probe_default_surface_is_risk_based(tmp_path: Path):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        plan = controller._default_duration_probe_plan()
+    finally:
+        controller.close()
+    assert controller._probe_surface_complete(plan) is True
+    probe_ids = {str(item["probe_id"]) for item in plan}
+    assert {
+        "runtime_doctor",
+        "repository_validate",
+        "jira_validate",
+        "control_evaluate",
+        "control_sequence",
+    } <= probe_ids
+
+
+def test_duration_probe_surface_rejects_doctor_control_jira_only(tmp_path: Path):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        cadence = max(controller.probe_interval_seconds, controller.heartbeat_seconds)
+        plan = [
+            controller._build_duration_probe_entry(
+                "runtime_doctor",
+                [sys.executable, "-m", "project_pipeline", "doctor", "--root", str(ROOT)],
+                cadence_seconds=cadence,
+            ),
+            controller._build_duration_probe_entry(
+                "control_evaluate",
+                [
+                    sys.executable,
+                    "-m",
+                    "project_pipeline",
+                    "control",
+                    "evaluate",
+                    "--root",
+                    str(ROOT),
+                ],
+                cadence_seconds=cadence,
+            ),
+            controller._build_duration_probe_entry(
+                "jira_validate",
+                [sys.executable, "-m", "project_pipeline", "jira", "validate", "--root", str(ROOT)],
+                cadence_seconds=cadence,
+            ),
+        ]
+    finally:
+        controller.close()
+    assert controller._probe_surface_complete(plan) is False
 
 
 def test_production_defaults_incomplete_cannot_finalize(
@@ -560,6 +868,82 @@ def test_production_defaults_incomplete_cannot_finalize(
                         "schema_version": "1.0.0",
                         "state": "INCOMPLETE",
                         "final_completion_gate_satisfied": False,
+                    }
+                }
+            )
+        elif kind == "release.remote-publication":
+            stdout = json.dumps(
+                {
+                    "publication": {
+                        "state": "PUBLISHED",
+                        "draft": False,
+                        "provider": "github-rest",
+                        "fixture_desktop": False,
+                        "target_commitish": "a" * 40,
+                        "source_tree": "b" * 40,
+                        "assets": [
+                            {
+                                "name": "candidate.whl",
+                                "sha256": "c" * 64,
+                                "remote_sha256": "c" * 64,
+                                "bytes_verified": True,
+                            }
+                        ],
+                    }
+                }
+            )
+        elif kind == "release.desktop-build":
+            stdout = json.dumps(
+                {
+                    "desktop_build": {
+                        "state": "BUILT",
+                        "real_native_build": True,
+                        "source_sha": "a" * 40,
+                        "source_tree": "b" * 40,
+                        "artifacts": {
+                            "windows_executable": {
+                                "sha256": "d" * 64,
+                                "size_bytes": 1,
+                            },
+                            "windows_installer": {
+                                "sha256": "e" * 64,
+                                "size_bytes": 1,
+                            },
+                        },
+                    }
+                }
+            )
+        elif kind == "release.remote-lifecycle":
+            stdout = json.dumps(
+                {
+                    "lifecycle": {
+                        "state": "VERIFIED",
+                        "source": "REMOTE_DRAFT_BYTES",
+                        "worktree_bytes_used": False,
+                        "execution_mode": "REAL_NATIVE_REMOTE_BYTES",
+                        "publication": {
+                            "source_sha": "a" * 40,
+                            "source_tree": "b" * 40,
+                        },
+                        "checks": {
+                            "install": "PASS",
+                            "migration": "PASS",
+                            "startup": "PASS",
+                            "health": "PASS",
+                            "desktop_launch": "PASS",
+                            "command_center": "PASS",
+                            "director_journey": "PASS",
+                            "upgrade": "PASS",
+                            "rollback": "PASS",
+                            "uninstall": "PASS",
+                            "state_restoration": "PASS",
+                            "wheel_install": "PASS",
+                            "wheel_import": "PASS",
+                            "wheel_doctor": "PASS",
+                            "sdist_install": "PASS",
+                            "sdist_import": "PASS",
+                            "sdist_doctor": "PASS",
+                        },
                     }
                 }
             )
@@ -606,13 +990,17 @@ def test_production_defaults_incomplete_cannot_finalize(
         inspect_identity=lambda _root: _identity(),
     )
     ready = _ready_after_72h(controller, tmp_path)
-    finalized = controller.finalize(ready["campaign_id"])
+    ready = controller.advance(ready["campaign_id"])
+    published = controller.finalize(ready["campaign_id"])
+    assert published["status"] == "PUBLISHED"
+    step = controller.advance(published["campaign_id"])
+    step = controller.advance(step["campaign_id"])
+    finalized = controller.advance(step["campaign_id"])
     assert finalized["status"] == "FAILED"
-    assert finalized["stage"] == "RELEASE"
-    kinds = [command_kind(item["command"]) for item in finalized["finalization_receipts"]]
+    assert finalized["stage"] == "COMPLETION_GATE"
+    kinds = [command_kind(item["command"]) for item in finalized["completion_gate_receipts"]]
     assert kinds[-1] == "assurance.completion-gate"
-    assert "control.completion" in kinds
-    last = finalized["finalization_receipts"][-1]
+    last = finalized["completion_gate_receipts"][-1]
     assert last["exit_code"] == 0
     assert last["result"] == "FAILED"
     assert last["semantic_state"] != "COMPLETE"
@@ -815,23 +1203,26 @@ def test_missing_owner_binding_blocks_heartbeat_and_recover_takes_over(tmp_path:
 def test_execute_and_finalize_require_live_owner(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
+    ready = controller.advance(ready["campaign_id"])
     binding = controller._owner_binding()
     assert binding is not None
+    foreign_pid = 424243 if os.getpid() == 424242 else 424242
     monkeypatch.setattr(
         "project_pipeline.autonomy_runtime.campaign.inspect_process",
         lambda pid: (
             {
-                "process_id": 424242,
+                "process_id": foreign_pid,
                 "executable": str(binding.get("executable_identity") or "python.exe"),
                 "started_at_utc": str(binding.get("process_started_at_utc")),
                 "alive": True,
             }
-            if int(pid) == 424242
+            if int(pid) == foreign_pid
             else None
         ),
     )
     controller._db.execute(
-        "UPDATE campaign_locks SET process_id = 424242 WHERE lock_name = 'active-campaign'"
+        "UPDATE campaign_locks SET process_id = ? WHERE lock_name = 'active-campaign'",
+        (foreign_pid,),
     )
     controller._db.commit()
     with pytest.raises(ValueError, match="second runner cannot mutate"):
@@ -893,21 +1284,23 @@ def test_heartbeat_rejects_second_runner_under_live_foreign_fence(
     )
     binding = controller._owner_binding()
     assert binding is not None
+    foreign_pid = 424243 if os.getpid() == 424242 else 424242
     monkeypatch.setattr(
         "project_pipeline.autonomy_runtime.campaign.inspect_process",
         lambda pid: (
             {
-                "process_id": 424242,
+                "process_id": foreign_pid,
                 "executable": str(binding.get("executable_identity") or "python.exe"),
                 "started_at_utc": str(binding.get("process_started_at_utc")),
                 "alive": True,
             }
-            if int(pid) == 424242
+            if int(pid) == foreign_pid
             else None
         ),
     )
     controller._db.execute(
-        "UPDATE campaign_locks SET process_id = 424242 WHERE lock_name = 'active-campaign'"
+        "UPDATE campaign_locks SET process_id = ? WHERE lock_name = 'active-campaign'",
+        (foreign_pid,),
     )
     controller._db.commit()
     with pytest.raises(ValueError, match="second runner cannot mutate"):
@@ -1207,6 +1600,40 @@ def test_recover_takes_over_reused_shared_qualification_pid(
     assert recovered["campaign_id"] != started["campaign_id"]
     assert recovered["status"] == "ATTESTED"
     assert controller.get(started["campaign_id"])["status"] == "DISQUALIFIED"
+    controller.close()
+
+
+def test_campaign_start_is_unique_when_clock_timestamps_tie(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    from project_pipeline.autonomy_runtime import campaign as campaign_module
+
+    fixed = datetime(2026, 8, 24, 8, 16, tzinfo=UTC)
+
+    class FixedDateTime:
+        @staticmethod
+        def now(_tz=UTC) -> datetime:
+            return fixed
+
+        @staticmethod
+        def fromisoformat(value: str) -> datetime:
+            return datetime.fromisoformat(value)
+
+    monkeypatch.setattr(campaign_module, "datetime", FixedDateTime)
+    controller = _controller(tmp_path)
+    first = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    controller.stop(first["campaign_id"], reason="test-restart")
+    second = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+
+    assert second["campaign_id"] != first["campaign_id"]
     controller.close()
 
 

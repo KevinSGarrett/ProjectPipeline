@@ -1,11 +1,10 @@
 from __future__ import annotations
 
 import argparse
-from datetime import datetime, timezone
 import hashlib
 import json
+from datetime import UTC, datetime
 from pathlib import Path
-
 
 ISSUE_DIRS = ("epics", "stories", "tasks", "subtasks")
 
@@ -18,11 +17,13 @@ def main() -> int:
     parser.add_argument("--mapping-output", type=Path, required=True)
     args = parser.parse_args()
     root = args.root.resolve()
-    snapshot_path = args.remote_snapshot if args.remote_snapshot.is_absolute() else root / args.remote_snapshot
+    snapshot_path = (
+        args.remote_snapshot if args.remote_snapshot.is_absolute() else root / args.remote_snapshot
+    )
     snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
     remote_by_local = {item["local_id"]: item for item in snapshot["issues"]}
     observed_at = snapshot["observed_at_utc"]
-    audited_at = datetime.now(timezone.utc).isoformat()
+    audited_at = datetime.now(UTC).isoformat()
     audit_rows: list[dict] = []
     mapping_rows: list[dict] = []
 
@@ -61,7 +62,8 @@ def main() -> int:
                 audit_rows.append(
                     {
                         "schema_version": "1.0.0",
-                        "audit_id": "JAUD-" + hashlib.sha256((local_id + audited_at).encode()).hexdigest()[:20].upper(),
+                        "audit_id": "JAUD-"
+                        + hashlib.sha256((local_id + audited_at).encode()).hexdigest()[:20].upper(),
                         "audited_at_utc": audited_at,
                         "local_id": local_id,
                         "remote_jira_key": remote["remote_key"],
@@ -92,19 +94,37 @@ def main() -> int:
                 }
             )
 
-    audit_output = args.audit_output if args.audit_output.is_absolute() else root / args.audit_output
+    audit_output = (
+        args.audit_output if args.audit_output.is_absolute() else root / args.audit_output
+    )
     audit_output.parent.mkdir(parents=True, exist_ok=True)
-    audit_output.write_text("".join(json.dumps(row, sort_keys=True) + "\n" for row in audit_rows), encoding="utf-8")
-    mapping_output = args.mapping_output if args.mapping_output.is_absolute() else root / args.mapping_output
+    audit_output.write_text(
+        "".join(json.dumps(row, sort_keys=True) + "\n" for row in audit_rows), encoding="utf-8"
+    )
+    mapping_output = (
+        args.mapping_output if args.mapping_output.is_absolute() else root / args.mapping_output
+    )
     mapping_output.parent.mkdir(parents=True, exist_ok=True)
-    mapping_output.write_text(json.dumps({
-        "schema_version": "1.0.0",
-        "generated_at_utc": audited_at,
-        "issue_count": len(mapping_rows),
-        "done_claims_rejected": len(audit_rows),
-        "mappings": mapping_rows,
-    }, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    print(json.dumps({"issues_updated": len(mapping_rows), "done_claims_rejected": len(audit_rows)}, indent=2))
+    mapping_output.write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0.0",
+                "generated_at_utc": audited_at,
+                "issue_count": len(mapping_rows),
+                "done_claims_rejected": len(audit_rows),
+                "mappings": mapping_rows,
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    print(
+        json.dumps(
+            {"issues_updated": len(mapping_rows), "done_claims_rejected": len(audit_rows)}, indent=2
+        )
+    )
     return 0
 
 

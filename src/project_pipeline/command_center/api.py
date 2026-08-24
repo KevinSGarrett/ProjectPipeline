@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import AsyncIterator, Callable
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -73,7 +73,7 @@ def create_command_center_app(
     control_provider: Callable[[], ControlSnapshot] | None = None,
     repository_root: Path | None = None,
     runtime_database: Path | None = None,
-):
+) -> FastAPI:
     app = FastAPI(title="Project Pipeline Command Center API", version="1.1.0")
     auth = auth or CommandCenterAuth.deny_all()
     director = DirectorContextBuilder()
@@ -173,8 +173,10 @@ def create_command_center_app(
         return event_broker.page(after_sequence=after_sequence, limit=limit).model_dump(mode="json")
 
     @app.get("/api/v1/command-center/events")
-    def sse(after_sequence: int = 0, follow: bool = False, _actor: str = Depends(principal)):
-        async def stream():
+    def sse(
+        after_sequence: int = 0, follow: bool = False, _actor: str = Depends(principal)
+    ) -> StreamingResponse:
+        async def stream() -> AsyncIterator[str]:
             if not follow:
                 for event in event_broker.page(after_sequence=after_sequence, limit=1000).events:
                     yield event_broker.sse(event)
@@ -191,7 +193,7 @@ def create_command_center_app(
     @app.websocket("/api/v1/command-center/ws")
     async def websocket_events(
         websocket: WebSocket, after_sequence: int = 0, token: str | None = None
-    ):
+    ) -> None:
         query_token = token or websocket.query_params.get("token")
         authorization = websocket.headers.get("authorization")
         if not authorization and query_token:

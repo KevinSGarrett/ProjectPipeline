@@ -7,9 +7,11 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from project_pipeline.command_center.application_verification import verify_command_center_ui
-from project_pipeline.command_center.live_browser import verify_live_command_center
-from project_pipeline.verification.browser import find_chromium
+from project_pipeline.command_center.application_verification import (  # noqa: E402
+    verify_command_center_ui,
+)
+from project_pipeline.command_center.live_browser import verify_live_command_center  # noqa: E402
+from project_pipeline.verification.browser import find_chromium  # noqa: E402
 
 chromium = find_chromium()
 if chromium is None:

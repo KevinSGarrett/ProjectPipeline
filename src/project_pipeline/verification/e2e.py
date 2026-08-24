@@ -255,8 +255,10 @@ def _control_snapshot(task_id: str) -> ControlSnapshot:
         sequence=sequence,
         scope=scope,
         completion=completion,
-        eligibility=(TaskEligibility(task_id=task_id, state="ELIGIBLE", eligible=True),),
-        readiness=(TaskReadiness(task_id=task_id, state="READY", ready=True),),
+        eligibility=(
+            TaskEligibility(task_id=task_id, state=EligibilityState.ELIGIBLE, eligible=True),
+        ),
+        readiness=(TaskReadiness(task_id=task_id, state=ReadinessState.READY, ready=True),),
         snapshot_fingerprint="c" * 64,
     )
 
@@ -473,10 +475,10 @@ def _independent_review_proof() -> bool:
         frozen_fingerprint=fp,
     )
     now = datetime.now(UTC)
-    records = (
+    records: tuple[dict[str, object], ...] = (
         {
             "evidence_id": "EVID-P23-A",
-            "criterion_ids": [criterion.criterion_id],
+            "criterion_ids": (criterion.criterion_id,),
             "verification_status": "VERIFIED",
             "result": "PASS",
             "observed_at_utc": now.isoformat(),
@@ -487,7 +489,7 @@ def _independent_review_proof() -> bool:
         },
         {
             "evidence_id": "EVID-P23-B",
-            "criterion_ids": [criterion.criterion_id],
+            "criterion_ids": (criterion.criterion_id,),
             "verification_status": "VERIFIED",
             "result": "PASS",
             "observed_at_utc": now.isoformat(),

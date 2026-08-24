@@ -52,7 +52,7 @@ class OrToolsSafeSetOptimizer:
     def select(
         self,
         candidates: Iterable[SchedulerTaskProfile],
-        graph: nx.Graph,
+        graph: nx.Graph[str],
         pools: dict[str, ResourcePool],
         base_usage: dict[str, int],
         lane_limit: int,

@@ -4,7 +4,10 @@ import json
 import urllib.error
 import urllib.request
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from playwright.sync_api import ConsoleMessage
 
 from project_pipeline.command_center.application_verification import (
     evaluate_loaded_command_center_page,
@@ -82,7 +85,9 @@ def verify_live_command_center(
         item.get("work_id") == "PP-TASK-000385" for item in live_work
     )
     synchronization = body.get("synchronization", []) if isinstance(body, dict) else []
-    jira = next((item for item in synchronization if item.get("system") == "Jira"), {})
+    jira: dict[str, Any] = next(
+        (item for item in synchronization if item.get("system") == "Jira"), {}
+    )
     checks["jira_readback_not_stale"] = jira.get("stale") is False
     checks["jira_note_names_pp391"] = "PP-391" in str(jira.get("note", ""))
     checks["ui_not_authoritative"] = (
@@ -112,12 +117,14 @@ def verify_live_command_center(
                 for width, height in viewports:
                     page = browser.new_page(viewport={"width": width, "height": height})
                     page_errors: list[str] = []
-                    page.on(
-                        "console",
-                        lambda message, page_errors=page_errors: (
-                            page_errors.append(message.text) if message.type == "error" else None
-                        ),
-                    )
+
+                    def _on_console(
+                        message: ConsoleMessage, _errors: list[str] = page_errors
+                    ) -> None:
+                        if message.type == "error":
+                            _errors.append(message.text)
+
+                    page.on("console", _on_console)
                     page.add_init_script(session_script)
                     page.goto(f"{base_url}/", wait_until="load", timeout=20000)
                     result = evaluate_loaded_command_center_page(

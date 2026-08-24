@@ -16,15 +16,17 @@ from project_pipeline.release_hardening.models import ReleaseCandidateSnapshot
 _FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 
 EXCLUDED_PREFIXES = ("evidence/", "release/generated/")
-EXCLUDED_PATHS = {
-    "PROJECT_MANIFEST.json",
-    "FILE_MANIFEST.sha256",
-    "docs/generated/REPOSITORY_MAP.json",
-    "docs/generated/REPOSITORY_MAP.md",
-    "release/release_candidate_r24.json",
-    "release/hardening_report_r24.json",
-    "release/sbom_r24.json",
-}
+EXCLUDED_PATHS = frozenset(
+    {
+        "PROJECT_MANIFEST.json",
+        "FILE_MANIFEST.sha256",
+        "docs/generated/REPOSITORY_MAP.json",
+        "docs/generated/REPOSITORY_MAP.md",
+        "release/release_candidate_r24.json",
+        "release/hardening_report_r24.json",
+        "release/sbom_r24.json",
+    }
+)
 
 
 def release_input_fingerprint(root: Path) -> str:

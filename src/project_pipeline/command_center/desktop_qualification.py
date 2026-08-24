@@ -199,9 +199,9 @@ def _find_window_for_pid(pid: int) -> str | None:
         return None
     user32 = ctypes.windll.user32
     found: list[str] = []
+    enum_proc = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
 
-    @ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
-    def callback(hwnd: int, _lparam: int) -> bool:  # type: ignore[untyped-decorator]
+    def callback(hwnd: int, _lparam: int) -> bool:
         process_id = wintypes.DWORD()
         user32.GetWindowThreadProcessId(hwnd, ctypes.byref(process_id))
         if process_id.value != pid or not user32.IsWindowVisible(hwnd):
@@ -214,7 +214,7 @@ def _find_window_for_pid(pid: int) -> str | None:
         found.append(buffer.value)
         return False
 
-    user32.EnumWindows(callback, 0)
+    user32.EnumWindows(enum_proc(callback), 0)
     return found[0] if found else None
 
 

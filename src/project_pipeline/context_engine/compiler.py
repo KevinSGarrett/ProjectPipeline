@@ -137,8 +137,8 @@ class ContextCompiler:
         )
 
     def reviewer_package(self, pack: ContextPack) -> ReviewerPackage:
-        def keys(kind):
-            return tuple(i.context_key for i in pack.items if i.kind in kind)
+        def keys(kinds: set[ContextSourceKind]) -> tuple[str, ...]:
+            return tuple(i.context_key for i in pack.items if i.kind in kinds)
 
         diff = keys({ContextSourceKind.DIFF})
         sources = keys(

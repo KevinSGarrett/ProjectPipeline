@@ -16,7 +16,7 @@ def _gate_property(seed: int, cases: int) -> PropertyProbeResult:
     for index in range(cases):
         values = [bool(rng.getrandbits(1)) for _ in range(16)]
         gaps = 0 if bool(rng.getrandbits(1)) else rng.randint(1, 5)
-        payload = {
+        payload: dict[str, object] = {
             "source_requirements_dispositioned": values[0],
             "accepted_requirements_complete_or_external": values[1],
             "implementation_traceability_complete": values[2],
@@ -37,7 +37,23 @@ def _gate_property(seed: int, cases: int) -> PropertyProbeResult:
         }
         facts = CompletionGateFacts(
             project_id="PROJECT-PIPELINE",
-            **payload,
+            source_requirements_dispositioned=values[0],
+            accepted_requirements_complete_or_external=values[1],
+            implementation_traceability_complete=values[2],
+            critical_paths_tested=values[3],
+            golden_journeys_pass=values[4],
+            autonomous_runtime_qualified=values[5],
+            security_gates_satisfied=values[6],
+            resilience_verified=values[7],
+            deployment_reproducible=values[8],
+            rollback_verified=values[9],
+            engineer_operable_from_docs=values[10],
+            ai_continuable_from_repo_and_jira=values[11],
+            unresolved_items_truthful=values[12],
+            command_center_truthful=values[13],
+            jira_truthful=values[14],
+            unattended_operating_loop_qualified=values[15],
+            unexplained_gap_count=gaps,
             snapshot_fingerprint=assurance_fingerprint((index, payload)),
         )
         decision = evaluate_completion_gate(facts)

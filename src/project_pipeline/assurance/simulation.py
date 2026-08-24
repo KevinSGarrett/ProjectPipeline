@@ -17,8 +17,8 @@ def supported_scenarios() -> tuple[str, ...]:
     return ("complete", "stale_or_missing_gate", "attempt_loop", "external_block_only")
 
 
-def _facts(**overrides) -> CompletionGateFacts:
-    base = dict(
+def _facts(**overrides: object) -> CompletionGateFacts:
+    facts = CompletionGateFacts(
         project_id="PROJECT-PIPELINE",
         source_requirements_dispositioned=True,
         accepted_requirements_complete_or_external=True,
@@ -39,8 +39,7 @@ def _facts(**overrides) -> CompletionGateFacts:
         unexplained_gap_count=0,
         snapshot_fingerprint="a" * 64,
     )
-    base.update(overrides)
-    return CompletionGateFacts(**base)
+    return facts.model_copy(update=overrides) if overrides else facts
 
 
 def simulate_scenario(scenario: str) -> AssuranceSimulationResult:

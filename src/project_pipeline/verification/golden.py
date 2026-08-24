@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import time
 from pathlib import Path
+from typing import Literal, cast
 
 from project_pipeline.assurance import build_repository_gate_facts, evaluate_completion_gate
 from project_pipeline.budget.simulation import simulate_scenario as simulate_budget
@@ -17,7 +18,7 @@ from project_pipeline.upstream import validate_upstream_reviews
 
 
 def definitions() -> tuple[GoldenJourneyDefinition, ...]:
-    raw = (
+    raw: tuple[dict[str, object], ...] = (
         {
             "name": "Budget hard-stop preserves local control",
             "objective": "Paid work is stopped at the hard budget boundary while eligible local control work remains admissible.",
@@ -113,13 +114,27 @@ def definitions() -> tuple[GoldenJourneyDefinition, ...]:
             "risk": "HIGH",
         },
     )
-    return tuple(
-        GoldenJourneyDefinition(
-            journey_id=verification_identifier("GJOURNEY", item["name"], item["objective"]),
-            **item,
+    definitions: list[GoldenJourneyDefinition] = []
+    for item in raw:
+        name = str(item["name"])
+        objective = str(item["objective"])
+        definitions.append(
+            GoldenJourneyDefinition(
+                journey_id=verification_identifier("GJOURNEY", name, objective),
+                name=name,
+                objective=objective,
+                requirement_ids=cast(tuple[str, ...], item["requirement_ids"]),
+                environment=str(item["environment"]),
+                setup_steps=cast(tuple[str, ...], item["setup_steps"]),
+                action_steps=cast(tuple[str, ...], item["action_steps"]),
+                expected_results=cast(tuple[str, ...], item["expected_results"]),
+                cleanup_steps=cast(tuple[str, ...], item["cleanup_steps"]),
+                evidence_expectations=cast(tuple[str, ...], item["evidence_expectations"]),
+                required_observations=cast(tuple[str, ...], item["required_observations"]),
+                risk=cast(Literal["LOW", "MEDIUM", "HIGH", "CRITICAL"], item["risk"]),
+            )
         )
-        for item in raw
-    )
+    return tuple(definitions)
 
 
 def run_journey(root: Path, journey: GoldenJourneyDefinition) -> GoldenJourneyResult:
@@ -127,25 +142,30 @@ def run_journey(root: Path, journey: GoldenJourneyDefinition) -> GoldenJourneyRe
     observations: list[str] = []
     passed = False
     if journey.name == "Budget hard-stop preserves local control":
-        result = simulate_budget(root, "hard_stop_local_continues")
-        observations.extend(result.notes)
-        observations.append(f"pressure:{result.pressure_mode.value}")
-        passed = result.pressure_mode.value == "HARD_STOP" and any(
-            note == "local_admitted:True" for note in result.notes
+        budget_result = simulate_budget(root, "hard_stop_local_continues")
+        observations.extend(budget_result.notes)
+        observations.append(f"pressure:{budget_result.pressure_mode.value}")
+        passed = budget_result.pressure_mode.value == "HARD_STOP" and any(
+            note == "local_admitted:True" for note in budget_result.notes
         )
     elif journey.name == "Durable unknown outcome requires reconciliation":
-        result = simulate_orchestration(root, "unknown-outcome")
-        observations.extend(result.observations)
-        observations.append(f"final_state:{result.final_state}")
-        passed = result.passed and result.final_state == "RECOVERY_REQUIRED"
+        orchestration_result = simulate_orchestration(root, "unknown-outcome")
+        observations.extend(orchestration_result.observations)
+        observations.append(f"final_state:{orchestration_result.final_state}")
+        passed = (
+            orchestration_result.passed and orchestration_result.final_state == "RECOVERY_REQUIRED"
+        )
     elif journey.name == "Completion Gate refuses premature completion":
         facts = build_repository_gate_facts(root, "PROJECT-PIPELINE")
-        result = evaluate_completion_gate(facts)
-        observations.append(f"state:{result.state.value}")
+        gate_result = evaluate_completion_gate(facts)
+        observations.append(f"state:{gate_result.state.value}")
         observations.append(
-            f"failed_questions:{','.join(str(item.question_number) for item in result.questions if not item.passed)}"
+            "failed_questions:"
+            + ",".join(
+                str(item.question_number) for item in gate_result.questions if not item.passed
+            )
         )
-        passed = result.state is GateState.NOT_COMPLETE and not result.final_complete
+        passed = gate_result.state is GateState.NOT_COMPLETE and not gate_result.final_complete
     elif journey.name == "Upstream reuse continuation remains enforceable":
         errors = validate_upstream_reviews(root)
         observations.append(f"upstream_errors:{len(errors)}")

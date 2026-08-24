@@ -43,15 +43,16 @@ def repair(root: Path) -> dict[str, int]:
         context_path = root / "jira/source_context" / f"{issue_id}.md"
         if context_path.exists() and issue_id not in _CONTEXT_REPAIRS:
             continue
-        plan_values = ", ".join(
-            f"`{item['line_reference']}`" for item in issue.get("plan_references", [])
-        ) or "None."
-        requirement_values = ", ".join(
-            f"`{item}`" for item in issue.get("requirement_ids", [])
-        ) or "None."
-        source_values = "\n".join(
-            f"- `{item}`" for item in issue.get("source_references", [])
-        ) or "None."
+        plan_values = (
+            ", ".join(f"`{item['line_reference']}`" for item in issue.get("plan_references", []))
+            or "None."
+        )
+        requirement_values = (
+            ", ".join(f"`{item}`" for item in issue.get("requirement_ids", [])) or "None."
+        )
+        source_values = (
+            "\n".join(f"- `{item}`" for item in issue.get("source_references", [])) or "None."
+        )
         context_path.write_text(
             "\n".join(
                 [
