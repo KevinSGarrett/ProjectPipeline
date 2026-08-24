@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "9f0bb00c99d4e0f40a1356afa7accca652c1f6e516eb2b3b95f1e2a60489a473",
+  "aggregate_sha256": "53a6e7430eda2dc95b19e1a8fa8b94e693a338055c16709004acaaa1ade426cf",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12422,8 +12422,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/command_execution.py",
-      "sha256": "ee2d5e7f063e30899560bcf9ad3add8f634188e434fb5f6f4372dd576c536613",
-      "size_bytes": 19866
+      "sha256": "3b963e5c6a98d4681659272e3be85f265063d5acfbcddb7041caba5296965d2c",
+      "size_bytes": 20983
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/cursor_cli_qualification.py",
@@ -14252,8 +14252,8 @@
     },
     {
       "path": "tests/test_campaign_duration_probes.py",
-      "sha256": "73b61a72f1e2ee3e21831609dbda2773aa83818f702b2e84a06b26722336b2d4",
-      "size_bytes": 1966
+      "sha256": "2dcdeda048e065a9a4152336282351dc1c64ce4a531d91ad4d3e8eea159fe073",
+      "size_bytes": 2770
     },
     {
       "path": "tests/test_campaign_post_release.py",
@@ -15171,7 +15171,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-24T13:23:32.123724+00:00",
+  "generated_at_utc": "2026-08-24T14:01:46.308253+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15180,5 +15180,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30419082
+  "total_bytes": 30421003
 }
