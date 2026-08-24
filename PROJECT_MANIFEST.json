@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "29104b9486fb7ab17e93f4399d25f52774d74788f6beb6c45459d1d96d847dac",
+  "aggregate_sha256": "027cb6c18e056c94fcaef0d8ac6a0f682d89f2589f7fbf313df9a4f7e86e8196",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -13047,8 +13047,8 @@
     },
     {
       "path": "src/project_pipeline/github_steward/service.py",
-      "sha256": "c2709969d6b01d3a86324b4333a1c7c9e502968fa5ff318d56041daa40a0cec9",
-      "size_bytes": 14019
+      "sha256": "b354a95419f03c954b88110e032f07409842a301adbee89a7913100ca29bc07a",
+      "size_bytes": 13989
     },
     {
       "path": "src/project_pipeline/github_steward/validation.py",
@@ -15171,7 +15171,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-24T16:10:55.301567+00:00",
+  "generated_at_utc": "2026-08-24T16:23:56.604639+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15180,5 +15180,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30434803
+  "total_bytes": 30434773
 }
