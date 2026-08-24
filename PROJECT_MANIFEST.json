@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "f9b96518965dce08b4abc1834e492d655e5e558f21bcd7bb25d1f256d33cc099",
+  "aggregate_sha256": "341f66a848ab31e053e47925b8718b25bfbcfda6bf27ea9ecaf534ad3574a67b",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12537,8 +12537,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "77872c692c01c583caf7d1ad1e4aecb38b4c0bed7363dfd69995543d2338bd50",
-      "size_bytes": 190206
+      "sha256": "cc06ccf8e4b8f51bc115e69b47ee624e84365e77b6a94cf3e8ac4db5c52da8ad",
+      "size_bytes": 190244
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -15131,7 +15131,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-24T08:57:49.213067+00:00",
+  "generated_at_utc": "2026-08-24T09:05:57.078553+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15140,5 +15140,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30289947
+  "total_bytes": 30289985
 }

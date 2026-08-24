@@ -3511,7 +3511,9 @@ def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, An
                 eligibility["integrated_sha"] != bundle.version.source_sha
                 or eligibility["integrated_tree"] != bundle.version.source_tree
             ):
-                raise ConfigurationError("finalize campaign identity does not match the release bundle")
+                raise ConfigurationError(
+                    "finalize campaign identity does not match the release bundle"
+                )
             release_id = int(_require_argument(args, "release_id"))
             planned = service.plan_finalize(
                 repository_slug,
