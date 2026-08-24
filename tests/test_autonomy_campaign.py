@@ -923,6 +923,22 @@ def test_duration_probe_default_surface_is_risk_based(tmp_path: Path):
     }
 
 
+def test_cursor_duration_probe_timeout_scales_with_campaign_heartbeat(tmp_path: Path):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=60.0,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        plan = controller._default_duration_probe_plan()
+    finally:
+        controller.close()
+    cursor = next(item for item in plan if item["probe_id"] == "cursor_cli_provider_dispatch")
+    assert float(cursor["timeout_seconds"]) == 120.0
+    assert float(cursor["timeout_seconds"]) < max(controller.heartbeat_seconds * 3.0, 90.0)
+
+
 def test_duration_probe_surface_rejects_doctor_control_jira_only(tmp_path: Path):
     controller = CampaignController(
         tmp_path / "campaign.sqlite3",
