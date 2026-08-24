@@ -61,3 +61,23 @@ def test_duration_probe_is_allowlisted_and_requires_subject_evidence() -> None:
         expected_tree="b" * 40,
     )
     assert verified["result"] == "PASSED"
+
+
+def test_repository_validation_pass_summary_is_machine_classified() -> None:
+    command = [sys.executable, "-m", "project_pipeline", "validate", "--root", str(ROOT)]
+    passed = evaluate_command_semantics(
+        command,
+        exit_code=0,
+        stdout="Repository validation: PASS\nChecks: 44 | Errors: 0 | Warnings: 0\n",
+    )
+    assert passed["result"] == "PASSED"
+    assert passed["reason"] == "repository-validation-pass"
+    assert passed["parsed"] == {"checks": 44, "errors": [], "warnings": 0}
+
+    rejected = evaluate_command_semantics(
+        command,
+        exit_code=0,
+        stdout="Repository validation: PASS\nChecks: 44 | Errors: 1 | Warnings: 0\n",
+    )
+    assert rejected["result"] == "FAILED"
+    assert rejected["reason"] == "repository-validation-summary-invalid"

@@ -45,6 +45,10 @@ _TAIL_CHARS = 2048
 _SECRET_RE = re.compile(
     r"(?i)(authorization|api[_-]?token|api[_-]?key|secret|password|bearer)\s*[:=]\s*\S+"
 )
+_REPOSITORY_VALIDATE_PASS = re.compile(
+    r"^Repository validation: PASS\r?\n"
+    r"Checks: (?P<checks>[1-9][0-9]*) \| Errors: 0 \| Warnings: (?P<warnings>[0-9]+)$"
+)
 
 
 def is_python_executable(value: str) -> bool:
@@ -430,6 +434,31 @@ def evaluate_command_semantics(
             "result": "PASSED" if ok else "FAILED",
             "reason": "remote-lifecycle-verified" if ok else "remote-lifecycle-unverified",
             "state": str(lifecycle.get("state") or ""),
+            "final_completion_gate_satisfied": False,
+            "parsed": payload,
+            "documents": documents,
+        }
+    if kind == "validate.repository" and not documents:
+        summary = _REPOSITORY_VALIDATE_PASS.fullmatch(stdout.strip())
+        if summary is not None:
+            return {
+                "kind": kind,
+                "result": "PASSED",
+                "reason": "repository-validation-pass",
+                "state": "PASS",
+                "final_completion_gate_satisfied": False,
+                "parsed": {
+                    "checks": int(summary.group("checks")),
+                    "errors": [],
+                    "warnings": int(summary.group("warnings")),
+                },
+                "documents": documents,
+            }
+        return {
+            "kind": kind,
+            "result": "FAILED",
+            "reason": "repository-validation-summary-invalid",
+            "state": None,
             "final_completion_gate_satisfied": False,
             "parsed": payload,
             "documents": documents,
