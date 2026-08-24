@@ -60,7 +60,11 @@ def _probe_command() -> list[str]:
 
 
 def _mock_next_verified_publication(
-    controller: CampaignController, monkeypatch: pytest.MonkeyPatch
+    controller: CampaignController,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    provider: str = "github-rest",
+    fixture_desktop: bool = False,
 ) -> None:
     original_execute = controller.execute
     consumed = False
@@ -80,6 +84,8 @@ def _mock_next_verified_publication(
                     "publication": {
                         "state": "PUBLISHED",
                         "draft": False,
+                        "provider": provider,
+                        "fixture_desktop": fixture_desktop,
                         "target_commitish": "a" * 40,
                         "source_tree": "b" * 40,
                         "assets": [
@@ -431,6 +437,18 @@ def test_finalize_after_seeded_72h_accepts_verified_remote_publication(
     controller.close()
 
 
+def test_finalize_rejects_mock_or_fixture_publication_receipts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = controller.advance(_ready_after_72h(controller, tmp_path)["campaign_id"])
+    _mock_next_verified_publication(controller, monkeypatch, provider="mock-github")
+    failed = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    assert failed["status"] == "FAILED"
+    assert failed["stage"] == "RELEASE"
+    controller.close()
+
+
 def test_campaign_publication_eligibility_requires_attested_72h(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
@@ -460,6 +478,9 @@ def test_advance_auto_finalizes_after_ready(tmp_path: Path, monkeypatch: pytest.
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
     _mock_next_verified_publication(controller, monkeypatch)
+    monkeypatch.setattr(
+        controller, "_default_post_release_commands", lambda *_args: [_probe_command()]
+    )
     monkeypatch.setattr(
         controller,
         "_default_reconcile_commands",
@@ -507,7 +528,7 @@ def test_post_release_verify_failure_marks_campaign_failed(
     monkeypatch.setattr(
         controller,
         "_default_post_release_commands",
-        lambda: [[sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]],
+        lambda *_args: [[sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]],
     )
     failed = controller.advance(published["campaign_id"])
     assert failed["status"] == "FAILED"
@@ -522,6 +543,9 @@ def test_reconcile_failure_marks_campaign_failed(tmp_path: Path, monkeypatch: py
     ready = controller.advance(ready["campaign_id"])
     _mock_next_verified_publication(controller, monkeypatch)
     published = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    monkeypatch.setattr(
+        controller, "_default_post_release_commands", lambda *_args: [_probe_command()]
+    )
     verified = controller.advance(published["campaign_id"])
     assert verified["status"] == "RECONCILING"
     monkeypatch.setattr(
@@ -542,7 +566,9 @@ def test_publish_to_completion_gate_transition_is_durable(
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
     _mock_next_verified_publication(controller, monkeypatch)
-    monkeypatch.setattr(controller, "_default_post_release_commands", lambda: [_probe_command()])
+    monkeypatch.setattr(
+        controller, "_default_post_release_commands", lambda *_args: [_probe_command()]
+    )
     monkeypatch.setattr(controller, "_default_reconcile_commands", lambda: [_probe_command()])
     ready = controller.advance(ready["campaign_id"])
     published = controller.advance(ready["campaign_id"])
@@ -688,7 +714,19 @@ def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):
     )
     try:
         commands = controller._default_publish_commands(
-            {"campaign_id": "QCAMP-TEST", "evidence_path": str(tmp_path / "evidence")}
+            {
+                "campaign_id": "QCAMP-TEST",
+                "evidence_path": str(tmp_path / "evidence"),
+                "integrated_sha": "a" * 40,
+                "integrated_tree": "b" * 40,
+            }
+        )
+        post_release = controller._default_post_release_commands(
+            {
+                "evidence_path": str(tmp_path / "evidence"),
+                "integrated_sha": "a" * 40,
+                "integrated_tree": "b" * 40,
+            }
         )
         gate = controller._default_completion_gate_commands()
     finally:
@@ -697,6 +735,9 @@ def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):
     rendered_gate = [" ".join(item) for item in gate]
     assert any(" -m project_pipeline validate --root " in row for row in rendered)
     assert any("campaign_release_publication.py" in row for row in rendered)
+    assert any("build_campaign_desktop_artifacts.py" in row for row in rendered)
+    assert command_kind(post_release[0]) == "release.remote-lifecycle"
+    assert command_is_allowlisted(post_release[0], repository_root=ROOT) is True
     assert any(
         " -m project_pipeline assurance completion-gate --root " in row for row in rendered_gate
     )
@@ -811,6 +852,8 @@ def test_production_defaults_incomplete_cannot_finalize(
                     "publication": {
                         "state": "PUBLISHED",
                         "draft": False,
+                        "provider": "github-rest",
+                        "fixture_desktop": False,
                         "target_commitish": "a" * 40,
                         "source_tree": "b" * 40,
                         "assets": [
@@ -821,6 +864,61 @@ def test_production_defaults_incomplete_cannot_finalize(
                                 "bytes_verified": True,
                             }
                         ],
+                    }
+                }
+            )
+        elif kind == "release.desktop-build":
+            stdout = json.dumps(
+                {
+                    "desktop_build": {
+                        "state": "BUILT",
+                        "real_native_build": True,
+                        "source_sha": "a" * 40,
+                        "source_tree": "b" * 40,
+                        "artifacts": {
+                            "windows_executable": {
+                                "sha256": "d" * 64,
+                                "size_bytes": 1,
+                            },
+                            "windows_installer": {
+                                "sha256": "e" * 64,
+                                "size_bytes": 1,
+                            },
+                        },
+                    }
+                }
+            )
+        elif kind == "release.remote-lifecycle":
+            stdout = json.dumps(
+                {
+                    "lifecycle": {
+                        "state": "VERIFIED",
+                        "source": "REMOTE_DRAFT_BYTES",
+                        "worktree_bytes_used": False,
+                        "execution_mode": "REAL_NATIVE_REMOTE_BYTES",
+                        "publication": {
+                            "source_sha": "a" * 40,
+                            "source_tree": "b" * 40,
+                        },
+                        "checks": {
+                            "install": "PASS",
+                            "migration": "PASS",
+                            "startup": "PASS",
+                            "health": "PASS",
+                            "desktop_launch": "PASS",
+                            "command_center": "PASS",
+                            "director_journey": "PASS",
+                            "upgrade": "PASS",
+                            "rollback": "PASS",
+                            "uninstall": "PASS",
+                            "state_restoration": "PASS",
+                            "wheel_install": "PASS",
+                            "wheel_import": "PASS",
+                            "wheel_doctor": "PASS",
+                            "sdist_install": "PASS",
+                            "sdist_import": "PASS",
+                            "sdist_doctor": "PASS",
+                        },
                     }
                 }
             )
@@ -1083,21 +1181,23 @@ def test_execute_and_finalize_require_live_owner(tmp_path: Path, monkeypatch: py
     ready = controller.advance(ready["campaign_id"])
     binding = controller._owner_binding()
     assert binding is not None
+    foreign_pid = 424243 if os.getpid() == 424242 else 424242
     monkeypatch.setattr(
         "project_pipeline.autonomy_runtime.campaign.inspect_process",
         lambda pid: (
             {
-                "process_id": 424242,
+                "process_id": foreign_pid,
                 "executable": str(binding.get("executable_identity") or "python.exe"),
                 "started_at_utc": str(binding.get("process_started_at_utc")),
                 "alive": True,
             }
-            if int(pid) == 424242
+            if int(pid) == foreign_pid
             else None
         ),
     )
     controller._db.execute(
-        "UPDATE campaign_locks SET process_id = 424242 WHERE lock_name = 'active-campaign'"
+        "UPDATE campaign_locks SET process_id = ? WHERE lock_name = 'active-campaign'",
+        (foreign_pid,),
     )
     controller._db.commit()
     with pytest.raises(ValueError, match="second runner cannot mutate"):
@@ -1159,21 +1259,23 @@ def test_heartbeat_rejects_second_runner_under_live_foreign_fence(
     )
     binding = controller._owner_binding()
     assert binding is not None
+    foreign_pid = 424243 if os.getpid() == 424242 else 424242
     monkeypatch.setattr(
         "project_pipeline.autonomy_runtime.campaign.inspect_process",
         lambda pid: (
             {
-                "process_id": 424242,
+                "process_id": foreign_pid,
                 "executable": str(binding.get("executable_identity") or "python.exe"),
                 "started_at_utc": str(binding.get("process_started_at_utc")),
                 "alive": True,
             }
-            if int(pid) == 424242
+            if int(pid) == foreign_pid
             else None
         ),
     )
     controller._db.execute(
-        "UPDATE campaign_locks SET process_id = 424242 WHERE lock_name = 'active-campaign'"
+        "UPDATE campaign_locks SET process_id = ? WHERE lock_name = 'active-campaign'",
+        (foreign_pid,),
     )
     controller._db.commit()
     with pytest.raises(ValueError, match="second runner cannot mutate"):

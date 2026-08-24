@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 from project_pipeline.autonomy_runtime import release_publication
+from project_pipeline.github_steward import draft_release
 from project_pipeline.github_steward.errors import GitHubStewardError
 from project_pipeline.github_steward.mock import MockGitHubAdapter
 from project_pipeline.release_factory.bundle import BoundArtifact, ReleaseBundle
@@ -60,15 +61,21 @@ def _eligible(*_args: object, **_kwargs: object) -> dict[str, object]:
     }
 
 
+def _patch_campaign_gate(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(release_publication, "verify_campaign_publication_eligibility", _eligible)
+    monkeypatch.setattr(draft_release, "_verify_campaign_publication", _eligible)
+
+
 def test_campaign_release_publication_finalizes_only_after_remote_bytes_verify(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
     bundle = _bundle(tmp_path)
-    monkeypatch.setattr(release_publication, "verify_campaign_publication_eligibility", _eligible)
+    _patch_campaign_gate(monkeypatch)
     monkeypatch.setattr(
         release_publication, "build_release_bundle", lambda *_args, **_kwargs: bundle
     )
     remote = MockGitHubAdapter(repository_slug="owner/repo")
+    remote.provider_id = "github-rest"  # test seam for a local byte-level fake
 
     result = release_publication.publish_campaign_release(
         repository_root=ROOT,
@@ -85,6 +92,8 @@ def test_campaign_release_publication_finalizes_only_after_remote_bytes_verify(
     publication = result["publication"]
     assert publication["state"] == "PUBLISHED"
     assert publication["draft"] is False
+    assert publication["provider"] == "github-rest"
+    assert publication["fixture_desktop"] is False
     assert publication["target_commitish"] == SHA
     assert publication["assets"][0]["bytes_verified"] is True
     assert publication["assets"][0]["sha256"] == publication["assets"][0]["remote_sha256"]
@@ -94,13 +103,15 @@ def test_campaign_release_publication_finalizes_only_after_remote_bytes_verify(
 def test_campaign_release_publication_rejects_unbound_desktop_artifacts(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
-    monkeypatch.setattr(release_publication, "verify_campaign_publication_eligibility", _eligible)
+    _patch_campaign_gate(monkeypatch)
     monkeypatch.setattr(
         release_publication,
         "build_release_bundle",
         lambda *_args, **_kwargs: _bundle(tmp_path, desktop_bound=False),
     )
 
+    remote = MockGitHubAdapter(repository_slug="owner/repo")
+    remote.provider_id = "github-rest"
     with pytest.raises(GitHubStewardError, match="real bound desktop artifacts"):
         release_publication.publish_campaign_release(
             repository_root=ROOT,
@@ -108,7 +119,7 @@ def test_campaign_release_publication_rejects_unbound_desktop_artifacts(
             campaign_id="QCAMP-TEST",
             evidence_path=tmp_path / "evidence",
             repository_slug="owner/repo",
-            remote=MockGitHubAdapter(repository_slug="owner/repo"),
+            remote=remote,
             actor_id="actor:test",
             authorization_id="auth:test",
             correlation_id="corr:test",
@@ -119,7 +130,7 @@ def test_campaign_release_publication_rejects_fixture_desktop_for_live_provider(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
     bundle = _bundle(tmp_path, desktop_bound=True)
-    monkeypatch.setattr(release_publication, "verify_campaign_publication_eligibility", _eligible)
+    _patch_campaign_gate(monkeypatch)
     monkeypatch.setattr(
         release_publication, "build_release_bundle", lambda *_args, **_kwargs: bundle
     )
@@ -138,4 +149,25 @@ def test_campaign_release_publication_rejects_fixture_desktop_for_live_provider(
             authorization_id="auth:test",
             correlation_id="corr:test",
             fixture_desktop=True,
+        )
+
+
+def test_campaign_release_publication_rejects_mock_remote(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    _patch_campaign_gate(monkeypatch)
+    monkeypatch.setattr(
+        release_publication, "build_release_bundle", lambda *_args, **_kwargs: _bundle(tmp_path)
+    )
+    with pytest.raises(GitHubStewardError, match="GitHub REST adapter"):
+        release_publication.publish_campaign_release(
+            repository_root=ROOT,
+            campaign_database=tmp_path / "campaign.sqlite3",
+            campaign_id="QCAMP-TEST",
+            evidence_path=tmp_path / "evidence",
+            repository_slug="owner/repo",
+            remote=MockGitHubAdapter(repository_slug="owner/repo"),
+            actor_id="actor:test",
+            authorization_id="auth:test",
+            correlation_id="corr:test",
         )

@@ -35,7 +35,9 @@ ALLOWED_SCRIPT_NAMES = frozenset(
         "scripts/run_autonomy_campaign.py",
         "scripts/campaign_probe.py",
         "scripts/autonomy_campaign_recovery_probe.py",
+        "scripts/build_campaign_desktop_artifacts.py",
         "scripts/campaign_release_publication.py",
+        "scripts/verify_campaign_post_release.py",
     }
 )
 _TAIL_CHARS = 2048
@@ -142,6 +144,10 @@ def command_kind(argv: list[str]) -> str:
         return "validate.repository"
     if "campaign_probe.py" in joined:
         return "probe"
+    if "build_campaign_desktop_artifacts.py" in joined:
+        return "release.desktop-build"
+    if "verify_campaign_post_release.py" in joined:
+        return "release.remote-lifecycle"
     if "campaign_release_publication.py" in joined:
         return "release.remote-publication"
     return "allowlisted"
@@ -276,12 +282,116 @@ def evaluate_command_semantics(
             )
         )
         published = publication.get("draft") is False and publication.get("state") == "PUBLISHED"
-        ok = identity_ok and assets_ok and published
+        live_remote = publication.get("provider") == "github-rest"
+        real_desktop = publication.get("fixture_desktop") is False
+        ok = identity_ok and assets_ok and published and live_remote and real_desktop
         return {
             "kind": kind,
             "result": "PASSED" if ok else "FAILED",
             "reason": "remote-publication-verified" if ok else "remote-publication-unverified",
             "state": str(publication.get("state") or ""),
+            "final_completion_gate_satisfied": False,
+            "parsed": payload,
+            "documents": documents,
+        }
+    if kind == "release.desktop-build":
+        desktop_build = payload.get("desktop_build")
+        if not isinstance(desktop_build, dict):
+            return {
+                "kind": kind,
+                "result": "FAILED",
+                "reason": "malformed-desktop-build",
+                "state": None,
+                "final_completion_gate_satisfied": False,
+                "parsed": payload,
+                "documents": documents,
+            }
+        artifacts = desktop_build.get("artifacts")
+        artifacts_ok = (
+            isinstance(artifacts, dict)
+            and {"windows_executable", "windows_installer"}.issubset(artifacts)
+            and all(
+                isinstance(artifacts.get(kind_name), dict)
+                and isinstance(artifacts[kind_name].get("sha256"), str)
+                and len(artifacts[kind_name]["sha256"]) == 64
+                and int(artifacts[kind_name].get("size_bytes") or 0) > 0
+                for kind_name in ("windows_executable", "windows_installer")
+            )
+        )
+        identity_ok = (not expected_sha or desktop_build.get("source_sha") == expected_sha) and (
+            not expected_tree or desktop_build.get("source_tree") == expected_tree
+        )
+        ok = (
+            desktop_build.get("state") in {"BUILT", "RECONCILED"}
+            and desktop_build.get("real_native_build") is True
+            and identity_ok
+            and artifacts_ok
+        )
+        return {
+            "kind": kind,
+            "result": "PASSED" if ok else "FAILED",
+            "reason": "desktop-build-verified" if ok else "desktop-build-unverified",
+            "state": str(desktop_build.get("state") or ""),
+            "final_completion_gate_satisfied": False,
+            "parsed": payload,
+            "documents": documents,
+        }
+    if kind == "release.remote-lifecycle":
+        lifecycle = payload.get("lifecycle")
+        if not isinstance(lifecycle, dict):
+            return {
+                "kind": kind,
+                "result": "FAILED",
+                "reason": "malformed-remote-lifecycle",
+                "state": None,
+                "final_completion_gate_satisfied": False,
+                "parsed": payload,
+                "documents": documents,
+            }
+        checks = lifecycle.get("checks")
+        required_checks = {
+            "install",
+            "migration",
+            "startup",
+            "health",
+            "desktop_launch",
+            "command_center",
+            "director_journey",
+            "upgrade",
+            "rollback",
+            "uninstall",
+            "state_restoration",
+            "wheel_install",
+            "wheel_import",
+            "wheel_doctor",
+            "sdist_install",
+            "sdist_import",
+            "sdist_doctor",
+        }
+        checks_ok = (
+            isinstance(checks, dict)
+            and required_checks.issubset(checks)
+            and all(str(checks[name]).startswith("PASS") for name in required_checks)
+        )
+        publication = lifecycle.get("publication")
+        identity_ok = (
+            isinstance(publication, dict)
+            and (not expected_sha or publication.get("source_sha") == expected_sha)
+            and (not expected_tree or publication.get("source_tree") == expected_tree)
+        )
+        ok = (
+            lifecycle.get("state") == "VERIFIED"
+            and lifecycle.get("source") == "REMOTE_DRAFT_BYTES"
+            and lifecycle.get("worktree_bytes_used") is False
+            and lifecycle.get("execution_mode") == "REAL_NATIVE_REMOTE_BYTES"
+            and checks_ok
+            and identity_ok
+        )
+        return {
+            "kind": kind,
+            "result": "PASSED" if ok else "FAILED",
+            "reason": "remote-lifecycle-verified" if ok else "remote-lifecycle-unverified",
+            "state": str(lifecycle.get("state") or ""),
             "final_completion_gate_satisfied": False,
             "parsed": payload,
             "documents": documents,

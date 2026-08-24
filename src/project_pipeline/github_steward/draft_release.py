@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 from collections.abc import Mapping
+from pathlib import Path
 from typing import Any
 
 from project_pipeline.contracts import ActionIntent, ApprovalState
@@ -22,6 +23,22 @@ from project_pipeline.github_steward.ports import GitHubRemotePort, GitHubWriteC
 _CREATE = GitOperationType.CREATE_DRAFT_RELEASE
 _UPLOAD = GitOperationType.UPLOAD_RELEASE_ASSET
 _FINALIZE = GitOperationType.FINALIZE_RELEASE
+
+
+def _verify_campaign_publication(
+    campaign_database: Path, *, repository_root: Path, campaign_id: str
+) -> dict[str, Any]:
+    """Resolve the campaign gate at the release-service mutation boundary."""
+
+    # Keep the dependency one-way at import time: the campaign runtime never
+    # needs GitHub release infrastructure to start or recover.
+    from project_pipeline.autonomy_runtime.campaign import (
+        verify_campaign_publication_eligibility,
+    )
+
+    return verify_campaign_publication_eligibility(
+        campaign_database, repository_root=repository_root, campaign_id=campaign_id
+    )
 
 
 class GitHubDraftReleaseService:
@@ -273,12 +290,25 @@ class GitHubDraftReleaseService:
         *,
         release_id: int,
         expected_head_sha: str,
-        campaign_complete: bool,
+        expected_source_tree: str,
+        campaign_database: Path,
+        campaign_id: str,
+        repository_root: Path,
         actor_id: str,
         correlation_id: str,
     ) -> GitHubOperation:
-        if not campaign_complete:
-            raise GitHubStewardError("finalize-before-campaign")
+        if self.remote.provider_id != "github-rest":
+            raise GitHubStewardError("campaign finalization requires the GitHub REST adapter")
+        eligibility = _verify_campaign_publication(
+            campaign_database,
+            repository_root=repository_root,
+            campaign_id=campaign_id,
+        )
+        if (
+            eligibility["integrated_sha"].lower() != expected_head_sha.lower()
+            or eligibility["integrated_tree"].lower() != expected_source_tree.lower()
+        ):
+            raise GitHubStewardError("campaign identity differs from the release candidate")
         release = self._required_release(repository_slug, release_id)
         if release.target_commitish.lower() != expected_head_sha.lower():
             raise GitHubStewardError("changed-head publication is rejected")
@@ -294,7 +324,13 @@ class GitHubDraftReleaseService:
             ),
             actor_id=actor_id,
             correlation_id=correlation_id,
-            payload={"release_id": release_id, "campaign_complete": True},
+            payload={
+                "release_id": release_id,
+                "campaign_id": campaign_id,
+                "qualification_run_id": eligibility["qualification_run_id"],
+                "attested_elapsed_seconds": eligibility["attested_elapsed_seconds"],
+                "integrated_tree": eligibility["integrated_tree"],
+            },
             expected_head_sha=expected_head_sha.lower(),
         )
         self.store.save_operation(operation)

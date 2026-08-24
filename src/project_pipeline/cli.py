@@ -479,7 +479,6 @@ def build_parser() -> argparse.ArgumentParser:
     release_factory.add_argument("--release-id", type=int)
     release_factory.add_argument("--asset", type=Path)
     release_factory.add_argument("--fixture-desktop", action="store_true")
-    release_factory.add_argument("--campaign-complete", action="store_true")
     release_factory.add_argument("--campaign-database", type=Path)
     release_factory.add_argument("--campaign-id")
     release_factory.add_argument("--apply", action="store_true")
@@ -3494,9 +3493,9 @@ def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, An
             write_acquired_assets(Path(dest), assets)
             return {"acquired": str(Path(dest)), "assets": sorted(assets)}, 0
         if args.action == "finalize":
-            if not args.campaign_complete or args.campaign_database is None or not args.campaign_id:
+            if args.campaign_database is None or not args.campaign_id:
                 raise ConfigurationError(
-                    "finalize requires --campaign-complete, --campaign-database, and --campaign-id"
+                    "finalize requires --campaign-database and --campaign-id"
                 )
             from project_pipeline.autonomy_runtime.campaign import (
                 verify_campaign_publication_eligibility,
@@ -3519,7 +3518,10 @@ def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, An
                 repository_slug,
                 release_id=release_id,
                 expected_head_sha=bundle.version.source_sha,
-                campaign_complete=bool(args.campaign_complete),
+                expected_source_tree=bundle.version.source_tree,
+                campaign_database=Path(args.campaign_database),
+                campaign_id=str(args.campaign_id),
+                repository_root=root,
                 actor_id=args.actor_id,
                 correlation_id=args.correlation_id,
             )

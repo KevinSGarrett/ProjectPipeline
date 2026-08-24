@@ -19,7 +19,6 @@ from project_pipeline.autonomy_runtime.release_publication import (  # noqa: E40
     publish_campaign_release,
 )
 from project_pipeline.github_steward.adapter import GitHubRestAdapter  # noqa: E402
-from project_pipeline.github_steward.mock import MockGitHubAdapter  # noqa: E402
 
 
 def _repository_slug(root: Path) -> str:
@@ -41,20 +40,13 @@ def main() -> int:
     parser.add_argument("--campaign-id", required=True)
     parser.add_argument("--evidence-path", type=Path, required=True)
     parser.add_argument("--desktop-dir", type=Path)
-    parser.add_argument("--provider", choices=("github", "mock"), default="github")
-    parser.add_argument("--fixture-desktop", action="store_true")
     args = parser.parse_args()
     root = args.repository_root.resolve()
     slug = _repository_slug(root)
-    if args.fixture_desktop and args.provider != "mock":
-        raise SystemExit("fixture_desktop_is_test_only")
-    if args.provider == "mock":
-        remote = MockGitHubAdapter(repository_slug=slug)
-    else:
-        token, _source = _resolve_github_token(root)
-        if not token:
-            raise SystemExit("github_token_unavailable")
-        remote = GitHubRestAdapter(token=token)
+    token, _source = _resolve_github_token(root)
+    if not token:
+        raise SystemExit("github_token_unavailable")
+    remote = GitHubRestAdapter(token=token)
     try:
         payload = publish_campaign_release(
             repository_root=root,
@@ -67,7 +59,6 @@ def main() -> int:
             authorization_id=f"auth:campaign-release:{args.campaign_id}",
             correlation_id=f"corr:campaign-release:{args.campaign_id}",
             desktop_artifact_dir=args.desktop_dir,
-            fixture_desktop=bool(args.fixture_desktop),
         )
     except Exception as exc:  # no secrets are included in the structured failure receipt
         print(json.dumps({"publication": {"state": "FAILED"}, "reason": str(exc)}))

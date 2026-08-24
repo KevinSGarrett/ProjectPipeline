@@ -262,6 +262,15 @@ def build_release_bundle(
                     raise ValueError(
                         f"desktop {kind} must resolve to exactly one file under --desktop-dir"
                     )
+                desktop_sidecar = _read_sidecar(matches[0])
+                if desktop_sidecar is None:
+                    raise ValueError(f"desktop {kind} is missing candidate identity provenance")
+                if (
+                    desktop_sidecar.kind != kind
+                    or desktop_sidecar.source_sha != version.source_sha
+                    or desktop_sidecar.source_tree != version.source_tree
+                ):
+                    raise ValueError(f"{MIXED_HEAD}: {matches[0].name} provenance differs")
                 copied = dest / matches[0].name
                 copied.write_bytes(matches[0].read_bytes())
                 paths[kind] = copied

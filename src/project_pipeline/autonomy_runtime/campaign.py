@@ -408,12 +408,18 @@ def verify_campaign_publication_eligibility(
             raise ValueError("campaign publication requires an attested 72-hour campaign")
         run_id = str(campaign["qualification_run_id"] or "")
         qualification = connection.execute(
-            "SELECT status, attested_elapsed_seconds FROM qualification_runs WHERE run_id = ?",
+            """
+            SELECT stage, status, attested_elapsed_seconds, window_broken, last_event_sha256
+            FROM qualification_runs WHERE run_id = ?
+            """,
             (run_id,),
         ).fetchone()
         if (
             qualification is None
+            or str(qualification["stage"]) != "UNATTENDED_72_HOUR"
             or str(qualification["status"]) != "ATTESTED"
+            or int(qualification["window_broken"] or 0) != 0
+            or not str(qualification["last_event_sha256"] or "")
             or float(qualification["attested_elapsed_seconds"] or 0) < H72.total_seconds()
         ):
             raise ValueError("campaign publication requires a completed 72-hour qualification")
@@ -426,6 +432,21 @@ def verify_campaign_publication_eligibility(
         required_events = {"72H_ATTESTED", "READY_TO_PUBLISH"}
         if not required_events.issubset(actions):
             raise ValueError("campaign publication evidence is incomplete")
+        qualification_events = connection.execute(
+            """
+            SELECT prev_event_sha256, event_sha256
+            FROM qualification_events
+            WHERE run_id = ? ORDER BY rowid
+            """,
+            (run_id,),
+        ).fetchall()
+        previous: str | None = None
+        for event in qualification_events:
+            if event["prev_event_sha256"] != previous or not event["event_sha256"]:
+                raise ValueError("campaign qualification event chain is incomplete")
+            previous = str(event["event_sha256"])
+        if previous != str(qualification["last_event_sha256"]):
+            raise ValueError("campaign qualification event chain is incomplete")
     finally:
         connection.close()
     identity = inspect_worktree_identity(repository_root)
@@ -1058,11 +1079,16 @@ class CampaignController:
             receipts.append(self.execute(campaign_id, argv))
         now = datetime.now(UTC)
         failed = [item for item in receipts if item.get("result") != "PASSED"]
-        publication_receipts = [
-            item
-            for item in receipts
-            if item.get("result_semantics") == "remote-publication-verified"
-        ]
+        publication_receipts = []
+        for item in receipts:
+            publication = (item.get("parsed_result") or {}).get("publication")
+            if (
+                item.get("result_semantics") == "remote-publication-verified"
+                and isinstance(publication, dict)
+                and publication.get("provider") == "github-rest"
+                and publication.get("fixture_desktop") is False
+            ):
+                publication_receipts.append(item)
         if not publication_receipts:
             failed.append(
                 {
@@ -1500,8 +1526,21 @@ class CampaignController:
         if row is None:
             raise ValueError("campaign publication requires the bound campaign row")
         evidence = Path(str(row["evidence_path"]))
+        desktop_dir = evidence / "desktop-artifacts"
         return [
             *self._default_finalize_commands(row),
+            [
+                self._python(),
+                str(self.repository_root / "scripts" / "build_campaign_desktop_artifacts.py"),
+                "--repository-root",
+                str(self.repository_root),
+                "--output-dir",
+                str(desktop_dir),
+                "--expected-sha",
+                str(row["integrated_sha"]),
+                "--expected-tree",
+                str(row["integrated_tree"]),
+            ],
             [
                 self._python(),
                 str(self.repository_root / "scripts" / "campaign_release_publication.py"),
@@ -1513,11 +1552,34 @@ class CampaignController:
                 str(row["campaign_id"]),
                 "--evidence-path",
                 str(evidence),
+                "--desktop-dir",
+                str(desktop_dir),
             ],
         ]
 
-    def _default_post_release_commands(self) -> list[list[str]]:
-        return [[self._python(), str(self.repository_root / "scripts" / "campaign_probe.py")]]
+    def _default_post_release_commands(
+        self, row: sqlite3.Row | dict[str, Any] | None = None
+    ) -> list[list[str]]:
+        if row is None:
+            raise ValueError("post-release verification requires the bound campaign row")
+        evidence = Path(str(row["evidence_path"]))
+        return [
+            [
+                self._python(),
+                str(self.repository_root / "scripts" / "verify_campaign_post_release.py"),
+                "--repository-root",
+                str(self.repository_root),
+                "--acquired-dir",
+                str(evidence / "remote-acquired"),
+                "--work-dir",
+                str(evidence / "post-release-lifecycle"),
+                "--expected-sha",
+                str(row["integrated_sha"]),
+                "--expected-tree",
+                str(row["integrated_tree"]),
+            ],
+            [self._python(), str(self.repository_root / "scripts" / "campaign_probe.py")],
+        ]
 
     def _default_reconcile_commands(self) -> list[list[str]]:
         python = self._python()
@@ -1660,7 +1722,7 @@ class CampaignController:
                 (datetime.now(UTC).isoformat(), "post-release-verify-started", campaign_id),
             )
         receipts: list[dict[str, Any]] = []
-        for argv in self._default_post_release_commands():
+        for argv in self._default_post_release_commands(row):
             receipts.append(self.execute(campaign_id, argv))
         now = datetime.now(UTC)
         if any(item.get("result") != "PASSED" for item in receipts):

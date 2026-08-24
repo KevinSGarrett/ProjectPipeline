@@ -19,4 +19,4 @@ If no authorized Authenticode identity is provisioned, the factory records `BLOC
 
 ## GitHub
 
-Create, upload, readback, unknown-outcome reconcile, and finalize are GitHub Steward operations. Finalize without `campaign_complete` fails closed as `finalize-before-campaign`.
+Create, upload, readback, unknown-outcome reconcile, and finalize are GitHub Steward operations. Finalization re-reads the campaign database at the GitHub Steward mutation boundary and requires a clean, attested 72-hour campaign whose SHA/tree exactly match the release candidate.

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 from typing import Any
 
@@ -82,7 +83,9 @@ def publish_campaign_release(
         or bundle.version.source_tree != eligibility["integrated_tree"]
     ):
         raise GitHubStewardError("release bundle identity differs from the attested campaign")
-    if fixture_desktop and remote.provider_id != "mock-github":
+    if remote.provider_id != "github-rest":
+        raise GitHubStewardError("campaign publication requires the GitHub REST adapter")
+    if fixture_desktop:
         raise GitHubStewardError("fixture desktop artifacts are test-only and cannot be published")
     if not bundle.desktop_bound and not fixture_desktop:
         raise GitHubStewardError("release publication requires real bound desktop artifacts")
@@ -176,7 +179,10 @@ def publish_campaign_release(
             repository_slug,
             release_id=release.api_id,
             expected_head_sha=bundle.version.source_sha,
-            campaign_complete=True,
+            expected_source_tree=bundle.version.source_tree,
+            campaign_database=campaign_database,
+            campaign_id=campaign_id,
+            repository_root=root,
             actor_id=actor_id,
             correlation_id=correlation_id,
         )
@@ -205,7 +211,7 @@ def publish_campaign_release(
         )
         if remote_bytes != draft_bytes:
             raise GitHubStewardError("published release bytes differ from the verified draft bytes")
-        write_acquired_assets(evidence / "remote-acquired", remote_bytes)
+        acquired_path = write_acquired_assets(evidence / "remote-acquired", remote_bytes)
         remote_assets = {asset.name: asset for asset in final_release.assets}
         assets = [
             {
@@ -217,6 +223,23 @@ def publish_campaign_release(
             }
             for name, digest in sorted(expected_assets.items())
         ]
+        (acquired_path / "campaign_publication.json").write_text(
+            json.dumps(
+                {
+                    "state": "PUBLISHED",
+                    "provider": remote.provider_id,
+                    "release_id": final_release.api_id,
+                    "tag_name": final_release.tag_name,
+                    "source_sha": bundle.version.source_sha,
+                    "source_tree": bundle.version.source_tree,
+                    "assets": assets,
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
     return {
         "publication": {
             "state": "PUBLISHED",
@@ -225,8 +248,10 @@ def publish_campaign_release(
             "tag_name": final_release.tag_name,
             "target_commitish": bundle.version.source_sha,
             "source_tree": bundle.version.source_tree,
+            "provider": remote.provider_id,
+            "fixture_desktop": False,
             "assets": assets,
-            "acquired_path": str(evidence / "remote-acquired"),
+            "acquired_path": str(acquired_path),
         },
         "campaign": eligibility,
         "user_action_required": False,

@@ -150,6 +150,9 @@ def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
         "PATH": os.environ.get("PATH", ""),
         "SYSTEMROOT": os.environ.get("SYSTEMROOT", ""),
         "WINDIR": os.environ.get("WINDIR", ""),
+        # A different checkout is deliberately inherited: the probe must still
+        # load modules from its bound candidate checkout.
+        "PYTHONPATH": str(Path("C:/Project_X/src")),
     }
     result = subprocess.run(
         [sys.executable, str(PROBE), "--config", str(config_path)],
@@ -162,6 +165,7 @@ def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
     assert result.returncode == 0, result.stderr
     written = json.loads(status_path.read_text(encoding="utf-8"))
     assert written["action"] == "no-campaign"
+    assert Path(written["campaign_module"]).resolve().is_relative_to(ROOT / "src")
     assert written["user_action_required"] is False
 
 
