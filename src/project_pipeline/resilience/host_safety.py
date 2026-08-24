@@ -22,7 +22,20 @@ $rows = @(Get-Volume | Where-Object { $null -ne $_.DriveLetter } |
 _STORAGE_EVENT_QUERY = r"""
 $ErrorActionPreference = 'Stop'
 $start = (Get-Date).AddHours(-__LOOKBACK_HOURS__)
-$rows = @(Get-WinEvent -FilterHashtable @{ LogName = 'System'; StartTime = $start; Id = @(129, 1001) } |
+$events = @(
+    try {
+        Get-WinEvent -FilterHashtable @{ LogName = 'System'; StartTime = $start; Id = @(129, 1001) } -ErrorAction Stop
+    }
+    catch {
+        if ($_.FullyQualifiedErrorId -like 'NoMatchingEventsFound,*') {
+            @()
+        }
+        else {
+            throw
+        }
+    }
+)
+$rows = @($events |
     Where-Object {
         ($_.Id -eq 129 -and $_.ProviderName -eq 'stornvme') -or
         ($_.Id -eq 1001 -and $_.ProviderName -eq 'Microsoft-Windows-WER-SystemErrorReporting')

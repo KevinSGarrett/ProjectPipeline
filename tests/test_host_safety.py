@@ -4,7 +4,10 @@ import json
 import subprocess
 from pathlib import Path
 
-from project_pipeline.resilience.host_safety import evaluate_local_host_safety
+from project_pipeline.resilience.host_safety import (
+    _STORAGE_EVENT_QUERY,
+    evaluate_local_host_safety,
+)
 
 
 def _query(*, volumes: list[dict[str, object]], events: list[dict[str, object]]):
@@ -35,6 +38,13 @@ def test_host_safety_accepts_healthy_windows_host(tmp_path: Path):
 
     assert report["state"] == "SAFE"
     assert report["blockers"] == []
+
+
+def test_host_safety_storage_query_treats_no_matching_events_as_an_empty_set():
+    """A clean System log is safe data, not an unavailable host inspection."""
+
+    assert "NoMatchingEventsFound" in _STORAGE_EVENT_QUERY
+    assert "@()" in _STORAGE_EVENT_QUERY
 
 
 def test_host_safety_blocks_unhealthy_volume_and_recent_storage_faults(tmp_path: Path):
