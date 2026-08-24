@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "ad28488f25adf2906cbc1f7abf57dedb4407c754efa0176f510d7acf50e9ce86",
+  "aggregate_sha256": "eea47760309b75fbdf7e7248a800eb7cfafb3b3bfc71e5ef7cad8569f02249db",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -5432,7 +5432,7 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "8b4fcbef803c4617c5b7e6d3f71986c26dd400fac4f9cf99d4f990b63ce639f9",
+      "sha256": "264ff2264b0c62ea1e8e0dee5448fca54665335f343d15138386aa1d8924c10c",
       "size_bytes": 25756
     },
     {
@@ -13157,8 +13157,8 @@
     },
     {
       "path": "src/project_pipeline/io.py",
-      "sha256": "eed5f920682136d7b027bd14f0cd0c92f0c6f5442abcefb3e154823da87d50b0",
-      "size_bytes": 5882
+      "sha256": "62fe834489ea8f45f7f9a22918eaddf710b29c4fa8387d91bbfd03031bc53550",
+      "size_bytes": 6283
     },
     {
       "path": "src/project_pipeline/jira.py",
@@ -15097,8 +15097,8 @@
     },
     {
       "path": "tests/test_validation_content.py",
-      "sha256": "62e5d4d3aafbc84810f931d87fd5ff790a8d11889a1844cd0ff851c2fc3f56a4",
-      "size_bytes": 4697
+      "sha256": "30e1d5232b5e67ffcc3bf52016521fc92f61be0bba21dbe887153e8940b2dcf3",
+      "size_bytes": 5284
     },
     {
       "path": "tests/test_verification_adversarial.py",
@@ -15186,7 +15186,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-24T22:10:49.185529+00:00",
+  "generated_at_utc": "2026-08-24T22:45:27.793192+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15196,5 +15196,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30456974
+  "total_bytes": 30457962
 }

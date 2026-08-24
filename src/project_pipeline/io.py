@@ -155,6 +155,7 @@ def iter_repository_files(
     ignored_directories: frozenset[str] = DEFAULT_IGNORED_DIRECTORIES,
     excluded_relative_paths: frozenset[str] = frozenset(),
 ) -> Iterator[Path]:
+    declared_root = root
     root = root.resolve()
     candidates: list[Path] = []
     for current_root, directory_names, file_names in os.walk(root, topdown=True, followlinks=False):
@@ -187,7 +188,12 @@ def iter_repository_files(
             continue
         if relative.as_posix() in excluded_relative_paths:
             continue
-        yield path
+        # Preserve the caller's spelling of the root for yielded paths.  On
+        # Windows, ``resolve()`` can expand a short (8.3) user-profile path
+        # while callers still hold the short form; yielding the resolved path
+        # makes a later ``path.relative_to(original_root)`` fail even though
+        # both names address the same directory.
+        yield declared_root / relative
 
 
 def is_probably_text(path: Path) -> bool:
