@@ -252,6 +252,7 @@ class QualificationStore:
             return self.get(run_id)
         stage = str(row["stage"])
         now = self._attestation_now(stage)
+        self._detect_integrity(row, now, fence=None)
         if int(row["window_broken"]) == 1 and stage in TIMED_STAGES:
             raise ValueError("uninterrupted window was broken and cannot be accumulated")
         elapsed = self._elapsed_seconds(row, now)

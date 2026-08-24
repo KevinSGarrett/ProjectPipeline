@@ -497,6 +497,7 @@ class CampaignController:
         finalize_commands: list[list[str]] | None = None,
         duration_probe_commands: list[list[str]] | None = None,
         probe_interval_seconds: float = 900.0,
+        allow_unbound_candidate_for_tests: bool = False,
     ) -> None:
         self.path = path
         self.repository_root = repository_root.resolve()
@@ -509,6 +510,7 @@ class CampaignController:
         self._inspect_identity = inspect_identity or inspect_worktree_identity
         self._finalize_commands = finalize_commands
         self._duration_probe_commands = duration_probe_commands
+        self._allow_unbound_candidate_for_tests = allow_unbound_candidate_for_tests
         self.probe_interval_seconds = float(probe_interval_seconds)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.qualification = QualificationStore(
@@ -552,11 +554,20 @@ class CampaignController:
     def _required_duration_probe_surface() -> frozenset[str]:
         return frozenset(
             {
+                "candidate_identity",
                 "runtime_doctor",
                 "repository_validate",
                 "jira_validate",
                 "control_evaluate",
                 "control_sequence",
+                "command_center_projection",
+                "autonomy_director_restart",
+                "desktop_artifact_health",
+                "cursor_cli_provider_dispatch",
+                "github_live_readback",
+                "jira_live_readback",
+                "campaign_persistence_integrity",
+                "recovery_isolation",
             }
         )
 
@@ -703,6 +714,8 @@ class CampaignController:
             raise ValueError(
                 "4-hour admission requires PP-384 integrated-main qualification PASSED"
             )
+        if not self._allow_unbound_candidate_for_tests:
+            self._validate_candidate_admission(row)
         started = self.qualification.start(
             "UNATTENDED_4_HOUR",
             state_path=Path(str(row["state_path"])),
@@ -852,6 +865,7 @@ class CampaignController:
         probe_label = f"heartbeat:{qual_status or row['status']}"
         if str(row["stage"]) in TIMED_STAGES:
             probe_label = self._run_due_duration_probes(campaign_id, row, now, probe_label)
+        now = datetime.now(UTC)
         with self._db:
             self._db.execute(
                 """
@@ -891,8 +905,17 @@ class CampaignController:
         if stage in TIMED_STAGES and row["qualification_run_id"]:
             run_id = str(row["qualification_run_id"])
             try:
+                self.heartbeat(campaign_id)
+                row = self.get(campaign_id)
+                self._assert_duration_completion_proof(campaign_id, row)
                 attested = self.qualification.complete(run_id)
             except ValueError:
+                if str(self.get(campaign_id)["status"]) == "DISQUALIFIED":
+                    return self.get(campaign_id)
+                current = self.qualification.get(run_id)
+                if str(current["status"]) in {"DISQUALIFIED", "FAILED", "STOPPED"}:
+                    self._disqualify(campaign_id, "qualification-completion-integrity-failed")
+                    return self.get(campaign_id)
                 return self.heartbeat(campaign_id)
             if attested["status"] == "ATTESTED" and stage == "UNATTENDED_4_HOUR":
                 return self.admit_24h(campaign_id)
@@ -1286,6 +1309,111 @@ class CampaignController:
             raise ValueError("campaign requires a clean immutable worktree")
         return identity
 
+    def _validate_candidate_admission(self, row: sqlite3.Row | dict[str, Any]) -> None:
+        """Fail closed before a timed window can accrue against an unbound candidate.
+
+        Runtime evidence lives outside the frozen source tree, but must bind the
+        immutable candidate, remote draft, remote-byte lifecycle, and concrete
+        artifact manifest before the four-hour stage begins.
+        """
+
+        evidence_root = Path(str(row["evidence_path"])).resolve()
+        candidate_path = evidence_root / "candidate-admission.json"
+        if not candidate_path.is_file():
+            raise ValueError("4-hour admission requires candidate-admission evidence")
+        try:
+            payload = json.loads(candidate_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as error:
+            raise ValueError("candidate-admission evidence is malformed") from error
+        if not isinstance(payload, dict) or payload.get("schema_version") != "1.0.0":
+            raise ValueError("candidate-admission evidence has an unsupported schema")
+        if payload.get("integrated_sha") != str(row["integrated_sha"]) or payload.get(
+            "integrated_tree"
+        ) != str(row["integrated_tree"]):
+            raise ValueError("candidate-admission evidence is bound to another subject")
+        artifacts = payload.get("artifacts")
+        if not isinstance(artifacts, list) or not artifacts:
+            raise ValueError("candidate-admission evidence has no artifacts")
+        names: set[str] = set()
+        for artifact in artifacts:
+            if not isinstance(artifact, dict):
+                raise ValueError("candidate-admission artifact is malformed")
+            name = str(artifact.get("name") or "")
+            digest = str(artifact.get("sha256") or "")
+            path = Path(str(artifact.get("path") or ""))
+            if (
+                not name
+                or len(digest) != 64
+                or not path.is_absolute()
+                or not path.is_file()
+                or not path.resolve().is_relative_to(evidence_root)
+            ):
+                raise ValueError("candidate-admission artifact is unavailable")
+            if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+                raise ValueError("candidate-admission artifact digest mismatch")
+            names.add(name)
+        if len(names) != len(artifacts):
+            raise ValueError("candidate-admission artifact names are not unique")
+        draft = payload.get("draft_release")
+        if not isinstance(draft, dict):
+            raise ValueError("candidate-admission draft release is missing")
+        if (
+            not isinstance(draft.get("release_id"), int)
+            or draft.get("draft") is not True
+            or draft.get("target_commitish") != str(row["integrated_sha"])
+        ):
+            raise ValueError("candidate-admission draft release is invalid")
+        draft_assets = draft.get("assets")
+        remote_names = (
+            {
+                str(asset.get("name"))
+                for asset in draft_assets
+                if isinstance(asset, dict) and asset.get("name")
+            }
+            if isinstance(draft_assets, list)
+            else set()
+        )
+        if (
+            not isinstance(draft_assets, list)
+            or remote_names != names
+            or len(draft_assets) != len(artifacts)
+        ):
+            raise ValueError("candidate-admission draft assets do not match the manifest")
+        lifecycle = payload.get("remote_lifecycle")
+        checks = lifecycle.get("checks") if isinstance(lifecycle, dict) else None
+        if (
+            not isinstance(lifecycle, dict)
+            or lifecycle.get("state") != "VERIFIED"
+            or lifecycle.get("source") != "REMOTE_DRAFT_BYTES"
+            or lifecycle.get("worktree_bytes_used") is not False
+            or lifecycle.get("execution_mode") != "REAL_NATIVE_REMOTE_BYTES"
+            or not isinstance(checks, dict)
+            or not checks
+            or not all(str(value).startswith("PASS") for value in checks.values())
+        ):
+            raise ValueError("candidate-admission remote lifecycle is unverified")
+        acquired_dir = Path(str(lifecycle.get("acquired_dir") or ""))
+        if not acquired_dir.is_absolute() or not acquired_dir.is_relative_to(evidence_root):
+            raise ValueError("candidate-admission acquired remote bytes are unavailable")
+        from project_pipeline.release_factory.lifecycle import verify_acquired_assets
+
+        try:
+            verify_acquired_assets(
+                acquired_dir,
+                expected_sha256s={str(item["name"]): str(item["sha256"]) for item in artifacts},
+            )
+        except (OSError, ValueError) as error:
+            raise ValueError("candidate-admission acquired remote bytes are unverified") from error
+        from project_pipeline.autonomy_runtime.duration_probes import verify_remote_candidate
+
+        remote = verify_remote_candidate(
+            self.repository_root,
+            {"identity_ok": True, "payload": payload},
+            expected_sha=str(row["integrated_sha"]),
+        )
+        if remote.get("ok") is not True:
+            raise ValueError("candidate-admission live remote draft verification failed")
+
     def _assert_identity(self, row: sqlite3.Row | dict[str, Any]) -> None:
         identity = self._inspect_identity(self.repository_root)
         if (
@@ -1341,26 +1469,62 @@ class CampaignController:
         return str(Path(__import__("sys").executable))
 
     def _default_duration_probes(self) -> list[list[str]]:
-        python = self._python()
-        root = str(self.repository_root)
-        return [
-            [python, "-m", "project_pipeline", "doctor", "--root", root],
-            [python, "-m", "project_pipeline", "validate", "--root", root],
-            [python, "-m", "project_pipeline", "control", "evaluate", "--root", root],
-            [python, "-m", "project_pipeline", "control", "sequence", "--root", root],
-            [python, "-m", "project_pipeline", "jira", "validate", "--root", root],
-        ]
+        return [item["argv"] for item in self._default_duration_probe_plan()]
 
-    def _default_duration_probe_plan(self) -> list[dict[str, Any]]:
+    def _default_duration_probe_plan(
+        self, row: sqlite3.Row | dict[str, Any] | None = None
+    ) -> list[dict[str, Any]]:
         python = self._python()
         root = str(self.repository_root)
         cadence = max(0.0, self.probe_interval_seconds)
+        source = dict(row) if row is not None else {}
+        expected_sha = str(source.get("integrated_sha") or "")
+        expected_tree = str(source.get("integrated_tree") or "")
+        campaign_id = str(source.get("campaign_id") or "")
+        evidence_root = Path(str(source.get("evidence_path") or self.repository_root / ".local"))
+        state_root = Path(str(source.get("state_path") or self.repository_root / ".local"))
+
+        def duration_probe(
+            probe_id: str,
+            *,
+            cadence_seconds: float = cadence,
+            timeout_seconds: float = 75.0,
+        ) -> dict[str, Any]:
+            return self._build_duration_probe_entry(
+                probe_id,
+                [
+                    python,
+                    str(self.repository_root / "scripts" / "campaign_duration_probe.py"),
+                    "--probe-id",
+                    probe_id,
+                    "--repository-root",
+                    root,
+                    "--expected-sha",
+                    expected_sha,
+                    "--expected-tree",
+                    expected_tree,
+                    "--campaign-database",
+                    str(self.path),
+                    "--campaign-id",
+                    campaign_id,
+                    "--candidate-evidence",
+                    str(evidence_root / "candidate-admission.json"),
+                    "--state-root",
+                    str(state_root / "duration-probes"),
+                ],
+                cadence_seconds=cadence_seconds,
+                timeout_seconds=timeout_seconds,
+                retry_budget=0,
+                required=True,
+            )
+
         return [
+            duration_probe("candidate_identity", timeout_seconds=30.0),
             self._build_duration_probe_entry(
                 "runtime_doctor",
                 [python, "-m", "project_pipeline", "doctor", "--root", root],
                 cadence_seconds=cadence,
-                timeout_seconds=180.0,
+                timeout_seconds=60.0,
                 retry_budget=0,
                 required=True,
             ),
@@ -1368,7 +1532,7 @@ class CampaignController:
                 "repository_validate",
                 [python, "-m", "project_pipeline", "validate", "--root", root],
                 cadence_seconds=cadence,
-                timeout_seconds=180.0,
+                timeout_seconds=60.0,
                 retry_budget=0,
                 required=True,
             ),
@@ -1376,7 +1540,7 @@ class CampaignController:
                 "jira_validate",
                 [python, "-m", "project_pipeline", "jira", "validate", "--root", root],
                 cadence_seconds=cadence,
-                timeout_seconds=180.0,
+                timeout_seconds=60.0,
                 retry_budget=0,
                 required=True,
             ),
@@ -1384,7 +1548,7 @@ class CampaignController:
                 "control_evaluate",
                 [python, "-m", "project_pipeline", "control", "evaluate", "--root", root],
                 cadence_seconds=cadence,
-                timeout_seconds=180.0,
+                timeout_seconds=60.0,
                 retry_budget=0,
                 required=True,
             ),
@@ -1392,16 +1556,30 @@ class CampaignController:
                 "control_sequence",
                 [python, "-m", "project_pipeline", "control", "sequence", "--root", root],
                 cadence_seconds=cadence,
-                timeout_seconds=180.0,
+                timeout_seconds=60.0,
                 retry_budget=0,
                 required=True,
             ),
+            duration_probe("command_center_projection", timeout_seconds=60.0),
+            duration_probe("autonomy_director_restart", timeout_seconds=60.0),
+            duration_probe("desktop_artifact_health", timeout_seconds=45.0),
+            duration_probe(
+                "cursor_cli_provider_dispatch",
+                cadence_seconds=max(cadence, 4 * 60 * 60),
+                timeout_seconds=60.0,
+            ),
+            duration_probe("github_live_readback", timeout_seconds=45.0),
+            duration_probe("jira_live_readback", timeout_seconds=45.0),
+            duration_probe("campaign_persistence_integrity", timeout_seconds=30.0),
+            duration_probe("recovery_isolation", timeout_seconds=30.0),
         ]
 
-    def _duration_probe_plan(self) -> list[dict[str, Any]]:
+    def _duration_probe_plan(
+        self, row: sqlite3.Row | dict[str, Any] | None = None
+    ) -> list[dict[str, Any]]:
         commands = self._duration_probe_commands
         if commands is None:
-            return self._default_duration_probe_plan()
+            return self._default_duration_probe_plan(row)
         cadence = max(0.0, self.probe_interval_seconds)
         plan: list[dict[str, Any]] = []
         for idx, argv in enumerate(commands):
@@ -1410,28 +1588,77 @@ class CampaignController:
                     f"custom_probe_{idx + 1}",
                     argv,
                     cadence_seconds=cadence,
-                    timeout_seconds=120.0,
+                    timeout_seconds=60.0,
                     retry_budget=0,
                     required=True,
                 )
             )
         return plan
 
-    def _last_duration_probe_at(self, campaign_id: str) -> datetime | None:
-        row = self._db.execute(
+    def _last_duration_probe_at(self, campaign_id: str, probe_id: str) -> datetime | None:
+        rows = self._db.execute(
             """
-            SELECT created_at_utc FROM campaign_events
+            SELECT created_at_utc, payload_json FROM campaign_events
             WHERE campaign_id = ? AND action = 'PROBE'
-            ORDER BY created_at_utc DESC LIMIT 1
+            ORDER BY rowid DESC
             """,
             (campaign_id,),
-        ).fetchone()
-        if row is None:
-            return None
-        stamp = datetime.fromisoformat(str(row["created_at_utc"]))
-        if stamp.tzinfo is None:
-            stamp = stamp.replace(tzinfo=UTC)
-        return stamp
+        ).fetchall()
+        for event in rows:
+            try:
+                payload = json.loads(str(event["payload_json"]))
+            except json.JSONDecodeError:
+                continue
+            probes = payload.get("probes") if isinstance(payload, dict) else None
+            if not isinstance(probes, list):
+                continue
+            if not any(
+                isinstance(item, dict) and item.get("probe_id") == probe_id for item in probes
+            ):
+                continue
+            stamp = datetime.fromisoformat(str(event["created_at_utc"]))
+            return stamp.replace(tzinfo=UTC) if stamp.tzinfo is None else stamp
+        return None
+
+    def _mark_duration_probe_running(
+        self,
+        campaign_id: str,
+        row: sqlite3.Row | dict[str, Any],
+        probe_id: str,
+        attempt: int,
+    ) -> None:
+        """Keep recovery telemetry fresh while one bounded probe owns the runner.
+
+        A duration probe executes synchronously, so its maximum runtime must stay
+        below the stale-owner boundary. Recording immediately before every
+        attempt makes recovery distinguish a live, bounded probe from a stalled
+        runner without inventing a second writer for the campaign database.
+        """
+
+        run_id = str(row["qualification_run_id"] or "")
+        if run_id:
+            qualification = self.qualification.get(run_id)
+            if str(qualification["status"]) not in ACTIVE:
+                self._disqualify(campaign_id, "duration-probe-qualification-not-active")
+                raise ValueError("duration probe requires an active qualification run")
+            try:
+                self.qualification.heartbeat(run_id, fence=str(qualification["fence"]))
+            except ValueError:
+                self._disqualify(campaign_id, "duration-probe-qualification-heartbeat-failed")
+                raise
+        with self._db:
+            self._db.execute(
+                """
+                UPDATE campaign_runs
+                SET last_heartbeat_utc = ?, last_probe = ?
+                WHERE campaign_id = ?
+                """,
+                (
+                    datetime.now(UTC).isoformat(),
+                    f"probe-running:{probe_id}:attempt-{attempt + 1}",
+                    campaign_id,
+                ),
+            )
 
     def _run_due_duration_probes(
         self,
@@ -1440,36 +1667,36 @@ class CampaignController:
         now: datetime,
         fallback_label: str,
     ) -> str:
-        started = datetime.fromisoformat(str(row["started_at_utc"]))
-        if started.tzinfo is None:
-            started = started.replace(tzinfo=UTC)
-        plan = self._duration_probe_plan()
+        plan = self._duration_probe_plan(row)
         if self._duration_probe_commands is None and not self._probe_surface_complete(plan):
             self._disqualify(campaign_id, "duration-probe-surface-incomplete")
             raise ValueError("duration probe surface incomplete")
-        anchor = self._last_duration_probe_at(campaign_id) or started
-        if (now - anchor).total_seconds() < self.probe_interval_seconds:
-            return fallback_label
         receipt_ids: list[str] = []
         probe_results: list[dict[str, Any]] = []
         for item in plan:
             probe_id = str(item.get("probe_id") or "probe")
             cadence_seconds = float(item.get("cadence_seconds", self.probe_interval_seconds))
-            if (now - anchor).total_seconds() < cadence_seconds:
+            last_probe = self._last_duration_probe_at(campaign_id, probe_id)
+            if last_probe is not None and (now - last_probe).total_seconds() < cadence_seconds:
                 continue
             argv = [str(token) for token in item.get("argv", [])]
             timeout_seconds = float(item.get("timeout_seconds", 120.0))
             retries = max(0, int(item.get("retry_budget", 0)))
             required = bool(item.get("required", True))
+            stale_owner_boundary = max(self.heartbeat_seconds * 3.0, 90.0)
+            if timeout_seconds >= stale_owner_boundary:
+                self._disqualify(campaign_id, "duration-probe-timeout-exceeds-heartbeat-window")
+                raise ValueError("duration probe timeout exceeds heartbeat window")
             attempt = 0
             receipt: dict[str, Any] | None = None
             while attempt <= retries:
+                self._mark_duration_probe_running(campaign_id, row, probe_id, attempt)
                 receipt = self.execute(
                     campaign_id,
                     argv,
                     timeout_seconds=timeout_seconds,
                     idempotency_key=(
-                        f"CIDEMP:{campaign_id}:{probe_id}:{anchor.isoformat()}:{attempt}"
+                        f"CIDEMP:{campaign_id}:{probe_id}:{(last_probe or now).isoformat()}:{attempt}"
                     ),
                     evidence_links=[
                         f"probe:{probe_id}",
@@ -1496,19 +1723,117 @@ class CampaignController:
                     ),
                 }
             )
+            event_now = datetime.now(UTC)
+            with self._db:
+                self._append_event(
+                    campaign_id,
+                    "PROBE",
+                    str(row["status"]),
+                    {
+                        "receipt_ids": [str(receipt["receipt_id"])],
+                        "last_probe": f"probe:{receipt['receipt_id']}",
+                        "probes": [probe_results[-1]],
+                    },
+                    event_now,
+                )
             if required and receipt.get("result") != "PASSED":
                 self._disqualify(campaign_id, "duration-probe-failed")
                 raise ValueError(f"duration probe failed: {probe_id}")
         label = "probe:" + ",".join(receipt_ids)
-        with self._db:
-            self._append_event(
-                campaign_id,
-                "PROBE",
-                str(row["status"]),
-                {"receipt_ids": receipt_ids, "last_probe": label, "probes": probe_results},
-                now,
-            )
         return label
+
+    def _assert_duration_completion_proof(
+        self, campaign_id: str, row: sqlite3.Row | dict[str, Any]
+    ) -> None:
+        """Require contiguous successful, identity-bound probe evidence before attestation."""
+
+        run_id = str(row["qualification_run_id"] or "")
+        qualification = self.qualification.get(run_id)
+        started = datetime.fromisoformat(str(qualification["started_at_utc"]))
+        if started.tzinfo is None:
+            started = started.replace(tzinfo=UTC)
+        plan = self._duration_probe_plan(row)
+        required = {
+            str(item.get("probe_id") or "") for item in plan if bool(item.get("required", True))
+        }
+        if not required or (
+            self._duration_probe_commands is None and not self._probe_surface_complete(plan)
+        ):
+            self._disqualify(campaign_id, "duration-completion-probe-surface-incomplete")
+            raise ValueError("duration completion requires the complete probe surface")
+        receipt_rows = self._db.execute(
+            """
+            SELECT receipt_id, result, evidence_json FROM campaign_command_receipts
+            WHERE campaign_id = ?
+            """,
+            (campaign_id,),
+        ).fetchall()
+        receipts = {str(item["receipt_id"]): item for item in receipt_rows}
+        observations: dict[str, list[datetime]] = {probe_id: [] for probe_id in required}
+        events = self._db.execute(
+            """
+            SELECT created_at_utc, payload_json FROM campaign_events
+            WHERE campaign_id = ? AND action = 'PROBE' ORDER BY rowid
+            """,
+            (campaign_id,),
+        ).fetchall()
+        for event in events:
+            stamp = datetime.fromisoformat(str(event["created_at_utc"]))
+            if stamp.tzinfo is None:
+                stamp = stamp.replace(tzinfo=UTC)
+            if stamp < started:
+                continue
+            try:
+                payload = json.loads(str(event["payload_json"]))
+            except json.JSONDecodeError:
+                continue
+            probes = payload.get("probes") if isinstance(payload, dict) else None
+            if not isinstance(probes, list):
+                continue
+            for probe in probes:
+                if not isinstance(probe, dict):
+                    continue
+                probe_id = str(probe.get("probe_id") or "")
+                receipt_id = str(probe.get("receipt_id") or "")
+                receipt = receipts.get(receipt_id)
+                if (
+                    probe_id not in required
+                    or probe.get("result") != "PASSED"
+                    or receipt is None
+                    or str(receipt["result"]) != "PASSED"
+                ):
+                    continue
+                try:
+                    evidence = json.loads(str(receipt["evidence_json"]))
+                except json.JSONDecodeError:
+                    continue
+                if evidence.get("integrated_sha") != str(row["integrated_sha"]) or evidence.get(
+                    "integrated_tree"
+                ) != str(row["integrated_tree"]):
+                    continue
+                observations[probe_id].append(stamp)
+        now = datetime.now(UTC)
+        grace_seconds = max(self.heartbeat_seconds * 3.0, 90.0)
+        for item in plan:
+            probe_id = str(item.get("probe_id") or "")
+            if probe_id not in required:
+                continue
+            stamps = observations[probe_id]
+            max_gap = (
+                float(item.get("cadence_seconds", self.probe_interval_seconds)) + grace_seconds
+            )
+            previous = started
+            if not stamps:
+                self._disqualify(campaign_id, f"duration-completion-probe-missing:{probe_id}")
+                raise ValueError(f"duration completion probe evidence is missing: {probe_id}")
+            for stamp in stamps:
+                if (stamp - previous).total_seconds() > max_gap:
+                    self._disqualify(campaign_id, f"duration-completion-probe-gap:{probe_id}")
+                    raise ValueError(f"duration completion probe evidence is stale: {probe_id}")
+                previous = stamp
+            if (now - previous).total_seconds() > max_gap:
+                self._disqualify(campaign_id, f"duration-completion-probe-stale:{probe_id}")
+                raise ValueError(f"duration completion probe evidence is stale: {probe_id}")
 
     def _default_finalize_commands(
         self, row: sqlite3.Row | dict[str, Any] | None = None

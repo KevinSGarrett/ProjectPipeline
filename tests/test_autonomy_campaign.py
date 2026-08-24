@@ -28,6 +28,7 @@ from project_pipeline.autonomy_runtime.command_execution import (
     evaluate_command_semantics,
     execute_allowlisted_command,
 )
+from project_pipeline.autonomy_runtime.duration_probes import required_probe_ids
 from project_pipeline.autonomy_runtime.process_identity import (
     current_process_identity,
     inspect_process,
@@ -111,6 +112,8 @@ def _controller(tmp_path: Path, inspect=None) -> CampaignController:
         heartbeat_seconds=0.05,
         inspect_identity=inspect or (lambda _root: _identity()),
         finalize_commands=[_probe_command()],
+        duration_probe_commands=[_probe_command()],
+        allow_unbound_candidate_for_tests=True,
     )
 
 
@@ -218,6 +221,60 @@ def test_advance_does_not_shorten_24h(tmp_path: Path):
     controller.close()
 
 
+def test_advance_disqualifies_a_timed_window_with_a_heartbeat_gap(tmp_path: Path):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    old = (datetime.now(UTC) - timedelta(hours=4, seconds=1)).isoformat()
+    controller.qualification._db.execute(
+        """
+        UPDATE qualification_runs
+        SET started_at_utc = ?, last_heartbeat_utc = ?
+        WHERE run_id = ?
+        """,
+        (old, old, admitted["qualification_run_id"]),
+    )
+    controller.qualification._db.commit()
+    result = controller.advance(admitted["campaign_id"])
+    assert result["status"] == "DISQUALIFIED"
+    qualification = controller.qualification.get(admitted["qualification_run_id"])
+    assert qualification["status"] == "DISQUALIFIED"
+    controller.close()
+
+
+def test_advance_disqualifies_a_timed_window_without_probe_receipts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    controller.qualification._db.execute(
+        "UPDATE qualification_runs SET started_at_utc = ? WHERE run_id = ?",
+        (
+            (datetime.now(UTC) - timedelta(hours=4, seconds=1)).isoformat(),
+            admitted["qualification_run_id"],
+        ),
+    )
+    controller.qualification._db.commit()
+    monkeypatch.setattr(
+        controller,
+        "_run_due_duration_probes",
+        lambda _campaign_id, _row, _now, label: label,
+    )
+    result = controller.advance(admitted["campaign_id"])
+    assert result["status"] == "DISQUALIFIED"
+    assert str(result["last_probe"]).startswith("disqualify:duration-completion-probe-missing")
+    controller.close()
+
+
 def test_seeded_attested_24h_auto_admits_72h(tmp_path: Path):
     controller = _controller(tmp_path)
     started = controller.start(
@@ -243,6 +300,7 @@ def test_timed_stage_heartbeat_runs_allowlisted_duration_probe(tmp_path: Path):
         finalize_commands=[_probe_command()],
         duration_probe_commands=[_probe_command()],
         probe_interval_seconds=0.0,
+        allow_unbound_candidate_for_tests=True,
     )
     started = controller.start(
         state_path=tmp_path / "state",
@@ -258,6 +316,29 @@ def test_timed_stage_heartbeat_runs_allowlisted_duration_probe(tmp_path: Path):
     controller.close()
 
 
+def test_duration_probe_renews_the_qualification_heartbeat(tmp_path: Path):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    run_id = str(admitted["qualification_run_id"])
+    previous = (datetime.now(UTC) - timedelta(milliseconds=500)).isoformat()
+    controller.qualification._db.execute(
+        "UPDATE qualification_runs SET last_heartbeat_utc = ? WHERE run_id = ?",
+        (previous, run_id),
+    )
+    controller.qualification._db.commit()
+    controller._mark_duration_probe_running(
+        admitted["campaign_id"], controller.get(admitted["campaign_id"]), "custom_probe_1", 0
+    )
+    renewed = controller.qualification.get(run_id)["last_heartbeat_utc"]
+    assert datetime.fromisoformat(str(renewed)) > datetime.fromisoformat(previous)
+    controller.close()
+
+
 def test_timed_stage_failed_duration_probe_disqualifies(tmp_path: Path):
     failing = [sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]
     controller = CampaignController(
@@ -268,6 +349,7 @@ def test_timed_stage_failed_duration_probe_disqualifies(tmp_path: Path):
         finalize_commands=[_probe_command()],
         duration_probe_commands=[failing],
         probe_interval_seconds=0.0,
+        allow_unbound_candidate_for_tests=True,
     )
     started = controller.start(
         state_path=tmp_path / "state",
@@ -798,13 +880,29 @@ def test_duration_probe_default_surface_is_risk_based(tmp_path: Path):
         controller.close()
     assert controller._probe_surface_complete(plan) is True
     probe_ids = {str(item["probe_id"]) for item in plan}
-    assert {
-        "runtime_doctor",
-        "repository_validate",
-        "jira_validate",
-        "control_evaluate",
-        "control_sequence",
-    } <= probe_ids
+    assert required_probe_ids() == controller._required_duration_probe_surface()
+    assert required_probe_ids() <= probe_ids
+    assert len(probe_ids) == len(plan)
+    for item in plan:
+        assert item["required"] is True
+        assert float(item["cadence_seconds"]) >= 0
+        assert float(item["timeout_seconds"]) > 0
+        assert float(item["timeout_seconds"]) < 90
+        assert int(item["retry_budget"]) >= 0
+    duration_entries = [
+        item for item in plan if "campaign_duration_probe.py" in " ".join(item["argv"])
+    ]
+    assert {str(item["probe_id"]) for item in duration_entries} == {
+        "candidate_identity",
+        "command_center_projection",
+        "autonomy_director_restart",
+        "desktop_artifact_health",
+        "cursor_cli_provider_dispatch",
+        "github_live_readback",
+        "jira_live_readback",
+        "campaign_persistence_integrity",
+        "recovery_isolation",
+    }
 
 
 def test_duration_probe_surface_rejects_doctor_control_jira_only(tmp_path: Path):
@@ -843,6 +941,105 @@ def test_duration_probe_surface_rejects_doctor_control_jira_only(tmp_path: Path)
     finally:
         controller.close()
     assert controller._probe_surface_complete(plan) is False
+
+
+def test_production_four_hour_admission_requires_bound_candidate(tmp_path: Path):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        started = controller.start(
+            state_path=tmp_path / "state",
+            evidence_path=tmp_path / "evidence",
+            pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+        )
+        with pytest.raises(ValueError, match="candidate-admission"):
+            controller.admit_4h(started["campaign_id"])
+    finally:
+        controller.close()
+
+
+def test_production_four_hour_admission_accepts_bound_remote_candidate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        evidence = tmp_path / "evidence"
+        started = controller.start(
+            state_path=tmp_path / "state",
+            evidence_path=evidence,
+            pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+        )
+        artifact = evidence / "artifacts" / "candidate.zip"
+        artifact.parent.mkdir(parents=True)
+        artifact.write_bytes(b"remote-bound-candidate")
+        digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
+        from project_pipeline.release_factory.lifecycle import write_acquired_assets
+
+        acquired = write_acquired_assets(
+            evidence / "remote-acquired" / "candidate-a-b", {artifact.name: artifact.read_bytes()}
+        )
+        lifecycle_checks = {
+            name: "PASS"
+            for name in (
+                "install",
+                "migration",
+                "startup",
+                "health",
+                "desktop_launch",
+                "command_center",
+                "director_journey",
+                "upgrade",
+                "rollback",
+                "uninstall",
+                "state_restoration",
+            )
+        }
+        (evidence / "candidate-admission.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "1.0.0",
+                    "integrated_sha": "a" * 40,
+                    "integrated_tree": "b" * 40,
+                    "artifacts": [{"name": artifact.name, "path": str(artifact), "sha256": digest}],
+                    "draft_release": {
+                        "release_id": 1,
+                        "draft": True,
+                        "target_commitish": "a" * 40,
+                        "assets": [{"name": artifact.name}],
+                    },
+                    "remote_lifecycle": {
+                        "state": "VERIFIED",
+                        "source": "REMOTE_DRAFT_BYTES",
+                        "worktree_bytes_used": False,
+                        "execution_mode": "REAL_NATIVE_REMOTE_BYTES",
+                        "acquired_dir": str(acquired),
+                        "checks": lifecycle_checks,
+                    },
+                }
+            ),
+            encoding="utf-8",
+        )
+        monkeypatch.setattr(
+            "project_pipeline.autonomy_runtime.duration_probes.verify_remote_candidate",
+            lambda *_args, **_kwargs: {"ok": False, "reason": "remote-bytes-diverged"},
+        )
+        with pytest.raises(ValueError, match="live remote draft"):
+            controller.admit_4h(started["campaign_id"])
+        monkeypatch.setattr(
+            "project_pipeline.autonomy_runtime.duration_probes.verify_remote_candidate",
+            lambda *_args, **_kwargs: {"ok": True, "provider": "github-rest"},
+        )
+        admitted = controller.admit_4h(started["campaign_id"])
+        assert admitted["stage"] == "UNATTENDED_4_HOUR"
+    finally:
+        controller.close()
 
 
 def test_production_defaults_incomplete_cannot_finalize(
@@ -988,6 +1185,7 @@ def test_production_defaults_incomplete_cannot_finalize(
         repository_root=ROOT,
         heartbeat_seconds=0.05,
         inspect_identity=lambda _root: _identity(),
+        allow_unbound_candidate_for_tests=True,
     )
     ready = _ready_after_72h(controller, tmp_path)
     ready = controller.advance(ready["campaign_id"])

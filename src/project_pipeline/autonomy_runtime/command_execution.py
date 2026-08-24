@@ -34,6 +34,7 @@ ALLOWED_SCRIPT_NAMES = frozenset(
         "scripts/run_live_qualification.py",
         "scripts/run_autonomy_campaign.py",
         "scripts/campaign_probe.py",
+        "scripts/campaign_duration_probe.py",
         "scripts/autonomy_campaign_recovery_probe.py",
         "scripts/build_campaign_desktop_artifacts.py",
         "scripts/campaign_release_publication.py",
@@ -142,6 +143,8 @@ def command_kind(argv: list[str]) -> str:
         return "validate.jira"
     if "validate" in argv:
         return "validate.repository"
+    if "campaign_duration_probe.py" in joined:
+        return "duration-probe"
     if "campaign_probe.py" in joined:
         return "probe"
     if "build_campaign_desktop_artifacts.py" in joined:
@@ -241,6 +244,41 @@ def evaluate_command_semantics(
             "reason": "control-projection",
             "state": state,
             "final_completion_gate_satisfied": final,
+            "parsed": payload,
+            "documents": documents,
+        }
+    if kind == "duration-probe":
+        subject = payload.get("subject")
+        if not isinstance(subject, dict):
+            return {
+                "kind": kind,
+                "result": "FAILED",
+                "reason": "missing-probe-subject",
+                "state": None,
+                "final_completion_gate_satisfied": False,
+                "parsed": payload,
+                "documents": documents,
+            }
+        identity_ok = (
+            (not expected_sha or subject.get("sha") == expected_sha)
+            and (not expected_tree or subject.get("tree") == expected_tree)
+            and subject.get("clean") is True
+            and subject.get("inspect_ok") is True
+        )
+        evidence_digest = payload.get("evidence_sha256")
+        ok = (
+            payload.get("ok") is True
+            and bool(payload.get("probe_id"))
+            and identity_ok
+            and isinstance(evidence_digest, str)
+            and len(evidence_digest) == 64
+        )
+        return {
+            "kind": kind,
+            "result": "PASSED" if ok else "FAILED",
+            "reason": "duration-probe-verified" if ok else "duration-probe-unverified",
+            "state": None,
+            "final_completion_gate_satisfied": False,
             "parsed": payload,
             "documents": documents,
         }
