@@ -204,7 +204,6 @@ def _probe_cursor(root: Path, state_root: Path) -> dict[str, Any]:
     report = qualify_cursor_cli_provider(
         repository_root=root,
         disposable_root=workspace,
-        durable_dir=state_root / "cursor-durable",
     )
     return {
         "outcome": report.get("outcome"),
