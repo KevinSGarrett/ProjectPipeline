@@ -15,6 +15,19 @@ from project_pipeline.validation.registries import check_json_documents
 
 
 class ContentValidationTests(unittest.TestCase):
+    def test_repository_iteration_preserves_callers_root_spelling(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            actual_root = Path(directory) / "project"
+            actual_root.mkdir()
+            root = actual_root / ".." / "project"
+            source = root / "src" / "production.py"
+            source.parent.mkdir()
+            source.write_text("value = 1\n", encoding="utf-8")
+
+            observed = {path.relative_to(root).as_posix() for path in iter_repository_files(root)}
+
+            self.assertEqual(observed, {"src/production.py"})
+
     def test_forbidden_term_is_detected(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
