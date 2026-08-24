@@ -7,7 +7,9 @@ from project_pipeline.release_factory.bundle import (
 )
 from project_pipeline.release_factory.lifecycle import (
     AcquiredCandidateLifecycle,
+    candidate_acquired_dir,
     exercise_acquired_lifecycle,
+    verify_acquired_assets,
     write_acquired_assets,
 )
 from project_pipeline.release_factory.supply import (
@@ -34,10 +36,12 @@ __all__ = [
     "artifact_sha256s",
     "bind_bundle_supply_chain",
     "build_release_bundle",
+    "candidate_acquired_dir",
     "exercise_acquired_lifecycle",
     "extract_zip_safely",
     "resolve_release_version_authority",
     "validate_release_factory",
+    "verify_acquired_assets",
     "write_acquired_assets",
     "write_fixture_artifacts",
 ]

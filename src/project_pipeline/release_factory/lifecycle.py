@@ -2,16 +2,20 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
 import time
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Literal
+from uuid import uuid4
 
 from pydantic import Field
 
 from project_pipeline.contracts.envelopes import ContractModel
+from project_pipeline.github_steward.asset_names import canonical_release_asset_name
 from project_pipeline.release_factory.supply import extract_zip_safely
 
 HEALTH_CHECKS = (
@@ -40,15 +44,83 @@ class AcquiredCandidateLifecycle(ContractModel):
     execution_mode: Literal["SIMULATED_REMOTE_BYTES", "REAL_NATIVE_REMOTE_BYTES"]
 
 
-def write_acquired_assets(dest: Path, assets: dict[str, bytes]) -> Path:
-    dest.mkdir(parents=True, exist_ok=True)
-    for name, payload in assets.items():
-        (dest / name).write_bytes(payload)
-    manifest = {name: _sha256_hex(payload) for name, payload in assets.items()}
-    (dest / "acquired_manifest.json").write_text(
-        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+_ACQUIRED_METADATA = frozenset({"acquired_manifest.json", "campaign_publication.json"})
+
+
+def candidate_acquired_dir(evidence_path: Path, *, source_sha: str, source_tree: str) -> Path:
+    """Return the immutable remote-byte directory for one exact candidate."""
+
+    return (
+        evidence_path.resolve()
+        / "remote-acquired"
+        / (f"candidate-{source_sha.lower()}-{source_tree.lower()}")
     )
+
+
+def _canonical_asset_bytes(assets: Mapping[str, bytes]) -> dict[str, bytes]:
+    canonical: dict[str, bytes] = {}
+    for raw_name, payload in assets.items():
+        name = canonical_release_asset_name(raw_name)
+        if name in canonical:
+            raise ValueError("acquired remote bytes contain colliding canonical asset names")
+        canonical[name] = payload
+    return canonical
+
+
+def write_acquired_assets(dest: Path, assets: dict[str, bytes]) -> Path:
+    """Persist a flat, exact remote-byte acquisition or verify an exact replay.
+
+    A candidate-specific acquisition may be replayed only when every byte and
+    the complete file set match.  Any stale or pre-seeded artifact fails closed.
+    """
+
+    payloads = _canonical_asset_bytes(assets)
+    manifest = {name: _sha256_hex(payload) for name, payload in payloads.items()}
+    if dest.exists():
+        if not dest.is_dir():
+            raise ValueError("acquired remote-byte destination is not a directory")
+        _verify_acquired_manifest(dest, expected_sha256s=manifest)
+        return dest
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    staging = dest.parent / f".acquired-staging-{uuid4().hex}"
+    try:
+        staging.mkdir(exist_ok=False)
+        for name, payload in payloads.items():
+            _write_file_fsynced(staging / name, payload)
+        _write_file_fsynced(
+            staging / "acquired_manifest.json",
+            (json.dumps(manifest, indent=2, sort_keys=True) + "\n").encode("utf-8"),
+        )
+        _fsync_directory(staging)
+        os.replace(staging, dest)
+        _fsync_directory(dest.parent)
+    except Exception:
+        if staging.exists():
+            shutil.rmtree(staging, ignore_errors=True)
+        raise
     return dest
+
+
+def _write_file_fsynced(path: Path, payload: bytes) -> None:
+    with path.open("wb") as stream:
+        stream.write(payload)
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+def _fsync_directory(path: Path) -> None:
+    """Best-effort directory sync; Windows does not expose directory handles."""
+
+    try:
+        descriptor = os.open(path, os.O_RDONLY)
+    except OSError:
+        return
+    try:
+        os.fsync(descriptor)
+    except OSError:
+        return
+    finally:
+        os.close(descriptor)
 
 
 def _sha256_hex(payload: bytes) -> str:
@@ -82,23 +154,55 @@ def _version_from_payload(payload_root: Path) -> str:
     raise ValueError("acquired candidate is missing VERSION")
 
 
-def _verify_acquired_manifest(acquired: Path) -> dict[str, str]:
+def _verify_acquired_manifest(
+    acquired: Path, *, expected_sha256s: Mapping[str, str] | None = None
+) -> dict[str, str]:
     manifest_path = acquired / "acquired_manifest.json"
     if not manifest_path.is_file():
         raise ValueError("acquired candidate is missing its remote-byte manifest")
     loaded = json.loads(manifest_path.read_text(encoding="utf-8"))
     if not isinstance(loaded, dict) or not loaded:
         raise ValueError("acquired candidate manifest is malformed")
-    manifest = {str(name): str(digest) for name, digest in loaded.items()}
+    manifest: dict[str, str] = {}
+    for raw_name, raw_digest in loaded.items():
+        name = canonical_release_asset_name(str(raw_name))
+        if name != raw_name or name in manifest:
+            raise ValueError("acquired candidate manifest has noncanonical asset names")
+        manifest[name] = str(raw_digest).lower()
+    expected_files = set(manifest) | {"acquired_manifest.json"}
+    observed_files = {path.name for path in acquired.iterdir() if path.is_file()}
+    if any(path.is_dir() for path in acquired.iterdir()) or not observed_files.issubset(
+        expected_files | {"campaign_publication.json"}
+    ):
+        raise ValueError("acquired remote-byte directory has unexpected files")
+    if not expected_files.issubset(observed_files):
+        raise ValueError("acquired remote-byte directory is incomplete")
     for name, digest in manifest.items():
         artifact = acquired / name
         if not artifact.is_file() or _sha256_hex(artifact.read_bytes()) != digest:
             raise ValueError("acquired remote bytes do not match their manifest")
+    if expected_sha256s is not None:
+        expected: dict[str, str] = {}
+        for raw_name, raw_digest in expected_sha256s.items():
+            name = canonical_release_asset_name(raw_name)
+            if name in expected:
+                raise ValueError("expected acquired assets collide after normalization")
+            expected[name] = str(raw_digest).lower()
+        if manifest != expected:
+            raise ValueError("acquired remote-byte manifest differs from the publication receipt")
     return manifest
 
 
+def verify_acquired_assets(
+    acquired: Path, *, expected_sha256s: Mapping[str, str] | None = None
+) -> dict[str, str]:
+    """Verify the exact remote acquisition and return its canonical manifest."""
+
+    return _verify_acquired_manifest(acquired, expected_sha256s=expected_sha256s)
+
+
 def _require_command(
-    command: list[str], *, timeout_seconds: float = 180.0
+    command: list[str], *, timeout_seconds: float = 180.0, environment: dict[str, str] | None = None
 ) -> subprocess.CompletedProcess[str]:
     try:
         completed = subprocess.run(
@@ -108,6 +212,7 @@ def _require_command(
             text=True,
             timeout=timeout_seconds,
             shell=False,
+            env=environment,
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise ValueError("required remote-byte lifecycle command did not complete") from exc
@@ -123,12 +228,20 @@ def _venv_python(venv: Path) -> Path:
     return candidate
 
 
+def _isolated_python_environment() -> dict[str, str]:
+    environment = dict(os.environ)
+    environment.pop("PYTHONPATH", None)
+    environment.pop("PYTHONHOME", None)
+    environment["PYTHONNOUSERSITE"] = "1"
+    return environment
+
+
 def _run_python_artifact_checks(
     acquired: Path,
     work: Path,
     *,
     expected_version: str,
-    repository_root: Path | None,
+    remote_install_root: Path,
     python_executable: str | None,
 ) -> dict[str, str]:
     wheel = next(iter(sorted(acquired.glob("*.whl"))), None)
@@ -137,12 +250,10 @@ def _run_python_artifact_checks(
         raise ValueError("acquired candidate requires a wheel and sdist")
     base_python = python_executable or sys.executable
     checks: dict[str, str] = {}
-    for name, artifact, extra in (
-        ("wheel", wheel, []),
-        ("sdist", sdist, ["--no-build-isolation"]),
-    ):
+    environment = _isolated_python_environment()
+    for name, artifact in (("wheel", wheel), ("sdist", sdist)):
         venv = work / f"{name}-venv"
-        _require_command([base_python, "-m", "venv", str(venv)])
+        _require_command([base_python, "-m", "venv", str(venv)], environment=environment)
         interpreter = _venv_python(venv)
         _require_command(
             [
@@ -151,34 +262,44 @@ def _run_python_artifact_checks(
                 "pip",
                 "install",
                 "--disable-pip-version-check",
-                "--no-deps",
-                *extra,
                 str(artifact),
-            ]
+            ],
+            environment=environment,
         )
-        version = _require_command(
+        installed = _require_command(
             [
                 str(interpreter),
                 "-c",
-                "import project_pipeline; print(project_pipeline.__version__)",
-            ]
-        ).stdout.strip()
-        if version != expected_version:
+                (
+                    "import json, project_pipeline; "
+                    "print(json.dumps({'version': project_pipeline.__version__, "
+                    "'path': project_pipeline.__file__}))"
+                ),
+            ],
+            environment=environment,
+        )
+        try:
+            imported = json.loads(installed.stdout)
+            version = str(imported["version"])
+            module_path = Path(str(imported["path"])).resolve()
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise ValueError("installed remote package import receipt is malformed") from exc
+        if version != expected_version or not module_path.is_relative_to(venv.resolve()):
             raise ValueError("installed remote package version differs from the candidate")
         checks[f"{name}_install"] = "PASS"
         checks[f"{name}_import"] = "PASS"
-        if repository_root is not None:
-            _require_command(
-                [
-                    str(interpreter),
-                    "-m",
-                    "project_pipeline",
-                    "doctor",
-                    "--root",
-                    str(repository_root),
-                ]
-            )
-            checks[f"{name}_doctor"] = "PASS"
+        _require_command(
+            [
+                str(interpreter),
+                "-m",
+                "project_pipeline",
+                "doctor",
+                "--root",
+                str(remote_install_root),
+            ],
+            environment=environment,
+        )
+        checks[f"{name}_doctor"] = "PASS"
     return checks
 
 
@@ -263,7 +384,7 @@ def exercise_acquired_lifecycle(
     expected_version: str | None = None,
     source_worktree: Path | None = None,
     execute_native: bool = False,
-    repository_root: Path | None = None,
+    expected_sha256s: Mapping[str, str] | None = None,
     python_executable: str | None = None,
 ) -> AcquiredCandidateLifecycle:
     acquired = acquired_dir.resolve()
@@ -276,7 +397,7 @@ def exercise_acquired_lifecycle(
             raise ValueError("worktree_bytes_used")
     if work.parent != acquired.parent:
         raise ValueError("lifecycle work directory must be a sibling of acquired remote bytes")
-    manifest = _verify_acquired_manifest(acquired)
+    manifest = _verify_acquired_manifest(acquired, expected_sha256s=expected_sha256s)
     if work.exists():
         shutil.rmtree(work)
     install = work / "install"
@@ -305,7 +426,7 @@ def exercise_acquired_lifecycle(
             acquired,
             work,
             expected_version=expected_version,
-            repository_root=repository_root,
+            remote_install_root=install,
             python_executable=python_executable,
         )
         native_checks = _run_native_desktop_checks(acquired, work)

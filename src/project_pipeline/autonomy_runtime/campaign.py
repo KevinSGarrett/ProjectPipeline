@@ -434,7 +434,7 @@ def verify_campaign_publication_eligibility(
             raise ValueError("campaign publication evidence is incomplete")
         qualification_events = connection.execute(
             """
-            SELECT prev_event_sha256, event_sha256
+            SELECT action, status, payload_json, prev_event_sha256, event_sha256, created_at_utc
             FROM qualification_events
             WHERE run_id = ? ORDER BY rowid
             """,
@@ -444,7 +444,24 @@ def verify_campaign_publication_eligibility(
         for event in qualification_events:
             if event["prev_event_sha256"] != previous or not event["event_sha256"]:
                 raise ValueError("campaign qualification event chain is incomplete")
-            previous = str(event["event_sha256"])
+            try:
+                payload = json.loads(str(event["payload_json"]))
+            except json.JSONDecodeError as exc:
+                raise ValueError("campaign qualification event payload is malformed") from exc
+            if not isinstance(payload, dict):
+                raise ValueError("campaign qualification event payload is malformed")
+            body = {
+                "run_id": run_id,
+                "action": str(event["action"]),
+                "status": str(event["status"]),
+                "payload": payload,
+                "prev_event_sha256": previous,
+                "created_at_utc": str(event["created_at_utc"]),
+            }
+            computed = hashlib.sha256(json.dumps(body, sort_keys=True).encode()).hexdigest()
+            if computed != str(event["event_sha256"]):
+                raise ValueError("campaign qualification event digest is invalid")
+            previous = computed
         if previous != str(qualification["last_event_sha256"]):
             raise ValueError("campaign qualification event chain is incomplete")
     finally:
@@ -1563,6 +1580,14 @@ class CampaignController:
         if row is None:
             raise ValueError("post-release verification requires the bound campaign row")
         evidence = Path(str(row["evidence_path"]))
+        acquired_dir = (
+            evidence
+            / "remote-acquired"
+            / (
+                f"candidate-{str(row['integrated_sha']).lower()}-{str(row['integrated_tree']).lower()}"
+            )
+        )
+        lifecycle_work_dir = acquired_dir.parent / f"lifecycle-{acquired_dir.name}"
         return [
             [
                 self._python(),
@@ -1570,9 +1595,9 @@ class CampaignController:
                 "--repository-root",
                 str(self.repository_root),
                 "--acquired-dir",
-                str(evidence / "remote-acquired"),
+                str(acquired_dir),
                 "--work-dir",
-                str(evidence / "post-release-lifecycle"),
+                str(lifecycle_work_dir),
                 "--expected-sha",
                 str(row["integrated_sha"]),
                 "--expected-tree",

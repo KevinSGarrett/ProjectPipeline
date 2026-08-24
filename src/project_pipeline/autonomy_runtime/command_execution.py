@@ -322,7 +322,7 @@ def evaluate_command_semantics(
             not expected_tree or desktop_build.get("source_tree") == expected_tree
         )
         ok = (
-            desktop_build.get("state") in {"BUILT", "RECONCILED"}
+            desktop_build.get("state") == "BUILT"
             and desktop_build.get("real_native_build") is True
             and identity_ok
             and artifacts_ok

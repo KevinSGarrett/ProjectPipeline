@@ -6,6 +6,7 @@ from pathlib import Path
 from types import TracebackType
 from typing import Any
 
+from project_pipeline.domain.base import utc_now
 from project_pipeline.domain.github import (
     GitHubOperation,
     GitHubOperationReceipt,
@@ -103,11 +104,11 @@ class GitHubStewardStore:
         existing = self.get_operation(operation.operation_id)
         if (
             existing is not None
-            and existing.state is GitOperationState.UNKNOWN_OUTCOME
+            and existing.state in {GitOperationState.PENDING, GitOperationState.UNKNOWN_OUTCOME}
             and operation.state in {GitOperationState.PLANNED, GitOperationState.PENDING}
         ):
             raise GitHubStewardError(
-                "unknown-outcome operations must be reconciled before any retry"
+                "pending or unknown-outcome operations must be reconciled before any retry"
             )
         self.db.execute(
             """
@@ -176,6 +177,33 @@ class GitHubStewardStore:
         ).fetchall()
         return tuple(item for row in rows if (item := self.get_operation(row[0])) is not None)
 
+    def mark_interrupted_pending_unknown(self, operation: GitHubOperation) -> GitHubOperation:
+        """Persist a restart-observed write as unknown before its readback.
+
+        ``PENDING`` means the write request was issued but no terminal receipt
+        was durably recorded.  A restarted process cannot safely distinguish a
+        request that is still in flight from one that has already taken effect.
+        """
+
+        stored = self.get_operation(operation.operation_id)
+        if stored is None:
+            raise GitHubStewardError("interrupted operation is not persisted")
+        if stored.state is GitOperationState.UNKNOWN_OUTCOME:
+            return stored
+        if stored.state is not GitOperationState.PENDING:
+            raise GitHubStewardError("only pending operations can be recovered as unknown")
+        observed = dict(stored.observed_result or {})
+        observed["recovery"] = "PENDING_WRITE_AT_RESTART"
+        recovered = stored.model_copy(
+            update={
+                "state": GitOperationState.UNKNOWN_OUTCOME,
+                "observed_result": observed,
+                "updated_at_utc": utc_now(),
+            }
+        )
+        self.save_operation(recovered)
+        return recovered
+
     def save_receipt(self, receipt: GitHubOperationReceipt) -> None:
         self.db.execute(
             "INSERT OR REPLACE INTO github_operation_receipts (receipt_id, operation_id, state, payload_json, created_at_utc) VALUES (?, ?, ?, ?, ?)",
@@ -210,5 +238,8 @@ class GitHubStewardStore:
             "operation_counts": dict(sorted(counts.items())),
             "active_ownership": ownership,
             "merge_gate_evaluations": gates,
-            "reconciliation_required": counts.get(GitOperationState.UNKNOWN_OUTCOME.value, 0) > 0,
+            "reconciliation_required": any(
+                counts.get(state.value, 0) > 0
+                for state in (GitOperationState.PENDING, GitOperationState.UNKNOWN_OUTCOME)
+            ),
         }

@@ -11,7 +11,11 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from project_pipeline.release_factory.lifecycle import exercise_acquired_lifecycle  # noqa: E402
+from project_pipeline.github_steward.asset_names import canonical_release_asset_name  # noqa: E402
+from project_pipeline.release_factory.lifecycle import (  # noqa: E402
+    exercise_acquired_lifecycle,
+    verify_acquired_assets,
+)
 
 
 def _publication_binding(path: Path, *, expected_sha: str, expected_tree: str) -> dict[str, Any]:
@@ -30,6 +34,26 @@ def _publication_binding(path: Path, *, expected_sha: str, expected_tree: str) -
         raise ValueError(
             "published remote-byte acquisition binding differs from campaign candidate"
         )
+    assets = loaded.get("assets")
+    if not isinstance(assets, list) or not assets:
+        raise ValueError("published remote-byte acquisition binding has no assets")
+    expected_assets: dict[str, str] = {}
+    for item in assets:
+        if not isinstance(item, dict):
+            raise ValueError("published remote-byte acquisition binding asset is malformed")
+        name = canonical_release_asset_name(str(item.get("name") or ""))
+        digest = str(item.get("sha256") or "").lower()
+        if (
+            name != item.get("name")
+            or name in expected_assets
+            or len(digest) != 64
+            or item.get("remote_sha256") != digest
+            or item.get("bytes_verified") is not True
+        ):
+            raise ValueError("published remote-byte acquisition binding asset is invalid")
+        expected_assets[name] = digest
+    verify_acquired_assets(path, expected_sha256s=expected_assets)
+    loaded["expected_assets"] = expected_assets
     return loaded
 
 
@@ -51,7 +75,7 @@ def main(argv: list[str] | None = None) -> int:
             acquired,
             args.work_dir,
             execute_native=True,
-            repository_root=args.repository_root.resolve(),
+            expected_sha256s=binding["expected_assets"],
             python_executable=str(args.python_executable),
         )
     except Exception as exc:

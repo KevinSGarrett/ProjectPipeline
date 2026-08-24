@@ -11,6 +11,7 @@ from typing import Literal
 from pydantic import Field
 
 from project_pipeline.contracts.envelopes import ContractModel
+from project_pipeline.github_steward.asset_names import canonical_release_asset_name
 from project_pipeline.release_factory.version import (
     ReleaseVersionAuthority,
     resolve_release_version_authority,
@@ -204,7 +205,15 @@ def _read_sidecar(artifact: Path) -> BoundArtifact | None:
 
 
 def artifact_sha256s(bundle: ReleaseBundle) -> dict[str, str]:
-    return {item.name: item.sha256 for item in bundle.artifacts if item.bound}
+    assets: dict[str, str] = {}
+    for item in bundle.artifacts:
+        if not item.bound:
+            continue
+        name = canonical_release_asset_name(item.name)
+        if name in assets:
+            raise ValueError("release bundle contains colliding canonical asset names")
+        assets[name] = item.sha256
+    return assets
 
 
 def build_release_bundle(
@@ -271,7 +280,7 @@ def build_release_bundle(
                     or desktop_sidecar.source_tree != version.source_tree
                 ):
                     raise ValueError(f"{MIXED_HEAD}: {matches[0].name} provenance differs")
-                copied = dest / matches[0].name
+                copied = dest / canonical_release_asset_name(matches[0].name)
                 copied.write_bytes(matches[0].read_bytes())
                 paths[kind] = copied
 
@@ -287,7 +296,7 @@ def build_release_bundle(
         digest = _sha256_file(path)
         bound = BoundArtifact(
             kind=kind,
-            name=path.name,
+            name=canonical_release_asset_name(path.name),
             sha256=digest,
             size_bytes=path.stat().st_size,
             source_sha=version.source_sha,

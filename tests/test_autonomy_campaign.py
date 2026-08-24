@@ -474,6 +474,27 @@ def test_campaign_publication_eligibility_requires_attested_72h(
     controller.close()
 
 
+def test_campaign_publication_eligibility_recomputes_qualification_event_hashes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = controller.advance(_ready_after_72h(controller, tmp_path)["campaign_id"])
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.campaign.inspect_worktree_identity",
+        lambda _root: _identity(),
+    )
+    controller.qualification._db.execute(
+        "UPDATE qualification_events SET payload_json = ? WHERE run_id = ?",
+        ('{"forged":true}', ready["qualification_run_id"]),
+    )
+    controller.qualification._db.commit()
+    with pytest.raises(ValueError, match="event digest is invalid"):
+        verify_campaign_publication_eligibility(
+            tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
+        )
+    controller.close()
+
+
 def test_advance_auto_finalizes_after_ready(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
@@ -738,6 +759,10 @@ def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):
     assert any("build_campaign_desktop_artifacts.py" in row for row in rendered)
     assert command_kind(post_release[0]) == "release.remote-lifecycle"
     assert command_is_allowlisted(post_release[0], repository_root=ROOT) is True
+    acquired_dir = Path(post_release[0][post_release[0].index("--acquired-dir") + 1])
+    lifecycle_work_dir = Path(post_release[0][post_release[0].index("--work-dir") + 1])
+    assert lifecycle_work_dir.parent == acquired_dir.parent
+    assert lifecycle_work_dir != acquired_dir
     assert any(
         " -m project_pipeline assurance completion-gate --root " in row for row in rendered_gate
     )

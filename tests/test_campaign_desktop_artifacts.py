@@ -4,6 +4,8 @@ import importlib.util
 import json
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -58,3 +60,26 @@ def test_campaign_desktop_builder_stages_candidate_bound_native_artifacts(tmp_pa
         assert sidecar["kind"] == kind
         assert sidecar["source_sha"] == sha
         assert sidecar["source_tree"] == tree
+
+
+def test_campaign_desktop_builder_rejects_preseeded_output(tmp_path, monkeypatch):
+    module = _load_builder()
+    root = tmp_path / "candidate"
+    root.mkdir()
+    output = tmp_path / "desktop-artifacts"
+    output.mkdir()
+    (output / "desktop_build.json").write_text("{}\n", encoding="utf-8")
+    sha = "a" * 40
+    tree = "b" * 40
+    monkeypatch.setattr(
+        module,
+        "inspect_worktree_identity",
+        lambda _root: {"ok": True, "dirty": False, "sha": sha, "tree": tree},
+    )
+    with pytest.raises(RuntimeError, match="desktop-build-output-conflict"):
+        module.build_artifacts(
+            root=root,
+            output_dir=output,
+            expected_sha=sha,
+            expected_tree=tree,
+        )

@@ -159,6 +159,7 @@ from project_pipeline.github_steward import (
     evaluate_protection_drift,
     prove_consolidation,
 )
+from project_pipeline.github_steward.asset_names import canonical_release_asset_name
 from project_pipeline.governance.framework_version import evaluate_framework_version
 from project_pipeline.governance.instruction_system import evaluate_instruction_system
 from project_pipeline.governance.product_profile import evaluate_product_profile
@@ -3451,15 +3452,16 @@ def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, An
             asset_path = Path(_require_argument(args, "asset"))
             release_id = int(_require_argument(args, "release_id"))
             content = asset_path.read_bytes()
+            canonical_name = canonical_release_asset_name(asset_path.name)
             digest = next(
                 item.sha256
                 for item in bundle.artifacts
-                if item.name == asset_path.name and item.bound
+                if canonical_release_asset_name(item.name) == canonical_name and item.bound
             )
             planned = service.plan_upload_asset(
                 repository_slug,
                 release_id=release_id,
-                name=asset_path.name,
+                name=canonical_name,
                 sha256=digest,
                 source_sha=bundle.version.source_sha,
                 actor_id=args.actor_id,
@@ -3494,9 +3496,7 @@ def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, An
             return {"acquired": str(Path(dest)), "assets": sorted(assets)}, 0
         if args.action == "finalize":
             if args.campaign_database is None or not args.campaign_id:
-                raise ConfigurationError(
-                    "finalize requires --campaign-database and --campaign-id"
-                )
+                raise ConfigurationError("finalize requires --campaign-database and --campaign-id")
             from project_pipeline.autonomy_runtime.campaign import (
                 verify_campaign_publication_eligibility,
             )

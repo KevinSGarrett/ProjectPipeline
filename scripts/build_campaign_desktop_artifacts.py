@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity  # noqa: E402
+from project_pipeline.github_steward.asset_names import canonical_release_asset_name  # noqa: E402
 from project_pipeline.release_factory.bundle import BoundArtifact  # noqa: E402
 
 
@@ -50,39 +51,6 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
     )
 
 
-def _load_reconciled(output_dir: Path, *, sha: str, tree: str) -> dict[str, Any] | None:
-    manifest = output_dir / "desktop_build.json"
-    if not manifest.is_file():
-        return None
-    try:
-        payload = json.loads(manifest.read_text(encoding="utf-8"))
-    except json.JSONDecodeError:
-        return None
-    if (
-        not isinstance(payload, dict)
-        or payload.get("source_sha") != sha
-        or payload.get("source_tree") != tree
-    ):
-        return None
-    artifacts = payload.get("artifacts")
-    if not isinstance(artifacts, dict):
-        return None
-    for kind in ("windows_executable", "windows_installer"):
-        item = artifacts.get(kind)
-        if not isinstance(item, dict):
-            return None
-        path = output_dir / str(item.get("name") or "")
-        if not path.is_file() or _sha256(path) != item.get("sha256"):
-            return None
-        try:
-            sidecar = json.loads(_sidecar_path(path).read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            return None
-        if sidecar != item:
-            return None
-    return payload
-
-
 def _run(command: list[str], *, cwd: Path, environment: dict[str, str]) -> None:
     completed = subprocess.run(
         command,
@@ -110,9 +78,6 @@ def build_artifacts(
         or identity.get("tree") != expected_tree
     ):
         raise RuntimeError("desktop-build-candidate-identity-drift")
-    reconciled = _load_reconciled(output, sha=expected_sha, tree=expected_tree)
-    if reconciled is not None:
-        return {**reconciled, "state": "RECONCILED"}
     if output.exists() and any(output.iterdir()):
         raise RuntimeError("desktop-build-output-conflict")
     output.mkdir(parents=True, exist_ok=True)
@@ -135,8 +100,8 @@ def build_artifacts(
     )
     if not executable.is_file() or len(installers) != 1:
         raise RuntimeError("desktop-build-artifacts-missing")
-    staged_executable = output / executable.name
-    staged_installer = output / installers[0].name
+    staged_executable = output / canonical_release_asset_name(executable.name)
+    staged_installer = output / canonical_release_asset_name(installers[0].name)
     shutil.copy2(executable, staged_executable)
     shutil.copy2(installers[0], staged_installer)
     artifacts = {
