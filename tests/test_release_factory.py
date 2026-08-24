@@ -329,11 +329,21 @@ def test_draft_release_unknown_outcome_duplicate_and_finalize_guards(tmp_path):
                 actor_id="actor:test",
                 correlation_id="corr:test",
             )
+        with pytest.raises(GitHubStewardError, match="finalize-before-campaign"):
+            service.plan_finalize(
+                "owner/repo",
+                release_id=release.api_id,
+                expected_head_sha=authority.source_sha,
+                campaign_complete=False,
+                actor_id="actor:test",
+                correlation_id="corr:test",
+            )
         with pytest.raises(GitHubStewardError, match="changed-head"):
             service.plan_finalize(
                 "owner/repo",
                 release_id=release.api_id,
                 expected_head_sha="e" * 40,
+                campaign_complete=True,
                 actor_id="actor:test",
                 correlation_id="corr:test",
             )

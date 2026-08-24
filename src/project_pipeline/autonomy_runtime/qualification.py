@@ -8,6 +8,7 @@ import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Protocol, cast
+from uuid import uuid4
 
 from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 
@@ -132,6 +133,7 @@ class QualificationStore:
             "stage": stage,
             "started_at_utc": now.isoformat(),
             "state_path": str(state_path),
+            "run_nonce": uuid4().hex,
         }
         run_id = (
             "QRUN-" + hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:16]

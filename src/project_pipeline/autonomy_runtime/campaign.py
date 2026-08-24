@@ -29,6 +29,7 @@ from project_pipeline.autonomy_runtime.qualification import (
     ACTIVE,
     H4,
     H24,
+    H72,
     TIMED_STAGES,
     QualificationStore,
     SystemClock,
@@ -374,6 +375,73 @@ def evaluate_pp384_admission(evidence_path: Path) -> dict[str, Any]:
         "missing": missing,
         "task_id": payload.get("task_id"),
         "stages": stages,
+    }
+
+
+def verify_campaign_publication_eligibility(
+    database: Path, *, repository_root: Path, campaign_id: str
+) -> dict[str, Any]:
+    """Bind release publication to the recorded, attested 72-hour campaign.
+
+    This is deliberately a read-only check so a release publisher cannot promote
+    a draft by supplying a caller-controlled boolean.  The final qualification
+    run, campaign state, event history, and immutable candidate identity must
+    all agree before a remote finalize operation is even planned.
+    """
+
+    database = database.resolve()
+    if not database.is_file():
+        raise ValueError("campaign publication requires an existing campaign database")
+    uri = f"file:{database.as_posix()}?mode=ro"
+    connection = sqlite3.connect(uri, uri=True)
+    connection.row_factory = sqlite3.Row
+    try:
+        campaign = connection.execute(
+            "SELECT * FROM campaign_runs WHERE campaign_id = ?", (campaign_id,)
+        ).fetchone()
+        if campaign is None:
+            raise ValueError("campaign publication requires a known campaign")
+        if str(campaign["stage"]) != "RELEASE" or str(campaign["status"]) not in {
+            "READY_TO_PUBLISH",
+            "READY_TO_FINALIZE",
+        }:
+            raise ValueError("campaign publication requires an attested 72-hour campaign")
+        run_id = str(campaign["qualification_run_id"] or "")
+        qualification = connection.execute(
+            "SELECT status, attested_elapsed_seconds FROM qualification_runs WHERE run_id = ?",
+            (run_id,),
+        ).fetchone()
+        if (
+            qualification is None
+            or str(qualification["status"]) != "ATTESTED"
+            or float(qualification["attested_elapsed_seconds"] or 0) < H72.total_seconds()
+        ):
+            raise ValueError("campaign publication requires a completed 72-hour qualification")
+        actions = {
+            str(item["action"])
+            for item in connection.execute(
+                "SELECT action FROM campaign_events WHERE campaign_id = ?", (campaign_id,)
+            ).fetchall()
+        }
+        required_events = {"72H_ATTESTED", "READY_TO_PUBLISH"}
+        if not required_events.issubset(actions):
+            raise ValueError("campaign publication evidence is incomplete")
+    finally:
+        connection.close()
+    identity = inspect_worktree_identity(repository_root)
+    if (
+        not identity.get("ok")
+        or identity.get("dirty")
+        or identity.get("sha") != str(campaign["integrated_sha"])
+        or identity.get("tree") != str(campaign["integrated_tree"])
+    ):
+        raise ValueError("campaign publication candidate identity drifted")
+    return {
+        "campaign_id": campaign_id,
+        "integrated_sha": str(campaign["integrated_sha"]),
+        "integrated_tree": str(campaign["integrated_tree"]),
+        "qualification_run_id": run_id,
+        "attested_elapsed_seconds": float(qualification["attested_elapsed_seconds"]),
     }
 
 
@@ -985,21 +1053,24 @@ class CampaignController:
         self._assert_live_ownership(row, require_current_process=True)
         self._assert_identity(row)
         planned = commands or self._finalize_commands or self._default_publish_commands(row)
-        with self._db:
-            self._db.execute(
-                """
-                UPDATE campaign_runs
-                SET status = 'PUBLISHING', last_heartbeat_utc = ?, last_probe = ?
-                WHERE campaign_id = ?
-                """,
-                (datetime.now(UTC).isoformat(), "publish-started", campaign_id),
-            )
-        row = self._require(campaign_id)
         receipts = []
         for argv in planned:
             receipts.append(self.execute(campaign_id, argv))
         now = datetime.now(UTC)
         failed = [item for item in receipts if item.get("result") != "PASSED"]
+        publication_receipts = [
+            item
+            for item in receipts
+            if item.get("result_semantics") == "remote-publication-verified"
+        ]
+        if not publication_receipts:
+            failed.append(
+                {
+                    "receipt_id": None,
+                    "result": "FAILED",
+                    "result_semantics": "remote-publication-receipt-missing",
+                }
+            )
         if failed:
             with self._db:
                 self._db.execute(
@@ -1017,6 +1088,9 @@ class CampaignController:
                     {
                         "receipts": [item.get("receipt_id") for item in receipts],
                         "failed": [item.get("receipt_id") for item in failed],
+                        "publication_receipts": [
+                            item.get("receipt_id") for item in publication_receipts
+                        ],
                     },
                     now,
                 )
@@ -1403,11 +1477,12 @@ class CampaignController:
             if row is not None and row["evidence_path"]
             else self.repository_root / ".local" / "release"
         )
-        identity = (
-            str(row["release_identity"])
-            if row is not None and row["release_identity"]
-            else "REL-local"
+        release_identity = (
+            row.get("release_identity")
+            if isinstance(row, dict)
+            else (None if row is None else row["release_identity"])
         )
+        identity = str(release_identity) if release_identity else "REL-local"
         archive = evidence / f"{identity}.zip"
         return [
             [python, "-m", "project_pipeline", "archive", "--root", root, "--output", str(archive)],
@@ -1422,7 +1497,24 @@ class CampaignController:
     def _default_publish_commands(
         self, row: sqlite3.Row | dict[str, Any] | None = None
     ) -> list[list[str]]:
-        return self._default_finalize_commands(row)
+        if row is None:
+            raise ValueError("campaign publication requires the bound campaign row")
+        evidence = Path(str(row["evidence_path"]))
+        return [
+            *self._default_finalize_commands(row),
+            [
+                self._python(),
+                str(self.repository_root / "scripts" / "campaign_release_publication.py"),
+                "--repository-root",
+                str(self.repository_root),
+                "--campaign-database",
+                str(self.path),
+                "--campaign-id",
+                str(row["campaign_id"]),
+                "--evidence-path",
+                str(evidence),
+            ],
+        ]
 
     def _default_post_release_commands(self) -> list[list[str]]:
         return [[self._python(), str(self.repository_root / "scripts" / "campaign_probe.py")]]

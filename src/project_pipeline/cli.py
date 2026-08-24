@@ -480,6 +480,8 @@ def build_parser() -> argparse.ArgumentParser:
     release_factory.add_argument("--asset", type=Path)
     release_factory.add_argument("--fixture-desktop", action="store_true")
     release_factory.add_argument("--campaign-complete", action="store_true")
+    release_factory.add_argument("--campaign-database", type=Path)
+    release_factory.add_argument("--campaign-id")
     release_factory.add_argument("--apply", action="store_true")
     release_factory.add_argument("--approve", action="store_true")
     release_factory.add_argument("--authorization-id")
@@ -3492,11 +3494,30 @@ def _run_release_factory_command(args: argparse.Namespace) -> tuple[dict[str, An
             write_acquired_assets(Path(dest), assets)
             return {"acquired": str(Path(dest)), "assets": sorted(assets)}, 0
         if args.action == "finalize":
+            if not args.campaign_complete or args.campaign_database is None or not args.campaign_id:
+                raise ConfigurationError(
+                    "finalize requires --campaign-complete, --campaign-database, and --campaign-id"
+                )
+            from project_pipeline.autonomy_runtime.campaign import (
+                verify_campaign_publication_eligibility,
+            )
+
+            eligibility = verify_campaign_publication_eligibility(
+                Path(args.campaign_database),
+                repository_root=root,
+                campaign_id=str(args.campaign_id),
+            )
+            if (
+                eligibility["integrated_sha"] != bundle.version.source_sha
+                or eligibility["integrated_tree"] != bundle.version.source_tree
+            ):
+                raise ConfigurationError("finalize campaign identity does not match the release bundle")
             release_id = int(_require_argument(args, "release_id"))
             planned = service.plan_finalize(
                 repository_slug,
                 release_id=release_id,
                 expected_head_sha=bundle.version.source_sha,
+                campaign_complete=bool(args.campaign_complete),
                 actor_id=args.actor_id,
                 correlation_id=args.correlation_id,
             )

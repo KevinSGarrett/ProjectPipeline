@@ -16,6 +16,7 @@ from project_pipeline.autonomy_runtime.campaign import (
     CampaignController,
     evaluate_pp384_admission,
     observe_windows_scheduled_task,
+    verify_campaign_publication_eligibility,
 )
 from project_pipeline.autonomy_runtime.campaign_status import (
     CampaignStatusError,
@@ -56,6 +57,45 @@ def _identity(sha: str = "a" * 40, tree: str = "b" * 40, dirty: bool = False) ->
 
 def _probe_command() -> list[str]:
     return [sys.executable, str(ROOT / "scripts" / "campaign_probe.py")]
+
+
+def _mock_next_verified_publication(
+    controller: CampaignController, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original_execute = controller.execute
+    consumed = False
+
+    def execute(campaign_id: str, argv: list[str], **kwargs: object) -> dict:
+        nonlocal consumed
+        if not consumed:
+            consumed = True
+            return {
+                "campaign_id": campaign_id,
+                "receipt_id": "CREC-REMOTE-PUBLICATION",
+                "command": list(argv),
+                "executed": True,
+                "result": "PASSED",
+                "result_semantics": "remote-publication-verified",
+                "parsed_result": {
+                    "publication": {
+                        "state": "PUBLISHED",
+                        "draft": False,
+                        "target_commitish": "a" * 40,
+                        "source_tree": "b" * 40,
+                        "assets": [
+                            {
+                                "name": "candidate.whl",
+                                "sha256": "c" * 64,
+                                "remote_sha256": "c" * 64,
+                                "bytes_verified": True,
+                            }
+                        ],
+                    }
+                },
+            }
+        return original_execute(campaign_id, argv, **kwargs)
+
+    monkeypatch.setattr(controller, "execute", execute)
 
 
 def _controller(tmp_path: Path, inspect=None) -> CampaignController:
@@ -365,13 +405,25 @@ def test_campaign_execute_reuses_derived_idempotency_key(tmp_path: Path):
     controller.close()
 
 
-def test_finalize_after_seeded_72h(tmp_path: Path):
+def test_finalize_after_seeded_72h_requires_verified_remote_publication(tmp_path: Path):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
     assert ready["stage"] == "RELEASE"
     assert ready["status"] == "72H_ATTESTED"
     ready = controller.advance(ready["campaign_id"])
     assert ready["status"] == "READY_TO_PUBLISH"
+    failed = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
+    assert failed["status"] == "FAILED"
+    assert failed["stage"] == "RELEASE"
+    assert failed["publication_receipts"][0]["result_semantics"] == "probe"
+
+
+def test_finalize_after_seeded_72h_accepts_verified_remote_publication(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = controller.advance(_ready_after_72h(controller, tmp_path)["campaign_id"])
+    _mock_next_verified_publication(controller, monkeypatch)
     published = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
     assert published["status"] == "PUBLISHED"
     assert published["stage"] == "POST_RELEASE"
@@ -379,9 +431,35 @@ def test_finalize_after_seeded_72h(tmp_path: Path):
     controller.close()
 
 
+def test_campaign_publication_eligibility_requires_attested_72h(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = controller.advance(_ready_after_72h(controller, tmp_path)["campaign_id"])
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.campaign.inspect_worktree_identity",
+        lambda _root: _identity(),
+    )
+    eligibility = verify_campaign_publication_eligibility(
+        tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
+    )
+    assert eligibility["attested_elapsed_seconds"] == 72 * 3600
+    controller.qualification._db.execute(
+        "UPDATE qualification_runs SET attested_elapsed_seconds = ? WHERE run_id = ?",
+        (71 * 3600, ready["qualification_run_id"]),
+    )
+    controller.qualification._db.commit()
+    with pytest.raises(ValueError, match="completed 72-hour qualification"):
+        verify_campaign_publication_eligibility(
+            tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
+        )
+    controller.close()
+
+
 def test_advance_auto_finalizes_after_ready(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
+    _mock_next_verified_publication(controller, monkeypatch)
     monkeypatch.setattr(
         controller,
         "_default_reconcile_commands",
@@ -423,6 +501,7 @@ def test_post_release_verify_failure_marks_campaign_failed(
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
     ready = controller.advance(ready["campaign_id"])
+    _mock_next_verified_publication(controller, monkeypatch)
     published = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
     assert published["status"] == "PUBLISHED"
     monkeypatch.setattr(
@@ -441,6 +520,7 @@ def test_reconcile_failure_marks_campaign_failed(tmp_path: Path, monkeypatch: py
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
     ready = controller.advance(ready["campaign_id"])
+    _mock_next_verified_publication(controller, monkeypatch)
     published = controller.finalize(ready["campaign_id"], commands=[_probe_command()])
     verified = controller.advance(published["campaign_id"])
     assert verified["status"] == "RECONCILING"
@@ -461,6 +541,7 @@ def test_publish_to_completion_gate_transition_is_durable(
 ):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)
+    _mock_next_verified_publication(controller, monkeypatch)
     monkeypatch.setattr(controller, "_default_post_release_commands", lambda: [_probe_command()])
     monkeypatch.setattr(controller, "_default_reconcile_commands", lambda: [_probe_command()])
     ready = controller.advance(ready["campaign_id"])
@@ -606,13 +687,16 @@ def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):
         inspect_identity=lambda _root: _identity(),
     )
     try:
-        commands = controller._default_publish_commands()
+        commands = controller._default_publish_commands(
+            {"campaign_id": "QCAMP-TEST", "evidence_path": str(tmp_path / "evidence")}
+        )
         gate = controller._default_completion_gate_commands()
     finally:
         controller.close()
     rendered = [" ".join(item) for item in commands]
     rendered_gate = [" ".join(item) for item in gate]
     assert any(" -m project_pipeline validate --root " in row for row in rendered)
+    assert any("campaign_release_publication.py" in row for row in rendered)
     assert any(
         " -m project_pipeline assurance completion-gate --root " in row for row in rendered_gate
     )
@@ -718,6 +802,25 @@ def test_production_defaults_incomplete_cannot_finalize(
                         "schema_version": "1.0.0",
                         "state": "INCOMPLETE",
                         "final_completion_gate_satisfied": False,
+                    }
+                }
+            )
+        elif kind == "release.remote-publication":
+            stdout = json.dumps(
+                {
+                    "publication": {
+                        "state": "PUBLISHED",
+                        "draft": False,
+                        "target_commitish": "a" * 40,
+                        "source_tree": "b" * 40,
+                        "assets": [
+                            {
+                                "name": "candidate.whl",
+                                "sha256": "c" * 64,
+                                "remote_sha256": "c" * 64,
+                                "bytes_verified": True,
+                            }
+                        ],
                     }
                 }
             )

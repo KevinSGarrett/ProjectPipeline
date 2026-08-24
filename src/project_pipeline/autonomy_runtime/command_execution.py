@@ -35,6 +35,7 @@ ALLOWED_SCRIPT_NAMES = frozenset(
         "scripts/run_autonomy_campaign.py",
         "scripts/campaign_probe.py",
         "scripts/autonomy_campaign_recovery_probe.py",
+        "scripts/campaign_release_publication.py",
     }
 )
 _TAIL_CHARS = 2048
@@ -141,6 +142,8 @@ def command_kind(argv: list[str]) -> str:
         return "validate.repository"
     if "campaign_probe.py" in joined:
         return "probe"
+    if "campaign_release_publication.py" in joined:
+        return "release.remote-publication"
     return "allowlisted"
 
 
@@ -242,6 +245,43 @@ def evaluate_command_semantics(
             "result": "PASSED" if ok else "FAILED",
             "reason": "probe" if ok else "probe-not-ok",
             "state": None,
+            "final_completion_gate_satisfied": False,
+            "parsed": payload,
+            "documents": documents,
+        }
+    if kind == "release.remote-publication":
+        publication = payload.get("publication")
+        if not isinstance(publication, dict):
+            return {
+                "kind": kind,
+                "result": "FAILED",
+                "reason": "malformed-remote-publication",
+                "state": None,
+                "final_completion_gate_satisfied": False,
+                "parsed": payload,
+                "documents": documents,
+            }
+        assets = publication.get("assets")
+        identity_ok = (
+            not expected_sha or publication.get("target_commitish") == expected_sha
+        ) and (not expected_tree or publication.get("source_tree") == expected_tree)
+        assets_ok = (
+            isinstance(assets, list)
+            and bool(assets)
+            and all(
+                isinstance(item, dict)
+                and item.get("bytes_verified") is True
+                and item.get("sha256") == item.get("remote_sha256")
+                for item in assets
+            )
+        )
+        published = publication.get("draft") is False and publication.get("state") == "PUBLISHED"
+        ok = identity_ok and assets_ok and published
+        return {
+            "kind": kind,
+            "result": "PASSED" if ok else "FAILED",
+            "reason": "remote-publication-verified" if ok else "remote-publication-unverified",
+            "state": str(publication.get("state") or ""),
             "final_completion_gate_satisfied": False,
             "parsed": payload,
             "documents": documents,
