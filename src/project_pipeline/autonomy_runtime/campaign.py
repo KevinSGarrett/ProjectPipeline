@@ -1488,6 +1488,10 @@ class CampaignController:
         campaign_id = str(source.get("campaign_id") or "")
         evidence_root = Path(str(source.get("evidence_path") or self.repository_root / ".local"))
         state_root = Path(str(source.get("state_path") or self.repository_root / ".local"))
+        # The live Cursor qualification is intentionally bounded but can take longer
+        # than a local health probe.  Keep its allowance below the stale-owner
+        # boundary while scaling it with the heartbeat used by the running campaign.
+        cursor_timeout = min(120.0, max(60.0, self.heartbeat_seconds * 2.0))
 
         def duration_probe(
             probe_id: str,
@@ -1571,7 +1575,7 @@ class CampaignController:
             duration_probe(
                 "cursor_cli_provider_dispatch",
                 cadence_seconds=max(cadence, 4 * 60 * 60),
-                timeout_seconds=60.0,
+                timeout_seconds=cursor_timeout,
             ),
             duration_probe("github_live_readback", timeout_seconds=45.0),
             duration_probe("jira_live_readback", timeout_seconds=45.0),

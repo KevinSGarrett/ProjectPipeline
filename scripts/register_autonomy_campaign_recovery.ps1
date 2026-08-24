@@ -25,8 +25,8 @@ param(
     [int]$IntervalMinutes = 5,
     [int]$RepetitionDays = 31,
     [int]$Cycles = 0,
-    [double]$HeartbeatSeconds = 30,
-    [double]$HeartbeatMaxAgeSeconds = 90
+    [double]$HeartbeatSeconds = 60,
+    [double]$HeartbeatMaxAgeSeconds = 180
 )
 
 Set-StrictMode -Version Latest
@@ -131,7 +131,7 @@ if ($RepetitionDays -lt 1 -or $RepetitionDays -gt 31) {
 }
 $exec = New-ScheduledTaskAction -Execute $python -Argument "`"$probe`" --config `"$configPath`"" -WorkingDirectory $root
 $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes $IntervalMinutes) -RepetitionDuration (New-TimeSpan -Days $RepetitionDays)
-$settings = New-ScheduledTaskSettingsSet -Hidden -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries
+$settings = New-ScheduledTaskSettingsSet -Hidden -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -MultipleInstances IgnoreNew
 Register-ScheduledTask -TaskName $TaskName -Action $exec -Trigger $trigger -Settings $settings -Force | Out-Null
 [ordered]@{
     task_name = $TaskName
