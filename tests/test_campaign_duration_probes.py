@@ -4,12 +4,13 @@ import json
 import sys
 from pathlib import Path
 
+from project_pipeline.autonomy_runtime import cursor_cli_qualification as cursor_cli_module
 from project_pipeline.autonomy_runtime.command_execution import (
     command_is_allowlisted,
     command_kind,
     evaluate_command_semantics,
 )
-from project_pipeline.autonomy_runtime.duration_probes import required_probe_ids
+from project_pipeline.autonomy_runtime.duration_probes import _probe_cursor, required_probe_ids
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -81,3 +82,34 @@ def test_repository_validation_pass_summary_is_machine_classified() -> None:
     )
     assert rejected["result"] == "FAILED"
     assert rejected["reason"] == "repository-validation-summary-invalid"
+
+
+def test_cursor_duration_probe_keeps_workspace_disposable_but_uses_durable_resolver(
+    monkeypatch, tmp_path: Path
+) -> None:
+    observed: dict[str, object] = {}
+
+    def qualify_cursor_cli_provider(**kwargs: object) -> dict[str, object]:
+        observed.update(kwargs)
+        return {
+            "outcome": "PASSED",
+            "provider_id": "provider:cursor-cli",
+            "live_dispatch": {"ok": True},
+            "replay_verified": True,
+            "reasons": [],
+        }
+
+    monkeypatch.setattr(
+        cursor_cli_module,
+        "qualify_cursor_cli_provider",
+        qualify_cursor_cli_provider,
+    )
+    root = tmp_path / "candidate"
+    state_root = tmp_path / "campaign-state"
+
+    report = _probe_cursor(root, state_root)
+
+    assert report["outcome"] == "PASSED"
+    assert observed["repository_root"] == root
+    assert observed["disposable_root"] == state_root / "cursor-disposable"
+    assert "durable_dir" not in observed
