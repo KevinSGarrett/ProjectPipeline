@@ -5,6 +5,7 @@ import json
 import shutil
 import subprocess
 import sys
+import time
 from contextlib import suppress
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -66,6 +67,8 @@ _LIVE_QUAL_JIRA_LOCAL_ID = "PP-TASK-000384"
 _LIVE_QUAL_PROBE_MARKER = "PP384-LIVE-QUAL-PROBE"
 _GITHUB_PROBE_BRANCH = "qual/pp384-live-probe"
 _ALLOWED_GITHUB_HOSTS = frozenset({"github.com", "www.github.com"})
+_GITHUB_BRANCH_DELETE_READBACK_ATTEMPTS = 5
+_GITHUB_BRANCH_DELETE_READBACK_DELAY_SECONDS = 0.2
 
 
 def _github_repository_slug_from_url(url: str) -> str | None:
@@ -316,9 +319,11 @@ def _probe_github_write_readback(repository_slug: str, token: str) -> dict[str, 
             branch.name for branch in adapter.iter_branches(repository_slug)
         }
         adapter.delete_branch(repository_slug, branch=branch_name, context=context)
-        observed_after_delete = branch_name not in {
-            branch.name for branch in adapter.iter_branches(repository_slug)
-        }
+        observed_after_delete = _branch_absent_after_delete_readback(
+            adapter,
+            repository_slug=repository_slug,
+            branch_name=branch_name,
+        )
         readback_ok = (
             observed_after_create
             and observed_after_delete
@@ -341,6 +346,25 @@ def _probe_github_write_readback(repository_slug: str, token: str) -> dict[str, 
             "write_readback_ok": False,
             "reason": error.__class__.__name__,
         }
+
+
+def _branch_absent_after_delete_readback(
+    adapter: Any,
+    *,
+    repository_slug: str,
+    branch_name: str,
+    attempts: int = _GITHUB_BRANCH_DELETE_READBACK_ATTEMPTS,
+    delay_seconds: float = _GITHUB_BRANCH_DELETE_READBACK_DELAY_SECONDS,
+    sleeper: Any = time.sleep,
+) -> bool:
+    """Confirm a successful GitHub branch deletion despite eventual read consistency."""
+
+    for attempt in range(attempts):
+        if branch_name not in {branch.name for branch in adapter.iter_branches(repository_slug)}:
+            return True
+        if attempt + 1 < attempts:
+            sleeper(delay_seconds)
+    return False
 
 
 def _probe_jira_write_readback(repository_root: Path) -> dict[str, Any]:
