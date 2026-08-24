@@ -436,6 +436,24 @@ def test_stale_timed_runner_preserves_disqualified_and_starts_fresh(tmp_path: Pa
     controller.close()
 
 
+def test_recover_refuses_a_terminal_disqualified_campaign(tmp_path: Path):
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    controller._disqualify(admitted["campaign_id"], "duration-probe-failed")
+
+    with pytest.raises(ValueError, match="terminal campaign cannot recover"):
+        controller.recover(admitted["campaign_id"])
+
+    assert controller.get(admitted["campaign_id"])["status"] == "DISQUALIFIED"
+    assert controller.current_running_campaigns() == []
+    controller.close()
+
+
 def test_allowlist_rejects_untrusted_and_executes_probe(tmp_path: Path):
     probe = [
         sys.executable,

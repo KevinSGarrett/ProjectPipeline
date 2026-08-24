@@ -63,6 +63,21 @@ def _load_config(path: Path) -> dict:
     return payload
 
 
+def _retarget_config(path: Path, config: dict, campaign: dict) -> None:
+    """Atomically bind future recovery probes to the successor campaign."""
+
+    updated = dict(config)
+    updated["campaign_id"] = str(campaign["campaign_id"])
+    updated["fence"] = str(campaign["fence"])
+    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        temporary.write_text(json.dumps(updated, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        os.replace(temporary, path)
+    finally:
+        if temporary.exists():
+            temporary.unlink()
+
+
 def _pid_file_identity(path: Path) -> dict | None:
     if not path.is_file():
         return None
@@ -261,6 +276,24 @@ def main() -> int:
         fence = str(config.get("fence") or "")
         if fence and campaign["fence"] != fence:
             raise SystemExit("campaign fence does not match bound fence")
+        if str(campaign["status"]) in {"DISQUALIFIED", "FAILED", "STOPPED", "FINALIZED"}:
+            controller.project_status(
+                campaign_id,
+                status_path=status_path,
+                task_health={"registered": True, "probe": "inactive"},
+            )
+            print(
+                json.dumps(
+                    {
+                        "action": "inactive",
+                        "campaign_id": campaign_id,
+                        "status": campaign["status"],
+                        "user_action_required": False,
+                    },
+                    sort_keys=True,
+                )
+            )
+            return 0
         pid_identity = _pid_file_identity(pid_path)
         if _healthy(
             campaign,
@@ -302,6 +335,9 @@ def main() -> int:
         if recovered.returncode != 0:
             raise SystemExit(recovered.stderr or "recover failed")
         resume_id = _parse_campaign_id(recovered.stdout or "") or campaign_id
+        resumed = controller.get(resume_id)
+        if resume_id != campaign_id:
+            _retarget_config(args.config, config, resumed)
         extra: list[str] = []
         if int(config.get("cycles") or 0) > 0:
             extra.extend(["--cycles", str(int(config["cycles"]))])

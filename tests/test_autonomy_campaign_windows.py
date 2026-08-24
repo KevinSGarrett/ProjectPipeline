@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import runpy
 import subprocess
 import sys
 import uuid
@@ -169,6 +170,91 @@ def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
     assert written["user_action_required"] is False
 
 
+def test_recovery_probe_preserves_a_disqualified_campaign(tmp_path: Path):
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=0.2,
+        inspect_identity=lambda _root: _identity(),
+        finalize_commands=[],
+        allow_unbound_candidate_for_tests=True,
+    )
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    controller._disqualify(admitted["campaign_id"], "duration-probe-failed")
+    controller.close()
+
+    config_path = tmp_path / "recovery_probe.json"
+    status_path = tmp_path / "status.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "repository_root": str(ROOT),
+                "python_exe": sys.executable,
+                "database": str(tmp_path / "campaign.sqlite3"),
+                "campaign_id": admitted["campaign_id"],
+                "expected_sha": "a" * 40,
+                "expected_tree": "b" * 40,
+                "fence": admitted["fence"],
+                "status_path": str(status_path),
+                "pid_path": str(tmp_path / "campaign.pid"),
+                "log_directory": str(tmp_path),
+                "heartbeat_seconds": 0.2,
+                "heartbeat_max_age_seconds": 1.0,
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    result = subprocess.run(
+        [sys.executable, str(PROBE), "--config", str(config_path)],
+        cwd=str(ROOT),
+        capture_output=True,
+        text=True,
+        check=False,
+        env={**os.environ, "PYTHONPATH": str(ROOT / "src"), "PYTHONUTF8": "1"},
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert json.loads(result.stdout)["action"] == "inactive"
+    reopened = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=0.2,
+        inspect_identity=lambda _root: _identity(),
+        finalize_commands=[],
+        allow_unbound_candidate_for_tests=True,
+    )
+    assert reopened.get(admitted["campaign_id"])["status"] == "DISQUALIFIED"
+    assert reopened.current_running_campaigns() == []
+    reopened.close()
+
+
+def test_recovery_probe_atomically_retargets_the_successor_config(tmp_path: Path):
+    config_path = tmp_path / "recovery_probe.json"
+    config_path.write_text(
+        json.dumps({"campaign_id": "QCAMP-parent", "fence": "CFENCE-parent"}),
+        encoding="utf-8",
+    )
+    probe = runpy.run_path(str(PROBE))
+
+    probe["_retarget_config"](
+        config_path,
+        json.loads(config_path.read_text(encoding="utf-8")),
+        {"campaign_id": "QCAMP-child", "fence": "CFENCE-child"},
+    )
+
+    assert json.loads(config_path.read_text(encoding="utf-8")) == {
+        "campaign_id": "QCAMP-child",
+        "fence": "CFENCE-child",
+    }
+    assert not list(tmp_path.glob(".recovery_probe.json.*.tmp"))
+
+
 def _register(
     action: str,
     tmp_path: Path,
@@ -300,6 +386,10 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
         payload = json.loads(probed.stdout)
         assert payload["action"] == "recovered"
         assert payload["user_action_required"] is False
+        recovered_campaign_id = payload["campaign_id"]
+        updated_config = json.loads(config_path.read_text(encoding="utf-8"))
+        assert updated_config["campaign_id"] == recovered_campaign_id
+        assert updated_config["fence"]
         if pid_path.is_file():
             pid_payload = json.loads(pid_path.read_text(encoding="utf-8"))
             spawned = pid_payload.get("process_id")
@@ -309,11 +399,17 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
             "status",
             tmp_path,
             task_name,
-            campaign_id,
+            recovered_campaign_id,
             expected_sha=str(identity["sha"]),
             expected_tree=str(identity["tree"]),
+            # A read-only task status must leave the dynamically retargeted
+            # recovery binding intact.
         )
         assert after["registered"] is True
+        assert (
+            json.loads(config_path.read_text(encoding="utf-8"))["campaign_id"]
+            == recovered_campaign_id
+        )
     finally:
         if spawned:
             subprocess.run(
@@ -324,7 +420,7 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
                     "--database",
                     str(tmp_path / "campaign.sqlite3"),
                     "--campaign-id",
-                    campaign_id,
+                    recovered_campaign_id,
                     "--repository-root",
                     str(ROOT),
                 ],
