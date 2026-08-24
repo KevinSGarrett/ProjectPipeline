@@ -170,7 +170,9 @@ class RepositorySteward:
             operation_type=GitOperationType.MERGE_PULL_REQUEST,
             repository_slug=repository_slug,
             target=str(number),
-            idempotency_key=f"github-merge:{repository_slug}:{number}:{required_head}",
+            idempotency_key=(
+                f"github-merge:{repository_slug}:{number}:{required_head}:{method}"
+            ),
             actor_id=actor_id,
             correlation_id=correlation_id,
             payload={

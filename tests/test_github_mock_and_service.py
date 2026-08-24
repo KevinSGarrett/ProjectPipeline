@@ -185,6 +185,35 @@ def test_unknown_merge_outcome_is_not_retried(tmp_path):
         assert adapter.calls.count(("merge_pull_request", "1")) == 1
 
 
+def test_failed_merge_can_be_replanned_with_a_different_method(tmp_path):
+    repo = make_repo(tmp_path)
+    adapter = seeded_adapter()
+    db = tmp_path / "state.db"
+    with GitHubStewardStore(db, Path.cwd()) as store:
+        steward = RepositorySteward(local=LocalGitRepository(repo), remote=adapter, store=store)
+        _, rejected = steward.plan_merge(
+            "owner/repo",
+            1,
+            actor_id="actor:test",
+            correlation_id="corr:merge-method",
+            method="merge",
+        )
+        store.save_operation(rejected.model_copy(update={"state": GitOperationState.FAILED}))
+
+        gate, replacement = steward.plan_merge(
+            "owner/repo",
+            1,
+            actor_id="actor:test",
+            correlation_id="corr:merge-method",
+            method="squash",
+        )
+
+        assert gate.state.value == "READY"
+        assert replacement.idempotency_key != rejected.idempotency_key
+        assert replacement.idempotency_key.endswith(":squash")
+        assert replacement.payload["method"] == "squash"
+
+
 def test_cleanup_protects_default_and_active_worktree(tmp_path):
     repo = make_repo(tmp_path)
     adapter = seeded_adapter()
