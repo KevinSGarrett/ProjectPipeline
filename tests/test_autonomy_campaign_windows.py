@@ -450,7 +450,10 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
         recovered_campaign_id = payload["campaign_id"]
         updated_config = json.loads(config_path.read_text(encoding="utf-8"))
         assert updated_config["campaign_id"] == recovered_campaign_id
-        assert updated_config["fence"]
+        if recovered_campaign_id != campaign_id:
+            assert updated_config["fence"]
+        else:
+            assert updated_config["fence"] == ""
         if pid_path.is_file():
             pid_payload = json.loads(pid_path.read_text(encoding="utf-8"))
             spawned = pid_payload.get("process_id")
