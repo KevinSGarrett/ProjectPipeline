@@ -623,6 +623,11 @@ def _coordinator_jira_receipt_probe(
     if not valid:
         unavailable["reason"] = "coordinator_jira_receipt_policy_mismatch"
         return unavailable
+    # mypy cannot retain narrowing through the aggregate validity predicate.
+    # Repeat this already-required condition at the point of indexed access.
+    if not isinstance(jira_write_probe, dict):
+        unavailable["reason"] = "coordinator_jira_receipt_policy_mismatch"
+        return unavailable
     allowed_signers = repository_root / _COORDINATOR_JIRA_ALLOWED_SIGNERS
     if not _verify_coordinator_jira_signature(
         receipt_sha256=receipt_sha256,
@@ -1045,7 +1050,7 @@ def run_live_qualification(
         )
     candidate_head, candidate_tree = _git_identity(repository_root)
     candidate_clean_before = _git_checkout_clean(repository_root)
-    stages = (
+    stages: tuple[StageResult, ...] = (
         _qualify_windows_service(repository_root=repository_root, disposable_root=root),
         _qualify_command_center(disposable_root=root),
         _qualify_local_provider(root),
