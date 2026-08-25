@@ -123,6 +123,25 @@ def _write_local_record_once(path: Path, payload: dict[str, Any]) -> dict[str, A
     }
 
 
+def _resolve_bootstrap_durable_dir(repository_root: Path, durable_dir: Path | None) -> Path:
+    """Return a worker-local destination for newly derived private records.
+
+    ``resolve_durable_dir`` deliberately supports legacy recovery flows that may
+    use the canonical coordinator state.  A new isolated-worker bootstrap has a
+    stricter ownership boundary: both its default and any explicit destination
+    must live under this clone's ``.local`` directory.
+    """
+    local_root = (repository_root / ".local").resolve()
+    target = (durable_dir or local_root / "state" / "takeover").resolve()
+    try:
+        target.relative_to(local_root)
+    except ValueError as error:
+        raise RecoveryError(
+            "machine-local bootstrap durable_dir must be within repository_root/.local"
+        ) from error
+    return target
+
+
 def bootstrap_machine_local_attestation_records(
     *,
     repository_root: Path,
@@ -138,7 +157,7 @@ def bootstrap_machine_local_attestation_records(
     re-evaluated before it is returned.
     """
     repository_root = repository_root.resolve()
-    target = resolve_durable_dir(repository_root, durable_dir).resolve()
+    target = _resolve_bootstrap_durable_dir(repository_root, durable_dir)
     verify = (verification_dir or target / "bootstrap-verification").resolve()
     policy = load_current_attestation_policy(repository_root)
     public_attestation = _parse_public_record(
