@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "eea47760309b75fbdf7e7248a800eb7cfafb3b3bfc71e5ef7cad8569f02249db",
+  "aggregate_sha256": "5b56aa8626caa44643417e1e3e8221236bec61db529eca4e1f609b1f748ff1ac",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 3035,
+  "file_count": 3036,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -11986,6 +11986,11 @@
       "size_bytes": 1665
     },
     {
+      "path": "scripts/bootstrap_worker_attestation.py",
+      "sha256": "55f0460ff71a6579a9c332f23fba62c7a47906008bea2406978980a69c286c2b",
+      "size_bytes": 904
+    },
+    {
       "path": "scripts/build_campaign_desktop_artifacts.py",
       "sha256": "8ab59fde0781016bc6a2ddf761b3bddf78a513b572662da9c3079821d1c05f3a",
       "size_bytes": 9118
@@ -13242,8 +13247,8 @@
     },
     {
       "path": "src/project_pipeline/lifecycle/attestation_recovery.py",
-      "sha256": "bd9cb042c5f6b41e18e25321c9ebac44c32d8c408cd9e8ce9482e69090edc4de",
-      "size_bytes": 21485
+      "sha256": "990b8b717034b9d2c0a51e68a16aee6eccf5d3a5661f9c67cbc91889137251c4",
+      "size_bytes": 29931
     },
     {
       "path": "src/project_pipeline/lifecycle/contracts.py",
@@ -14137,8 +14142,8 @@
     },
     {
       "path": "tests/test_attestation_recovery.py",
-      "sha256": "bfafe4a016268339bc7901f4efea62d4279ab41b92ed2af43fccf9097100f1e6",
-      "size_bytes": 9061
+      "sha256": "353d9f57c267c82bbde143c4ee20ddbc2fe0ab95fc5c2f7eadd004843e3f1137",
+      "size_bytes": 13300
     },
     {
       "path": "tests/test_autonomous_governance.py",
@@ -15186,7 +15191,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-24T22:45:27.793192+00:00",
+  "generated_at_utc": "2026-08-25T02:24:40.073850+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15196,5 +15201,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30457962
+  "total_bytes": 30471551
 }

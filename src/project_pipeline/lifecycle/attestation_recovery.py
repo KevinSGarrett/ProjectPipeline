@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -69,6 +70,196 @@ class RecoveryDisposition(StrEnum):
 
 class RecoveryError(ValueError):
     """Raised when an import would write mismatched or unauthorized bytes."""
+
+
+def _parse_public_record(
+    path: Path, *, expected_sha256: str, expected_bytes: int
+) -> dict[str, Any]:
+    if not path.is_file():
+        raise RecoveryError(f"required public record is missing: {path}")
+    payload = path.read_bytes()
+    if len(payload) != expected_bytes or sha256_bytes(payload) != expected_sha256:
+        raise RecoveryError("public record digest or length does not match the accepted subject")
+    try:
+        parsed = json.loads(payload.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as error:
+        raise RecoveryError("public record is not valid JSON") from error
+    if not isinstance(parsed, dict):
+        raise RecoveryError("public record is not a JSON object")
+    return parsed
+
+
+def _require_utc_timestamp(value: object, *, field: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise RecoveryError(f"public record has no valid {field}")
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as error:
+        raise RecoveryError(f"public record has no valid {field}") from error
+    if parsed.tzinfo is None:
+        raise RecoveryError(f"public record has no valid {field}")
+    return value
+
+
+def _write_local_record_once(path: Path, payload: dict[str, Any]) -> dict[str, Any]:
+    """Create one local record without ever overwriting an existing record."""
+    encoded = (json.dumps(payload, sort_keys=True) + "\n").encode("utf-8")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        with path.open("xb") as handle:
+            handle.write(encoded)
+            handle.flush()
+            os.fsync(handle.fileno())
+    except FileExistsError:
+        return {"path": str(path), "applied": False, "reason": "already-present"}
+    actual = path.read_bytes()
+    if actual != encoded:
+        raise RecoveryError("machine-local attestation readback did not match the requested record")
+    return {
+        "path": str(path),
+        "applied": True,
+        "sha256": sha256_bytes(actual),
+        "byte_length": len(actual),
+    }
+
+
+def _resolve_bootstrap_durable_dir(repository_root: Path, durable_dir: Path | None) -> Path:
+    """Return a worker-local destination for newly derived private records.
+
+    ``resolve_durable_dir`` deliberately supports legacy recovery flows that may
+    use the canonical coordinator state.  A new isolated-worker bootstrap has a
+    stricter ownership boundary: both its default and any explicit destination
+    must live under this clone's ``.local`` directory.
+    """
+    local_root = (repository_root / ".local").resolve()
+    target = (durable_dir or local_root / "state" / "takeover").resolve()
+    try:
+        target.relative_to(local_root)
+    except ValueError as error:
+        raise RecoveryError(
+            "machine-local bootstrap durable_dir must be within repository_root/.local"
+        ) from error
+    return target
+
+
+def bootstrap_machine_local_attestation_records(
+    *,
+    repository_root: Path,
+    durable_dir: Path | None = None,
+    verification_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Establish CPU-local attestation records from accepted public evidence.
+
+    This is deliberately a one-way, no-overwrite bootstrap for a newly isolated
+    worker. It never imports a different machine's private state, credential, or
+    campaign evidence. Exact public bytes and the active policy must validate
+    before any local record is created, and the result is independently
+    re-evaluated before it is returned.
+    """
+    repository_root = repository_root.resolve()
+    target = _resolve_bootstrap_durable_dir(repository_root, durable_dir)
+    verify = (verification_dir or target / "bootstrap-verification").resolve()
+    policy = load_current_attestation_policy(repository_root)
+    public_attestation = _parse_public_record(
+        repository_root / PUBLIC_ATTESTATION_REF,
+        expected_sha256=EXPECTED_PUBLIC_ATTESTATION_SHA256,
+        expected_bytes=EXPECTED_PUBLIC_ATTESTATION_BYTES,
+    )
+    public_qualification = _parse_public_record(
+        repository_root / PUBLIC_QUALIFICATION_REF,
+        expected_sha256=EXPECTED_PUBLIC_QUALIFICATION_SHA256,
+        expected_bytes=EXPECTED_PUBLIC_QUALIFICATION_BYTES,
+    )
+    required_identity = {
+        "project_id": policy.project_id,
+        "provider_id": policy.provider_id,
+        "scope": policy.scope,
+    }
+    if (
+        any(public_attestation.get(key) != value for key, value in required_identity.items())
+        or public_attestation.get("approved") is not True
+        or any(public_qualification.get(key) != value for key, value in required_identity.items())
+        or public_qualification.get("qualified") is not True
+    ):
+        raise RecoveryError("public records do not match the active attestation policy")
+    approved_at = _require_utc_timestamp(
+        public_attestation.get("approved_at_utc"), field="approved_at_utc"
+    )
+    verified_at = _require_utc_timestamp(
+        public_qualification.get("verified_at_utc"), field="verified_at_utc"
+    )
+    attestation_fingerprint = DurableAttestation.fingerprint_for(policy.attestation_inputs())
+    if attestation_fingerprint != HISTORICAL_ATTESTATION_FINGERPRINT:
+        raise RecoveryError("active policy does not match the accepted attestation fingerprint")
+    qualification_fingerprint = DurableProviderQualificationEvidence.fingerprint_for(
+        project_id=policy.project_id,
+        provider_id=policy.provider_id,
+        scope=policy.scope,
+        qualified=True,
+    )
+    preexisting = evaluate_attestation_recovery(
+        repository_root=repository_root,
+        source_attestation=repository_root / PUBLIC_ATTESTATION_REF,
+        source_qualification=repository_root / PUBLIC_QUALIFICATION_REF,
+        durable_attestation_path=target / "privacy_attestation.json",
+        durable_qualification_path=target / "provider_qualification.json",
+        verification_dir=verify / "before-bootstrap",
+        historical_receipt_path=repository_root / HISTORICAL_RECEIPT_REF,
+        policy=policy,
+    )
+    preexisting_by_kind = {item["kind"]: item for item in preexisting["artifacts"]}
+    for filename, kind in (
+        ("privacy_attestation.json", "privacy_attestation"),
+        ("provider_qualification.json", "provider_qualification"),
+    ):
+        if (target / filename).exists() and (
+            preexisting_by_kind[kind]["disposition"] != RecoveryDisposition.RECOVERED_VALID.value
+        ):
+            raise RecoveryError("refusing to replace a mismatched machine-local attestation record")
+    writes = {
+        "privacy_attestation": _write_local_record_once(
+            target / "privacy_attestation.json",
+            {
+                "fingerprint": attestation_fingerprint,
+                "approved": True,
+                **required_identity,
+                "approved_at_utc": approved_at,
+                "evidence_ref": PUBLIC_ATTESTATION_REF,
+                "evidence_fingerprint": EXPECTED_PUBLIC_ATTESTATION_SHA256,
+            },
+        ),
+        "provider_qualification": _write_local_record_once(
+            target / "provider_qualification.json",
+            {
+                "qualified": True,
+                "fingerprint": qualification_fingerprint,
+                **required_identity,
+                "verified_at_utc": verified_at,
+                "evidence_ref": PUBLIC_QUALIFICATION_REF,
+                "evidence_fingerprint": EXPECTED_PUBLIC_QUALIFICATION_SHA256,
+            },
+        ),
+    }
+    evaluation = evaluate_attestation_recovery(
+        repository_root=repository_root,
+        source_attestation=repository_root / PUBLIC_ATTESTATION_REF,
+        source_qualification=repository_root / PUBLIC_QUALIFICATION_REF,
+        durable_attestation_path=target / "privacy_attestation.json",
+        durable_qualification_path=target / "provider_qualification.json",
+        verification_dir=verify,
+        historical_receipt_path=repository_root / HISTORICAL_RECEIPT_REF,
+        policy=policy,
+    )
+    if evaluation.get("accepted_for_restore") is not True:
+        raise RecoveryError("machine-local attestation bootstrap did not revalidate")
+    return {
+        "schema_version": "1.0.0",
+        "durable_dir": str(target),
+        "writes": writes,
+        "evaluation": evaluation,
+        "cross_machine_state_imported": False,
+        "secret_value_observed": False,
+    }
 
 
 @dataclass(frozen=True)
