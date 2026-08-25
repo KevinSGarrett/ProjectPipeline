@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from collections.abc import Mapping
 import os
+from collections.abc import Mapping
 from pathlib import Path
 
 from project_pipeline.configuration.loader import (
@@ -11,7 +11,6 @@ from project_pipeline.configuration.loader import (
     load_runtime_configuration,
     parse_env_file,
 )
-
 
 _CAMPAIGN_RUNTIME_KEYS = frozenset(
     {"JIRA_BASE_URL", "JIRA_USER_EMAIL", "JIRA_API_TOKEN_REF", "GITHUB_TOKEN_REF"}
