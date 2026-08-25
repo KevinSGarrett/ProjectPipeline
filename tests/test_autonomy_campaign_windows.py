@@ -130,6 +130,13 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
     assert payload["task_name"] == "ProjectPipelineAutonomyCampaign"
     assert "MaxValue" not in RECOVERY.read_text(encoding="utf-8")
     assert "autonomy_campaign_recovery_probe.py" in RECOVERY.read_text(encoding="utf-8")
+    assert "RuntimeEnvironmentFile" in text
+    assert "New-ScheduledTaskPrincipal" in text
+    assert "-LogonType Interactive" in text
+    assert "-RunLevel Limited" in text
+    assert "-ExecutionTimeLimit (New-TimeSpan -Minutes 4)" in text
+    assert "-MultipleInstances IgnoreNew" in text
+    assert "scheduled_principal_sid" in text
 
 
 def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
@@ -430,7 +437,20 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
             expected_tree=str(identity["tree"]),
         )
         assert status["registered"] is True
+        assert status["enabled"] is True
         assert status["hidden"] is True
+        assert status["principal_identity"]
+        assert status["scheduled_principal_sid"].startswith("S-")
+        assert status["principal_sid"] == status["scheduled_principal_sid"]
+        assert status["principal_sid_matches_expected"] is True
+        assert status["principal_identity_matches_expected"] is True
+        assert status["principal_logon_type"] == "Interactive"
+        assert status["principal_run_level"] == "Limited"
+        assert Path(status["action_executable"]).resolve() == Path(sys.executable).resolve()
+        assert Path(status["working_directory"]).resolve() == ROOT
+        assert "autonomy_campaign_recovery_probe.py" in status["action_arguments"]
+        assert status["execution_time_limit"] == "PT4M"
+        assert status["multiple_instances"] == "IgnoreNew"
         assert status["user_action_required"] is False
         pid_path = tmp_path / "logs" / "campaign.pid"
         pid_path.write_text(json.dumps({"process_id": 2147000000}) + "\n", encoding="utf-8")

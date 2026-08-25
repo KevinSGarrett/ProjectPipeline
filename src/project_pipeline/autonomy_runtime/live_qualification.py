@@ -165,12 +165,13 @@ def _gh_auth_available() -> bool:
 
 
 def _credential_environment(repository_root: Path) -> dict[str, str]:
+    """Load legacy files only as defaults; process-bound campaign refs take precedence."""
+
     import os
 
     from project_pipeline.configuration.loader import parse_env_file
 
-    merged = dict(os.environ)
-    merged.update(parse_env_file(repository_root / ".env"))
+    merged: dict[str, str] = {}
     project_json = repository_root / "config" / "project.json"
     if project_json.is_file():
         target_root = json.loads(project_json.read_text(encoding="utf-8")).get("target_local_root")
@@ -178,6 +179,10 @@ def _credential_environment(repository_root: Path) -> dict[str, str]:
             canonical_env = Path(target_root).expanduser().resolve() / ".env"
             if canonical_env.is_file():
                 merged.update(parse_env_file(canonical_env))
+    merged.update(parse_env_file(repository_root / ".env"))
+    # The recovery runner supplies validated references through its constrained
+    # process environment.  A mutable checkout .env must never replace them.
+    merged.update(os.environ)
     return merged
 
 
@@ -216,19 +221,26 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
 
 
 def _build_jira_adapter(repository_root: Path) -> Any:
+    from project_pipeline.configuration.campaign_environment import (
+        campaign_lease_deadline,
+        campaign_secret_scope,
+    )
     from project_pipeline.configuration.loader import load_runtime_configuration
     from project_pipeline.configuration.secrets import SecretResolver
     from project_pipeline.jira_steward.adapter import AtlassianJiraCloudAdapter
 
-    configuration = load_runtime_configuration(
-        repository_root, environment=_credential_environment(repository_root)
-    )
+    environment = _credential_environment(repository_root)
+    configuration = load_runtime_configuration(repository_root, environment=environment)
     integrations = configuration.settings.integrations
     if not integrations.jira_base_url or not integrations.jira_user_email:
         raise RuntimeError("jira_integration_not_configured")
     if integrations.jira_api_token is None:
         raise RuntimeError("jira_api_token_unconfigured")
-    token = SecretResolver(repository_root, _credential_environment(repository_root)).resolve(
+    required_scope = None
+    if integrations.jira_api_token.scheme == "dpapi":
+        campaign_lease_deadline(environment)
+        required_scope = campaign_secret_scope(environment)
+    token = SecretResolver(repository_root, environment, required_scope=required_scope).resolve(
         integrations.jira_api_token
     )
     return AtlassianJiraCloudAdapter(

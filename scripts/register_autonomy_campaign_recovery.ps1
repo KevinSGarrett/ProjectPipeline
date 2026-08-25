@@ -22,6 +22,7 @@ param(
     [string]$EvidencePath = "",
     [string]$Pp384Evidence = "",
     [string]$StatusPath = "",
+    [string]$RuntimeEnvironmentFile = "",
     [int]$IntervalMinutes = 5,
     [int]$RepetitionDays = 31,
     [int]$Cycles = 0,
@@ -48,6 +49,16 @@ if (-not $StatusPath) {
 if (-not $StatePath) { $StatePath = Join-Path -Path $LogDirectory -ChildPath "state" }
 if (-not $EvidencePath) { $EvidencePath = Join-Path -Path $LogDirectory -ChildPath "evidence" }
 if (-not $Pp384Evidence) { $Pp384Evidence = Join-Path -Path $LogDirectory -ChildPath "pp384.json" }
+$runtimeEnvironmentPath = ""
+$windowsIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+$scheduledPrincipalIdentity = $windowsIdentity.Name
+$scheduledPrincipalSid = $windowsIdentity.User.Value
+if ($RuntimeEnvironmentFile) {
+    $runtimeEnvironmentPath = (Resolve-Path -LiteralPath $RuntimeEnvironmentFile).Path
+    if (-not (Test-Path -LiteralPath $runtimeEnvironmentPath -PathType Leaf)) {
+        throw "campaign runtime environment file is unavailable"
+    }
+}
 
 $config = [ordered]@{
     schema_version = "1.0.0"
@@ -69,6 +80,9 @@ $config = [ordered]@{
     heartbeat_seconds = $HeartbeatSeconds
     heartbeat_max_age_seconds = $HeartbeatMaxAgeSeconds
     cycles = $Cycles
+    runtime_environment_file = $runtimeEnvironmentPath
+    scheduled_principal_identity = $scheduledPrincipalIdentity
+    scheduled_principal_sid = $scheduledPrincipalSid
     simulated_elapsed = $false
 }
 $payload = [ordered]@{
@@ -87,6 +101,9 @@ $payload = [ordered]@{
     expected_tree = $ExpectedTree
     fence = $Fence
     status_path = $StatusPath
+    runtime_environment_file = $runtimeEnvironmentPath
+    scheduled_principal_identity = $scheduledPrincipalIdentity
+    scheduled_principal_sid = $scheduledPrincipalSid
     simulated_elapsed = $false
 }
 
@@ -99,10 +116,26 @@ if ($Action -eq "status") {
     $task = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
     $info = $null
     if ($task) { $info = Get-ScheduledTaskInfo -TaskName $TaskName }
+    $registeredAction = if ($task) { @($task.Actions)[0] } else { $null }
+    $registeredPrincipalSid = if ($task) { ([xml](Export-ScheduledTask -TaskName $TaskName)).Task.Principals.Principal.UserId } else { $null }
     [ordered]@{
         task_name = $TaskName
         registered = [bool]$task
+        enabled = if ($task) { [bool]$task.Settings.Enabled } else { $false }
         hidden = if ($task) { [bool]$task.Settings.Hidden } else { $false }
+        principal_identity = if ($task) { $task.Principal.UserId } else { $null }
+        expected_principal_identity = $scheduledPrincipalIdentity
+        scheduled_principal_sid = $scheduledPrincipalSid
+        principal_sid = $registeredPrincipalSid
+        principal_sid_matches_expected = if ($task) { $registeredPrincipalSid -ieq $scheduledPrincipalSid } else { $false }
+        principal_identity_matches_expected = if ($task) { ($task.Principal.UserId -ieq $scheduledPrincipalIdentity) -or ($task.Principal.UserId -ieq $scheduledPrincipalSid) -or ($registeredPrincipalSid -ieq $scheduledPrincipalSid) } else { $false }
+        principal_logon_type = if ($task) { $task.Principal.LogonType.ToString() } else { $null }
+        principal_run_level = if ($task) { $task.Principal.RunLevel.ToString() } else { $null }
+        action_executable = if ($registeredAction) { $registeredAction.Execute } else { $null }
+        action_arguments = if ($registeredAction) { $registeredAction.Arguments } else { $null }
+        working_directory = if ($registeredAction) { $registeredAction.WorkingDirectory } else { $null }
+        execution_time_limit = if ($task) { $task.Settings.ExecutionTimeLimit.ToString() } else { $null }
+        multiple_instances = if ($task) { $task.Settings.MultipleInstances.ToString() } else { $null }
         pid_file = $pidFile
         pid_file_exists = (Test-Path -LiteralPath $pidFile)
         status_path = $StatusPath
@@ -131,8 +164,9 @@ if ($RepetitionDays -lt 1 -or $RepetitionDays -gt 31) {
 }
 $exec = New-ScheduledTaskAction -Execute $python -Argument "`"$probe`" --config `"$configPath`"" -WorkingDirectory $root
 $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes $IntervalMinutes) -RepetitionDuration (New-TimeSpan -Days $RepetitionDays)
-$settings = New-ScheduledTaskSettingsSet -Hidden -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -MultipleInstances IgnoreNew
-Register-ScheduledTask -TaskName $TaskName -Action $exec -Trigger $trigger -Settings $settings -Force | Out-Null
+$settings = New-ScheduledTaskSettingsSet -Hidden -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 4) -MultipleInstances IgnoreNew
+$principal = New-ScheduledTaskPrincipal -UserId $scheduledPrincipalSid -LogonType Interactive -RunLevel Limited
+Register-ScheduledTask -TaskName $TaskName -Action $exec -Trigger $trigger -Settings $settings -Principal $principal -Force | Out-Null
 [ordered]@{
     task_name = $TaskName
     registered = $true
@@ -140,5 +174,11 @@ Register-ScheduledTask -TaskName $TaskName -Action $exec -Trigger $trigger -Sett
     health_log = $healthLog
     config_path = $configPath
     status_path = $StatusPath
+    runtime_environment_file = $runtimeEnvironmentPath
+    principal_identity = $principal.UserId
+    principal_sid = $scheduledPrincipalSid
+    principal_logon_type = "Interactive"
+    principal_run_level = "Limited"
+    execution_time_limit = "PT4M"
     user_action_required = $false
 } | ConvertTo-Json

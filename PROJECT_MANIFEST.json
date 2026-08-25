@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "31690cb6970f8ca20037cf34df2791ac3b3a11aa0ccb1d98e44d74903cc559d3",
+  "aggregate_sha256": "523e4add2d6f43f1ca41d28e34aea56b1e74b65066a1e5fff55eb3a5e7fe6731",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -8,7 +8,7 @@
     "docs/generated/REPOSITORY_MAP.json",
     "docs/generated/REPOSITORY_MAP.md"
   ],
-  "file_count": 3038,
+  "file_count": 3040,
   "files": [
     {
       "path": ".agents/skills/failure-recovery/SKILL.md",
@@ -1667,8 +1667,8 @@
     },
     {
       "path": "docs/security/secrets_and_egress.md",
-      "sha256": "6f5099883b24b76867998407e7ff3be3f487801c94c5ed3f449692b11e3df4b5",
-      "size_bytes": 951
+      "sha256": "c0553c003374a4f439f05321a05f22b6cd91249aad311390afeafe8b20319cb5",
+      "size_bytes": 1692
     },
     {
       "path": "docs/security/security_authority_model.md",
@@ -5437,7 +5437,7 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "264ff2264b0c62ea1e8e0dee5448fca54665335f343d15138386aa1d8924c10c",
+      "sha256": "10e81cd6201ffe022ca8369ec266ff3b445ec0cdc8d9df2957d7c156ec458698",
       "size_bytes": 25756
     },
     {
@@ -11977,8 +11977,8 @@
     },
     {
       "path": "scripts/autonomy_campaign_recovery_probe.py",
-      "sha256": "6bf42adcc6b2bce7b80c49f26a776a92cd783260e0a9c4d2c7ccdb26a02eec69",
-      "size_bytes": 17014
+      "sha256": "690483985b56303fa9e29f0fbfb2bcb6c86084d752f9cdc98b3c15cc059ebd0c",
+      "size_bytes": 17969
     },
     {
       "path": "scripts/bootstrap_dev.ps1",
@@ -12061,6 +12061,11 @@
       "size_bytes": 5149
     },
     {
+      "path": "scripts/provision_dpapi_campaign_secret.py",
+      "sha256": "2a3f80d90ee3ae146c79e369f7eea2e22bbc4dd63e20ebcbe12ef10b121c5c64",
+      "size_bytes": 11328
+    },
+    {
       "path": "scripts/qualify_desktop_windows.py",
       "sha256": "b01b480f44ded7449217603ee549dffc8eb143dc1af5537d9bf458bf93a87ea8",
       "size_bytes": 1467
@@ -12072,8 +12077,8 @@
     },
     {
       "path": "scripts/register_autonomy_campaign_recovery.ps1",
-      "sha256": "cb0b753728781a7223abd5c4fd9dc1b33b9726112953e31aa2d1300600c97b06",
-      "size_bytes": 5692
+      "sha256": "f25b6715d9572f7cc4ff071482d277f797997a4f234b92af2a5fa64256652d98",
+      "size_bytes": 8633
     },
     {
       "path": "scripts/repair_jira_plan_references.py",
@@ -12097,8 +12102,8 @@
     },
     {
       "path": "scripts/run_autonomy_campaign.py",
-      "sha256": "b8c792cd013a430ed4f3f67cf3d03d09723518c2bb66e9ea1d26b708061d04a1",
-      "size_bytes": 4975
+      "sha256": "5bc585fdb087046f40973694d61a9c093e4690c40254c1cf336d47a008ce6e66",
+      "size_bytes": 5384
     },
     {
       "path": "scripts/run_autonomy_qualification.py",
@@ -12462,8 +12467,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
-      "sha256": "ab2b2a04d57b50cd3fd299bec024f96ea61c1732dcb4eab21a08526cbe2d1e15",
-      "size_bytes": 43332
+      "sha256": "9a0b05ff2638c5a0a2cad4b123447f0fec4bf52fb01dbb2f7165a02a13abbc7b",
+      "size_bytes": 43956
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/nonduration.py",
@@ -12701,14 +12706,19 @@
       "size_bytes": 1459
     },
     {
+      "path": "src/project_pipeline/configuration/campaign_environment.py",
+      "sha256": "b7b56896106890f3972fb4858466832d76f04fe4bd8091d8bef8ff9f7671a8a7",
+      "size_bytes": 7659
+    },
+    {
       "path": "src/project_pipeline/configuration/loader.py",
       "sha256": "e2be5ada90623620fdc7eb2a8fc2804468d9ad752580605e388ad07b4cddcf8d",
       "size_bytes": 9280
     },
     {
       "path": "src/project_pipeline/configuration/models.py",
-      "sha256": "d288d13dd048b4b0ec41db28f41a2cc936855c3bb49ef79a786fc3610e2a2dd1",
-      "size_bytes": 9292
+      "sha256": "6b7709742d5b4c6a84c1816f118fea1e63cb938d48399c8aa760e9c1441017bd",
+      "size_bytes": 9645
     },
     {
       "path": "src/project_pipeline/configuration/schema.py",
@@ -12717,8 +12727,8 @@
     },
     {
       "path": "src/project_pipeline/configuration/secrets.py",
-      "sha256": "4b419592fb7e6d7e698db5ed16b912287e673c0e117dfc5d35d8e78583f2f32d",
-      "size_bytes": 1691
+      "sha256": "3627a7537b54ce699b3e494ab9c01e7173b9ec800d2b700c60d3157d91787783",
+      "size_bytes": 11116
     },
     {
       "path": "src/project_pipeline/context_engine/__init__.py",
@@ -14172,8 +14182,8 @@
     },
     {
       "path": "tests/test_autonomy_campaign_windows.py",
-      "sha256": "fe9fbcacd02d51b037490c06ec8454d28fd37c3f47c1c434e14ed8d21ad80872",
-      "size_bytes": 17985
+      "sha256": "dfae82acb5bc12c69cf4c962e7131d17868c787140006afb607111c71b884636",
+      "size_bytes": 19161
     },
     {
       "path": "tests/test_autonomy_director.py",
@@ -14187,8 +14197,8 @@
     },
     {
       "path": "tests/test_autonomy_live_qualification.py",
-      "sha256": "7fc93957145956386db0aa13a84f7bf81b3c792423a741fc839b0980f276dc93",
-      "size_bytes": 11369
+      "sha256": "435039869c5065d02e9b39a6ddc15519eaec8eade802d466c1bb2c51a50365c4",
+      "size_bytes": 12032
     },
     {
       "path": "tests/test_autonomy_providers.py",
@@ -14362,8 +14372,8 @@
     },
     {
       "path": "tests/test_configuration.py",
-      "sha256": "aff739a0062c5ab4f2b1a0840269fa0ea2b2995262086aa628b876b1a4959535",
-      "size_bytes": 6660
+      "sha256": "ab6ad992f3d792a81b4febefb57e08d0ff06ec3cc37627674e71b13aea02fb3f",
+      "size_bytes": 20275
     },
     {
       "path": "tests/test_context_broker_compiler.py",
@@ -15201,7 +15211,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-25T04:19:06.445560+00:00",
+  "generated_at_utc": "2026-08-25T08:35:19.920960+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15211,5 +15221,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30493797
+  "total_bytes": 30543686
 }

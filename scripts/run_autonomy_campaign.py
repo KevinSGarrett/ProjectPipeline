@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 from project_pipeline.autonomy_runtime.campaign import CampaignController
+from project_pipeline.configuration.campaign_environment import apply_campaign_runtime_environment
 from project_pipeline.resilience.host_safety import evaluate_local_host_safety
 
 _HOST_SAFETY_REQUIRED_ACTIONS = frozenset(
@@ -48,8 +49,15 @@ def main() -> int:
     parser.add_argument("--command-json", help="JSON argument list for execute")
     parser.add_argument("--repository-root", type=Path)
     parser.add_argument("--status-path", type=Path)
+    parser.add_argument("--runtime-environment-file", type=Path)
     args = parser.parse_args()
     root = (args.repository_root or Path.cwd()).resolve()
+    if args.runtime_environment_file is not None:
+        apply_campaign_runtime_environment(
+            root,
+            args.runtime_environment_file,
+            require_fresh_campaign_window=args.action in {"start", "admit-4h"},
+        )
     host_safety = (
         evaluate_local_host_safety(root) if args.action in _HOST_SAFETY_REQUIRED_ACTIONS else None
     )

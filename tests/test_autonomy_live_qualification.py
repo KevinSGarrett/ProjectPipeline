@@ -94,6 +94,22 @@ def test_live_qualification_rerun_clears_same_disposable_root(tmp_path: Path) ->
     assert second["stages"][1]["outcome"] == StageOutcome.PASSED.value
 
 
+def test_credential_environment_keeps_process_bound_references_over_mutable_env_file(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / ".env").write_text(
+        "JIRA_API_TOKEN_REF=env://MUTABLE_FILE\nGITHUB_TOKEN_REF=env://MUTABLE_FILE\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("JIRA_API_TOKEN_REF", "dpapi://C16B_JIRA_TOKEN")
+    monkeypatch.setenv("GITHUB_TOKEN_REF", "gh-auth://default")
+
+    environment = live_qualification_module._credential_environment(tmp_path)
+
+    assert environment["JIRA_API_TOKEN_REF"] == "dpapi://C16B_JIRA_TOKEN"
+    assert environment["GITHUB_TOKEN_REF"] == "gh-auth://default"
+
+
 def test_live_qualification_fails_closed_when_runtime_root_stays_locked(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
