@@ -505,11 +505,12 @@ class ConfigurationTests(unittest.TestCase):
                 issue_campaign_secret_access_lease(
                     root, scope, access_identity="test-policy-too-long", ttl_seconds=901
                 )
+            expired_issued_at = datetime.now(UTC) - timedelta(seconds=901)
             expired = CampaignSecretAccessLease(
                 access_id="SACCESS-EXPIRED",
                 access_identity="test-expired",
-                issued_at_utc=datetime.now(UTC) - timedelta(seconds=901),
-                expires_at_utc=datetime.now(UTC) - timedelta(seconds=1),
+                issued_at_utc=expired_issued_at,
+                expires_at_utc=expired_issued_at + timedelta(seconds=899),
                 scope=scope,
             )
             with self.assertRaisesRegex(SecretResolutionError, "expired"):
