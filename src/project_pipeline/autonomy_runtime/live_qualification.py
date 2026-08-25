@@ -224,6 +224,7 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
         except (ConfigurationError, RuntimeError):
             return None, "none"
 
+    completed: subprocess.CompletedProcess[str] | None = None
     try:
         completed = subprocess.run(
             ["gh", "auth", "token"],
@@ -233,8 +234,11 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
             check=False,
         )
     except (OSError, subprocess.TimeoutExpired):
-        return None, "none"
-    if completed.returncode == 0:
+        # A normal coordinator may have a configured secret reference even
+        # when the optional GitHub CLI is unavailable.  Only the campaign
+        # route is constrained to its DPAPI-bound reference above.
+        completed = None
+    if completed is not None and completed.returncode == 0:
         token = completed.stdout.strip()
         if token:
             return token, "gh-auth"

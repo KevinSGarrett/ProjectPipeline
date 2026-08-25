@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 from types import SimpleNamespace
@@ -17,6 +18,7 @@ from project_pipeline.autonomy_runtime.live_qualification import (
     run_live_qualification,
     write_live_qualification_evidence,
 )
+from project_pipeline.configuration.models import SecretReference
 
 
 def _scaffold_repo(repo: Path) -> None:
@@ -179,6 +181,52 @@ def test_noncampaign_github_resolution_keeps_gh_precedence_over_config_reference
     )
 
     assert live_qualification_module._resolve_github_token(root) == ("ambient-token", "gh-auth")
+
+
+@pytest.mark.parametrize(
+    "cli_error",
+    (
+        OSError("gh unavailable"),
+        subprocess.TimeoutExpired(("gh", "auth", "token"), 15),
+    ),
+)
+def test_noncampaign_github_resolution_falls_back_to_config_when_cli_is_unavailable(
+    monkeypatch: pytest.MonkeyPatch,
+    cli_error: BaseException,
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    environment = {"GITHUB_TOKEN_REF": "env://CONFIGURED_TOKEN"}
+    monkeypatch.setattr(
+        live_qualification_module, "_credential_environment", lambda _root: environment
+    )
+
+    def unavailable_cli(*_args: object, **_kwargs: object) -> object:
+        raise cli_error
+
+    class ConfiguredSecretResolver:
+        def __init__(self, *_args: object, **_kwargs: object) -> None:
+            pass
+
+        def resolve(self, _reference: SecretReference) -> str:
+            return "configured-token"
+
+    configuration = SimpleNamespace(
+        settings=SimpleNamespace(
+            integrations=SimpleNamespace(
+                github_token=SecretReference(reference="env://CONFIGURED_TOKEN")
+            )
+        )
+    )
+    monkeypatch.setattr(live_qualification_module.subprocess, "run", unavailable_cli)
+    monkeypatch.setattr(
+        "project_pipeline.configuration.loader.load_runtime_configuration",
+        lambda *_args, **_kwargs: configuration,
+    )
+    monkeypatch.setattr(
+        "project_pipeline.configuration.secrets.SecretResolver", ConfiguredSecretResolver
+    )
+
+    assert live_qualification_module._resolve_github_token(root) == ("configured-token", "config")
 
 
 def test_unrelated_campaign_prefixed_environment_key_does_not_force_campaign_mode(
