@@ -1,4 +1,5 @@
 from project_pipeline.configuration.campaign_environment import (
+    campaign_runtime_database_path,
     campaign_runtime_environment_from_process,
     validate_campaign_runtime_binding,
 )
@@ -57,6 +58,7 @@ __all__ = [
     "SecuritySettings",
     "TelemetryExporter",
     "TelemetrySettings",
+    "campaign_runtime_database_path",
     "campaign_runtime_environment_from_process",
     "collect_secret_references",
     "deep_merge",

@@ -6,7 +6,7 @@ import os
 import sqlite3
 import subprocess
 import time
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, cast
@@ -499,6 +499,7 @@ class CampaignController:
         duration_probe_commands: list[list[str]] | None = None,
         probe_interval_seconds: float = 900.0,
         allow_unbound_candidate_for_tests: bool = False,
+        command_environment: Mapping[str, str] | None = None,
     ) -> None:
         self.path = path
         self.repository_root = repository_root.resolve()
@@ -512,6 +513,11 @@ class CampaignController:
         self._finalize_commands = finalize_commands
         self._duration_probe_commands = duration_probe_commands
         self._allow_unbound_candidate_for_tests = allow_unbound_candidate_for_tests
+        self._command_environment = (
+            None
+            if command_environment is None
+            else {key: str(value) for key, value in command_environment.items()}
+        )
         self.probe_interval_seconds = float(probe_interval_seconds)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self.qualification = QualificationStore(
@@ -1046,6 +1052,10 @@ class CampaignController:
             evidence_links=evidence_links,
             expected_sha=str(row["integrated_sha"]),
             expected_tree=str(row["integrated_tree"]),
+            environment_class="campaign-bound"
+            if self._command_environment is not None
+            else "local",
+            environment=self._command_environment,
         )
         receipt["idempotency_key"] = effective_idempotency_key
         now = datetime.now(UTC)

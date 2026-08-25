@@ -86,13 +86,38 @@ def _write_dpapi_envelope(
         check=False,
     )
     expected_principal = f"*{scheduled_principal_sid}".casefold()
-    principals = {
-        match.casefold() for match in re.findall(r"\*?S-\d+(?:-\d+)+(?=:)", readback.stdout or "")
-    }
+    principals = _icacls_explicit_access_principals(readback.stdout or "", path)
     if readback.returncode or principals != {expected_principal}:
         with suppress(OSError):
             path.unlink()
         raise RuntimeError("DPAPI credential envelope ACL effective-access readback failed")
+
+
+def _icacls_explicit_access_principals(output: str, path: Path) -> set[str]:
+    """Return every trustee reported with an explicit access ACE by ``icacls``.
+
+    ``icacls`` may display a trustee as a SID or an account name.  Restricting
+    parsing to SID-shaped text would incorrectly accept an extra named ACE.
+    The first output line may prefix its trustee with the target path; strip
+    that prefix only when it exactly matches the controlled destination.
+    """
+
+    principals: set[str] = set()
+    prefixes = {str(path).casefold(), str(path.resolve()).casefold()}
+    for raw_line in output.splitlines():
+        line = raw_line.strip()
+        match = re.match(r"^(?P<principal>.+?):(?:\([A-Za-z]+\))+", line)
+        if match is None:
+            continue
+        principal = match.group("principal").strip()
+        lowered = principal.casefold()
+        for prefix in prefixes:
+            if lowered.startswith(prefix):
+                principal = principal[len(prefix) :].strip()
+                break
+        if principal:
+            principals.add(principal.casefold())
+    return principals
 
 
 def _load_scope(scope_file: Path, *, allow_expired: bool) -> dict[str, str]:

@@ -511,6 +511,35 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual(run.call_args_list[1].args[0][-1], "/verify")
         self.assertEqual(run.call_args_list[2].args[0], ["icacls.exe", str(destination)])
 
+    @unittest.skipUnless(os.name == "nt", "Windows ACL enforcement")
+    def test_dpapi_envelope_acl_readback_rejects_an_unexpected_named_trustee(self) -> None:
+        script = runpy.run_path(str(ROOT / "scripts" / "provision_dpapi_campaign_secret.py"))
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "envelope.json"
+            with (
+                patch.object(
+                    script["subprocess"],
+                    "run",
+                    side_effect=[
+                        subprocess.CompletedProcess(["icacls.exe"], 0, "", ""),
+                        subprocess.CompletedProcess(["icacls.exe"], 0, "", ""),
+                        subprocess.CompletedProcess(
+                            ["icacls.exe"],
+                            0,
+                            "*S-1-5-21-1000:(M)\nBUILTIN\\Administrators:(F)\n",
+                            "",
+                        ),
+                    ],
+                ),
+                self.assertRaisesRegex(RuntimeError, "effective-access readback"),
+            ):
+                script["_write_dpapi_envelope"](
+                    destination,
+                    {"ciphertext_base64": "ciphertext-only"},
+                    scheduled_principal_sid="S-1-5-21-1000",
+                )
+            self.assertFalse(destination.exists())
+
     def test_dpapi_envelope_persists_only_ciphertext_and_scope(self) -> None:
         scope = _campaign_scope(scheduler_lease_id="CLEASE-EXAMPLE")
         with patch(

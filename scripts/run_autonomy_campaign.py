@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 from project_pipeline.autonomy_runtime.campaign import CampaignController
 from project_pipeline.configuration.campaign_environment import (
     apply_campaign_runtime_environment,
+    campaign_runtime_database_path,
+    limited_campaign_subprocess_environment,
     validate_campaign_runtime_binding,
 )
 from project_pipeline.resilience.host_safety import evaluate_local_host_safety
@@ -70,12 +73,23 @@ def main() -> int:
     args = parser.parse_args()
     root = (args.repository_root or Path.cwd()).resolve()
     runtime_environment = None
+    command_environment = None
     if args.runtime_environment_file is not None:
         runtime_environment = apply_campaign_runtime_environment(
             root,
             args.runtime_environment_file,
             require_fresh_campaign_window=args.action in {"start", "admit-4h"},
         )
+        runtime_database = campaign_runtime_database_path(runtime_environment)
+        if args.database.resolve() != runtime_database:
+            raise SystemExit("--database must match the bound campaign runtime database")
+        # The launch process may have inherited coordinator configuration, but
+        # no operation or child command may retain it after runtime parsing.
+        command_environment = limited_campaign_subprocess_environment(
+            root, args.runtime_environment_file
+        )
+        os.environ.clear()
+        os.environ.update(command_environment)
     if args.action in _RUNTIME_BOUND_ACTIONS and runtime_environment is None:
         raise SystemExit(f"{args.action} requires --runtime-environment-file")
     if args.action == "start" and runtime_environment is not None:
@@ -101,6 +115,7 @@ def main() -> int:
         args.database,
         repository_root=root,
         heartbeat_seconds=args.heartbeat_seconds,
+        command_environment=command_environment,
     )
     try:
         if runtime_environment is not None and args.action in _RUNTIME_BOUND_ACTIONS:

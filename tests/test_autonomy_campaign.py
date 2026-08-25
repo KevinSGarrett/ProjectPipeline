@@ -480,6 +480,30 @@ def test_allowlist_rejects_untrusted_and_executes_probe(tmp_path: Path):
     assert "campaign" in receipt["stdout_tail"]
 
 
+def test_allowlisted_command_uses_the_explicit_campaign_environment(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    observed: dict[str, object] = {}
+
+    def fake_run(*_args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        observed["environment"] = kwargs.get("env")
+        return subprocess.CompletedProcess([], 0, "{}", "")
+
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.command_execution.subprocess.run", fake_run
+    )
+    environment = {"PATH": "C:/Windows/System32", "CAMPAIGN_ID": "QCAMP-C16B-TEST"}
+    execute_allowlisted_command(
+        ["python.exe", "-m", "project_pipeline", "validate"],
+        cwd=ROOT,
+        repository_root=ROOT,
+        environment=environment,
+        environment_class="campaign-bound",
+    )
+
+    assert observed["environment"] == environment
+
+
 def test_campaign_execute_persists_truthful_receipt(tmp_path: Path):
     controller = _controller(tmp_path)
     started = controller.start(

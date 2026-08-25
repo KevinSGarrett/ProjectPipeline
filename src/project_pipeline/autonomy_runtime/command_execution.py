@@ -5,6 +5,7 @@ import json
 import re
 import subprocess
 import sys
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -507,6 +508,7 @@ def execute_allowlisted_command(
     expected_sha: str | None = None,
     expected_tree: str | None = None,
     environment_class: str = "local",
+    environment: Mapping[str, str] | None = None,
 ) -> dict[str, Any]:
     if not command_is_allowlisted(argv, repository_root=repository_root):
         raise ValueError("command is not on the campaign allowlist")
@@ -521,6 +523,7 @@ def execute_allowlisted_command(
             timeout=timeout_seconds,
             check=False,
             shell=False,
+            env=None if environment is None else dict(environment),
         )
         exit_code: int | None = int(completed.returncode)
         stdout = completed.stdout or ""

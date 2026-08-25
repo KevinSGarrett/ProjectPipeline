@@ -56,6 +56,7 @@ from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusErro
 from project_pipeline.autonomy_runtime.process_identity import inspect_process  # noqa: E402
 from project_pipeline.configuration.campaign_environment import (  # noqa: E402
     apply_campaign_runtime_environment,
+    campaign_runtime_database_path,
     limited_campaign_subprocess_environment,
     validate_campaign_runtime_binding,
 )
@@ -213,9 +214,9 @@ def _run_controller(
     root: Path,
     campaign_id: str,
     heartbeat_seconds: float,
-    runtime_environment_file: Path,
     extra: list[str] | None = None,
     *,
+    runtime_environment_file: Path,
     wait: bool,
     stdout_path: Path,
     stderr_path: Path,
@@ -282,11 +283,24 @@ def main() -> int:
     if not runtime_environment_path.is_file():
         raise SystemExit("recovery probe runtime environment file is unavailable")
     runtime_environment = apply_campaign_runtime_environment(root, runtime_environment_path)
+    command_environment = None
+    if campaign_id:
+        runtime_database = campaign_runtime_database_path(runtime_environment)
+        if database.resolve() != runtime_database:
+            raise SystemExit(
+                "recovery probe database must match the bound campaign runtime database"
+            )
+        command_environment = limited_campaign_subprocess_environment(
+            root, runtime_environment_path
+        )
+        os.environ.clear()
+        os.environ.update(command_environment)
     script = root / "scripts" / "run_autonomy_campaign.py"
     controller = CampaignController(
         database,
         repository_root=root,
         heartbeat_seconds=heartbeat_seconds,
+        command_environment=command_environment,
     )
     try:
         if not campaign_id:

@@ -255,11 +255,21 @@ def _current_checkout_identity(root: Path) -> tuple[str, str]:
     return observed[0], observed[1]
 
 
-def _bound_campaign_record(environment: Mapping[str, str]) -> dict[str, str]:
+def campaign_runtime_database_path(environment: Mapping[str, str]) -> Path:
+    """Return the absolute, existing database bound by a campaign environment."""
+
     database_value = str(environment.get("CAMPAIGN_DATABASE") or "").strip()
-    database = Path(database_value).expanduser().resolve()
+    candidate = Path(database_value).expanduser()
+    if not candidate.is_absolute():
+        raise ConfigurationError("campaign runtime database binding must be absolute")
+    database = candidate.resolve()
     if not database.is_file():
         raise ConfigurationError("campaign runtime database is unavailable")
+    return database
+
+
+def _bound_campaign_record(environment: Mapping[str, str]) -> dict[str, str]:
+    database = campaign_runtime_database_path(environment)
     campaign_id = str(environment.get("CAMPAIGN_ID") or "").strip()
     try:
         connection = sqlite3.connect(f"file:{database.as_posix()}?mode=ro", uri=True)

@@ -26,15 +26,17 @@ only non-secret endpoint metadata, references, binding identifiers, and the
 CPU-local campaign database path. Before any campaign DPAPI materialization,
 the runtime scope must agree with the checkout's `HEAD` and tree and with the
 selected `campaign_runs` row, including its campaign ID, SHA/tree, lease, and
-fence. A scheduled campaign process never loads the checkout `.env`; it uses
-only this explicit allowlisted runtime environment. The hidden runner and
-recovery task both require that file and construct child environments from its
-allowlist rather than from ambient variables.
+fence. The controller database argument must be the same absolute database
+path named by that runtime binding, preventing a split between a credential
+record and the campaign it operates. A scheduled campaign process never loads
+the checkout `.env`; it clears inherited configuration after parsing the
+runtime file, and the hidden runner, recovery task, and every allowlisted child
+command use only its explicit allowlist rather than ambient variables.
 
 Provisioning accepts plaintext only on standard input, immediately encrypts it
 under the CPU current-user DPAPI identity, restricts the envelope ACL to the
-scheduled SID, reads that ACL back to reject any unexpected SID, and emits only
-redacted metadata. Revocation requires the same
+scheduled SID, reads that ACL back to reject any unexpected SID or named
+trustee, and emits only redacted metadata. Revocation requires the same
 full scope, records a durable non-secret intent before deletion, and reconciles
 an interrupted deletion idempotently on the next run. Plaintext is never
 placed in a runtime configuration, receipt, command line, database, repository,
