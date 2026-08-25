@@ -19,7 +19,7 @@
     ".mod": 1,
     ".png": 28,
     ".ps1": 10,
-    ".py": 648,
+    ".py": 658,
     ".rego": 1,
     ".rs": 2,
     ".sha256": 1,
@@ -34,7 +34,7 @@
     ".xml": 1,
     ".yaml": 3,
     ".yml": 6,
-    "[none]": 21
+    "[none]": 22
   },
   "by_top_level": {
     ".agents": 8,
@@ -45,7 +45,7 @@
     "apps": 25,
     "architecture": 19,
     "benchmarks": 1,
-    "config": 42,
+    "config": 43,
     "contracts": 5,
     "database": 102,
     "docs": 77,
@@ -62,12 +62,12 @@
     "requirements": 5,
     "runbooks": 28,
     "schemas": 209,
-    "scripts": 47,
-    "src": 351,
-    "tests": 238,
+    "scripts": 51,
+    "src": 354,
+    "tests": 241,
     "third_party": 1
   },
-  "file_count": 3032,
+  "file_count": 3043,
   "files": [
     {
       "extension": ".md",
@@ -233,8 +233,8 @@
     {
       "extension": "[none]",
       "path": ".git",
-      "sha256": "29230fd8ef3602498782ebfd030d0f91a9a1ac48fd37b95517c3e4f75c9555ae",
-      "size_bytes": 60,
+      "sha256": "8e98d57aeb3d1c432bed9676902d3524cfe39c604c8139de7bcaa16fe66dc748",
+      "size_bytes": 74,
       "top_level": "_root"
     },
     {
@@ -296,8 +296,8 @@
     {
       "extension": "[none]",
       "path": ".gitignore",
-      "sha256": "32a5c09584dc86343d6ce0a419f9a3b7223efbc407cdd7c09c15179b2a069059",
-      "size_bytes": 2540,
+      "sha256": "981d006dea5b39810bc0b6cec4171ba96b3e33d1914eb435e6eb6c3e95c2b790",
+      "size_bytes": 2636,
       "top_level": "_root"
     },
     {
@@ -1117,6 +1117,13 @@
       "path": "config/runtime/profiles/windows.json",
       "sha256": "6f4a4fbd4eb5b7d6d71f55214d7e97b4ac951eeb99eb5cbb93a4e0ff70643272",
       "size_bytes": 224,
+      "top_level": "config"
+    },
+    {
+      "extension": "[none]",
+      "path": "config/security/coordinator_jira_receipt_allowed_signers",
+      "sha256": "e7ae9a966ef955ac07aeeaa7cd6b7aa4d166da7c995a39e5b7d31209046fb4e5",
+      "size_bytes": 159,
       "top_level": "config"
     },
     {
@@ -7226,8 +7233,8 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "644d0a7c0154838d944ac02783913cdeeb5125fc0bf9fa392bf13d825a089d32",
-      "size_bytes": 346864,
+      "sha256": "922026b1d331fb11ebf8045f37ae8eb57e6364fab23a557e9787b80066b8d8ce",
+      "size_bytes": 348078,
       "top_level": "_root"
     },
     {
@@ -7674,7 +7681,7 @@
     {
       "extension": ".json",
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "c600906128ee60795f32ee134e95763c73198db7f3cbd53e381b5cd7ff9a60bf",
+      "sha256": "10e81cd6201ffe022ca8369ec266ff3b445ec0cdc8d9df2957d7c156ec458698",
       "size_bytes": 25756,
       "top_level": "instructions"
     },
@@ -14450,8 +14457,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "511326cb581a57b1314851054e34e0e6d584c659622dd29221cb0d7060c329eb",
-      "size_bytes": 567897,
+      "sha256": "e2754137d2a67d3cb09f944ca89b4070adb7efe2519bb67161840a61d7469de2",
+      "size_bytes": 569992,
       "top_level": "_root"
     },
     {
@@ -16837,8 +16844,8 @@
     {
       "extension": ".py",
       "path": "scripts/autonomy_campaign_recovery_probe.py",
-      "sha256": "8a10f07be26c7a52b391353ac95286afae278ecb5e6c8c39bddcdfba35c971cd",
-      "size_bytes": 12593,
+      "sha256": "690483985b56303fa9e29f0fbfb2bcb6c86084d752f9cdc98b3c15cc059ebd0c",
+      "size_bytes": 17969,
       "top_level": "scripts"
     },
     {
@@ -16857,9 +16864,16 @@
     },
     {
       "extension": ".py",
+      "path": "scripts/bootstrap_worker_attestation.py",
+      "sha256": "55f0460ff71a6579a9c332f23fba62c7a47906008bea2406978980a69c286c2b",
+      "size_bytes": 904,
+      "top_level": "scripts"
+    },
+    {
+      "extension": ".py",
       "path": "scripts/build_campaign_desktop_artifacts.py",
-      "sha256": "640a6b91628728edcaafcccaf134cf86a571cbf1d8e84ebcf78df5a6a7df1674",
-      "size_bytes": 5561,
+      "sha256": "8ab59fde0781016bc6a2ddf761b3bddf78a513b572662da9c3079821d1c05f3a",
+      "size_bytes": 9118,
       "top_level": "scripts"
     },
     {
@@ -16867,6 +16881,13 @@
       "path": "scripts/bulk_reconcile_implemented_jira.py",
       "sha256": "d9e41064f5d0a4afbf4468ebb3a9d4053bfd90851b626d8df216b3904ae1695d",
       "size_bytes": 2426,
+      "top_level": "scripts"
+    },
+    {
+      "extension": ".py",
+      "path": "scripts/campaign_duration_probe.py",
+      "sha256": "806f5c96c5e38d4940e4d7f8f565375765dee7b4093864e17f279a939bb08f88",
+      "size_bytes": 1348,
       "top_level": "scripts"
     },
     {
@@ -16941,6 +16962,13 @@
     },
     {
       "extension": ".py",
+      "path": "scripts/provision_dpapi_campaign_secret.py",
+      "sha256": "b41ed79fe3db5364e1461b13e20c0357da5451869996c56cd2bc33fd82336e04",
+      "size_bytes": 3368,
+      "top_level": "scripts"
+    },
+    {
+      "extension": ".py",
       "path": "scripts/qualify_desktop_windows.py",
       "sha256": "b01b480f44ded7449217603ee549dffc8eb143dc1af5537d9bf458bf93a87ea8",
       "size_bytes": 1467,
@@ -16956,8 +16984,8 @@
     {
       "extension": ".ps1",
       "path": "scripts/register_autonomy_campaign_recovery.ps1",
-      "sha256": "0573e058b08c02c45e40cc2351ce484d3af6c7e8cffb13aadbe7f2cbc922cb93",
-      "size_bytes": 5575,
+      "sha256": "e297865b85d650e093c0b0e60d50871016a48d13ed6db52d5da3c35d18af91d4",
+      "size_bytes": 6728,
       "top_level": "scripts"
     },
     {
@@ -16991,8 +17019,8 @@
     {
       "extension": ".py",
       "path": "scripts/run_autonomy_campaign.py",
-      "sha256": "8e9f95d2b656459d2be941caa7345550e7a0b4e10c255251aa25fc066ac43704",
-      "size_bytes": 4168,
+      "sha256": "e1e5d2500ffa036eda7b6352aef2116a7b06bf9a0f97eb9841c067df4ad39055",
+      "size_bytes": 5269,
       "top_level": "scripts"
     },
     {
@@ -17018,6 +17046,13 @@
     },
     {
       "extension": ".py",
+      "path": "scripts/run_coordinator_jira_governance_probe.py",
+      "sha256": "3417f1bfb3a848064a1407d5924a6711849753d3e0fa069df0d480e4474f7ca9",
+      "size_bytes": 3605,
+      "top_level": "scripts"
+    },
+    {
+      "extension": ".py",
       "path": "scripts/run_jira_done_verification.py",
       "sha256": "9fcc42779fee31a9973d89e4667793120d4d6467ac07d8af73a974485631b1c4",
       "size_bytes": 8256,
@@ -17026,8 +17061,8 @@
     {
       "extension": ".py",
       "path": "scripts/run_live_qualification.py",
-      "sha256": "f43ef3113b166822a3adc6b346066affc55e65b69527a4ffb464314d095ebfa2",
-      "size_bytes": 1628,
+      "sha256": "2e943e09d91ab6969f60c7deb220b24c6b6c5e397059d2c48f74d381decaac56",
+      "size_bytes": 2032,
       "top_level": "scripts"
     },
     {
@@ -17446,8 +17481,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/campaign.py",
-      "sha256": "d46bfea05a8aae5e7fe4ebaefcffc15aa2a1bfdb1c14e5d9aafd261d566f0e51",
-      "size_bytes": 84467,
+      "sha256": "f2ee34172303ae9d90baf80513e1348830cc03f0859fa79f02b97ba7de052b95",
+      "size_bytes": 100739,
       "top_level": "src"
     },
     {
@@ -17460,8 +17495,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/command_execution.py",
-      "sha256": "ebd99092bd2b92b46897a09baca85bea830da5eb679ed517e5a85aea33b648ac",
-      "size_bytes": 18408,
+      "sha256": "3b963e5c6a98d4681659272e3be85f265063d5acfbcddb7041caba5296965d2c",
+      "size_bytes": 20983,
       "top_level": "src"
     },
     {
@@ -17469,6 +17504,13 @@
       "path": "src/project_pipeline/autonomy_runtime/cursor_cli_qualification.py",
       "sha256": "edb00807c7843efd263893ea84efaafb971929c84b7b77f9260eb018560125a9",
       "size_bytes": 24344,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/autonomy_runtime/duration_probes.py",
+      "sha256": "8f5deb8fac2e52ccd03fb7452459b1ca848db459b1a24473e4129b51162220c4",
+      "size_bytes": 19288,
       "top_level": "src"
     },
     {
@@ -17488,8 +17530,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
-      "sha256": "4d44a456445cc94eaa125b83605b0097a870b6e058a8b458b05d8529f818b94e",
-      "size_bytes": 31274,
+      "sha256": "120486a7e19ab2a7023fb22a5f2838bcfd5c0b5fed7c24e2e33b1dfa69b8dcc2",
+      "size_bytes": 43613,
       "top_level": "src"
     },
     {
@@ -17523,8 +17565,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/qualification.py",
-      "sha256": "a4ff0140f6d85a18be04c1ea05286424b50782594583d8a8213669ba7c1b6eb3",
-      "size_bytes": 19901,
+      "sha256": "58b2254f8df53d23b6e1586fc0430977230c0e7e5595f67b6a6f525d774c5979",
+      "size_bytes": 19954,
       "top_level": "src"
     },
     {
@@ -17823,6 +17865,13 @@
     },
     {
       "extension": ".py",
+      "path": "src/project_pipeline/configuration/campaign_environment.py",
+      "sha256": "f4cbeb44f86dbe4a85132c74e6c34a5891102cf5c4163837f9319a4d1043ac38",
+      "size_bytes": 2696,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
       "path": "src/project_pipeline/configuration/loader.py",
       "sha256": "e2be5ada90623620fdc7eb2a8fc2804468d9ad752580605e388ad07b4cddcf8d",
       "size_bytes": 9280,
@@ -17831,8 +17880,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/configuration/models.py",
-      "sha256": "d288d13dd048b4b0ec41db28f41a2cc936855c3bb49ef79a786fc3610e2a2dd1",
-      "size_bytes": 9292,
+      "sha256": "6b7709742d5b4c6a84c1816f118fea1e63cb938d48399c8aa760e9c1441017bd",
+      "size_bytes": 9645,
       "top_level": "src"
     },
     {
@@ -17845,8 +17894,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/configuration/secrets.py",
-      "sha256": "4b419592fb7e6d7e698db5ed16b912287e673c0e117dfc5d35d8e78583f2f32d",
-      "size_bytes": 1691,
+      "sha256": "2fcfa88a9eb1cb84a8cb2c41def51c0b5c56c3c1d7c73aedcfab58d677f30877",
+      "size_bytes": 9400,
       "top_level": "src"
     },
     {
@@ -18328,8 +18377,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/github_steward/service.py",
-      "sha256": "24a228269915feddad272327475e4c6c57100ed64988afb74915811a06e264c3",
-      "size_bytes": 13978,
+      "sha256": "b354a95419f03c954b88110e032f07409842a301adbee89a7913100ca29bc07a",
+      "size_bytes": 13989,
       "top_level": "src"
     },
     {
@@ -18482,8 +18531,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/io.py",
-      "sha256": "eed5f920682136d7b027bd14f0cd0c92f0c6f5442abcefb3e154823da87d50b0",
-      "size_bytes": 5882,
+      "sha256": "62fe834489ea8f45f7f9a22918eaddf710b29c4fa8387d91bbfd03031bc53550",
+      "size_bytes": 6283,
       "top_level": "src"
     },
     {
@@ -18601,8 +18650,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/lifecycle/attestation_recovery.py",
-      "sha256": "bd9cb042c5f6b41e18e25321c9ebac44c32d8c408cd9e8ce9482e69090edc4de",
-      "size_bytes": 21485,
+      "sha256": "990b8b717034b9d2c0a51e68a16aee6eccf5d3a5661f9c67cbc91889137251c4",
+      "size_bytes": 29931,
       "top_level": "src"
     },
     {
@@ -18692,8 +18741,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/manifest.py",
-      "sha256": "cc727d1c5e7776d7681a006e13b325177e0ce4ca2a609c5ebcf77e8c1daee3fb",
-      "size_bytes": 4835,
+      "sha256": "b38815ab92c1b9da1e886b9ca2b982bb378e30643c142a18ff87297b75312b75",
+      "size_bytes": 5284,
       "top_level": "src"
     },
     {
@@ -18888,8 +18937,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/release_factory/lifecycle.py",
-      "sha256": "090422240c832e1cc3cc739389edb142361f7916ac056e3895d7f7d512043705",
-      "size_bytes": 18470,
+      "sha256": "331b1f56f4f6f4e7d09567f69f57904f7e4f25b7b2bf166fc872c34df769a136",
+      "size_bytes": 19457,
       "top_level": "src"
     },
     {
@@ -19030,6 +19079,13 @@
       "path": "src/project_pipeline/resilience/gaps.py",
       "sha256": "bffba5e5714d1f27ba2d3c3f7f7bad872ac6db524b3f578606cfaebf568cb677",
       "size_bytes": 2818,
+      "top_level": "src"
+    },
+    {
+      "extension": ".py",
+      "path": "src/project_pipeline/resilience/host_safety.py",
+      "sha256": "c24cf5053b5a754a8ae5ed109d97a3020784d34164cbe1bcdf96cd20f78826de",
+      "size_bytes": 5924,
       "top_level": "src"
     },
     {
@@ -19469,8 +19525,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/validation/product_outcome.py",
-      "sha256": "1049760c77712db6ef29be3637410b6291a5653fea745400804552584911e053",
-      "size_bytes": 20275,
+      "sha256": "6857f1e7c0ce7524e3ed719b9b8781e31faa60f9c23608a9dd1311c502f21a4c",
+      "size_bytes": 20311,
       "top_level": "src"
     },
     {
@@ -19847,8 +19903,8 @@
     {
       "extension": ".py",
       "path": "tests/test_attestation_recovery.py",
-      "sha256": "bfafe4a016268339bc7901f4efea62d4279ab41b92ed2af43fccf9097100f1e6",
-      "size_bytes": 9061,
+      "sha256": "353d9f57c267c82bbde143c4ee20ddbc2fe0ab95fc5c2f7eadd004843e3f1137",
+      "size_bytes": 13300,
       "top_level": "tests"
     },
     {
@@ -19868,15 +19924,15 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_campaign.py",
-      "sha256": "875fa13dac753b72264cfacfb442bec464f60dc65337e235ae81815c3b880f58",
-      "size_bytes": 65690,
+      "sha256": "cbd1c33051b8bdeec51927427b0232339c1ea7c8934b36f4c7a3f545cc5351fc",
+      "size_bytes": 75380,
       "top_level": "tests"
     },
     {
       "extension": ".py",
       "path": "tests/test_autonomy_campaign_windows.py",
-      "sha256": "fefdc31230dca0d0c530c1b0dc27b9501c38136934b824931c0b67283eeecd02",
-      "size_bytes": 11966,
+      "sha256": "33b9f8b8deda11da1403f79099b3c9cf7b22ffdaa2250790e77ad94a658bf969",
+      "size_bytes": 18277,
       "top_level": "tests"
     },
     {
@@ -19896,8 +19952,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_live_qualification.py",
-      "sha256": "e7ecbbda9c02b96e3633d7deb7a19b6c327055cd378c9f3b8d59c039d81c563e",
-      "size_bytes": 4334,
+      "sha256": "435039869c5065d02e9b39a6ddc15519eaec8eade802d466c1bb2c51a50365c4",
+      "size_bytes": 12032,
       "top_level": "tests"
     },
     {
@@ -20008,8 +20064,15 @@
     {
       "extension": ".py",
       "path": "tests/test_campaign_desktop_artifacts.py",
-      "sha256": "3f248520fce54bf34d55951196c341ba98fb3163331d0132341ad513ae45fe0d",
-      "size_bytes": 2887,
+      "sha256": "ada34f78847fbb258ce957e609988792dd8d08cd88521e92acac75700f050ec7",
+      "size_bytes": 6290,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_campaign_duration_probes.py",
+      "sha256": "79dccc3836fe0bd4b3b6cf891e3c6f8b1689739bb044da33b5a290b31f16f00d",
+      "size_bytes": 3835,
       "top_level": "tests"
     },
     {
@@ -20134,8 +20197,8 @@
     {
       "extension": ".py",
       "path": "tests/test_configuration.py",
-      "sha256": "aff739a0062c5ab4f2b1a0840269fa0ea2b2995262086aa628b876b1a4959535",
-      "size_bytes": 6660,
+      "sha256": "09f2297da28aec511407e3be1dfef4fcebf0b12c5dc4f1851f0bd4e5f0b5e27e",
+      "size_bytes": 9498,
       "top_level": "tests"
     },
     {
@@ -20400,8 +20463,8 @@
     {
       "extension": ".py",
       "path": "tests/test_github_mock_and_service.py",
-      "sha256": "2cc783f0d18f8a32671f502dd9188aa900bdd5dafa861819bc2b480f3bdaf437",
-      "size_bytes": 6900,
+      "sha256": "f27d612b43e44e3a62b21611232e4063e0a29dff49adc076efebf3107c1754b7",
+      "size_bytes": 7965,
       "top_level": "tests"
     },
     {
@@ -20437,6 +20500,13 @@
       "path": "tests/test_governance_post_merge_refresh.py",
       "sha256": "82b18d614afdfc8b8ce16c430b53b1f25891d86810ecf1f6da36ee40aea6d118",
       "size_bytes": 2819,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_host_safety.py",
+      "sha256": "ed1611d888f71794e2be7f0731694a5db1e99afbc0fed65ab2c3d1359d4ccfba",
+      "size_bytes": 3513,
       "top_level": "tests"
     },
     {
@@ -20589,8 +20659,8 @@
     {
       "extension": ".py",
       "path": "tests/test_manifest.py",
-      "sha256": "566bc4aff366b2db8c52ec55565c5da14165e6f72a4ff1488d5e3ba202477eaf",
-      "size_bytes": 5932,
+      "sha256": "75cf006b80ebfa3680c4d331ad7a1b7441a6ee2678b9093582fb60700fd798cf",
+      "size_bytes": 6604,
       "top_level": "tests"
     },
     {
@@ -20729,8 +20799,8 @@
     {
       "extension": ".py",
       "path": "tests/test_product_outcome_contract.py",
-      "sha256": "9c04aabd3bb91351d0878292dd3d86f8888b32e3c5bc9ad4e5217cdae077e093",
-      "size_bytes": 14309,
+      "sha256": "379a084d50fcdebc518f26f9818aaccc141849887930441da83c6d79d7d12ad1",
+      "size_bytes": 14396,
       "top_level": "tests"
     },
     {
@@ -20799,8 +20869,8 @@
     {
       "extension": ".py",
       "path": "tests/test_release_factory.py",
-      "sha256": "4eaa89f80bcd21b79f7a5033cf776d5da6664b014ad0b5a616f926bb24c1340e",
-      "size_bytes": 27843,
+      "sha256": "e7ed492da71d165ca024ed775368cfccc7a0205b720e7af48bb83e832035d231",
+      "size_bytes": 28897,
       "top_level": "tests"
     },
     {
@@ -20955,6 +21025,13 @@
       "path": "tests/test_retrieval_benchmark.py",
       "sha256": "a2e59eb0f40a10b06b08dc1ca505a27b67974634c1447e94e76d3b842dac7b86",
       "size_bytes": 5721,
+      "top_level": "tests"
+    },
+    {
+      "extension": ".py",
+      "path": "tests/test_run_autonomy_campaign.py",
+      "sha256": "f1a001640c6c097c9e2026ea58a6a172b7a144af2a353c3b7e2adbf2bfcb81ee",
+      "size_bytes": 1302,
       "top_level": "tests"
     },
     {
@@ -21170,8 +21247,8 @@
     {
       "extension": ".py",
       "path": "tests/test_validation_content.py",
-      "sha256": "62e5d4d3aafbc84810f931d87fd5ff790a8d11889a1844cd0ff851c2fc3f56a4",
-      "size_bytes": 4697,
+      "sha256": "30e1d5232b5e67ffcc3bf52016521fc92f61be0bba21dbe887153e8940b2dcf3",
+      "size_bytes": 5284,
       "top_level": "tests"
     },
     {
@@ -21294,7 +21371,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-24T11:02:51.151622+00:00",
+  "generated_at_utc": "2026-08-25T07:46:05.782924+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

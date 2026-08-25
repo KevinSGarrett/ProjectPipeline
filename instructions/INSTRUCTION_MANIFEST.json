@@ -593,8 +593,8 @@
       "instruction_id": "PP-ASSET-SRC-PROJECT-PIPELINE-CONFIGURATION-MODELS-PY",
       "kind": "IMPLEMENTATION_SUPPORT",
       "path": "src/project_pipeline/configuration/models.py",
-      "sha256": "d288d13dd048b4b0ec41db28f41a2cc936855c3bb49ef79a786fc3610e2a2dd1",
-      "size_bytes": 9292
+      "sha256": "6b7709742d5b4c6a84c1816f118fea1e63cb938d48399c8aa760e9c1441017bd",
+      "size_bytes": 9645
     },
     {
       "instruction_id": "PP-ASSET-SRC-PROJECT-PIPELINE-VALIDATION-CONTENT-PY",

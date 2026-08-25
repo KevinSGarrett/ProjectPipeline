@@ -165,12 +165,13 @@ def _gh_auth_available() -> bool:
 
 
 def _credential_environment(repository_root: Path) -> dict[str, str]:
+    """Load legacy files only as defaults; process-bound campaign refs take precedence."""
+
     import os
 
     from project_pipeline.configuration.loader import parse_env_file
 
-    merged = dict(os.environ)
-    merged.update(parse_env_file(repository_root / ".env"))
+    merged: dict[str, str] = {}
     project_json = repository_root / "config" / "project.json"
     if project_json.is_file():
         target_root = json.loads(project_json.read_text(encoding="utf-8")).get("target_local_root")
@@ -178,6 +179,10 @@ def _credential_environment(repository_root: Path) -> dict[str, str]:
             canonical_env = Path(target_root).expanduser().resolve() / ".env"
             if canonical_env.is_file():
                 merged.update(parse_env_file(canonical_env))
+    merged.update(parse_env_file(repository_root / ".env"))
+    # The recovery runner supplies validated references through its constrained
+    # process environment.  A mutable checkout .env must never replace them.
+    merged.update(os.environ)
     return merged
 
 
