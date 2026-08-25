@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "90da096bda641d7b878afae2815394b5912e7ef587619db60e757b1fab3b4d31",
+  "aggregate_sha256": "92451a3a690bb724b89ca223c792d929557f54db4551bf39863df47b82c2d328",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12077,8 +12077,8 @@
     },
     {
       "path": "scripts/register_autonomy_campaign_recovery.ps1",
-      "sha256": "fc3066e11b2c49b1f5b598fa36fc0a412aa41403938485dc6f9ce15ac6de4d66",
-      "size_bytes": 8260
+      "sha256": "f25b6715d9572f7cc4ff071482d277f797997a4f234b92af2a5fa64256652d98",
+      "size_bytes": 8633
     },
     {
       "path": "scripts/repair_jira_plan_references.py",
@@ -14182,8 +14182,8 @@
     },
     {
       "path": "tests/test_autonomy_campaign_windows.py",
-      "sha256": "6c16c0a942e515025985f4b26d1d0ebb9edce23dad4d92853ab26359a6cb8c68",
-      "size_bytes": 19021
+      "sha256": "dfae82acb5bc12c69cf4c962e7131d17868c787140006afb607111c71b884636",
+      "size_bytes": 19161
     },
     {
       "path": "tests/test_autonomy_director.py",
@@ -15211,7 +15211,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-25T08:17:04.634066+00:00",
+  "generated_at_utc": "2026-08-25T08:22:26.990713+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15221,5 +15221,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30542910
+  "total_bytes": 30543423
 }
