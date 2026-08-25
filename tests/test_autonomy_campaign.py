@@ -149,11 +149,17 @@ def _ready_after_72h(controller: CampaignController, tmp_path: Path) -> dict:
     return controller._mark_72h_attested(started["campaign_id"])
 
 
-def test_pp384_admission_requires_all_five_stages(tmp_path: Path):
+def test_pp384_admission_requires_all_required_stages(tmp_path: Path):
     good = _pp384_evidence(tmp_path / "good.json")
     assert evaluate_pp384_admission(good)["admitted"] is True
     bad = _pp384_evidence(tmp_path / "bad.json", failed_stage="cursor_cli_provider_dispatch")
     assert evaluate_pp384_admission(bad)["admitted"] is False
+    integrity_failed = _pp384_evidence(
+        tmp_path / "integrity-failed.json", failed_stage="candidate_checkout_integrity"
+    )
+    admission = evaluate_pp384_admission(integrity_failed)
+    assert admission["admitted"] is False
+    assert admission["missing"] == ["candidate_checkout_integrity"]
 
 
 def test_campaign_rejects_dirty_worktree_and_failed_pp384(tmp_path: Path):

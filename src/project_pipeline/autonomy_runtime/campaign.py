@@ -53,6 +53,7 @@ REQUIRED_PP384_STAGES = (
     "local_provider_dispatch",
     "github_jira_governance",
     "cursor_cli_provider_dispatch",
+    "candidate_checkout_integrity",
 )
 REQUIRED_TABLES = (
     "campaign_runs",

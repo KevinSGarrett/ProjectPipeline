@@ -131,6 +131,7 @@ def test_bound_runtime_qualification_may_close_persistent_director(product_root:
                     {"stage_id": "local_provider_dispatch", "outcome": "PASSED"},
                     {"stage_id": "github_jira_governance", "outcome": "PASSED"},
                     {"stage_id": "cursor_cli_provider_dispatch", "outcome": "PASSED"},
+                    {"stage_id": "candidate_checkout_integrity", "outcome": "PASSED"},
                 ],
             }
         )
