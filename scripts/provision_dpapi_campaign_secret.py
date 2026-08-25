@@ -88,16 +88,28 @@ def _require_local_scope(scope: dict[str, str]) -> None:
 
 
 def _receipt_path(root: Path, receipt_path: Path, destination: Path) -> Path:
-    resolved = receipt_path.resolve()
+    workspace = root.absolute()
+    candidate = receipt_path.absolute()
     try:
-        resolved.relative_to(root)
+        relative = candidate.relative_to(workspace)
     except ValueError as error:
         raise RuntimeError(
             "revocation receipt must remain within the campaign workspace"
         ) from error
-    if resolved == destination.resolve():
+    # The workspace root is trusted.  Reject symlink components below it before
+    # creating a receipt so an apparently local path cannot redirect a durable
+    # intent outside the campaign workspace.  Keeping the original absolute
+    # spelling also avoids Windows 8.3-versus-long-path alias false negatives.
+    current = workspace
+    for component in relative.parts[:-1]:
+        current /= component
+        if current.is_symlink():
+            raise RuntimeError("revocation receipt path must not traverse a symlink")
+    if candidate.is_symlink():
+        raise RuntimeError("revocation receipt path must not be a symlink")
+    if candidate == destination.absolute():
         raise RuntimeError("revocation receipt must not replace the encrypted envelope")
-    return resolved
+    return candidate
 
 
 def _receipt(

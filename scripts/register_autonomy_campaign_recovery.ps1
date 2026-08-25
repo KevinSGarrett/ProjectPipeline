@@ -125,7 +125,7 @@ if ($Action -eq "status") {
         principal_identity = if ($task) { $task.Principal.UserId } else { $null }
         expected_principal_identity = $scheduledPrincipalIdentity
         scheduled_principal_sid = $scheduledPrincipalSid
-        principal_identity_matches_expected = if ($task) { $task.Principal.UserId -ieq $scheduledPrincipalIdentity } else { $false }
+        principal_identity_matches_expected = if ($task) { ($task.Principal.UserId -ieq $scheduledPrincipalIdentity) -or ($task.Principal.UserId -ieq $scheduledPrincipalSid) } else { $false }
         principal_logon_type = if ($task) { $task.Principal.LogonType.ToString() } else { $null }
         principal_run_level = if ($task) { $task.Principal.RunLevel.ToString() } else { $null }
         action_executable = if ($registeredAction) { $registeredAction.Execute } else { $null }
@@ -162,7 +162,7 @@ if ($RepetitionDays -lt 1 -or $RepetitionDays -gt 31) {
 $exec = New-ScheduledTaskAction -Execute $python -Argument "`"$probe`" --config `"$configPath`"" -WorkingDirectory $root
 $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes $IntervalMinutes) -RepetitionDuration (New-TimeSpan -Days $RepetitionDays)
 $settings = New-ScheduledTaskSettingsSet -Hidden -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 4) -MultipleInstances IgnoreNew
-$principal = New-ScheduledTaskPrincipal -UserId $scheduledPrincipalIdentity -LogonType Interactive -RunLevel Limited
+$principal = New-ScheduledTaskPrincipal -UserId $scheduledPrincipalSid -LogonType Interactive -RunLevel Limited
 Register-ScheduledTask -TaskName $TaskName -Action $exec -Trigger $trigger -Settings $settings -Principal $principal -Force | Out-Null
 [ordered]@{
     task_name = $TaskName

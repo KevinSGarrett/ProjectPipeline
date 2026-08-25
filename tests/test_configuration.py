@@ -270,6 +270,25 @@ class ConfigurationTests(unittest.TestCase):
                 )
             self.assertTrue(destination.exists())
 
+    def test_dpapi_revocation_rejects_a_symlinked_receipt_parent(self) -> None:
+        script = runpy.run_path(str(ROOT / "scripts" / "provision_dpapi_campaign_secret.py"))
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            target = root / "outside"
+            target.mkdir()
+            linked = root / ".local" / "evidence"
+            linked.parent.mkdir()
+            try:
+                linked.symlink_to(target, target_is_directory=True)
+            except OSError:
+                self.skipTest("local symlink creation is unavailable")
+            with self.assertRaisesRegex(RuntimeError, "must not traverse a symlink"):
+                script["_receipt_path"](
+                    root,
+                    linked / "revocation.json",
+                    root / ".local" / "secure-secrets" / "dpapi" / "secret.json",
+                )
+
     def test_dpapi_envelope_persists_only_ciphertext_and_scope(self) -> None:
         scope = {
             "project_id": "PROJECT-PIPELINE",
