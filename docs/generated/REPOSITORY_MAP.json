@@ -14457,7 +14457,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "6e57d626624bcd95e894db3aa6dafc15b0a88facb8187f3881e62d9d16c6e4f5",
+      "sha256": "efb9e769793289bebea353fdc6d6bacd17620e9dc108a60cd55946a4309c63ac",
       "size_bytes": 569997,
       "top_level": "_root"
     },
@@ -17866,8 +17866,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/configuration/campaign_environment.py",
-      "sha256": "529dd5c0b2f85f487405b6d92a54cf7ca4d4a9069b0a583d72630e151e3e545b",
-      "size_bytes": 8865,
+      "sha256": "6f0ffef7897cdc9457ba6f25717fa9edb92f95d2679775d1ed5e67fb6461777c",
+      "size_bytes": 8989,
       "top_level": "src"
     },
     {
@@ -17894,8 +17894,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/configuration/secrets.py",
-      "sha256": "c729677e6e31ceb8f3b827ffe2a10dada2646dbd871140a403a7050114836cd5",
-      "size_bytes": 17326,
+      "sha256": "c88be914fb6971e08a3fef29322b9c7e3bc4bd8e8dcab38a558c808c190b9aa7",
+      "size_bytes": 17396,
       "top_level": "src"
     },
     {
@@ -20197,8 +20197,8 @@
     {
       "extension": ".py",
       "path": "tests/test_configuration.py",
-      "sha256": "62b26a947ca85e1a2bd98776adfcf0e339ef5a7d5e211cc06dc4e5e2c5f1af84",
-      "size_bytes": 27833,
+      "sha256": "76cd99e752c24264a49436164d4b06e50e99b983bbb86fb972ae04b442201367",
+      "size_bytes": 28541,
       "top_level": "tests"
     },
     {
@@ -21371,7 +21371,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-25T21:34:22.701709+00:00",
+  "generated_at_utc": "2026-08-25T21:42:37.161443+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

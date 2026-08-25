@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "ba35e222656e26be9878bd588ac8d315b198030e90cba77ccb2a1222b7ab125b",
+  "aggregate_sha256": "986ed30b2a5a6241a9d185f68913f6977bf64984c0250bced7cfc3fdf71acc6b",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12707,8 +12707,8 @@
     },
     {
       "path": "src/project_pipeline/configuration/campaign_environment.py",
-      "sha256": "529dd5c0b2f85f487405b6d92a54cf7ca4d4a9069b0a583d72630e151e3e545b",
-      "size_bytes": 8865
+      "sha256": "6f0ffef7897cdc9457ba6f25717fa9edb92f95d2679775d1ed5e67fb6461777c",
+      "size_bytes": 8989
     },
     {
       "path": "src/project_pipeline/configuration/loader.py",
@@ -12727,8 +12727,8 @@
     },
     {
       "path": "src/project_pipeline/configuration/secrets.py",
-      "sha256": "c729677e6e31ceb8f3b827ffe2a10dada2646dbd871140a403a7050114836cd5",
-      "size_bytes": 17326
+      "sha256": "c88be914fb6971e08a3fef29322b9c7e3bc4bd8e8dcab38a558c808c190b9aa7",
+      "size_bytes": 17396
     },
     {
       "path": "src/project_pipeline/context_engine/__init__.py",
@@ -14372,8 +14372,8 @@
     },
     {
       "path": "tests/test_configuration.py",
-      "sha256": "62b26a947ca85e1a2bd98776adfcf0e339ef5a7d5e211cc06dc4e5e2c5f1af84",
-      "size_bytes": 27833
+      "sha256": "76cd99e752c24264a49436164d4b06e50e99b983bbb86fb972ae04b442201367",
+      "size_bytes": 28541
     },
     {
       "path": "tests/test_context_broker_compiler.py",
@@ -15211,7 +15211,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-25T21:34:23.059617+00:00",
+  "generated_at_utc": "2026-08-25T21:42:38.880638+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15221,5 +15221,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30578330
+  "total_bytes": 30579232
 }

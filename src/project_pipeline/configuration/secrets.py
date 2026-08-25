@@ -108,7 +108,9 @@ def _dpapi_unprotect(ciphertext: bytes, entropy: bytes) -> bytes:
         ctypes.byref(output),
     )
     if not ok:
-        raise SecretResolutionError("DPAPI credential envelope cannot be opened by this Windows identity")
+        raise SecretResolutionError(
+            "DPAPI credential envelope cannot be opened by this Windows identity"
+        )
     try:
         return ctypes.string_at(output.pbData, output.cbData)
     finally:
@@ -277,8 +279,10 @@ def issue_campaign_secret_access_lease(
     )
     maximum = _secret_lease_max_seconds(root)
     requested_ttl = maximum if ttl_seconds is None else ttl_seconds
-    if isinstance(requested_ttl, bool) or not isinstance(requested_ttl, int) or not (
-        0 < requested_ttl <= maximum
+    if (
+        isinstance(requested_ttl, bool)
+        or not isinstance(requested_ttl, int)
+        or not (0 < requested_ttl <= maximum)
     ):
         raise SecretResolutionError("campaign secret access lease exceeds security policy")
     expires = min(envelope_expiry, issued + timedelta(seconds=requested_ttl))
@@ -381,7 +385,9 @@ class SecretResolver:
                 "DPAPI credential envelope scope does not match the bound campaign"
             )
         if self.access_lease is None:
-            raise SecretResolutionError("DPAPI credential materialization requires a short-lived access lease")
+            raise SecretResolutionError(
+                "DPAPI credential materialization requires a short-lived access lease"
+            )
         self.access_lease.validate(self.root, required_scope=normalized_scope)
         try:
             expiry = _parse_utc_timestamp(

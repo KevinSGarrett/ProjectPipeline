@@ -92,9 +92,7 @@ def _campaign_runtime_text(*, expiry: datetime, deadline: datetime) -> str:
 def _write_security_policy(root: Path, *, maximum_seconds: int = 900) -> None:
     policy = root / "config" / "security_policy.json"
     policy.parent.mkdir(parents=True, exist_ok=True)
-    policy.write_text(
-        json.dumps({"secret_lease_max_seconds": maximum_seconds}), encoding="utf-8"
-    )
+    policy.write_text(json.dumps({"secret_lease_max_seconds": maximum_seconds}), encoding="utf-8")
 
 
 class ConfigurationTests(unittest.TestCase):
@@ -243,8 +241,13 @@ class ConfigurationTests(unittest.TestCase):
                     expiry=datetime.now(UTC) + timedelta(days=6),
                     deadline=datetime.now(UTC) + timedelta(hours=101),
                 )
-                .replace("JIRA_API_TOKEN_REF=dpapi://C16B_JIRA_TOKEN", "JIRA_API_TOKEN_REF=env://MUTABLE")
-                .replace("GITHUB_TOKEN_REF=dpapi://C16B_GITHUB_TOKEN", "GITHUB_TOKEN_REF=gh-auth://default"),
+                .replace(
+                    "JIRA_API_TOKEN_REF=dpapi://C16B_JIRA_TOKEN", "JIRA_API_TOKEN_REF=env://MUTABLE"
+                )
+                .replace(
+                    "GITHUB_TOKEN_REF=dpapi://C16B_GITHUB_TOKEN",
+                    "GITHUB_TOKEN_REF=gh-auth://default",
+                ),
                 encoding="utf-8",
             )
             with self.assertRaises(ConfigurationError):
@@ -257,14 +260,19 @@ class ConfigurationTests(unittest.TestCase):
                 _campaign_runtime_text(
                     expiry=datetime.now(UTC) + timedelta(days=6),
                     deadline=datetime.now(UTC) + timedelta(hours=101),
-                ).replace("GITHUB_TOKEN_REF=dpapi://C16B_GITHUB_TOKEN", "GITHUB_TOKEN_REF=gh-auth://default"),
+                ).replace(
+                    "GITHUB_TOKEN_REF=dpapi://C16B_GITHUB_TOKEN",
+                    "GITHUB_TOKEN_REF=gh-auth://default",
+                ),
                 encoding="utf-8",
             )
             with self.assertRaises(ConfigurationError):
                 load_campaign_runtime_environment(ROOT, env_file)
 
     def test_campaign_envelope_admission_window_is_not_reapplied_during_recovery(self) -> None:
-        scope = _campaign_scope(expires_at_utc=(datetime.now(UTC) + timedelta(hours=108)).isoformat())
+        scope = _campaign_scope(
+            expires_at_utc=(datetime.now(UTC) + timedelta(hours=108)).isoformat()
+        )
         values = {
             "CAMPAIGN_PROJECT_ID": scope["project_id"],
             "CAMPAIGN_CYCLE_ID": scope["cycle_id"],
@@ -431,20 +439,34 @@ class ConfigurationTests(unittest.TestCase):
                 return_value=b"ciphertext",
             ),
             patch(
-                "project_pipeline.configuration.secrets._dpapi_unprotect", return_value=b"resolved"),
+                "project_pipeline.configuration.secrets._dpapi_unprotect", return_value=b"resolved"
+            ),
             patch(
                 "project_pipeline.configuration.secrets.current_windows_principal_sid",
                 return_value="S-1-5-21-4242",
             ),
-            patch("project_pipeline.configuration.secrets.socket.gethostname", return_value="test-machine"),
+            patch(
+                "project_pipeline.configuration.secrets.socket.gethostname",
+                return_value="test-machine",
+            ),
         ):
             root = Path(directory)
             _write_security_policy(root)
             destination = root / ".local" / "secure-secrets" / "dpapi"
             destination.mkdir(parents=True)
+            # This fixture deliberately contains only sealed test bytes.  The
+            # plaintext path is covered by the envelope-builder test above;
+            # this test exercises the resolver's access-lease boundary.
+            sealed_fixture = {
+                "schema_version": "2.0.0",
+                "kind": "windows_current_user_credential_envelope",
+                "reference": reference.reference,
+                "scope": scope,
+                "ciphertext_base64": "Y2lwaGVydGV4dA==",
+                "plaintext_persisted": False,
+            }
             (destination / "C16B_JIRA_TOKEN.json").write_text(
-                json.dumps(build_dpapi_secret_envelope("never-persisted", reference=reference, scope=scope)),
-                encoding="utf-8",
+                json.dumps(sealed_fixture), encoding="utf-8"
             )
             with self.assertRaisesRegex(SecretResolutionError, "short-lived access lease"):
                 SecretResolver(root, required_scope=scope).resolve(reference)
@@ -454,15 +476,17 @@ class ConfigurationTests(unittest.TestCase):
                 access_identity="test-stale-fence",
             )
             with self.assertRaisesRegex(SecretResolutionError, "scope does not match"):
-                SecretResolver(
-                    root, required_scope=scope, access_lease=stale_fence
-                ).resolve(reference)
+                SecretResolver(root, required_scope=scope, access_lease=stale_fence).resolve(
+                    reference
+                )
             access_lease = issue_campaign_secret_access_lease(
                 root, scope, access_identity="test-current-fence"
             )
             resolver = SecretResolver(root, required_scope=scope, access_lease=access_lease)
             self.assertEqual(resolver.resolve(reference), "resolved")
-            self.assertEqual(resolver.last_access_receipt["kind"], "campaign_secret_materialization_access")
+            self.assertEqual(
+                resolver.last_access_receipt["kind"], "campaign_secret_materialization_access"
+            )
             self.assertNotIn("resolved", json.dumps(resolver.last_access_receipt))
             access_lease.revoke()
             with self.assertRaisesRegex(SecretResolutionError, "revoked"):
@@ -476,9 +500,7 @@ class ConfigurationTests(unittest.TestCase):
             lease = issue_campaign_secret_access_lease(
                 root, scope, access_identity="test-policy", ttl_seconds=900
             )
-            self.assertLessEqual(
-                (lease.expires_at_utc - lease.issued_at_utc).total_seconds(), 900
-            )
+            self.assertLessEqual((lease.expires_at_utc - lease.issued_at_utc).total_seconds(), 900)
             with self.assertRaisesRegex(SecretResolutionError, "exceeds security policy"):
                 issue_campaign_secret_access_lease(
                     root, scope, access_identity="test-policy-too-long", ttl_seconds=901

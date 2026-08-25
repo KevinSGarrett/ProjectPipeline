@@ -87,7 +87,9 @@ def campaign_credential_envelope_scope(
         for key, source in _SCOPE_ENVIRONMENT_KEYS.items()
     }
     if not all(scope.values()):
-        raise ConfigurationError("campaign runtime environment lacks a complete credential envelope scope")
+        raise ConfigurationError(
+            "campaign runtime environment lacks a complete credential envelope scope"
+        )
     if scope["project_id"] != "PROJECT-PIPELINE" or scope["cycle_id"] != "CYCLE-16-B":
         raise ConfigurationError(
             "campaign credential envelope scope is not bound to ProjectPipeline Cycle 16-B"
@@ -97,17 +99,25 @@ def campaign_credential_envelope_scope(
             "campaign credential envelope scope requires a canonical Windows principal SID"
         )
     if not re.fullmatch(r"QCAMP-[A-Za-z0-9-]+", scope["campaign_id"]):
-        raise ConfigurationError("campaign credential envelope scope contains an invalid campaign identity")
+        raise ConfigurationError(
+            "campaign credential envelope scope contains an invalid campaign identity"
+        )
     if not re.fullmatch(r"[0-9a-fA-F]{40}", scope["candidate_sha"]):
-        raise ConfigurationError("campaign credential envelope scope contains an invalid candidate SHA")
+        raise ConfigurationError(
+            "campaign credential envelope scope contains an invalid candidate SHA"
+        )
     if not re.fullmatch(r"[0-9a-fA-F]{40}", scope["candidate_tree"]):
-        raise ConfigurationError("campaign credential envelope scope contains an invalid candidate tree")
+        raise ConfigurationError(
+            "campaign credential envelope scope contains an invalid candidate tree"
+        )
     if not re.fullmatch(r"(?:CLEASE|SLEASE)-[A-Za-z0-9-]+", scope["scheduler_lease_id"]):
         raise ConfigurationError(
             "campaign credential envelope scope contains an invalid scheduler lease identity"
         )
     if not re.fullmatch(r"CFENCE-[A-Za-z0-9-]+", scope["fence_token"]):
-        raise ConfigurationError("campaign credential envelope scope contains an invalid fence token")
+        raise ConfigurationError(
+            "campaign credential envelope scope contains an invalid fence token"
+        )
     try:
         expiry = datetime.fromisoformat(scope["expires_at_utc"].replace("Z", "+00:00"))
     except ValueError as error:
@@ -146,7 +156,9 @@ def campaign_credential_envelope_deadline(environment: Mapping[str, str]) -> dat
     deadline = _parse_utc_timestamp(deadline_value, label="campaign deadline")
     if deadline <= datetime.now(UTC):
         raise ConfigurationError("campaign deadline is expired")
-    expiry = _parse_utc_timestamp(scope["expires_at_utc"], label="campaign credential envelope expiry")
+    expiry = _parse_utc_timestamp(
+        scope["expires_at_utc"], label="campaign credential envelope expiry"
+    )
     if expiry < deadline:
         raise ConfigurationError(
             "campaign credential envelope expires before the bound campaign deadline"
