@@ -117,6 +117,7 @@ if ($Action -eq "status") {
     $info = $null
     if ($task) { $info = Get-ScheduledTaskInfo -TaskName $TaskName }
     $registeredAction = if ($task) { @($task.Actions)[0] } else { $null }
+    $registeredPrincipalSid = if ($task) { ([xml](Export-ScheduledTask -TaskName $TaskName)).Task.Principals.Principal.UserId } else { $null }
     [ordered]@{
         task_name = $TaskName
         registered = [bool]$task
@@ -125,7 +126,9 @@ if ($Action -eq "status") {
         principal_identity = if ($task) { $task.Principal.UserId } else { $null }
         expected_principal_identity = $scheduledPrincipalIdentity
         scheduled_principal_sid = $scheduledPrincipalSid
-        principal_identity_matches_expected = if ($task) { ($task.Principal.UserId -ieq $scheduledPrincipalIdentity) -or ($task.Principal.UserId -ieq $scheduledPrincipalSid) } else { $false }
+        principal_sid = $registeredPrincipalSid
+        principal_sid_matches_expected = if ($task) { $registeredPrincipalSid -ieq $scheduledPrincipalSid } else { $false }
+        principal_identity_matches_expected = if ($task) { ($task.Principal.UserId -ieq $scheduledPrincipalIdentity) -or ($task.Principal.UserId -ieq $scheduledPrincipalSid) -or ($registeredPrincipalSid -ieq $scheduledPrincipalSid) } else { $false }
         principal_logon_type = if ($task) { $task.Principal.LogonType.ToString() } else { $null }
         principal_run_level = if ($task) { $task.Principal.RunLevel.ToString() } else { $null }
         action_executable = if ($registeredAction) { $registeredAction.Execute } else { $null }

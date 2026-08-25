@@ -441,6 +441,8 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
         assert status["hidden"] is True
         assert status["principal_identity"]
         assert status["scheduled_principal_sid"].startswith("S-")
+        assert status["principal_sid"] == status["scheduled_principal_sid"]
+        assert status["principal_sid_matches_expected"] is True
         assert status["principal_identity_matches_expected"] is True
         assert status["principal_logon_type"] == "Interactive"
         assert status["principal_run_level"] == "Limited"
