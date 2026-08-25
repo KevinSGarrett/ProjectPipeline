@@ -135,7 +135,7 @@ class ConfigurationTests(unittest.TestCase):
                 "JIRA_BASE_URL=https://example.atlassian.net\n"
                 "JIRA_USER_EMAIL=worker@example.test\n"
                 "JIRA_API_TOKEN_REF=dpapi://C16B_JIRA_TOKEN\n"
-                "GITHUB_TOKEN_REF=gh-auth://default\n"
+                "GITHUB_TOKEN_REF=dpapi://C16B_GITHUB_TOKEN\n"
                 "CAMPAIGN_PROJECT_ID=PROJECT-PIPELINE\n"
                 "CAMPAIGN_CYCLE_ID=CYCLE-16-B\n"
                 "CAMPAIGN_MACHINE_ID=COMFY-V4-CPU-01\n"
@@ -152,7 +152,7 @@ class ConfigurationTests(unittest.TestCase):
                 source={"PATH": "safe-path", "SYSTEMROOT": "safe-root", "UNRELATED_SECRET": "no"},
             )
         self.assertEqual(values["JIRA_API_TOKEN_REF"], "dpapi://C16B_JIRA_TOKEN")
-        self.assertEqual(environment["GITHUB_TOKEN_REF"], "gh-auth://default")
+        self.assertEqual(environment["GITHUB_TOKEN_REF"], "dpapi://C16B_GITHUB_TOKEN")
         self.assertNotIn("UNRELATED_SECRET", environment)
 
     def test_campaign_runtime_environment_rejects_non_campaign_secret_schemes(self) -> None:
@@ -162,6 +162,26 @@ class ConfigurationTests(unittest.TestCase):
                 "JIRA_BASE_URL=https://example.atlassian.net\n"
                 "JIRA_USER_EMAIL=worker@example.test\n"
                 "JIRA_API_TOKEN_REF=env://MUTABLE\n"
+                "GITHUB_TOKEN_REF=gh-auth://default\n"
+                "CAMPAIGN_PROJECT_ID=PROJECT-PIPELINE\n"
+                "CAMPAIGN_CYCLE_ID=CYCLE-16-B\n"
+                "CAMPAIGN_MACHINE_ID=COMFY-V4-CPU-01\n"
+                "CAMPAIGN_PRINCIPAL_SID=S-1-5-21-1000\n"
+                "CAMPAIGN_LEASE_ID=SLEASE-C16B-TEST\n"
+                f"CAMPAIGN_LEASE_EXPIRES_AT_UTC={(datetime.now(UTC) + timedelta(days=6)).isoformat()}\n"
+                f"CAMPAIGN_DEADLINE_AT_UTC={(datetime.now(UTC) + timedelta(hours=101)).isoformat()}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaises(ConfigurationError):
+                load_campaign_runtime_environment(ROOT, env_file)
+
+    def test_campaign_runtime_environment_rejects_ambient_github_cli_reference(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            env_file = Path(directory) / "campaign-runtime.env"
+            env_file.write_text(
+                "JIRA_BASE_URL=https://example.atlassian.net\n"
+                "JIRA_USER_EMAIL=worker@example.test\n"
+                "JIRA_API_TOKEN_REF=dpapi://C16B_JIRA_TOKEN\n"
                 "GITHUB_TOKEN_REF=gh-auth://default\n"
                 "CAMPAIGN_PROJECT_ID=PROJECT-PIPELINE\n"
                 "CAMPAIGN_CYCLE_ID=CYCLE-16-B\n"
@@ -195,7 +215,7 @@ class ConfigurationTests(unittest.TestCase):
                 "JIRA_BASE_URL=https://example.atlassian.net\n"
                 "JIRA_USER_EMAIL=worker@example.test\n"
                 "JIRA_API_TOKEN_REF=dpapi://C16B_JIRA_TOKEN\n"
-                "GITHUB_TOKEN_REF=gh-auth://default\n"
+                "GITHUB_TOKEN_REF=dpapi://C16B_GITHUB_TOKEN\n"
                 "CAMPAIGN_PROJECT_ID=PROJECT-PIPELINE\n"
                 "CAMPAIGN_CYCLE_ID=CYCLE-16-B\n"
                 "CAMPAIGN_MACHINE_ID=COMFY-V4-CPU-01\n"

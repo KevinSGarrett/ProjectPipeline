@@ -164,9 +164,9 @@ def load_campaign_runtime_environment(
     github_reference = SecretReference(reference=values["GITHUB_TOKEN_REF"])
     if jira_reference.scheme != "dpapi":
         raise ConfigurationError("campaign Jira credential must use a current-user DPAPI reference")
-    if github_reference.reference != "gh-auth://default":
+    if github_reference.reference != "dpapi://C16B_GITHUB_TOKEN":
         raise ConfigurationError(
-            "campaign GitHub credential must use the authenticated GitHub CLI reference"
+            "campaign GitHub credential must use the scoped current-user DPAPI reference"
         )
     campaign_secret_scope(values, require_fresh_campaign_window=require_fresh_campaign_window)
     campaign_lease_deadline(values)

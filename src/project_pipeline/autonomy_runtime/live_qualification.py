@@ -68,6 +68,17 @@ _LIVE_QUAL_PROBE_MARKER = "PP384-LIVE-QUAL-PROBE"
 _GITHUB_PROBE_BRANCH = "qual/pp384-live-probe"
 _ALLOWED_GITHUB_HOSTS = frozenset({"github.com", "www.github.com"})
 _GITHUB_BRANCH_DELETE_READBACK_ATTEMPTS = 5
+_CAMPAIGN_IDENTITY_KEYS = frozenset(
+    {
+        "CAMPAIGN_PROJECT_ID",
+        "CAMPAIGN_CYCLE_ID",
+        "CAMPAIGN_MACHINE_ID",
+        "CAMPAIGN_PRINCIPAL_SID",
+        "CAMPAIGN_LEASE_ID",
+        "CAMPAIGN_LEASE_EXPIRES_AT_UTC",
+        "CAMPAIGN_DEADLINE_AT_UTC",
+    }
+)
 _GITHUB_BRANCH_DELETE_READBACK_DELAY_SECONDS = 0.2
 _COORDINATOR_JIRA_RECEIPT_KIND = "pp384_coordinator_jira_governance"
 _COORDINATOR_JIRA_RECEIPT_VERSION = "1.0.0"
@@ -187,6 +198,33 @@ def _credential_environment(repository_root: Path) -> dict[str, str]:
 
 
 def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
+    from project_pipeline.configuration.campaign_environment import (
+        campaign_lease_deadline,
+        campaign_secret_scope,
+    )
+    from project_pipeline.configuration.loader import ConfigurationError, load_runtime_configuration
+    from project_pipeline.configuration.secrets import SecretResolver
+
+    environment = _credential_environment(repository_root)
+    campaign_environment_declared = bool(_CAMPAIGN_IDENTITY_KEYS.intersection(environment))
+    if campaign_environment_declared:
+        try:
+            configuration = load_runtime_configuration(repository_root, environment=environment)
+            token_ref = configuration.settings.integrations.github_token
+            if token_ref is None:
+                return None, "none"
+            required_scope = campaign_secret_scope(environment)
+            campaign_lease_deadline(environment)
+            if token_ref.reference != "dpapi://C16B_GITHUB_TOKEN":
+                return None, "none"
+            token = SecretResolver(
+                repository_root, environment, required_scope=required_scope
+            ).resolve(token_ref)
+            return (token, "campaign-dpapi") if token.strip() else (None, "none")
+        except (ConfigurationError, RuntimeError):
+            return None, "none"
+
+    completed: subprocess.CompletedProcess[str] | None = None
     try:
         completed = subprocess.run(
             ["gh", "auth", "token"],
@@ -196,26 +234,24 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
             check=False,
         )
     except (OSError, subprocess.TimeoutExpired):
+        # A normal coordinator may have a configured secret reference even
+        # when the optional GitHub CLI is unavailable.  Only the campaign
+        # route is constrained to its DPAPI-bound reference above.
         completed = None
     if completed is not None and completed.returncode == 0:
         token = completed.stdout.strip()
         if token:
             return token, "gh-auth"
-    try:
-        from project_pipeline.configuration.loader import load_runtime_configuration
-        from project_pipeline.configuration.secrets import SecretResolver
 
-        configuration = load_runtime_configuration(
-            repository_root, environment=_credential_environment(repository_root)
-        )
+    try:
+        configuration = load_runtime_configuration(repository_root, environment=environment)
         token_ref = configuration.settings.integrations.github_token
-        if token_ref is not None:
-            token = SecretResolver(
-                repository_root, _credential_environment(repository_root)
-            ).resolve(token_ref)
-            if token.strip():
-                return token, "config"
-    except Exception:
+        if token_ref is None:
+            return None, "none"
+        token = SecretResolver(repository_root, environment).resolve(token_ref)
+        if token.strip():
+            return token, "config"
+    except (ConfigurationError, RuntimeError):
         return None, "none"
     return None, "none"
 
@@ -608,6 +644,11 @@ def _coordinator_jira_receipt_probe(
         and bool(str(jira_write_probe.get("remote_key")).strip())
     )
     if not valid:
+        unavailable["reason"] = "coordinator_jira_receipt_policy_mismatch"
+        return unavailable
+    # mypy cannot retain narrowing through the aggregate validity predicate.
+    # Repeat this already-required condition at the point of indexed access.
+    if not isinstance(jira_write_probe, dict):
         unavailable["reason"] = "coordinator_jira_receipt_policy_mismatch"
         return unavailable
     allowed_signers = repository_root / _COORDINATOR_JIRA_ALLOWED_SIGNERS
@@ -1032,7 +1073,7 @@ def run_live_qualification(
         )
     candidate_head, candidate_tree = _git_identity(repository_root)
     candidate_clean_before = _git_checkout_clean(repository_root)
-    stages = (
+    stages: tuple[StageResult, ...] = (
         _qualify_windows_service(repository_root=repository_root, disposable_root=root),
         _qualify_command_center(disposable_root=root),
         _qualify_local_provider(root),

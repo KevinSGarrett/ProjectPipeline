@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -16,6 +18,7 @@ from project_pipeline.autonomy_runtime.live_qualification import (
     run_live_qualification,
     write_live_qualification_evidence,
 )
+from project_pipeline.configuration.models import SecretReference
 
 
 def _scaffold_repo(repo: Path) -> None:
@@ -108,6 +111,139 @@ def test_credential_environment_keeps_process_bound_references_over_mutable_env_
 
     assert environment["JIRA_API_TOKEN_REF"] == "dpapi://C16B_JIRA_TOKEN"
     assert environment["GITHUB_TOKEN_REF"] == "gh-auth://default"
+
+
+def test_campaign_github_resolution_rejects_ambient_cli_reference(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    environment = {
+        "JIRA_BASE_URL": "https://example.atlassian.net",
+        "JIRA_USER_EMAIL": "worker@example.test",
+        "JIRA_API_TOKEN_REF": "dpapi://C16B_JIRA_TOKEN",
+        "GITHUB_TOKEN_REF": "gh-auth://default",
+        "CAMPAIGN_PROJECT_ID": "PROJECT-PIPELINE",
+        "CAMPAIGN_CYCLE_ID": "CYCLE-16-B",
+        "CAMPAIGN_MACHINE_ID": "COMFY-V4-CPU-01",
+        "CAMPAIGN_PRINCIPAL_SID": "S-1-5-21-1000",
+        "CAMPAIGN_LEASE_ID": "SLEASE-C16B-TEST",
+        "CAMPAIGN_LEASE_EXPIRES_AT_UTC": "2099-01-01T00:00:00+00:00",
+        "CAMPAIGN_DEADLINE_AT_UTC": "2098-12-31T00:00:00+00:00",
+    }
+    monkeypatch.setattr(
+        live_qualification_module, "_credential_environment", lambda _root: environment
+    )
+
+    def unexpected_cli_lookup(*_args: object, **_kwargs: object) -> object:
+        raise AssertionError("campaign resolution must not fall back to ambient gh auth")
+
+    monkeypatch.setattr(live_qualification_module.subprocess, "run", unexpected_cli_lookup)
+
+    assert live_qualification_module._resolve_github_token(root) == (None, "none")
+
+
+def test_noncampaign_github_resolution_uses_ambient_cli_without_configured_reference(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    calls: list[list[str]] = []
+    monkeypatch.setattr(live_qualification_module, "_credential_environment", lambda _root: {})
+
+    def cli_lookup(args: list[str], **_kwargs: object) -> SimpleNamespace:
+        calls.append(args)
+        return SimpleNamespace(returncode=0, stdout="ambient-token\n")
+
+    monkeypatch.setattr(live_qualification_module.subprocess, "run", cli_lookup)
+
+    assert live_qualification_module._resolve_github_token(root) == ("ambient-token", "gh-auth")
+    assert calls == [["gh", "auth", "token"]]
+
+
+def test_noncampaign_github_resolution_keeps_gh_precedence_over_config_reference(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    environment = {"GITHUB_TOKEN_REF": "env://CONFIGURED_TOKEN", "CONFIGURED_TOKEN": "config"}
+    monkeypatch.setattr(
+        live_qualification_module, "_credential_environment", lambda _root: environment
+    )
+    monkeypatch.setattr(
+        live_qualification_module.subprocess,
+        "run",
+        lambda *_args, **_kwargs: SimpleNamespace(returncode=0, stdout="ambient-token\n"),
+    )
+
+    def unexpected_config_load(*_args: object, **_kwargs: object) -> object:
+        raise AssertionError("normal gh auth must take precedence over configured token resolution")
+
+    monkeypatch.setattr(
+        "project_pipeline.configuration.loader.load_runtime_configuration", unexpected_config_load
+    )
+
+    assert live_qualification_module._resolve_github_token(root) == ("ambient-token", "gh-auth")
+
+
+@pytest.mark.parametrize(
+    "cli_error",
+    (
+        OSError("gh unavailable"),
+        subprocess.TimeoutExpired(("gh", "auth", "token"), 15),
+    ),
+)
+def test_noncampaign_github_resolution_falls_back_to_config_when_cli_is_unavailable(
+    monkeypatch: pytest.MonkeyPatch,
+    cli_error: BaseException,
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    environment = {"GITHUB_TOKEN_REF": "env://CONFIGURED_TOKEN"}
+    monkeypatch.setattr(
+        live_qualification_module, "_credential_environment", lambda _root: environment
+    )
+
+    def unavailable_cli(*_args: object, **_kwargs: object) -> object:
+        raise cli_error
+
+    class ConfiguredSecretResolver:
+        def __init__(self, *_args: object, **_kwargs: object) -> None:
+            self.repository_root = _args[0]
+
+        def resolve(self, _reference: SecretReference) -> str:
+            return "configured-token"
+
+    configuration = SimpleNamespace(
+        settings=SimpleNamespace(
+            integrations=SimpleNamespace(
+                github_token=SecretReference(reference="env://CONFIGURED_TOKEN")
+            )
+        )
+    )
+    monkeypatch.setattr(live_qualification_module.subprocess, "run", unavailable_cli)
+    monkeypatch.setattr(
+        "project_pipeline.configuration.loader.load_runtime_configuration",
+        lambda *_args, **_kwargs: configuration,
+    )
+    monkeypatch.setattr(
+        "project_pipeline.configuration.secrets.SecretResolver", ConfiguredSecretResolver
+    )
+
+    assert live_qualification_module._resolve_github_token(root) == ("configured-token", "config")
+
+
+def test_unrelated_campaign_prefixed_environment_key_does_not_force_campaign_mode(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    environment = {"CAMPAIGN_DIAGNOSTIC_MARKER": "unrelated"}
+    monkeypatch.setattr(
+        live_qualification_module, "_credential_environment", lambda _root: environment
+    )
+    monkeypatch.setattr(
+        live_qualification_module.subprocess,
+        "run",
+        lambda *_args, **_kwargs: SimpleNamespace(returncode=0, stdout="ambient-token\n"),
+    )
+
+    assert live_qualification_module._resolve_github_token(root) == ("ambient-token", "gh-auth")
 
 
 def test_live_qualification_fails_closed_when_runtime_root_stays_locked(

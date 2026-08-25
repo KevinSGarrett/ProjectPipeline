@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "523e4add2d6f43f1ca41d28e34aea56b1e74b65066a1e5fff55eb3a5e7fe6731",
+  "aggregate_sha256": "c10fffa49cd79a4daed3ed3eba57cffd9e344a3f4983160b0b45edb3d27a3e21",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -1667,8 +1667,8 @@
     },
     {
       "path": "docs/security/secrets_and_egress.md",
-      "sha256": "c0553c003374a4f439f05321a05f22b6cd91249aad311390afeafe8b20319cb5",
-      "size_bytes": 1692
+      "sha256": "c2c96f11ef128e36f36aac27a63339119cf5dda6379f98a3064f542bcf79a3b3",
+      "size_bytes": 1892
     },
     {
       "path": "docs/security/security_authority_model.md",
@@ -12467,8 +12467,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
-      "sha256": "9a0b05ff2638c5a0a2cad4b123447f0fec4bf52fb01dbb2f7165a02a13abbc7b",
-      "size_bytes": 43956
+      "sha256": "d5f011f945d0b4431ea0a4f6d20143e949a3e41472b61a7197a22db9c834983e",
+      "size_bytes": 45897
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/nonduration.py",
@@ -12707,8 +12707,8 @@
     },
     {
       "path": "src/project_pipeline/configuration/campaign_environment.py",
-      "sha256": "b7b56896106890f3972fb4858466832d76f04fe4bd8091d8bef8ff9f7671a8a7",
-      "size_bytes": 7659
+      "sha256": "f2389f60f630587eb4f24c51a2a36956de08cb7de07070a969d9723e65a91333",
+      "size_bytes": 7668
     },
     {
       "path": "src/project_pipeline/configuration/loader.py",
@@ -14197,8 +14197,8 @@
     },
     {
       "path": "tests/test_autonomy_live_qualification.py",
-      "sha256": "435039869c5065d02e9b39a6ddc15519eaec8eade802d466c1bb2c51a50365c4",
-      "size_bytes": 12032
+      "sha256": "f048f3a26b40a81f3f19065be7321cd26d27a1e1d1387642bbc8ca7367f16010",
+      "size_bytes": 17323
     },
     {
       "path": "tests/test_autonomy_providers.py",
@@ -14372,8 +14372,8 @@
     },
     {
       "path": "tests/test_configuration.py",
-      "sha256": "ab6ad992f3d792a81b4febefb57e08d0ff06ec3cc37627674e71b13aea02fb3f",
-      "size_bytes": 20275
+      "sha256": "fdb7d1696f3d43e1ce2ed225f77030d999192bd67f754be3aa548570854f2934",
+      "size_bytes": 21439
     },
     {
       "path": "tests/test_context_broker_compiler.py",
@@ -15211,7 +15211,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-25T08:35:19.920960+00:00",
+  "generated_at_utc": "2026-08-25T11:27:29.971853+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15221,5 +15221,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30543686
+  "total_bytes": 30552291
 }
