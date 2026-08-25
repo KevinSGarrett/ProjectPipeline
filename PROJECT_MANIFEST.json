@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "c4a2d872845439db5ba8a0e92d288902f9a5952b8a5439054683c1b02e01d0b5",
+  "aggregate_sha256": "f695eef710f5cad35d7ead38ddd85ecd80045f969776b4e29ad18bbd47429c8d",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -14182,8 +14182,8 @@
     },
     {
       "path": "tests/test_autonomy_campaign_windows.py",
-      "sha256": "de627da8b2f4d7a55a582e6e92fa6041f10ebe644f795ad85ad8020967f89daf",
-      "size_bytes": 20162
+      "sha256": "f27cdd9ca47da91b776d10bf60099bb8804c8e5815d6b4370b1f9c3be503d0b1",
+      "size_bytes": 20451
     },
     {
       "path": "tests/test_autonomy_director.py",
@@ -15211,7 +15211,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-25T22:51:53.484479+00:00",
+  "generated_at_utc": "2026-08-25T23:11:27.442095+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15221,5 +15221,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30599838
+  "total_bytes": 30600127
 }

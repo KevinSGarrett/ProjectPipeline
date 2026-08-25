@@ -143,7 +143,12 @@ def test_hidden_campaign_launcher_dry_run(tmp_path: Path):
     assert payload["window_style"] == "Hidden"
     assert payload["simulated_elapsed"] is False
     assert payload["argument_list"][1] == "run"
-    assert payload["runtime_environment_file"] == str(runtime.resolve())
+    # PowerShell preserves the on-disk case while Python may preserve the case
+    # supplied by ``tmp_path``.  Windows paths are case-insensitive, so compare
+    # the canonical case-insensitive representations rather than path spelling.
+    assert os.path.normcase(payload["runtime_environment_file"]) == os.path.normcase(
+        str(runtime.resolve())
+    )
 
 
 def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
