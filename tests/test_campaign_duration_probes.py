@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 from project_pipeline.autonomy_runtime import cursor_cli_qualification as cursor_cli_module
 from project_pipeline.autonomy_runtime.command_execution import (
@@ -10,7 +12,13 @@ from project_pipeline.autonomy_runtime.command_execution import (
     command_kind,
     evaluate_command_semantics,
 )
-from project_pipeline.autonomy_runtime.duration_probes import _probe_cursor, required_probe_ids
+from project_pipeline.autonomy_runtime.duration_probes import (
+    _probe_cursor,
+    required_probe_ids,
+    verify_remote_candidate,
+)
+from project_pipeline.contracts import AdapterErrorCategory, AdapterErrorPayload
+from project_pipeline.github_steward.errors import GitHubAdapterError
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -113,3 +121,127 @@ def test_cursor_duration_probe_keeps_workspace_disposable_but_uses_durable_resol
     assert observed["repository_root"] == root
     assert observed["disposable_root"] == state_root / "cursor-disposable"
     assert "durable_dir" not in observed
+
+
+def test_remote_candidate_uses_anonymous_readback_when_no_token_is_available(
+    monkeypatch,
+) -> None:
+    expected_sha = "a" * 40
+    expected_assets = {"candidate.zip": "b" * 64}
+    observed_tokens: list[str | None] = []
+
+    class AnonymousAdapter:
+        provider_id = "github-rest"
+
+        def __init__(self, *, token: str | None = None) -> None:
+            observed_tokens.append(token)
+
+        def get_release(self, _slug: str, _release_id: int):
+            return SimpleNamespace(
+                api_id=7,
+                draft=True,
+                target_commitish=expected_sha,
+                assets=[SimpleNamespace(name="candidate.zip", api_id=11)],
+            )
+
+        def iter_branches(self, _slug: str):
+            return iter([SimpleNamespace(name="main", sha=expected_sha)])
+
+        def download_release_asset(self, _slug: str, *, asset_id: int) -> bytes:
+            assert asset_id == 11
+            return b"candidate-bytes"
+
+    digest = hashlib.sha256(b"candidate-bytes").hexdigest()
+    expected_assets["candidate.zip"] = digest
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.live_qualification._resolve_github_token",
+        lambda _root: (None, "none"),
+    )
+    monkeypatch.setattr(
+        "project_pipeline.github_steward.adapter.GitHubRestAdapter", AnonymousAdapter
+    )
+
+    report = verify_remote_candidate(
+        ROOT,
+        {
+            "identity_ok": True,
+            "payload": {
+                "draft_release": {"release_id": 7},
+                "artifacts": [
+                    {"name": "candidate.zip", "sha256": expected_assets["candidate.zip"]}
+                ],
+            },
+        },
+        expected_sha=expected_sha,
+    )
+
+    assert report["ok"] is True
+    assert report["token_source"] == "anonymous-read-only"
+    assert observed_tokens == [None]
+
+
+def test_remote_candidate_retries_anonymously_after_an_invalid_local_token(
+    monkeypatch,
+) -> None:
+    expected_sha = "c" * 40
+    payload = b"remote-candidate"
+    digest = hashlib.sha256(payload).hexdigest()
+    observed_tokens: list[str | None] = []
+
+    class FallbackAdapter:
+        provider_id = "github-rest"
+
+        def __init__(self, *, token: str | None = None) -> None:
+            observed_tokens.append(token)
+            self.token = token
+
+        def get_release(self, _slug: str, _release_id: int):
+            if self.token:
+                raise GitHubAdapterError(
+                    AdapterErrorPayload(
+                        error_code="GITHUB_HTTP_401",
+                        category=AdapterErrorCategory.AUTHENTICATION,
+                        message="invalid token",
+                        provider=self.provider_id,
+                        operation="github.release.read",
+                        correlation_id="corr:test",
+                        retryable=False,
+                    )
+                )
+            return SimpleNamespace(
+                api_id=9,
+                draft=True,
+                target_commitish=expected_sha,
+                assets=[SimpleNamespace(name="candidate.zip", api_id=13)],
+            )
+
+        def iter_branches(self, _slug: str):
+            return iter([SimpleNamespace(name="main", sha=expected_sha)])
+
+        def download_release_asset(self, _slug: str, *, asset_id: int) -> bytes:
+            assert asset_id == 13
+            return payload
+
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.live_qualification._resolve_github_token",
+        lambda _root: ("invalid-local-token", "gh-auth"),
+    )
+    monkeypatch.setattr(
+        "project_pipeline.github_steward.adapter.GitHubRestAdapter", FallbackAdapter
+    )
+
+    report = verify_remote_candidate(
+        ROOT,
+        {
+            "identity_ok": True,
+            "payload": {
+                "draft_release": {"release_id": 9},
+                "artifacts": [{"name": "candidate.zip", "sha256": digest}],
+            },
+        },
+        expected_sha=expected_sha,
+    )
+
+    assert report["ok"] is True
+    assert report["token_source"] == "anonymous-read-only-after-authentication-failure"
+    assert observed_tokens == ["invalid-local-token", None]

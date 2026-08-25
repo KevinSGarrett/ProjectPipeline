@@ -227,7 +227,9 @@ def verify_remote_candidate(
         _github_repository_slug_from_url,
         _resolve_github_token,
     )
+    from project_pipeline.contracts import AdapterErrorCategory
     from project_pipeline.github_steward.adapter import GitHubRestAdapter
+    from project_pipeline.github_steward.errors import GitHubAdapterError
 
     project = _read_json(root / "config" / "project.json")
     repository = str(project.get("repository") or "")
@@ -255,23 +257,46 @@ def verify_remote_candidate(
         return {"ok": False, "reason": "candidate-artifact-manifest-invalid"}
     token, token_source = _resolve_github_token(root)
     if not token:
-        return {"ok": False, "reason": "github-token-unavailable"}
-    try:
-        remote = GitHubRestAdapter(token=token)
+        token_source = "anonymous-read-only"
+
+    def read_remote(remote: GitHubRestAdapter) -> tuple[Any, Any, dict[str, Any], dict[str, str]]:
         snapshot = remote.get_release(slug, release_id)
         main = next((item for item in remote.iter_branches(slug) if item.name == "main"), None)
         if snapshot is None:
-            return {
-                "ok": False,
-                "reason": "draft-release-unavailable",
-                "provider": remote.provider_id,
-            }
+            raise ValueError("draft-release-unavailable")
         observed = {asset.name: asset for asset in snapshot.assets}
         hashes = {
             name: hashlib.sha256(
                 remote.download_release_asset(slug, asset_id=asset.api_id)
             ).hexdigest()
             for name, asset in observed.items()
+        }
+        return snapshot, main, observed, hashes
+
+    remote = GitHubRestAdapter(token=token)
+    try:
+        snapshot, main, observed, hashes = read_remote(remote)
+    except GitHubAdapterError as error:
+        if token and error.payload.category is AdapterErrorCategory.AUTHENTICATION:
+            remote = GitHubRestAdapter(token=None)
+            token_source = "anonymous-read-only-after-authentication-failure"
+            try:
+                snapshot, main, observed, hashes = read_remote(remote)
+            except ValueError:
+                return {
+                    "ok": False,
+                    "reason": "draft-release-unavailable",
+                    "provider": remote.provider_id,
+                }
+            except Exception as retry_error:
+                return {"ok": False, "reason": type(retry_error).__name__}
+        else:
+            return {"ok": False, "reason": type(error).__name__}
+    except ValueError:
+        return {
+            "ok": False,
+            "reason": "draft-release-unavailable",
+            "provider": remote.provider_id,
         }
     except Exception as error:
         return {"ok": False, "reason": type(error).__name__}
