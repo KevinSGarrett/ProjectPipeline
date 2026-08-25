@@ -73,6 +73,10 @@ _COORDINATOR_JIRA_RECEIPT_KIND = "pp384_coordinator_jira_governance"
 _COORDINATOR_JIRA_RECEIPT_VERSION = "1.0.0"
 _COORDINATOR_JIRA_RECEIPT_MAX_AGE = timedelta(minutes=15)
 _PRIMARY_COORDINATOR_ID = "PRIMARY-CODEX-WORKSTATION"
+_COORDINATOR_JIRA_SIGNATURE_NAMESPACE = "project-pipeline-pp384-jira-governance"
+_COORDINATOR_JIRA_ALLOWED_SIGNERS = Path(
+    "config/security/coordinator_jira_receipt_allowed_signers"
+)
 
 
 def _github_repository_slug_from_url(url: str) -> str | None:
@@ -111,6 +115,18 @@ def _utc_now() -> str:
 def _digest(payload: dict[str, Any]) -> str:
     encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
     return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+
+def _coordinator_jira_receipt_digest(payload: dict[str, Any]) -> str:
+    """Hash the canonical receipt body, excluding its self-declared address."""
+
+    unsigned = dict(payload)
+    unsigned.pop("receipt_sha256", None)
+    return _digest(unsigned)
+
+
+def _coordinator_jira_receipt_message(receipt_sha256: str) -> bytes:
+    return f"sha256:{receipt_sha256}\n".encode("ascii")
 
 
 def _run_gh_json(args: list[str]) -> dict[str, Any]:
@@ -454,7 +470,7 @@ def create_coordinator_jira_governance_receipt(
     jira_probe = _probe_jira_read(repository_root)
     jira_write_probe = _probe_jira_write_readback(repository_root)
     passed = bool(jira_probe.get("read_ok")) and bool(jira_write_probe.get("write_readback_ok"))
-    return {
+    receipt: dict[str, Any] = {
         "schema_version": _COORDINATOR_JIRA_RECEIPT_VERSION,
         "kind": _COORDINATOR_JIRA_RECEIPT_KIND,
         "status": "PASSED" if passed else "FAILED",
@@ -466,11 +482,52 @@ def create_coordinator_jira_governance_receipt(
         "jira_write_probe": jira_write_probe,
         "secret_value_observed": False,
     }
+    receipt["receipt_sha256"] = _coordinator_jira_receipt_digest(receipt)
+    return receipt
+
+
+def _verify_coordinator_jira_signature(
+    *, receipt_sha256: str, signature_path: Path, allowed_signers_path: Path
+) -> bool:
+    """Verify laptop-owned evidence without moving a credential to the CPU worker."""
+
+    if (
+        len(receipt_sha256) != 64
+        or any(character not in "0123456789abcdef" for character in receipt_sha256)
+        or not signature_path.is_file()
+        or not allowed_signers_path.is_file()
+    ):
+        return False
+    try:
+        completed = subprocess.run(
+            [
+                "ssh-keygen",
+                "-Y",
+                "verify",
+                "-f",
+                str(allowed_signers_path),
+                "-I",
+                _PRIMARY_COORDINATOR_ID,
+                "-n",
+                _COORDINATOR_JIRA_SIGNATURE_NAMESPACE,
+                "-s",
+                str(signature_path),
+            ],
+            input=_coordinator_jira_receipt_message(receipt_sha256),
+            capture_output=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return completed.returncode == 0
 
 
 def _coordinator_jira_receipt_probe(
     receipt_path: Path | None,
+    signature_path: Path | None,
     *,
+    repository_root: Path,
     expected_head: str | None,
     expected_tree: str | None,
 ) -> dict[str, Any]:
@@ -484,6 +541,9 @@ def _coordinator_jira_receipt_probe(
     if receipt_path is None:
         unavailable["reason"] = "coordinator_jira_receipt_not_provided"
         return unavailable
+    if signature_path is None:
+        unavailable["reason"] = "coordinator_jira_signature_not_provided"
+        return unavailable
     if expected_head is None or expected_tree is None:
         unavailable["reason"] = "candidate_identity_unavailable"
         return unavailable
@@ -494,6 +554,10 @@ def _coordinator_jira_receipt_probe(
         return unavailable
     if not isinstance(payload, dict):
         unavailable["reason"] = "coordinator_jira_receipt_malformed"
+        return unavailable
+    receipt_sha256 = str(payload.get("receipt_sha256") or "").lower()
+    if receipt_sha256 != _coordinator_jira_receipt_digest(payload):
+        unavailable["reason"] = "coordinator_jira_receipt_digest_mismatch"
         return unavailable
     candidate = payload.get("candidate")
     jira_probe = payload.get("jira_probe")
@@ -536,6 +600,14 @@ def _coordinator_jira_receipt_probe(
     if not valid:
         unavailable["reason"] = "coordinator_jira_receipt_policy_mismatch"
         return unavailable
+    allowed_signers = repository_root / _COORDINATOR_JIRA_ALLOWED_SIGNERS
+    if not _verify_coordinator_jira_signature(
+        receipt_sha256=receipt_sha256,
+        signature_path=signature_path,
+        allowed_signers_path=allowed_signers,
+    ):
+        unavailable["reason"] = "coordinator_jira_signature_invalid"
+        return unavailable
     return {
         "provided": True,
         "valid": True,
@@ -545,6 +617,9 @@ def _coordinator_jira_receipt_probe(
         "remote_key": str(jira_write_probe["remote_key"]),
         "provider_id": str(jira_write_probe.get("provider_id") or "unknown"),
         "generated_at_utc": generated.isoformat(),
+        "receipt_sha256": receipt_sha256,
+        "signature_verified": True,
+        "allowed_signers": str(_COORDINATOR_JIRA_ALLOWED_SIGNERS),
     }
 
 
@@ -721,6 +796,7 @@ def _qualify_github_jira_governance(
     candidate_head: str | None = None,
     candidate_tree: str | None = None,
     coordinator_jira_receipt: Path | None = None,
+    coordinator_jira_signature: Path | None = None,
 ) -> StageResult:
     github_steward = repository_root / "src" / "project_pipeline" / "github_steward"
     jira_module = repository_root / "src" / "project_pipeline" / "jira_steward"
@@ -745,21 +821,43 @@ def _qualify_github_jira_governance(
             if parsed_slug is not None:
                 repository_slug = parsed_slug
 
-    github_probe = _probe_github_read(repository_slug)
-    local_jira_probe = _probe_jira_read(repository_root)
     coordinator_jira_probe = _coordinator_jira_receipt_probe(
         coordinator_jira_receipt,
+        coordinator_jira_signature,
+        repository_root=repository_root,
         expected_head=candidate_head,
         expected_tree=candidate_tree,
     )
-    jira_probe = local_jira_probe
+    github_probe = _probe_github_read(repository_slug)
+    local_jira_probe: dict[str, Any]
+    local_jira_write_probe: dict[str, Any]
     if coordinator_jira_probe.get("valid"):
+        local_jira_probe = {
+            "not_attempted": True,
+            "reason": "coordinator_owned_jira_receipt_verified",
+        }
+        local_jira_write_probe = dict(local_jira_probe)
         jira_probe = {
             "credential_available": True,
             "read_ok": True,
             "execution_owner": "coordinator-receipt",
             "remote_key": coordinator_jira_probe["remote_key"],
         }
+        jira_write_probe = {
+            "credential_available": True,
+            "write_attempted": True,
+            "write_readback_ok": True,
+            "execution_owner": "coordinator-receipt",
+            "remote_key": coordinator_jira_probe["remote_key"],
+            "provider_id": coordinator_jira_probe["provider_id"],
+            "receipt_sha256": coordinator_jira_probe["receipt_sha256"],
+            "signature_verified": True,
+        }
+    else:
+        local_jira_probe = _probe_jira_read(repository_root)
+        local_jira_write_probe = _probe_jira_write_readback(repository_root)
+        jira_probe = local_jira_probe
+        jira_write_probe = local_jira_write_probe
     read_ok = bool(github_probe.get("read_ok")) or bool(jira_probe.get("read_ok"))
 
     github_write_probe: dict[str, Any] = {
@@ -772,17 +870,6 @@ def _qualify_github_jira_governance(
         github_write_probe = _probe_github_write_readback(repository_slug, token)
         github_write_probe["token_source"] = token_source
 
-    local_jira_write_probe = _probe_jira_write_readback(repository_root)
-    jira_write_probe = local_jira_write_probe
-    if coordinator_jira_probe.get("valid"):
-        jira_write_probe = {
-            "credential_available": True,
-            "write_attempted": True,
-            "write_readback_ok": True,
-            "execution_owner": "coordinator-receipt",
-            "remote_key": coordinator_jira_probe["remote_key"],
-            "provider_id": coordinator_jira_probe["provider_id"],
-        }
     github_ok = bool(github_write_probe.get("write_readback_ok"))
     jira_ok = bool(jira_write_probe.get("write_readback_ok"))
     write_readback_ok = github_ok and jira_ok
@@ -893,6 +980,20 @@ def _git_identity(repository_root: Path) -> tuple[str | None, str | None]:
     return head, tree
 
 
+def _git_checkout_clean(repository_root: Path) -> bool:
+    try:
+        completed = subprocess.run(
+            ["git", "-C", str(repository_root), "status", "--porcelain=v1"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return completed.returncode == 0 and not completed.stdout.strip()
+
+
 def run_live_qualification(
     *,
     repository_root: Path,
@@ -901,6 +1002,7 @@ def run_live_qualification(
     attestation_source_root: Path | None = None,
     durable_dir: Path | None = None,
     coordinator_jira_receipt: Path | None = None,
+    coordinator_jira_signature: Path | None = None,
 ) -> dict[str, Any]:
     repository_root = repository_root.resolve()
     default_root = repository_root / ".local" / "live_qualification_runtime"
@@ -919,6 +1021,7 @@ def run_live_qualification(
             f"disposable cursor-cli qualification workspace is still locked: {cursor_root}"
         )
     candidate_head, candidate_tree = _git_identity(repository_root)
+    candidate_clean_before = _git_checkout_clean(repository_root)
     stages = (
         _qualify_windows_service(repository_root=repository_root, disposable_root=root),
         _qualify_command_center(disposable_root=root),
@@ -928,6 +1031,7 @@ def run_live_qualification(
             candidate_head=candidate_head,
             candidate_tree=candidate_tree,
             coordinator_jira_receipt=coordinator_jira_receipt,
+            coordinator_jira_signature=coordinator_jira_signature,
         ),
         _qualify_cursor_cli_provider(
             repository_root,
@@ -935,6 +1039,33 @@ def run_live_qualification(
             runner=cursor_cli_runner,
             source_root=attestation_source_root,
             durable_dir=durable_dir,
+        ),
+    )
+    observed_head, observed_tree = _git_identity(repository_root)
+    candidate_clean_after = _git_checkout_clean(repository_root)
+    candidate_integrity_ok = (
+        candidate_head is not None
+        and candidate_tree is not None
+        and candidate_clean_before
+        and candidate_head == observed_head
+        and candidate_tree == observed_tree
+        and candidate_clean_after
+    )
+    stages += (
+        StageResult(
+            stage_id="candidate_checkout_integrity",
+            outcome=StageOutcome.PASSED if candidate_integrity_ok else StageOutcome.FAILED,
+            observations={
+                "initial_head": candidate_head,
+                "initial_tree": candidate_tree,
+                "initial_checkout_clean": candidate_clean_before,
+                "final_head": observed_head,
+                "final_tree": observed_tree,
+                "final_checkout_clean": candidate_clean_after,
+            },
+            reasons=()
+            if candidate_integrity_ok
+            else ("candidate identity changed, is unavailable, or checkout is not clean",),
         ),
     )
     body: dict[str, Any] = {
@@ -972,6 +1103,7 @@ def write_live_qualification_evidence(
     attestation_source_root: Path | None = None,
     durable_dir: Path | None = None,
     coordinator_jira_receipt: Path | None = None,
+    coordinator_jira_signature: Path | None = None,
 ) -> Path:
     report = run_live_qualification(
         repository_root=repository_root,
@@ -980,6 +1112,7 @@ def write_live_qualification_evidence(
         attestation_source_root=attestation_source_root,
         durable_dir=durable_dir,
         coordinator_jira_receipt=coordinator_jira_receipt,
+        coordinator_jira_signature=coordinator_jira_signature,
     )
     target = evidence_dir or (
         repository_root / "evidence" / "autonomy_runtime" / "live_qualification"

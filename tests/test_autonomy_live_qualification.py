@@ -135,7 +135,7 @@ def test_github_branch_delete_readback_tolerates_a_stale_first_listing() -> None
 
 
 def _coordinator_jira_receipt(*, sha: str, tree: str) -> dict[str, object]:
-    return {
+    receipt: dict[str, object] = {
         "schema_version": "1.0.0",
         "kind": "pp384_coordinator_jira_governance",
         "status": "PASSED",
@@ -151,21 +151,70 @@ def _coordinator_jira_receipt(*, sha: str, tree: str) -> dict[str, object]:
         },
         "secret_value_observed": False,
     }
+    receipt["receipt_sha256"] = live_qualification_module._coordinator_jira_receipt_digest(
+        receipt
+    )
+    return receipt
 
 
-def test_coordinator_jira_receipt_requires_fresh_exact_candidate(tmp_path: Path) -> None:
+def test_coordinator_jira_receipt_requires_fresh_exact_candidate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
     sha = "a" * 40
     tree = "b" * 40
     receipt = tmp_path / "coordinator-jira.json"
+    signature = tmp_path / "coordinator-jira.sig"
     receipt.write_text(json.dumps(_coordinator_jira_receipt(sha=sha, tree=tree)), encoding="utf-8")
+    signature.write_bytes(b"test signature")
+    monkeypatch.setattr(
+        live_qualification_module, "_verify_coordinator_jira_signature", lambda **_kwargs: True
+    )
 
-    accepted = _coordinator_jira_receipt_probe(receipt, expected_head=sha, expected_tree=tree)
+    accepted = _coordinator_jira_receipt_probe(
+        receipt,
+        signature,
+        repository_root=tmp_path,
+        expected_head=sha,
+        expected_tree=tree,
+    )
     assert accepted["valid"] is True
     assert accepted["write_readback_ok"] is True
 
-    rejected = _coordinator_jira_receipt_probe(receipt, expected_head="c" * 40, expected_tree=tree)
+    rejected = _coordinator_jira_receipt_probe(
+        receipt,
+        signature,
+        repository_root=tmp_path,
+        expected_head="c" * 40,
+        expected_tree=tree,
+    )
     assert rejected["valid"] is False
     assert rejected["reason"] == "coordinator_jira_receipt_policy_mismatch"
+
+
+def test_coordinator_jira_receipt_rejects_content_address_mismatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    sha = "a" * 40
+    tree = "b" * 40
+    payload = _coordinator_jira_receipt(sha=sha, tree=tree)
+    payload["status"] = "FAILED"
+    receipt = tmp_path / "coordinator-jira.json"
+    signature = tmp_path / "coordinator-jira.sig"
+    receipt.write_text(json.dumps(payload), encoding="utf-8")
+    signature.write_bytes(b"test signature")
+    monkeypatch.setattr(
+        live_qualification_module, "_verify_coordinator_jira_signature", lambda **_kwargs: True
+    )
+
+    rejected = _coordinator_jira_receipt_probe(
+        receipt,
+        signature,
+        repository_root=tmp_path,
+        expected_head=sha,
+        expected_tree=tree,
+    )
+    assert rejected["valid"] is False
+    assert rejected["reason"] == "coordinator_jira_receipt_digest_mismatch"
 
 
 def test_coordinator_jira_receipt_satisfies_cpu_governance_without_a_jira_secret(
@@ -174,7 +223,9 @@ def test_coordinator_jira_receipt_satisfies_cpu_governance_without_a_jira_secret
     sha = "a" * 40
     tree = "b" * 40
     receipt = tmp_path / "coordinator-jira.json"
+    signature = tmp_path / "coordinator-jira.sig"
     receipt.write_text(json.dumps(_coordinator_jira_receipt(sha=sha, tree=tree)), encoding="utf-8")
+    signature.write_bytes(b"test signature")
     repo = tmp_path / "repo"
     _scaffold_repo(repo)
     monkeypatch.setattr(
@@ -193,12 +244,15 @@ def test_coordinator_jira_receipt_satisfies_cpu_governance_without_a_jira_secret
     monkeypatch.setattr(
         live_qualification_module,
         "_probe_jira_read",
-        lambda _root: {"credential_available": False},
+        lambda _root: pytest.fail("CPU must not read Jira after verifying coordinator proof"),
     )
     monkeypatch.setattr(
         live_qualification_module,
         "_probe_jira_write_readback",
-        lambda _root: {"write_readback_ok": False},
+        lambda _root: pytest.fail("CPU must not write Jira after verifying coordinator proof"),
+    )
+    monkeypatch.setattr(
+        live_qualification_module, "_verify_coordinator_jira_signature", lambda **_kwargs: True
     )
 
     stage = _qualify_github_jira_governance(
@@ -206,9 +260,11 @@ def test_coordinator_jira_receipt_satisfies_cpu_governance_without_a_jira_secret
         candidate_head=sha,
         candidate_tree=tree,
         coordinator_jira_receipt=receipt,
+        coordinator_jira_signature=signature,
     )
     assert stage.outcome is StageOutcome.PASSED
     assert stage.observations["jira_write_probe"]["execution_owner"] == "coordinator-receipt"
+    assert stage.observations["local_jira_probe"]["not_attempted"] is True
 
 
 def test_coordinator_probe_receipt_contains_no_jira_secret(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -225,4 +281,23 @@ def test_coordinator_probe_receipt_contains_no_jira_secret(monkeypatch: pytest.M
     )
     receipt = create_coordinator_jira_governance_receipt(repository_root=Path("."))
     assert receipt["status"] == "PASSED"
+    assert len(str(receipt["receipt_sha256"])) == 64
     assert receipt["secret_value_observed"] is False
+
+
+def test_live_qualification_rejects_candidate_mutation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = tmp_path / "repo"
+    _scaffold_repo(repo)
+    identities = [("a" * 40, "b" * 40), ("c" * 40, "d" * 40)]
+    monkeypatch.setattr(
+        live_qualification_module, "_git_identity", lambda _root: identities.pop(0)
+    )
+    monkeypatch.setattr(live_qualification_module, "_git_checkout_clean", lambda _root: True)
+
+    report = run_live_qualification(repository_root=repo, disposable_root=tmp_path / "runtime")
+    by_id = {stage["stage_id"]: stage for stage in report["stages"]}
+    integrity = by_id["candidate_checkout_integrity"]
+    assert integrity["outcome"] == StageOutcome.FAILED.value
+    assert integrity["observations"]["final_head"] == "c" * 40
