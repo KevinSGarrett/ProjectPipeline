@@ -7254,7 +7254,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "785543c480e68b11ced72323ae19e81f2b52ebf0710fd7d9785c7b5cdbf08a69",
+      "sha256": "913bf7f7bd7c3bff9cfdefcca30ea9d2a2927b1bca08789bfbdf479e33a41f4e",
       "size_bytes": 348078,
       "top_level": "_root"
     },
@@ -14478,7 +14478,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "e3188730549ffe73f52c68ef8e91f77272efb3b29cc7ae08ab9f6c6eb74750b8",
+      "sha256": "7e55cb40f425a25637ab102108343c9125dbbee9f3625f4cf480913348d262be",
       "size_bytes": 569996,
       "top_level": "_root"
     },
@@ -17915,8 +17915,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/configuration/secrets.py",
-      "sha256": "109cb7e07d79614eddc55aff45d99c9d4f305c16502973eb51fd1fbb8ebd81d1",
-      "size_bytes": 10853,
+      "sha256": "3627a7537b54ce699b3e494ab9c01e7173b9ec800d2b700c60d3157d91787783",
+      "size_bytes": 11116,
       "top_level": "src"
     },
     {
@@ -21392,7 +21392,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-25T08:22:26.482977+00:00",
+  "generated_at_utc": "2026-08-25T08:35:23.529999+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {
