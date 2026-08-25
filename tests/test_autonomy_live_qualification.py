@@ -205,7 +205,7 @@ def test_noncampaign_github_resolution_falls_back_to_config_when_cli_is_unavaila
 
     class ConfiguredSecretResolver:
         def __init__(self, *_args: object, **_kwargs: object) -> None:
-            pass
+            self.repository_root = _args[0]
 
         def resolve(self, _reference: SecretReference) -> str:
             return "configured-token"
