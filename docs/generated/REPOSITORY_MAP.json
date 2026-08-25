@@ -8,7 +8,7 @@
     ".html": 3,
     ".ico": 1,
     ".ini": 1,
-    ".json": 1129,
+    ".json": 1133,
     ".jsonl": 64,
     ".jsx": 2,
     ".lock": 1,
@@ -34,15 +34,15 @@
     ".xml": 1,
     ".yaml": 3,
     ".yml": 6,
-    "[none]": 22
+    "[none]": 21
   },
   "by_top_level": {
     ".agents": 8,
     ".cursor": 12,
     ".github": 7,
-    "_root": 18,
+    "_root": 17,
     "adr": 30,
-    "apps": 25,
+    "apps": 29,
     "architecture": 19,
     "benchmarks": 1,
     "config": 43,
@@ -67,7 +67,7 @@
     "tests": 241,
     "third_party": 1
   },
-  "file_count": 3043,
+  "file_count": 3046,
   "files": [
     {
       "extension": ".md",
@@ -228,13 +228,6 @@
       "path": ".env.example",
       "sha256": "eb553a43ea4b50f00217743798d9b6e55d554fd3524477f3883a59f7f3ed1433",
       "size_bytes": 14174,
-      "top_level": "_root"
-    },
-    {
-      "extension": "[none]",
-      "path": ".git",
-      "sha256": "8e98d57aeb3d1c432bed9676902d3524cfe39c604c8139de7bcaa16fe66dc748",
-      "size_bytes": 74,
       "top_level": "_root"
     },
     {
@@ -669,6 +662,34 @@
       "path": "apps/desktop_shell/src-tauri/Cargo.toml",
       "sha256": "297f81f7a901cf9c843a64894bed28d647fbc7d9ec6b909daa578bb7221fbcbf",
       "size_bytes": 417,
+      "top_level": "apps"
+    },
+    {
+      "extension": ".json",
+      "path": "apps/desktop_shell/src-tauri/gen/schemas/acl-manifests.json",
+      "sha256": "2a97280a4ab4ff26618f7c565c7c95fbf4b4fd58729b584670ec6381e36e919d",
+      "size_bytes": 72687,
+      "top_level": "apps"
+    },
+    {
+      "extension": ".json",
+      "path": "apps/desktop_shell/src-tauri/gen/schemas/capabilities.json",
+      "sha256": "5d272bde552cb860bf7bb31290f973d298cf6fc1ca26cec3bd353bb3ae3ab305",
+      "size_bytes": 239,
+      "top_level": "apps"
+    },
+    {
+      "extension": ".json",
+      "path": "apps/desktop_shell/src-tauri/gen/schemas/desktop-schema.json",
+      "sha256": "8c9ca7f1bdfd57dde47a543a903ca7601b4d3ff881198c44c5934de9ca629d40",
+      "size_bytes": 127056,
+      "top_level": "apps"
+    },
+    {
+      "extension": ".json",
+      "path": "apps/desktop_shell/src-tauri/gen/schemas/windows-schema.json",
+      "sha256": "8c9ca7f1bdfd57dde47a543a903ca7601b4d3ff881198c44c5934de9ca629d40",
+      "size_bytes": 127056,
       "top_level": "apps"
     },
     {
@@ -2396,8 +2417,8 @@
     {
       "extension": ".md",
       "path": "docs/security/secrets_and_egress.md",
-      "sha256": "6f5099883b24b76867998407e7ff3be3f487801c94c5ed3f449692b11e3df4b5",
-      "size_bytes": 951,
+      "sha256": "c0553c003374a4f439f05321a05f22b6cd91249aad311390afeafe8b20319cb5",
+      "size_bytes": 1692,
       "top_level": "docs"
     },
     {
@@ -7233,7 +7254,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "0a082e37aec6222af96ad9c91665b1d1cc5dc04320ee9dfdbdef0397b8411bfa",
+      "sha256": "7976b90d5ce5ffd076e9d29aed55278f8579ce9bdc1c7175de1b1d000a559ffe",
       "size_bytes": 348078,
       "top_level": "_root"
     },
@@ -14457,8 +14478,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "f616f6325a544b68a2551ae8e9ebe2dbe19d0bf7f139e352a69ef7f2780d5866",
-      "size_bytes": 569992,
+      "sha256": "3f52f5e5a4fc1d658341797c0f68ee96a377e1bf26713d13f275dc1a6ab65e36",
+      "size_bytes": 569994,
       "top_level": "_root"
     },
     {
@@ -16963,8 +16984,8 @@
     {
       "extension": ".py",
       "path": "scripts/provision_dpapi_campaign_secret.py",
-      "sha256": "297e3d9707af8cce0e8778942cb1f7fa6cb0784efc6bec0c0034874bdb749ed6",
-      "size_bytes": 6147,
+      "sha256": "25981feb75690c6b9d78e693e0fee4c1430587f7c5c748e58e9dd2948a5fab98",
+      "size_bytes": 10639,
       "top_level": "scripts"
     },
     {
@@ -16984,8 +17005,8 @@
     {
       "extension": ".ps1",
       "path": "scripts/register_autonomy_campaign_recovery.ps1",
-      "sha256": "dff08100294bf9833dbf62a133efe07da118c963ef94b727010bc89fd3c97547",
-      "size_bytes": 7286,
+      "sha256": "f7ad5a7f35f39d175f2e0304e179efe497500cff9477d66e97c8f215c46ef4d3",
+      "size_bytes": 8387,
       "top_level": "scripts"
     },
     {
@@ -17019,8 +17040,8 @@
     {
       "extension": ".py",
       "path": "scripts/run_autonomy_campaign.py",
-      "sha256": "e1e5d2500ffa036eda7b6352aef2116a7b06bf9a0f97eb9841c067df4ad39055",
-      "size_bytes": 5269,
+      "sha256": "5bc585fdb087046f40973694d61a9c093e4690c40254c1cf336d47a008ce6e66",
+      "size_bytes": 5384,
       "top_level": "scripts"
     },
     {
@@ -17530,8 +17551,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
-      "sha256": "aa341a73958506e5af490f6f996d7ca68de3e8a992def61aab8195e2d3450366",
-      "size_bytes": 43868,
+      "sha256": "9a0b05ff2638c5a0a2cad4b123447f0fec4bf52fb01dbb2f7165a02a13abbc7b",
+      "size_bytes": 43956,
       "top_level": "src"
     },
     {
@@ -17866,8 +17887,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/configuration/campaign_environment.py",
-      "sha256": "2151f14e129b7e65a10234a923647093e58615586b3af7e9e0cc445d84018ef7",
-      "size_bytes": 5543,
+      "sha256": "b7b56896106890f3972fb4858466832d76f04fe4bd8091d8bef8ff9f7671a8a7",
+      "size_bytes": 7659,
       "top_level": "src"
     },
     {
@@ -19931,8 +19952,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_campaign_windows.py",
-      "sha256": "da4696a5aa4444865fd09206b1d28e5c00738dfb2bc85164d6286f2528d2bb10",
-      "size_bytes": 18432,
+      "sha256": "6c16c0a942e515025985f4b26d1d0ebb9edce23dad4d92853ab26359a6cb8c68",
+      "size_bytes": 19021,
       "top_level": "tests"
     },
     {
@@ -20197,8 +20218,8 @@
     {
       "extension": ".py",
       "path": "tests/test_configuration.py",
-      "sha256": "c9669ec6cdc0215d7100a7854769e66746013cbc5ad588ed255552921416cce1",
-      "size_bytes": 13247,
+      "sha256": "5b21fb8751cd27fccb0366442f2607bfe5c3320049e2cb5a868b026c143614eb",
+      "size_bytes": 19374,
       "top_level": "tests"
     },
     {
@@ -21371,7 +21392,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-25T07:52:27.670347+00:00",
+  "generated_at_utc": "2026-08-25T08:08:15.067312+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

@@ -1,16 +1,16 @@
 # Generated Repository Map
 
-- Files: `3043`
-- Generated: `2026-08-25T07:52:27.670347+00:00`
+- Files: `3046`
+- Generated: `2026-08-25T08:08:15.067312+00:00`
 
 ## Top-level counts
 
 - `.agents`: 8
 - `.cursor`: 12
 - `.github`: 7
-- `_root`: 18
+- `_root`: 17
 - `adr`: 30
-- `apps`: 25
+- `apps`: 29
 - `architecture`: 19
 - `benchmarks`: 1
 - `config`: 43
