@@ -187,6 +187,35 @@ def _credential_environment(repository_root: Path) -> dict[str, str]:
 
 
 def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
+    from project_pipeline.configuration.campaign_environment import (
+        campaign_lease_deadline,
+        campaign_secret_scope,
+    )
+    from project_pipeline.configuration.loader import ConfigurationError, load_runtime_configuration
+    from project_pipeline.configuration.secrets import SecretResolver
+
+    environment = _credential_environment(repository_root)
+    campaign_environment_declared = any(key.startswith("CAMPAIGN_") for key in environment)
+    try:
+        configuration = load_runtime_configuration(repository_root, environment=environment)
+        token_ref = configuration.settings.integrations.github_token
+        if token_ref is None:
+            return None, "none"
+        if campaign_environment_declared:
+            required_scope = campaign_secret_scope(environment)
+            campaign_lease_deadline(environment)
+            if token_ref.reference != "dpapi://C16B_GITHUB_TOKEN":
+                return None, "none"
+            token = SecretResolver(
+                repository_root, environment, required_scope=required_scope
+            ).resolve(token_ref)
+            return (token, "campaign-dpapi") if token.strip() else (None, "none")
+        token = SecretResolver(repository_root, environment).resolve(token_ref)
+        if token.strip():
+            return token, "config"
+    except (ConfigurationError, RuntimeError):
+        if campaign_environment_declared:
+            return None, "none"
     try:
         completed = subprocess.run(
             ["gh", "auth", "token"],
@@ -196,27 +225,11 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
             check=False,
         )
     except (OSError, subprocess.TimeoutExpired):
-        completed = None
-    if completed is not None and completed.returncode == 0:
+        return None, "none"
+    if completed.returncode == 0:
         token = completed.stdout.strip()
         if token:
             return token, "gh-auth"
-    try:
-        from project_pipeline.configuration.loader import load_runtime_configuration
-        from project_pipeline.configuration.secrets import SecretResolver
-
-        configuration = load_runtime_configuration(
-            repository_root, environment=_credential_environment(repository_root)
-        )
-        token_ref = configuration.settings.integrations.github_token
-        if token_ref is not None:
-            token = SecretResolver(
-                repository_root, _credential_environment(repository_root)
-            ).resolve(token_ref)
-            if token.strip():
-                return token, "config"
-    except Exception:
-        return None, "none"
     return None, "none"
 
 

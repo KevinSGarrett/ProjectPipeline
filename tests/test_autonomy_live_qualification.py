@@ -110,6 +110,35 @@ def test_credential_environment_keeps_process_bound_references_over_mutable_env_
     assert environment["GITHUB_TOKEN_REF"] == "gh-auth://default"
 
 
+def test_campaign_github_resolution_rejects_ambient_cli_reference(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    root = Path(__file__).resolve().parents[1]
+    environment = {
+        "JIRA_BASE_URL": "https://example.atlassian.net",
+        "JIRA_USER_EMAIL": "worker@example.test",
+        "JIRA_API_TOKEN_REF": "dpapi://C16B_JIRA_TOKEN",
+        "GITHUB_TOKEN_REF": "gh-auth://default",
+        "CAMPAIGN_PROJECT_ID": "PROJECT-PIPELINE",
+        "CAMPAIGN_CYCLE_ID": "CYCLE-16-B",
+        "CAMPAIGN_MACHINE_ID": "COMFY-V4-CPU-01",
+        "CAMPAIGN_PRINCIPAL_SID": "S-1-5-21-1000",
+        "CAMPAIGN_LEASE_ID": "SLEASE-C16B-TEST",
+        "CAMPAIGN_LEASE_EXPIRES_AT_UTC": "2099-01-01T00:00:00+00:00",
+        "CAMPAIGN_DEADLINE_AT_UTC": "2098-12-31T00:00:00+00:00",
+    }
+    monkeypatch.setattr(
+        live_qualification_module, "_credential_environment", lambda _root: environment
+    )
+
+    def unexpected_cli_lookup(*_args: object, **_kwargs: object) -> object:
+        raise AssertionError("campaign resolution must not fall back to ambient gh auth")
+
+    monkeypatch.setattr(live_qualification_module.subprocess, "run", unexpected_cli_lookup)
+
+    assert live_qualification_module._resolve_github_token(root) == (None, "none")
+
+
 def test_live_qualification_fails_closed_when_runtime_root_stays_locked(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -6,8 +6,11 @@ Local ENV/FILE references are supported through the configuration resolver. SOPS
 
 ## CPU campaign credentials
 
-Cycle 16-B's CPU-owned campaign may use only a current-user `dpapi://` Jira
-reference and the scheduled identity's `gh-auth://default` GitHub reference.
+Cycle 16-B's CPU-owned campaign may use only the current-user
+`dpapi://C16B_JIRA_TOKEN` and `dpapi://C16B_GITHUB_TOKEN` references. The
+GitHub token is never taken from an ambient GitHub CLI session during an
+unattended campaign; both references are scope-checked against the CPU,
+scheduled Windows SID, lease, expiry, and campaign deadline before use.
 Its non-secret runtime configuration binds the project, cycle, CPU hostname,
 Windows SID, lease identity, credential expiry, and campaign deadline. New
 admission verifies a fresh bounded lease; recovery verifies that the existing
