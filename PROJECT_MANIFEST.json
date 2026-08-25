@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "9d8b627dd93aabc45a6b7c34a16a71116171e9be306bddbb7b6126fec53f5c2f",
+  "aggregate_sha256": "c10fffa49cd79a4daed3ed3eba57cffd9e344a3f4983160b0b45edb3d27a3e21",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12467,8 +12467,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
-      "sha256": "ff760308aac8a90710bb96dcfcff5235987f1fb6b46f709c4c7871583d63fc4b",
-      "size_bytes": 45596
+      "sha256": "d5f011f945d0b4431ea0a4f6d20143e949a3e41472b61a7197a22db9c834983e",
+      "size_bytes": 45897
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/nonduration.py",
@@ -14197,8 +14197,8 @@
     },
     {
       "path": "tests/test_autonomy_live_qualification.py",
-      "sha256": "55ce695ba1371d88cd8cf28fa3794a10177d01db5f8b28b235432430a78d7a13",
-      "size_bytes": 15649
+      "sha256": "f048f3a26b40a81f3f19065be7321cd26d27a1e1d1387642bbc8ca7367f16010",
+      "size_bytes": 17323
     },
     {
       "path": "tests/test_autonomy_providers.py",
@@ -15211,7 +15211,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-25T10:41:52.905271+00:00",
+  "generated_at_utc": "2026-08-25T11:27:29.971853+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15221,5 +15221,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30550316
+  "total_bytes": 30552291
 }
