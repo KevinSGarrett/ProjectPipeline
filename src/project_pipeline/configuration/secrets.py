@@ -10,6 +10,7 @@ import subprocess
 from collections.abc import Mapping
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 from project_pipeline.configuration.models import SecretReference
 
@@ -36,6 +37,15 @@ def _dpapi_entropy(reference: str, scope: Mapping[str, object]) -> bytes:
         sort_keys=True,
         separators=(",", ":"),
     ).encode("utf-8")
+
+
+def _windows_dll(name: str) -> Any:
+    """Load a Windows DLL after the platform guard without platform-stub leakage."""
+
+    loader = getattr(ctypes, "WinDLL", None)
+    if loader is None:
+        raise SecretResolutionError("Windows DLL loading is unavailable on this platform")
+    return loader(name, use_last_error=True)
 
 
 def current_windows_principal_sid() -> str:
@@ -65,8 +75,8 @@ def _dpapi_unprotect(ciphertext: bytes, entropy: bytes) -> bytes:
 
     if os.name != "nt":
         raise SecretResolutionError("DPAPI secret resolution is only available on Windows")
-    crypt32 = ctypes.WinDLL("crypt32", use_last_error=True)
-    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    crypt32 = _windows_dll("crypt32")
+    kernel32 = _windows_dll("kernel32")
     cipher_buffer = ctypes.create_string_buffer(ciphertext)
     entropy_buffer = ctypes.create_string_buffer(entropy)
     source = _DataBlob(len(ciphertext), ctypes.cast(cipher_buffer, ctypes.POINTER(ctypes.c_byte)))
@@ -98,8 +108,8 @@ def protect_dpapi_secret(value: str, *, reference: str, scope: Mapping[str, obje
         raise SecretResolutionError("DPAPI secret provisioning is only available on Windows")
     plaintext = value.encode("utf-8")
     entropy = _dpapi_entropy(reference, scope)
-    crypt32 = ctypes.WinDLL("crypt32", use_last_error=True)
-    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    crypt32 = _windows_dll("crypt32")
+    kernel32 = _windows_dll("kernel32")
     plain_buffer = ctypes.create_string_buffer(plaintext)
     entropy_buffer = ctypes.create_string_buffer(entropy)
     source = _DataBlob(len(plaintext), ctypes.cast(plain_buffer, ctypes.POINTER(ctypes.c_byte)))
