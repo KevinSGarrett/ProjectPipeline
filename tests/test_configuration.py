@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import tempfile
 import unittest
 from argparse import Namespace
@@ -19,6 +20,11 @@ from project_pipeline.configuration import (
     runtime_configuration_schema,
     validate_runtime_configuration_files,
 )
+from project_pipeline.configuration.campaign_environment import (
+    limited_campaign_subprocess_environment,
+    load_campaign_runtime_environment,
+)
+from project_pipeline.configuration.secrets import build_dpapi_secret_envelope
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -100,6 +106,59 @@ class ConfigurationTests(unittest.TestCase):
                 resolver.resolve(SecretReference(reference="file://../outside.txt"))
             with self.assertRaises(SecretResolutionError):
                 resolver.resolve(SecretReference(reference="env://MISSING"))
+
+    def test_secret_resolver_uses_github_cli_reference_without_environment_token(self) -> None:
+        completed = subprocess.CompletedProcess(["gh", "auth", "token"], 0, "token-from-cli\n", "")
+        with patch(
+            "project_pipeline.configuration.secrets.subprocess.run", return_value=completed
+        ) as run:
+            value = SecretResolver(Path("."), {}).resolve(
+                SecretReference(reference="gh-auth://default")
+            )
+        self.assertEqual(value, "token-from-cli")
+        self.assertEqual(run.call_args.args[0], ["gh", "auth", "token"])
+
+    def test_campaign_runtime_environment_is_nonsecret_and_limited(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            env_file = Path(directory) / "campaign-runtime.env"
+            env_file.write_text(
+                "JIRA_BASE_URL=https://example.atlassian.net\n"
+                "JIRA_USER_EMAIL=worker@example.test\n"
+                "JIRA_API_TOKEN_REF=dpapi://C16B_JIRA_TOKEN\n"
+                "GITHUB_TOKEN_REF=gh-auth://default\n",
+                encoding="utf-8",
+            )
+            values = load_campaign_runtime_environment(ROOT, env_file)
+            environment = limited_campaign_subprocess_environment(
+                ROOT,
+                env_file,
+                source={"PATH": "safe-path", "SYSTEMROOT": "safe-root", "UNRELATED_SECRET": "no"},
+            )
+        self.assertEqual(values["JIRA_API_TOKEN_REF"], "dpapi://C16B_JIRA_TOKEN")
+        self.assertEqual(environment["GITHUB_TOKEN_REF"], "gh-auth://default")
+        self.assertNotIn("UNRELATED_SECRET", environment)
+
+    def test_dpapi_envelope_persists_only_ciphertext_and_scope(self) -> None:
+        scope = {
+            "project_id": "PROJECT-PIPELINE",
+            "cycle_id": "CYCLE-16-B",
+            "machine_id": "COMFY-V4-CPU-01",
+            "identity_id": "Windows 11",
+            "lease_id": "SLEASE-EXAMPLE",
+            "expires_at_utc": "2099-01-01T00:00:00+00:00",
+        }
+        with patch(
+            "project_pipeline.configuration.secrets.protect_dpapi_secret",
+            return_value=b"ciphertext",
+        ):
+            envelope = build_dpapi_secret_envelope(
+                "plaintext-never-persisted",
+                reference=SecretReference(reference="dpapi://C16B_JIRA_TOKEN"),
+                scope=scope,
+            )
+        self.assertEqual(envelope["reference"], "dpapi://C16B_JIRA_TOKEN")
+        self.assertTrue(envelope["plaintext_persisted"] is False)
+        self.assertNotIn("plaintext-never-persisted", json.dumps(envelope))
 
     def test_secret_reference_syntax_is_strict(self) -> None:
         for value in ("plaintext", "vault://item", "file:///absolute", "env://BAD-NAME"):

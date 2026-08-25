@@ -54,6 +54,10 @@ from project_pipeline.autonomy_runtime.campaign import (  # noqa: E402
 )
 from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusError  # noqa: E402
 from project_pipeline.autonomy_runtime.process_identity import inspect_process  # noqa: E402
+from project_pipeline.configuration.campaign_environment import (  # noqa: E402
+    apply_campaign_runtime_environment,
+    limited_campaign_subprocess_environment,
+)
 
 TERMINAL_CAMPAIGN_STATUSES = frozenset({"DISQUALIFIED", "FAILED", "STOPPED", "FINALIZED"})
 
@@ -209,6 +213,7 @@ def _run_controller(
     campaign_id: str,
     heartbeat_seconds: float,
     extra: list[str] | None = None,
+    runtime_environment_file: Path | None = None,
     *,
     wait: bool,
     stdout_path: Path,
@@ -227,9 +232,15 @@ def _run_controller(
         "--heartbeat-seconds",
         str(heartbeat_seconds),
     ]
+    if runtime_environment_file is not None:
+        args.extend(["--runtime-environment-file", str(runtime_environment_file)])
     if extra:
         args.extend(extra)
-    env = {**os.environ, "PYTHONPATH": str(root / "src"), "PYTHONUTF8": "1"}
+    env = (
+        limited_campaign_subprocess_environment(root, runtime_environment_file)
+        if runtime_environment_file is not None
+        else {**os.environ, "PYTHONPATH": str(root / "src"), "PYTHONUTF8": "1"}
+    )
     stdout_path.parent.mkdir(parents=True, exist_ok=True)
     if wait:
         return subprocess.run(
@@ -268,6 +279,12 @@ def main() -> int:
     log_dir = Path(str(config.get("log_directory") or pid_path.parent))
     max_age = float(config.get("heartbeat_max_age_seconds") or 90)
     heartbeat_seconds = float(config.get("heartbeat_seconds") or 30)
+    runtime_environment_file = str(config.get("runtime_environment_file") or "").strip()
+    runtime_environment_path = (
+        Path(runtime_environment_file).resolve() if runtime_environment_file else None
+    )
+    if runtime_environment_path is not None:
+        apply_campaign_runtime_environment(root, runtime_environment_path)
     script = root / "scripts" / "run_autonomy_campaign.py"
     controller = CampaignController(
         database,
@@ -386,6 +403,7 @@ def main() -> int:
             root,
             campaign_id,
             heartbeat_seconds,
+            runtime_environment_file=runtime_environment_path,
             wait=True,
             stdout_path=log_dir / "campaign.recover.stdout.log",
             stderr_path=log_dir / "campaign.recover.stderr.log",
@@ -434,6 +452,7 @@ def main() -> int:
             resume_id,
             heartbeat_seconds,
             extra,
+            runtime_environment_file=runtime_environment_path,
             wait=False,
             stdout_path=log_dir / "campaign.stdout.log",
             stderr_path=log_dir / "campaign.stderr.log",

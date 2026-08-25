@@ -130,6 +130,12 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
     assert payload["task_name"] == "ProjectPipelineAutonomyCampaign"
     assert "MaxValue" not in RECOVERY.read_text(encoding="utf-8")
     assert "autonomy_campaign_recovery_probe.py" in RECOVERY.read_text(encoding="utf-8")
+    assert "RuntimeEnvironmentFile" in text
+    assert "New-ScheduledTaskPrincipal" in text
+    assert "-LogonType Interactive" in text
+    assert "-RunLevel Limited" in text
+    assert "-ExecutionTimeLimit (New-TimeSpan -Minutes 4)" in text
+    assert "-MultipleInstances IgnoreNew" in text
 
 
 def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):

@@ -56,8 +56,8 @@ class SecretReference(StrictModel):
     @classmethod
     def validate_reference(cls, value: str) -> str:
         scheme, separator, target = value.partition("://")
-        if separator != "://" or scheme not in {"env", "file"}:
-            raise ValueError("secret references must use env:// or file://")
+        if separator != "://" or scheme not in {"env", "file", "dpapi", "gh-auth"}:
+            raise ValueError("secret references must use env://, file://, dpapi://, or gh-auth://")
         if not target or target.strip() != target:
             raise ValueError("secret reference target must be non-empty and trimmed")
         if any(character in target for character in ("\x00", "\n", "\r")):
@@ -66,6 +66,10 @@ class SecretReference(StrictModel):
             raise ValueError("environment secret reference contains invalid characters")
         if scheme == "file" and (Path(target).is_absolute() or target.startswith(("/", "\\"))):
             raise ValueError("file secret references must be repository-relative")
+        if scheme == "dpapi" and not (target.replace("_", "").replace("-", "").isalnum()):
+            raise ValueError("DPAPI secret reference contains invalid characters")
+        if scheme == "gh-auth" and target != "default":
+            raise ValueError("gh-auth secret reference target must be default")
         return value
 
     @property
