@@ -72,7 +72,9 @@ class RecoveryError(ValueError):
     """Raised when an import would write mismatched or unauthorized bytes."""
 
 
-def _parse_public_record(path: Path, *, expected_sha256: str, expected_bytes: int) -> dict[str, Any]:
+def _parse_public_record(
+    path: Path, *, expected_sha256: str, expected_bytes: int
+) -> dict[str, Any]:
     if not path.is_file():
         raise RecoveryError(f"required public record is missing: {path}")
     payload = path.read_bytes()
