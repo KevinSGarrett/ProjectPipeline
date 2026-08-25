@@ -53,7 +53,11 @@ def main() -> int:
     args = parser.parse_args()
     root = (args.repository_root or Path.cwd()).resolve()
     if args.runtime_environment_file is not None:
-        apply_campaign_runtime_environment(root, args.runtime_environment_file)
+        apply_campaign_runtime_environment(
+            root,
+            args.runtime_environment_file,
+            require_fresh_campaign_window=args.action in {"start", "admit-4h"},
+        )
     host_safety = (
         evaluate_local_host_safety(root) if args.action in _HOST_SAFETY_REQUIRED_ACTIONS else None
     )

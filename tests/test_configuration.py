@@ -2,6 +2,8 @@ from __future__ import annotations
 
 import json
 import os
+import runpy
+import socket
 import subprocess
 import tempfile
 import unittest
@@ -23,12 +25,14 @@ from project_pipeline.configuration import (
     validate_runtime_configuration_files,
 )
 from project_pipeline.configuration.campaign_environment import (
+    campaign_secret_scope,
     limited_campaign_subprocess_environment,
     load_campaign_runtime_environment,
 )
 from project_pipeline.configuration.secrets import (
     _dpapi_unprotect,
     build_dpapi_secret_envelope,
+    current_windows_principal_sid,
     protect_dpapi_secret,
 )
 
@@ -137,7 +141,8 @@ class ConfigurationTests(unittest.TestCase):
                 "CAMPAIGN_MACHINE_ID=COMFY-V4-CPU-01\n"
                 "CAMPAIGN_PRINCIPAL_SID=S-1-5-21-1000\n"
                 "CAMPAIGN_LEASE_ID=SLEASE-C16B-TEST\n"
-                f"CAMPAIGN_LEASE_EXPIRES_AT_UTC={(datetime.now(UTC) + timedelta(days=6)).isoformat()}\n",
+                f"CAMPAIGN_LEASE_EXPIRES_AT_UTC={(datetime.now(UTC) + timedelta(days=6)).isoformat()}\n"
+                f"CAMPAIGN_DEADLINE_AT_UTC={(datetime.now(UTC) + timedelta(hours=101)).isoformat()}\n",
                 encoding="utf-8",
             )
             values = load_campaign_runtime_environment(ROOT, env_file)
@@ -163,11 +168,107 @@ class ConfigurationTests(unittest.TestCase):
                 "CAMPAIGN_MACHINE_ID=COMFY-V4-CPU-01\n"
                 "CAMPAIGN_PRINCIPAL_SID=S-1-5-21-1000\n"
                 "CAMPAIGN_LEASE_ID=SLEASE-C16B-TEST\n"
-                f"CAMPAIGN_LEASE_EXPIRES_AT_UTC={(datetime.now(UTC) + timedelta(days=6)).isoformat()}\n",
+                f"CAMPAIGN_LEASE_EXPIRES_AT_UTC={(datetime.now(UTC) + timedelta(days=6)).isoformat()}\n"
+                f"CAMPAIGN_DEADLINE_AT_UTC={(datetime.now(UTC) + timedelta(hours=101)).isoformat()}\n",
                 encoding="utf-8",
             )
             with self.assertRaises(ConfigurationError):
                 load_campaign_runtime_environment(ROOT, env_file)
+
+    def test_campaign_lease_admission_window_is_not_reapplied_during_recovery(self) -> None:
+        values = {
+            "CAMPAIGN_PROJECT_ID": "PROJECT-PIPELINE",
+            "CAMPAIGN_CYCLE_ID": "CYCLE-16-B",
+            "CAMPAIGN_MACHINE_ID": "COMFY-V4-CPU-01",
+            "CAMPAIGN_PRINCIPAL_SID": "S-1-5-21-1000",
+            "CAMPAIGN_LEASE_ID": "SLEASE-C16B-TEST",
+            "CAMPAIGN_LEASE_EXPIRES_AT_UTC": (datetime.now(UTC) + timedelta(hours=108)).isoformat(),
+        }
+        self.assertEqual(campaign_secret_scope(values)["lease_id"], "SLEASE-C16B-TEST")
+        with self.assertRaises(ConfigurationError):
+            campaign_secret_scope(values, require_fresh_campaign_window=True)
+
+    def test_campaign_runtime_environment_requires_lease_to_cover_deadline(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            env_file = Path(directory) / "campaign-runtime.env"
+            env_file.write_text(
+                "JIRA_BASE_URL=https://example.atlassian.net\n"
+                "JIRA_USER_EMAIL=worker@example.test\n"
+                "JIRA_API_TOKEN_REF=dpapi://C16B_JIRA_TOKEN\n"
+                "GITHUB_TOKEN_REF=gh-auth://default\n"
+                "CAMPAIGN_PROJECT_ID=PROJECT-PIPELINE\n"
+                "CAMPAIGN_CYCLE_ID=CYCLE-16-B\n"
+                "CAMPAIGN_MACHINE_ID=COMFY-V4-CPU-01\n"
+                "CAMPAIGN_PRINCIPAL_SID=S-1-5-21-1000\n"
+                "CAMPAIGN_LEASE_ID=SLEASE-C16B-TEST\n"
+                f"CAMPAIGN_LEASE_EXPIRES_AT_UTC={(datetime.now(UTC) + timedelta(days=5)).isoformat()}\n"
+                f"CAMPAIGN_DEADLINE_AT_UTC={(datetime.now(UTC) + timedelta(days=6)).isoformat()}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaises(ConfigurationError):
+                load_campaign_runtime_environment(ROOT, env_file)
+
+    def test_dpapi_revocation_requires_scope_and_persists_reconciliation(self) -> None:
+        script = runpy.run_path(str(ROOT / "scripts" / "provision_dpapi_campaign_secret.py"))
+        scope = {
+            "project_id": "PROJECT-PIPELINE",
+            "cycle_id": "CYCLE-16-B",
+            "machine_id": "COMFY-V4-CPU-01",
+            "identity_id": "S-1-5-21-1000",
+            "lease_id": "SLEASE-C16B-TEST",
+            "expires_at_utc": "2099-01-01T00:00:00+00:00",
+        }
+        reference = SecretReference(reference="dpapi://C16B_JIRA_TOKEN")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            destination = root / ".local" / "secure-secrets" / "dpapi" / "C16B_JIRA_TOKEN.json"
+            destination.parent.mkdir(parents=True)
+            destination.write_text(
+                json.dumps(
+                    {
+                        "reference": reference.reference,
+                        "scope": scope,
+                        "ciphertext_base64": "not-secret-test-data",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            receipt_path = root / ".local" / "evidence" / "revocation.json"
+            receipt = script["_revoke"](root, reference, scope, receipt_path)
+            self.assertTrue(receipt["revoked"])
+            self.assertFalse(destination.exists())
+            self.assertEqual(
+                json.loads(receipt_path.read_text(encoding="utf-8"))["state"], "REVOKED"
+            )
+            self.assertEqual(
+                script["_revoke"](root, reference, scope, receipt_path)["state"], "REVOKED"
+            )
+
+    def test_dpapi_revocation_rejects_scope_mismatch_without_deleting(self) -> None:
+        script = runpy.run_path(str(ROOT / "scripts" / "provision_dpapi_campaign_secret.py"))
+        scope = {
+            "project_id": "PROJECT-PIPELINE",
+            "cycle_id": "CYCLE-16-B",
+            "machine_id": "COMFY-V4-CPU-01",
+            "identity_id": "S-1-5-21-1000",
+            "lease_id": "SLEASE-C16B-TEST",
+            "expires_at_utc": "2099-01-01T00:00:00+00:00",
+        }
+        reference = SecretReference(reference="dpapi://C16B_JIRA_TOKEN")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            destination = root / ".local" / "secure-secrets" / "dpapi" / "C16B_JIRA_TOKEN.json"
+            destination.parent.mkdir(parents=True)
+            mismatched_scope = {**scope, "lease_id": "SLEASE-C16B-OTHER"}
+            destination.write_text(
+                json.dumps({"reference": reference.reference, "scope": mismatched_scope}),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(RuntimeError, "scope does not match"):
+                script["_revoke"](
+                    root, reference, scope, root / ".local" / "evidence" / "revocation.json"
+                )
+            self.assertTrue(destination.exists())
 
     def test_dpapi_envelope_persists_only_ciphertext_and_scope(self) -> None:
         scope = {
@@ -224,25 +325,46 @@ class ConfigurationTests(unittest.TestCase):
         scope = {
             "project_id": "PROJECT-PIPELINE",
             "cycle_id": "CYCLE-16-B",
-            "machine_id": "COMFY-V4-CPU-01",
-            "identity_id": "S-1-5-21-1000",
+            "machine_id": socket.gethostname(),
+            "identity_id": current_windows_principal_sid(),
             "lease_id": "SLEASE-C16B-ROUNDTRIP",
-            "expires_at_utc": "2099-01-01T00:00:00+00:00",
+            "expires_at_utc": (datetime.now(UTC) + timedelta(days=6)).isoformat(),
         }
+        reference = SecretReference(reference="dpapi://roundtrip")
         ciphertext = protect_dpapi_secret(
-            "nonpersistent-test-material", reference="dpapi://roundtrip", scope=scope
+            "nonpersistent-test-material", reference=reference.reference, scope=scope
         )
         self.assertEqual(
             _dpapi_unprotect(
                 ciphertext,
                 json.dumps(
-                    {"reference": "dpapi://roundtrip", "scope": scope},
+                    {"reference": reference.reference, "scope": scope},
                     sort_keys=True,
                     separators=(",", ":"),
                 ).encode("utf-8"),
             ).decode("utf-8"),
             "nonpersistent-test-material",
         )
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            destination = root / ".local" / "secure-secrets" / "dpapi"
+            destination.mkdir(parents=True)
+            (destination / "roundtrip.json").write_text(
+                json.dumps(
+                    build_dpapi_secret_envelope(
+                        "nonpersistent-test-material", reference=reference, scope=scope
+                    )
+                ),
+                encoding="utf-8",
+            )
+            self.assertEqual(
+                SecretResolver(root, required_scope=scope).resolve(reference),
+                "nonpersistent-test-material",
+            )
+            with self.assertRaises(SecretResolutionError):
+                SecretResolver(
+                    root, required_scope={**scope, "lease_id": "SLEASE-C16B-OTHER"}
+                ).resolve(reference)
 
     def test_secret_reference_syntax_is_strict(self) -> None:
         for value in ("plaintext", "vault://item", "file:///absolute", "env://BAD-NAME"):

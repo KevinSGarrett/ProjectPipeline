@@ -437,9 +437,18 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
             expected_tree=str(identity["tree"]),
         )
         assert status["registered"] is True
+        assert status["enabled"] is True
         assert status["hidden"] is True
         assert status["principal_identity"]
         assert status["scheduled_principal_sid"].startswith("S-")
+        assert status["principal_identity_matches_expected"] is True
+        assert status["principal_logon_type"] == "Interactive"
+        assert status["principal_run_level"] == "Limited"
+        assert Path(status["action_executable"]).resolve() == Path(sys.executable).resolve()
+        assert Path(status["working_directory"]).resolve() == ROOT
+        assert "autonomy_campaign_recovery_probe.py" in status["action_arguments"]
+        assert status["execution_time_limit"] == "PT4M"
+        assert status["multiple_instances"] == "IgnoreNew"
         assert status["user_action_required"] is False
         pid_path = tmp_path / "logs" / "campaign.pid"
         pid_path.write_text(json.dumps({"process_id": 2147000000}) + "\n", encoding="utf-8")

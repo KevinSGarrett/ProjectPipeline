@@ -116,12 +116,23 @@ if ($Action -eq "status") {
     $task = Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue
     $info = $null
     if ($task) { $info = Get-ScheduledTaskInfo -TaskName $TaskName }
+    $registeredAction = if ($task) { @($task.Actions)[0] } else { $null }
     [ordered]@{
         task_name = $TaskName
         registered = [bool]$task
+        enabled = if ($task) { [bool]$task.Settings.Enabled } else { $false }
         hidden = if ($task) { [bool]$task.Settings.Hidden } else { $false }
         principal_identity = if ($task) { $task.Principal.UserId } else { $null }
+        expected_principal_identity = $scheduledPrincipalIdentity
         scheduled_principal_sid = $scheduledPrincipalSid
+        principal_identity_matches_expected = if ($task) { $task.Principal.UserId -ieq $scheduledPrincipalIdentity } else { $false }
+        principal_logon_type = if ($task) { $task.Principal.LogonType.ToString() } else { $null }
+        principal_run_level = if ($task) { $task.Principal.RunLevel.ToString() } else { $null }
+        action_executable = if ($registeredAction) { $registeredAction.Execute } else { $null }
+        action_arguments = if ($registeredAction) { $registeredAction.Arguments } else { $null }
+        working_directory = if ($registeredAction) { $registeredAction.WorkingDirectory } else { $null }
+        execution_time_limit = if ($task) { $task.Settings.ExecutionTimeLimit.ToString() } else { $null }
+        multiple_instances = if ($task) { $task.Settings.MultipleInstances.ToString() } else { $null }
         pid_file = $pidFile
         pid_file_exists = (Test-Path -LiteralPath $pidFile)
         status_path = $StatusPath
