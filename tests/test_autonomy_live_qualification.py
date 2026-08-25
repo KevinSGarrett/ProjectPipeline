@@ -113,6 +113,39 @@ def test_credential_environment_keeps_process_bound_references_over_mutable_env_
     assert environment["GITHUB_TOKEN_REF"] == "gh-auth://default"
 
 
+def test_campaign_credential_environment_never_loads_a_mutable_checkout_env(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    (tmp_path / ".env").write_text(
+        "JIRA_API_TOKEN=must-not-be-loaded\nJIRA_API_TOKEN_REF=env://MUTABLE\n",
+        encoding="utf-8",
+    )
+    campaign_environment = {
+        "JIRA_BASE_URL": "https://example.atlassian.net",
+        "JIRA_USER_EMAIL": "worker@example.test",
+        "JIRA_API_TOKEN_REF": "dpapi://C16B_JIRA_TOKEN",
+        "GITHUB_TOKEN_REF": "dpapi://C16B_GITHUB_TOKEN",
+        "CAMPAIGN_PROJECT_ID": "PROJECT-PIPELINE",
+        "CAMPAIGN_CYCLE_ID": "CYCLE-16-B",
+        "CAMPAIGN_MACHINE_ID": "COMFY-V4-CPU-01",
+        "CAMPAIGN_PRINCIPAL_SID": "S-1-5-21-1000",
+        "CAMPAIGN_ID": "QCAMP-C16B-TEST",
+        "CAMPAIGN_CANDIDATE_SHA": "a" * 40,
+        "CAMPAIGN_CANDIDATE_TREE": "b" * 40,
+        "CAMPAIGN_SCHEDULER_LEASE_ID": "CLEASE-C16B-TEST",
+        "CAMPAIGN_FENCE_TOKEN": "CFENCE-C16B-TEST",
+        "CAMPAIGN_CREDENTIAL_ENVELOPE_EXPIRES_AT_UTC": "2099-01-01T00:00:00+00:00",
+        "CAMPAIGN_DEADLINE_AT_UTC": "2098-12-31T00:00:00+00:00",
+    }
+    for key, value in campaign_environment.items():
+        monkeypatch.setenv(key, value)
+
+    environment = live_qualification_module._credential_environment(tmp_path)
+
+    assert environment["JIRA_API_TOKEN_REF"] == "dpapi://C16B_JIRA_TOKEN"
+    assert "JIRA_API_TOKEN" not in environment
+
+
 def test_campaign_github_resolution_rejects_ambient_cli_reference(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -126,8 +159,12 @@ def test_campaign_github_resolution_rejects_ambient_cli_reference(
         "CAMPAIGN_CYCLE_ID": "CYCLE-16-B",
         "CAMPAIGN_MACHINE_ID": "COMFY-V4-CPU-01",
         "CAMPAIGN_PRINCIPAL_SID": "S-1-5-21-1000",
-        "CAMPAIGN_LEASE_ID": "SLEASE-C16B-TEST",
-        "CAMPAIGN_LEASE_EXPIRES_AT_UTC": "2099-01-01T00:00:00+00:00",
+        "CAMPAIGN_ID": "QCAMP-C16B-TEST",
+        "CAMPAIGN_CANDIDATE_SHA": "a" * 40,
+        "CAMPAIGN_CANDIDATE_TREE": "b" * 40,
+        "CAMPAIGN_SCHEDULER_LEASE_ID": "CLEASE-C16B-TEST",
+        "CAMPAIGN_FENCE_TOKEN": "CFENCE-C16B-TEST",
+        "CAMPAIGN_CREDENTIAL_ENVELOPE_EXPIRES_AT_UTC": "2099-01-01T00:00:00+00:00",
         "CAMPAIGN_DEADLINE_AT_UTC": "2098-12-31T00:00:00+00:00",
     }
     monkeypatch.setattr(

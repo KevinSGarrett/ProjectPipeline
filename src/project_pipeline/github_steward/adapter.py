@@ -63,6 +63,11 @@ class GitHubRestAdapter(GitHubRemotePort):
         self.retry_base_seconds = max(0.0, retry_base_seconds)
         self._opener = opener or urllib_request.build_opener()
 
+    def discard_secret_material(self) -> None:
+        """Drop a probe's in-memory bearer token before the adapter is released."""
+
+        self._token = None
+
     def discover_capabilities(self) -> GitHubAdapterCapabilities:
         return GitHubAdapterCapabilities(provider="GITHUB_REST", api_version=_API_VERSION)
 

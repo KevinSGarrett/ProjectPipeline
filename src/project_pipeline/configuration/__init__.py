@@ -5,6 +5,7 @@ from project_pipeline.configuration.loader import (
     deep_merge,
     load_runtime_configuration,
     parse_env_file,
+    parse_selected_env_file,
 )
 from project_pipeline.configuration.models import (
     EnvironmentName,
@@ -26,9 +27,15 @@ from project_pipeline.configuration.schema import (
     validate_runtime_configuration_files,
     write_runtime_configuration_schema,
 )
-from project_pipeline.configuration.secrets import SecretResolutionError, SecretResolver
+from project_pipeline.configuration.secrets import (
+    CampaignSecretAccessLease,
+    SecretResolutionError,
+    SecretResolver,
+    issue_campaign_secret_access_lease,
+)
 
 __all__ = [
+    "CampaignSecretAccessLease",
     "ConfigurationError",
     "EffectiveConfiguration",
     "EnvironmentName",
@@ -48,8 +55,10 @@ __all__ = [
     "TelemetrySettings",
     "collect_secret_references",
     "deep_merge",
+    "issue_campaign_secret_access_lease",
     "load_runtime_configuration",
     "parse_env_file",
+    "parse_selected_env_file",
     "runtime_configuration_schema",
     "validate_runtime_configuration_files",
     "write_runtime_configuration_schema",

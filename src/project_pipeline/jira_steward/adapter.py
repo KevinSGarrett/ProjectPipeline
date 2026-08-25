@@ -102,6 +102,11 @@ class AtlassianJiraCloudAdapter(JiraRemotePort):
         self.local_id_field = local_id_field
         self._opener = opener or urllib_request.build_opener()
 
+    def discard_secret_material(self) -> None:
+        """Drop a probe's in-memory API token before the adapter is released."""
+
+        self._api_token = ""
+
     def discover_capabilities(self) -> JiraAdapterCapabilities:
         self._request_json(
             "GET",

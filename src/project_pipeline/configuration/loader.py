@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-from collections.abc import Mapping, Sequence
+from collections.abc import Collection, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -99,6 +99,45 @@ def parse_env_file(path: Path) -> dict[str, str]:
     return values
 
 
+def parse_selected_env_file(path: Path, keys: Collection[str]) -> dict[str, str]:
+    """Read and retain only explicitly requested environment-file values.
+
+    This is deliberately narrower than :func:`parse_env_file` for coordinator
+    operations that need one credential without loading an entire local
+    configuration file into a long-lived mapping.  Non-selected values are
+    never split, normalized, or retained.
+    """
+
+    selected = frozenset(str(key).strip() for key in keys)
+    if not selected or "" in selected:
+        raise ConfigurationError("selected environment keys must be non-empty")
+    values: dict[str, str] = {}
+    if not path.exists():
+        return values
+    try:
+        stream = path.open(encoding="utf-8")
+    except OSError as error:
+        raise ConfigurationError(f"environment file cannot be read: {path}") from error
+    with stream:
+        for number, raw in enumerate(stream, 1):
+            line = raw.strip()
+            if not line or line.startswith("#"):
+                continue
+            key, separator, remainder = line.partition("=")
+            if not separator:
+                raise ConfigurationError(f"invalid environment file entry at {path}:{number}")
+            key = key.strip()
+            if not key:
+                raise ConfigurationError(f"empty environment key at {path}:{number}")
+            if key not in selected:
+                continue
+            value = remainder.strip()
+            if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
+                value = value[1:-1]
+            values[key] = value
+    return values
+
+
 def _load_json_object(path: Path) -> dict[str, Any]:
     try:
         value = json.loads(path.read_text(encoding="utf-8"))
@@ -182,6 +221,7 @@ def load_runtime_configuration(
     profile: str | None = None,
     config_file: Path | None = None,
     env_file: Path | None = None,
+    include_default_env_file: bool = True,
     environment: Mapping[str, str] | None = None,
     overrides: Sequence[str] = (),
 ) -> EffectiveConfiguration:
@@ -189,7 +229,11 @@ def load_runtime_configuration(
 
     root = root.resolve()
     source_environment = dict(os.environ if environment is None else environment)
-    file_values = parse_env_file(env_file or root / ".env")
+    file_values = (
+        parse_env_file(env_file)
+        if env_file is not None
+        else (parse_env_file(root / ".env") if include_default_env_file else {})
+    )
     combined_environment = {**file_values, **source_environment}
 
     base_path = root / "config" / "runtime" / "base.json"

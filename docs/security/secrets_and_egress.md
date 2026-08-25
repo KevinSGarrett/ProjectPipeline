@@ -9,15 +9,27 @@ Local ENV/FILE references are supported through the configuration resolver. SOPS
 Cycle 16-B's CPU-owned campaign may use only the current-user
 `dpapi://C16B_JIRA_TOKEN` and `dpapi://C16B_GITHUB_TOKEN` references. The
 GitHub token is never taken from an ambient GitHub CLI session during an
-unattended campaign; both references are scope-checked against the CPU,
-scheduled Windows SID, lease, expiry, and campaign deadline before use.
-Its non-secret runtime configuration binds the project, cycle, CPU hostname,
-Windows SID, lease identity, credential expiry, and campaign deadline. New
-admission verifies a fresh bounded lease; recovery verifies that the existing
-lease remains unexpired through the bound deadline. Revocation requires the
-same full scope, writes a durable non-secret intent before deleting the
-encrypted envelope, and reconciles an interrupted deletion on the next run.
-Plaintext is never placed in the runtime configuration, receipt, command line,
-repository, or artifact.
+unattended campaign; both references are current-user encrypted credential
+envelopes, not multi-day plaintext secret leases. An envelope is bound to the
+CPU hostname, scheduled Windows SID, project, cycle, campaign identity,
+candidate SHA/tree, scheduler lease, fencing token, and campaign deadline.
+The envelope may retain ciphertext only until that bounded deadline.
+
+Each materialization creates a separate in-memory access lease with an access
+identity and a TTL no longer than `secret_lease_max_seconds` in
+`config/security_policy.json` (currently 900 seconds). A missing, expired,
+revoked, wrong-machine, wrong-principal, wrong-campaign, wrong-candidate, or
+stale-fence access context fails closed before DPAPI decryption. Recovery
+creates a new access lease and resolves the same encrypted reference; it never
+stores plaintext for later use. The scheduled campaign environment contains
+only non-secret endpoint metadata, references, and binding identifiers.
+
+Provisioning accepts plaintext only on standard input, immediately encrypts it
+under the CPU current-user DPAPI identity, restricts the envelope ACL to the
+scheduled SID, and emits only redacted metadata. Revocation requires the same
+full scope, records a durable non-secret intent before deletion, and reconciles
+an interrupted deletion idempotently on the next run. Plaintext is never
+placed in a runtime configuration, receipt, command line, database, repository,
+or artifact.
 
 Data is classified PUBLIC, INTERNAL, CONFIDENTIAL, SECRET, or LOCAL_ONLY. Secret and local-only data cannot egress. Confidential egress requires approval. Untrusted instructions may be transferred only as constrained data and cannot acquire governing authority.

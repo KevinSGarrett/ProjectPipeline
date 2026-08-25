@@ -1315,6 +1315,38 @@ def _secret_resolver(args: argparse.Namespace) -> SecretResolver:
     """Resolve secrets from the same environment sources used by configuration loading."""
     env_path = args.env_file or args.root / ".env"
     environment = {**parse_env_file(env_path), **os.environ}
+    campaign_identity_keys = {
+        "CAMPAIGN_PROJECT_ID",
+        "CAMPAIGN_CYCLE_ID",
+        "CAMPAIGN_MACHINE_ID",
+        "CAMPAIGN_PRINCIPAL_SID",
+        "CAMPAIGN_ID",
+        "CAMPAIGN_CANDIDATE_SHA",
+        "CAMPAIGN_CANDIDATE_TREE",
+        "CAMPAIGN_SCHEDULER_LEASE_ID",
+        "CAMPAIGN_FENCE_TOKEN",
+        "CAMPAIGN_CREDENTIAL_ENVELOPE_EXPIRES_AT_UTC",
+        "CAMPAIGN_DEADLINE_AT_UTC",
+    }
+    if campaign_identity_keys.intersection(environment):
+        from project_pipeline.configuration.campaign_environment import (
+            campaign_credential_envelope_deadline,
+            campaign_credential_envelope_scope,
+        )
+        from project_pipeline.configuration.secrets import issue_campaign_secret_access_lease
+
+        scope = campaign_credential_envelope_scope(environment)
+        campaign_credential_envelope_deadline(environment)
+        return SecretResolver(
+            args.root,
+            environment,
+            required_scope=scope,
+            access_lease=issue_campaign_secret_access_lease(
+                args.root,
+                scope,
+                access_identity=f"cli:{os.getpid()}",
+            ),
+        )
     return SecretResolver(args.root, environment)
 
 

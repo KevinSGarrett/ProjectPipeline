@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -74,8 +75,12 @@ _CAMPAIGN_IDENTITY_KEYS = frozenset(
         "CAMPAIGN_CYCLE_ID",
         "CAMPAIGN_MACHINE_ID",
         "CAMPAIGN_PRINCIPAL_SID",
-        "CAMPAIGN_LEASE_ID",
-        "CAMPAIGN_LEASE_EXPIRES_AT_UTC",
+        "CAMPAIGN_ID",
+        "CAMPAIGN_CANDIDATE_SHA",
+        "CAMPAIGN_CANDIDATE_TREE",
+        "CAMPAIGN_SCHEDULER_LEASE_ID",
+        "CAMPAIGN_FENCE_TOKEN",
+        "CAMPAIGN_CREDENTIAL_ENVELOPE_EXPIRES_AT_UTC",
         "CAMPAIGN_DEADLINE_AT_UTC",
     }
 )
@@ -178,10 +183,14 @@ def _gh_auth_available() -> bool:
 def _credential_environment(repository_root: Path) -> dict[str, str]:
     """Load legacy files only as defaults; process-bound campaign refs take precedence."""
 
-    import os
-
     from project_pipeline.configuration.loader import parse_env_file
 
+    process_environment = dict(os.environ)
+    # A scheduled campaign receives its constrained, non-secret runtime
+    # environment directly.  Do not load a mutable checkout or coordinator
+    # .env in that context, even as a fallback.
+    if _CAMPAIGN_IDENTITY_KEYS.intersection(process_environment):
+        return process_environment
     merged: dict[str, str] = {}
     project_json = repository_root / "config" / "project.json"
     if project_json.is_file():
@@ -199,26 +208,39 @@ def _credential_environment(repository_root: Path) -> dict[str, str]:
 
 def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
     from project_pipeline.configuration.campaign_environment import (
-        campaign_lease_deadline,
-        campaign_secret_scope,
+        campaign_credential_envelope_deadline,
+        campaign_credential_envelope_scope,
     )
     from project_pipeline.configuration.loader import ConfigurationError, load_runtime_configuration
-    from project_pipeline.configuration.secrets import SecretResolver
+    from project_pipeline.configuration.secrets import (
+        SecretResolver,
+        issue_campaign_secret_access_lease,
+    )
 
     environment = _credential_environment(repository_root)
     campaign_environment_declared = bool(_CAMPAIGN_IDENTITY_KEYS.intersection(environment))
     if campaign_environment_declared:
         try:
-            configuration = load_runtime_configuration(repository_root, environment=environment)
+            configuration = load_runtime_configuration(
+                repository_root, environment=environment, include_default_env_file=False
+            )
             token_ref = configuration.settings.integrations.github_token
             if token_ref is None:
                 return None, "none"
-            required_scope = campaign_secret_scope(environment)
-            campaign_lease_deadline(environment)
+            required_scope = campaign_credential_envelope_scope(environment)
+            campaign_credential_envelope_deadline(environment)
             if token_ref.reference != "dpapi://C16B_GITHUB_TOKEN":
                 return None, "none"
+            access_lease = issue_campaign_secret_access_lease(
+                repository_root,
+                required_scope,
+                access_identity=f"live-qualification-github:{os.getpid()}",
+            )
             token = SecretResolver(
-                repository_root, environment, required_scope=required_scope
+                repository_root,
+                environment,
+                required_scope=required_scope,
+                access_lease=access_lease,
             ).resolve(token_ref)
             return (token, "campaign-dpapi") if token.strip() else (None, "none")
         except (ConfigurationError, RuntimeError):
@@ -258,27 +280,48 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
 
 def _build_jira_adapter(repository_root: Path) -> Any:
     from project_pipeline.configuration.campaign_environment import (
-        campaign_lease_deadline,
-        campaign_secret_scope,
+        campaign_credential_envelope_deadline,
+        campaign_credential_envelope_scope,
     )
     from project_pipeline.configuration.loader import load_runtime_configuration
-    from project_pipeline.configuration.secrets import SecretResolver
+    from project_pipeline.configuration.secrets import (
+        SecretResolver,
+        issue_campaign_secret_access_lease,
+    )
     from project_pipeline.jira_steward.adapter import AtlassianJiraCloudAdapter
 
     environment = _credential_environment(repository_root)
-    configuration = load_runtime_configuration(repository_root, environment=environment)
+    campaign_environment_declared = bool(_CAMPAIGN_IDENTITY_KEYS.intersection(environment))
+    configuration = load_runtime_configuration(
+        repository_root,
+        environment=environment,
+        include_default_env_file=not campaign_environment_declared,
+    )
     integrations = configuration.settings.integrations
     if not integrations.jira_base_url or not integrations.jira_user_email:
         raise RuntimeError("jira_integration_not_configured")
     if integrations.jira_api_token is None:
         raise RuntimeError("jira_api_token_unconfigured")
     required_scope = None
+    access_lease = None
     if integrations.jira_api_token.scheme == "dpapi":
-        campaign_lease_deadline(environment)
-        required_scope = campaign_secret_scope(environment)
-    token = SecretResolver(repository_root, environment, required_scope=required_scope).resolve(
-        integrations.jira_api_token
-    )
+        if not campaign_environment_declared:
+            raise RuntimeError("campaign_dpapi_jira_requires_a_bound_runtime_environment")
+        campaign_credential_envelope_deadline(environment)
+        required_scope = campaign_credential_envelope_scope(environment)
+        access_lease = issue_campaign_secret_access_lease(
+            repository_root,
+            required_scope,
+            access_identity=f"live-qualification-jira:{os.getpid()}",
+        )
+    elif campaign_environment_declared:
+        raise RuntimeError("campaign_jira_credential_must_use_a_bound_dpapi_envelope")
+    token = SecretResolver(
+        repository_root,
+        environment,
+        required_scope=required_scope,
+        access_lease=access_lease,
+    ).resolve(integrations.jira_api_token)
     return AtlassianJiraCloudAdapter(
         base_url=integrations.jira_base_url,
         user_email=integrations.jira_user_email,
@@ -345,6 +388,8 @@ def _probe_jira_read(repository_root: Path) -> dict[str, Any]:
             "credential_available": False,
             "reason": error.__class__.__name__,
         }
+    finally:
+        adapter.discard_secret_material()
 
 
 def _probe_github_write_readback(repository_slug: str, token: str) -> dict[str, Any]:
@@ -412,6 +457,8 @@ def _probe_github_write_readback(repository_slug: str, token: str) -> dict[str, 
             "write_readback_ok": False,
             "reason": error.__class__.__name__,
         }
+    finally:
+        adapter.discard_secret_material()
 
 
 def _branch_absent_after_delete_readback(
@@ -445,23 +492,22 @@ def _probe_jira_write_readback(repository_root: Path) -> dict[str, Any]:
             "reason": error.__class__.__name__,
         }
 
-    remote_key = _resolve_jira_remote_key(adapter, repository_root)
-    if not remote_key:
-        return {
-            "credential_available": True,
-            "write_attempted": False,
-            "write_readback_ok": False,
-            "reason": "remote_key_unresolved",
-        }
-
-    context = JiraWriteContext(
-        actor_id="actor:pp384-live-qual",
-        correlation_id="corr:pp384-jira-write-readback",
-        idempotency_key="pp384-live-qual-jira-comment-probe",
-        authorization_id="auth:pp384-live-qual-jira",
-    )
-    probe_body = f"{_LIVE_QUAL_PROBE_MARKER}: governed live qualification probe"
     try:
+        remote_key = _resolve_jira_remote_key(adapter, repository_root)
+        if not remote_key:
+            return {
+                "credential_available": True,
+                "write_attempted": False,
+                "write_readback_ok": False,
+                "reason": "remote_key_unresolved",
+            }
+        context = JiraWriteContext(
+            actor_id="actor:pp384-live-qual",
+            correlation_id="corr:pp384-jira-write-readback",
+            idempotency_key="pp384-live-qual-jira-comment-probe",
+            authorization_id="auth:pp384-live-qual-jira",
+        )
+        probe_body = f"{_LIVE_QUAL_PROBE_MARKER}: governed live qualification probe"
         before = adapter.get_issue(remote_key)
         if before is None:
             return {
@@ -503,6 +549,8 @@ def _probe_jira_write_readback(repository_root: Path) -> dict[str, Any]:
             "remote_key": remote_key,
             "reason": error.__class__.__name__,
         }
+    finally:
+        adapter.discard_secret_material()
 
 
 def create_coordinator_jira_governance_receipt(
@@ -918,8 +966,11 @@ def _qualify_github_jira_governance(
     }
     token, token_source = _resolve_github_token(repository_root)
     if token:
-        github_write_probe = _probe_github_write_readback(repository_slug, token)
-        github_write_probe["token_source"] = token_source
+        try:
+            github_write_probe = _probe_github_write_readback(repository_slug, token)
+            github_write_probe["token_source"] = token_source
+        finally:
+            token = ""
 
     github_ok = bool(github_write_probe.get("write_readback_ok"))
     jira_ok = bool(jira_write_probe.get("write_readback_ok"))

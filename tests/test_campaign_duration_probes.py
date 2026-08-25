@@ -124,13 +124,20 @@ def test_jira_duration_probe_uses_remote_issue_status_name(monkeypatch) -> None:
         status_name = "In Progress"
 
     class JiraAdapter:
+        discarded = False
+
         def get_issue(self, key: str) -> RemoteJiraIssue:
             assert key in {"PP-384", "PP-385", "PP-391", "PP-393"}
             return RemoteJiraIssue()
 
+        def discard_secret_material(self) -> None:
+            self.discarded = True
+
+    adapter = JiraAdapter()
+
     monkeypatch.setattr(
         "project_pipeline.autonomy_runtime.live_qualification._build_jira_adapter",
-        lambda _root: JiraAdapter(),
+        lambda _root: adapter,
     )
 
     result = _probe_jira(ROOT)
@@ -144,3 +151,4 @@ def test_jira_duration_probe_uses_remote_issue_status_name(monkeypatch) -> None:
             "PP-393": "In Progress",
         },
     }
+    assert adapter.discarded is True

@@ -460,8 +460,8 @@
       "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-MACHINE-REGISTRY-JSON",
       "kind": "MACHINE_POLICY",
       "path": "instructions/policies/MACHINE_REGISTRY.json",
-      "sha256": "6acb1d19a82ffa1ca54ea88b94fc56f4ab46104568aa771feffd5ce9b08258df",
-      "size_bytes": 1879
+      "sha256": "66da525b4b3f4fb1e3792d84ef5e9c0ec3526f4df164a984d118f9f37126655f",
+      "size_bytes": 4044
     },
     {
       "instruction_id": "PP-ASSET-INSTRUCTIONS-POLICIES-PPQS-BENCHMARK-REGISTRY-JSON",
