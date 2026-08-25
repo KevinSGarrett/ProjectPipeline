@@ -499,6 +499,9 @@ class ConfigurationTests(unittest.TestCase):
                     subprocess.CompletedProcess(["icacls.exe"], 0, "", ""),
                     subprocess.CompletedProcess(["icacls.exe"], 0, "", ""),
                     subprocess.CompletedProcess(["icacls.exe"], 0, "*S-1-5-21-1000:(M)\n", ""),
+                    subprocess.CompletedProcess(
+                        ["whoami.exe"], 0, '"COMFY-V4-CPU-01\\Windows 11","S-1-5-21-1000"\n', ""
+                    ),
                 ],
             ) as run:
                 script["_write_dpapi_envelope"](
@@ -506,10 +509,40 @@ class ConfigurationTests(unittest.TestCase):
                     {"ciphertext_base64": "ciphertext-only"},
                     scheduled_principal_sid="S-1-5-21-1000",
                 )
-        self.assertEqual(run.call_count, 3)
+        self.assertEqual(run.call_count, 4)
         self.assertIn("*S-1-5-21-1000:(M)", run.call_args_list[0].args[0])
         self.assertEqual(run.call_args_list[1].args[0][-1], "/verify")
         self.assertEqual(run.call_args_list[2].args[0], ["icacls.exe", str(destination)])
+        self.assertEqual(
+            run.call_args_list[3].args[0], ["whoami.exe", "/user", "/fo", "csv", "/nh"]
+        )
+
+    @unittest.skipUnless(os.name == "nt", "Windows ACL enforcement")
+    def test_dpapi_envelope_acl_readback_accepts_the_resolved_scheduled_trustee(self) -> None:
+        script = runpy.run_path(str(ROOT / "scripts" / "provision_dpapi_campaign_secret.py"))
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "envelope.json"
+            with patch.object(
+                script["subprocess"],
+                "run",
+                side_effect=[
+                    subprocess.CompletedProcess(["icacls.exe"], 0, "", ""),
+                    subprocess.CompletedProcess(["icacls.exe"], 0, "", ""),
+                    subprocess.CompletedProcess(
+                        ["icacls.exe"], 0, "COMFY-V4-CPU-01\\Windows 11:(M)\n", ""
+                    ),
+                    subprocess.CompletedProcess(
+                        ["whoami.exe"], 0, '"COMFY-V4-CPU-01\\Windows 11","S-1-5-21-1000"\n', ""
+                    ),
+                ],
+            ) as run:
+                script["_write_dpapi_envelope"](
+                    destination,
+                    {"ciphertext_base64": "ciphertext-only"},
+                    scheduled_principal_sid="S-1-5-21-1000",
+                )
+            self.assertTrue(destination.exists())
+            self.assertEqual(run.call_count, 4)
 
     @unittest.skipUnless(os.name == "nt", "Windows ACL enforcement")
     def test_dpapi_envelope_acl_readback_rejects_an_unexpected_named_trustee(self) -> None:

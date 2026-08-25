@@ -56,6 +56,9 @@ $scheduledPrincipalSid = $windowsIdentity.User.Value
 if (($Action -eq "plan" -or $Action -eq "install") -and -not $RuntimeEnvironmentFile) {
     throw "campaign recovery registration requires a bound runtime environment file"
 }
+if (($Action -eq "plan" -or $Action -eq "install") -and -not $CampaignId) {
+    throw "campaign recovery registration requires a bound campaign identity"
+}
 if ($RuntimeEnvironmentFile) {
     $runtimeEnvironmentPath = (Resolve-Path -LiteralPath $RuntimeEnvironmentFile).Path
     if (-not (Test-Path -LiteralPath $runtimeEnvironmentPath -PathType Leaf)) {
@@ -156,9 +159,9 @@ if ($Action -eq "uninstall") {
     exit 0
 }
 
-# The recovery probe retargets this file atomically after a legitimate
-# stale-runner takeover.  Only installation may author a new binding; read and
-# uninstall operations must not silently restore an obsolete parent campaign.
+# A recovery binding is immutable for its campaign.  A stale timed runner is
+# disqualified rather than retargeted; only a newly governed campaign may
+# install a new runtime, fence, and credential-envelope binding.
 $utf8NoBom = New-Object System.Text.UTF8Encoding $false
 [System.IO.File]::WriteAllText($configPath, (($config | ConvertTo-Json -Depth 6) + [Environment]::NewLine), $utf8NoBom)
 

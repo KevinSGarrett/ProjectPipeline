@@ -7,6 +7,7 @@ in command arguments, stdout, receipts, or the repository.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import os
@@ -85,12 +86,46 @@ def _write_dpapi_envelope(
         text=True,
         check=False,
     )
-    expected_principal = f"*{scheduled_principal_sid}".casefold()
     principals = _icacls_explicit_access_principals(readback.stdout or "", path)
-    if readback.returncode or principals != {expected_principal}:
+    if readback.returncode or len(principals) != 1:
         with suppress(OSError):
             path.unlink()
         raise RuntimeError("DPAPI credential envelope ACL effective-access readback failed")
+    expected_principals = _scheduled_principal_aliases(scheduled_principal_sid)
+    if not principals.issubset(expected_principals):
+        with suppress(OSError):
+            path.unlink()
+        raise RuntimeError("DPAPI credential envelope ACL effective-access readback failed")
+
+
+def _scheduled_principal_aliases(scheduled_principal_sid: str) -> set[str]:
+    """Return the only trustee spellings permitted for the scheduled user.
+
+    ``icacls`` may resolve the SID we supplied to an account name.  Resolve
+    that name from the current scheduled user and accept it only when its SID
+    exactly equals the scope-bound SID.  A failed name lookup does not widen
+    access: the literal SID representation remains the sole accepted form.
+    """
+
+    aliases = {scheduled_principal_sid.casefold(), f"*{scheduled_principal_sid}".casefold()}
+    identity = subprocess.run(
+        ["whoami.exe", "/user", "/fo", "csv", "/nh"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if identity.returncode:
+        return aliases
+    try:
+        rows = list(csv.reader((identity.stdout or "").splitlines()))
+    except csv.Error:
+        return aliases
+    if len(rows) != 1 or len(rows[0]) != 2:
+        return aliases
+    principal, sid = (field.strip() for field in rows[0])
+    if principal and sid.casefold() == scheduled_principal_sid.casefold():
+        aliases.add(principal.casefold())
+    return aliases
 
 
 def _icacls_explicit_access_principals(output: str, path: Path) -> set[str]:

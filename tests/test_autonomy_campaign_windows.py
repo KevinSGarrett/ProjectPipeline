@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import os
-import runpy
 import sqlite3
 import subprocess
 import sys
@@ -171,6 +170,8 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
             str(tmp_path / "campaign.sqlite3"),
             "-LogDirectory",
             str(tmp_path / "logs"),
+            "-CampaignId",
+            "QCAMP-C16B-TEST",
             "-RuntimeEnvironmentFile",
             str(runtime),
         ],
@@ -193,7 +194,7 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
     assert "scheduled_principal_sid" in text
 
 
-def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
+def test_recovery_probe_requires_a_bound_campaign_identity(tmp_path: Path):
     config_path = tmp_path / "recovery_probe.json"
     status_path = tmp_path / "status.json"
     payload = {
@@ -227,11 +228,9 @@ def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
         check=False,
         env=env,
     )
-    assert result.returncode == 0, result.stderr
-    written = json.loads(status_path.read_text(encoding="utf-8"))
-    assert written["action"] == "no-campaign"
-    assert Path(written["campaign_module"]).resolve().is_relative_to(ROOT / "src")
-    assert written["user_action_required"] is False
+    assert result.returncode != 0
+    assert "requires a bound campaign ID" in result.stderr
+    assert not status_path.exists()
 
 
 def test_recovery_probe_preserves_a_disqualified_campaign(tmp_path: Path):
@@ -303,88 +302,6 @@ def test_recovery_probe_preserves_a_disqualified_campaign(tmp_path: Path):
     assert reopened.get(admitted["campaign_id"])["status"] == "DISQUALIFIED"
     assert reopened.current_running_campaigns() == []
     reopened.close()
-
-
-def test_recovery_probe_atomically_retargets_the_successor_config(tmp_path: Path):
-    config_path = tmp_path / "recovery_probe.json"
-    config_path.write_text(
-        json.dumps({"campaign_id": "QCAMP-parent", "fence": "CFENCE-parent"}),
-        encoding="utf-8",
-    )
-    probe = runpy.run_path(str(PROBE))
-
-    probe["_retarget_config"](
-        config_path,
-        json.loads(config_path.read_text(encoding="utf-8")),
-        {"campaign_id": "QCAMP-child", "fence": "CFENCE-child"},
-    )
-
-    assert json.loads(config_path.read_text(encoding="utf-8")) == {
-        "campaign_id": "QCAMP-child",
-        "fence": "CFENCE-child",
-    }
-    assert not list(tmp_path.glob(".recovery_probe.json.*.tmp"))
-
-
-def test_recovery_probe_reconciles_a_single_successor_after_retarget_failure(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-):
-    controller = CampaignController(
-        tmp_path / "campaign.sqlite3",
-        repository_root=ROOT,
-        heartbeat_seconds=0.2,
-        inspect_identity=lambda _root: _identity(),
-        finalize_commands=[],
-        allow_unbound_candidate_for_tests=True,
-    )
-    parent = controller.start(
-        state_path=tmp_path / "state",
-        evidence_path=tmp_path / "evidence",
-        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
-        service_identity="schtasks:test-recovery",
-    )
-    controller._disqualify(parent["campaign_id"], "stale-runner-broken-window")
-    successor = controller.start(
-        state_path=tmp_path / "state",
-        evidence_path=tmp_path / "evidence",
-        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
-        service_identity="schtasks:test-recovery",
-        prior_campaign_id=parent["campaign_id"],
-    )
-    config_path = tmp_path / "recovery_probe.json"
-    config = {"campaign_id": parent["campaign_id"], "fence": parent["fence"]}
-    config_path.write_text(json.dumps(config), encoding="utf-8")
-    probe = runpy.run_path(str(PROBE))
-
-    original_replace = probe["os"].replace
-
-    def fail_replace(_source: Path, _destination: Path) -> None:
-        raise OSError("injected retarget failure")
-
-    monkeypatch.setattr(probe["os"], "replace", fail_replace)
-    with pytest.raises(OSError, match="injected retarget failure"):
-        probe["_retarget_config"](config_path, config, successor)
-    assert (
-        json.loads(config_path.read_text(encoding="utf-8"))["campaign_id"] == parent["campaign_id"]
-    )
-    assert not list(tmp_path.glob(".recovery_probe.json.*.tmp"))
-
-    recovered = probe["_terminal_successor"](
-        controller,
-        controller.get(parent["campaign_id"]),
-        expected_sha="a" * 40,
-        expected_tree="b" * 40,
-    )
-    assert recovered is not None
-    assert recovered["campaign_id"] == successor["campaign_id"]
-
-    monkeypatch.setattr(probe["os"], "replace", original_replace)
-    probe["_retarget_config"](config_path, config, recovered)
-    assert (
-        json.loads(config_path.read_text(encoding="utf-8"))["campaign_id"]
-        == successor["campaign_id"]
-    )
-    controller.close()
 
 
 def _register(

@@ -21,7 +21,11 @@ identity and a TTL no longer than `secret_lease_max_seconds` in
 revoked, wrong-machine, wrong-principal, wrong-campaign, wrong-candidate, or
 stale-fence access context fails closed before DPAPI decryption. Recovery
 creates a new access lease and resolves the same encrypted reference; it never
-stores plaintext for later use. The scheduled campaign environment contains
+stores plaintext for later use. A stale timed runner is disqualified in place:
+its recovery task cannot create or retarget a successor under the parent
+credential scope. A replacement campaign must receive fresh governed runtime,
+lease, fence, and credential-envelope identities. The scheduled campaign
+environment contains
 only non-secret endpoint metadata, references, binding identifiers, and the
 CPU-local campaign database path. Before any campaign DPAPI materialization,
 the runtime scope must agree with the checkout's `HEAD` and tree and with the
@@ -35,8 +39,9 @@ command use only its explicit allowlist rather than ambient variables.
 
 Provisioning accepts plaintext only on standard input, immediately encrypts it
 under the CPU current-user DPAPI identity, restricts the envelope ACL to the
-scheduled SID, reads that ACL back to reject any unexpected SID or named
-trustee, and emits only redacted metadata. Revocation requires the same
+scheduled SID, reads that ACL back to allow only that SID or its exact
+same-SID account-name resolution, rejects every additional trustee, and emits
+only redacted metadata. Revocation requires the same
 full scope, records a durable non-secret intent before deletion, and reconciles
 an interrupted deletion idempotently on the next run. Plaintext is never
 placed in a runtime configuration, receipt, command line, database, repository,

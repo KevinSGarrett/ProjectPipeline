@@ -974,18 +974,10 @@ class CampaignController:
                 if str(current["status"]) in ACTIVE:
                     self.qualification.fail(run_id, reason="stale-runner")
             preserved = self._disqualify(campaign_id, "stale-runner-broken-window")
-            budget = int(preserved["retry_budget"])
-            if budget <= 0:
-                return preserved
-            started = self.start(
-                state_path=Path(str(preserved["state_path"])),
-                evidence_path=Path(str(preserved["evidence_path"])),
-                pp384_evidence=Path(str(preserved["pp384_evidence_path"])),
-                retry_budget=budget - 1,
-                service_identity=preserved.get("service_identity"),
-                prior_campaign_id=campaign_id,
-            )
-            return started
+            # A broken timed window invalidates its campaign.  Do not create a
+            # successor under the parent credential scope: a new campaign must
+            # receive a fresh governed runtime binding and credential envelope.
+            return preserved
         owner = current_process_identity(service_identity=row["service_identity"])
         now = datetime.now(UTC)
         with self._db:

@@ -421,7 +421,7 @@ def test_clock_rollback_and_fence_mismatch_disqualify(tmp_path: Path):
     controller.close()
 
 
-def test_stale_timed_runner_preserves_disqualified_and_starts_fresh(tmp_path: Path):
+def test_stale_timed_runner_disqualifies_without_creating_a_successor(tmp_path: Path):
     controller = _controller(tmp_path)
     started = controller.start(
         state_path=tmp_path / "state",
@@ -435,10 +435,13 @@ def test_stale_timed_runner_preserves_disqualified_and_starts_fresh(tmp_path: Pa
     )
     controller._db.commit()
     recovered = controller.recover(admitted["campaign_id"])
-    assert recovered["campaign_id"] != admitted["campaign_id"]
-    assert recovered["prior_campaign_id"] == admitted["campaign_id"]
-    assert controller.get(admitted["campaign_id"])["status"] == "DISQUALIFIED"
-    assert recovered["retry_budget"] == 1
+    assert recovered["campaign_id"] == admitted["campaign_id"]
+    assert recovered["status"] == "DISQUALIFIED"
+    child_count = controller._db.execute(
+        "SELECT COUNT(*) FROM campaign_runs WHERE prior_campaign_id = ?",
+        (admitted["campaign_id"],),
+    ).fetchone()[0]
+    assert child_count == 0
     controller.close()
 
 
@@ -1824,7 +1827,7 @@ def test_recover_refuses_live_foreign_qualification_owner(
     controller.close()
 
 
-def test_recover_takes_over_reused_shared_qualification_pid(
+def test_recover_disqualifies_a_timed_stage_with_a_reused_shared_qualification_pid(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
     controller = _controller(tmp_path)
@@ -1859,9 +1862,14 @@ def test_recover_takes_over_reused_shared_qualification_pid(
     )
     controller._db.commit()
     recovered = controller.recover(started["campaign_id"])
-    assert recovered["campaign_id"] != started["campaign_id"]
-    assert recovered["status"] == "ATTESTED"
+    assert recovered["campaign_id"] == started["campaign_id"]
+    assert recovered["status"] == "DISQUALIFIED"
     assert controller.get(started["campaign_id"])["status"] == "DISQUALIFIED"
+    child_count = controller._db.execute(
+        "SELECT COUNT(*) FROM campaign_runs WHERE prior_campaign_id = ?",
+        (started["campaign_id"],),
+    ).fetchone()[0]
+    assert child_count == 0
     controller.close()
 
 
