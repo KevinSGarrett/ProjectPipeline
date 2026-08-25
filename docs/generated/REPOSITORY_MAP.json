@@ -7254,7 +7254,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "7976b90d5ce5ffd076e9d29aed55278f8579ce9bdc1c7175de1b1d000a559ffe",
+      "sha256": "bb905e7e92ce90e0ec6c2408bc68d63af79187b918fcc828e28d173068c31fcb",
       "size_bytes": 348078,
       "top_level": "_root"
     },
@@ -14478,8 +14478,8 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "3f52f5e5a4fc1d658341797c0f68ee96a377e1bf26713d13f275dc1a6ab65e36",
-      "size_bytes": 569994,
+      "sha256": "69096e5fe1a580ebe86622251de3357e02aaf008e813f968400a737e5cb078bc",
+      "size_bytes": 569996,
       "top_level": "_root"
     },
     {
@@ -16984,8 +16984,8 @@
     {
       "extension": ".py",
       "path": "scripts/provision_dpapi_campaign_secret.py",
-      "sha256": "25981feb75690c6b9d78e693e0fee4c1430587f7c5c748e58e9dd2948a5fab98",
-      "size_bytes": 10639,
+      "sha256": "2a3f80d90ee3ae146c79e369f7eea2e22bbc4dd63e20ebcbe12ef10b121c5c64",
+      "size_bytes": 11328,
       "top_level": "scripts"
     },
     {
@@ -17005,8 +17005,8 @@
     {
       "extension": ".ps1",
       "path": "scripts/register_autonomy_campaign_recovery.ps1",
-      "sha256": "f7ad5a7f35f39d175f2e0304e179efe497500cff9477d66e97c8f215c46ef4d3",
-      "size_bytes": 8387,
+      "sha256": "46c23db4e6dcff5fee479e569a82eecb11d8a9f48a0a9278bd32bd11f3565bda",
+      "size_bytes": 8441,
       "top_level": "scripts"
     },
     {
@@ -20218,8 +20218,8 @@
     {
       "extension": ".py",
       "path": "tests/test_configuration.py",
-      "sha256": "5b21fb8751cd27fccb0366442f2607bfe5c3320049e2cb5a868b026c143614eb",
-      "size_bytes": 19374,
+      "sha256": "ab6ad992f3d792a81b4febefb57e08d0ff06ec3cc37627674e71b13aea02fb3f",
+      "size_bytes": 20275,
       "top_level": "tests"
     },
     {
@@ -21392,7 +21392,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-25T08:08:15.067312+00:00",
+  "generated_at_utc": "2026-08-25T08:17:04.122371+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {
