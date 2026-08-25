@@ -50,6 +50,9 @@ if (-not $StatePath) { $StatePath = Join-Path -Path $LogDirectory -ChildPath "st
 if (-not $EvidencePath) { $EvidencePath = Join-Path -Path $LogDirectory -ChildPath "evidence" }
 if (-not $Pp384Evidence) { $Pp384Evidence = Join-Path -Path $LogDirectory -ChildPath "pp384.json" }
 $runtimeEnvironmentPath = ""
+$windowsIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+$scheduledPrincipalIdentity = $windowsIdentity.Name
+$scheduledPrincipalSid = $windowsIdentity.User.Value
 if ($RuntimeEnvironmentFile) {
     $runtimeEnvironmentPath = (Resolve-Path -LiteralPath $RuntimeEnvironmentFile).Path
     if (-not (Test-Path -LiteralPath $runtimeEnvironmentPath -PathType Leaf)) {
@@ -78,6 +81,8 @@ $config = [ordered]@{
     heartbeat_max_age_seconds = $HeartbeatMaxAgeSeconds
     cycles = $Cycles
     runtime_environment_file = $runtimeEnvironmentPath
+    scheduled_principal_identity = $scheduledPrincipalIdentity
+    scheduled_principal_sid = $scheduledPrincipalSid
     simulated_elapsed = $false
 }
 $payload = [ordered]@{
@@ -97,6 +102,8 @@ $payload = [ordered]@{
     fence = $Fence
     status_path = $StatusPath
     runtime_environment_file = $runtimeEnvironmentPath
+    scheduled_principal_identity = $scheduledPrincipalIdentity
+    scheduled_principal_sid = $scheduledPrincipalSid
     simulated_elapsed = $false
 }
 
@@ -113,6 +120,8 @@ if ($Action -eq "status") {
         task_name = $TaskName
         registered = [bool]$task
         hidden = if ($task) { [bool]$task.Settings.Hidden } else { $false }
+        principal_identity = if ($task) { $task.Principal.UserId } else { $null }
+        scheduled_principal_sid = $scheduledPrincipalSid
         pid_file = $pidFile
         pid_file_exists = (Test-Path -LiteralPath $pidFile)
         status_path = $StatusPath
@@ -142,7 +151,7 @@ if ($RepetitionDays -lt 1 -or $RepetitionDays -gt 31) {
 $exec = New-ScheduledTaskAction -Execute $python -Argument "`"$probe`" --config `"$configPath`"" -WorkingDirectory $root
 $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes $IntervalMinutes) -RepetitionDuration (New-TimeSpan -Days $RepetitionDays)
 $settings = New-ScheduledTaskSettingsSet -Hidden -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 4) -MultipleInstances IgnoreNew
-$principal = New-ScheduledTaskPrincipal -UserId ([System.Security.Principal.WindowsIdentity]::GetCurrent().Name) -LogonType Interactive -RunLevel Limited
+$principal = New-ScheduledTaskPrincipal -UserId $scheduledPrincipalIdentity -LogonType Interactive -RunLevel Limited
 Register-ScheduledTask -TaskName $TaskName -Action $exec -Trigger $trigger -Settings $settings -Principal $principal -Force | Out-Null
 [ordered]@{
     task_name = $TaskName
@@ -153,6 +162,7 @@ Register-ScheduledTask -TaskName $TaskName -Action $exec -Trigger $trigger -Sett
     status_path = $StatusPath
     runtime_environment_file = $runtimeEnvironmentPath
     principal_identity = $principal.UserId
+    principal_sid = $scheduledPrincipalSid
     principal_logon_type = "Interactive"
     principal_run_level = "Limited"
     execution_time_limit = "PT4M"

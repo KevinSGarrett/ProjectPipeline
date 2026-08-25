@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import tempfile
 import unittest
 from argparse import Namespace
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
@@ -24,7 +26,11 @@ from project_pipeline.configuration.campaign_environment import (
     limited_campaign_subprocess_environment,
     load_campaign_runtime_environment,
 )
-from project_pipeline.configuration.secrets import build_dpapi_secret_envelope
+from project_pipeline.configuration.secrets import (
+    _dpapi_unprotect,
+    build_dpapi_secret_envelope,
+    protect_dpapi_secret,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -125,7 +131,13 @@ class ConfigurationTests(unittest.TestCase):
                 "JIRA_BASE_URL=https://example.atlassian.net\n"
                 "JIRA_USER_EMAIL=worker@example.test\n"
                 "JIRA_API_TOKEN_REF=dpapi://C16B_JIRA_TOKEN\n"
-                "GITHUB_TOKEN_REF=gh-auth://default\n",
+                "GITHUB_TOKEN_REF=gh-auth://default\n"
+                "CAMPAIGN_PROJECT_ID=PROJECT-PIPELINE\n"
+                "CAMPAIGN_CYCLE_ID=CYCLE-16-B\n"
+                "CAMPAIGN_MACHINE_ID=COMFY-V4-CPU-01\n"
+                "CAMPAIGN_PRINCIPAL_SID=S-1-5-21-1000\n"
+                "CAMPAIGN_LEASE_ID=SLEASE-C16B-TEST\n"
+                f"CAMPAIGN_LEASE_EXPIRES_AT_UTC={(datetime.now(UTC) + timedelta(days=6)).isoformat()}\n",
                 encoding="utf-8",
             )
             values = load_campaign_runtime_environment(ROOT, env_file)
@@ -138,12 +150,31 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual(environment["GITHUB_TOKEN_REF"], "gh-auth://default")
         self.assertNotIn("UNRELATED_SECRET", environment)
 
+    def test_campaign_runtime_environment_rejects_non_campaign_secret_schemes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            env_file = Path(directory) / "campaign-runtime.env"
+            env_file.write_text(
+                "JIRA_BASE_URL=https://example.atlassian.net\n"
+                "JIRA_USER_EMAIL=worker@example.test\n"
+                "JIRA_API_TOKEN_REF=env://MUTABLE\n"
+                "GITHUB_TOKEN_REF=gh-auth://default\n"
+                "CAMPAIGN_PROJECT_ID=PROJECT-PIPELINE\n"
+                "CAMPAIGN_CYCLE_ID=CYCLE-16-B\n"
+                "CAMPAIGN_MACHINE_ID=COMFY-V4-CPU-01\n"
+                "CAMPAIGN_PRINCIPAL_SID=S-1-5-21-1000\n"
+                "CAMPAIGN_LEASE_ID=SLEASE-C16B-TEST\n"
+                f"CAMPAIGN_LEASE_EXPIRES_AT_UTC={(datetime.now(UTC) + timedelta(days=6)).isoformat()}\n",
+                encoding="utf-8",
+            )
+            with self.assertRaises(ConfigurationError):
+                load_campaign_runtime_environment(ROOT, env_file)
+
     def test_dpapi_envelope_persists_only_ciphertext_and_scope(self) -> None:
         scope = {
             "project_id": "PROJECT-PIPELINE",
             "cycle_id": "CYCLE-16-B",
             "machine_id": "COMFY-V4-CPU-01",
-            "identity_id": "Windows 11",
+            "identity_id": "S-1-5-21-1000",
             "lease_id": "SLEASE-EXAMPLE",
             "expires_at_utc": "2099-01-01T00:00:00+00:00",
         }
@@ -159,6 +190,59 @@ class ConfigurationTests(unittest.TestCase):
         self.assertEqual(envelope["reference"], "dpapi://C16B_JIRA_TOKEN")
         self.assertTrue(envelope["plaintext_persisted"] is False)
         self.assertNotIn("plaintext-never-persisted", json.dumps(envelope))
+
+    def test_dpapi_resolver_rejects_a_mismatched_bound_scope(self) -> None:
+        scope = {
+            "project_id": "PROJECT-PIPELINE",
+            "cycle_id": "CYCLE-16-B",
+            "machine_id": "COMFY-V4-CPU-01",
+            "identity_id": "S-1-5-21-1000",
+            "lease_id": "SLEASE-C16B-ONE",
+            "expires_at_utc": "2099-01-01T00:00:00+00:00",
+        }
+        reference = SecretReference(reference="dpapi://C16B_JIRA_TOKEN")
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            patch(
+                "project_pipeline.configuration.secrets.protect_dpapi_secret",
+                return_value=b"ciphertext",
+            ),
+        ):
+            root = Path(directory)
+            destination = root / ".local" / "secure-secrets" / "dpapi"
+            destination.mkdir(parents=True)
+            (destination / "C16B_JIRA_TOKEN.json").write_text(
+                json.dumps(build_dpapi_secret_envelope("test", reference=reference, scope=scope)),
+                encoding="utf-8",
+            )
+            required_scope = {**scope, "lease_id": "SLEASE-C16B-TWO"}
+            with self.assertRaises(SecretResolutionError):
+                SecretResolver(root, required_scope=required_scope).resolve(reference)
+
+    @unittest.skipUnless(os.name == "nt", "Windows DPAPI integration")
+    def test_dpapi_current_user_round_trip(self) -> None:
+        scope = {
+            "project_id": "PROJECT-PIPELINE",
+            "cycle_id": "CYCLE-16-B",
+            "machine_id": "COMFY-V4-CPU-01",
+            "identity_id": "S-1-5-21-1000",
+            "lease_id": "SLEASE-C16B-ROUNDTRIP",
+            "expires_at_utc": "2099-01-01T00:00:00+00:00",
+        }
+        ciphertext = protect_dpapi_secret(
+            "nonpersistent-test-material", reference="dpapi://roundtrip", scope=scope
+        )
+        self.assertEqual(
+            _dpapi_unprotect(
+                ciphertext,
+                json.dumps(
+                    {"reference": "dpapi://roundtrip", "scope": scope},
+                    sort_keys=True,
+                    separators=(",", ":"),
+                ).encode("utf-8"),
+            ).decode("utf-8"),
+            "nonpersistent-test-material",
+        )
 
     def test_secret_reference_syntax_is_strict(self) -> None:
         for value in ("plaintext", "vault://item", "file:///absolute", "env://BAD-NAME"):

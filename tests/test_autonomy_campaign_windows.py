@@ -136,6 +136,7 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
     assert "-RunLevel Limited" in text
     assert "-ExecutionTimeLimit (New-TimeSpan -Minutes 4)" in text
     assert "-MultipleInstances IgnoreNew" in text
+    assert "scheduled_principal_sid" in text
 
 
 def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
@@ -437,6 +438,8 @@ def test_disposable_recovery_task_plan_install_recover_uninstall(tmp_path: Path)
         )
         assert status["registered"] is True
         assert status["hidden"] is True
+        assert status["principal_identity"]
+        assert status["scheduled_principal_sid"].startswith("S-")
         assert status["user_action_required"] is False
         pid_path = tmp_path / "logs" / "campaign.pid"
         pid_path.write_text(json.dumps({"process_id": 2147000000}) + "\n", encoding="utf-8")

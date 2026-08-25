@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import os
+import re
 from collections.abc import Mapping
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from project_pipeline.configuration.loader import (
@@ -11,10 +13,32 @@ from project_pipeline.configuration.loader import (
     load_runtime_configuration,
     parse_env_file,
 )
+from project_pipeline.configuration.models import SecretReference
 
 _CAMPAIGN_RUNTIME_KEYS = frozenset(
-    {"JIRA_BASE_URL", "JIRA_USER_EMAIL", "JIRA_API_TOKEN_REF", "GITHUB_TOKEN_REF"}
+    {
+        "JIRA_BASE_URL",
+        "JIRA_USER_EMAIL",
+        "JIRA_API_TOKEN_REF",
+        "GITHUB_TOKEN_REF",
+        "CAMPAIGN_PROJECT_ID",
+        "CAMPAIGN_CYCLE_ID",
+        "CAMPAIGN_MACHINE_ID",
+        "CAMPAIGN_PRINCIPAL_SID",
+        "CAMPAIGN_LEASE_ID",
+        "CAMPAIGN_LEASE_EXPIRES_AT_UTC",
+    }
 )
+_SCOPE_ENVIRONMENT_KEYS = {
+    "project_id": "CAMPAIGN_PROJECT_ID",
+    "cycle_id": "CAMPAIGN_CYCLE_ID",
+    "machine_id": "CAMPAIGN_MACHINE_ID",
+    "identity_id": "CAMPAIGN_PRINCIPAL_SID",
+    "lease_id": "CAMPAIGN_LEASE_ID",
+    "expires_at_utc": "CAMPAIGN_LEASE_EXPIRES_AT_UTC",
+}
+_C16B_LEASE_MINIMUM = timedelta(days=5)
+_C16B_LEASE_MAXIMUM = timedelta(days=7)
 _PROCESS_PASSTHROUGH_KEYS = (
     "SYSTEMROOT",
     "WINDIR",
@@ -34,6 +58,39 @@ _PROCESS_PASSTHROUGH_KEYS = (
     "TEMP",
     "TMP",
 )
+
+
+def campaign_secret_scope(environment: Mapping[str, str]) -> dict[str, str]:
+    """Return the exact non-secret scope that authorizes a Cycle 16-B DPAPI envelope."""
+
+    scope = {
+        key: str(environment.get(source) or "").strip()
+        for key, source in _SCOPE_ENVIRONMENT_KEYS.items()
+    }
+    if not all(scope.values()):
+        raise ConfigurationError("campaign runtime environment lacks a complete credential scope")
+    if scope["project_id"] != "PROJECT-PIPELINE" or scope["cycle_id"] != "CYCLE-16-B":
+        raise ConfigurationError(
+            "campaign credential scope is not bound to ProjectPipeline Cycle 16-B"
+        )
+    if not re.fullmatch(r"S-\d+(?:-\d+)+", scope["identity_id"]):
+        raise ConfigurationError(
+            "campaign credential scope requires a canonical Windows principal SID"
+        )
+    if not re.fullmatch(r"SLEASE-[A-Za-z0-9-]+", scope["lease_id"]):
+        raise ConfigurationError("campaign credential scope contains an invalid lease identity")
+    try:
+        expiry = datetime.fromisoformat(scope["expires_at_utc"].replace("Z", "+00:00"))
+    except ValueError as error:
+        raise ConfigurationError("campaign credential lease expiry is invalid") from error
+    if expiry.tzinfo is None:
+        raise ConfigurationError("campaign credential lease expiry must be UTC-aware")
+    remaining = expiry - datetime.now(UTC)
+    if not (_C16B_LEASE_MINIMUM <= remaining <= _C16B_LEASE_MAXIMUM):
+        raise ConfigurationError(
+            "campaign credential lease does not cover the bounded Cycle 16-B window"
+        )
+    return scope
 
 
 def load_campaign_runtime_environment(root: Path, env_file: Path) -> dict[str, str]:
@@ -57,6 +114,15 @@ def load_campaign_runtime_environment(root: Path, env_file: Path) -> dict[str, s
         raise ConfigurationError("campaign runtime environment lacks a complete Jira reference")
     if not integrations.github_token:
         raise ConfigurationError("campaign runtime environment lacks a GitHub reference")
+    jira_reference = SecretReference(reference=values["JIRA_API_TOKEN_REF"])
+    github_reference = SecretReference(reference=values["GITHUB_TOKEN_REF"])
+    if jira_reference.scheme != "dpapi":
+        raise ConfigurationError("campaign Jira credential must use a current-user DPAPI reference")
+    if github_reference.reference != "gh-auth://default":
+        raise ConfigurationError(
+            "campaign GitHub credential must use the authenticated GitHub CLI reference"
+        )
+    campaign_secret_scope(values)
     return {key: values[key] for key in sorted(values)}
 
 

@@ -221,19 +221,24 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
 
 
 def _build_jira_adapter(repository_root: Path) -> Any:
+    from project_pipeline.configuration.campaign_environment import campaign_secret_scope
     from project_pipeline.configuration.loader import load_runtime_configuration
     from project_pipeline.configuration.secrets import SecretResolver
     from project_pipeline.jira_steward.adapter import AtlassianJiraCloudAdapter
 
-    configuration = load_runtime_configuration(
-        repository_root, environment=_credential_environment(repository_root)
-    )
+    environment = _credential_environment(repository_root)
+    configuration = load_runtime_configuration(repository_root, environment=environment)
     integrations = configuration.settings.integrations
     if not integrations.jira_base_url or not integrations.jira_user_email:
         raise RuntimeError("jira_integration_not_configured")
     if integrations.jira_api_token is None:
         raise RuntimeError("jira_api_token_unconfigured")
-    token = SecretResolver(repository_root, _credential_environment(repository_root)).resolve(
+    required_scope = (
+        campaign_secret_scope(environment)
+        if integrations.jira_api_token.scheme == "dpapi"
+        else None
+    )
+    token = SecretResolver(repository_root, environment, required_scope=required_scope).resolve(
         integrations.jira_api_token
     )
     return AtlassianJiraCloudAdapter(

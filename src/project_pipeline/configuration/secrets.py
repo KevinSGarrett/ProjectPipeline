@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import base64
+import csv
 import ctypes
 import json
 import os
@@ -20,6 +21,9 @@ class SecretResolutionError(RuntimeError):
 _DPAPI_BLOB_DIRECTORY = Path(".local") / "secure-secrets" / "dpapi"
 _DPAPI_SCHEMA_VERSION = "1.0.0"
 _DPAPI_KIND = "windows_current_user_secret_lease"
+_DPAPI_SCOPE_KEYS = frozenset(
+    {"project_id", "cycle_id", "machine_id", "identity_id", "lease_id", "expires_at_utc"}
+)
 
 
 class _DataBlob(ctypes.Structure):
@@ -32,6 +36,28 @@ def _dpapi_entropy(reference: str, scope: Mapping[str, object]) -> bytes:
         sort_keys=True,
         separators=(",", ":"),
     ).encode("utf-8")
+
+
+def current_windows_principal_sid() -> str:
+    """Return the immutable SID of the Windows identity that is opening DPAPI."""
+
+    if os.name != "nt":
+        raise SecretResolutionError("DPAPI secret resolution is only available on Windows")
+    try:
+        completed = subprocess.run(
+            ["whoami.exe", "/user", "/fo", "csv", "/nh"],
+            capture_output=True,
+            text=True,
+            timeout=15,
+            check=False,
+        )
+        rows = list(csv.reader(completed.stdout.splitlines()))
+    except (OSError, subprocess.TimeoutExpired, csv.Error) as error:
+        raise SecretResolutionError("Windows principal SID is unavailable") from error
+    sid = rows[0][1].strip() if completed.returncode == 0 and rows and len(rows[0]) >= 2 else ""
+    if not sid.startswith("S-"):
+        raise SecretResolutionError("Windows principal SID is unavailable")
+    return sid
 
 
 def _dpapi_unprotect(ciphertext: bytes, entropy: bytes) -> bytes:
@@ -105,15 +131,9 @@ def build_dpapi_secret_envelope(
 
     if reference.scheme != "dpapi":
         raise ValueError("DPAPI envelope requires a dpapi:// secret reference")
-    required_scope = {
-        "project_id",
-        "cycle_id",
-        "machine_id",
-        "identity_id",
-        "lease_id",
-        "expires_at_utc",
-    }
-    if set(scope) != required_scope or not all(str(scope[key]).strip() for key in required_scope):
+    if set(scope) != _DPAPI_SCOPE_KEYS or not all(
+        str(scope[key]).strip() for key in _DPAPI_SCOPE_KEYS
+    ):
         raise ValueError("DPAPI secret lease scope is incomplete")
     expiry = datetime.fromisoformat(str(scope["expires_at_utc"]).replace("Z", "+00:00"))
     if expiry.tzinfo is None or expiry <= datetime.now(UTC):
@@ -132,9 +152,20 @@ def build_dpapi_secret_envelope(
 class SecretResolver:
     """Resolve approved secret references only on explicit runtime demand."""
 
-    def __init__(self, root: Path, environment: Mapping[str, str] | None = None) -> None:
+    def __init__(
+        self,
+        root: Path,
+        environment: Mapping[str, str] | None = None,
+        *,
+        required_scope: Mapping[str, str] | None = None,
+    ) -> None:
         self.root = root.resolve()
         self.environment = os.environ if environment is None else environment
+        self.required_scope = (
+            None
+            if required_scope is None
+            else {key: str(value) for key, value in required_scope.items()}
+        )
 
     def resolve(self, reference: SecretReference) -> str:
         if reference.scheme == "env":
@@ -195,18 +226,23 @@ class SecretResolver:
         if payload.get("kind") != _DPAPI_KIND or payload.get("reference") != reference.reference:
             raise SecretResolutionError("DPAPI secret lease reference is invalid")
         scope = payload.get("scope")
-        if not isinstance(scope, dict):
+        if not isinstance(scope, dict) or set(scope) != _DPAPI_SCOPE_KEYS:
             raise SecretResolutionError("DPAPI secret lease scope is invalid")
+        normalized_scope = {key: str(scope[key]) for key in _DPAPI_SCOPE_KEYS}
+        if self.required_scope is None or normalized_scope != self.required_scope:
+            raise SecretResolutionError(
+                "DPAPI secret lease scope does not match the bound campaign"
+            )
         try:
             expiry = datetime.fromisoformat(str(scope["expires_at_utc"]).replace("Z", "+00:00"))
         except (KeyError, ValueError) as error:
             raise SecretResolutionError("DPAPI secret lease expiry is invalid") from error
         if expiry.tzinfo is None or expiry <= datetime.now(UTC):
             raise SecretResolutionError("DPAPI secret lease is expired")
-        machine = str(scope.get("machine_id") or "")
-        identity = str(scope.get("identity_id") or "")
-        actual_machine = os.environ.get("COMPUTERNAME") or socket.gethostname()
-        actual_identity = os.environ.get("USERNAME") or ""
+        machine = normalized_scope["machine_id"]
+        identity = normalized_scope["identity_id"]
+        actual_machine = socket.gethostname()
+        actual_identity = current_windows_principal_sid()
         if (
             machine.casefold() != actual_machine.casefold()
             or identity.casefold() != actual_identity.casefold()
