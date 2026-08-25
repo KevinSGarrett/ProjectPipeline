@@ -34,4 +34,4 @@ def test_local_real_golden_journey(tmp_path: Path) -> None:
     assert "HUMAN" + "_REQUIRED" not in live_states
     assert evidence["16_next_eligible_selection"]["next_eligible_task_id"] == "PP-GOLDEN-002"
     assert all(key in evidence for key in BEHAVIOR_KEYS)
-    assert str(harness.evidence_path).startswith(str(tmp_path))
+    assert harness.evidence_path.is_relative_to(tmp_path)

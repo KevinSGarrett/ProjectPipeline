@@ -10,7 +10,11 @@ from project_pipeline.autonomy_runtime.command_execution import (
     command_kind,
     evaluate_command_semantics,
 )
-from project_pipeline.autonomy_runtime.duration_probes import _probe_cursor, required_probe_ids
+from project_pipeline.autonomy_runtime.duration_probes import (
+    _probe_cursor,
+    _probe_jira,
+    required_probe_ids,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -113,3 +117,30 @@ def test_cursor_duration_probe_keeps_workspace_disposable_but_uses_durable_resol
     assert observed["repository_root"] == root
     assert observed["disposable_root"] == state_root / "cursor-disposable"
     assert "durable_dir" not in observed
+
+
+def test_jira_duration_probe_uses_remote_issue_status_name(monkeypatch) -> None:
+    class RemoteJiraIssue:
+        status_name = "In Progress"
+
+    class JiraAdapter:
+        def get_issue(self, key: str) -> RemoteJiraIssue:
+            assert key in {"PP-384", "PP-385", "PP-391", "PP-393"}
+            return RemoteJiraIssue()
+
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.live_qualification._build_jira_adapter",
+        lambda _root: JiraAdapter(),
+    )
+
+    result = _probe_jira(ROOT)
+
+    assert result == {
+        "ok": True,
+        "issues": {
+            "PP-384": "In Progress",
+            "PP-385": "In Progress",
+            "PP-391": "In Progress",
+            "PP-393": "In Progress",
+        },
+    }

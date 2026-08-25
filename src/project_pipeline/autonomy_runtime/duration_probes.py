@@ -311,7 +311,7 @@ def _probe_jira(root: Path) -> dict[str, Any]:
         for key in sorted(desired):
             issue = adapter.get_issue(key)
             if issue is not None:
-                observed[key] = str(issue.status)
+                observed[key] = str(issue.status_name)
         return {"ok": set(observed) == desired, "issues": observed}
     except Exception as error:
         return {"ok": False, "reason": type(error).__name__}
