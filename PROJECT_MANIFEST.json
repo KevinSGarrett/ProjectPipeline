@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "c10fffa49cd79a4daed3ed3eba57cffd9e344a3f4983160b0b45edb3d27a3e21",
+  "aggregate_sha256": "36cef30f499cd8fc67134d2dbc62f20747db1c0224cb081a7bc2e7bcc71d7d7a",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -12452,8 +12452,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/duration_probes.py",
-      "sha256": "8f5deb8fac2e52ccd03fb7452459b1ca848db459b1a24473e4129b51162220c4",
-      "size_bytes": 19288
+      "sha256": "53c78d3880afef3d61a49fcfc710a9007280fb887cb80be43aac5ce901803d32",
+      "size_bytes": 19293
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/golden.py",
@@ -14027,8 +14027,8 @@
     },
     {
       "path": "tests/integration/autonomy_runtime/test_golden_journey.py",
-      "sha256": "afe82e2a24f5a2e64f97777685caf9642feec1ab152ca42dde154e11b3a2742f",
-      "size_bytes": 1643
+      "sha256": "d6e39b60b7612ad2c41714907e27b4c513da5810708e76a9532a4995055af941",
+      "size_bytes": 1637
     },
     {
       "path": "tests/integration/autonomy_runtime/test_golden_journey_failures.py",
@@ -14282,8 +14282,8 @@
     },
     {
       "path": "tests/test_campaign_duration_probes.py",
-      "sha256": "79dccc3836fe0bd4b3b6cf891e3c6f8b1689739bb044da33b5a290b31f16f00d",
-      "size_bytes": 3835
+      "sha256": "d996fda70b3c228b905fb0a5abcc91afe5c24bb65634cd4b13902828fca86549",
+      "size_bytes": 4611
     },
     {
       "path": "tests/test_campaign_post_release.py",
@@ -15211,7 +15211,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-25T11:27:29.971853+00:00",
+  "generated_at_utc": "2026-08-25T13:01:49.835889+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15221,5 +15221,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30552291
+  "total_bytes": 30553066
 }
