@@ -183,6 +183,9 @@ def _gh_auth_available() -> bool:
 def _credential_environment(repository_root: Path) -> dict[str, str]:
     """Load legacy files only as defaults; process-bound campaign refs take precedence."""
 
+    from project_pipeline.configuration.campaign_environment import (
+        campaign_runtime_environment_from_process,
+    )
     from project_pipeline.configuration.loader import parse_env_file
 
     process_environment = dict(os.environ)
@@ -190,7 +193,12 @@ def _credential_environment(repository_root: Path) -> dict[str, str]:
     # environment directly.  Do not load a mutable checkout or coordinator
     # .env in that context, even as a fallback.
     if _CAMPAIGN_IDENTITY_KEYS.intersection(process_environment):
-        return process_environment
+        campaign_environment = campaign_runtime_environment_from_process(
+            repository_root, source=process_environment
+        )
+        if campaign_environment is None:
+            raise RuntimeError("campaign runtime environment is unavailable")
+        return campaign_environment
     merged: dict[str, str] = {}
     project_json = repository_root / "config" / "project.json"
     if project_json.is_file():
@@ -208,8 +216,7 @@ def _credential_environment(repository_root: Path) -> dict[str, str]:
 
 def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
     from project_pipeline.configuration.campaign_environment import (
-        campaign_credential_envelope_deadline,
-        campaign_credential_envelope_scope,
+        validate_campaign_runtime_binding,
     )
     from project_pipeline.configuration.loader import ConfigurationError, load_runtime_configuration
     from project_pipeline.configuration.secrets import (
@@ -227,10 +234,9 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
             token_ref = configuration.settings.integrations.github_token
             if token_ref is None:
                 return None, "none"
-            required_scope = campaign_credential_envelope_scope(environment)
-            campaign_credential_envelope_deadline(environment)
             if token_ref.reference != "dpapi://C16B_GITHUB_TOKEN":
                 return None, "none"
+            required_scope = validate_campaign_runtime_binding(repository_root, environment)
             access_lease = issue_campaign_secret_access_lease(
                 repository_root,
                 required_scope,
@@ -280,8 +286,7 @@ def _resolve_github_token(repository_root: Path) -> tuple[str | None, str]:
 
 def _build_jira_adapter(repository_root: Path) -> Any:
     from project_pipeline.configuration.campaign_environment import (
-        campaign_credential_envelope_deadline,
-        campaign_credential_envelope_scope,
+        validate_campaign_runtime_binding,
     )
     from project_pipeline.configuration.loader import load_runtime_configuration
     from project_pipeline.configuration.secrets import (
@@ -307,8 +312,7 @@ def _build_jira_adapter(repository_root: Path) -> Any:
     if integrations.jira_api_token.scheme == "dpapi":
         if not campaign_environment_declared:
             raise RuntimeError("campaign_dpapi_jira_requires_a_bound_runtime_environment")
-        campaign_credential_envelope_deadline(environment)
-        required_scope = campaign_credential_envelope_scope(environment)
+        required_scope = validate_campaign_runtime_binding(repository_root, environment)
         access_lease = issue_campaign_secret_access_lease(
             repository_root,
             required_scope,

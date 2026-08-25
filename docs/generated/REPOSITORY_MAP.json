@@ -2396,8 +2396,8 @@
     {
       "extension": ".md",
       "path": "docs/security/secrets_and_egress.md",
-      "sha256": "713c9bddbd41cb3481a030265718501071b4bb45cc074bb74104acb33657b787",
-      "size_bytes": 2636,
+      "sha256": "d54a250f674504ab3244366b301f0e002be5f2705386eee79faaad820716915f",
+      "size_bytes": 3199,
       "top_level": "docs"
     },
     {
@@ -7233,7 +7233,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "3f3d65067c020318ccade5287d22f88da5e9a319978807814a2b23ef06c73512",
+      "sha256": "e893ecfb0d30c646019abc1109417076a9e119bbf4b205b5bf7e062bd1384045",
       "size_bytes": 348078,
       "top_level": "_root"
     },
@@ -14457,7 +14457,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "9dd50b52d4b782ef3661b8194ee0d9a16b3020e85d7f478cfecc38abe2e5e001",
+      "sha256": "5dcf8484bcc905dd4279394dacc6a3ef9f613f4904ef1a64ca92797513af935d",
       "size_bytes": 569997,
       "top_level": "_root"
     },
@@ -16844,8 +16844,8 @@
     {
       "extension": ".py",
       "path": "scripts/autonomy_campaign_recovery_probe.py",
-      "sha256": "690483985b56303fa9e29f0fbfb2bcb6c86084d752f9cdc98b3c15cc059ebd0c",
-      "size_bytes": 17969,
+      "sha256": "1ffde94e51cad4c8eee9e9ff39ce4db90809ccf54922e643c464992479950b8c",
+      "size_bytes": 18041,
       "top_level": "scripts"
     },
     {
@@ -16963,8 +16963,8 @@
     {
       "extension": ".py",
       "path": "scripts/provision_dpapi_campaign_secret.py",
-      "sha256": "6544c18193e630794f789d599a1f2c773b2378b59fbcea0588552537008e1206",
-      "size_bytes": 12190,
+      "sha256": "a4c59d782bc08a71a3ba5f953a7de50fafa0c7f70edd137846adcd525645fa44",
+      "size_bytes": 12792,
       "top_level": "scripts"
     },
     {
@@ -16984,8 +16984,8 @@
     {
       "extension": ".ps1",
       "path": "scripts/register_autonomy_campaign_recovery.ps1",
-      "sha256": "fa760e1114cc2a3e3cf70f5137bf963fc775c2fdf3b7d7a616f658ca890875f9",
-      "size_bytes": 8817,
+      "sha256": "a792df214d375987dde677462a84c0f9fce3d4ffcb18b0100622f69456363c1b",
+      "size_bytes": 8987,
       "top_level": "scripts"
     },
     {
@@ -17019,8 +17019,8 @@
     {
       "extension": ".py",
       "path": "scripts/run_autonomy_campaign.py",
-      "sha256": "5bc585fdb087046f40973694d61a9c093e4690c40254c1cf336d47a008ce6e66",
-      "size_bytes": 5384,
+      "sha256": "28d6913f36e0b2fbb0968947d48cf5c4a8449e24917c139474eddac1ee8762a9",
+      "size_bytes": 6635,
       "top_level": "scripts"
     },
     {
@@ -17096,8 +17096,8 @@
     {
       "extension": ".ps1",
       "path": "scripts/start_autonomy_campaign_hidden.ps1",
-      "sha256": "277eb4b84439d89b4febb0202ebb2460e0f632ff3f6cfd3d89abc2b1ba6bff5a",
-      "size_bytes": 5307,
+      "sha256": "8edd610bbb27ece664ea3ef0e7430dd1f04efd8af391515a96ae93f930c840aa",
+      "size_bytes": 4203,
       "top_level": "scripts"
     },
     {
@@ -17530,8 +17530,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
-      "sha256": "af53ac73e340269d2121739ca9d453a13c0da1a29707c7a9653de27f67bb8c5c",
-      "size_bytes": 47969,
+      "sha256": "db0b5e7c89e0d4edcfb97c9204cbe5473256cdd10ecd0f0c41c7a2a25d4b3f63",
+      "size_bytes": 48170,
       "top_level": "src"
     },
     {
@@ -17684,8 +17684,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/cli.py",
-      "sha256": "a89840fbb5563d75a91a44d887df322663c54021f9b67d4fc82898ef0f43d85b",
-      "size_bytes": 191596,
+      "sha256": "182ef0914d3fef08b81f4cb2696b98e6309010ba118de600e6e0b54adb930568",
+      "size_bytes": 191703,
       "top_level": "src"
     },
     {
@@ -17859,15 +17859,15 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/configuration/__init__.py",
-      "sha256": "8a0c4284ab0141156683e8c021439affefcde51dcbea9d2fa2401d514208a45b",
-      "size_bytes": 1678,
+      "sha256": "b7607301c8668c31d67ee9fb744271bf36727457281517df88231b335c800b96",
+      "size_bytes": 1922,
       "top_level": "src"
     },
     {
       "extension": ".py",
       "path": "src/project_pipeline/configuration/campaign_environment.py",
-      "sha256": "6f0ffef7897cdc9457ba6f25717fa9edb92f95d2679775d1ed5e67fb6461777c",
-      "size_bytes": 8989,
+      "sha256": "4829380c0d363f506411fa8228a5a976fac2e190718766a3b8a67531a60830b5",
+      "size_bytes": 14097,
       "top_level": "src"
     },
     {
@@ -19931,8 +19931,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_campaign_windows.py",
-      "sha256": "dfae82acb5bc12c69cf4c962e7131d17868c787140006afb607111c71b884636",
-      "size_bytes": 19161,
+      "sha256": "398ea8fe58e0c2fdfaa1d2aff70a16d01797b99b31e19322b21de95ea219ff83",
+      "size_bytes": 22074,
       "top_level": "tests"
     },
     {
@@ -19952,8 +19952,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_live_qualification.py",
-      "sha256": "5a2616c7ff545d1d2071d059ee49a098d9a19011a6397b86fe76304d0a9cb0a7",
-      "size_bytes": 18956,
+      "sha256": "ca3e0794e522c686ed1d154cf4d1357599e14ac3617e902f9eb98619734f3fdb",
+      "size_bytes": 19223,
       "top_level": "tests"
     },
     {
@@ -20197,8 +20197,8 @@
     {
       "extension": ".py",
       "path": "tests/test_configuration.py",
-      "sha256": "ec6f390d8e684ee6941e6a10172dda5b031dab3a76c66ffbf07be9812ddfa6aa",
-      "size_bytes": 28593,
+      "sha256": "45cb7e4b72081c4c6394a15e9111919ce401b1774b7872e531b29b0b4a1ea8df",
+      "size_bytes": 34155,
       "top_level": "tests"
     },
     {
@@ -21371,7 +21371,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-25T21:52:44.373804+00:00",
+  "generated_at_utc": "2026-08-25T22:15:32.471795+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

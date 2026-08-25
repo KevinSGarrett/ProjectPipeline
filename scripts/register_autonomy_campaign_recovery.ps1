@@ -53,6 +53,9 @@ $runtimeEnvironmentPath = ""
 $windowsIdentity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
 $scheduledPrincipalIdentity = $windowsIdentity.Name
 $scheduledPrincipalSid = $windowsIdentity.User.Value
+if (($Action -eq "plan" -or $Action -eq "install") -and -not $RuntimeEnvironmentFile) {
+    throw "campaign recovery registration requires a bound runtime environment file"
+}
 if ($RuntimeEnvironmentFile) {
     $runtimeEnvironmentPath = (Resolve-Path -LiteralPath $RuntimeEnvironmentFile).Path
     if (-not (Test-Path -LiteralPath $runtimeEnvironmentPath -PathType Leaf)) {

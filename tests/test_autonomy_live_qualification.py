@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
@@ -116,10 +117,14 @@ def test_credential_environment_keeps_process_bound_references_over_mutable_env_
 def test_campaign_credential_environment_never_loads_a_mutable_checkout_env(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    source_root = Path(__file__).resolve().parents[1]
+    shutil.copytree(source_root / "config" / "runtime", tmp_path / "config" / "runtime")
     (tmp_path / ".env").write_text(
         "JIRA_API_TOKEN=must-not-be-loaded\nJIRA_API_TOKEN_REF=env://MUTABLE\n",
         encoding="utf-8",
     )
+    database = tmp_path / "campaign.sqlite3"
+    database.touch()
     campaign_environment = {
         "JIRA_BASE_URL": "https://example.atlassian.net",
         "JIRA_USER_EMAIL": "worker@example.test",
@@ -136,6 +141,7 @@ def test_campaign_credential_environment_never_loads_a_mutable_checkout_env(
         "CAMPAIGN_FENCE_TOKEN": "CFENCE-C16B-TEST",
         "CAMPAIGN_CREDENTIAL_ENVELOPE_EXPIRES_AT_UTC": "2099-01-01T00:00:00+00:00",
         "CAMPAIGN_DEADLINE_AT_UTC": "2098-12-31T00:00:00+00:00",
+        "CAMPAIGN_DATABASE": str(database),
     }
     for key, value in campaign_environment.items():
         monkeypatch.setenv(key, value)

@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import os
 import runpy
+import sqlite3
 import subprocess
 import sys
 import uuid
@@ -43,6 +44,50 @@ def _pp384_evidence(path: Path) -> Path:
     return path
 
 
+def _runtime_environment(
+    path: Path,
+    database: Path,
+    *,
+    campaign_id: str = "QCAMP-C16B-TEST",
+    candidate_sha: str = "a" * 40,
+    candidate_tree: str = "b" * 40,
+) -> Path:
+    fence = "CFENCE-C16B-TEST"
+    lease = "CLEASE-C16B-TEST"
+    if database.is_file():
+        with sqlite3.connect(database) as connection:
+            row = connection.execute(
+                "SELECT fence, lease_id FROM campaign_runs WHERE campaign_id = ?", (campaign_id,)
+            ).fetchone()
+        if row is not None:
+            fence, lease = str(row[0]), str(row[1])
+    path.write_text(
+        "\n".join(
+            (
+                "JIRA_BASE_URL=https://example.atlassian.net",
+                "JIRA_USER_EMAIL=worker@example.test",
+                "JIRA_API_TOKEN_REF=dpapi://C16B_JIRA_TOKEN",
+                "GITHUB_TOKEN_REF=dpapi://C16B_GITHUB_TOKEN",
+                "CAMPAIGN_PROJECT_ID=PROJECT-PIPELINE",
+                "CAMPAIGN_CYCLE_ID=CYCLE-16-B",
+                "CAMPAIGN_MACHINE_ID=COMFY-V4-CPU-01",
+                "CAMPAIGN_PRINCIPAL_SID=S-1-5-21-1000",
+                f"CAMPAIGN_ID={campaign_id}",
+                f"CAMPAIGN_CANDIDATE_SHA={candidate_sha}",
+                f"CAMPAIGN_CANDIDATE_TREE={candidate_tree}",
+                f"CAMPAIGN_SCHEDULER_LEASE_ID={lease}",
+                f"CAMPAIGN_FENCE_TOKEN={fence}",
+                "CAMPAIGN_CREDENTIAL_ENVELOPE_EXPIRES_AT_UTC=2099-01-01T00:00:00+00:00",
+                "CAMPAIGN_DEADLINE_AT_UTC=2098-12-31T00:00:00+00:00",
+                f"CAMPAIGN_DATABASE={database}",
+                "",
+            )
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
 LAUNCHER = ROOT / "scripts" / "start_autonomy_campaign_hidden.ps1"
 RECOVERY = ROOT / "scripts" / "register_autonomy_campaign_recovery.ps1"
 PROBE = ROOT / "scripts" / "autonomy_campaign_recovery_probe.py"
@@ -63,6 +108,7 @@ def test_hidden_campaign_launcher_declares_windows_contract():
 def test_hidden_campaign_launcher_dry_run(tmp_path: Path):
     if os.name != "nt":
         return
+    runtime = _runtime_environment(tmp_path / "campaign.runtime.env", tmp_path / "campaign.sqlite3")
     completed = subprocess.run(
         [
             "powershell",
@@ -83,6 +129,10 @@ def test_hidden_campaign_launcher_dry_run(tmp_path: Path):
             str(tmp_path / "evidence"),
             "-Pp384Evidence",
             str(tmp_path / "pp384.json"),
+            "-CampaignId",
+            "QCAMP-C16B-TEST",
+            "-RuntimeEnvironmentFile",
+            str(runtime),
             "-DryRun",
         ],
         check=True,
@@ -93,7 +143,8 @@ def test_hidden_campaign_launcher_dry_run(tmp_path: Path):
     payload = json.loads(completed.stdout)
     assert payload["window_style"] == "Hidden"
     assert payload["simulated_elapsed"] is False
-    assert payload["argument_list"][1] == "start"
+    assert payload["argument_list"][1] == "run"
+    assert payload["runtime_environment_file"] == str(runtime.resolve())
 
 
 def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
@@ -103,6 +154,7 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
     assert "simulated_elapsed = $false" in text
     if os.name != "nt":
         return
+    runtime = _runtime_environment(tmp_path / "campaign.runtime.env", tmp_path / "campaign.sqlite3")
     completed = subprocess.run(
         [
             "powershell",
@@ -119,6 +171,8 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
             str(tmp_path / "campaign.sqlite3"),
             "-LogDirectory",
             str(tmp_path / "logs"),
+            "-RuntimeEnvironmentFile",
+            str(runtime),
         ],
         check=True,
         capture_output=True,
@@ -152,6 +206,9 @@ def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
         "log_directory": str(tmp_path),
         "heartbeat_seconds": 0.2,
         "heartbeat_max_age_seconds": 1.0,
+        "runtime_environment_file": str(
+            _runtime_environment(tmp_path / "campaign.runtime.env", tmp_path / "campaign.sqlite3")
+        ),
     }
     config_path.write_text(json.dumps(payload), encoding="utf-8")
     env = {
@@ -212,6 +269,13 @@ def test_recovery_probe_preserves_a_disqualified_campaign(tmp_path: Path):
                 "log_directory": str(tmp_path),
                 "heartbeat_seconds": 0.2,
                 "heartbeat_max_age_seconds": 1.0,
+                "runtime_environment_file": str(
+                    _runtime_environment(
+                        tmp_path / "campaign.runtime.env",
+                        tmp_path / "campaign.sqlite3",
+                        campaign_id=admitted["campaign_id"],
+                    )
+                ),
             }
         ),
         encoding="utf-8",
@@ -332,6 +396,13 @@ def _register(
     expected_sha: str = "a" * 40,
     expected_tree: str = "b" * 40,
 ) -> dict:
+    runtime = _runtime_environment(
+        tmp_path / "campaign.runtime.env",
+        tmp_path / "campaign.sqlite3",
+        campaign_id=campaign_id or "QCAMP-C16B-TEST",
+        candidate_sha=expected_sha,
+        candidate_tree=expected_tree,
+    )
     completed = subprocess.run(
         [
             "powershell",
@@ -362,6 +433,8 @@ def _register(
             "1",
             "-HeartbeatSeconds",
             "0.2",
+            "-RuntimeEnvironmentFile",
+            str(runtime),
         ],
         check=False,
         capture_output=True,

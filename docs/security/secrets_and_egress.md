@@ -22,11 +22,19 @@ revoked, wrong-machine, wrong-principal, wrong-campaign, wrong-candidate, or
 stale-fence access context fails closed before DPAPI decryption. Recovery
 creates a new access lease and resolves the same encrypted reference; it never
 stores plaintext for later use. The scheduled campaign environment contains
-only non-secret endpoint metadata, references, and binding identifiers.
+only non-secret endpoint metadata, references, binding identifiers, and the
+CPU-local campaign database path. Before any campaign DPAPI materialization,
+the runtime scope must agree with the checkout's `HEAD` and tree and with the
+selected `campaign_runs` row, including its campaign ID, SHA/tree, lease, and
+fence. A scheduled campaign process never loads the checkout `.env`; it uses
+only this explicit allowlisted runtime environment. The hidden runner and
+recovery task both require that file and construct child environments from its
+allowlist rather than from ambient variables.
 
 Provisioning accepts plaintext only on standard input, immediately encrypts it
 under the CPU current-user DPAPI identity, restricts the envelope ACL to the
-scheduled SID, and emits only redacted metadata. Revocation requires the same
+scheduled SID, reads that ACL back to reject any unexpected SID, and emits only
+redacted metadata. Revocation requires the same
 full scope, records a durable non-secret intent before deletion, and reconciles
 an interrupted deletion idempotently on the next run. Plaintext is never
 placed in a runtime configuration, receipt, command line, database, repository,

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import os
 import re
+import sqlite3
+import subprocess
 from collections.abc import Mapping
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -32,6 +34,7 @@ _CAMPAIGN_RUNTIME_KEYS = frozenset(
         "CAMPAIGN_FENCE_TOKEN",
         "CAMPAIGN_CREDENTIAL_ENVELOPE_EXPIRES_AT_UTC",
         "CAMPAIGN_DEADLINE_AT_UTC",
+        "CAMPAIGN_DATABASE",
     }
 )
 _SCOPE_ENVIRONMENT_KEYS = {
@@ -166,21 +169,22 @@ def campaign_credential_envelope_deadline(environment: Mapping[str, str]) -> dat
     return deadline
 
 
-def load_campaign_runtime_environment(
-    root: Path, env_file: Path, *, require_fresh_campaign_window: bool = False
+def _validate_campaign_runtime_values(
+    root: Path,
+    values: Mapping[str, str],
+    *,
+    require_fresh_campaign_window: bool = False,
 ) -> dict[str, str]:
-    """Read one non-secret allowlisted environment file for a bound campaign."""
+    """Validate an already-selected non-secret campaign runtime mapping."""
 
-    root = root.resolve()
-    env_file = env_file.resolve()
-    if not env_file.is_file():
-        raise ConfigurationError("campaign runtime environment file is unavailable")
-    values = parse_env_file(env_file)
-    unknown = sorted(set(values) - _CAMPAIGN_RUNTIME_KEYS)
+    normalized = {key: str(value) for key, value in values.items()}
+    unknown = sorted(set(normalized) - _CAMPAIGN_RUNTIME_KEYS)
     if unknown:
         raise ConfigurationError("campaign runtime environment contains disallowed keys")
+    if not normalized.get("CAMPAIGN_DATABASE", "").strip():
+        raise ConfigurationError("campaign runtime environment lacks a campaign database binding")
     configuration = load_runtime_configuration(
-        root, environment=values, include_default_env_file=False
+        root, environment=normalized, include_default_env_file=False
     )
     integrations = configuration.settings.integrations
     if (
@@ -191,19 +195,137 @@ def load_campaign_runtime_environment(
         raise ConfigurationError("campaign runtime environment lacks a complete Jira reference")
     if not integrations.github_token:
         raise ConfigurationError("campaign runtime environment lacks a GitHub reference")
-    jira_reference = SecretReference(reference=values["JIRA_API_TOKEN_REF"])
-    github_reference = SecretReference(reference=values["GITHUB_TOKEN_REF"])
-    if jira_reference.scheme != "dpapi":
-        raise ConfigurationError("campaign Jira credential must use a current-user DPAPI reference")
+    jira_reference = SecretReference(reference=normalized["JIRA_API_TOKEN_REF"])
+    github_reference = SecretReference(reference=normalized["GITHUB_TOKEN_REF"])
+    if jira_reference.reference != "dpapi://C16B_JIRA_TOKEN":
+        raise ConfigurationError(
+            "campaign Jira credential must use the scoped current-user DPAPI reference"
+        )
     if github_reference.reference != "dpapi://C16B_GITHUB_TOKEN":
         raise ConfigurationError(
             "campaign GitHub credential must use the scoped current-user DPAPI reference"
         )
     campaign_credential_envelope_scope(
-        values, require_fresh_campaign_window=require_fresh_campaign_window
+        normalized, require_fresh_campaign_window=require_fresh_campaign_window
     )
-    campaign_credential_envelope_deadline(values)
-    return {key: values[key] for key in sorted(values)}
+    campaign_credential_envelope_deadline(normalized)
+    return {key: normalized[key] for key in sorted(normalized)}
+
+
+def campaign_runtime_environment_from_process(
+    root: Path, *, source: Mapping[str, str] | None = None
+) -> dict[str, str] | None:
+    """Return a validated campaign mapping, never reading a mutable ``.env`` file.
+
+    A process that declares any campaign key is fail-closed as a campaign
+    process.  Only the explicit runtime allowlist is retained, so ambient
+    checkout configuration cannot become a credential source.
+    """
+
+    parent = os.environ if source is None else source
+    campaign_keys = {key for key in _CAMPAIGN_RUNTIME_KEYS if key.startswith("CAMPAIGN_")}
+    if not campaign_keys.intersection(parent):
+        return None
+    values = {key: str(parent[key]) for key in _CAMPAIGN_RUNTIME_KEYS if key in parent}
+    return _validate_campaign_runtime_values(root.resolve(), values)
+
+
+def _current_checkout_identity(root: Path) -> tuple[str, str]:
+    commands = (
+        ("rev-parse", ["git", "rev-parse", "HEAD"]),
+        ("tree", ["git", "show", "-s", "--format=%T", "HEAD"]),
+    )
+    observed: list[str] = []
+    for _label, command in commands:
+        try:
+            completed = subprocess.run(
+                command,
+                cwd=root,
+                capture_output=True,
+                text=True,
+                timeout=15,
+                check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired) as error:
+            raise ConfigurationError("campaign checkout identity is unavailable") from error
+        value = completed.stdout.strip().lower() if completed.returncode == 0 else ""
+        if not re.fullmatch(r"[0-9a-f]{40}", value):
+            raise ConfigurationError("campaign checkout identity is invalid")
+        observed.append(value)
+    return observed[0], observed[1]
+
+
+def _bound_campaign_record(environment: Mapping[str, str]) -> dict[str, str]:
+    database_value = str(environment.get("CAMPAIGN_DATABASE") or "").strip()
+    database = Path(database_value).expanduser().resolve()
+    if not database.is_file():
+        raise ConfigurationError("campaign runtime database is unavailable")
+    campaign_id = str(environment.get("CAMPAIGN_ID") or "").strip()
+    try:
+        connection = sqlite3.connect(f"file:{database.as_posix()}?mode=ro", uri=True)
+        connection.row_factory = sqlite3.Row
+        try:
+            row = connection.execute(
+                """
+                SELECT campaign_id, integrated_sha, integrated_tree, fence, lease_id, status
+                FROM campaign_runs
+                WHERE campaign_id = ?
+                """,
+                (campaign_id,),
+            ).fetchone()
+        finally:
+            connection.close()
+    except sqlite3.Error as error:
+        raise ConfigurationError(
+            "campaign runtime database cannot prove the selected campaign"
+        ) from error
+    if row is None:
+        raise ConfigurationError("campaign runtime binding does not select an existing campaign")
+    return {key: str(row[key] or "") for key in tuple(row.keys())}
+
+
+def validate_campaign_runtime_binding(root: Path, environment: Mapping[str, str]) -> dict[str, str]:
+    """Prove scope, checkout, and selected campaign row agree before materialization."""
+
+    scope = campaign_credential_envelope_scope(environment)
+    campaign_credential_envelope_deadline(environment)
+    head, tree = _current_checkout_identity(root.resolve())
+    if scope["candidate_sha"].lower() != head or scope["candidate_tree"].lower() != tree:
+        raise ConfigurationError(
+            "campaign credential envelope does not match the checked-out candidate"
+        )
+    campaign = _bound_campaign_record(environment)
+    expected = {
+        "campaign_id": campaign["campaign_id"],
+        "candidate_sha": campaign["integrated_sha"],
+        "candidate_tree": campaign["integrated_tree"],
+        "fence_token": campaign["fence"],
+        "scheduler_lease_id": campaign["lease_id"],
+    }
+    if any(not value for value in expected.values()) or any(
+        scope[key].lower() != value.lower() for key, value in expected.items()
+    ):
+        raise ConfigurationError(
+            "campaign credential envelope does not match the selected campaign"
+        )
+    if campaign["status"] not in {"ATTESTED", "RUNNING"}:
+        raise ConfigurationError("selected campaign is not eligible for credential materialization")
+    return scope
+
+
+def load_campaign_runtime_environment(
+    root: Path, env_file: Path, *, require_fresh_campaign_window: bool = False
+) -> dict[str, str]:
+    """Read one non-secret allowlisted environment file for a bound campaign."""
+
+    root = root.resolve()
+    env_file = env_file.resolve()
+    if not env_file.is_file():
+        raise ConfigurationError("campaign runtime environment file is unavailable")
+    values = parse_env_file(env_file)
+    return _validate_campaign_runtime_values(
+        root, values, require_fresh_campaign_window=require_fresh_campaign_window
+    )
 
 
 def apply_campaign_runtime_environment(

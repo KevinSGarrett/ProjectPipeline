@@ -1,3 +1,7 @@
+from project_pipeline.configuration.campaign_environment import (
+    campaign_runtime_environment_from_process,
+    validate_campaign_runtime_binding,
+)
 from project_pipeline.configuration.loader import (
     ConfigurationError,
     EffectiveConfiguration,
@@ -53,6 +57,7 @@ __all__ = [
     "SecuritySettings",
     "TelemetryExporter",
     "TelemetrySettings",
+    "campaign_runtime_environment_from_process",
     "collect_secret_references",
     "deep_merge",
     "issue_campaign_secret_access_lease",
@@ -60,6 +65,7 @@ __all__ = [
     "parse_env_file",
     "parse_selected_env_file",
     "runtime_configuration_schema",
+    "validate_campaign_runtime_binding",
     "validate_runtime_configuration_files",
     "write_runtime_configuration_schema",
 ]

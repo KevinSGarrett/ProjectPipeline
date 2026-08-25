@@ -4,6 +4,7 @@ import json
 import os
 import runpy
 import socket
+import sqlite3
 import subprocess
 import tempfile
 import unittest
@@ -14,7 +15,7 @@ from unittest.mock import patch
 
 from pydantic import ValidationError
 
-from project_pipeline.cli import _secret_resolver
+from project_pipeline.cli import _load_configuration, _secret_resolver
 from project_pipeline.configuration import (
     ConfigurationError,
     SecretReference,
@@ -27,8 +28,10 @@ from project_pipeline.configuration import (
 )
 from project_pipeline.configuration.campaign_environment import (
     campaign_credential_envelope_scope,
+    campaign_runtime_environment_from_process,
     limited_campaign_subprocess_environment,
     load_campaign_runtime_environment,
+    validate_campaign_runtime_binding,
 )
 from project_pipeline.configuration.secrets import (
     CampaignSecretAccessLease,
@@ -85,6 +88,7 @@ def _campaign_runtime_text(*, expiry: datetime, deadline: datetime) -> str:
         "CAMPAIGN_FENCE_TOKEN": scope["fence_token"],
         "CAMPAIGN_CREDENTIAL_ENVELOPE_EXPIRES_AT_UTC": scope["expires_at_utc"],
         "CAMPAIGN_DEADLINE_AT_UTC": deadline.isoformat(),
+        "CAMPAIGN_DATABASE": "C:/campaign.sqlite3",
     }
     return "".join(f"{key}={value}\n" for key, value in values.items())
 
@@ -107,6 +111,118 @@ class ConfigurationTests(unittest.TestCase):
                     SecretReference(reference="env://PP_TEST_CLI_SECRET")
                 )
             self.assertEqual(value, "resolved-from-file")
+
+    def test_campaign_cli_configuration_excludes_mutable_default_environment_file(self) -> None:
+        campaign_environment = {
+            line.split("=", 1)[0]: line.split("=", 1)[1]
+            for line in _campaign_runtime_text(
+                expiry=datetime.now(UTC) + timedelta(days=6),
+                deadline=datetime.now(UTC) + timedelta(hours=101),
+            ).splitlines()
+            if line
+        }
+        args = Namespace(
+            root=ROOT,
+            profile=None,
+            config_file=None,
+            env_file=ROOT / ".env",
+            overrides=(),
+        )
+        expected = object()
+        with (
+            patch(
+                "project_pipeline.cli.campaign_runtime_environment_from_process",
+                return_value=campaign_environment,
+            ),
+            patch("project_pipeline.cli.load_runtime_configuration", return_value=expected) as load,
+        ):
+            self.assertIs(_load_configuration(args), expected)
+        self.assertEqual(load.call_args.kwargs["env_file"], None)
+        self.assertFalse(load.call_args.kwargs["include_default_env_file"])
+        self.assertEqual(load.call_args.kwargs["environment"], campaign_environment)
+
+    def test_campaign_process_environment_is_fail_closed_and_allowlisted(self) -> None:
+        environment = {
+            line.split("=", 1)[0]: line.split("=", 1)[1]
+            for line in _campaign_runtime_text(
+                expiry=datetime.now(UTC) + timedelta(days=6),
+                deadline=datetime.now(UTC) + timedelta(hours=101),
+            ).splitlines()
+            if line
+        }
+        environment["UNRELATED_SECRET"] = "must-not-be-retained"
+        values = campaign_runtime_environment_from_process(ROOT, source=environment)
+        self.assertIsNotNone(values)
+        assert values is not None
+        self.assertNotIn("UNRELATED_SECRET", values)
+        del environment["CAMPAIGN_DATABASE"]
+        with self.assertRaisesRegex(ConfigurationError, "database binding"):
+            campaign_runtime_environment_from_process(ROOT, source=environment)
+
+    def test_campaign_runtime_binding_requires_matching_checkout_and_campaign_row(self) -> None:
+        head = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, check=True
+        ).stdout.strip()
+        tree = subprocess.run(
+            ["git", "show", "-s", "--format=%T", "HEAD"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            check=True,
+        ).stdout.strip()
+        with tempfile.TemporaryDirectory() as directory:
+            database = Path(directory) / "campaign.sqlite3"
+            scope = _campaign_scope(
+                candidate_sha=head,
+                candidate_tree=tree,
+                expires_at_utc=(datetime.now(UTC) + timedelta(days=6)).isoformat(),
+            )
+            connection = sqlite3.connect(database)
+            try:
+                connection.execute(
+                    """
+                    CREATE TABLE campaign_runs (
+                        campaign_id TEXT, integrated_sha TEXT, integrated_tree TEXT,
+                        fence TEXT, lease_id TEXT, status TEXT
+                    )
+                    """
+                )
+                connection.execute(
+                    "INSERT INTO campaign_runs VALUES (?, ?, ?, ?, ?, ?)",
+                    (
+                        scope["campaign_id"],
+                        scope["candidate_sha"],
+                        scope["candidate_tree"],
+                        scope["fence_token"],
+                        scope["scheduler_lease_id"],
+                        "ATTESTED",
+                    ),
+                )
+                connection.commit()
+            finally:
+                connection.close()
+            values = {
+                "JIRA_BASE_URL": "https://example.atlassian.net",
+                "JIRA_USER_EMAIL": "worker@example.test",
+                "JIRA_API_TOKEN_REF": "dpapi://C16B_JIRA_TOKEN",
+                "GITHUB_TOKEN_REF": "dpapi://C16B_GITHUB_TOKEN",
+                "CAMPAIGN_PROJECT_ID": scope["project_id"],
+                "CAMPAIGN_CYCLE_ID": scope["cycle_id"],
+                "CAMPAIGN_MACHINE_ID": scope["machine_id"],
+                "CAMPAIGN_PRINCIPAL_SID": scope["identity_id"],
+                "CAMPAIGN_ID": scope["campaign_id"],
+                "CAMPAIGN_CANDIDATE_SHA": scope["candidate_sha"],
+                "CAMPAIGN_CANDIDATE_TREE": scope["candidate_tree"],
+                "CAMPAIGN_SCHEDULER_LEASE_ID": scope["scheduler_lease_id"],
+                "CAMPAIGN_FENCE_TOKEN": scope["fence_token"],
+                "CAMPAIGN_CREDENTIAL_ENVELOPE_EXPIRES_AT_UTC": scope["expires_at_utc"],
+                "CAMPAIGN_DEADLINE_AT_UTC": (datetime.now(UTC) + timedelta(hours=101)).isoformat(),
+                "CAMPAIGN_DATABASE": str(database),
+            }
+            self.assertEqual(validate_campaign_runtime_binding(ROOT, values), scope)
+            values["CAMPAIGN_CANDIDATE_TREE"] = "f" * 40
+            with self.assertRaisesRegex(ConfigurationError, "checked-out candidate"):
+                validate_campaign_runtime_binding(ROOT, values)
 
     def test_selected_environment_parser_retains_only_requested_values(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -382,6 +498,7 @@ class ConfigurationTests(unittest.TestCase):
                 side_effect=[
                     subprocess.CompletedProcess(["icacls.exe"], 0, "", ""),
                     subprocess.CompletedProcess(["icacls.exe"], 0, "", ""),
+                    subprocess.CompletedProcess(["icacls.exe"], 0, "*S-1-5-21-1000:(M)\n", ""),
                 ],
             ) as run:
                 script["_write_dpapi_envelope"](
@@ -389,9 +506,10 @@ class ConfigurationTests(unittest.TestCase):
                     {"ciphertext_base64": "ciphertext-only"},
                     scheduled_principal_sid="S-1-5-21-1000",
                 )
-        self.assertEqual(run.call_count, 2)
+        self.assertEqual(run.call_count, 3)
         self.assertIn("*S-1-5-21-1000:(M)", run.call_args_list[0].args[0])
         self.assertEqual(run.call_args_list[1].args[0][-1], "/verify")
+        self.assertEqual(run.call_args_list[2].args[0], ["icacls.exe", str(destination)])
 
     def test_dpapi_envelope_persists_only_ciphertext_and_scope(self) -> None:
         scope = _campaign_scope(scheduler_lease_id="CLEASE-EXAMPLE")

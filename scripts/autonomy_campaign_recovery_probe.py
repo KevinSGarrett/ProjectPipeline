@@ -57,6 +57,7 @@ from project_pipeline.autonomy_runtime.process_identity import inspect_process  
 from project_pipeline.configuration.campaign_environment import (  # noqa: E402
     apply_campaign_runtime_environment,
     limited_campaign_subprocess_environment,
+    validate_campaign_runtime_binding,
 )
 
 TERMINAL_CAMPAIGN_STATUSES = frozenset({"DISQUALIFIED", "FAILED", "STOPPED", "FINALIZED"})
@@ -212,8 +213,8 @@ def _run_controller(
     root: Path,
     campaign_id: str,
     heartbeat_seconds: float,
+    runtime_environment_file: Path,
     extra: list[str] | None = None,
-    runtime_environment_file: Path | None = None,
     *,
     wait: bool,
     stdout_path: Path,
@@ -232,15 +233,10 @@ def _run_controller(
         "--heartbeat-seconds",
         str(heartbeat_seconds),
     ]
-    if runtime_environment_file is not None:
-        args.extend(["--runtime-environment-file", str(runtime_environment_file)])
+    args.extend(["--runtime-environment-file", str(runtime_environment_file)])
     if extra:
         args.extend(extra)
-    env = (
-        limited_campaign_subprocess_environment(root, runtime_environment_file)
-        if runtime_environment_file is not None
-        else {**os.environ, "PYTHONPATH": str(root / "src"), "PYTHONUTF8": "1"}
-    )
+    env = limited_campaign_subprocess_environment(root, runtime_environment_file)
     stdout_path.parent.mkdir(parents=True, exist_ok=True)
     if wait:
         return subprocess.run(
@@ -280,11 +276,12 @@ def main() -> int:
     max_age = float(config.get("heartbeat_max_age_seconds") or 90)
     heartbeat_seconds = float(config.get("heartbeat_seconds") or 30)
     runtime_environment_file = str(config.get("runtime_environment_file") or "").strip()
-    runtime_environment_path = (
-        Path(runtime_environment_file).resolve() if runtime_environment_file else None
-    )
-    if runtime_environment_path is not None:
-        apply_campaign_runtime_environment(root, runtime_environment_path)
+    if not runtime_environment_file:
+        raise SystemExit("recovery probe requires a bound runtime environment file")
+    runtime_environment_path = Path(runtime_environment_file).resolve()
+    if not runtime_environment_path.is_file():
+        raise SystemExit("recovery probe runtime environment file is unavailable")
+    runtime_environment = apply_campaign_runtime_environment(root, runtime_environment_path)
     script = root / "scripts" / "run_autonomy_campaign.py"
     controller = CampaignController(
         database,
@@ -376,6 +373,7 @@ def main() -> int:
                     )
                 )
                 return 0
+        validate_campaign_runtime_binding(root, runtime_environment)
         pid_identity = _pid_file_identity(pid_path)
         if _healthy(
             campaign,

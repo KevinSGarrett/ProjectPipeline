@@ -16,10 +16,13 @@ param(
     [string]$EvidencePath,
     [Parameter(Mandatory = $true)]
     [string]$Pp384Evidence,
-    [string]$CampaignId = "",
+    [Parameter(Mandatory = $true)]
+    [string]$CampaignId,
     [string]$ExpectedSha = "",
     [string]$ExpectedTree = "",
     [string]$StatusPath = "",
+    [Parameter(Mandatory = $true)]
+    [string]$RuntimeEnvironmentFile,
     [double]$HeartbeatSeconds = 30,
     [int]$Cycles = 0,
     [string]$StopFile = "",
@@ -42,40 +45,37 @@ New-Item -ItemType Directory -Force -Path $StatePath | Out-Null
 if (-not $StatusPath) {
     $StatusPath = Join-Path -Path $LogDirectory -ChildPath "pp385_campaign_status.json"
 }
+$runtimeEnvironmentPath = (Resolve-Path -LiteralPath $RuntimeEnvironmentFile).Path
+if (-not (Test-Path -LiteralPath $runtimeEnvironmentPath -PathType Leaf)) {
+    throw "campaign runtime environment file is unavailable"
+}
 
 $stdout = Join-Path -Path $LogDirectory -ChildPath "campaign.stdout.log"
 $stderr = Join-Path -Path $LogDirectory -ChildPath "campaign.stderr.log"
 $pidFile = Join-Path -Path $LogDirectory -ChildPath "campaign.pid"
 $env:PYTHONPATH = Join-Path -Path $root -ChildPath "src"
 
-$startArgs = @(
+$runArgs = @(
     $script,
-    "start",
+    "run",
     "--database", $Database,
-    "--state-path", $StatePath,
-    "--evidence-path", $EvidencePath,
-    "--pp384-evidence", $Pp384Evidence,
+    "--campaign-id", $CampaignId,
     "--repository-root", $root,
-    "--heartbeat-seconds", ([string]$HeartbeatSeconds),
-    "--service-identity", $ServiceIdentity
+    "--runtime-environment-file", $runtimeEnvironmentPath,
+    "--heartbeat-seconds", ([string]$HeartbeatSeconds)
 )
-$recoverArgs = $null
-if ($CampaignId) {
-    $recoverArgs = @(
-        $script,
-        "recover",
-        "--database", $Database,
-        "--campaign-id", $CampaignId,
-        "--repository-root", $root,
-        "--heartbeat-seconds", ([string]$HeartbeatSeconds)
-    )
+if ($Cycles -gt 0) {
+    $runArgs += @("--cycles", ([string]$Cycles))
+}
+if ($StopFile) {
+    $runArgs += @("--stop-file", $StopFile)
 }
 
 $payload = [ordered]@{
     working_directory = $root
     python_exe = $python
     window_style = "Hidden"
-    argument_list = $(if ($recoverArgs) { $recoverArgs } else { $startArgs })
+    argument_list = $runArgs
     stdout_log = $stdout
     stderr_log = $stderr
     pid_file = $pidFile
@@ -85,51 +85,14 @@ $payload = [ordered]@{
     campaign_id = $CampaignId
     expected_sha = $ExpectedSha
     expected_tree = $ExpectedTree
+    runtime_environment_file = $runtimeEnvironmentPath
 }
 if ($DryRun) {
     $payload | ConvertTo-Json -Depth 6
     exit 0
 }
 
-function Invoke-CampaignJson {
-    param([string[]]$ArgumentList)
-    $started = Start-Process -FilePath $python -ArgumentList $ArgumentList -WorkingDirectory $root -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru
-    Wait-Process -Id $started.Id -Timeout 180 -ErrorAction SilentlyContinue
-    $raw = ""
-    if (Test-Path -LiteralPath $stdout) {
-        $raw = Get-Content -LiteralPath $stdout -Raw
-    }
-    $id = $null
-    if ($raw -match '"campaign_id"\s*:\s*"([^"]+)"') {
-        $id = $Matches[1]
-    }
-    return $id
-}
-
 $resolvedId = $CampaignId
-if ($recoverArgs) {
-    $resolvedId = Invoke-CampaignJson -ArgumentList $recoverArgs
-} else {
-    $resolvedId = Invoke-CampaignJson -ArgumentList $startArgs
-}
-if (-not $resolvedId) {
-    throw "campaign launcher could not read a campaign_id from controller output"
-}
-
-$runArgs = @(
-    $script,
-    "run",
-    "--database", $Database,
-    "--campaign-id", $resolvedId,
-    "--repository-root", $root,
-    "--heartbeat-seconds", ([string]$HeartbeatSeconds)
-)
-if ($Cycles -gt 0) {
-    $runArgs += @("--cycles", ([string]$Cycles))
-}
-if ($StopFile) {
-    $runArgs += @("--stop-file", $StopFile)
-}
 $process = Start-Process -FilePath $python -ArgumentList $runArgs -WorkingDirectory $root -WindowStyle Hidden -RedirectStandardOutput $stdout -RedirectStandardError $stderr -PassThru
 $pidPayload = [ordered]@{
     process_id = $process.Id

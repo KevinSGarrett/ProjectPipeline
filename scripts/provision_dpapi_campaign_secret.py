@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import socket
 import subprocess
 import sys
@@ -78,6 +79,20 @@ def _write_dpapi_envelope(
         with suppress(OSError):
             path.unlink()
         raise RuntimeError("DPAPI credential envelope ACL verification failed")
+    readback = subprocess.run(
+        ["icacls.exe", str(path)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    expected_principal = f"*{scheduled_principal_sid}".casefold()
+    principals = {
+        match.casefold() for match in re.findall(r"\*?S-\d+(?:-\d+)+(?=:)", readback.stdout or "")
+    }
+    if readback.returncode or principals != {expected_principal}:
+        with suppress(OSError):
+            path.unlink()
+        raise RuntimeError("DPAPI credential envelope ACL effective-access readback failed")
 
 
 def _load_scope(scope_file: Path, *, allow_expired: bool) -> dict[str, str]:
@@ -94,7 +109,9 @@ def _load_scope(scope_file: Path, *, allow_expired: bool) -> dict[str, str]:
             allow_expired=allow_expired,
         )
     except Exception as error:
-        raise RuntimeError("scope file is not an eligible Cycle 16-B credential envelope scope") from error
+        raise RuntimeError(
+            "scope file is not an eligible Cycle 16-B credential envelope scope"
+        ) from error
 
 
 def _require_local_scope(scope: dict[str, str]) -> None:
@@ -232,7 +249,9 @@ def _revoke(
         failed = dict(intent)
         failed["state"] = "DELETE_FAILED"
         _write_atomic(receipt_path, failed, replace=True)
-        raise RuntimeError("DPAPI credential envelope deletion failed after durable intent") from error
+        raise RuntimeError(
+            "DPAPI credential envelope deletion failed after durable intent"
+        ) from error
     if destination.exists():
         failed = dict(intent)
         failed["state"] = "DELETE_READBACK_FAILED"

@@ -5,11 +5,28 @@ import json
 from pathlib import Path
 
 from project_pipeline.autonomy_runtime.campaign import CampaignController
-from project_pipeline.configuration.campaign_environment import apply_campaign_runtime_environment
+from project_pipeline.configuration.campaign_environment import (
+    apply_campaign_runtime_environment,
+    validate_campaign_runtime_binding,
+)
 from project_pipeline.resilience.host_safety import evaluate_local_host_safety
 
 _HOST_SAFETY_REQUIRED_ACTIONS = frozenset(
     {"start", "admit-4h", "admit-24h", "admit-72h", "run", "advance", "execute", "finalize"}
+)
+_RUNTIME_BOUND_ACTIONS = frozenset(
+    {
+        "admit-4h",
+        "admit-24h",
+        "admit-72h",
+        "run",
+        "heartbeat",
+        "advance",
+        "recover",
+        "execute",
+        "finalize",
+        "claim-runner",
+    }
 )
 
 
@@ -52,11 +69,18 @@ def main() -> int:
     parser.add_argument("--runtime-environment-file", type=Path)
     args = parser.parse_args()
     root = (args.repository_root or Path.cwd()).resolve()
+    runtime_environment = None
     if args.runtime_environment_file is not None:
-        apply_campaign_runtime_environment(
+        runtime_environment = apply_campaign_runtime_environment(
             root,
             args.runtime_environment_file,
             require_fresh_campaign_window=args.action in {"start", "admit-4h"},
+        )
+    if args.action in _RUNTIME_BOUND_ACTIONS and runtime_environment is None:
+        raise SystemExit(f"{args.action} requires --runtime-environment-file")
+    if args.action == "start" and runtime_environment is not None:
+        raise SystemExit(
+            "start creates the campaign identity and must not consume a bound credential envelope"
         )
     host_safety = (
         evaluate_local_host_safety(root) if args.action in _HOST_SAFETY_REQUIRED_ACTIONS else None
@@ -79,6 +103,14 @@ def main() -> int:
         heartbeat_seconds=args.heartbeat_seconds,
     )
     try:
+        if runtime_environment is not None and args.action in _RUNTIME_BOUND_ACTIONS:
+            campaign_id = str(args.campaign_id or "")
+            if not campaign_id:
+                raise SystemExit(f"{args.action} requires --campaign-id")
+            validate_campaign_runtime_binding(root, runtime_environment)
+            campaign = controller.get(campaign_id)
+            if campaign["campaign_id"] != runtime_environment["CAMPAIGN_ID"]:
+                raise SystemExit("campaign runtime environment does not match --campaign-id")
         result = _dispatch(controller, args)
         if host_safety is not None:
             result["host_safety"] = host_safety
