@@ -15,6 +15,7 @@ from project_pipeline.lifecycle.attestation_recovery import (
     PUBLIC_QUALIFICATION_REF,
     CurrentAttestationPolicy,
     RecoveryError,
+    bootstrap_machine_local_attestation_records,
     evaluate_attestation_recovery,
     import_exact_public_artifact,
     recover_and_restore,
@@ -209,3 +210,41 @@ def test_resolve_durable_dir_falls_back_to_repo_when_canonical_absent(
     assert attestation_recovery_module.resolve_durable_dir(repo, None) == (
         repo / ".local" / "state" / "takeover"
     )
+
+
+def test_bootstrap_creates_verified_machine_local_records_without_importing_private_state(
+    tmp_path: Path,
+) -> None:
+    durable = tmp_path / "cpu-local" / "takeover"
+    first = bootstrap_machine_local_attestation_records(
+        repository_root=source_root(),
+        durable_dir=durable,
+        verification_dir=tmp_path / "verify-first",
+    )
+    assert first["cross_machine_state_imported"] is False
+    assert first["evaluation"]["accepted_for_restore"] is True
+    assert first["writes"]["privacy_attestation"]["applied"] is True
+    assert first["writes"]["provider_qualification"]["applied"] is True
+    second = bootstrap_machine_local_attestation_records(
+        repository_root=source_root(),
+        durable_dir=durable,
+        verification_dir=tmp_path / "verify-second",
+    )
+    assert second["evaluation"]["accepted_for_restore"] is True
+    assert second["writes"]["privacy_attestation"]["applied"] is False
+    assert second["writes"]["provider_qualification"]["applied"] is False
+
+
+def test_bootstrap_refuses_to_replace_mismatched_machine_local_record(tmp_path: Path) -> None:
+    durable = tmp_path / "cpu-local" / "takeover"
+    write_json(durable / "privacy_attestation.json", {"forged": True})
+    with pytest.raises(RecoveryError, match="refusing to replace"):
+        bootstrap_machine_local_attestation_records(
+            repository_root=source_root(),
+            durable_dir=durable,
+            verification_dir=tmp_path / "verify",
+        )
+    assert json.loads((durable / "privacy_attestation.json").read_text(encoding="utf-8")) == {
+        "forged": True
+    }
+    assert not (durable / "provider_qualification.json").exists()
