@@ -5,6 +5,8 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -30,7 +32,7 @@ def test_campaign_runner_returns_structured_host_safety_block(monkeypatch, capsy
         "argv",
         [
             "run_autonomy_campaign.py",
-            "run",
+            "start",
             "--database",
             str(tmp_path / "campaign.sqlite3"),
             "--campaign-id",
@@ -42,3 +44,32 @@ def test_campaign_runner_returns_structured_host_safety_block(monkeypatch, capsy
     payload = json.loads(capsys.readouterr().out)
     assert payload["campaign"] == {"state": "BLOCKED", "reason": "host-safety-blocked"}
     assert payload["host_safety"]["blockers"] == [{"code": "recent-nvme-reset"}]
+
+
+def test_campaign_runner_rejects_a_database_other_than_the_runtime_binding(
+    monkeypatch, tmp_path: Path
+):
+    module = _load_script()
+    bound_database = tmp_path / "bound.sqlite3"
+    bound_database.touch()
+    monkeypatch.setattr(module, "apply_campaign_runtime_environment", lambda *_args, **_kwargs: {})
+    monkeypatch.setattr(
+        module, "campaign_runtime_database_path", lambda _environment: bound_database
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "run_autonomy_campaign.py",
+            "run",
+            "--database",
+            str(tmp_path / "other.sqlite3"),
+            "--campaign-id",
+            "QCAMP-C16B-TEST",
+            "--runtime-environment-file",
+            str(tmp_path / "campaign.runtime.env"),
+        ],
+    )
+
+    with pytest.raises(SystemExit, match="must match the bound campaign runtime database"):
+        module.main()

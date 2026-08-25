@@ -1,4 +1,4 @@
-"""Provision one current-user DPAPI campaign-secret lease from standard input.
+"""Provision one current-user DPAPI campaign credential envelope from standard input.
 
 The plaintext is read once, encrypted before persistence, and never included
 in command arguments, stdout, receipts, or the repository.
@@ -7,9 +7,11 @@ in command arguments, stdout, receipts, or the repository.
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
 import os
+import re
 import socket
 import subprocess
 import sys
@@ -18,7 +20,7 @@ from contextlib import suppress
 from pathlib import Path
 
 from project_pipeline.configuration import SecretReference
-from project_pipeline.configuration.campaign_environment import campaign_secret_scope
+from project_pipeline.configuration.campaign_environment import campaign_credential_envelope_scope
 from project_pipeline.configuration.secrets import (
     build_dpapi_secret_envelope,
     current_windows_principal_sid,
@@ -29,7 +31,7 @@ def _write_atomic(path: Path, payload: dict[str, object], *, replace: bool = Fal
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists() and not replace:
         raise RuntimeError(
-            "DPAPI secret lease already exists; replacement requires explicit revocation"
+            "DPAPI credential envelope already exists; replacement requires explicit revocation"
         )
     with tempfile.NamedTemporaryFile(
         mode="w", encoding="utf-8", delete=False, dir=path.parent, prefix=f".{path.name}."
@@ -44,15 +46,22 @@ def _write_atomic(path: Path, payload: dict[str, object], *, replace: bool = Fal
             temporary.unlink()
 
 
-def _write_dpapi_envelope(path: Path, payload: dict[str, object]) -> None:
+def _write_dpapi_envelope(
+    path: Path, payload: dict[str, object], *, scheduled_principal_sid: str
+) -> None:
     """Persist one encrypted envelope atomically, then restrict it to its owner."""
 
     _write_atomic(path, payload)
     if os.name != "nt":
         return
-    identity = os.environ.get("USERNAME", "")
     acl = subprocess.run(
-        ["icacls.exe", str(path), "/inheritance:r", "/grant:r", f"{identity}:(M)"],
+        [
+            "icacls.exe",
+            str(path),
+            "/inheritance:r",
+            "/grant:r",
+            f"*{scheduled_principal_sid}:(M)",
+        ],
         capture_output=True,
         text=True,
         check=False,
@@ -60,7 +69,90 @@ def _write_dpapi_envelope(path: Path, payload: dict[str, object]) -> None:
     if acl.returncode:
         with suppress(OSError):
             path.unlink()
-        raise RuntimeError("DPAPI secret lease ACL could not be restricted")
+        raise RuntimeError("DPAPI credential envelope ACL could not be restricted")
+    verified = subprocess.run(
+        ["icacls.exe", str(path), "/verify"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if verified.returncode:
+        with suppress(OSError):
+            path.unlink()
+        raise RuntimeError("DPAPI credential envelope ACL verification failed")
+    readback = subprocess.run(
+        ["icacls.exe", str(path)],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    principals = _icacls_explicit_access_principals(readback.stdout or "", path)
+    if readback.returncode or len(principals) != 1:
+        with suppress(OSError):
+            path.unlink()
+        raise RuntimeError("DPAPI credential envelope ACL effective-access readback failed")
+    expected_principals = _scheduled_principal_aliases(scheduled_principal_sid)
+    if not principals.issubset(expected_principals):
+        with suppress(OSError):
+            path.unlink()
+        raise RuntimeError("DPAPI credential envelope ACL effective-access readback failed")
+
+
+def _scheduled_principal_aliases(scheduled_principal_sid: str) -> set[str]:
+    """Return the only trustee spellings permitted for the scheduled user.
+
+    ``icacls`` may resolve the SID we supplied to an account name.  Resolve
+    that name from the current scheduled user and accept it only when its SID
+    exactly equals the scope-bound SID.  A failed name lookup does not widen
+    access: the literal SID representation remains the sole accepted form.
+    """
+
+    aliases = {scheduled_principal_sid.casefold(), f"*{scheduled_principal_sid}".casefold()}
+    identity = subprocess.run(
+        ["whoami.exe", "/user", "/fo", "csv", "/nh"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    if identity.returncode:
+        return aliases
+    try:
+        rows = list(csv.reader((identity.stdout or "").splitlines()))
+    except csv.Error:
+        return aliases
+    if len(rows) != 1 or len(rows[0]) != 2:
+        return aliases
+    principal, sid = (field.strip() for field in rows[0])
+    if principal and sid.casefold() == scheduled_principal_sid.casefold():
+        aliases.add(principal.casefold())
+    return aliases
+
+
+def _icacls_explicit_access_principals(output: str, path: Path) -> set[str]:
+    """Return every trustee reported with an explicit access ACE by ``icacls``.
+
+    ``icacls`` may display a trustee as a SID or an account name.  Restricting
+    parsing to SID-shaped text would incorrectly accept an extra named ACE.
+    The first output line may prefix its trustee with the target path; strip
+    that prefix only when it exactly matches the controlled destination.
+    """
+
+    principals: set[str] = set()
+    prefixes = {str(path).casefold(), str(path.resolve()).casefold()}
+    for raw_line in output.splitlines():
+        line = raw_line.strip()
+        match = re.match(r"^(?P<principal>.+?):(?:\([A-Za-z]+\))+", line)
+        if match is None:
+            continue
+        principal = match.group("principal").strip()
+        lowered = principal.casefold()
+        for prefix in prefixes:
+            if lowered.startswith(prefix):
+                principal = principal[len(prefix) :].strip()
+                break
+        if principal:
+            principals.add(principal.casefold())
+    return principals
 
 
 def _load_scope(scope_file: Path, *, allow_expired: bool) -> dict[str, str]:
@@ -71,13 +163,15 @@ def _load_scope(scope_file: Path, *, allow_expired: bool) -> dict[str, str]:
     if not isinstance(scope, dict):
         raise RuntimeError("scope file must contain one JSON object")
     try:
-        return campaign_secret_scope(
+        return campaign_credential_envelope_scope(
             {key: str(value) for key, value in scope.items()},
             require_fresh_campaign_window=not allow_expired,
             allow_expired=allow_expired,
         )
     except Exception as error:
-        raise RuntimeError("scope file is not an eligible Cycle 16-B credential scope") from error
+        raise RuntimeError(
+            "scope file is not an eligible Cycle 16-B credential envelope scope"
+        ) from error
 
 
 def _require_local_scope(scope: dict[str, str]) -> None:
@@ -122,7 +216,7 @@ def _receipt(
 ) -> dict[str, object]:
     return {
         "schema_version": "1.0.0",
-        "kind": "dpapi_campaign_secret_revocation",
+        "kind": "dpapi_campaign_credential_envelope_revocation",
         "state": state,
         "reference": reference.reference,
         "destination": str(destination),
@@ -149,7 +243,7 @@ def _reconcile_existing_intent(
     if not isinstance(receipt, dict):
         raise RuntimeError("revocation receipt is invalid")
     if (
-        receipt.get("kind") != "dpapi_campaign_secret_revocation"
+        receipt.get("kind") != "dpapi_campaign_credential_envelope_revocation"
         or receipt.get("reference") != reference.reference
         or receipt.get("scope") != expected_scope
     ):
@@ -190,15 +284,15 @@ def _revoke(
     try:
         payload = json.loads(destination.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as error:
-        raise RuntimeError("DPAPI secret lease is unavailable for revocation") from error
+        raise RuntimeError("DPAPI credential envelope is unavailable for revocation") from error
     if not isinstance(payload, dict) or payload.get("reference") != reference.reference:
-        raise RuntimeError("DPAPI secret lease reference does not match revocation request")
+        raise RuntimeError("DPAPI credential envelope reference does not match revocation request")
     scope = payload.get("scope")
     if (
         not isinstance(scope, dict)
         or {key: str(value) for key, value in scope.items()} != expected_scope
     ):
-        raise RuntimeError("DPAPI secret lease scope does not match revocation request")
+        raise RuntimeError("DPAPI credential envelope scope does not match revocation request")
     digest = hashlib.sha256(destination.read_bytes()).hexdigest()
     intent = _receipt(
         state="REVOCATION_INTENT",
@@ -215,12 +309,14 @@ def _revoke(
         failed = dict(intent)
         failed["state"] = "DELETE_FAILED"
         _write_atomic(receipt_path, failed, replace=True)
-        raise RuntimeError("DPAPI secret lease deletion failed after durable intent") from error
+        raise RuntimeError(
+            "DPAPI credential envelope deletion failed after durable intent"
+        ) from error
     if destination.exists():
         failed = dict(intent)
         failed["state"] = "DELETE_READBACK_FAILED"
         _write_atomic(receipt_path, failed, replace=True)
-        raise RuntimeError("DPAPI secret lease revocation readback failed")
+        raise RuntimeError("DPAPI credential envelope revocation readback failed")
     receipt = _receipt(
         state="REVOKED",
         reference=reference,
@@ -266,14 +362,26 @@ def main() -> int:
     plaintext = sys.stdin.buffer.read().decode("utf-8").rstrip("\r\n")
     if not plaintext:
         raise SystemExit("secret input is empty")
-    envelope = build_dpapi_secret_envelope(plaintext, reference=reference, scope=normalized_scope)
+    try:
+        envelope = build_dpapi_secret_envelope(
+            plaintext, reference=reference, scope=normalized_scope
+        )
+    finally:
+        # Drop the only Python-level plaintext reference as soon as DPAPI has
+        # accepted it.  The object is never written, logged, or passed as an
+        # argument.
+        plaintext = ""
     destination = root / ".local" / "secure-secrets" / "dpapi" / f"{reference.target}.json"
-    _write_dpapi_envelope(destination, envelope)
+    _write_dpapi_envelope(
+        destination,
+        envelope,
+        scheduled_principal_sid=normalized_scope["identity_id"],
+    )
     print(
         json.dumps(
             {
                 "schema_version": "1.0.0",
-                "kind": "dpapi_campaign_secret_provisioning",
+                "kind": "dpapi_campaign_credential_envelope_provisioning",
                 "reference": reference.reference,
                 "destination": str(destination),
                 "ciphertext_sha256": hashlib.sha256(destination.read_bytes()).hexdigest(),

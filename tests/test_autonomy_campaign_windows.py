@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import json
 import os
-import runpy
+import sqlite3
 import subprocess
 import sys
 import uuid
@@ -43,6 +43,50 @@ def _pp384_evidence(path: Path) -> Path:
     return path
 
 
+def _runtime_environment(
+    path: Path,
+    database: Path,
+    *,
+    campaign_id: str = "QCAMP-C16B-TEST",
+    candidate_sha: str = "a" * 40,
+    candidate_tree: str = "b" * 40,
+) -> Path:
+    fence = "CFENCE-C16B-TEST"
+    lease = "CLEASE-C16B-TEST"
+    if database.is_file():
+        with sqlite3.connect(database) as connection:
+            row = connection.execute(
+                "SELECT fence, lease_id FROM campaign_runs WHERE campaign_id = ?", (campaign_id,)
+            ).fetchone()
+        if row is not None:
+            fence, lease = str(row[0]), str(row[1])
+    path.write_text(
+        "\n".join(
+            (
+                "JIRA_BASE_URL=https://example.atlassian.net",
+                "JIRA_USER_EMAIL=worker@example.test",
+                "JIRA_API_TOKEN_REF=dpapi://C16B_JIRA_TOKEN",
+                "GITHUB_TOKEN_REF=dpapi://C16B_GITHUB_TOKEN",
+                "CAMPAIGN_PROJECT_ID=PROJECT-PIPELINE",
+                "CAMPAIGN_CYCLE_ID=CYCLE-16-B",
+                "CAMPAIGN_MACHINE_ID=COMFY-V4-CPU-01",
+                "CAMPAIGN_PRINCIPAL_SID=S-1-5-21-1000",
+                f"CAMPAIGN_ID={campaign_id}",
+                f"CAMPAIGN_CANDIDATE_SHA={candidate_sha}",
+                f"CAMPAIGN_CANDIDATE_TREE={candidate_tree}",
+                f"CAMPAIGN_SCHEDULER_LEASE_ID={lease}",
+                f"CAMPAIGN_FENCE_TOKEN={fence}",
+                "CAMPAIGN_CREDENTIAL_ENVELOPE_EXPIRES_AT_UTC=2099-01-01T00:00:00+00:00",
+                "CAMPAIGN_DEADLINE_AT_UTC=2098-12-31T00:00:00+00:00",
+                f"CAMPAIGN_DATABASE={database}",
+                "",
+            )
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
 LAUNCHER = ROOT / "scripts" / "start_autonomy_campaign_hidden.ps1"
 RECOVERY = ROOT / "scripts" / "register_autonomy_campaign_recovery.ps1"
 PROBE = ROOT / "scripts" / "autonomy_campaign_recovery_probe.py"
@@ -63,6 +107,7 @@ def test_hidden_campaign_launcher_declares_windows_contract():
 def test_hidden_campaign_launcher_dry_run(tmp_path: Path):
     if os.name != "nt":
         return
+    runtime = _runtime_environment(tmp_path / "campaign.runtime.env", tmp_path / "campaign.sqlite3")
     completed = subprocess.run(
         [
             "powershell",
@@ -83,6 +128,10 @@ def test_hidden_campaign_launcher_dry_run(tmp_path: Path):
             str(tmp_path / "evidence"),
             "-Pp384Evidence",
             str(tmp_path / "pp384.json"),
+            "-CampaignId",
+            "QCAMP-C16B-TEST",
+            "-RuntimeEnvironmentFile",
+            str(runtime),
             "-DryRun",
         ],
         check=True,
@@ -93,7 +142,13 @@ def test_hidden_campaign_launcher_dry_run(tmp_path: Path):
     payload = json.loads(completed.stdout)
     assert payload["window_style"] == "Hidden"
     assert payload["simulated_elapsed"] is False
-    assert payload["argument_list"][1] == "start"
+    assert payload["argument_list"][1] == "run"
+    # PowerShell preserves the on-disk case while Python may preserve the case
+    # supplied by ``tmp_path``.  Windows paths are case-insensitive, so compare
+    # the canonical case-insensitive representations rather than path spelling.
+    assert os.path.normcase(payload["runtime_environment_file"]) == os.path.normcase(
+        str(runtime.resolve())
+    )
 
 
 def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
@@ -103,6 +158,7 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
     assert "simulated_elapsed = $false" in text
     if os.name != "nt":
         return
+    runtime = _runtime_environment(tmp_path / "campaign.runtime.env", tmp_path / "campaign.sqlite3")
     completed = subprocess.run(
         [
             "powershell",
@@ -119,6 +175,10 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
             str(tmp_path / "campaign.sqlite3"),
             "-LogDirectory",
             str(tmp_path / "logs"),
+            "-CampaignId",
+            "QCAMP-C16B-TEST",
+            "-RuntimeEnvironmentFile",
+            str(runtime),
         ],
         check=True,
         capture_output=True,
@@ -139,7 +199,7 @@ def test_recovery_task_plan_is_hidden_and_non_interactive(tmp_path: Path):
     assert "scheduled_principal_sid" in text
 
 
-def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
+def test_recovery_probe_requires_a_bound_campaign_identity(tmp_path: Path):
     config_path = tmp_path / "recovery_probe.json"
     status_path = tmp_path / "status.json"
     payload = {
@@ -152,6 +212,9 @@ def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
         "log_directory": str(tmp_path),
         "heartbeat_seconds": 0.2,
         "heartbeat_max_age_seconds": 1.0,
+        "runtime_environment_file": str(
+            _runtime_environment(tmp_path / "campaign.runtime.env", tmp_path / "campaign.sqlite3")
+        ),
     }
     config_path.write_text(json.dumps(payload), encoding="utf-8")
     env = {
@@ -170,11 +233,42 @@ def test_recovery_probe_bootstraps_imports_without_pythonpath(tmp_path: Path):
         check=False,
         env=env,
     )
-    assert result.returncode == 0, result.stderr
-    written = json.loads(status_path.read_text(encoding="utf-8"))
-    assert written["action"] == "no-campaign"
-    assert Path(written["campaign_module"]).resolve().is_relative_to(ROOT / "src")
-    assert written["user_action_required"] is False
+    assert result.returncode != 0
+    assert "requires a bound campaign ID" in result.stderr
+    assert not status_path.exists()
+
+
+def test_recovery_probe_rejects_a_campaign_id_mismatched_to_its_runtime(tmp_path: Path):
+    config_path = tmp_path / "recovery_probe.json"
+    status_path = tmp_path / "status.json"
+    database = tmp_path / "campaign.sqlite3"
+    payload = {
+        "repository_root": str(ROOT),
+        "python_exe": sys.executable,
+        "database": str(database),
+        "campaign_id": "QCAMP-C16B-CONFIG-MISMATCH",
+        "status_path": str(status_path),
+        "pid_path": str(tmp_path / "campaign.pid"),
+        "log_directory": str(tmp_path),
+        "heartbeat_seconds": 0.2,
+        "heartbeat_max_age_seconds": 1.0,
+        "runtime_environment_file": str(
+            _runtime_environment(tmp_path / "campaign.runtime.env", database)
+        ),
+    }
+    config_path.write_text(json.dumps(payload), encoding="utf-8")
+    result = subprocess.run(
+        [sys.executable, str(PROBE), "--config", str(config_path)],
+        cwd=str(tmp_path),
+        capture_output=True,
+        text=True,
+        check=False,
+        env={"PATH": os.environ.get("PATH", ""), "SYSTEMROOT": os.environ.get("SYSTEMROOT", "")},
+    )
+    assert result.returncode != 0
+    assert "campaign ID must match" in result.stderr
+    assert not status_path.exists()
+    assert not database.exists()
 
 
 def test_recovery_probe_preserves_a_disqualified_campaign(tmp_path: Path):
@@ -212,6 +306,13 @@ def test_recovery_probe_preserves_a_disqualified_campaign(tmp_path: Path):
                 "log_directory": str(tmp_path),
                 "heartbeat_seconds": 0.2,
                 "heartbeat_max_age_seconds": 1.0,
+                "runtime_environment_file": str(
+                    _runtime_environment(
+                        tmp_path / "campaign.runtime.env",
+                        tmp_path / "campaign.sqlite3",
+                        campaign_id=admitted["campaign_id"],
+                    )
+                ),
             }
         ),
         encoding="utf-8",
@@ -241,88 +342,6 @@ def test_recovery_probe_preserves_a_disqualified_campaign(tmp_path: Path):
     reopened.close()
 
 
-def test_recovery_probe_atomically_retargets_the_successor_config(tmp_path: Path):
-    config_path = tmp_path / "recovery_probe.json"
-    config_path.write_text(
-        json.dumps({"campaign_id": "QCAMP-parent", "fence": "CFENCE-parent"}),
-        encoding="utf-8",
-    )
-    probe = runpy.run_path(str(PROBE))
-
-    probe["_retarget_config"](
-        config_path,
-        json.loads(config_path.read_text(encoding="utf-8")),
-        {"campaign_id": "QCAMP-child", "fence": "CFENCE-child"},
-    )
-
-    assert json.loads(config_path.read_text(encoding="utf-8")) == {
-        "campaign_id": "QCAMP-child",
-        "fence": "CFENCE-child",
-    }
-    assert not list(tmp_path.glob(".recovery_probe.json.*.tmp"))
-
-
-def test_recovery_probe_reconciles_a_single_successor_after_retarget_failure(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-):
-    controller = CampaignController(
-        tmp_path / "campaign.sqlite3",
-        repository_root=ROOT,
-        heartbeat_seconds=0.2,
-        inspect_identity=lambda _root: _identity(),
-        finalize_commands=[],
-        allow_unbound_candidate_for_tests=True,
-    )
-    parent = controller.start(
-        state_path=tmp_path / "state",
-        evidence_path=tmp_path / "evidence",
-        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
-        service_identity="schtasks:test-recovery",
-    )
-    controller._disqualify(parent["campaign_id"], "stale-runner-broken-window")
-    successor = controller.start(
-        state_path=tmp_path / "state",
-        evidence_path=tmp_path / "evidence",
-        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
-        service_identity="schtasks:test-recovery",
-        prior_campaign_id=parent["campaign_id"],
-    )
-    config_path = tmp_path / "recovery_probe.json"
-    config = {"campaign_id": parent["campaign_id"], "fence": parent["fence"]}
-    config_path.write_text(json.dumps(config), encoding="utf-8")
-    probe = runpy.run_path(str(PROBE))
-
-    original_replace = probe["os"].replace
-
-    def fail_replace(_source: Path, _destination: Path) -> None:
-        raise OSError("injected retarget failure")
-
-    monkeypatch.setattr(probe["os"], "replace", fail_replace)
-    with pytest.raises(OSError, match="injected retarget failure"):
-        probe["_retarget_config"](config_path, config, successor)
-    assert (
-        json.loads(config_path.read_text(encoding="utf-8"))["campaign_id"] == parent["campaign_id"]
-    )
-    assert not list(tmp_path.glob(".recovery_probe.json.*.tmp"))
-
-    recovered = probe["_terminal_successor"](
-        controller,
-        controller.get(parent["campaign_id"]),
-        expected_sha="a" * 40,
-        expected_tree="b" * 40,
-    )
-    assert recovered is not None
-    assert recovered["campaign_id"] == successor["campaign_id"]
-
-    monkeypatch.setattr(probe["os"], "replace", original_replace)
-    probe["_retarget_config"](config_path, config, recovered)
-    assert (
-        json.loads(config_path.read_text(encoding="utf-8"))["campaign_id"]
-        == successor["campaign_id"]
-    )
-    controller.close()
-
-
 def _register(
     action: str,
     tmp_path: Path,
@@ -332,6 +351,13 @@ def _register(
     expected_sha: str = "a" * 40,
     expected_tree: str = "b" * 40,
 ) -> dict:
+    runtime = _runtime_environment(
+        tmp_path / "campaign.runtime.env",
+        tmp_path / "campaign.sqlite3",
+        campaign_id=campaign_id or "QCAMP-C16B-TEST",
+        candidate_sha=expected_sha,
+        candidate_tree=expected_tree,
+    )
     completed = subprocess.run(
         [
             "powershell",
@@ -362,6 +388,8 @@ def _register(
             "1",
             "-HeartbeatSeconds",
             "0.2",
+            "-RuntimeEnvironmentFile",
+            str(runtime),
         ],
         check=False,
         capture_output=True,

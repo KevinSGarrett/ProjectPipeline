@@ -1,3 +1,8 @@
+from project_pipeline.configuration.campaign_environment import (
+    campaign_runtime_database_path,
+    campaign_runtime_environment_from_process,
+    validate_campaign_runtime_binding,
+)
 from project_pipeline.configuration.loader import (
     ConfigurationError,
     EffectiveConfiguration,
@@ -5,6 +10,7 @@ from project_pipeline.configuration.loader import (
     deep_merge,
     load_runtime_configuration,
     parse_env_file,
+    parse_selected_env_file,
 )
 from project_pipeline.configuration.models import (
     EnvironmentName,
@@ -26,9 +32,15 @@ from project_pipeline.configuration.schema import (
     validate_runtime_configuration_files,
     write_runtime_configuration_schema,
 )
-from project_pipeline.configuration.secrets import SecretResolutionError, SecretResolver
+from project_pipeline.configuration.secrets import (
+    CampaignSecretAccessLease,
+    SecretResolutionError,
+    SecretResolver,
+    issue_campaign_secret_access_lease,
+)
 
 __all__ = [
+    "CampaignSecretAccessLease",
     "ConfigurationError",
     "EffectiveConfiguration",
     "EnvironmentName",
@@ -46,11 +58,16 @@ __all__ = [
     "SecuritySettings",
     "TelemetryExporter",
     "TelemetrySettings",
+    "campaign_runtime_database_path",
+    "campaign_runtime_environment_from_process",
     "collect_secret_references",
     "deep_merge",
+    "issue_campaign_secret_access_lease",
     "load_runtime_configuration",
     "parse_env_file",
+    "parse_selected_env_file",
     "runtime_configuration_schema",
+    "validate_campaign_runtime_binding",
     "validate_runtime_configuration_files",
     "write_runtime_configuration_schema",
 ]

@@ -256,6 +256,7 @@ def verify_remote_candidate(
     token, token_source = _resolve_github_token(root)
     if not token:
         return {"ok": False, "reason": "github-token-unavailable"}
+    remote: Any | None = None
     try:
         remote = GitHubRestAdapter(token=token)
         snapshot = remote.get_release(slug, release_id)
@@ -275,6 +276,10 @@ def verify_remote_candidate(
         }
     except Exception as error:
         return {"ok": False, "reason": type(error).__name__}
+    finally:
+        if remote is not None:
+            remote.discard_secret_material()
+        token = ""
     assets_ok = set(observed) == set(expected_assets) and hashes == expected_assets
     return {
         "ok": bool(candidate.get("identity_ok"))
@@ -304,6 +309,7 @@ def _probe_github(root: Path, candidate: dict[str, Any], expected_sha: str) -> d
 def _probe_jira(root: Path) -> dict[str, Any]:
     from project_pipeline.autonomy_runtime.live_qualification import _build_jira_adapter
 
+    adapter: Any | None = None
     try:
         adapter = _build_jira_adapter(root)
         desired = {"PP-384", "PP-385", "PP-391", "PP-393"}
@@ -315,6 +321,10 @@ def _probe_jira(root: Path) -> dict[str, Any]:
         return {"ok": set(observed) == desired, "issues": observed}
     except Exception as error:
         return {"ok": False, "reason": type(error).__name__}
+    finally:
+        discard = getattr(adapter, "discard_secret_material", None)
+        if callable(discard):
+            discard()
 
 
 def _validate_campaign_event_chain(connection: sqlite3.Connection, campaign_id: str) -> bool:

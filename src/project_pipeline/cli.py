@@ -74,8 +74,10 @@ from project_pipeline.configuration import (
     PersistenceBackend,
     SecretResolutionError,
     SecretResolver,
+    campaign_runtime_environment_from_process,
     load_runtime_configuration,
     parse_env_file,
+    validate_campaign_runtime_binding,
 )
 from project_pipeline.context_engine import ContextCompiler, ContextService, ContextStore
 from project_pipeline.contracts import (
@@ -1302,6 +1304,19 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def _load_configuration(args: argparse.Namespace) -> Any:
+    campaign_environment = campaign_runtime_environment_from_process(args.root)
+    if campaign_environment is not None:
+        # A scheduled campaign process may not fall back to a mutable checkout
+        # .env file, even when an unrelated CLI invocation supplied one.
+        return load_runtime_configuration(
+            args.root,
+            profile=args.profile,
+            config_file=args.config_file,
+            env_file=None,
+            include_default_env_file=False,
+            environment=campaign_environment,
+            overrides=tuple(args.overrides),
+        )
     return load_runtime_configuration(
         args.root,
         profile=args.profile,
@@ -1313,6 +1328,21 @@ def _load_configuration(args: argparse.Namespace) -> Any:
 
 def _secret_resolver(args: argparse.Namespace) -> SecretResolver:
     """Resolve secrets from the same environment sources used by configuration loading."""
+    campaign_environment = campaign_runtime_environment_from_process(args.root)
+    if campaign_environment is not None:
+        from project_pipeline.configuration.secrets import issue_campaign_secret_access_lease
+
+        scope = validate_campaign_runtime_binding(args.root, campaign_environment)
+        return SecretResolver(
+            args.root,
+            campaign_environment,
+            required_scope=scope,
+            access_lease=issue_campaign_secret_access_lease(
+                args.root,
+                scope,
+                access_identity=f"cli:{os.getpid()}",
+            ),
+        )
     env_path = args.env_file or args.root / ".env"
     environment = {**parse_env_file(env_path), **os.environ}
     return SecretResolver(args.root, environment)

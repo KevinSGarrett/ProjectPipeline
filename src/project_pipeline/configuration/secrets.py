@@ -8,9 +8,11 @@ import os
 import socket
 import subprocess
 from collections.abc import Mapping
-from datetime import UTC, datetime
+from dataclasses import dataclass
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 from project_pipeline.configuration.models import SecretReference
 
@@ -20,11 +22,23 @@ class SecretResolutionError(RuntimeError):
 
 
 _DPAPI_BLOB_DIRECTORY = Path(".local") / "secure-secrets" / "dpapi"
-_DPAPI_SCHEMA_VERSION = "1.0.0"
-_DPAPI_KIND = "windows_current_user_secret_lease"
+_DPAPI_SCHEMA_VERSION = "2.0.0"
+_DPAPI_KIND = "windows_current_user_credential_envelope"
 _DPAPI_SCOPE_KEYS = frozenset(
-    {"project_id", "cycle_id", "machine_id", "identity_id", "lease_id", "expires_at_utc"}
+    {
+        "project_id",
+        "cycle_id",
+        "machine_id",
+        "identity_id",
+        "campaign_id",
+        "candidate_sha",
+        "candidate_tree",
+        "scheduler_lease_id",
+        "fence_token",
+        "expires_at_utc",
+    }
 )
+_ACCESS_LEASE_KIND = "campaign_secret_materialization_access"
 
 
 class _DataBlob(ctypes.Structure):
@@ -94,7 +108,9 @@ def _dpapi_unprotect(ciphertext: bytes, entropy: bytes) -> bytes:
         ctypes.byref(output),
     )
     if not ok:
-        raise SecretResolutionError("DPAPI secret lease cannot be opened by this Windows identity")
+        raise SecretResolutionError(
+            "DPAPI credential envelope cannot be opened by this Windows identity"
+        )
     try:
         return ctypes.string_at(output.pbData, output.cbData)
     finally:
@@ -102,7 +118,7 @@ def _dpapi_unprotect(ciphertext: bytes, entropy: bytes) -> bytes:
 
 
 def protect_dpapi_secret(value: str, *, reference: str, scope: Mapping[str, object]) -> bytes:
-    """Protect plaintext for a current-user lease; callers must never persist ``value``."""
+    """Protect plaintext for a current-user envelope; callers never persist ``value``."""
 
     if os.name != "nt":
         raise SecretResolutionError("DPAPI secret provisioning is only available on Windows")
@@ -137,17 +153,17 @@ def protect_dpapi_secret(value: str, *, reference: str, scope: Mapping[str, obje
 def build_dpapi_secret_envelope(
     value: str, *, reference: SecretReference, scope: Mapping[str, object]
 ) -> dict[str, object]:
-    """Create non-secret lease metadata plus a DPAPI ciphertext envelope."""
+    """Create non-secret binding metadata plus a DPAPI ciphertext envelope."""
 
     if reference.scheme != "dpapi":
         raise ValueError("DPAPI envelope requires a dpapi:// secret reference")
     if set(scope) != _DPAPI_SCOPE_KEYS or not all(
         str(scope[key]).strip() for key in _DPAPI_SCOPE_KEYS
     ):
-        raise ValueError("DPAPI secret lease scope is incomplete")
+        raise ValueError("DPAPI credential envelope scope is incomplete")
     expiry = datetime.fromisoformat(str(scope["expires_at_utc"]).replace("Z", "+00:00"))
     if expiry.tzinfo is None or expiry <= datetime.now(UTC):
-        raise ValueError("DPAPI secret lease expiry must be a future UTC timestamp")
+        raise ValueError("DPAPI credential envelope expiry must be a future UTC timestamp")
     encrypted = protect_dpapi_secret(value, reference=reference.reference, scope=scope)
     return {
         "schema_version": _DPAPI_SCHEMA_VERSION,
@@ -159,6 +175,128 @@ def build_dpapi_secret_envelope(
     }
 
 
+def _parse_utc_timestamp(value: object, *, label: str) -> datetime:
+    try:
+        timestamp = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError as error:
+        raise SecretResolutionError(f"{label} is invalid") from error
+    if timestamp.tzinfo is None:
+        raise SecretResolutionError(f"{label} must be UTC-aware")
+    return timestamp.astimezone(UTC)
+
+
+def _secret_lease_max_seconds(root: Path) -> int:
+    """Load the authoritative materialization limit without accepting a fallback."""
+
+    policy_path = root.resolve() / "config" / "security_policy.json"
+    try:
+        policy = json.loads(policy_path.read_text(encoding="utf-8"))
+        maximum = policy["secret_lease_max_seconds"]
+    except (OSError, json.JSONDecodeError, KeyError, TypeError) as error:
+        raise SecretResolutionError("secret access policy is unavailable") from error
+    if isinstance(maximum, bool) or not isinstance(maximum, int) or maximum <= 0:
+        raise SecretResolutionError("secret access policy limit is invalid")
+    return maximum
+
+
+@dataclass(slots=True)
+class CampaignSecretAccessLease:
+    """An in-memory, per-materialization authority bounded by security policy."""
+
+    access_id: str
+    access_identity: str
+    issued_at_utc: datetime
+    expires_at_utc: datetime
+    scope: dict[str, str]
+    revoked: bool = False
+
+    def revoke(self) -> None:
+        """Invalidate this process-local access authority before materialization."""
+
+        self.revoked = True
+
+    def redacted_receipt(self, reference: SecretReference) -> dict[str, object]:
+        """Return evidence-safe metadata; plaintext is never represented here."""
+
+        return {
+            "schema_version": "1.0.0",
+            "kind": _ACCESS_LEASE_KIND,
+            "access_id": self.access_id,
+            "access_identity": self.access_identity,
+            "issued_at_utc": self.issued_at_utc.isoformat(),
+            "expires_at_utc": self.expires_at_utc.isoformat(),
+            "reference": reference.reference,
+            "scope": dict(self.scope),
+            "revoked": self.revoked,
+            "secret_value_observed": False,
+            "plaintext_persisted": False,
+        }
+
+    def validate(
+        self,
+        root: Path,
+        *,
+        required_scope: Mapping[str, str],
+        now: datetime | None = None,
+    ) -> None:
+        if self.revoked:
+            raise SecretResolutionError("campaign secret access lease is revoked")
+        if not self.access_id.startswith("SACCESS-") or not self.access_identity.strip():
+            raise SecretResolutionError("campaign secret access lease identity is invalid")
+        normalized_scope = {key: str(value) for key, value in self.scope.items()}
+        expected_scope = {key: str(value) for key, value in required_scope.items()}
+        if set(normalized_scope) != _DPAPI_SCOPE_KEYS or normalized_scope != expected_scope:
+            raise SecretResolutionError("campaign secret access lease scope does not match")
+        issued = self.issued_at_utc.astimezone(UTC) if self.issued_at_utc.tzinfo else None
+        expires = self.expires_at_utc.astimezone(UTC) if self.expires_at_utc.tzinfo else None
+        if issued is None or expires is None or expires <= issued:
+            raise SecretResolutionError("campaign secret access lease timestamps are invalid")
+        maximum = _secret_lease_max_seconds(root)
+        if expires - issued > timedelta(seconds=maximum):
+            raise SecretResolutionError("campaign secret access lease exceeds security policy")
+        if expires <= (now or datetime.now(UTC)).astimezone(UTC):
+            raise SecretResolutionError("campaign secret access lease is expired")
+
+
+def issue_campaign_secret_access_lease(
+    root: Path,
+    scope: Mapping[str, str],
+    *,
+    access_identity: str,
+    ttl_seconds: int | None = None,
+    now: datetime | None = None,
+) -> CampaignSecretAccessLease:
+    """Issue one process-local secret-materialization lease up to policy maximum."""
+
+    normalized_scope = {key: str(value) for key, value in scope.items()}
+    if set(normalized_scope) != _DPAPI_SCOPE_KEYS or not all(normalized_scope.values()):
+        raise SecretResolutionError("campaign credential envelope scope is incomplete")
+    if not access_identity.strip():
+        raise SecretResolutionError("campaign secret access identity is required")
+    issued = (now or datetime.now(UTC)).astimezone(UTC)
+    envelope_expiry = _parse_utc_timestamp(
+        normalized_scope["expires_at_utc"], label="campaign credential envelope expiry"
+    )
+    maximum = _secret_lease_max_seconds(root)
+    requested_ttl = maximum if ttl_seconds is None else ttl_seconds
+    if (
+        isinstance(requested_ttl, bool)
+        or not isinstance(requested_ttl, int)
+        or not (0 < requested_ttl <= maximum)
+    ):
+        raise SecretResolutionError("campaign secret access lease exceeds security policy")
+    expires = min(envelope_expiry, issued + timedelta(seconds=requested_ttl))
+    if expires <= issued:
+        raise SecretResolutionError("campaign credential envelope is expired")
+    return CampaignSecretAccessLease(
+        access_id=f"SACCESS-{uuid4().hex.upper()}",
+        access_identity=access_identity.strip(),
+        issued_at_utc=issued,
+        expires_at_utc=expires,
+        scope=normalized_scope,
+    )
+
+
 class SecretResolver:
     """Resolve approved secret references only on explicit runtime demand."""
 
@@ -168,6 +306,7 @@ class SecretResolver:
         environment: Mapping[str, str] | None = None,
         *,
         required_scope: Mapping[str, str] | None = None,
+        access_lease: CampaignSecretAccessLease | None = None,
     ) -> None:
         self.root = root.resolve()
         self.environment = os.environ if environment is None else environment
@@ -176,6 +315,8 @@ class SecretResolver:
             if required_scope is None
             else {key: str(value) for key, value in required_scope.items()}
         )
+        self.access_lease = access_lease
+        self.last_access_receipt: dict[str, object] | None = None
 
     def resolve(self, reference: SecretReference) -> str:
         if reference.scheme == "env":
@@ -229,26 +370,33 @@ class SecretResolver:
             payload = json.loads(path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError) as error:
             raise SecretResolutionError(
-                f"DPAPI secret lease is unavailable: {reference.reference}"
+                f"DPAPI credential envelope is unavailable: {reference.reference}"
             ) from error
         if not isinstance(payload, dict) or payload.get("schema_version") != _DPAPI_SCHEMA_VERSION:
-            raise SecretResolutionError("DPAPI secret lease schema is invalid")
+            raise SecretResolutionError("DPAPI credential envelope schema is invalid")
         if payload.get("kind") != _DPAPI_KIND or payload.get("reference") != reference.reference:
-            raise SecretResolutionError("DPAPI secret lease reference is invalid")
+            raise SecretResolutionError("DPAPI credential envelope reference is invalid")
         scope = payload.get("scope")
         if not isinstance(scope, dict) or set(scope) != _DPAPI_SCOPE_KEYS:
-            raise SecretResolutionError("DPAPI secret lease scope is invalid")
+            raise SecretResolutionError("DPAPI credential envelope scope is invalid")
         normalized_scope = {key: str(scope[key]) for key in _DPAPI_SCOPE_KEYS}
         if self.required_scope is None or normalized_scope != self.required_scope:
             raise SecretResolutionError(
-                "DPAPI secret lease scope does not match the bound campaign"
+                "DPAPI credential envelope scope does not match the bound campaign"
             )
+        if self.access_lease is None:
+            raise SecretResolutionError(
+                "DPAPI credential materialization requires a short-lived access lease"
+            )
+        self.access_lease.validate(self.root, required_scope=normalized_scope)
         try:
-            expiry = datetime.fromisoformat(str(scope["expires_at_utc"]).replace("Z", "+00:00"))
-        except (KeyError, ValueError) as error:
-            raise SecretResolutionError("DPAPI secret lease expiry is invalid") from error
-        if expiry.tzinfo is None or expiry <= datetime.now(UTC):
-            raise SecretResolutionError("DPAPI secret lease is expired")
+            expiry = _parse_utc_timestamp(
+                scope["expires_at_utc"], label="DPAPI credential envelope expiry"
+            )
+        except KeyError as error:
+            raise SecretResolutionError("DPAPI credential envelope expiry is invalid") from error
+        if expiry <= datetime.now(UTC):
+            raise SecretResolutionError("DPAPI credential envelope is expired")
         machine = normalized_scope["machine_id"]
         identity = normalized_scope["identity_id"]
         actual_machine = socket.gethostname()
@@ -258,7 +406,7 @@ class SecretResolver:
             or identity.casefold() != actual_identity.casefold()
         ):
             raise SecretResolutionError(
-                "DPAPI secret lease scope does not match this Windows identity"
+                "DPAPI credential envelope scope does not match this Windows identity"
             )
         try:
             ciphertext = base64.b64decode(str(payload["ciphertext_base64"]), validate=True)
@@ -268,7 +416,8 @@ class SecretResolver:
         except (KeyError, ValueError, UnicodeDecodeError, SecretResolutionError) as error:
             if isinstance(error, SecretResolutionError):
                 raise
-            raise SecretResolutionError("DPAPI secret lease cannot be decrypted") from error
+            raise SecretResolutionError("DPAPI credential envelope cannot be decrypted") from error
         if not value:
-            raise SecretResolutionError("DPAPI secret lease resolved to empty material")
+            raise SecretResolutionError("DPAPI credential envelope resolved to empty material")
+        self.last_access_receipt = self.access_lease.redacted_receipt(reference)
         return value

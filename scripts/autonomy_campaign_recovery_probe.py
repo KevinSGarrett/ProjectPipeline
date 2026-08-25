@@ -56,7 +56,9 @@ from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusErro
 from project_pipeline.autonomy_runtime.process_identity import inspect_process  # noqa: E402
 from project_pipeline.configuration.campaign_environment import (  # noqa: E402
     apply_campaign_runtime_environment,
+    campaign_runtime_database_path,
     limited_campaign_subprocess_environment,
+    validate_campaign_runtime_binding,
 )
 
 TERMINAL_CAMPAIGN_STATUSES = frozenset({"DISQUALIFIED", "FAILED", "STOPPED", "FINALIZED"})
@@ -67,53 +69,6 @@ def _load_config(path: Path) -> dict:
     if not isinstance(payload, dict):
         raise SystemExit("recovery config must be a JSON object")
     return payload
-
-
-def _retarget_config(path: Path, config: dict, campaign: dict) -> None:
-    """Atomically bind future recovery probes to the successor campaign."""
-
-    updated = dict(config)
-    updated["campaign_id"] = str(campaign["campaign_id"])
-    updated["fence"] = str(campaign["fence"])
-    temporary = path.with_name(f".{path.name}.{os.getpid()}.tmp")
-    try:
-        temporary.write_text(json.dumps(updated, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        os.replace(temporary, path)
-    finally:
-        if temporary.exists():
-            temporary.unlink()
-
-
-def _terminal_successor(
-    controller: CampaignController,
-    campaign: dict,
-    *,
-    expected_sha: str,
-    expected_tree: str,
-) -> dict | None:
-    """Return the single eligible child left by a failed retarget, if any."""
-
-    rows = controller._db.execute(
-        """
-        SELECT campaign_id
-        FROM campaign_runs
-        WHERE prior_campaign_id = ?
-          AND integrated_sha = ?
-          AND integrated_tree = ?
-          AND COALESCE(service_identity, '') = COALESCE(?, '')
-          AND status IN ('ATTESTED', 'RUNNING')
-        ORDER BY started_at_utc
-        """,
-        (
-            campaign["campaign_id"],
-            expected_sha,
-            expected_tree,
-            campaign.get("service_identity"),
-        ),
-    ).fetchall()
-    if len(rows) != 1:
-        return None
-    return controller.get(str(rows[0]["campaign_id"]))
 
 
 def _pid_file_identity(path: Path) -> dict | None:
@@ -183,27 +138,6 @@ def _healthy(
     return bool(verdict["healthy"])
 
 
-def _parse_campaign_id(text: str) -> str:
-    try:
-        payload = json.loads(text)
-    except json.JSONDecodeError:
-        payload = None
-    if isinstance(payload, dict) and payload.get("campaign_id"):
-        return str(payload["campaign_id"])
-    marker = '"campaign_id"'
-    index = text.find(marker)
-    if index < 0:
-        return ""
-    fragment = text[index:]
-    try:
-        start = fragment.find(":")
-        quote = fragment.find('"', start)
-        end = fragment.find('"', quote + 1)
-        return fragment[quote + 1 : end]
-    except ValueError:
-        return ""
-
-
 def _run_controller(
     python: str,
     script: Path,
@@ -213,8 +147,8 @@ def _run_controller(
     campaign_id: str,
     heartbeat_seconds: float,
     extra: list[str] | None = None,
-    runtime_environment_file: Path | None = None,
     *,
+    runtime_environment_file: Path,
     wait: bool,
     stdout_path: Path,
     stderr_path: Path,
@@ -232,15 +166,10 @@ def _run_controller(
         "--heartbeat-seconds",
         str(heartbeat_seconds),
     ]
-    if runtime_environment_file is not None:
-        args.extend(["--runtime-environment-file", str(runtime_environment_file)])
+    args.extend(["--runtime-environment-file", str(runtime_environment_file)])
     if extra:
         args.extend(extra)
-    env = (
-        limited_campaign_subprocess_environment(root, runtime_environment_file)
-        if runtime_environment_file is not None
-        else {**os.environ, "PYTHONPATH": str(root / "src"), "PYTHONUTF8": "1"}
-    )
+    env = limited_campaign_subprocess_environment(root, runtime_environment_file)
     stdout_path.parent.mkdir(parents=True, exist_ok=True)
     if wait:
         return subprocess.run(
@@ -280,43 +209,33 @@ def main() -> int:
     max_age = float(config.get("heartbeat_max_age_seconds") or 90)
     heartbeat_seconds = float(config.get("heartbeat_seconds") or 30)
     runtime_environment_file = str(config.get("runtime_environment_file") or "").strip()
-    runtime_environment_path = (
-        Path(runtime_environment_file).resolve() if runtime_environment_file else None
-    )
-    if runtime_environment_path is not None:
-        apply_campaign_runtime_environment(root, runtime_environment_path)
+    if not runtime_environment_file:
+        raise SystemExit("recovery probe requires a bound runtime environment file")
+    runtime_environment_path = Path(runtime_environment_file).resolve()
+    if not runtime_environment_path.is_file():
+        raise SystemExit("recovery probe runtime environment file is unavailable")
+    runtime_environment = apply_campaign_runtime_environment(root, runtime_environment_path)
+    if not campaign_id:
+        raise SystemExit("recovery probe requires a bound campaign ID")
+    runtime_campaign_id = str(runtime_environment.get("CAMPAIGN_ID") or "").strip()
+    if campaign_id != runtime_campaign_id:
+        raise SystemExit(
+            "recovery probe campaign ID must match the bound campaign runtime environment"
+        )
+    runtime_database = campaign_runtime_database_path(runtime_environment)
+    if database.resolve() != runtime_database:
+        raise SystemExit("recovery probe database must match the bound campaign runtime database")
+    command_environment = limited_campaign_subprocess_environment(root, runtime_environment_path)
+    os.environ.clear()
+    os.environ.update(command_environment)
     script = root / "scripts" / "run_autonomy_campaign.py"
     controller = CampaignController(
         database,
         repository_root=root,
         heartbeat_seconds=heartbeat_seconds,
+        command_environment=command_environment,
     )
     try:
-        if not campaign_id:
-            running = controller.current_running_campaigns()
-            if len(running) > 1:
-                raise SystemExit("multiple RUNNING campaigns present")
-            if running:
-                campaign_id = str(running[0]["campaign_id"])
-        if not campaign_id:
-            status_path.parent.mkdir(parents=True, exist_ok=True)
-            status_path.write_text(
-                json.dumps(
-                    {
-                        "healthy": False,
-                        "action": "no-campaign",
-                        "campaign_module": str(
-                            Path(sys.modules[CampaignController.__module__].__file__).resolve()
-                        ),
-                        "user_action_required": False,
-                    },
-                    indent=2,
-                    sort_keys=True,
-                )
-                + "\n",
-                encoding="utf-8",
-            )
-            return 0
         campaign = controller.get(campaign_id)
         expected_sha = str(config.get("expected_sha") or "")
         expected_tree = str(config.get("expected_tree") or "")
@@ -328,54 +247,27 @@ def main() -> int:
         if fence and campaign["fence"] != fence:
             raise SystemExit("campaign fence does not match bound fence")
         if str(campaign["status"]) in TERMINAL_CAMPAIGN_STATUSES:
-            successor = _terminal_successor(
-                controller,
-                campaign,
-                expected_sha=str(campaign["integrated_sha"]),
-                expected_tree=str(campaign["integrated_tree"]),
+            # A terminated parent has no credential authority to take over a
+            # successor. A fresh candidate campaign receives new identities,
+            # envelopes, and a newly installed recovery binding.
+            controller.project_status(
+                campaign_id,
+                status_path=status_path,
+                task_health={"registered": True, "probe": "inactive"},
             )
-            if successor is not None:
-                try:
-                    _retarget_config(args.config, config, successor)
-                except OSError:
-                    controller.project_status(
-                        campaign_id,
-                        status_path=status_path,
-                        task_health={"registered": True, "probe": "retarget-pending"},
-                    )
-                    print(
-                        json.dumps(
-                            {
-                                "action": "retarget-pending",
-                                "campaign_id": campaign_id,
-                                "successor_campaign_id": successor["campaign_id"],
-                                "user_action_required": False,
-                            },
-                            sort_keys=True,
-                        )
-                    )
-                    return 0
-                campaign = successor
-                campaign_id = str(successor["campaign_id"])
-                fence = str(successor["fence"])
-            else:
-                controller.project_status(
-                    campaign_id,
-                    status_path=status_path,
-                    task_health={"registered": True, "probe": "inactive"},
+            print(
+                json.dumps(
+                    {
+                        "action": "inactive",
+                        "campaign_id": campaign_id,
+                        "status": campaign["status"],
+                        "user_action_required": False,
+                    },
+                    sort_keys=True,
                 )
-                print(
-                    json.dumps(
-                        {
-                            "action": "inactive",
-                            "campaign_id": campaign_id,
-                            "status": campaign["status"],
-                            "user_action_required": False,
-                        },
-                        sort_keys=True,
-                    )
-                )
-                return 0
+            )
+            return 0
+        validate_campaign_runtime_binding(root, runtime_environment)
         pid_identity = _pid_file_identity(pid_path)
         if _healthy(
             campaign,
@@ -417,29 +309,28 @@ def main() -> int:
         )
         if recovered.returncode != 0:
             raise SystemExit(recovered.stderr or "recover failed")
-        resume_id = _parse_campaign_id(recovered.stdout or "") or campaign_id
-        resumed = controller.get(resume_id)
-        if resume_id != campaign_id:
-            try:
-                _retarget_config(args.config, config, resumed)
-            except OSError:
-                controller.project_status(
-                    campaign_id,
-                    status_path=status_path,
-                    task_health={"registered": True, "probe": "retarget-pending"},
+        resumed = controller.get(campaign_id)
+        if str(resumed["status"]) in TERMINAL_CAMPAIGN_STATUSES:
+            # ``recover`` disqualifies a stale timed stage rather than creating
+            # a child.  Its recovery task therefore cannot accidentally reuse
+            # the parent's database, fence, or credential envelope.
+            controller.project_status(
+                campaign_id,
+                status_path=status_path,
+                task_health={"registered": True, "probe": "inactive"},
+            )
+            print(
+                json.dumps(
+                    {
+                        "action": "inactive",
+                        "campaign_id": campaign_id,
+                        "status": resumed["status"],
+                        "user_action_required": False,
+                    },
+                    sort_keys=True,
                 )
-                print(
-                    json.dumps(
-                        {
-                            "action": "retarget-pending",
-                            "campaign_id": campaign_id,
-                            "successor_campaign_id": resume_id,
-                            "user_action_required": False,
-                        },
-                        sort_keys=True,
-                    )
-                )
-                return 0
+            )
+            return 0
         extra: list[str] = []
         if int(config.get("cycles") or 0) > 0:
             extra.extend(["--cycles", str(int(config["cycles"]))])
@@ -449,7 +340,7 @@ def main() -> int:
             "run",
             database,
             root,
-            resume_id,
+            campaign_id,
             heartbeat_seconds,
             extra,
             runtime_environment_file=runtime_environment_path,
@@ -462,7 +353,7 @@ def main() -> int:
             json.dumps(
                 {
                     "process_id": creation.pid,
-                    "campaign_id": resume_id,
+                    "campaign_id": campaign_id,
                     "executable": python,
                 },
                 sort_keys=True,
@@ -480,7 +371,7 @@ def main() -> int:
             time.sleep(0.2)
         try:
             controller.project_status(
-                resume_id,
+                campaign_id,
                 status_path=status_path,
                 task_health={"registered": True, "probe": "recovered"},
             )
@@ -490,7 +381,7 @@ def main() -> int:
                 json.dumps(
                     {
                         "action": "recovered",
-                        "campaign_id": resume_id,
+                        "campaign_id": campaign_id,
                         "user_action_required": False,
                         "runner_pid": creation.pid,
                     },
@@ -504,7 +395,7 @@ def main() -> int:
             json.dumps(
                 {
                     "action": "recovered",
-                    "campaign_id": resume_id,
+                    "campaign_id": campaign_id,
                     "user_action_required": False,
                 },
                 sort_keys=True,

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "36cef30f499cd8fc67134d2dbc62f20747db1c0224cb081a7bc2e7bcc71d7d7a",
+  "aggregate_sha256": "f695eef710f5cad35d7ead38ddd85ecd80045f969776b4e29ad18bbd47429c8d",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -1667,8 +1667,8 @@
     },
     {
       "path": "docs/security/secrets_and_egress.md",
-      "sha256": "c2c96f11ef128e36f36aac27a63339119cf5dda6379f98a3064f542bcf79a3b3",
-      "size_bytes": 1892
+      "sha256": "c90043fcd26b351b1ada8228400c944b2fc92d33f887316ff268c999d901767a",
+      "size_bytes": 3827
     },
     {
       "path": "docs/security/security_authority_model.md",
@@ -5437,7 +5437,7 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "10e81cd6201ffe022ca8369ec266ff3b445ec0cdc8d9df2957d7c156ec458698",
+      "sha256": "8e4401959dab09659ec1aaaf459cf121887d118a9c6c206394a0987f1cfdbc18",
       "size_bytes": 25756
     },
     {
@@ -5467,8 +5467,8 @@
     },
     {
       "path": "instructions/policies/MACHINE_REGISTRY.json",
-      "sha256": "6acb1d19a82ffa1ca54ea88b94fc56f4ab46104568aa771feffd5ce9b08258df",
-      "size_bytes": 1879
+      "sha256": "66da525b4b3f4fb1e3792d84ef5e9c0ec3526f4df164a984d118f9f37126655f",
+      "size_bytes": 4044
     },
     {
       "path": "instructions/policies/PPQS_BENCHMARK_REGISTRY.json",
@@ -11977,8 +11977,8 @@
     },
     {
       "path": "scripts/autonomy_campaign_recovery_probe.py",
-      "sha256": "690483985b56303fa9e29f0fbfb2bcb6c86084d752f9cdc98b3c15cc059ebd0c",
-      "size_bytes": 17969
+      "sha256": "2ecbd76e78708d817faeb8fd19c05e3881edcf129eedd5947879ca0d59e8f000",
+      "size_bytes": 14687
     },
     {
       "path": "scripts/bootstrap_dev.ps1",
@@ -12062,8 +12062,8 @@
     },
     {
       "path": "scripts/provision_dpapi_campaign_secret.py",
-      "sha256": "2a3f80d90ee3ae146c79e369f7eea2e22bbc4dd63e20ebcbe12ef10b121c5c64",
-      "size_bytes": 11328
+      "sha256": "9aff44dae623bc4d53f78f70072a566f7a14af206e6e2b0094165c99c3552dac",
+      "size_bytes": 15236
     },
     {
       "path": "scripts/qualify_desktop_windows.py",
@@ -12077,8 +12077,8 @@
     },
     {
       "path": "scripts/register_autonomy_campaign_recovery.ps1",
-      "sha256": "f25b6715d9572f7cc4ff071482d277f797997a4f234b92af2a5fa64256652d98",
-      "size_bytes": 8633
+      "sha256": "5ea4cfa54f4820132564054efacb310bf28bd1b27294be7ae2fa1a1753b834b3",
+      "size_bytes": 8952
     },
     {
       "path": "scripts/repair_jira_plan_references.py",
@@ -12102,8 +12102,8 @@
     },
     {
       "path": "scripts/run_autonomy_campaign.py",
-      "sha256": "5bc585fdb087046f40973694d61a9c093e4690c40254c1cf336d47a008ce6e66",
-      "size_bytes": 5384
+      "sha256": "2412c1faf07b57c2be664c9ad121b78c05afaad567552c3df2b77c61c25d175f",
+      "size_bytes": 7390
     },
     {
       "path": "scripts/run_autonomy_qualification.py",
@@ -12157,8 +12157,8 @@
     },
     {
       "path": "scripts/start_autonomy_campaign_hidden.ps1",
-      "sha256": "8c1b67a75790ccc160e4aba12c16b40b604559d552db568e50a2390e9bc90f1f",
-      "size_bytes": 5149
+      "sha256": "5248dfc5a3d91beb10058cca285d725a19f76bff30e941460d507d221348bced",
+      "size_bytes": 4114
     },
     {
       "path": "scripts/start_autonomy_qualification_hidden.ps1",
@@ -12432,8 +12432,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/campaign.py",
-      "sha256": "f2ee34172303ae9d90baf80513e1348830cc03f0859fa79f02b97ba7de052b95",
-      "size_bytes": 100739
+      "sha256": "1b6161b7054398b38d93c53db68597adcf3d35ac13dbdbe35808e863279ee12d",
+      "size_bytes": 100891
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/campaign_status.py",
@@ -12442,8 +12442,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/command_execution.py",
-      "sha256": "3b963e5c6a98d4681659272e3be85f265063d5acfbcddb7041caba5296965d2c",
-      "size_bytes": 20983
+      "sha256": "c9dd4297c67d1ffaa9b4364e7055be3ba42b1ed044a4967832944a5b23b2f929",
+      "size_bytes": 21137
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/cursor_cli_qualification.py",
@@ -12452,8 +12452,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/duration_probes.py",
-      "sha256": "53c78d3880afef3d61a49fcfc710a9007280fb887cb80be43aac5ce901803d32",
-      "size_bytes": 19293
+      "sha256": "c33168c0a64b9571341a193e03bb14513c33c42ff0ae78b5e204155e6c8ebad9",
+      "size_bytes": 19595
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/golden.py",
@@ -12467,8 +12467,8 @@
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/live_qualification.py",
-      "sha256": "d5f011f945d0b4431ea0a4f6d20143e949a3e41472b61a7197a22db9c834983e",
-      "size_bytes": 45897
+      "sha256": "db0b5e7c89e0d4edcfb97c9204cbe5473256cdd10ecd0f0c41c7a2a25d4b3f63",
+      "size_bytes": 48170
     },
     {
       "path": "src/project_pipeline/autonomy_runtime/nonduration.py",
@@ -12577,8 +12577,8 @@
     },
     {
       "path": "src/project_pipeline/cli.py",
-      "sha256": "8c62f16c9aa1de44f742a036e7d5328d4a19c1d762cc761cdd9550d3993785ed",
-      "size_bytes": 190419
+      "sha256": "182ef0914d3fef08b81f4cb2696b98e6309010ba118de600e6e0b54adb930568",
+      "size_bytes": 191703
     },
     {
       "path": "src/project_pipeline/command_center/__init__.py",
@@ -12702,18 +12702,18 @@
     },
     {
       "path": "src/project_pipeline/configuration/__init__.py",
-      "sha256": "f852065f9e01c80f8a839a35b42d950627c9f008b3c0b4bdcc61ff0c92b43deb",
-      "size_bytes": 1459
+      "sha256": "4cc2c80995a4d447f13a30116fd0eca62b4ba38d6a7451de2c2e7c4525ed9664",
+      "size_bytes": 1996
     },
     {
       "path": "src/project_pipeline/configuration/campaign_environment.py",
-      "sha256": "f2389f60f630587eb4f24c51a2a36956de08cb7de07070a969d9723e65a91333",
-      "size_bytes": 7668
+      "sha256": "77bcf53ada1e8ea3f03401ceecded9de16dd56571a279fe58b127bc95209cc24",
+      "size_bytes": 14486
     },
     {
       "path": "src/project_pipeline/configuration/loader.py",
-      "sha256": "e2be5ada90623620fdc7eb2a8fc2804468d9ad752580605e388ad07b4cddcf8d",
-      "size_bytes": 9280
+      "sha256": "0a75f4748d334b3502653c06cd828abc138e43f688cc912f7d728b7252ffdaa1",
+      "size_bytes": 11077
     },
     {
       "path": "src/project_pipeline/configuration/models.py",
@@ -12727,8 +12727,8 @@
     },
     {
       "path": "src/project_pipeline/configuration/secrets.py",
-      "sha256": "3627a7537b54ce699b3e494ab9c01e7173b9ec800d2b700c60d3157d91787783",
-      "size_bytes": 11116
+      "sha256": "c88be914fb6971e08a3fef29322b9c7e3bc4bd8e8dcab38a558c808c190b9aa7",
+      "size_bytes": 17396
     },
     {
       "path": "src/project_pipeline/context_engine/__init__.py",
@@ -13002,8 +13002,8 @@
     },
     {
       "path": "src/project_pipeline/github_steward/adapter.py",
-      "sha256": "3b4b32dbd25486893f3b25dec5506a51c589b1b529d2257003cd71ddffc514d0",
-      "size_bytes": 37760
+      "sha256": "5f8918d34a333b8d73a4df4d760743a361f5777dd73fa1436ffb55ea02faadd4",
+      "size_bytes": 37920
     },
     {
       "path": "src/project_pipeline/github_steward/asset_names.py",
@@ -13197,8 +13197,8 @@
     },
     {
       "path": "src/project_pipeline/jira_steward/adapter.py",
-      "sha256": "cdd040f0597c6ebb1c55d0c207dd8ad367c8ee99b399fd9c8b4f0d9ec7604f53",
-      "size_bytes": 31236
+      "sha256": "da0697493d835a2b89b89ce32b1316c3aaebde66779cc85ee6f74e0ab6c61b35",
+      "size_bytes": 31395
     },
     {
       "path": "src/project_pipeline/jira_steward/alignment.py",
@@ -14177,13 +14177,13 @@
     },
     {
       "path": "tests/test_autonomy_campaign.py",
-      "sha256": "cbd1c33051b8bdeec51927427b0232339c1ea7c8934b36f4c7a3f545cc5351fc",
-      "size_bytes": 75380
+      "sha256": "9ed950110f32e5f19d37f0b681b0216c3c8478c19b6c8c25406dd4fb58acbae0",
+      "size_bytes": 76504
     },
     {
       "path": "tests/test_autonomy_campaign_windows.py",
-      "sha256": "dfae82acb5bc12c69cf4c962e7131d17868c787140006afb607111c71b884636",
-      "size_bytes": 19161
+      "sha256": "f27cdd9ca47da91b776d10bf60099bb8804c8e5815d6b4370b1f9c3be503d0b1",
+      "size_bytes": 20451
     },
     {
       "path": "tests/test_autonomy_director.py",
@@ -14197,8 +14197,8 @@
     },
     {
       "path": "tests/test_autonomy_live_qualification.py",
-      "sha256": "f048f3a26b40a81f3f19065be7321cd26d27a1e1d1387642bbc8ca7367f16010",
-      "size_bytes": 17323
+      "sha256": "ca3e0794e522c686ed1d154cf4d1357599e14ac3617e902f9eb98619734f3fdb",
+      "size_bytes": 19223
     },
     {
       "path": "tests/test_autonomy_providers.py",
@@ -14282,8 +14282,8 @@
     },
     {
       "path": "tests/test_campaign_duration_probes.py",
-      "sha256": "d996fda70b3c228b905fb0a5abcc91afe5c24bb65634cd4b13902828fca86549",
-      "size_bytes": 4611
+      "sha256": "879e85900ac3c89e669d8ab0dbb60183e87c885b4e5b496640859e0a48752712",
+      "size_bytes": 4784
     },
     {
       "path": "tests/test_campaign_post_release.py",
@@ -14372,8 +14372,8 @@
     },
     {
       "path": "tests/test_configuration.py",
-      "sha256": "fdb7d1696f3d43e1ce2ed225f77030d999192bd67f754be3aa548570854f2934",
-      "size_bytes": 21439
+      "sha256": "1415ff39b661550760f7e7dd67299aacda91f04686bf0dd2729a9390aaf8bf3d",
+      "size_bytes": 37151
     },
     {
       "path": "tests/test_context_broker_compiler.py",
@@ -14967,8 +14967,8 @@
     },
     {
       "path": "tests/test_run_autonomy_campaign.py",
-      "sha256": "f1a001640c6c097c9e2026ea58a6a172b7a144af2a353c3b7e2adbf2bfcb81ee",
-      "size_bytes": 1302
+      "sha256": "2b67e3ff69ad20c196a2a70c738fcd4b63d06f8e35b3c228b7484d87bfb4eafb",
+      "size_bytes": 2232
     },
     {
       "path": "tests/test_runtime_foundation.py",
@@ -15211,7 +15211,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-25T13:01:49.835889+00:00",
+  "generated_at_utc": "2026-08-25T23:11:27.442095+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15221,5 +15221,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30553066
+  "total_bytes": 30600127
 }
