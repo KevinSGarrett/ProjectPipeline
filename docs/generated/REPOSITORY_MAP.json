@@ -2396,8 +2396,8 @@
     {
       "extension": ".md",
       "path": "docs/security/secrets_and_egress.md",
-      "sha256": "16fa19ac2988b075def970363aedfa9081967e28994d961397a1f8465ae74824",
-      "size_bytes": 3698,
+      "sha256": "c90043fcd26b351b1ada8228400c944b2fc92d33f887316ff268c999d901767a",
+      "size_bytes": 3827,
       "top_level": "docs"
     },
     {
@@ -7233,7 +7233,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "070734035b5f5d58e589b47e8295bc55970dcb8c5e9114a25fa62ffdae3f2aba",
+      "sha256": "015f60a91e813f3b0e67c9638e845f860de1b88d17ca5a92a3c0de068a64b0d0",
       "size_bytes": 348078,
       "top_level": "_root"
     },
@@ -14457,7 +14457,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "ae942a41b7e80d0b316da55dbfa1a18cab4dcb85e88cb2cd8dfc9e8bb3d54667",
+      "sha256": "0efa6f2cdf6058c24b0215e4cafa9dded49017e51b8bbe3c66a41616204fc1a4",
       "size_bytes": 569998,
       "top_level": "_root"
     },
@@ -16844,8 +16844,8 @@
     {
       "extension": ".py",
       "path": "scripts/autonomy_campaign_recovery_probe.py",
-      "sha256": "a302521f59da15516040479734d4dd9d839247b0107595b2b33ebb2ed0367f2d",
-      "size_bytes": 14433,
+      "sha256": "2ecbd76e78708d817faeb8fd19c05e3881edcf129eedd5947879ca0d59e8f000",
+      "size_bytes": 14687,
       "top_level": "scripts"
     },
     {
@@ -19931,8 +19931,8 @@
     {
       "extension": ".py",
       "path": "tests/test_autonomy_campaign_windows.py",
-      "sha256": "4ea2a20093ac3d83e7f945297c28fc467d1d6e03ab24a72133e350aeca2f6066",
-      "size_bytes": 18888,
+      "sha256": "de627da8b2f4d7a55a582e6e92fa6041f10ebe644f795ad85ad8020967f89daf",
+      "size_bytes": 20162,
       "top_level": "tests"
     },
     {
@@ -21371,7 +21371,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-25T22:45:23.411697+00:00",
+  "generated_at_utc": "2026-08-25T22:51:53.065873+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

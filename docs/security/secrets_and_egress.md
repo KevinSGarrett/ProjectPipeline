@@ -32,7 +32,9 @@ the runtime scope must agree with the checkout's `HEAD` and tree and with the
 selected `campaign_runs` row, including its campaign ID, SHA/tree, lease, and
 fence. The controller database argument must be the same absolute database
 path named by that runtime binding, preventing a split between a credential
-record and the campaign it operates. A scheduled campaign process never loads
+record and the campaign it operates. The recovery task's config campaign ID
+must also equal the runtime binding before it can construct a controller or
+write status. A scheduled campaign process never loads
 the checkout `.env`; it clears inherited configuration after parsing the
 runtime file, and the hidden runner, recovery task, and every allowlisted child
 command use only its explicit allowlist rather than ambient variables.

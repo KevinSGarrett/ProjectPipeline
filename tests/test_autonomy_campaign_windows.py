@@ -233,6 +233,39 @@ def test_recovery_probe_requires_a_bound_campaign_identity(tmp_path: Path):
     assert not status_path.exists()
 
 
+def test_recovery_probe_rejects_a_campaign_id_mismatched_to_its_runtime(tmp_path: Path):
+    config_path = tmp_path / "recovery_probe.json"
+    status_path = tmp_path / "status.json"
+    database = tmp_path / "campaign.sqlite3"
+    payload = {
+        "repository_root": str(ROOT),
+        "python_exe": sys.executable,
+        "database": str(database),
+        "campaign_id": "QCAMP-C16B-CONFIG-MISMATCH",
+        "status_path": str(status_path),
+        "pid_path": str(tmp_path / "campaign.pid"),
+        "log_directory": str(tmp_path),
+        "heartbeat_seconds": 0.2,
+        "heartbeat_max_age_seconds": 1.0,
+        "runtime_environment_file": str(
+            _runtime_environment(tmp_path / "campaign.runtime.env", database)
+        ),
+    }
+    config_path.write_text(json.dumps(payload), encoding="utf-8")
+    result = subprocess.run(
+        [sys.executable, str(PROBE), "--config", str(config_path)],
+        cwd=str(tmp_path),
+        capture_output=True,
+        text=True,
+        check=False,
+        env={"PATH": os.environ.get("PATH", ""), "SYSTEMROOT": os.environ.get("SYSTEMROOT", "")},
+    )
+    assert result.returncode != 0
+    assert "campaign ID must match" in result.stderr
+    assert not status_path.exists()
+    assert not database.exists()
+
+
 def test_recovery_probe_preserves_a_disqualified_campaign(tmp_path: Path):
     controller = CampaignController(
         tmp_path / "campaign.sqlite3",

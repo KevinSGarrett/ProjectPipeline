@@ -217,6 +217,11 @@ def main() -> int:
     runtime_environment = apply_campaign_runtime_environment(root, runtime_environment_path)
     if not campaign_id:
         raise SystemExit("recovery probe requires a bound campaign ID")
+    runtime_campaign_id = str(runtime_environment.get("CAMPAIGN_ID") or "").strip()
+    if campaign_id != runtime_campaign_id:
+        raise SystemExit(
+            "recovery probe campaign ID must match the bound campaign runtime environment"
+        )
     runtime_database = campaign_runtime_database_path(runtime_environment)
     if database.resolve() != runtime_database:
         raise SystemExit("recovery probe database must match the bound campaign runtime database")
