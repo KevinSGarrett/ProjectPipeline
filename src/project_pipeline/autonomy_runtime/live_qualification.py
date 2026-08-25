@@ -74,9 +74,7 @@ _COORDINATOR_JIRA_RECEIPT_VERSION = "1.0.0"
 _COORDINATOR_JIRA_RECEIPT_MAX_AGE = timedelta(minutes=15)
 _PRIMARY_COORDINATOR_ID = "PRIMARY-CODEX-WORKSTATION"
 _COORDINATOR_JIRA_SIGNATURE_NAMESPACE = "project-pipeline-pp384-jira-governance"
-_COORDINATOR_JIRA_ALLOWED_SIGNERS = Path(
-    "config/security/coordinator_jira_receipt_allowed_signers"
-)
+_COORDINATOR_JIRA_ALLOWED_SIGNERS = Path("config/security/coordinator_jira_receipt_allowed_signers")
 
 
 def _github_repository_slug_from_url(url: str) -> str | None:

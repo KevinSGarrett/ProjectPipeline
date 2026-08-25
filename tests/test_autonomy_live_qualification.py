@@ -151,9 +151,7 @@ def _coordinator_jira_receipt(*, sha: str, tree: str) -> dict[str, object]:
         },
         "secret_value_observed": False,
     }
-    receipt["receipt_sha256"] = live_qualification_module._coordinator_jira_receipt_digest(
-        receipt
-    )
+    receipt["receipt_sha256"] = live_qualification_module._coordinator_jira_receipt_digest(receipt)
     return receipt
 
 
@@ -291,9 +289,7 @@ def test_live_qualification_rejects_candidate_mutation(
     repo = tmp_path / "repo"
     _scaffold_repo(repo)
     identities = [("a" * 40, "b" * 40), ("c" * 40, "d" * 40)]
-    monkeypatch.setattr(
-        live_qualification_module, "_git_identity", lambda _root: identities.pop(0)
-    )
+    monkeypatch.setattr(live_qualification_module, "_git_identity", lambda _root: identities.pop(0))
     monkeypatch.setattr(live_qualification_module, "_git_checkout_clean", lambda _root: True)
 
     report = run_live_qualification(repository_root=repo, disposable_root=tmp_path / "runtime")

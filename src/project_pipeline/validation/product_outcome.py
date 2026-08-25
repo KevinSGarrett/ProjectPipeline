@@ -35,6 +35,7 @@ _REQUIRED_LIVE_STAGES = (
     "local_provider_dispatch",
     "github_jira_governance",
     "cursor_cli_provider_dispatch",
+    "candidate_checkout_integrity",
 )
 ORIGINAL_USER_INTENT_SECTION_IDS = {
     "SRC-002-SEC-001",
