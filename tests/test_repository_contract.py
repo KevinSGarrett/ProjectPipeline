@@ -4,6 +4,7 @@ import hashlib
 import json
 import unittest
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from project_pipeline.io import sha256_canonical_file
 from project_pipeline.validation import RepositoryValidator
@@ -16,9 +17,22 @@ class RepositoryContractTests(unittest.TestCase):
         report = RepositoryValidator(ROOT).validate()
         self.assertEqual([], [item.as_dict() for item in report.errors], report.render())
 
-    def test_canonical_text_digest_ignores_working_tree_crlf(self) -> None:
-        from tempfile import TemporaryDirectory
+    def test_standalone_public_source_checkout_is_detected_without_private_records(self) -> None:
+        with TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            for relative in ("pyproject.toml", "README.md", "LICENSE"):
+                (root / relative).write_text("fixture\n", encoding="utf-8")
+            (root / "src" / "project_pipeline").mkdir(parents=True)
 
+            validator = RepositoryValidator(root)
+            self.assertTrue(validator._is_standalone_public_source_checkout())
+
+            plan_catalog = root / "plans" / "PLAN_CATALOG.json"
+            plan_catalog.parent.mkdir(parents=True)
+            plan_catalog.write_text("{}\n", encoding="utf-8")
+            self.assertFalse(RepositoryValidator(root)._is_standalone_public_source_checkout())
+
+    def test_canonical_text_digest_ignores_working_tree_crlf(self) -> None:
         from project_pipeline.io import sha256_canonical_file, sha256_file
 
         with TemporaryDirectory() as directory:

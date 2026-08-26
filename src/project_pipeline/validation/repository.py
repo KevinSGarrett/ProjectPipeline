@@ -80,6 +80,9 @@ class RepositoryValidator:
             )
 
     def validate(self) -> ValidationReport:
+        if self._is_standalone_public_source_checkout():
+            return self._validate_standalone_public_source_checkout()
+
         self._run("required_paths", self._check_required_paths)
         self._run("json_documents", lambda: check_json_documents(self.root, self.report))
         self._run("runtime_configuration", self._check_runtime_configuration)
@@ -173,9 +176,77 @@ class RepositoryValidator:
         self._run("manifest", self._check_manifest)
         return self.report
 
+    def _is_standalone_public_source_checkout(self) -> bool:
+        """Return whether *root* is a distributable source checkout, not a control workspace."""
+        public_markers = (
+            "pyproject.toml",
+            "README.md",
+            "LICENSE",
+            "src/project_pipeline",
+        )
+        return (
+            not (self.root / "plans" / "PLAN_CATALOG.json").is_file()
+            and all((self.root / marker).exists() for marker in public_markers)
+        )
+
+    def _validate_standalone_public_source_checkout(self) -> ValidationReport:
+        """Validate the source distribution without requiring private delivery records."""
+        self.report.add(
+            "INFO",
+            "PUBLIC001",
+            "Validated a standalone public source checkout; local delivery records are optional.",
+            "README.md",
+        )
+        self._run("public_source_layout", self._check_public_source_layout)
+        self._run("json_documents", lambda: check_json_documents(self.root, self.report))
+        self._run("runtime_configuration", self._check_runtime_configuration)
+        self._run("dependency_lock", self._check_dependency_lock)
+        self._run("generated_schemas", self._check_generated_schemas)
+        self._run("database_migrations", self._check_database_migrations)
+        self._run(
+            "forbidden_terminology",
+            lambda: check_forbidden_terminology(self.root, self.policy, self.report),
+        )
+        content_policy = self.policy.get("content_validation", {})
+        excluded_roots = (
+            content_policy.get("placeholder_excluded_roots", [])
+            if isinstance(content_policy, dict)
+            else []
+        )
+        self._run(
+            "placeholders",
+            lambda: check_placeholders(
+                self.root,
+                self.report,
+                excluded_roots=excluded_roots if isinstance(excluded_roots, list) else (),
+            ),
+        )
+        self._run("secrets", lambda: check_secrets(self.root, self.report))
+        self._run("markdown_links", lambda: check_markdown_links(self.root, self.report))
+        return self.report
+
     def _check_runtime_configuration(self) -> None:
         for error in validate_runtime_configuration_files(self.root):
             self.report.add("ERROR", "CONFIG001", error, "config/runtime")
+
+    def _check_public_source_layout(self) -> None:
+        required = (
+            "README.md",
+            "LICENSE",
+            "pyproject.toml",
+            ".gitignore",
+            "src/project_pipeline",
+            "config/runtime/base.json",
+            "database/MIGRATION_CATALOG.json",
+        )
+        for relative in required:
+            if not (self.root / relative).exists():
+                self.report.add(
+                    "ERROR",
+                    "PUBLIC002",
+                    f"Public source checkout is missing required path: {relative}",
+                    relative,
+                )
 
     def _check_autonomous_external_preconditions(self) -> None:
         for error in validate_autonomous_external_preconditions(self.root):
