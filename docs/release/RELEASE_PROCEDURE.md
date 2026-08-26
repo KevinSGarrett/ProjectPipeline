@@ -1,6 +1,6 @@
 # Release Procedure
 
-A release candidate is an immutable identity over source/configuration/dependency/migration inputs plus separately recorded archive/SBOM/provenance evidence. `release/release_candidate_r24.json` is intentionally labeled a local hardening candidate and **not production ready**.
+A release candidate is an immutable identity over source, configuration, dependency, and migration inputs plus separately recorded archive, SBOM, and provenance evidence. Candidate records are generated for each release and retained with that release's evidence; they are not committed as historical source fixtures.
 
 Before production release: the resolver lock must be READY; Completion Gate must be COMPLETE; current functional/golden/performance/security/resilience evidence must pass; target installation, upgrade, rollback, and uninstall must be qualified; external blockers must be explicit; manifests/SBOM/provenance must be refreshed; the final archive must open under the exact root, pass CRC, preserve prior cumulative members, and pass clean-extraction validation.
 

@@ -4,11 +4,11 @@ Project Pipeline now has strict, immutable Pydantic entities for project manifes
 
 ## Stable identity
 
-Identifiers are validated by semantic kind. Human-readable project, requirement, plan, Jira, evidence, decision, and migration identifiers retain their established forms. Transition, trace-link, import, and mutation identifiers are content-derived SHA-256 digests with kind-specific prefixes. Repeating the same semantic operation yields the same identifier.
+Identifiers are validated by semantic kind. Human-readable project, work-item, verification, decision, and migration identifiers retain their established forms. Transition, trace-link, import, and mutation identifiers are content-derived SHA-256 digests with kind-specific prefixes. Repeating the same semantic operation yields the same identifier.
 
 ## Project manifest
 
-`config/project_manifest.json` is the domain manifest for the controlled Project Pipeline project. It is distinct from root `PROJECT_MANIFEST.json`, which is the file-integrity manifest. The domain manifest names the primary repository and authoritative source, requirement, plan, Jira, and evidence registries. Its semantic fingerprint excludes timestamps; an unchanged rebuild is byte-stable and does not increment the revision.
+Project manifests are local workspace records. They identify a project's source, work model, and verification records without turning a repository's private planning or operational history into published source. Their semantic fingerprint excludes timestamps, so an unchanged rebuild is byte-stable and does not increment the revision.
 
 ## State authority
 
@@ -16,4 +16,4 @@ Project and task state use explicit lifecycle enums, allowed-transition tables, 
 
 ## Requirement entity
 
-Each requirement record parses as a strict `RequirementRecord`. Exact source references, plan IDs, work IDs, decisions, implementation paths, tests, and evidence are validated by semantic type. Implemented records retain implementation, test, and evidence links.
+Each requirement record parses as a strict `RequirementRecord`. Exact source references, work IDs, decisions, implementation paths, tests, and verification links are validated by semantic type. Implemented records retain their implementation, test, and verification links.

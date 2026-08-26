@@ -44,6 +44,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install -e .
 .\.venv\Scripts\project-pipeline.exe doctor --root .
+.\.venv\Scripts\project-pipeline.exe validate --root .
 ```
 
 On macOS or Linux, activate the virtual environment and use the corresponding `project-pipeline` command.

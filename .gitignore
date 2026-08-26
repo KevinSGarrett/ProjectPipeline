@@ -131,6 +131,8 @@ terraform.rc
 /instructions/
 /FILE_MANIFEST.sha256
 /PROJECT_MANIFEST.json
+/config/project_manifest.json
+/release/*.json
 
 # Local working corpora and recoverable Codex backups
 /.codex_backups/
