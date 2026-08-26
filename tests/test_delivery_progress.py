@@ -376,6 +376,27 @@ def test_implementation_and_test_change_is_objective_progress(tmp_path: Path) ->
     assert not decision.reconciliation_batch
 
 
+def test_tested_delivery_script_is_objective_progress(tmp_path: Path) -> None:
+    root, base = _repository(tmp_path)
+    script = root / "scripts" / "build_release.py"
+    test = root / "tests" / "test_build_release.py"
+    script.parent.mkdir(parents=True, exist_ok=True)
+    test.parent.mkdir(parents=True, exist_ok=True)
+    script.write_text("def build_release():\n    return 'ready'\n", encoding="utf-8")
+    test.write_text(
+        "from scripts.build_release import build_release\n\n"
+        "def test_build_release():\n    assert build_release() == 'ready'\n",
+        encoding="utf-8",
+    )
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "implement tested delivery script")
+
+    decision = evaluate_delivery_gate(root, base_ref=base)
+
+    assert decision.state is DeliveryGateState.PASS
+    assert decision.objective_progress_units == 1
+
+
 def test_remote_in_progress_alignment_does_not_block_material_slice(tmp_path: Path) -> None:
     root, base = _repository(tmp_path)
     issue = _issue("PP-TASK-000001")
