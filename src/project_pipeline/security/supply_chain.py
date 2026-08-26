@@ -328,7 +328,14 @@ def build_repository_sbom(
         )
     registry_path = root / "provenance/upstream_registry.json"
     usage_path = root / "provenance/upstream_usage.jsonl"
-    if registry_path.is_file() and usage_path.is_file():
+    registry_exists = registry_path.is_file()
+    usage_exists = usage_path.is_file()
+    if registry_exists != usage_exists:
+        raise ValueError(
+            "upstream provenance ledger is incomplete; upstream_registry.json and "
+            "upstream_usage.jsonl must be both present or both absent"
+        )
+    if registry_exists and usage_exists:
         registry = json.loads(registry_path.read_text(encoding="utf-8"))
         usage = {
             json.loads(line)["upstream_id"]: json.loads(line)

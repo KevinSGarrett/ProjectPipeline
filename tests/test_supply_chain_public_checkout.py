@@ -4,6 +4,8 @@ import json
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from project_pipeline.security.supply_chain import build_repository_sbom
 
 
@@ -78,3 +80,16 @@ def test_build_repository_sbom_includes_upstream_components_when_ledgers_present
         "python-package",
         "upstream-integration",
     ]
+
+
+def test_build_repository_sbom_rejects_partial_upstream_ledger_state() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        _write_minimal_sbom_inputs(root)
+        (root / "provenance").mkdir(parents=True, exist_ok=True)
+        (root / "provenance" / "upstream_registry.json").write_text(
+            json.dumps({"entries": []}) + "\n",
+            encoding="utf-8",
+        )
+        with pytest.raises(ValueError, match="upstream provenance ledger is incomplete"):
+            build_repository_sbom(root)
