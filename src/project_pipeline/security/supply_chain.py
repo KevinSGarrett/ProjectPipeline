@@ -326,41 +326,49 @@ def build_repository_sbom(
                 metadata_sha256=package.get("metadata_sha256"),
             )
         )
-    registry = json.loads((root / "provenance/upstream_registry.json").read_text(encoding="utf-8"))
-    usage = {
-        json.loads(line)["upstream_id"]: json.loads(line)
-        for line in (root / "provenance/upstream_usage.jsonl")
-        .read_text(encoding="utf-8")
-        .splitlines()
-        if line.strip()
-    }
-    implemented_states = {
-        "ACTIVE_RUNTIME",
-        "OPTIONAL_ADAPTER_IMPLEMENTED",
-        "EXTERNAL_CLI_ADAPTER_IMPLEMENTED",
-        "ARCHITECTURE_PATTERN_ADOPTED",
-        "IMPLEMENTATION_PATTERN_ADOPTED",
-        "TEST_PATTERN_ADOPTED",
-        "INCORPORATED_ASSET",
-    }
-    for item in registry.get("entries", []):
-        record = usage.get(item["upstream_id"])
-        if not record or record.get("usage_state") not in implemented_states:
-            continue
-        name = f"{item['owner']}/{item['repository']}"
-        revision = item.get("inspected_revision", "unknown")
-        components.append(
-            SBOMComponent(
-                component_id=security_identifier(
-                    "SCOMP", "upstream", item["upstream_id"], revision
-                ),
-                name=name,
-                version=revision,
-                component_type="upstream-integration",
-                license=item.get("license"),
-                source=item.get("canonical_url"),
-            )
+    registry_path = root / "provenance/upstream_registry.json"
+    usage_path = root / "provenance/upstream_usage.jsonl"
+    registry_exists = registry_path.is_file()
+    usage_exists = usage_path.is_file()
+    if registry_exists != usage_exists:
+        raise ValueError(
+            "upstream provenance ledger is incomplete; upstream_registry.json and "
+            "upstream_usage.jsonl must be both present or both absent"
         )
+    if registry_exists and usage_exists:
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+        usage = {
+            json.loads(line)["upstream_id"]: json.loads(line)
+            for line in usage_path.read_text(encoding="utf-8").splitlines()
+            if line.strip()
+        }
+        implemented_states = {
+            "ACTIVE_RUNTIME",
+            "OPTIONAL_ADAPTER_IMPLEMENTED",
+            "EXTERNAL_CLI_ADAPTER_IMPLEMENTED",
+            "ARCHITECTURE_PATTERN_ADOPTED",
+            "IMPLEMENTATION_PATTERN_ADOPTED",
+            "TEST_PATTERN_ADOPTED",
+            "INCORPORATED_ASSET",
+        }
+        for item in registry.get("entries", []):
+            record = usage.get(item["upstream_id"])
+            if not record or record.get("usage_state") not in implemented_states:
+                continue
+            name = f"{item['owner']}/{item['repository']}"
+            revision = item.get("inspected_revision", "unknown")
+            components.append(
+                SBOMComponent(
+                    component_id=security_identifier(
+                        "SCOMP", "upstream", item["upstream_id"], revision
+                    ),
+                    name=name,
+                    version=revision,
+                    component_type="upstream-integration",
+                    license=item.get("license"),
+                    source=item.get("canonical_url"),
+                )
+            )
     aggregate = _manifest_aggregate(root)
     return SoftwareBillOfMaterials(
         sbom_id=security_identifier("SBOM", project_id, aggregate, str(len(components))),

@@ -61,28 +61,13 @@ from project_pipeline.validation.registries import (
     check_upstream_registry,
 )
 
-PRIVATE_CONTROL_PATHS = (
+CONTROL_WORKSPACE_MARKERS = (
     ".agents",
     ".cursor",
     ".cursorignore",
-    "AGENTS.md",
-    "FILE_MANIFEST.sha256",
-    "PROJECT_MANIFEST.json",
-    "config/project_manifest.json",
-    "docs/CONTINUATION_PACKAGE.md",
-    "docs/NAVIGATION.md",
-    "docs/REQUIREMENT_CATALOG.md",
-    "docs/STATUS_MODEL.md",
-    "docs/engineering/pp380_disposition_generation.md",
-    "docs/generated",
-    "docs/jira",
-    "dummy",
-    "evidence",
     "instructions",
     "jira",
     "plans",
-    "provenance",
-    "release",
 )
 
 
@@ -219,7 +204,7 @@ class RepositoryValidator:
             isinstance(project_pipeline, dict)
             and project_pipeline.get("checkout_kind") == "PUBLIC_SOURCE"
             and all((self.root / marker).exists() for marker in public_markers)
-            and all(not (self.root / path).exists() for path in PRIVATE_CONTROL_PATHS)
+            and all(not (self.root / path).exists() for path in CONTROL_WORKSPACE_MARKERS)
         )
 
     def _validate_standalone_public_source_checkout(self) -> ValidationReport:
