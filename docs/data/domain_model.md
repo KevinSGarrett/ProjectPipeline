@@ -16,4 +16,4 @@ Project and task state use explicit lifecycle enums, allowed-transition tables, 
 
 ## Requirement entity
 
-Every row in `plans/_traceability/requirements.jsonl` parses as a strict `RequirementRecord`. Exact source references, plan IDs, plan-section IDs, Jira IDs, decisions, implementation paths, tests, and evidence are validated by semantic type. Implemented records must retain implementation, test, and evidence links.
+Each requirement record parses as a strict `RequirementRecord`. Exact source references, plan IDs, work IDs, decisions, implementation paths, tests, and evidence are validated by semantic type. Implemented records retain implementation, test, and evidence links.

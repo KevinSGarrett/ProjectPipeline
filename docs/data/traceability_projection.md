@@ -19,4 +19,4 @@ The service supports:
 
 A mutation declares requirement ID, operation, link type, target, expected revision, actor, correlation ID, and reason. A changed mutation increments the requirement revision exactly once. A semantic no-op preserves the revision. Stale expected revisions fail closed. Every accepted mutation receives an immutable audit record.
 
-Mutations are marked `PROPOSED_CHANGE`. Exported projections are review artifacts and do not replace `plans/_traceability/requirements.jsonl` automatically.
+Mutations are marked `PROPOSED_CHANGE`. Exported projections are review artifacts and do not replace a project's authoritative requirement registry automatically.

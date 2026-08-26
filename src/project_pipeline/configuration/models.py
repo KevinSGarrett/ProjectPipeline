@@ -84,7 +84,7 @@ class SecretReference(StrictModel):
 class RuntimePaths(StrictModel):
     data_dir: Annotated[Path, Field(default=".local/data")]
     state_dir: Annotated[Path, Field(default=".local/state")]
-    evidence_dir: Annotated[Path, Field(default="evidence")]
+    evidence_dir: Annotated[Path, Field(default=".local/evidence")]
     artifact_dir: Annotated[Path, Field(default=".local/artifacts")]
     cache_dir: Annotated[Path, Field(default=".local/cache")]
     log_dir: Annotated[Path, Field(default=".local/logs")]

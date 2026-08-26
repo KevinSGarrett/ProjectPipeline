@@ -764,6 +764,10 @@ class ConfigurationTests(unittest.TestCase):
             (ROOT / ".local" / "state" / "project_pipeline.db").resolve(),
         )
 
+    def test_local_runtime_evidence_defaults_to_hidden_workspace_state(self) -> None:
+        configuration = load_runtime_configuration(ROOT, profile="local", environment={})
+        self.assertEqual(configuration.settings.paths.evidence_dir.as_posix(), ".local/evidence")
+
     def test_postgresql_profile_requires_secret_reference_and_keeps_it_redacted(self) -> None:
         with self.assertRaises(ConfigurationError):
             load_runtime_configuration(

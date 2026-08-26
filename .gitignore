@@ -127,6 +127,7 @@ terraform.rc
 /docs/NAVIGATION.md
 /docs/REQUIREMENT_CATALOG.md
 /docs/STATUS_MODEL.md
+/docs/engineering/pp380_disposition_generation.md
 /instructions/
 /FILE_MANIFEST.sha256
 /PROJECT_MANIFEST.json

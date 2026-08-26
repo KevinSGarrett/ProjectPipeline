@@ -1221,7 +1221,7 @@ def write_live_qualification_evidence(
         coordinator_jira_signature=coordinator_jira_signature,
     )
     target = evidence_dir or (
-        repository_root / "evidence" / "autonomy_runtime" / "live_qualification"
+        repository_root / ".local" / "evidence" / "autonomy_runtime" / "live_qualification"
     )
     target.mkdir(parents=True, exist_ok=True)
     output = target / "live_qualification_latest.json"
