@@ -119,13 +119,20 @@ def _license_metadata(distribution: importlib.metadata.Distribution) -> str:
 
     metadata = distribution.metadata
     for field in ("License-Expression", "License"):
-        value = str(metadata.get(field) or "").strip()
+        try:
+            raw_value: object = metadata[field]
+        except KeyError:
+            continue
+        if not isinstance(raw_value, str):
+            continue
+        value = raw_value.strip()
         if value and value.casefold() not in {"unknown", "none", "n/a"}:
             return value
     prefix = "License :: OSI Approved :: "
     for classifier in metadata.get_all("Classifier", ()):
-        if classifier.startswith(prefix):
-            value = classifier.removeprefix(prefix).strip()
+        raw_classifier: object = classifier
+        if isinstance(raw_classifier, str) and raw_classifier.startswith(prefix):
+            value = raw_classifier.removeprefix(prefix).strip()
             if value:
                 return value
     raise DependencyError(f"distribution license metadata is missing for {metadata['Name']}")
