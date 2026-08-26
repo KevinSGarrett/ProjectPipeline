@@ -13,14 +13,25 @@ from project_pipeline.assurance.delivery_progress import (
 from project_pipeline.domain.assurance import DeliveryGateState
 
 
+_GIT_TIMEOUT_SECONDS = 15
+
+
 def _git(root: Path, *args: str) -> str:
-    result = subprocess.run(
-        ["git", "-C", str(root), *args],
-        check=True,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-    )
+    command = ["git", "-C", str(root), *args]
+    try:
+        result = subprocess.run(
+            command,
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired as error:
+        rendered_command = " ".join(command[0:2] + ["<repository>"] + command[3:])
+        raise AssertionError(
+            f"Git test helper timed out after {_GIT_TIMEOUT_SECONDS}s: {rendered_command}"
+        ) from error
     return result.stdout.strip()
 
 
@@ -81,6 +92,36 @@ def _repository(tmp_path: Path) -> tuple[Path, str]:
     _git(root, "add", ".")
     _git(root, "commit", "-m", "base")
     return root, _git(root, "rev-parse", "HEAD")
+
+
+def test_git_helper_fails_boundedly_with_actionable_command(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    observed: dict[str, object] = {}
+
+    def _timeout(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        observed["command"] = command
+        observed["timeout"] = kwargs["timeout"]
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(subprocess, "run", _timeout)
+
+    with pytest.raises(
+        AssertionError,
+        match=r"Git test helper timed out after 15s: git -C <repository> config user.name Test",
+    ):
+        _git(tmp_path, "config", "user.name", "Test")
+
+    assert observed["command"] == [
+        "git",
+        "-C",
+        str(tmp_path),
+        "config",
+        "user.name",
+        "Test",
+    ]
+    assert observed["timeout"] == _GIT_TIMEOUT_SECONDS
 
 
 def test_progress_delta_does_not_count_lifecycle_activity() -> None:
