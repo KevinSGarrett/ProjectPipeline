@@ -24,6 +24,7 @@ from project_pipeline.domain.security import (
     security_fingerprint,
     security_identifier,
 )
+from project_pipeline.manifest import build_manifest
 
 _SHA_ACTION = re.compile(r"^[0-9a-f]{40}$")
 _PROVENANCE_EVIDENCE_ID = re.compile(r"^(SCANEVID|INTEGRITY|SIG|EVID)-[A-Z0-9-]{8,}$")
@@ -301,8 +302,12 @@ def build_scanner_evidence(
 
 
 def _manifest_aggregate(root: Path) -> str:
-    data = json.loads((root / "PROJECT_MANIFEST.json").read_text(encoding="utf-8"))
-    return str(data["aggregate_sha256"])
+    manifest_path = root / "PROJECT_MANIFEST.json"
+    if manifest_path.is_file():
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
+        return str(data["aggregate_sha256"])
+    # Public-source checkouts may omit persisted manifest files.
+    return str(build_manifest(root)["aggregate_sha256"])
 
 
 def build_repository_sbom(
@@ -310,10 +315,16 @@ def build_repository_sbom(
 ) -> SoftwareBillOfMaterials:
     root = root.resolve()
     lock = json.loads((root / "requirements/environment.lock.json").read_text(encoding="utf-8"))
+    licenses = lock.get("licenses")
+    if not isinstance(licenses, dict):
+        raise ValueError("environment lock license inventory is missing")
     components: list[SBOMComponent] = []
     for package in sorted(
         lock.get("packages", []), key=lambda item: (item["name"].casefold(), item["version"])
     ):
+        license_value = licenses.get(package["name"])
+        if not isinstance(license_value, str) or not license_value.strip():
+            raise ValueError(f"environment lock license is missing: {package['name']}")
         components.append(
             SBOMComponent(
                 component_id=security_identifier(
@@ -322,6 +333,7 @@ def build_repository_sbom(
                 name=package["name"],
                 version=package["version"],
                 component_type="python-package",
+                license=license_value,
                 source="requirements/environment.lock.json",
                 metadata_sha256=package.get("metadata_sha256"),
             )

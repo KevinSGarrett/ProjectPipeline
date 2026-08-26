@@ -2,6 +2,11 @@
 
 ProjectPipeline builds a **content-addressed release candidate** from one SHA/tree, binds SBOM/license/checksum/provenance, and stores the exact bytes as a **GitHub draft release**. Publication is blocked until the governed 4-hour, 24-hour, and 72-hour qualification sequence passes.
 
+For a public-source checkout, the factory derives a deterministic license inventory from the
+license declarations bound in `requirements/environment.lock.json`. The inventory is emitted
+alongside the bundle, hashed in the supply binding, declared in provenance, and re-verified before
+it can be accepted; absent or altered license metadata fails closed.
+
 ## Version authority
 
 - Bundle/tag version is `config/version_compatibility.json` `platform_version`, which must match `pyproject.toml` and `src/project_pipeline/__init__.py`.

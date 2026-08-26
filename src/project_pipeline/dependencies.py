@@ -114,6 +114,30 @@ def _metadata_hash(distribution: importlib.metadata.Distribution) -> str:
     return hashlib.sha256(metadata_path.read_bytes()).hexdigest()
 
 
+def _license_metadata(distribution: importlib.metadata.Distribution) -> str:
+    """Extract the reviewed license declaration that is bound by METADATA."""
+
+    metadata = distribution.metadata
+    for field in ("License-Expression", "License"):
+        try:
+            raw_value: object = metadata[field]
+        except KeyError:
+            continue
+        if not isinstance(raw_value, str):
+            continue
+        value = raw_value.strip()
+        if value and value.casefold() not in {"unknown", "none", "n/a"}:
+            return value
+    prefix = "License :: OSI Approved :: "
+    for classifier in metadata.get_all("Classifier", ()):
+        raw_classifier: object = classifier
+        if isinstance(raw_classifier, str) and raw_classifier.startswith(prefix):
+            value = raw_classifier.removeprefix(prefix).strip()
+            if value:
+                return value
+    raise DependencyError(f"distribution license metadata is missing for {metadata['Name']}")
+
+
 def _applicable_requirement(value: str) -> Requirement | None:
     requirement = Requirement(value)
     if requirement.marker is None:
@@ -218,6 +242,7 @@ def build_environment_lock(root: Path) -> dict[str, Any]:
         "closure": {group: sorted(names) for group, names in sorted(closure_by_group.items())},
         "package_count": len(packages),
         "packages": packages,
+        "licenses": {name: _license_metadata(distributions[name]) for name in all_names},
     }
     write_json(root / _LOCK_RELATIVE_PATH, document)
     _write_portable_exports(root, document)
@@ -352,6 +377,15 @@ def validate_dependency_lock(root: Path, *, verify_installed: bool = False) -> l
         errors.append("environment lock active_groups differ from dependency policy")
     if document.get("package_count") != len(package_map):
         errors.append("environment lock package_count is stale")
+    licenses = document.get("licenses")
+    if not isinstance(licenses, dict):
+        errors.append("environment lock licenses must be an object")
+    elif set(licenses) != set(package_map):
+        errors.append("environment lock licenses must cover exactly the locked packages")
+    else:
+        for name, license_value in licenses.items():
+            if not isinstance(license_value, str) or not license_value.strip():
+                errors.append(f"environment lock license is missing: {name}")
     for name, item in package_map.items():
         digest = item.get("metadata_sha256")
         if not isinstance(digest, str) or not re.fullmatch(r"[0-9a-f]{64}", digest):
@@ -416,6 +450,11 @@ def validate_dependency_lock(root: Path, *, verify_installed: bool = False) -> l
                 )
             elif same_environment and _metadata_hash(distribution) != item["metadata_sha256"]:
                 errors.append(f"installed metadata differs from environment lock: {name}")
+            elif same_environment and (
+                not isinstance(licenses, dict)
+                or licenses.get(name) != _license_metadata(distribution)
+            ):
+                errors.append(f"installed license metadata differs from environment lock: {name}")
     return errors
 
 
