@@ -66,6 +66,15 @@ PRIVATE_CONTROL_PATHS = (
     ".cursor",
     ".cursorignore",
     "AGENTS.md",
+    "FILE_MANIFEST.sha256",
+    "PROJECT_MANIFEST.json",
+    "config/project_manifest.json",
+    "docs/CONTINUATION_PACKAGE.md",
+    "docs/NAVIGATION.md",
+    "docs/REQUIREMENT_CATALOG.md",
+    "docs/STATUS_MODEL.md",
+    "docs/engineering/pp380_disposition_generation.md",
+    "docs/generated",
     "docs/jira",
     "dummy",
     "evidence",
@@ -73,6 +82,7 @@ PRIVATE_CONTROL_PATHS = (
     "jira",
     "plans",
     "provenance",
+    "release",
 )
 
 

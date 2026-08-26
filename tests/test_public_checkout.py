@@ -5,6 +5,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from project_pipeline.validation.repository import RepositoryValidator
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -75,21 +77,42 @@ def test_unmarked_checkout_does_not_suppress_private_control_validation() -> Non
     assert "public_source_mode" not in report.checks
 
 
-def test_repository_validator_requires_the_explicit_public_declaration() -> None:
+@pytest.mark.parametrize(
+    "private_path",
+    (
+        ".agents",
+        ".cursor",
+        ".cursorignore",
+        "AGENTS.md",
+        "FILE_MANIFEST.sha256",
+        "PROJECT_MANIFEST.json",
+        "config/project_manifest.json",
+        "docs/CONTINUATION_PACKAGE.md",
+        "docs/NAVIGATION.md",
+        "docs/REQUIREMENT_CATALOG.md",
+        "docs/STATUS_MODEL.md",
+        "docs/engineering/pp380_disposition_generation.md",
+        "docs/generated",
+        "docs/jira",
+        "dummy",
+        "evidence",
+        "instructions",
+        "jira",
+        "plans",
+        "provenance",
+        "release",
+    ),
+)
+def test_private_control_records_prevent_public_mode(private_path: str) -> None:
+    module = load_script("private_control_checkout", ROOT / "scripts/validate_instructions.py")
     with tempfile.TemporaryDirectory() as directory:
         root = Path(directory)
         make_public_checkout(root)
         assert RepositoryValidator(root)._is_standalone_public_source_checkout()
+        assert module.is_standalone_public_source_checkout(root)
 
-        (root / "instructions").mkdir()
+        private_record = root / private_path
+        private_record.parent.mkdir(parents=True, exist_ok=True)
+        private_record.write_text("private control record\n", encoding="utf-8")
         assert not RepositoryValidator(root)._is_standalone_public_source_checkout()
-
-        (root / "instructions").rmdir()
-        (root / "plans").mkdir()
-        assert not RepositoryValidator(root)._is_standalone_public_source_checkout()
-
-        (root / "plans").rmdir()
-        (root / "pyproject.toml").write_text(
-            "[project]\nname = 'project-pipeline'\n", encoding="utf-8"
-        )
-        assert not RepositoryValidator(root)._is_standalone_public_source_checkout()
+        assert not module.is_standalone_public_source_checkout(root)

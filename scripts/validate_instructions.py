@@ -32,6 +32,15 @@ USES_ACTION = re.compile(r"^\s*-?\s*uses:\s*([^\s#]+)", re.MULTILINE)
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 MANDATORY_BOOTSTRAP = [
     "AGENTS.md",
+    "FILE_MANIFEST.sha256",
+    "PROJECT_MANIFEST.json",
+    "config/project_manifest.json",
+    "docs/CONTINUATION_PACKAGE.md",
+    "docs/NAVIGATION.md",
+    "docs/REQUIREMENT_CATALOG.md",
+    "docs/STATUS_MODEL.md",
+    "docs/engineering/pp380_disposition_generation.md",
+    "docs/generated",
     "instructions/README.md",
     "instructions/00_START_HERE.md",
     "instructions/01_AUTHORITY_AND_SOURCE_OF_TRUTH.md",
@@ -55,6 +64,15 @@ PRIVATE_CONTROL_PATHS = (
     ".cursor",
     ".cursorignore",
     "AGENTS.md",
+    "FILE_MANIFEST.sha256",
+    "PROJECT_MANIFEST.json",
+    "config/project_manifest.json",
+    "docs/CONTINUATION_PACKAGE.md",
+    "docs/NAVIGATION.md",
+    "docs/REQUIREMENT_CATALOG.md",
+    "docs/STATUS_MODEL.md",
+    "docs/engineering/pp380_disposition_generation.md",
+    "docs/generated",
     "docs/jira",
     "dummy",
     "evidence",
@@ -62,6 +80,7 @@ PRIVATE_CONTROL_PATHS = (
     "jira",
     "plans",
     "provenance",
+    "release",
 )
 
 
