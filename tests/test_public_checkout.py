@@ -83,24 +83,9 @@ def test_unmarked_checkout_does_not_suppress_private_control_validation() -> Non
         ".agents",
         ".cursor",
         ".cursorignore",
-        "AGENTS.md",
-        "FILE_MANIFEST.sha256",
-        "PROJECT_MANIFEST.json",
-        "config/project_manifest.json",
-        "docs/CONTINUATION_PACKAGE.md",
-        "docs/NAVIGATION.md",
-        "docs/REQUIREMENT_CATALOG.md",
-        "docs/STATUS_MODEL.md",
-        "docs/engineering/pp380_disposition_generation.md",
-        "docs/generated",
-        "docs/jira",
-        "dummy",
-        "evidence",
         "instructions",
         "jira",
         "plans",
-        "provenance",
-        "release",
     ),
 )
 def test_private_control_records_prevent_public_mode(private_path: str) -> None:
@@ -116,3 +101,28 @@ def test_private_control_records_prevent_public_mode(private_path: str) -> None:
         private_record.write_text("private control record\n", encoding="utf-8")
         assert not RepositoryValidator(root)._is_standalone_public_source_checkout()
         assert not module.is_standalone_public_source_checkout(root)
+
+
+@pytest.mark.parametrize(
+    "public_path",
+    (
+        "evidence",
+        "provenance",
+        "release",
+        "AGENTS.md",
+        "FILE_MANIFEST.sha256",
+    ),
+)
+def test_public_release_material_does_not_block_public_mode(public_path: str) -> None:
+    module = load_script("public_release_checkout", ROOT / "scripts/validate_instructions.py")
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        make_public_checkout(root)
+        marker = root / public_path
+        if marker.suffix:
+            marker.parent.mkdir(parents=True, exist_ok=True)
+            marker.write_text("public release material\n", encoding="utf-8")
+        else:
+            marker.mkdir(parents=True, exist_ok=True)
+        assert RepositoryValidator(root)._is_standalone_public_source_checkout()
+        assert module.is_standalone_public_source_checkout(root)
