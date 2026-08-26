@@ -23,6 +23,8 @@ def main() -> int:
     parser.add_argument("--durable-dir", type=Path)
     parser.add_argument("--coordinator-jira-receipt", type=Path)
     parser.add_argument("--coordinator-jira-signature", type=Path)
+    parser.add_argument("--coordinator-attestation-receipt", type=Path)
+    parser.add_argument("--coordinator-attestation-signature", type=Path)
     parser.add_argument("--write-evidence", action="store_true")
     args = parser.parse_args()
     if args.write_evidence:
@@ -34,6 +36,8 @@ def main() -> int:
             durable_dir=args.durable_dir,
             coordinator_jira_receipt=args.coordinator_jira_receipt,
             coordinator_jira_signature=args.coordinator_jira_signature,
+            coordinator_attestation_receipt=args.coordinator_attestation_receipt,
+            coordinator_attestation_signature=args.coordinator_attestation_signature,
         )
         print(json.dumps({"written": str(output)}, indent=2, sort_keys=True))
         return 0
@@ -44,6 +48,8 @@ def main() -> int:
         durable_dir=args.durable_dir,
         coordinator_jira_receipt=args.coordinator_jira_receipt,
         coordinator_jira_signature=args.coordinator_jira_signature,
+        coordinator_attestation_receipt=args.coordinator_attestation_receipt,
+        coordinator_attestation_signature=args.coordinator_attestation_signature,
     )
     print(json.dumps(report, indent=2, sort_keys=True))
     return 0
