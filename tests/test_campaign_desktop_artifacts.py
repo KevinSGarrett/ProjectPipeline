@@ -107,7 +107,7 @@ def test_campaign_desktop_builder_stages_gnu_target_artifacts(tmp_path, monkeypa
     monkeypatch.setattr(
         module,
         "_prepare_native_build_environment",
-        lambda environment: (
+        lambda environment, *, workspace: (
             {**environment, "CARGO_BUILD_TARGET": module._GNU_TARGET},
             module._GNU_TARGET,
             "x86_64-w64-mingw32-gcc.exe",
@@ -163,7 +163,7 @@ def test_campaign_desktop_builder_discovers_winget_winlibs(tmp_path, monkeypatch
     monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: None)
 
     environment, target, compiler = module._prepare_native_build_environment(
-        {"LOCALAPPDATA": str(tmp_path), "PATH": "base-path"}
+        {"LOCALAPPDATA": str(tmp_path), "PATH": "base-path"}, workspace=tmp_path / "build"
     )
 
     assert target == module._GNU_TARGET
@@ -172,35 +172,7 @@ def test_campaign_desktop_builder_discovers_winget_winlibs(tmp_path, monkeypatch
     assert compiler == str(winlibs_bin / module._GNU_GCC)
 
 
-def test_campaign_desktop_builder_uses_short_path_for_winlibs_with_spaces(tmp_path, monkeypatch):
-    module = _load_builder()
-    winlibs_bin = (
-        tmp_path
-        / "with space"
-        / "Microsoft"
-        / "WinGet"
-        / "Packages"
-        / "BrechtSanders.WinLibs.POSIX.UCRT_example"
-        / "mingw64"
-        / "bin"
-    )
-    winlibs_bin.mkdir(parents=True)
-    (winlibs_bin / module._GNU_GCC).write_bytes(b"")
-    short_bin = Path("C:/WinLibsShort/mingw64/bin")
-    monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: None)
-    monkeypatch.setattr(module, "_windows_short_path", lambda _path: short_bin)
-
-    environment, target, compiler = module._prepare_native_build_environment(
-        {"LOCALAPPDATA": str(tmp_path / "with space"), "PATH": "base-path"}
-    )
-
-    assert target == module._GNU_TARGET
-    assert environment["PATH"].startswith(str(short_bin))
-    assert " " not in environment["PATH"].split(module.os.pathsep, 1)[0]
-    assert compiler == str(short_bin / module._GNU_GCC)
-
-
-def test_campaign_desktop_builder_rejects_spaced_winlibs_path_without_short_name(
+def test_campaign_desktop_builder_copies_winlibs_with_spaces_to_build_workspace(
     tmp_path, monkeypatch
 ):
     module = _load_builder()
@@ -216,10 +188,80 @@ def test_campaign_desktop_builder_rejects_spaced_winlibs_path_without_short_name
     )
     winlibs_bin.mkdir(parents=True)
     (winlibs_bin / module._GNU_GCC).write_bytes(b"")
+    copied_bin = tmp_path / "build" / "winlibs-gnu" / "bin"
     monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: None)
-    monkeypatch.setattr(module, "_windows_short_path", lambda _path: None)
+    monkeypatch.setattr(
+        module, "_copy_winlibs_toolchain_to_build_workspace", lambda _source, _workspace: copied_bin
+    )
 
-    with pytest.raises(RuntimeError, match="desktop-build-gnu-linker-space-path"):
-        module._prepare_native_build_environment(
-            {"LOCALAPPDATA": str(tmp_path / "with space"), "PATH": "base-path"}
+    environment, target, compiler = module._prepare_native_build_environment(
+        {"LOCALAPPDATA": str(tmp_path / "with space"), "PATH": "base-path"},
+        workspace=tmp_path / "build",
+    )
+
+    assert target == module._GNU_TARGET
+    assert environment["PATH"].startswith(str(copied_bin))
+    assert " " not in environment["PATH"].split(module.os.pathsep, 1)[0]
+    assert compiler == str(copied_bin / module._GNU_GCC)
+
+
+def test_campaign_desktop_builder_rejects_spaced_winlibs_path_in_spaced_workspace(tmp_path):
+    module = _load_builder()
+    winlibs_bin = (
+        tmp_path
+        / "with space"
+        / "Microsoft"
+        / "WinGet"
+        / "Packages"
+        / "BrechtSanders.WinLibs.POSIX.UCRT_example"
+        / "mingw64"
+        / "bin"
+    )
+    winlibs_bin.mkdir(parents=True)
+    (winlibs_bin / module._GNU_GCC).write_bytes(b"")
+
+    with pytest.raises(RuntimeError, match="desktop-build-gnu-toolchain-workspace-space-path"):
+        module._copy_winlibs_toolchain_to_build_workspace(
+            winlibs_bin, tmp_path / "output with space"
         )
+
+
+def test_campaign_desktop_builder_removes_created_output_after_build_failure(tmp_path, monkeypatch):
+    module = _load_builder()
+    root = tmp_path / "candidate"
+    frontend = root / "apps" / "command_center"
+    frontend.mkdir(parents=True)
+    (frontend / "package-lock.json").write_text("{}\n", encoding="utf-8")
+    output = tmp_path / "desktop-artifacts"
+    sha = "a" * 40
+    tree = "b" * 40
+    monkeypatch.setattr(
+        module,
+        "inspect_worktree_identity",
+        lambda _root: {"ok": True, "dirty": False, "sha": sha, "tree": tree},
+    )
+    monkeypatch.setattr(module, "require_safe_local_host", lambda _root: {"state": "SAFE"})
+    monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: "npm")
+    monkeypatch.setattr(
+        module,
+        "_prepare_native_build_environment",
+        lambda environment, *, workspace: (environment, module._GNU_TARGET, "gcc"),
+    )
+    monkeypatch.setattr(module, "_gnu_rust_toolchain", lambda _root: "1.97.1-x86_64-pc-windows-gnu")
+    monkeypatch.setattr(
+        module,
+        "_run",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            RuntimeError("desktop-native-build-failed")
+        ),
+    )
+
+    with pytest.raises(RuntimeError, match="desktop-native-build-failed"):
+        module.build_artifacts(
+            root=root,
+            output_dir=output,
+            expected_sha=sha,
+            expected_tree=tree,
+        )
+
+    assert not output.exists()
