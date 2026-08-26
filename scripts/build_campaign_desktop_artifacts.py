@@ -84,8 +84,8 @@ def _winget_winlibs_bin(environment: dict[str, str]) -> Path | None:
     return None
 
 
-def _copy_winlibs_toolchain_to_build_workspace(source_bin: Path, workspace: Path) -> Path:
-    """Copy a WinGet GNU toolchain whose embedded prefix contains a space."""
+def _copy_gnu_toolchain_to_build_workspace(source_bin: Path, workspace: Path) -> Path:
+    """Copy a GNU toolchain whose embedded prefix contains a space."""
 
     if " " in str(workspace):
         raise RuntimeError("desktop-build-gnu-toolchain-workspace-space-path")
@@ -104,7 +104,7 @@ def _gnu_toolchain_path_entry(path: Path, *, workspace: Path) -> Path:
 
     if " " not in str(path):
         return path
-    return _copy_winlibs_toolchain_to_build_workspace(path, workspace)
+    return _copy_gnu_toolchain_to_build_workspace(path, workspace)
 
 
 def _prepare_native_build_environment(
@@ -130,14 +130,14 @@ def _prepare_native_build_environment(
 
     compiler = shutil.which(_GNU_GCC, path=path_value)
     if compiler:
-        compiler_path = Path(compiler)
+        path_entry = _gnu_toolchain_path_entry(Path(compiler).parent, workspace=workspace)
     else:
         winlibs_bin = _winget_winlibs_bin(configured)
         if winlibs_bin is None:
             raise RuntimeError("desktop-build-gnu-linker-unavailable")
         path_entry = _gnu_toolchain_path_entry(winlibs_bin, workspace=workspace)
-        configured["PATH"] = str(path_entry) + os.pathsep + path_value
-        compiler_path = path_entry / _GNU_GCC
+    configured["PATH"] = str(path_entry) + os.pathsep + path_value
+    compiler_path = path_entry / _GNU_GCC
     configured["CARGO_BUILD_TARGET"] = _GNU_TARGET
     return configured, target, str(compiler_path)
 

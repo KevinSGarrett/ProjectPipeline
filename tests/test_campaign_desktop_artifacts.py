@@ -191,7 +191,7 @@ def test_campaign_desktop_builder_copies_winlibs_with_spaces_to_build_workspace(
     copied_bin = tmp_path / "build" / "winlibs-gnu" / "bin"
     monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: None)
     monkeypatch.setattr(
-        module, "_copy_winlibs_toolchain_to_build_workspace", lambda _source, _workspace: copied_bin
+        module, "_copy_gnu_toolchain_to_build_workspace", lambda _source, _workspace: copied_bin
     )
 
     environment, target, compiler = module._prepare_native_build_environment(
@@ -221,9 +221,31 @@ def test_campaign_desktop_builder_rejects_spaced_winlibs_path_in_spaced_workspac
     (winlibs_bin / module._GNU_GCC).write_bytes(b"")
 
     with pytest.raises(RuntimeError, match="desktop-build-gnu-toolchain-workspace-space-path"):
-        module._copy_winlibs_toolchain_to_build_workspace(
-            winlibs_bin, tmp_path / "output with space"
-        )
+        module._copy_gnu_toolchain_to_build_workspace(winlibs_bin, tmp_path / "output with space")
+
+
+def test_campaign_desktop_builder_copies_spaced_gnu_compiler_from_path(tmp_path, monkeypatch):
+    module = _load_builder()
+    compiler = tmp_path / "compiler with space" / "bin" / module._GNU_GCC
+    compiler.parent.mkdir(parents=True)
+    compiler.write_bytes(b"")
+    copied_bin = tmp_path / "build" / "winlibs-gnu" / "bin"
+    monkeypatch.setattr(
+        module.shutil,
+        "which",
+        lambda name, path=None: str(compiler) if name == module._GNU_GCC else None,
+    )
+    monkeypatch.setattr(
+        module, "_copy_gnu_toolchain_to_build_workspace", lambda _source, _workspace: copied_bin
+    )
+
+    environment, target, resolved_compiler = module._prepare_native_build_environment(
+        {"PATH": str(compiler.parent)}, workspace=tmp_path / "build"
+    )
+
+    assert target == module._GNU_TARGET
+    assert environment["PATH"].startswith(str(copied_bin))
+    assert resolved_compiler == str(copied_bin / module._GNU_GCC)
 
 
 def test_campaign_desktop_builder_removes_created_output_after_build_failure(tmp_path, monkeypatch):
