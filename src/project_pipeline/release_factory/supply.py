@@ -135,13 +135,14 @@ def _materialize_public_license_inventory(
             for component in sbom.components
         ],
     }
-    path = output_dir / "provenance" / "license_policy.generated.json"
+    relative_path = Path("provenance") / "license_policy.generated.json"
+    path = output_dir / relative_path
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(
         json.dumps(payload, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
-    return path.as_posix()
+    return relative_path.as_posix()
 
 
 def _resolve_license_inventory_path(

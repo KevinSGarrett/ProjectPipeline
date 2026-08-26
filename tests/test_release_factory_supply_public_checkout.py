@@ -87,7 +87,7 @@ def test_bind_bundle_supply_chain_generates_public_license_inventory() -> None:
         bundle = _fixture_bundle(output)
 
         binding = bind_bundle_supply_chain(root, bundle)
-        generated = Path(binding.license_inventory_path)
+        generated = output / binding.license_inventory_path
         assert generated.name == "license_policy.generated.json"
         assert generated.is_file()
 
