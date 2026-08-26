@@ -233,8 +233,8 @@
     {
       "extension": "[none]",
       "path": ".git",
-      "sha256": "5b05045966a8f80aa8e9a27c70fb5947aaac92fc3a7e3dea24cb1836e02791ed",
-      "size_bytes": 74,
+      "sha256": "52fcfe94edd7dcfb6d54fc060dd46631ac309be9a562d1efc9bdaaecfc5d4e2b",
+      "size_bytes": 68,
       "top_level": "_root"
     },
     {
@@ -2368,8 +2368,8 @@
     {
       "extension": ".md",
       "path": "docs/resilience/gaps.md",
-      "sha256": "9652265e3bb9cc55dcd275ca8f33e880b41046fc75d90cbdd3b3a22f29ed3a92",
-      "size_bytes": 562,
+      "sha256": "db981dc2ff30c6ebf015f4b20475de1915387f8174c6c85a14ded51fa9b7f763",
+      "size_bytes": 938,
       "top_level": "docs"
     },
     {
@@ -5938,7 +5938,7 @@
     {
       "extension": ".jsonl",
       "path": "evidence/EVIDENCE_LEDGER.jsonl",
-      "sha256": "6a3fa8d0df3468e8e935c46096e1f737dfb826e14720fc491667326b3be3cea9",
+      "sha256": "cbd32efcb51fe863b029d42163aded8f7f4cc2458ca1e83e0dd1fe47b8ab29eb",
       "size_bytes": 168347,
       "top_level": "evidence"
     },
@@ -7233,7 +7233,7 @@
     {
       "extension": ".sha256",
       "path": "FILE_MANIFEST.sha256",
-      "sha256": "505a29f5b8eff26424de16f336b9beb7105d0805cd650f4a6514a1e55f755ab2",
+      "sha256": "ad5fb34bc03332bd26f31a3923f1f800fed49bd7b62f7cb7c7a3eb9fe3c359f7",
       "size_bytes": 348078,
       "top_level": "_root"
     },
@@ -14457,7 +14457,7 @@
     {
       "extension": ".json",
       "path": "PROJECT_MANIFEST.json",
-      "sha256": "9f881d559c87fbb5fa6975d3823df166f1b5f47d349a97e21ad37b22afc20a89",
+      "sha256": "3ad336c1b8c282489a7e0dc647a97f51c1c28be8c43318f1ca9130819e8120b2",
       "size_bytes": 569998,
       "top_level": "_root"
     },
@@ -16984,8 +16984,8 @@
     {
       "extension": ".ps1",
       "path": "scripts/register_autonomy_campaign_recovery.ps1",
-      "sha256": "219497d5579b401cc143e582f6b8dfd90a35e11d2b77d97a94ca7e8a2b5e0e23",
-      "size_bytes": 9128,
+      "sha256": "eb3f77b3185946ab82bb8a7e5693fec3b9326289dd389c6b398558dd0a5f0e8e",
+      "size_bytes": 9142,
       "top_level": "scripts"
     },
     {
@@ -17096,8 +17096,8 @@
     {
       "extension": ".ps1",
       "path": "scripts/start_autonomy_campaign_hidden.ps1",
-      "sha256": "8edd610bbb27ece664ea3ef0e7430dd1f04efd8af391515a96ae93f930c840aa",
-      "size_bytes": 4203,
+      "sha256": "2fc836b5bebb6b3a084e859838d7072c93ef94a34576fdf9403e3aa468a82018",
+      "size_bytes": 4235,
       "top_level": "scripts"
     },
     {
@@ -19084,8 +19084,8 @@
     {
       "extension": ".py",
       "path": "src/project_pipeline/resilience/host_safety.py",
-      "sha256": "c24cf5053b5a754a8ae5ed109d97a3020784d34164cbe1bcdf96cd20f78826de",
-      "size_bytes": 5924,
+      "sha256": "f5f79a0bbb85792d81e443cf32ceb72a0fb0955d83b8e7334d90f07d934d5fe4",
+      "size_bytes": 9736,
       "top_level": "src"
     },
     {
@@ -20505,8 +20505,8 @@
     {
       "extension": ".py",
       "path": "tests/test_host_safety.py",
-      "sha256": "ed1611d888f71794e2be7f0731694a5db1e99afbc0fed65ab2c3d1359d4ccfba",
-      "size_bytes": 3513,
+      "sha256": "3cab82ba197057785adee569e1aeee12f6ad1eaf878451c059617d3500f5d637",
+      "size_bytes": 9012,
       "top_level": "tests"
     },
     {
@@ -21371,7 +21371,7 @@
       "top_level": "third_party"
     }
   ],
-  "generated_at_utc": "2026-08-25T23:11:26.880853+00:00",
+  "generated_at_utc": "2026-08-26T00:38:49.839076+00:00",
   "project_id": "PROJECT-PIPELINE",
   "schema_version": "1.0.0",
   "semantic_index": {

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "f695eef710f5cad35d7ead38ddd85ecd80045f969776b4e29ad18bbd47429c8d",
+  "aggregate_sha256": "911ec3152db145fae19e59ded67d534ff6a1ffbdd96dafbc94296ecd33573d43",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -1647,8 +1647,8 @@
     },
     {
       "path": "docs/resilience/gaps.md",
-      "sha256": "9652265e3bb9cc55dcd275ca8f33e880b41046fc75d90cbdd3b3a22f29ed3a92",
-      "size_bytes": 562
+      "sha256": "db981dc2ff30c6ebf015f4b20475de1915387f8174c6c85a14ded51fa9b7f763",
+      "size_bytes": 938
     },
     {
       "path": "docs/retrieval_benchmark.md",
@@ -4197,7 +4197,7 @@
     },
     {
       "path": "evidence/EVIDENCE_LEDGER.jsonl",
-      "sha256": "6a3fa8d0df3468e8e935c46096e1f737dfb826e14720fc491667326b3be3cea9",
+      "sha256": "cbd32efcb51fe863b029d42163aded8f7f4cc2458ca1e83e0dd1fe47b8ab29eb",
       "size_bytes": 168347
     },
     {
@@ -13577,8 +13577,8 @@
     },
     {
       "path": "src/project_pipeline/resilience/host_safety.py",
-      "sha256": "c24cf5053b5a754a8ae5ed109d97a3020784d34164cbe1bcdf96cd20f78826de",
-      "size_bytes": 5924
+      "sha256": "f5f79a0bbb85792d81e443cf32ceb72a0fb0955d83b8e7334d90f07d934d5fe4",
+      "size_bytes": 9736
     },
     {
       "path": "src/project_pipeline/resilience/local_models.py",
@@ -14592,8 +14592,8 @@
     },
     {
       "path": "tests/test_host_safety.py",
-      "sha256": "ed1611d888f71794e2be7f0731694a5db1e99afbc0fed65ab2c3d1359d4ccfba",
-      "size_bytes": 3513
+      "sha256": "3cab82ba197057785adee569e1aeee12f6ad1eaf878451c059617d3500f5d637",
+      "size_bytes": 9012
     },
     {
       "path": "tests/test_ids.py",
@@ -15211,7 +15211,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-25T23:11:27.442095+00:00",
+  "generated_at_utc": "2026-08-26T00:38:50.276108+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15221,5 +15221,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30600127
+  "total_bytes": 30609814
 }
