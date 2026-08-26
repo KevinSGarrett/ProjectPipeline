@@ -351,6 +351,46 @@ def _coordinator_jira_receipt(*, sha: str, tree: str) -> dict[str, object]:
     return receipt
 
 
+def _coordinator_attestation_receipt(*, sha: str, tree: str) -> dict[str, object]:
+    policy = SimpleNamespace(
+        project_id="PROJECT-PIPELINE",
+        provider_id="cursor-cli",
+        scope="pp379_writer_attestation",
+    )
+    receipt: dict[str, object] = {
+        "schema_version": live_qualification_module._COORDINATOR_ATTESTATION_RECEIPT_VERSION,
+        "kind": live_qualification_module._COORDINATOR_ATTESTATION_RECEIPT_KIND,
+        "status": "PASSED",
+        "generated_at_utc": datetime.now(UTC).isoformat(),
+        "task_id": "PP-TASK-000384",
+        "coordinator_id": "PRIMARY-CODEX-WORKSTATION",
+        "candidate": {"sha": sha, "tree": tree},
+        "attestation": {
+            "evidence_ref": live_qualification_module.PUBLIC_ATTESTATION_REF,
+            "sha256": live_qualification_module.EXPECTED_PUBLIC_ATTESTATION_SHA256,
+            "byte_length": live_qualification_module.EXPECTED_PUBLIC_ATTESTATION_BYTES,
+            "project_id": policy.project_id,
+            "provider_id": policy.provider_id,
+            "scope": policy.scope,
+            "approved": True,
+            "approved_at_utc": datetime.now(UTC).isoformat(),
+        },
+        "qualification": {
+            "evidence_ref": live_qualification_module.PUBLIC_QUALIFICATION_REF,
+            "sha256": live_qualification_module.EXPECTED_PUBLIC_QUALIFICATION_SHA256,
+            "byte_length": live_qualification_module.EXPECTED_PUBLIC_QUALIFICATION_BYTES,
+            "project_id": policy.project_id,
+            "provider_id": policy.provider_id,
+            "scope": policy.scope,
+            "qualified": True,
+            "verified_at_utc": datetime.now(UTC).isoformat(),
+        },
+        "secret_value_observed": False,
+    }
+    receipt["receipt_sha256"] = live_qualification_module._coordinator_jira_receipt_digest(receipt)
+    return receipt
+
+
 def test_coordinator_jira_receipt_requires_fresh_exact_candidate(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -383,6 +423,81 @@ def test_coordinator_jira_receipt_requires_fresh_exact_candidate(
     )
     assert rejected["valid"] is False
     assert rejected["reason"] == "coordinator_jira_receipt_policy_mismatch"
+
+
+def test_coordinator_attestation_relay_requires_signed_exact_fresh_candidate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    sha = "a" * 40
+    tree = "b" * 40
+    receipt = tmp_path / "coordinator-attestation.json"
+    signature = tmp_path / "coordinator-attestation.sig"
+    payload = _coordinator_attestation_receipt(sha=sha, tree=tree)
+    receipt.write_text(json.dumps(payload), encoding="utf-8")
+    signature.write_bytes(b"test signature")
+    monkeypatch.setattr(
+        live_qualification_module,
+        "load_current_attestation_policy",
+        lambda _root: SimpleNamespace(
+            project_id="PROJECT-PIPELINE",
+            provider_id="cursor-cli",
+            scope="pp379_writer_attestation",
+        ),
+    )
+    monkeypatch.setattr(
+        live_qualification_module, "_verify_coordinator_signature", lambda **_kwargs: True
+    )
+
+    accepted = live_qualification_module._coordinator_attestation_receipt_probe(
+        receipt,
+        signature,
+        repository_root=tmp_path,
+        expected_head=sha,
+        expected_tree=tree,
+    )
+    assert accepted["valid"] is True
+    assert accepted["signature_verified"] is True
+    assert accepted["relay"] == "signed-private-attestation"
+
+    payload["candidate"] = {"sha": "c" * 40, "tree": tree}
+    payload["receipt_sha256"] = live_qualification_module._coordinator_jira_receipt_digest(payload)
+    receipt.write_text(json.dumps(payload), encoding="utf-8")
+    rejected = live_qualification_module._coordinator_attestation_receipt_probe(
+        receipt,
+        signature,
+        repository_root=tmp_path,
+        expected_head=sha,
+        expected_tree=tree,
+    )
+    assert rejected["valid"] is False
+    assert rejected["reason"] == "coordinator_attestation_receipt_policy_mismatch"
+
+
+def test_windows_signature_verifier_uses_redirected_message_file(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    observed: dict[str, object] = {}
+
+    def fake_run(command: list[str], **kwargs: object) -> SimpleNamespace:
+        observed["command"] = command
+        observed["kwargs"] = kwargs
+        batch = Path(command[-1])
+        observed["batch"] = batch.read_text(encoding="mbcs")
+        return SimpleNamespace(returncode=0, stdout=b"ok", stderr=b"")
+
+    monkeypatch.setattr(live_qualification_module.subprocess, "run", fake_run)
+
+    result = live_qualification_module._run_windows_signature_verifier(
+        ["ssh-keygen", "-Y", "verify", "-s", "signature.sig"],
+        message=b"sha256:" + b"a" * 64 + b"\n",
+        comspec="cmd.exe",
+    )
+
+    assert result.returncode == 0
+    assert observed["command"][:3] == ["cmd.exe", "/d", "/c"]
+    assert "stdin" not in observed["kwargs"]
+    assert "ssh-keygen -Y verify -s signature.sig" in str(observed["batch"])
+    assert "message.txt" in str(observed["batch"])
 
 
 def test_coordinator_jira_receipt_rejects_content_address_mismatch(

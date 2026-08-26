@@ -403,6 +403,7 @@ def qualify_cursor_cli_provider(
     timeout_seconds: float = 600.0,
     create_worktree_cleanup: Callable[[Path], dict[str, Any]] | None = None,
     policy: CurrentAttestationPolicy | None = None,
+    coordinator_attestation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     repository_root = repository_root.resolve()
     durable_dir = resolve_durable_dir(repository_root, durable_dir)
@@ -412,6 +413,12 @@ def qualify_cursor_cli_provider(
     workspace.mkdir(parents=True, exist_ok=True)
     phases: list[dict[str, Any]] = []
     policy = policy or load_current_attestation_policy(repository_root)
+    coordinator_attestation_valid = bool(
+        coordinator_attestation
+        and coordinator_attestation.get("valid") is True
+        and coordinator_attestation.get("signature_verified") is True
+        and coordinator_attestation.get("relay") == "signed-private-attestation"
+    )
 
     public_attestation = repository_root / PUBLIC_ATTESTATION_REF
     public_qualification = repository_root / PUBLIC_QUALIFICATION_REF
@@ -420,6 +427,7 @@ def qualify_cursor_cli_provider(
         "public_qualification_found": public_qualification.is_file(),
         "recoverable_source_present": source_root is not None
         and (source_root / PUBLIC_ATTESTATION_REF).is_file(),
+        "coordinator_attestation_valid": coordinator_attestation_valid,
     }
     if (
         not discovery["public_attestation_found"] or not discovery["public_qualification_found"]
@@ -458,16 +466,25 @@ def qualify_cursor_cli_provider(
         {
             "phase": QualificationPhase.EVIDENCE_VALIDATION.value,
             "observations": {
-                "accepted": evaluation["accepted_for_restore"]
+                "accepted": coordinator_attestation_valid
+                or evaluation["accepted_for_restore"]
                 or all(
                     item["disposition"] == RecoveryDisposition.RECOVERED_VALID.value
                     for item in evaluation["artifacts"]
                 ),
-                "artifacts": evaluation["artifacts"],
+                "evidence_source": (
+                    "signed_coordinator_attestation"
+                    if coordinator_attestation_valid
+                    else "public_or_recoverable_artifacts"
+                ),
+                "artifacts": [] if coordinator_attestation_valid else evaluation["artifacts"],
+                "coordinator_attestation": coordinator_attestation
+                if coordinator_attestation_valid
+                else None,
             },
         }
     )
-    if not all(
+    if not coordinator_attestation_valid and not all(
         item["disposition"] == RecoveryDisposition.RECOVERED_VALID.value
         for item in evaluation["artifacts"]
     ):

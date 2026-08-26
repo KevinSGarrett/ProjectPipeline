@@ -12,6 +12,16 @@ Cursor is a replaceable execution provider inside ProjectPipeline. It is not the
 6. Qualify the golden journey, controlled GitHub/Jira adapters, restart recovery, Windows behavior, then 4-hour, 24-hour, and 72-hour unattended stages.
 7. Change provider activation to `QUALIFIED` only through a governed review after evidence is registered.
 
+## Private-attestation relay
+
+Some provider attestation records are intentionally private coordinator evidence and are excluded
+from public source archives.  Before a CPU-hosted PP-384 run, the coordinator may create a fresh,
+candidate-bound receipt with `scripts/run_coordinator_attestation_relay.py`.  The receipt contains
+only the approved immutable digest, byte-length, policy identity, candidate identity, and a
+coordinator signature; it never contains or restores the private evidence bytes.  The CPU accepts
+the relay only when the signature, receipt digest, policy fields, candidate SHA/tree, and freshness
+window all verify.  An invalid or missing relay remains a fail-closed qualification finding.
+
 The supervisor rehydrates durable state, runs deterministic validation, uses Control ordering, audits each candidate against its own declared artifacts and tests, selects genuinely missing work, creates at most two conflict-safe lanes, verifies one cohesive slice, opens one PR, runs the expensive gate once, reconciles state in a batch, and repeats.
 
 Initialize and update its durable local state only through the governed helper:

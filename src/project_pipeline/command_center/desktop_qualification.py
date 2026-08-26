@@ -110,9 +110,19 @@ def discover_desktop_artifacts(root: Path, *, hosted_dir: Path | None = None) ->
     for hosted in hosted_dirs:
         if hosted is None or not hosted.is_dir():
             continue
-        for path in hosted.rglob("*"):
+        # A staged release directory can retain a nested Cargo target cache for
+        # reproducibility diagnostics.  Prefer the closest staged artifact for
+        # each kind so a deeply nested build helper is never launched as the
+        # Command Center executable.
+        for path in sorted(
+            hosted.rglob("*"),
+            key=lambda candidate: (
+                len(candidate.relative_to(hosted).parts),
+                candidate.as_posix().lower(),
+            ),
+        ):
             classified = classify_desktop_artifact(path)
-            if classified is not None:
+            if classified is not None and classified not in found:
                 found[classified] = path
     return found
 

@@ -6,6 +6,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 from contextlib import suppress
 from dataclasses import dataclass
@@ -33,6 +34,15 @@ from project_pipeline.autonomy_runtime.windows_service import (
     plan_service_commands,
 )
 from project_pipeline.command_center.autonomy import project_autonomy_runtime
+from project_pipeline.lifecycle.attestation_recovery import (
+    EXPECTED_PUBLIC_ATTESTATION_BYTES,
+    EXPECTED_PUBLIC_ATTESTATION_SHA256,
+    EXPECTED_PUBLIC_QUALIFICATION_BYTES,
+    EXPECTED_PUBLIC_QUALIFICATION_SHA256,
+    PUBLIC_ATTESTATION_REF,
+    PUBLIC_QUALIFICATION_REF,
+    load_current_attestation_policy,
+)
 
 
 class StageOutcome(StrEnum):
@@ -91,6 +101,9 @@ _COORDINATOR_JIRA_RECEIPT_MAX_AGE = timedelta(minutes=15)
 _PRIMARY_COORDINATOR_ID = "PRIMARY-CODEX-WORKSTATION"
 _COORDINATOR_JIRA_SIGNATURE_NAMESPACE = "project-pipeline-pp384-jira-governance"
 _COORDINATOR_JIRA_ALLOWED_SIGNERS = Path("config/security/coordinator_jira_receipt_allowed_signers")
+_COORDINATOR_ATTESTATION_RECEIPT_KIND = "pp384_coordinator_attestation_relay"
+_COORDINATOR_ATTESTATION_RECEIPT_VERSION = "1.0.0"
+_COORDINATOR_ATTESTATION_SIGNATURE_NAMESPACE = "project-pipeline-pp384-attestation"
 
 
 def _github_repository_slug_from_url(url: str) -> str | None:
@@ -584,10 +597,268 @@ def create_coordinator_jira_governance_receipt(
     return receipt
 
 
-def _verify_coordinator_jira_signature(
-    *, receipt_sha256: str, signature_path: Path, allowed_signers_path: Path
+def _receipt_timestamp(value: object) -> str | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed.astimezone(UTC).isoformat() if parsed.tzinfo is not None else None
+
+
+def _coordinator_attestation_subject(
+    path: Path,
+    *,
+    expected_sha256: str,
+    expected_bytes: int,
+    state_field: str,
+    timestamp_field: str,
+    evidence_ref: str,
+    policy: Any,
+) -> dict[str, Any] | None:
+    try:
+        raw = path.read_bytes()
+        payload = json.loads(raw.decode("utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    if (
+        not isinstance(payload, dict)
+        or len(raw) != expected_bytes
+        or hashlib.sha256(raw).hexdigest() != expected_sha256
+        or payload.get("project_id") != policy.project_id
+        or payload.get("provider_id") != policy.provider_id
+        or payload.get("scope") != policy.scope
+        or payload.get(state_field) is not True
+    ):
+        return None
+    timestamp = _receipt_timestamp(payload.get(timestamp_field))
+    if timestamp is None:
+        return None
+    return {
+        "evidence_ref": evidence_ref,
+        "sha256": expected_sha256,
+        "byte_length": expected_bytes,
+        "project_id": policy.project_id,
+        "provider_id": policy.provider_id,
+        "scope": policy.scope,
+        state_field: True,
+        timestamp_field: timestamp,
+    }
+
+
+def create_coordinator_attestation_receipt(
+    *,
+    repository_root: Path,
+    attestation_source_root: Path,
+    coordinator_id: str = _PRIMARY_COORDINATOR_ID,
+) -> dict[str, Any]:
+    """Attest private PP-379 records without copying their bytes to the CPU.
+
+    The source records remain in the coordinator's private preservation store.
+    Only policy-relevant identities and accepted immutable digests travel in the
+    signed receipt.
+    """
+
+    head, tree = _git_identity(repository_root)
+    if head is None or tree is None:
+        raise RuntimeError("coordinator attestation receipt requires a valid Git candidate identity")
+    policy = load_current_attestation_policy(repository_root)
+    attestation = _coordinator_attestation_subject(
+        attestation_source_root / PUBLIC_ATTESTATION_REF,
+        expected_sha256=EXPECTED_PUBLIC_ATTESTATION_SHA256,
+        expected_bytes=EXPECTED_PUBLIC_ATTESTATION_BYTES,
+        state_field="approved",
+        timestamp_field="approved_at_utc",
+        evidence_ref=PUBLIC_ATTESTATION_REF,
+        policy=policy,
+    )
+    qualification = _coordinator_attestation_subject(
+        attestation_source_root / PUBLIC_QUALIFICATION_REF,
+        expected_sha256=EXPECTED_PUBLIC_QUALIFICATION_SHA256,
+        expected_bytes=EXPECTED_PUBLIC_QUALIFICATION_BYTES,
+        state_field="qualified",
+        timestamp_field="verified_at_utc",
+        evidence_ref=PUBLIC_QUALIFICATION_REF,
+        policy=policy,
+    )
+    receipt: dict[str, Any] = {
+        "schema_version": _COORDINATOR_ATTESTATION_RECEIPT_VERSION,
+        "kind": _COORDINATOR_ATTESTATION_RECEIPT_KIND,
+        "status": "PASSED" if attestation and qualification else "FAILED",
+        "generated_at_utc": _utc_now(),
+        "task_id": _LIVE_QUAL_JIRA_LOCAL_ID,
+        "coordinator_id": coordinator_id,
+        "candidate": {"sha": head, "tree": tree},
+        "attestation": attestation,
+        "qualification": qualification,
+        "secret_value_observed": False,
+    }
+    receipt["receipt_sha256"] = _coordinator_jira_receipt_digest(receipt)
+    return receipt
+
+
+def _coordinator_attestation_subject_matches(
+    subject: object,
+    *,
+    expected_sha256: str,
+    expected_bytes: int,
+    state_field: str,
+    timestamp_field: str,
+    evidence_ref: str,
+    policy: Any,
 ) -> bool:
-    """Verify laptop-owned evidence without moving a credential to the CPU worker."""
+    return (
+        isinstance(subject, dict)
+        and subject.get("evidence_ref") == evidence_ref
+        and subject.get("sha256") == expected_sha256
+        and subject.get("byte_length") == expected_bytes
+        and subject.get("project_id") == policy.project_id
+        and subject.get("provider_id") == policy.provider_id
+        and subject.get("scope") == policy.scope
+        and subject.get(state_field) is True
+        and _receipt_timestamp(subject.get(timestamp_field)) is not None
+    )
+
+
+def _coordinator_attestation_receipt_probe(
+    receipt_path: Path | None,
+    signature_path: Path | None,
+    *,
+    repository_root: Path,
+    expected_head: str | None,
+    expected_tree: str | None,
+) -> dict[str, Any]:
+    """Validate a fresh, signed, candidate-bound relay for private PP-379 proof."""
+
+    unavailable: dict[str, Any] = {"provided": receipt_path is not None, "valid": False}
+    if receipt_path is None:
+        unavailable["reason"] = "coordinator_attestation_receipt_not_provided"
+        return unavailable
+    if signature_path is None:
+        unavailable["reason"] = "coordinator_attestation_signature_not_provided"
+        return unavailable
+    if expected_head is None or expected_tree is None:
+        unavailable["reason"] = "candidate_identity_unavailable"
+        return unavailable
+    try:
+        payload = json.loads(receipt_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        unavailable["reason"] = "coordinator_attestation_receipt_unreadable"
+        return unavailable
+    if not isinstance(payload, dict):
+        unavailable["reason"] = "coordinator_attestation_receipt_malformed"
+        return unavailable
+    receipt_sha256 = str(payload.get("receipt_sha256") or "").lower()
+    if receipt_sha256 != _coordinator_jira_receipt_digest(payload):
+        unavailable["reason"] = "coordinator_attestation_receipt_digest_mismatch"
+        return unavailable
+    generated = _receipt_timestamp(payload.get("generated_at_utc"))
+    if generated is None:
+        unavailable["reason"] = "coordinator_attestation_receipt_timestamp_invalid"
+        return unavailable
+    now = datetime.now(UTC)
+    generated_at = datetime.fromisoformat(generated)
+    if generated_at > now or now - generated_at > _COORDINATOR_JIRA_RECEIPT_MAX_AGE:
+        unavailable["reason"] = "coordinator_attestation_receipt_stale"
+        return unavailable
+    candidate = payload.get("candidate")
+    identity_matches = (
+        isinstance(candidate, dict)
+        and str(candidate.get("sha") or "").lower() == expected_head.lower()
+        and str(candidate.get("tree") or "").lower() == expected_tree.lower()
+    )
+    policy = load_current_attestation_policy(repository_root)
+    attestation_ok = _coordinator_attestation_subject_matches(
+        payload.get("attestation"),
+        expected_sha256=EXPECTED_PUBLIC_ATTESTATION_SHA256,
+        expected_bytes=EXPECTED_PUBLIC_ATTESTATION_BYTES,
+        state_field="approved",
+        timestamp_field="approved_at_utc",
+        evidence_ref=PUBLIC_ATTESTATION_REF,
+        policy=policy,
+    )
+    qualification_ok = _coordinator_attestation_subject_matches(
+        payload.get("qualification"),
+        expected_sha256=EXPECTED_PUBLIC_QUALIFICATION_SHA256,
+        expected_bytes=EXPECTED_PUBLIC_QUALIFICATION_BYTES,
+        state_field="qualified",
+        timestamp_field="verified_at_utc",
+        evidence_ref=PUBLIC_QUALIFICATION_REF,
+        policy=policy,
+    )
+    policy_matches = (
+        payload.get("schema_version") == _COORDINATOR_ATTESTATION_RECEIPT_VERSION
+        and payload.get("kind") == _COORDINATOR_ATTESTATION_RECEIPT_KIND
+        and payload.get("status") == "PASSED"
+        and payload.get("task_id") == _LIVE_QUAL_JIRA_LOCAL_ID
+        and payload.get("coordinator_id") == _PRIMARY_COORDINATOR_ID
+        and payload.get("secret_value_observed") is False
+        and identity_matches
+        and attestation_ok
+        and qualification_ok
+    )
+    if not policy_matches:
+        unavailable["reason"] = "coordinator_attestation_receipt_policy_mismatch"
+        return unavailable
+    allowed_signers = repository_root / _COORDINATOR_JIRA_ALLOWED_SIGNERS
+    if not _verify_coordinator_signature(
+        receipt_sha256=receipt_sha256,
+        signature_path=signature_path,
+        allowed_signers_path=allowed_signers,
+        namespace=_COORDINATOR_ATTESTATION_SIGNATURE_NAMESPACE,
+    ):
+        unavailable["reason"] = "coordinator_attestation_signature_invalid"
+        return unavailable
+    return {
+        "provided": True,
+        "valid": True,
+        "receipt_sha256": receipt_sha256,
+        "generated_at_utc": generated,
+        "signature_verified": True,
+        "relay": "signed-private-attestation",
+    }
+
+
+def _run_windows_signature_verifier(
+    command: list[str], *, message: bytes, comspec: str
+) -> subprocess.CompletedProcess[bytes]:
+    """Run OpenSSH verification through cmd redirection on Windows.
+
+    Windows OpenSSH's ``ssh-keygen -Y verify`` can block indefinitely when it
+    receives the signed message from a Python pipe.  A short-lived command file
+    gives the program a real redirected file handle while retaining argument
+    vector construction and deterministic cleanup.
+    """
+
+    with tempfile.TemporaryDirectory(prefix="project-pipeline-signature-") as temporary:
+        temporary_root = Path(temporary)
+        message_path = temporary_root / "message.txt"
+        command_path = temporary_root / "verify.cmd"
+        message_path.write_bytes(message)
+        command_path.write_text(
+            "@echo off\r\n"
+            f"{subprocess.list2cmdline(command)} < {subprocess.list2cmdline([str(message_path)])}\r\n"
+            "exit /b %ERRORLEVEL%\r\n",
+            encoding="mbcs",
+            newline="",
+        )
+        return subprocess.run(
+            [comspec, "/d", "/c", str(command_path)],
+            capture_output=True,
+            timeout=30,
+            check=False,
+        )
+
+
+def _verify_coordinator_signature(
+    *,
+    receipt_sha256: str,
+    signature_path: Path,
+    allowed_signers_path: Path,
+    namespace: str,
+) -> bool:
+    """Verify one bounded coordinator receipt without moving a credential."""
 
     if (
         len(receipt_sha256) != 64
@@ -596,29 +867,54 @@ def _verify_coordinator_jira_signature(
         or not allowed_signers_path.is_file()
     ):
         return False
+    command = [
+        "ssh-keygen",
+        "-Y",
+        "verify",
+        "-f",
+        str(allowed_signers_path),
+        "-I",
+        _PRIMARY_COORDINATOR_ID,
+        "-n",
+        namespace,
+        "-s",
+        str(signature_path),
+    ]
+    message = _coordinator_jira_receipt_message(receipt_sha256)
     try:
-        completed = subprocess.run(
-            [
-                "ssh-keygen",
-                "-Y",
-                "verify",
-                "-f",
-                str(allowed_signers_path),
-                "-I",
-                _PRIMARY_COORDINATOR_ID,
-                "-n",
-                _COORDINATOR_JIRA_SIGNATURE_NAMESPACE,
-                "-s",
-                str(signature_path),
-            ],
-            input=_coordinator_jira_receipt_message(receipt_sha256),
-            capture_output=True,
-            timeout=30,
-            check=False,
-        )
+        if os.name == "nt":
+            comspec = os.environ.get("COMSPEC")
+            if not comspec:
+                return False
+            completed = _run_windows_signature_verifier(
+                command,
+                message=message,
+                comspec=comspec,
+            )
+        else:
+            completed = subprocess.run(
+                command,
+                input=message,
+                capture_output=True,
+                timeout=30,
+                check=False,
+            )
     except (OSError, subprocess.TimeoutExpired):
         return False
     return completed.returncode == 0
+
+
+def _verify_coordinator_jira_signature(
+    *, receipt_sha256: str, signature_path: Path, allowed_signers_path: Path
+) -> bool:
+    """Verify laptop-owned Jira evidence without moving a credential to the CPU worker."""
+
+    return _verify_coordinator_signature(
+        receipt_sha256=receipt_sha256,
+        signature_path=signature_path,
+        allowed_signers_path=allowed_signers_path,
+        namespace=_COORDINATOR_JIRA_SIGNATURE_NAMESPACE,
+    )
 
 
 def _coordinator_jira_receipt_probe(
@@ -1028,6 +1324,7 @@ def _qualify_cursor_cli_provider(
     runner: Any | None = None,
     source_root: Path | None = None,
     durable_dir: Path | None = None,
+    coordinator_attestation: dict[str, Any] | None = None,
 ) -> StageResult:
     report = qualify_cursor_cli_provider(
         repository_root=repository_root,
@@ -1035,6 +1332,7 @@ def _qualify_cursor_cli_provider(
         source_root=source_root,
         durable_dir=durable_dir,
         runner=runner,
+        coordinator_attestation=coordinator_attestation,
     )
     if runner is None and disposable_root.name == ".pp384_cursor_cli_runtime":
         with suppress(OSError):
@@ -1109,6 +1407,8 @@ def run_live_qualification(
     durable_dir: Path | None = None,
     coordinator_jira_receipt: Path | None = None,
     coordinator_jira_signature: Path | None = None,
+    coordinator_attestation_receipt: Path | None = None,
+    coordinator_attestation_signature: Path | None = None,
 ) -> dict[str, Any]:
     repository_root = repository_root.resolve()
     default_root = repository_root / ".local" / "live_qualification_runtime"
@@ -1128,6 +1428,13 @@ def run_live_qualification(
         )
     candidate_head, candidate_tree = _git_identity(repository_root)
     candidate_clean_before = _git_checkout_clean(repository_root)
+    coordinator_attestation = _coordinator_attestation_receipt_probe(
+        coordinator_attestation_receipt,
+        coordinator_attestation_signature,
+        repository_root=repository_root,
+        expected_head=candidate_head,
+        expected_tree=candidate_tree,
+    )
     stages: tuple[StageResult, ...] = (
         _qualify_windows_service(repository_root=repository_root, disposable_root=root),
         _qualify_command_center(disposable_root=root),
@@ -1145,6 +1452,7 @@ def run_live_qualification(
             runner=cursor_cli_runner,
             source_root=attestation_source_root,
             durable_dir=durable_dir,
+            coordinator_attestation=coordinator_attestation,
         ),
     )
     observed_head, observed_tree = _git_identity(repository_root)
@@ -1210,6 +1518,8 @@ def write_live_qualification_evidence(
     durable_dir: Path | None = None,
     coordinator_jira_receipt: Path | None = None,
     coordinator_jira_signature: Path | None = None,
+    coordinator_attestation_receipt: Path | None = None,
+    coordinator_attestation_signature: Path | None = None,
 ) -> Path:
     report = run_live_qualification(
         repository_root=repository_root,
@@ -1219,6 +1529,8 @@ def write_live_qualification_evidence(
         durable_dir=durable_dir,
         coordinator_jira_receipt=coordinator_jira_receipt,
         coordinator_jira_signature=coordinator_jira_signature,
+        coordinator_attestation_receipt=coordinator_attestation_receipt,
+        coordinator_attestation_signature=coordinator_attestation_signature,
     )
     target = evidence_dir or (
         repository_root / ".local" / "evidence" / "autonomy_runtime" / "live_qualification"
