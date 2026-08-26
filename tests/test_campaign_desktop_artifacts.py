@@ -152,6 +152,7 @@ def test_campaign_desktop_builder_discovers_winget_winlibs(tmp_path, monkeypatch
     module = _load_builder()
     winlibs_bin = (
         tmp_path
+        / "with space"
         / "Microsoft"
         / "WinGet"
         / "Packages"
@@ -162,16 +163,24 @@ def test_campaign_desktop_builder_discovers_winget_winlibs(tmp_path, monkeypatch
     winlibs_bin.mkdir(parents=True)
     (winlibs_bin / module._GNU_GCC).write_bytes(b"")
     monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: None)
+    copied_bin = Path("C:/ProjectPipeline-desktop-test/mingw64/bin")
+    cleanup_root = copied_bin.parents[1]
+    monkeypatch.setattr(
+        module,
+        "_copy_gnu_toolchain_to_build_workspace",
+        lambda _source, _workspace: (copied_bin, cleanup_root),
+    )
 
-    environment, target, compiler, cleanup_root = module._prepare_native_build_environment(
-        {"LOCALAPPDATA": str(tmp_path), "PATH": "base-path"}, workspace=tmp_path / "build"
+    environment, target, compiler, resolved_cleanup_root = module._prepare_native_build_environment(
+        {"LOCALAPPDATA": str(tmp_path / "with space"), "PATH": "base-path"},
+        workspace=tmp_path / "build",
     )
 
     assert target == module._GNU_TARGET
     assert environment["CARGO_BUILD_TARGET"] == module._GNU_TARGET
-    assert environment["PATH"].startswith(str(winlibs_bin))
-    assert compiler == str(winlibs_bin / module._GNU_GCC)
-    assert cleanup_root is None
+    assert environment["PATH"].startswith(str(copied_bin))
+    assert compiler == str(copied_bin / module._GNU_GCC)
+    assert resolved_cleanup_root == cleanup_root
 
 
 def test_campaign_desktop_builder_copies_winlibs_with_spaces_to_build_workspace(
