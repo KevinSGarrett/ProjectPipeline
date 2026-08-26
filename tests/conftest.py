@@ -1,3 +1,4 @@
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -79,9 +80,20 @@ PRIVATE_CONTROL_TEST_PATHS = frozenset(
 
 
 def is_standalone_public_source_checkout(root: Path = ROOT) -> bool:
-    return not (root / "plans" / "PLAN_CATALOG.json").is_file() and all(
-        (root / marker).exists()
-        for marker in ("README.md", "LICENSE", "pyproject.toml", "src/project_pipeline")
+    try:
+        pyproject = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError):
+        return False
+    tool = pyproject.get("tool")
+    project_pipeline = tool.get("project_pipeline") if isinstance(tool, dict) else None
+    return (
+        not (root / "instructions").exists()
+        and isinstance(project_pipeline, dict)
+        and project_pipeline.get("checkout_kind") == "PUBLIC_SOURCE"
+        and all(
+            (root / marker).exists()
+            for marker in ("README.md", "LICENSE", "pyproject.toml", "src/project_pipeline")
+        )
     )
 
 

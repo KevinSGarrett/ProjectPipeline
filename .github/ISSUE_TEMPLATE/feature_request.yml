@@ -1,7 +1,7 @@
 name: Feature request
 description: Suggest an improvement to ProjectPipeline
 title: "[Feature]: "
-labels: ["enhancement", "triage"]
+labels: ["enhancement"]
 body:
   - type: textarea
     id: problem

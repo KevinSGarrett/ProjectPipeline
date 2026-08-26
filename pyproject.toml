@@ -90,6 +90,12 @@ quality = [
 [project.scripts]
 project-pipeline = "project_pipeline.cli:main"
 
+[tool.project_pipeline]
+# This declaration distinguishes the intentionally slim public source tree
+# from the private maintainer control workspace.  Validation remains strict
+# unless this exact public-distribution contract is present.
+checkout_kind = "PUBLIC_SOURCE"
+
 [tool.setuptools.packages.find]
 where = ["src"]
 

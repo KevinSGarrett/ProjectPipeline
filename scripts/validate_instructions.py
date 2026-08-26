@@ -6,6 +6,7 @@ import json
 import re
 import sys
 import tempfile
+import tomllib
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -48,6 +49,7 @@ PUBLIC_SOURCE_MARKERS = (
     "pyproject.toml",
     "src/project_pipeline",
 )
+PUBLIC_SOURCE_CHECKOUT_KIND = "PUBLIC_SOURCE"
 
 
 @dataclass(slots=True)
@@ -1008,6 +1010,22 @@ def load_documents(root: Path, report: Report) -> dict[Path, Any]:
     return documents
 
 
+def _declares_public_source_checkout(root: Path) -> bool:
+    """Return whether the package metadata explicitly declares public source mode."""
+    try:
+        pyproject = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError):
+        return False
+    tool = pyproject.get("tool")
+    if not isinstance(tool, dict):
+        return False
+    project_pipeline = tool.get("project_pipeline")
+    return (
+        isinstance(project_pipeline, dict)
+        and project_pipeline.get("checkout_kind") == PUBLIC_SOURCE_CHECKOUT_KIND
+    )
+
+
 def is_standalone_public_source_checkout(root: Path) -> bool:
     """Return whether *root* is the distributable source tree.
 
@@ -1016,8 +1034,10 @@ def is_standalone_public_source_checkout(root: Path) -> bool:
     ``instructions`` directory is therefore valid in its public form; a
     partially missing internal checkout is not.
     """
-    return not (root / "instructions").exists() and all(
-        (root / marker).exists() for marker in PUBLIC_SOURCE_MARKERS
+    return (
+        not (root / "instructions").exists()
+        and _declares_public_source_checkout(root)
+        and all((root / marker).exists() for marker in PUBLIC_SOURCE_MARKERS)
     )
 
 

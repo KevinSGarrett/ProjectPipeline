@@ -21,7 +21,11 @@ def load_script(name: str, path: Path):
 def make_public_checkout(root: Path) -> None:
     (root / "README.md").write_text("# ProjectPipeline\n", encoding="utf-8")
     (root / "LICENSE").write_text("LicenseRef-Proprietary\n", encoding="utf-8")
-    (root / "pyproject.toml").write_text("[project]\nname = 'project-pipeline'\n", encoding="utf-8")
+    (root / "pyproject.toml").write_text(
+        "[project]\nname = 'project-pipeline'\n"
+        "[tool.project_pipeline]\ncheckout_kind = 'PUBLIC_SOURCE'\n",
+        encoding="utf-8",
+    )
     (root / "src/project_pipeline").mkdir(parents=True)
     (root / "scripts").mkdir()
     for name in ("validate_instructions.py", "instruction_cold_start.py"):
@@ -53,6 +57,20 @@ def test_public_cold_start_routes_to_public_documentation() -> None:
     assert payload["mode"] == "PUBLIC_SOURCE"
     assert payload["first_read"] == ["README.md", "CONTRIBUTING.md", "SECURITY.md"]
     assert payload["routing"] == {}
+
+
+def test_unmarked_checkout_does_not_suppress_private_control_validation() -> None:
+    module = load_script("unmarked_public_checkout", ROOT / "scripts/validate_instructions.py")
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        make_public_checkout(root)
+        (root / "pyproject.toml").write_text(
+            "[project]\nname = 'project-pipeline'\n", encoding="utf-8"
+        )
+        report = module.validate_instruction_system(root)
+
+    assert report.errors
+    assert "public_source_mode" not in report.checks
 
 
 def test_private_control_tests_are_not_collected_from_public_source() -> None:

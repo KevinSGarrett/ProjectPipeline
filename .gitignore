@@ -121,6 +121,7 @@ terraform.rc
 /evidence/
 /jira/
 /plans/
+/provenance/
 /docs/jira/
 /docs/generated/
 /docs/CONTINUATION_PACKAGE.md

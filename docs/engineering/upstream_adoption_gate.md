@@ -4,12 +4,9 @@ Project Pipeline treats the supplied upstream repository catalog as an implement
 
 The authoritative files are:
 
-- `provenance/upstream_registry.json` — catalog identity, review depth, terminal disposition, license, and provenance.
-- `provenance/catalog_dispositions.jsonl` — streaming terminal disposition ledger for all catalog entries.
-- `provenance/upstream_usage.jsonl` — actual integration state; selection is not use.
-- `provenance/upstream_adoption_gate.json` — subsystem-to-candidate review gate.
-- `provenance/adoption_queue.json` — prioritized future integration/qualification work.
-- `provenance/source_incorporation_reviews/` — exact bounded source-adaptation approvals.
+- A private maintainer registry records catalog identity, review depth, terminal disposition, license, and provenance.
+- A private disposition ledger records every catalog decision and actual integration state; selection is not use.
+- A private subsystem-to-candidate review gate and adaptation record bind approved source reuse to the exact upstream revision, license, and behavioral tests.
 
 ## Required behavior
 
