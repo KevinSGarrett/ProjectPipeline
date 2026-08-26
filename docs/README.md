@@ -1,11 +1,12 @@
-# Documentation
+# ProjectPipeline documentation
 
-This directory contains concise navigation and operating guidance. Technical design authority lives in `/plans`; accepted architectural choices live in `/adr`; executable work definitions live in `/jira`; observed verification lives in `/evidence`.
+This documentation explains how to evaluate, develop, and integrate ProjectPipeline. It is written for people using the project in their own work—not for a private project-management system.
 
-- [`DEVELOPMENT.md`](DEVELOPMENT.md) — local development workflow
-- [`NAVIGATION.md`](NAVIGATION.md) — how humans and autonomous workers retrieve project truth
-- [`REQUIREMENT_CATALOG.md`](REQUIREMENT_CATALOG.md) — atomic requirement, source-coverage, decision, and query model
-- [`STATUS_MODEL.md`](STATUS_MODEL.md) — claim, evidence, verified fact, and implementation-state semantics
-- `generated/` — deterministic repository maps
-- [`intake/README.md`](intake/README.md) — safe project discovery, deterministic compilation, gap analysis, and controlled bootstrap
-- [`jira/README.md`](jira/README.md) — typed local Jira mirror, remote adapter, reconciliation, outbox, and safe operator workflows
+- [Development guide](development/README.md) — local setup, quality checks, and contribution workflow
+- [Architecture](architecture/FINAL_ARCHITECTURE.md) — component boundaries and technical design
+- [API reference](api/API_REFERENCE.md) — CLI and service-facing reference material
+- [Project intake](intake/README.md) — safely inspecting and compiling a project model
+- [Security policy](../SECURITY.md) — responsible reporting and secure configuration guidance
+- [Release guidance](release/RELEASE_PROCEDURE.md) — artifact and release practices
+
+For questions, ideas, and design discussion, use this repository's GitHub Discussions. Use Issues for reproducible defects and concrete feature proposals.

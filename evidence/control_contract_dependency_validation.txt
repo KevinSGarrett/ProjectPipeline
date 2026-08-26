@@ -1,9 +1,0 @@
-{
-  "errors": [],
-  "ok": true
-}
-
-{
-  "errors": [],
-  "ok": true
-}

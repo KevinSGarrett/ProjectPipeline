@@ -82,6 +82,7 @@ def test_write_live_qualification_evidence(tmp_path: Path) -> None:
     payload = json.loads(output.read_text(encoding="utf-8"))
     assert payload["task_id"] == "PP-TASK-000384"
     assert output.name == "live_qualification_latest.json"
+    assert output.parent == repo / ".local" / "evidence" / "autonomy_runtime" / "live_qualification"
     assert payload["report_sha256"]
     assert "bound_head" in payload
     assert "bound_tree" in payload

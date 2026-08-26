@@ -228,7 +228,7 @@
           "type": "string"
         },
         "evidence_dir": {
-          "default": "evidence",
+          "default": ".local/evidence",
           "format": "path",
           "title": "Evidence Dir",
           "type": "string"

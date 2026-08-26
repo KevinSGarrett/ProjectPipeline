@@ -8,4 +8,4 @@ A protected reserve is excluded from ordinary work. It is available only to expl
 
 Unknown pricing is `UNKNOWN`, not zero. Unknown remote outcomes retain their spend reservation until reconciliation. Cost history and forecasts are advisory evidence used by deterministic policy, with P50/P90 and confidence recorded separately from actual provider-reported or reconciled spend.
 
-Upstream boundaries are recorded in `provenance/pass_14_budget_gate.json`: LiteLLM and OpenLIT are existing adapters, Infracost is a read-only preflight adapter, and Langfuse/MLflow provide architecture/implementation patterns. None owns Project Pipeline budget state.
+Upstream boundaries are evaluated in the private maintainer workspace before an adapter is accepted. LiteLLM and OpenLIT are existing adapters, Infracost is a read-only preflight adapter, and Langfuse/MLflow provide architecture and implementation patterns. None owns ProjectPipeline budget state.

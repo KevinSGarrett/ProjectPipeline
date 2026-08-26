@@ -1,8 +1,0 @@
-{
-  "benchmark_id": "PPQS-05",
-  "runtime": {
-    "go": "1.25.8",
-    "go_toolchain": "1.25.10"
-  },
-  "source": "frozen r02 contract"
-}

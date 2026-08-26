@@ -1,7 +1,0 @@
-test_archive_is_deterministic_and_valid (tests.test_archive.ArchiveTests.test_archive_is_deterministic_and_valid) ... ok
-test_wrong_root_is_reported (tests.test_archive.ArchiveTests.test_wrong_root_is_reported) ... ok
-
-----------------------------------------------------------------------
-Ran 2 tests in 0.002s
-
-OK

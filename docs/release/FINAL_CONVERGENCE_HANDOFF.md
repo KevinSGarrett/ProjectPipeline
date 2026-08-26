@@ -8,7 +8,7 @@ Only the deterministic 15-question Completion Gate may declare the project compl
 
 ## Final audit scope
 
-The machine-readable report at `release/final_convergence_audit_r25.json` enumerates every accepted requirement and records its implementation state, plans, Jira relationships, implementation paths, tests, evidence, source references, and final classification. It also records orphan Jira findings, decision state, upstream usage state, repository validation, release blockers, and the Completion Gate result.
+The final machine-readable audit is generated for the exact release candidate and retained with its immutable release evidence. It records accepted requirements, implementation paths, tests, verification records, source references, release blockers, and the Completion Gate result. Historical campaign records are not published as source fixtures.
 
 ## External qualification boundary
 

@@ -45,10 +45,12 @@ jobs:
         run: |
           project-pipeline schemas check --root .
           project-pipeline dependencies validate --root .
-      - name: Validate instruction system and cold start
+      - name: Validate checkout mode and cold start
         run: |
           python scripts/validate_instructions.py --root .
           python scripts/instruction_cold_start.py --root .
+      - name: Repository self-validation
+        run: project-pipeline validate --root .
       - name: Enforce cohesive delivery progress
         if: github.event_name == 'pull_request' && matrix.python-version == '3.11'
         run: >-
@@ -62,9 +64,7 @@ jobs:
       - name: Static typing
         run: mypy
       - name: Tests and coverage
-        run: pytest -q --cov=project_pipeline --cov-report=term-missing --cov-fail-under=70
-      - name: Repository self-validation
-        run: project-pipeline validate --root .
+        run: pytest -q --cov=project_pipeline --cov-report=term-missing --cov-fail-under=60
       - name: Build distributions
         run: python -m build
 

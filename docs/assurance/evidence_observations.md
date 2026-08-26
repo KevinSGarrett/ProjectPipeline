@@ -1,6 +1,6 @@
 # Evidence definitions and observation receipts
 
-Source-controlled `evidence/EVIDENCE_LEDGER.jsonl` rows are **definitions**. They name a stable evidence ID, claim, criteria, requirements, artifact, digest, method, environment, and policy. They do not prove the current integrated commit.
+Evidence definitions name a stable evidence ID, claim, criteria, requirements, artifact, digest, method, environment, and policy. They do not prove the current integrated commit.
 
 A separate immutable **observation receipt** records an actual execution against an exact subject SHA and tree. Observations live in the governed runtime store outside the subject Git tree:
 

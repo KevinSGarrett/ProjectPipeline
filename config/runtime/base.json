@@ -7,7 +7,7 @@
   "paths": {
     "data_dir": ".local/data",
     "state_dir": ".local/state",
-    "evidence_dir": "evidence",
+    "evidence_dir": ".local/evidence",
     "artifact_dir": ".local/artifacts",
     "cache_dir": ".local/cache",
     "log_dir": ".local/logs",

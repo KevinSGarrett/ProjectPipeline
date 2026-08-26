@@ -1,7 +1,0 @@
-{
-  "mcpServers": {},
-  "projectPipelinePolicy": {
-    "note": "Keep provider credentials outside the repository. Prefer ProjectPipeline governed CLI/adapters; add MCP servers only after security and representative qualification.",
-    "externalWrites": "DENY_BY_DEFAULT"
-  }
-}

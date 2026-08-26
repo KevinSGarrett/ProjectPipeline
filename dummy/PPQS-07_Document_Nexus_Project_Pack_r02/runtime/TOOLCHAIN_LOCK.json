@@ -1,8 +1,0 @@
-{
-  "benchmark_id": "PPQS-07",
-  "runtime": {
-    "node": ">=22.19.0",
-    "python": ">=3.10"
-  },
-  "source": "frozen r02 contract"
-}

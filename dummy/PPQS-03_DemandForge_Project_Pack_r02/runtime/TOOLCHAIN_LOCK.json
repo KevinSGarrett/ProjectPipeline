@@ -1,8 +1,0 @@
-{
-  "benchmark_id": "PPQS-03",
-  "runtime": {
-    "execution": "CPU baseline; optional accelerator",
-    "python": ">=3.11,<3.14"
-  },
-  "source": "frozen r02 contract"
-}

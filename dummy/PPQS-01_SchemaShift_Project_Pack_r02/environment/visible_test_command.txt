@@ -1,1 +1,0 @@
-PPQS_CANDIDATE_ROOT=<candidate-root> python -m unittest discover -s visible_tests -v

@@ -6,6 +6,7 @@ import json
 import re
 import sys
 import tempfile
+import tomllib
 from collections.abc import Iterable
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
@@ -31,6 +32,15 @@ USES_ACTION = re.compile(r"^\s*-?\s*uses:\s*([^\s#]+)", re.MULTILINE)
 FULL_SHA = re.compile(r"^[0-9a-f]{40}$")
 MANDATORY_BOOTSTRAP = [
     "AGENTS.md",
+    "FILE_MANIFEST.sha256",
+    "PROJECT_MANIFEST.json",
+    "config/project_manifest.json",
+    "docs/CONTINUATION_PACKAGE.md",
+    "docs/NAVIGATION.md",
+    "docs/REQUIREMENT_CATALOG.md",
+    "docs/STATUS_MODEL.md",
+    "docs/engineering/pp380_disposition_generation.md",
+    "docs/generated",
     "instructions/README.md",
     "instructions/00_START_HERE.md",
     "instructions/01_AUTHORITY_AND_SOURCE_OF_TRUTH.md",
@@ -41,6 +51,37 @@ MANDATORY_BOOTSTRAP = [
     "instructions/AUTHORITY_MAP.json",
     "instructions/SECOND_PASS_REQUIRED.md",
 ]
+
+PUBLIC_SOURCE_MARKERS = (
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+    "src/project_pipeline",
+)
+PUBLIC_SOURCE_CHECKOUT_KIND = "PUBLIC_SOURCE"
+PRIVATE_CONTROL_PATHS = (
+    ".agents",
+    ".cursor",
+    ".cursorignore",
+    "AGENTS.md",
+    "FILE_MANIFEST.sha256",
+    "PROJECT_MANIFEST.json",
+    "config/project_manifest.json",
+    "docs/CONTINUATION_PACKAGE.md",
+    "docs/NAVIGATION.md",
+    "docs/REQUIREMENT_CATALOG.md",
+    "docs/STATUS_MODEL.md",
+    "docs/engineering/pp380_disposition_generation.md",
+    "docs/generated",
+    "docs/jira",
+    "dummy",
+    "evidence",
+    "instructions",
+    "jira",
+    "plans",
+    "provenance",
+    "release",
+)
 
 
 @dataclass(slots=True)
@@ -1001,9 +1042,57 @@ def load_documents(root: Path, report: Report) -> dict[Path, Any]:
     return documents
 
 
+def _declares_public_source_checkout(root: Path) -> bool:
+    """Return whether the package metadata explicitly declares public source mode."""
+    try:
+        pyproject = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError):
+        return False
+    tool = pyproject.get("tool")
+    if not isinstance(tool, dict):
+        return False
+    project_pipeline = tool.get("project_pipeline")
+    return (
+        isinstance(project_pipeline, dict)
+        and project_pipeline.get("checkout_kind") == PUBLIC_SOURCE_CHECKOUT_KIND
+    )
+
+
+def is_standalone_public_source_checkout(root: Path) -> bool:
+    """Return whether *root* is the distributable source tree.
+
+    The maintainers' control instructions intentionally live outside a public
+    checkout.  A checkout that has the product-source markers but no
+    ``instructions`` directory is therefore valid in its public form; a
+    partially missing internal checkout is not.
+    """
+    return (
+        _declares_public_source_checkout(root)
+        and all((root / marker).exists() for marker in PUBLIC_SOURCE_MARKERS)
+        and all(not (root / path).exists() for path in PRIVATE_CONTROL_PATHS)
+    )
+
+
 def validate_instruction_system(root: Path, *, update: bool = False) -> Report:
     root = root.resolve()
     report = Report(root=str(root))
+    if is_standalone_public_source_checkout(root):
+        if update:
+            report.add(
+                "ERROR",
+                "PUBLIC002",
+                "A public source checkout has no private instruction manifest to update.",
+                "instructions",
+            )
+            return report
+        report.checks.append("public_source_mode")
+        report.add(
+            "INFO",
+            "PUBLIC001",
+            "Private maintainer instructions are intentionally excluded from this public source checkout.",
+            "README.md",
+        )
+        return report
     documents = load_documents(root, report)
     manifest = documents.get(MANIFEST_PATH)
     if not isinstance(manifest, dict):

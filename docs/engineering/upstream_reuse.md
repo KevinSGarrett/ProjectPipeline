@@ -11,7 +11,7 @@ Before implementing a commodity capability:
 3. record a disposition and revision;
 4. prefer direct dependency use or a replaceable adapter when that preserves Project Pipeline authority;
 5. use bounded source adaptation only after a separate adaptation review;
-6. record actual use in `provenance/upstream_usage.jsonl`;
+6. record actual use in the private maintainer evidence ledger;
 7. add behavioral tests and rollback guidance.
 
 The permanent upstream report exposes both architectural disposition and actual use state.
@@ -27,7 +27,7 @@ The permanent upstream report exposes both architectural disposition and actual 
 
 ## Source adaptation
 
-Source adaptation is denied by default. An approved bounded adaptation must have a record under `provenance/source_incorporation_reviews/` containing the exact upstream revision and source path, Project Pipeline path and hash, license, notice location, adaptation purpose, and behavioral tests.
+Source adaptation is denied by default. An approved bounded adaptation must have a private maintainer record containing the exact upstream revision and source path, ProjectPipeline path and hash, license, notice location, adaptation purpose, and behavioral tests.
 
 The adaptation must be small and purposeful. Project Pipeline does not wholesale vendor a repository merely because its license permits copying.
 

@@ -1,6 +1,0 @@
-VALIDATION PASSED
-Sources: 18
-Lines: 26941
-Canonical bytes, normalized text, SQLite lines, JSONL lines, and line-numbered files are equivalent.
-Every source line is covered by at least one chunk.
-All canonical raw hashes and manifested file hashes match.
