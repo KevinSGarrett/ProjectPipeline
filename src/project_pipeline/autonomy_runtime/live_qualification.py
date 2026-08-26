@@ -823,34 +823,28 @@ def _coordinator_attestation_receipt_probe(
 
 
 def _run_windows_signature_verifier(
-    command: list[str], *, message: bytes, comspec: str
+    command: list[str], *, message: bytes
 ) -> subprocess.CompletedProcess[bytes]:
-    """Run OpenSSH verification through cmd redirection on Windows.
+    """Run OpenSSH verification from a redirected file handle on Windows.
 
     Windows OpenSSH's ``ssh-keygen -Y verify`` can block indefinitely when it
-    receives the signed message from a Python pipe.  A short-lived command file
-    gives the program a real redirected file handle while retaining argument
-    vector construction and deterministic cleanup.
+    receives the signed message from a Python pipe.  A short-lived message file
+    gives the program a real redirected file handle without converting the
+    command argument vector into shell text.
     """
 
     with tempfile.TemporaryDirectory(prefix="project-pipeline-signature-") as temporary:
         temporary_root = Path(temporary)
         message_path = temporary_root / "message.txt"
-        command_path = temporary_root / "verify.cmd"
         message_path.write_bytes(message)
-        command_path.write_text(
-            "@echo off\r\n"
-            f"{subprocess.list2cmdline(command)} < {subprocess.list2cmdline([str(message_path)])}\r\n"
-            "exit /b %ERRORLEVEL%\r\n",
-            encoding="mbcs",
-            newline="",
-        )
-        return subprocess.run(
-            [comspec, "/d", "/c", str(command_path)],
-            capture_output=True,
-            timeout=30,
-            check=False,
-        )
+        with message_path.open("rb") as message_stream:
+            return subprocess.run(
+                command,
+                stdin=message_stream,
+                capture_output=True,
+                timeout=30,
+                check=False,
+            )
 
 
 def _verify_coordinator_signature(
@@ -885,13 +879,9 @@ def _verify_coordinator_signature(
     message = _coordinator_jira_receipt_message(receipt_sha256)
     try:
         if os.name == "nt":
-            comspec = os.environ.get("COMSPEC")
-            if not comspec:
-                return False
             completed = _run_windows_signature_verifier(
                 command,
                 message=message,
-                comspec=comspec,
             )
         else:
             completed = subprocess.run(

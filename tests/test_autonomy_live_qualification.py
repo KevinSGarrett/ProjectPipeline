@@ -473,7 +473,7 @@ def test_coordinator_attestation_relay_requires_signed_exact_fresh_candidate(
     assert rejected["reason"] == "coordinator_attestation_receipt_policy_mismatch"
 
 
-def test_windows_signature_verifier_uses_redirected_message_file(
+def test_windows_signature_verifier_uses_file_handle_without_a_shell(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     observed: dict[str, object] = {}
@@ -481,23 +481,20 @@ def test_windows_signature_verifier_uses_redirected_message_file(
     def fake_run(command: list[str], **kwargs: object) -> SimpleNamespace:
         observed["command"] = command
         observed["kwargs"] = kwargs
-        batch = Path(command[-1])
-        observed["batch"] = batch.read_text(encoding="mbcs")
+        stream = kwargs["stdin"]
+        observed["message"] = stream.read()
         return SimpleNamespace(returncode=0, stdout=b"ok", stderr=b"")
 
     monkeypatch.setattr(live_qualification_module.subprocess, "run", fake_run)
 
     result = live_qualification_module._run_windows_signature_verifier(
-        ["ssh-keygen", "-Y", "verify", "-s", "signature.sig"],
+        ["ssh-keygen", "-Y", "verify", "-s", r"C:\\relay&ver.sig"],
         message=b"sha256:" + b"a" * 64 + b"\n",
-        comspec="cmd.exe",
     )
 
     assert result.returncode == 0
-    assert observed["command"][:3] == ["cmd.exe", "/d", "/c"]
-    assert "stdin" not in observed["kwargs"]
-    assert "ssh-keygen -Y verify -s signature.sig" in str(observed["batch"])
-    assert "message.txt" in str(observed["batch"])
+    assert observed["command"] == ["ssh-keygen", "-Y", "verify", "-s", r"C:\\relay&ver.sig"]
+    assert observed["message"] == b"sha256:" + b"a" * 64 + b"\n"
 
 
 def test_coordinator_jira_receipt_rejects_content_address_mismatch(

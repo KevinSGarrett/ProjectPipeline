@@ -465,7 +465,12 @@ def qualify_cursor_cli_provider(
         and (source_root / PUBLIC_ATTESTATION_REF).is_file(),
         "coordinator_attestation_valid": coordinator_attestation_valid,
     }
-    if (
+    if coordinator_attestation_valid:
+        # A signed coordinator relay represents private evidence by immutable
+        # identity only.  It must never materialize, restore, or validate raw
+        # source records inside the candidate checkout or disposable workspace.
+        discovery["relay_prevented_raw_evidence_materialization"] = True
+    elif (
         not discovery["public_attestation_found"] or not discovery["public_qualification_found"]
     ) and discovery["recoverable_source_present"]:
         try:
@@ -499,22 +504,25 @@ def qualify_cursor_cli_provider(
         discovery["public_qualification_found"] = public_qualification.is_file()
     phases.append({"phase": QualificationPhase.EVIDENCE_DISCOVERY.value, "observations": discovery})
 
-    evaluation = evaluate_attestation_recovery(
-        repository_root=repository_root,
-        source_attestation=public_attestation
-        if public_attestation.is_file()
-        else (source_root / PUBLIC_ATTESTATION_REF if source_root else public_attestation),
-        source_qualification=public_qualification
-        if public_qualification.is_file()
-        else (source_root / PUBLIC_QUALIFICATION_REF if source_root else public_qualification),
-        durable_attestation_path=durable_dir / "privacy_attestation.json",
-        durable_qualification_path=durable_dir / "provider_qualification.json",
-        verification_dir=disposable_root / "evidence-verify",
-        historical_receipt_path=repository_root
-        / "evidence"
-        / "control_completion_post_remediation.json",
-        policy=policy,
-    )
+    if coordinator_attestation_valid:
+        evaluation = {"accepted_for_restore": False, "artifacts": []}
+    else:
+        evaluation = evaluate_attestation_recovery(
+            repository_root=repository_root,
+            source_attestation=public_attestation
+            if public_attestation.is_file()
+            else (source_root / PUBLIC_ATTESTATION_REF if source_root else public_attestation),
+            source_qualification=public_qualification
+            if public_qualification.is_file()
+            else (source_root / PUBLIC_QUALIFICATION_REF if source_root else public_qualification),
+            durable_attestation_path=durable_dir / "privacy_attestation.json",
+            durable_qualification_path=durable_dir / "provider_qualification.json",
+            verification_dir=disposable_root / "evidence-verify",
+            historical_receipt_path=repository_root
+            / "evidence"
+            / "control_completion_post_remediation.json",
+            policy=policy,
+        )
     phases.append(
         {
             "phase": QualificationPhase.EVIDENCE_VALIDATION.value,
