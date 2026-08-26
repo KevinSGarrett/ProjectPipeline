@@ -1,49 +1,24 @@
 
-## Objective
+## Summary
 
-## Authority and traceability
+Explain the problem and the user-facing result of this change.
 
-- Work-item IDs:
-- Requirement IDs:
-- Plan/decision IDs:
-- Source/evidence IDs:
+## What changed
 
-## Implementation and generated changes
+-
 
-## Acceptance criteria
+## How it was verified
 
-| Criterion | Verification method | Evidence |
-|---|---|---|
-| | | |
+- Tests or checks run:
+- Manual verification, if relevant:
 
-## Testing
+## Contributor checklist
 
-## Risk and review
+- [ ] The change is focused and includes the necessary tests and documentation.
+- [ ] No credentials, private data, generated local state, or machine-specific files are included.
+- [ ] Compatibility, accessibility, and security impacts have been considered where relevant.
+- [ ] Known limitations or follow-up work are described below.
 
-- Risk tier:
-- Independent review:
-- Current head SHA:
+## Notes for reviewers
 
-## Security, data, observability, and operations
-
-## External-system impact
-
-- GitHub/Jira/cloud/provider writes:
-- Read-back or reconciliation receipt:
-
-## Rollback and recovery
-
-## UI evidence and accessibility
-
-## Known limitations and follow-up
-
-## Traceability updates
-
-- [ ] Requirements and plans updated where needed
-- [ ] Jira mirror updated
-- [ ] Tests exercise affected behavior
-- [ ] Evidence identifies the exact implementation and environment
-- [ ] Generated artifacts were regenerated from authoritative inputs
-- [ ] Secrets and local-only artifacts are excluded
-- [ ] Repository validation passes
-- [ ] Merge Gate evaluates the current head SHA
+Call out migration, deployment, rollback, or integration considerations here.
