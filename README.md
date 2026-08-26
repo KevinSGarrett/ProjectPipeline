@@ -6,7 +6,7 @@ ProjectPipeline helps engineering teams turn an idea into a clear plan, coordina
 
 > ProjectPipeline is an early-stage project. The repository contains a working Python foundation and a Windows Command Center experience; some integrations and advanced automation paths are still under active development.
 
-![ProjectPipeline turns delivery signals into a verified release path.](docs/assets/social-preview.png)
+![ProjectPipeline turns delivery signals into a verified release path.](docs/assets/social-preview.jpg)
 
 ## Why ProjectPipeline?
 
