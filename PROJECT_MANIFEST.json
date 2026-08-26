@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "911ec3152db145fae19e59ded67d534ff6a1ffbdd96dafbc94296ecd33573d43",
+  "aggregate_sha256": "9206855980f2ea970ce1d0f6fcad7698611318712dfca432fa3c82d3ba2b5061",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -757,8 +757,8 @@
     },
     {
       "path": "config/security/coordinator_jira_receipt_allowed_signers",
-      "sha256": "e7ae9a966ef955ac07aeeaa7cd6b7aa4d166da7c995a39e5b7d31209046fb4e5",
-      "size_bytes": 159
+      "sha256": "c3284f2f59d4712cfe6cf5f9d26763254c876334ef18aa3252c9d1adcd087c6c",
+      "size_bytes": 329
     },
     {
       "path": "config/security_policy.json",
@@ -5437,8 +5437,8 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "8e4401959dab09659ec1aaaf459cf121887d118a9c6c206394a0987f1cfdbc18",
-      "size_bytes": 25756
+      "sha256": "128f976bb4d67139bff4ca5c2c4f3502d5b02e1d02bbfd460485b593aa2736c3",
+      "size_bytes": 25757
     },
     {
       "path": "instructions/policies/BRANCH_PR_POLICY.json",
@@ -14607,8 +14607,8 @@
     },
     {
       "path": "tests/test_instruction_system.py",
-      "sha256": "8319b1cefa1e892b5bcc5203759e99a727644b16ff18f4bda70a88b9da534cc9",
-      "size_bytes": 9514
+      "sha256": "b9dd9f60bd5f79135a484c5d0badd2a75040c6cf1b66d1356e35e1f56493fa9c",
+      "size_bytes": 10294
     },
     {
       "path": "tests/test_intake_cli.py",
@@ -15211,7 +15211,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-26T00:38:50.276108+00:00",
+  "generated_at_utc": "2026-08-26T01:54:44.791876+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15221,5 +15221,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30609814
+  "total_bytes": 30610765
 }

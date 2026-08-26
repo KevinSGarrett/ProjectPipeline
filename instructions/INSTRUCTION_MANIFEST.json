@@ -621,8 +621,8 @@
       "instruction_id": "PP-ASSET-TESTS-TEST-INSTRUCTION-SYSTEM-PY",
       "kind": "TEST",
       "path": "tests/test_instruction_system.py",
-      "sha256": "8319b1cefa1e892b5bcc5203759e99a727644b16ff18f4bda70a88b9da534cc9",
-      "size_bytes": 9514
+      "sha256": "b9dd9f60bd5f79135a484c5d0badd2a75040c6cf1b66d1356e35e1f56493fa9c",
+      "size_bytes": 10294
     },
     {
       "instruction_id": "PP-ASSET-TESTS-TEST-SECURITY-UPSTREAM-ADAPTERS-PY",
