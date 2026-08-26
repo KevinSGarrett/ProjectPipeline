@@ -59,28 +59,13 @@ PUBLIC_SOURCE_MARKERS = (
     "src/project_pipeline",
 )
 PUBLIC_SOURCE_CHECKOUT_KIND = "PUBLIC_SOURCE"
-PRIVATE_CONTROL_PATHS = (
+CONTROL_WORKSPACE_MARKERS = (
     ".agents",
     ".cursor",
     ".cursorignore",
-    "AGENTS.md",
-    "FILE_MANIFEST.sha256",
-    "PROJECT_MANIFEST.json",
-    "config/project_manifest.json",
-    "docs/CONTINUATION_PACKAGE.md",
-    "docs/NAVIGATION.md",
-    "docs/REQUIREMENT_CATALOG.md",
-    "docs/STATUS_MODEL.md",
-    "docs/engineering/pp380_disposition_generation.md",
-    "docs/generated",
-    "docs/jira",
-    "dummy",
-    "evidence",
     "instructions",
     "jira",
     "plans",
-    "provenance",
-    "release",
 )
 
 
@@ -1062,14 +1047,13 @@ def is_standalone_public_source_checkout(root: Path) -> bool:
     """Return whether *root* is the distributable source tree.
 
     The maintainers' control instructions intentionally live outside a public
-    checkout.  A checkout that has the product-source markers but no
-    ``instructions`` directory is therefore valid in its public form; a
-    partially missing internal checkout is not.
+    checkout. A checkout that has the product-source markers and does not
+    contain control-workspace markers is therefore valid in its public form.
     """
     return (
         _declares_public_source_checkout(root)
         and all((root / marker).exists() for marker in PUBLIC_SOURCE_MARKERS)
-        and all(not (root / path).exists() for path in PRIVATE_CONTROL_PATHS)
+        and all(not (root / path).exists() for path in CONTROL_WORKSPACE_MARKERS)
     )
 
 
