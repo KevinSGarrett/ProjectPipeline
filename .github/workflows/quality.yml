@@ -66,7 +66,9 @@ jobs:
           if [[ -f plans/PLAN_CATALOG.json ]]; then
             pytest -q --cov=project_pipeline --cov-report=term-missing --cov-fail-under=70
           else
-            pytest -q --cov=project_pipeline --cov-report=term-missing
+            # The public tree intentionally excludes the maintainers' private
+            # control corpus. Its data-free test suite has a separate floor.
+            pytest -q --cov=project_pipeline --cov-report=term-missing --cov-fail-under=60
           fi
       - name: Repository self-validation
         run: project-pipeline validate --root .

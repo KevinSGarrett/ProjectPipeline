@@ -58,5 +58,5 @@ def test_public_cold_start_routes_to_public_documentation() -> None:
 def test_private_control_tests_are_not_collected_from_public_source() -> None:
     module = load_script("public_conftest", ROOT / "tests/conftest.py")
 
-    assert len(module.PRIVATE_CONTROL_TEST_PATHS) == 60
+    assert len(module.PRIVATE_CONTROL_TEST_PATHS) == 65
     assert all((ROOT / path).is_file() for path in module.PRIVATE_CONTROL_TEST_PATHS)
