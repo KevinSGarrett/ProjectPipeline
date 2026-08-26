@@ -107,10 +107,11 @@ def test_campaign_desktop_builder_stages_gnu_target_artifacts(tmp_path, monkeypa
     monkeypatch.setattr(
         module,
         "_prepare_native_build_environment",
-        lambda environment: (
+        lambda environment, *, workspace: (
             {**environment, "CARGO_BUILD_TARGET": module._GNU_TARGET},
             module._GNU_TARGET,
             "x86_64-w64-mingw32-gcc.exe",
+            None,
         ),
     )
 
@@ -151,6 +152,7 @@ def test_campaign_desktop_builder_discovers_winget_winlibs(tmp_path, monkeypatch
     module = _load_builder()
     winlibs_bin = (
         tmp_path
+        / "with space"
         / "Microsoft"
         / "WinGet"
         / "Packages"
@@ -161,12 +163,165 @@ def test_campaign_desktop_builder_discovers_winget_winlibs(tmp_path, monkeypatch
     winlibs_bin.mkdir(parents=True)
     (winlibs_bin / module._GNU_GCC).write_bytes(b"")
     monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: None)
+    copied_bin = Path("C:/ProjectPipeline-desktop-test/mingw64/bin")
+    cleanup_root = copied_bin.parents[1]
+    monkeypatch.setattr(
+        module,
+        "_copy_gnu_toolchain_to_build_workspace",
+        lambda _source, _workspace: (copied_bin, cleanup_root),
+    )
 
-    environment, target, compiler = module._prepare_native_build_environment(
-        {"LOCALAPPDATA": str(tmp_path), "PATH": "base-path"}
+    environment, target, compiler, resolved_cleanup_root = module._prepare_native_build_environment(
+        {"LOCALAPPDATA": str(tmp_path / "with space"), "PATH": "base-path"},
+        workspace=tmp_path / "build",
     )
 
     assert target == module._GNU_TARGET
     assert environment["CARGO_BUILD_TARGET"] == module._GNU_TARGET
-    assert environment["PATH"].startswith(str(winlibs_bin))
-    assert compiler == str(winlibs_bin / module._GNU_GCC)
+    assert environment["PATH"].startswith(str(copied_bin))
+    assert compiler == str(copied_bin / module._GNU_GCC)
+    assert resolved_cleanup_root == cleanup_root
+
+
+def test_campaign_desktop_builder_copies_winlibs_with_spaces_to_build_workspace(
+    tmp_path, monkeypatch
+):
+    module = _load_builder()
+    winlibs_bin = (
+        tmp_path
+        / "with space"
+        / "Microsoft"
+        / "WinGet"
+        / "Packages"
+        / "BrechtSanders.WinLibs.POSIX.UCRT_example"
+        / "mingw64"
+        / "bin"
+    )
+    winlibs_bin.mkdir(parents=True)
+    (winlibs_bin / module._GNU_GCC).write_bytes(b"")
+    copied_bin = Path("C:/ProjectPipeline-desktop-test/mingw64/bin")
+    cleanup_root = copied_bin.parents[1]
+    monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: None)
+    monkeypatch.setattr(
+        module,
+        "_copy_gnu_toolchain_to_build_workspace",
+        lambda _source, _workspace: (copied_bin, cleanup_root),
+    )
+
+    environment, target, compiler, resolved_cleanup_root = module._prepare_native_build_environment(
+        {"LOCALAPPDATA": str(tmp_path / "with space"), "PATH": "base-path"},
+        workspace=tmp_path / "build",
+    )
+
+    assert target == module._GNU_TARGET
+    assert environment["PATH"].startswith(str(copied_bin))
+    assert " " not in environment["PATH"].split(module.os.pathsep, 1)[0]
+    assert compiler == str(copied_bin / module._GNU_GCC)
+    assert resolved_cleanup_root == cleanup_root
+
+
+def test_campaign_desktop_builder_stages_gnu_toolchain_at_volume_root(tmp_path, monkeypatch):
+    module = _load_builder()
+    winlibs_bin = (
+        tmp_path
+        / "with space"
+        / "Microsoft"
+        / "WinGet"
+        / "Packages"
+        / "BrechtSanders.WinLibs.POSIX.UCRT_example"
+        / "mingw64"
+        / "bin"
+    )
+    winlibs_bin.mkdir(parents=True)
+    (winlibs_bin / module._GNU_GCC).write_bytes(b"")
+
+    staging_root = tmp_path / "staged-toolchain"
+    observed: dict[str, str] = {}
+
+    def fake_mkdtemp(*, prefix, dir):
+        observed["prefix"] = prefix
+        observed["dir"] = dir
+        staging_root.mkdir()
+        return str(staging_root)
+
+    monkeypatch.setattr(module.tempfile, "mkdtemp", fake_mkdtemp)
+    copied_bin, cleanup_root = module._copy_gnu_toolchain_to_build_workspace(
+        winlibs_bin, tmp_path / "output with space"
+    )
+
+    assert observed == {
+        "prefix": "projectpipeline-desktop-toolchain-",
+        "dir": str((tmp_path / "output with space").anchor),
+    }
+    assert copied_bin == staging_root / "mingw64" / "bin"
+    assert (copied_bin / module._GNU_GCC).is_file()
+    assert cleanup_root == staging_root
+    module.shutil.rmtree(cleanup_root)
+
+
+def test_campaign_desktop_builder_copies_spaced_gnu_compiler_from_path(tmp_path, monkeypatch):
+    module = _load_builder()
+    compiler = tmp_path / "compiler with space" / "bin" / module._GNU_GCC
+    compiler.parent.mkdir(parents=True)
+    compiler.write_bytes(b"")
+    copied_bin = tmp_path / "build" / "winlibs-gnu" / "bin"
+    monkeypatch.setattr(
+        module.shutil,
+        "which",
+        lambda name, path=None: str(compiler) if name == module._GNU_GCC else None,
+    )
+    monkeypatch.setattr(
+        module,
+        "_copy_gnu_toolchain_to_build_workspace",
+        lambda _source, _workspace: (copied_bin, copied_bin.parents[1]),
+    )
+
+    environment, target, resolved_compiler, cleanup_root = module._prepare_native_build_environment(
+        {"PATH": str(compiler.parent)}, workspace=tmp_path / "build"
+    )
+
+    assert target == module._GNU_TARGET
+    assert environment["PATH"].startswith(str(copied_bin))
+    assert resolved_compiler == str(copied_bin / module._GNU_GCC)
+    assert cleanup_root == copied_bin.parents[1]
+
+
+def test_campaign_desktop_builder_removes_created_output_after_build_failure(tmp_path, monkeypatch):
+    module = _load_builder()
+    root = tmp_path / "candidate"
+    frontend = root / "apps" / "command_center"
+    frontend.mkdir(parents=True)
+    (frontend / "package-lock.json").write_text("{}\n", encoding="utf-8")
+    output = tmp_path / "desktop-artifacts"
+    sha = "a" * 40
+    tree = "b" * 40
+    monkeypatch.setattr(
+        module,
+        "inspect_worktree_identity",
+        lambda _root: {"ok": True, "dirty": False, "sha": sha, "tree": tree},
+    )
+    monkeypatch.setattr(module, "require_safe_local_host", lambda _root: {"state": "SAFE"})
+    monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: "npm")
+    monkeypatch.setattr(
+        module,
+        "_prepare_native_build_environment",
+        lambda environment, *, workspace: (environment, module._GNU_TARGET, "gcc", None),
+    )
+    monkeypatch.setattr(module, "_gnu_rust_toolchain", lambda _root: "1.97.1-x86_64-pc-windows-gnu")
+    monkeypatch.setattr(
+        module,
+        "_run",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            RuntimeError("desktop-native-build-failed")
+        ),
+    )
+
+    with pytest.raises(RuntimeError, match="desktop-native-build-failed"):
+        module.build_artifacts(
+            root=root,
+            output_dir=output,
+            expected_sha=sha,
+            expected_tree=tree,
+        )
+
+    assert not output.exists()

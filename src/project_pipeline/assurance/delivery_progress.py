@@ -50,6 +50,7 @@ _IMPLEMENTATION_PREFIXES = (
     "apps/",
     "database/",
     "infrastructure/",
+    "scripts/",
 )
 
 

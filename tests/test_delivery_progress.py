@@ -12,16 +12,28 @@ from project_pipeline.assurance.delivery_progress import (
 )
 from project_pipeline.domain.assurance import DeliveryGateState
 
+_GIT_TIMEOUT_SECONDS = 15
+
 
 def _git(root: Path, *args: str) -> str:
-    result = subprocess.run(
-        ["git", "-C", str(root), *args],
-        check=True,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
+    command = ["git", "-C", str(root), *args]
+    try:
+        result = subprocess.run(
+            command,
+            check=True,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            timeout=_GIT_TIMEOUT_SECONDS,
+        )
+    except subprocess.TimeoutExpired:
+        rendered_command = " ".join([*command[0:2], "<repository>", *command[3:]])
+    else:
+        return result.stdout.strip()
+
+    raise AssertionError(
+        f"Git test helper timed out after {_GIT_TIMEOUT_SECONDS}s: {rendered_command}"
     )
-    return result.stdout.strip()
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -81,6 +93,39 @@ def _repository(tmp_path: Path) -> tuple[Path, str]:
     _git(root, "add", ".")
     _git(root, "commit", "-m", "base")
     return root, _git(root, "rev-parse", "HEAD")
+
+
+def test_git_helper_fails_boundedly_with_actionable_command(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    observed: dict[str, object] = {}
+
+    def _timeout(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        observed["command"] = command
+        observed["timeout"] = kwargs["timeout"]
+        raise subprocess.TimeoutExpired(command, kwargs["timeout"])
+
+    monkeypatch.setattr(subprocess, "run", _timeout)
+
+    with pytest.raises(
+        AssertionError,
+        match=r"Git test helper timed out after 15s: git -C <repository> config user.name Test",
+    ) as raised:
+        _git(tmp_path, "config", "user.name", "Test")
+
+    assert observed["command"] == [
+        "git",
+        "-C",
+        str(tmp_path),
+        "config",
+        "user.name",
+        "Test",
+    ]
+    assert observed["timeout"] == _GIT_TIMEOUT_SECONDS
+    assert raised.value.__cause__ is None
+    assert raised.value.__context__ is None
+    assert str(tmp_path) not in str(raised.value)
 
 
 def test_progress_delta_does_not_count_lifecycle_activity() -> None:
@@ -374,6 +419,27 @@ def test_implementation_and_test_change_is_objective_progress(tmp_path: Path) ->
     assert decision.state is DeliveryGateState.PASS
     assert decision.objective_progress_units == 1
     assert not decision.reconciliation_batch
+
+
+def test_tested_delivery_script_is_objective_progress(tmp_path: Path) -> None:
+    root, base = _repository(tmp_path)
+    script = root / "scripts" / "build_release.py"
+    test = root / "tests" / "test_build_release.py"
+    script.parent.mkdir(parents=True, exist_ok=True)
+    test.parent.mkdir(parents=True, exist_ok=True)
+    script.write_text("def build_release():\n    return 'ready'\n", encoding="utf-8")
+    test.write_text(
+        "from scripts.build_release import build_release\n\n"
+        "def test_build_release():\n    assert build_release() == 'ready'\n",
+        encoding="utf-8",
+    )
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "implement tested delivery script")
+
+    decision = evaluate_delivery_gate(root, base_ref=base)
+
+    assert decision.state is DeliveryGateState.PASS
+    assert decision.objective_progress_units == 1
 
 
 def test_remote_in_progress_alignment_does_not_block_material_slice(tmp_path: Path) -> None:
