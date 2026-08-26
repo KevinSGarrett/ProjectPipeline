@@ -1,7 +1,0 @@
-{
-  "schema_version": "1.0.0",
-  "record_count": 215,
-  "verified_pass_count": 214,
-  "live_external_verification_count": 1,
-  "note": "Verified live external qualifications are counted only when their evidence artifact and digest are current; unavailable capabilities remain explicit."
-}

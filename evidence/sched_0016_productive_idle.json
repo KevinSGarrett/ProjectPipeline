@@ -1,9 +1,0 @@
-{
-  "claim": "Scheduler selected and progressed an unrelated ready lane while another lane waited, without protected-capacity or shared-scope drift.",
-  "requirement_id": "REQ-SCHED-0016",
-  "result": "PASS",
-  "test_ids": [
-    "TEST-SCHED-IDLE-001",
-    "TEST-SCHED-IDLE-002"
-  ]
-}

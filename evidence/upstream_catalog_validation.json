@@ -1,7 +1,0 @@
-{
-  "catalog_entry_count": 116,
-  "duplicate_count": 0,
-  "invalid_url_count": 0,
-  "result": "PASS",
-  "validation_scope": "Syntax, uniqueness, and registry completeness only; remote metadata and licenses were not inspected."
-}

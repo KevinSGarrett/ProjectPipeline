@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and ideas
+    url: https://github.com/KevinSGarrett/ProjectPipeline/discussions
+    about: Start a Discussion for support, design feedback, and general questions.
+  - name: Security vulnerability
+    url: https://github.com/KevinSGarrett/ProjectPipeline/security/advisories/new
+    about: Report potential security issues privately. Do not disclose vulnerabilities in a public issue.

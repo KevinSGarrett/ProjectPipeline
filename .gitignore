@@ -103,26 +103,33 @@ terraform.rc
 *.pid.lock
 *.log
 
-# Local AI-assistant/session state. The repository-owned /.agents/ instruction
-# skills are intentionally tracked and must not be covered by these rules.
+# Local AI-assistant/session state and repository-private delivery materials.
+# These files belong to a developer's local workspace, not a public clone.
 /.codex*
 /.claude/
-/.cursor/*
-!/.cursor/rules/
-!/.cursor/rules/**
-!/.cursor/hooks/
-!/.cursor/hooks/**
-!/.cursor/cli.json
-!/.cursor/hooks.json
-!/.cursor/environment.json
-!/.cursor/mcp.example.json
-/.cursor/mcp.json
-/.cursor/scratchpad.md
-/.cursor/**/*.log
-/.cursor/**/*secret*
-!/.cursor/rules/40-security-and-secrets.mdc
+/.cursor/
+/.agents/
+/.cursorignore
+/AGENTS.md
 /.aider.chat.history.md
 /.aider.input.history
+
+# Internal project-control corpus and generated delivery records.
+# Public source releases do not include local work tracking, benchmark packs,
+# plans, evidence, or internal instruction material.
+/dummy/
+/evidence/
+/jira/
+/plans/
+/docs/jira/
+/docs/generated/
+/docs/CONTINUATION_PACKAGE.md
+/docs/NAVIGATION.md
+/docs/REQUIREMENT_CATALOG.md
+/docs/STATUS_MODEL.md
+/instructions/
+/FILE_MANIFEST.sha256
+/PROJECT_MANIFEST.json
 
 # Local working corpora and recoverable Codex backups
 /.codex_backups/

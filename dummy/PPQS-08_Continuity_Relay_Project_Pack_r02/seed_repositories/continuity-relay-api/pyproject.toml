@@ -1,6 +1,0 @@
-
-[project]
-name="continuity-relay-api"
-version="0.8.0"
-requires-python=">=3.11"
-dependencies=["fastapi>=0.115,<1","uvicorn>=0.30,<1"]

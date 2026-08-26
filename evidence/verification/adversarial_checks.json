@@ -1,8 +1,0 @@
-{
-  "observations": [
-    "required-check-silent-skip rejected",
-    "single-false-completion-fact prevents completion",
-    "api-schema-path-traversal rejected",
-    "external-axe-bundle rejected"
-  ]
-}

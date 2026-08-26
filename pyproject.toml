@@ -5,13 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "project-pipeline"
 version = "0.9.0"
-description = "Traceable, policy-safe autonomous project-control foundation"
+description = "Local-first tooling for planning, coordinating, and verifying software delivery"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 authors = [{name = "Kevin Garrett"}]
-license = "MIT"
+license = {text = "Proprietary — all rights reserved"}
 license-files = ["LICENSE"]
-keywords = ["automation", "orchestration", "project-control", "traceability"]
+keywords = ["automation", "developer-tools", "local-first", "project-management", "release-engineering", "software-delivery"]
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Programming Language :: Python :: 3",
