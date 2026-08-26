@@ -184,9 +184,8 @@ class RepositoryValidator:
             "LICENSE",
             "src/project_pipeline",
         )
-        return (
-            not (self.root / "plans" / "PLAN_CATALOG.json").is_file()
-            and all((self.root / marker).exists() for marker in public_markers)
+        return not (self.root / "plans" / "PLAN_CATALOG.json").is_file() and all(
+            (self.root / marker).exists() for marker in public_markers
         )
 
     def _validate_standalone_public_source_checkout(self) -> ValidationReport:
