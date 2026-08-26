@@ -9,6 +9,7 @@ import os
 import shutil
 import subprocess
 import sys
+import tempfile
 import tomllib
 from pathlib import Path
 from typing import Any
@@ -84,26 +85,30 @@ def _winget_winlibs_bin(environment: dict[str, str]) -> Path | None:
     return None
 
 
-def _copy_gnu_toolchain_to_build_workspace(source_bin: Path, workspace: Path) -> Path:
+def _copy_gnu_toolchain_to_build_workspace(source_bin: Path, workspace: Path) -> tuple[Path, Path]:
     """Copy a GNU toolchain whose embedded prefix contains a space."""
 
-    if " " in str(workspace):
-        raise RuntimeError("desktop-build-gnu-toolchain-workspace-space-path")
-    destination_root = workspace / "winlibs-gnu"
-    if destination_root.exists():
-        raise RuntimeError("desktop-build-toolchain-output-conflict")
-    shutil.copytree(source_bin.parent, destination_root)
-    copied_bin = destination_root / "bin"
-    if not (copied_bin / _GNU_GCC).is_file():
-        raise RuntimeError("desktop-build-gnu-linker-unavailable")
-    return copied_bin
+    anchor = workspace.anchor
+    if not anchor or " " in anchor:
+        raise RuntimeError("desktop-build-gnu-toolchain-workspace-unavailable")
+    staging_root = Path(tempfile.mkdtemp(prefix="projectpipeline-desktop-toolchain-", dir=anchor))
+    try:
+        destination_root = staging_root / "mingw64"
+        shutil.copytree(source_bin.parent, destination_root)
+        copied_bin = destination_root / "bin"
+        if not (copied_bin / _GNU_GCC).is_file():
+            raise RuntimeError("desktop-build-gnu-linker-unavailable")
+        return copied_bin, staging_root
+    except Exception:
+        shutil.rmtree(staging_root)
+        raise
 
 
-def _gnu_toolchain_path_entry(path: Path, *, workspace: Path) -> Path:
+def _gnu_toolchain_path_entry(path: Path, *, workspace: Path) -> tuple[Path, Path | None]:
     """Provide GNU ld a toolchain prefix without Windows path separators."""
 
     if " " not in str(path):
-        return path
+        return path, None
     return _copy_gnu_toolchain_to_build_workspace(path, workspace)
 
 
@@ -111,7 +116,7 @@ def _prepare_native_build_environment(
     environment: dict[str, str],
     *,
     workspace: Path,
-) -> tuple[dict[str, str], str, str]:
+) -> tuple[dict[str, str], str, str, Path | None]:
     """Choose a native Windows toolchain and return its isolated build environment."""
 
     configured = dict(environment)
@@ -126,20 +131,24 @@ def _prepare_native_build_environment(
     if target == _MSVC_TARGET:
         if not shutil.which("link.exe", path=path_value):
             raise RuntimeError("desktop-build-msvc-linker-unavailable")
-        return configured, target, "MSVC link.exe"
+        return configured, target, "MSVC link.exe", None
 
     compiler = shutil.which(_GNU_GCC, path=path_value)
     if compiler:
-        path_entry = _gnu_toolchain_path_entry(Path(compiler).parent, workspace=workspace)
+        path_entry, toolchain_staging_root = _gnu_toolchain_path_entry(
+            Path(compiler).parent, workspace=workspace
+        )
     else:
         winlibs_bin = _winget_winlibs_bin(configured)
         if winlibs_bin is None:
             raise RuntimeError("desktop-build-gnu-linker-unavailable")
-        path_entry = _gnu_toolchain_path_entry(winlibs_bin, workspace=workspace)
+        path_entry, toolchain_staging_root = _gnu_toolchain_path_entry(
+            winlibs_bin, workspace=workspace
+        )
     configured["PATH"] = str(path_entry) + os.pathsep + path_value
     compiler_path = path_entry / _GNU_GCC
     configured["CARGO_BUILD_TARGET"] = _GNU_TARGET
-    return configured, target, str(compiler_path)
+    return configured, target, str(compiler_path), toolchain_staging_root
 
 
 def _gnu_rust_toolchain(root: Path) -> str:
@@ -176,6 +185,7 @@ def build_artifacts(
     host_safety = require_safe_local_host(root)
     output_existed = output.exists()
     output.mkdir(parents=True, exist_ok=True)
+    toolchain_staging_root: Path | None = None
     try:
         frontend = root / "apps" / "command_center"
         if not (frontend / "package-lock.json").is_file():
@@ -183,8 +193,8 @@ def build_artifacts(
         npm = shutil.which("npm.cmd") or shutil.which("npm")
         if not npm:
             raise RuntimeError("desktop-build-npm-unavailable")
-        environment, build_target, compiler = _prepare_native_build_environment(
-            dict(os.environ), workspace=output
+        environment, build_target, compiler, toolchain_staging_root = (
+            _prepare_native_build_environment(dict(os.environ), workspace=output)
         )
         rust_toolchain = None
         if build_target == _GNU_TARGET:
@@ -197,6 +207,9 @@ def build_artifacts(
             tauri_command.extend(["--target", build_target])
         tauri_command.extend(["--", "--locked"])
         _run(tauri_command, cwd=frontend, environment=environment)
+        if toolchain_staging_root is not None:
+            shutil.rmtree(toolchain_staging_root)
+            toolchain_staging_root = None
 
         release_dir = output / "cargo-target"
         if build_target != _MSVC_TARGET:
@@ -244,6 +257,8 @@ def build_artifacts(
         _write_json(output / "desktop_build.json", payload)
         return payload
     except Exception:
+        if toolchain_staging_root is not None and toolchain_staging_root.exists():
+            shutil.rmtree(toolchain_staging_root)
         if not output_existed:
             shutil.rmtree(output)
         raise
