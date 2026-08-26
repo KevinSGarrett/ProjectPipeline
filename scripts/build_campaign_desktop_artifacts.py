@@ -84,6 +84,37 @@ def _winget_winlibs_bin(environment: dict[str, str]) -> Path | None:
     return None
 
 
+def _windows_short_path(path: Path) -> Path | None:
+    """Return a Windows executable-safe path when the volume provides one."""
+
+    if os.name != "nt":
+        return None
+    try:
+        import ctypes
+
+        buffer = ctypes.create_unicode_buffer(32768)
+        get_short_path_name = ctypes.windll.kernel32.GetShortPathNameW
+        get_short_path_name.argtypes = [ctypes.c_wchar_p, ctypes.c_wchar_p, ctypes.c_uint]
+        get_short_path_name.restype = ctypes.c_uint
+        length = get_short_path_name(str(path), buffer, len(buffer))
+    except (AttributeError, OSError):
+        return None
+    if not length or length >= len(buffer):
+        return None
+    return Path(buffer.value)
+
+
+def _gnu_toolchain_path_entry(path: Path) -> Path:
+    """Avoid GNU linker prefix parsing failures for WinGet paths containing spaces."""
+
+    if " " not in str(path):
+        return path
+    short_path = _windows_short_path(path)
+    if short_path is None or " " in str(short_path):
+        raise RuntimeError("desktop-build-gnu-linker-space-path")
+    return short_path
+
+
 def _prepare_native_build_environment(
     environment: dict[str, str],
 ) -> tuple[dict[str, str], str, str]:
@@ -110,8 +141,9 @@ def _prepare_native_build_environment(
         winlibs_bin = _winget_winlibs_bin(configured)
         if winlibs_bin is None:
             raise RuntimeError("desktop-build-gnu-linker-unavailable")
-        configured["PATH"] = str(winlibs_bin) + os.pathsep + path_value
-        compiler_path = winlibs_bin / _GNU_GCC
+        path_entry = _gnu_toolchain_path_entry(winlibs_bin)
+        configured["PATH"] = str(path_entry) + os.pathsep + path_value
+        compiler_path = path_entry / _GNU_GCC
     configured["CARGO_BUILD_TARGET"] = _GNU_TARGET
     return configured, target, str(compiler_path)
 

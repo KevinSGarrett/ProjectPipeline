@@ -170,3 +170,56 @@ def test_campaign_desktop_builder_discovers_winget_winlibs(tmp_path, monkeypatch
     assert environment["CARGO_BUILD_TARGET"] == module._GNU_TARGET
     assert environment["PATH"].startswith(str(winlibs_bin))
     assert compiler == str(winlibs_bin / module._GNU_GCC)
+
+
+def test_campaign_desktop_builder_uses_short_path_for_winlibs_with_spaces(tmp_path, monkeypatch):
+    module = _load_builder()
+    winlibs_bin = (
+        tmp_path
+        / "with space"
+        / "Microsoft"
+        / "WinGet"
+        / "Packages"
+        / "BrechtSanders.WinLibs.POSIX.UCRT_example"
+        / "mingw64"
+        / "bin"
+    )
+    winlibs_bin.mkdir(parents=True)
+    (winlibs_bin / module._GNU_GCC).write_bytes(b"")
+    short_bin = Path("C:/WinLibsShort/mingw64/bin")
+    monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: None)
+    monkeypatch.setattr(module, "_windows_short_path", lambda _path: short_bin)
+
+    environment, target, compiler = module._prepare_native_build_environment(
+        {"LOCALAPPDATA": str(tmp_path / "with space"), "PATH": "base-path"}
+    )
+
+    assert target == module._GNU_TARGET
+    assert environment["PATH"].startswith(str(short_bin))
+    assert " " not in environment["PATH"].split(module.os.pathsep, 1)[0]
+    assert compiler == str(short_bin / module._GNU_GCC)
+
+
+def test_campaign_desktop_builder_rejects_spaced_winlibs_path_without_short_name(
+    tmp_path, monkeypatch
+):
+    module = _load_builder()
+    winlibs_bin = (
+        tmp_path
+        / "with space"
+        / "Microsoft"
+        / "WinGet"
+        / "Packages"
+        / "BrechtSanders.WinLibs.POSIX.UCRT_example"
+        / "mingw64"
+        / "bin"
+    )
+    winlibs_bin.mkdir(parents=True)
+    (winlibs_bin / module._GNU_GCC).write_bytes(b"")
+    monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: None)
+    monkeypatch.setattr(module, "_windows_short_path", lambda _path: None)
+
+    with pytest.raises(RuntimeError, match="desktop-build-gnu-linker-space-path"):
+        module._prepare_native_build_environment(
+            {"LOCALAPPDATA": str(tmp_path / "with space"), "PATH": "base-path"}
+        )
