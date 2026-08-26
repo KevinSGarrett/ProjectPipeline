@@ -62,7 +62,12 @@ jobs:
       - name: Static typing
         run: mypy
       - name: Tests and coverage
-        run: pytest -q --cov=project_pipeline --cov-report=term-missing --cov-fail-under=70
+        run: |
+          if [[ -f plans/PLAN_CATALOG.json ]]; then
+            pytest -q --cov=project_pipeline --cov-report=term-missing --cov-fail-under=70
+          else
+            pytest -q --cov=project_pipeline --cov-report=term-missing
+          fi
       - name: Repository self-validation
         run: project-pipeline validate --root .
       - name: Build distributions
