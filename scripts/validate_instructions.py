@@ -42,6 +42,13 @@ MANDATORY_BOOTSTRAP = [
     "instructions/SECOND_PASS_REQUIRED.md",
 ]
 
+PUBLIC_SOURCE_MARKERS = (
+    "README.md",
+    "LICENSE",
+    "pyproject.toml",
+    "src/project_pipeline",
+)
+
 
 @dataclass(slots=True)
 class Finding:
@@ -1001,9 +1008,39 @@ def load_documents(root: Path, report: Report) -> dict[Path, Any]:
     return documents
 
 
+def is_standalone_public_source_checkout(root: Path) -> bool:
+    """Return whether *root* is the distributable source tree.
+
+    The maintainers' control instructions intentionally live outside a public
+    checkout.  A checkout that has the product-source markers but no
+    ``instructions`` directory is therefore valid in its public form; a
+    partially missing internal checkout is not.
+    """
+    return not (root / "instructions").exists() and all(
+        (root / marker).exists() for marker in PUBLIC_SOURCE_MARKERS
+    )
+
+
 def validate_instruction_system(root: Path, *, update: bool = False) -> Report:
     root = root.resolve()
     report = Report(root=str(root))
+    if is_standalone_public_source_checkout(root):
+        if update:
+            report.add(
+                "ERROR",
+                "PUBLIC002",
+                "A public source checkout has no private instruction manifest to update.",
+                "instructions",
+            )
+            return report
+        report.checks.append("public_source_mode")
+        report.add(
+            "INFO",
+            "PUBLIC001",
+            "Private maintainer instructions are intentionally excluded from this public source checkout.",
+            "README.md",
+        )
+        return report
     documents = load_documents(root, report)
     manifest = documents.get(MANIFEST_PATH)
     if not isinstance(manifest, dict):

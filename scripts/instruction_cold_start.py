@@ -26,11 +26,43 @@ def load_instruction_validator(root: Path) -> Any:
 
 def build_cold_start(root: Path) -> dict[str, Any]:
     root = root.resolve()
+    validator = load_instruction_validator(root)
+    instruction_report = validator.validate_instruction_system(root)
+    if validator.is_standalone_public_source_checkout(root):
+        return {
+            "schema_version": "1.0.0",
+            "mode": "PUBLIC_SOURCE",
+            "ready": instruction_report.ok,
+            "missing": [],
+            "instruction_validation": {
+                "ok": instruction_report.ok,
+                "error_count": len(instruction_report.errors),
+                "warning_count": len(instruction_report.warnings),
+            },
+            "identity": {
+                "project": "ProjectPipeline",
+                "project_id": "PROJECT-PIPELINE",
+                "repository": "https://github.com/KevinSGarrett/ProjectPipeline",
+                "canonical_local_root": None,
+            },
+            "first_read": ["README.md", "CONTRIBUTING.md", "SECURITY.md"],
+            "preflight_commands": [
+                "project-pipeline doctor --root .",
+                "project-pipeline validate --root .",
+            ],
+            "routing": {},
+            "hard_stops": [
+                "missing or exposed credential",
+                "unknown remote write outcome",
+                "destructive operation against unpreserved work",
+                "failed required gate",
+            ],
+            "durable_state": ["source control", "release artifacts", "local application data"],
+            "scenario_ids": [],
+        }
     manifest = load(root / "instructions/INSTRUCTION_MANIFEST.json")
     coverage = load(root / "instructions/INSTRUCTION_COVERAGE_MATRIX.json")
     scenarios = load(root / "instructions/policies/VALIDATION_SCENARIOS.json")
-    validator = load_instruction_validator(root)
-    instruction_report = validator.validate_instruction_system(root)
     first_read = list(validator.MANDATORY_BOOTSTRAP)
     required = [
         *(root / path for path in first_read),

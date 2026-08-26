@@ -45,7 +45,7 @@ jobs:
         run: |
           project-pipeline schemas check --root .
           project-pipeline dependencies validate --root .
-      - name: Validate instruction system and cold start
+      - name: Validate checkout mode and cold start
         run: |
           python scripts/validate_instructions.py --root .
           python scripts/instruction_cold_start.py --root .
