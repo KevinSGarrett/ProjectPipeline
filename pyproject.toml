@@ -9,7 +9,7 @@ description = "Local-first tooling for planning, coordinating, and verifying sof
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
 authors = [{name = "Kevin Garrett"}]
-license = {text = "Proprietary — all rights reserved"}
+license = "Proprietary - All rights reserved"
 license-files = ["LICENSE"]
 keywords = ["automation", "developer-tools", "local-first", "project-management", "release-engineering", "software-delivery"]
 classifiers = [
