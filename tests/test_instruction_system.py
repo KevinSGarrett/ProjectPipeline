@@ -159,6 +159,26 @@ def test_routine_development_policy_has_no_human_approval_terminal() -> None:
     assert jira_policy["remote_done_human_approval_required"] is False
 
 
+def test_pp384_coordinator_signer_rotation_keeps_retained_and_active_identities() -> None:
+    lines = (
+        (ROOT / "config/security/coordinator_jira_receipt_allowed_signers")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
+    entries = [line.split(maxsplit=3) for line in lines if line.strip()]
+    assert len(entries) >= 2
+    assert all(
+        len(entry) == 4
+        and entry[0] == "PRIMARY-CODEX-WORKSTATION"
+        and entry[1] == "ssh-ed25519"
+        and entry[2].startswith("AAAAC3NzaC1lZDI1NTE5")
+        for entry in entries
+    )
+    assert any("PP384 coordinator receipt" in entry[3] for entry in entries)
+    assert any("Cycle 16-B PP384 coordinator receipt" in entry[3] for entry in entries)
+    assert not any("PRIVATE" in line.upper() for line in lines)
+
+
 def test_delivery_progress_policy_weakening_is_rejected() -> None:
     module = load_script(
         "validate_instructions_delivery_guard", ROOT / "scripts/validate_instructions.py"
