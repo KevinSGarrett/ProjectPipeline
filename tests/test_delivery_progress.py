@@ -12,7 +12,6 @@ from project_pipeline.assurance.delivery_progress import (
 )
 from project_pipeline.domain.assurance import DeliveryGateState
 
-
 _GIT_TIMEOUT_SECONDS = 15
 
 
@@ -27,12 +26,14 @@ def _git(root: Path, *args: str) -> str:
             encoding="utf-8",
             timeout=_GIT_TIMEOUT_SECONDS,
         )
-    except subprocess.TimeoutExpired as error:
-        rendered_command = " ".join(command[0:2] + ["<repository>"] + command[3:])
-        raise AssertionError(
-            f"Git test helper timed out after {_GIT_TIMEOUT_SECONDS}s: {rendered_command}"
-        ) from error
-    return result.stdout.strip()
+    except subprocess.TimeoutExpired:
+        rendered_command = " ".join([*command[0:2], "<repository>", *command[3:]])
+    else:
+        return result.stdout.strip()
+
+    raise AssertionError(
+        f"Git test helper timed out after {_GIT_TIMEOUT_SECONDS}s: {rendered_command}"
+    )
 
 
 def _write_json(path: Path, value: object) -> None:
@@ -110,7 +111,7 @@ def test_git_helper_fails_boundedly_with_actionable_command(
     with pytest.raises(
         AssertionError,
         match=r"Git test helper timed out after 15s: git -C <repository> config user.name Test",
-    ):
+    ) as raised:
         _git(tmp_path, "config", "user.name", "Test")
 
     assert observed["command"] == [
@@ -122,6 +123,9 @@ def test_git_helper_fails_boundedly_with_actionable_command(
         "Test",
     ]
     assert observed["timeout"] == _GIT_TIMEOUT_SECONDS
+    assert raised.value.__cause__ is None
+    assert raised.value.__context__ is None
+    assert str(tmp_path) not in str(raised.value)
 
 
 def test_progress_delta_does_not_count_lifecycle_activity() -> None:
