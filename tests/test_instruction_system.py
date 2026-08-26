@@ -161,8 +161,10 @@ def test_routine_development_policy_has_no_human_approval_terminal() -> None:
 
 def test_pp384_coordinator_signer_rotation_keeps_retained_and_active_identities() -> None:
     lines = (
-        ROOT / "config/security/coordinator_jira_receipt_allowed_signers"
-    ).read_text(encoding="utf-8").splitlines()
+        (ROOT / "config/security/coordinator_jira_receipt_allowed_signers")
+        .read_text(encoding="utf-8")
+        .splitlines()
+    )
     entries = [line.split(maxsplit=3) for line in lines if line.strip()]
     assert len(entries) >= 2
     assert all(

@@ -1,5 +1,5 @@
 {
-  "aggregate_sha256": "9206855980f2ea970ce1d0f6fcad7698611318712dfca432fa3c82d3ba2b5061",
+  "aggregate_sha256": "cfb7c7b87a85a8eed7de28cfce6a679352051efe3c5e9b06d925f0ac75d77130",
   "content_canonicalization": "UTF-8 CRLF is normalized to LF; binary content is hashed unchanged",
   "exclusions": [
     ".git",
@@ -5437,7 +5437,7 @@
     },
     {
       "path": "instructions/INSTRUCTION_MANIFEST.json",
-      "sha256": "128f976bb4d67139bff4ca5c2c4f3502d5b02e1d02bbfd460485b593aa2736c3",
+      "sha256": "ec1adee03857f5df686ad4c400fbfe898a278bdaf6652119bf3003dc706d3305",
       "size_bytes": 25757
     },
     {
@@ -14607,8 +14607,8 @@
     },
     {
       "path": "tests/test_instruction_system.py",
-      "sha256": "b9dd9f60bd5f79135a484c5d0badd2a75040c6cf1b66d1356e35e1f56493fa9c",
-      "size_bytes": 10294
+      "sha256": "af388229503935446d6e78dd17e82c6ee6b0b24e9bdc76d99505cb3fd92a2e58",
+      "size_bytes": 10314
     },
     {
       "path": "tests/test_intake_cli.py",
@@ -15211,7 +15211,7 @@
       "size_bytes": 2517
     }
   ],
-  "generated_at_utc": "2026-08-26T01:54:44.791876+00:00",
+  "generated_at_utc": "2026-08-26T01:57:31.468894+00:00",
   "local_only_exclusion_rules": [
     ".env and non-template .env.* files",
     "private key/certificate files: *.pem, *.key, *.p12, *.pfx",
@@ -15221,5 +15221,5 @@
   "project_id": "PROJECT-PIPELINE",
   "root_name": "Project_X",
   "schema_version": "1.0.0",
-  "total_bytes": 30610765
+  "total_bytes": 30610785
 }
