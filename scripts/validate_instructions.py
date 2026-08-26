@@ -50,6 +50,19 @@ PUBLIC_SOURCE_MARKERS = (
     "src/project_pipeline",
 )
 PUBLIC_SOURCE_CHECKOUT_KIND = "PUBLIC_SOURCE"
+PRIVATE_CONTROL_PATHS = (
+    ".agents",
+    ".cursor",
+    ".cursorignore",
+    "AGENTS.md",
+    "docs/jira",
+    "dummy",
+    "evidence",
+    "instructions",
+    "jira",
+    "plans",
+    "provenance",
+)
 
 
 @dataclass(slots=True)
@@ -1035,9 +1048,9 @@ def is_standalone_public_source_checkout(root: Path) -> bool:
     partially missing internal checkout is not.
     """
     return (
-        not (root / "instructions").exists()
-        and _declares_public_source_checkout(root)
+        _declares_public_source_checkout(root)
         and all((root / marker).exists() for marker in PUBLIC_SOURCE_MARKERS)
+        and all(not (root / path).exists() for path in PRIVATE_CONTROL_PATHS)
     )
 
 

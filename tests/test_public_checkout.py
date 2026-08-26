@@ -5,6 +5,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from project_pipeline.validation.repository import RepositoryValidator
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -73,8 +75,21 @@ def test_unmarked_checkout_does_not_suppress_private_control_validation() -> Non
     assert "public_source_mode" not in report.checks
 
 
-def test_private_control_tests_are_not_collected_from_public_source() -> None:
-    module = load_script("public_conftest", ROOT / "tests/conftest.py")
+def test_repository_validator_requires_the_explicit_public_declaration() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        make_public_checkout(root)
+        assert RepositoryValidator(root)._is_standalone_public_source_checkout()
 
-    assert len(module.PRIVATE_CONTROL_TEST_PATHS) == 65
-    assert all((ROOT / path).is_file() for path in module.PRIVATE_CONTROL_TEST_PATHS)
+        (root / "instructions").mkdir()
+        assert not RepositoryValidator(root)._is_standalone_public_source_checkout()
+
+        (root / "instructions").rmdir()
+        (root / "plans").mkdir()
+        assert not RepositoryValidator(root)._is_standalone_public_source_checkout()
+
+        (root / "plans").rmdir()
+        (root / "pyproject.toml").write_text(
+            "[project]\nname = 'project-pipeline'\n", encoding="utf-8"
+        )
+        assert not RepositoryValidator(root)._is_standalone_public_source_checkout()

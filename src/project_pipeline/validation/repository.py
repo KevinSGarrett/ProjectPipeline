@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import tomllib
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -58,6 +59,20 @@ from project_pipeline.validation.registries import (
     check_source_section_registry,
     check_traceability_exports,
     check_upstream_registry,
+)
+
+PRIVATE_CONTROL_PATHS = (
+    ".agents",
+    ".cursor",
+    ".cursorignore",
+    "AGENTS.md",
+    "docs/jira",
+    "dummy",
+    "evidence",
+    "instructions",
+    "jira",
+    "plans",
+    "provenance",
 )
 
 
@@ -184,8 +199,17 @@ class RepositoryValidator:
             "LICENSE",
             "src/project_pipeline",
         )
-        return not (self.root / "plans" / "PLAN_CATALOG.json").is_file() and all(
-            (self.root / marker).exists() for marker in public_markers
+        try:
+            pyproject = tomllib.loads((self.root / "pyproject.toml").read_text(encoding="utf-8"))
+        except (OSError, tomllib.TOMLDecodeError):
+            return False
+        tool = pyproject.get("tool")
+        project_pipeline = tool.get("project_pipeline") if isinstance(tool, dict) else None
+        return (
+            isinstance(project_pipeline, dict)
+            and project_pipeline.get("checkout_kind") == "PUBLIC_SOURCE"
+            and all((self.root / marker).exists() for marker in public_markers)
+            and all(not (self.root / path).exists() for path in PRIVATE_CONTROL_PATHS)
         )
 
     def _validate_standalone_public_source_checkout(self) -> ValidationReport:

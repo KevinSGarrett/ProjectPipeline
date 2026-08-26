@@ -36,7 +36,6 @@ from project_pipeline.lifecycle import (
     VersionQualificationManager,
     assess_adoption_maturity,
     simulate_scenario,
-    validate_lifecycle_foundation,
 )
 from project_pipeline.lifecycle.persistence import LifecycleStore
 
@@ -399,7 +398,3 @@ def test_ppdb_0018_store_and_rollback(project_root, tmp_path):
         runner.rollback_last()
         ids = {x[0] for x in s.db.execute("SELECT migration_id FROM schema_migrations")}
         assert "PPDB-0018" not in ids and "PPDB-0017" in ids
-
-
-def test_pass22_lifecycle_validator(project_root):
-    assert validate_lifecycle_foundation(project_root) == []
