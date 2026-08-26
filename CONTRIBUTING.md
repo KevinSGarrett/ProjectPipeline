@@ -1,6 +1,6 @@
 # Contributing to ProjectPipeline
 
-Thanks for helping improve ProjectPipeline. Small, well-explained contributions are welcome.
+Thanks for helping improve ProjectPipeline. Discussion, bug reports, and feature proposals are welcome. Code contributions are accepted from explicitly authorized contributors under the repository's source-available license.
 
 ## Before you begin
 
@@ -22,8 +22,8 @@ Keep changes focused, add or update tests when behavior changes, and explain the
 
 ## Pull requests
 
-1. Fork the repository and create a focused branch.
-2. Describe the problem, the solution, and how you verified it.
+1. Contact the copyright holder for authorization before creating a fork or preparing a code contribution.
+2. Once authorized, create a focused branch and describe the problem, solution, and verification.
 3. Keep secrets and machine-specific files out of the diff.
 4. Be respectful and constructive in review.
 
