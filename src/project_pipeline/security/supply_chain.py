@@ -24,6 +24,7 @@ from project_pipeline.domain.security import (
     security_fingerprint,
     security_identifier,
 )
+from project_pipeline.manifest import build_manifest
 
 _SHA_ACTION = re.compile(r"^[0-9a-f]{40}$")
 _PROVENANCE_EVIDENCE_ID = re.compile(r"^(SCANEVID|INTEGRITY|SIG|EVID)-[A-Z0-9-]{8,}$")
@@ -301,8 +302,12 @@ def build_scanner_evidence(
 
 
 def _manifest_aggregate(root: Path) -> str:
-    data = json.loads((root / "PROJECT_MANIFEST.json").read_text(encoding="utf-8"))
-    return str(data["aggregate_sha256"])
+    manifest_path = root / "PROJECT_MANIFEST.json"
+    if manifest_path.is_file():
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
+        return str(data["aggregate_sha256"])
+    # Public-source checkouts may omit persisted manifest files.
+    return str(build_manifest(root)["aggregate_sha256"])
 
 
 def build_repository_sbom(

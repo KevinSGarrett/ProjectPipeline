@@ -6,10 +6,11 @@ from pathlib import Path
 
 import pytest
 
+from project_pipeline.manifest import build_manifest
 from project_pipeline.security.supply_chain import build_repository_sbom
 
 
-def _write_minimal_sbom_inputs(root: Path) -> None:
+def _write_minimal_sbom_inputs(root: Path, *, include_manifest: bool = True) -> None:
     (root / "requirements").mkdir(parents=True, exist_ok=True)
     (root / "requirements" / "environment.lock.json").write_text(
         json.dumps(
@@ -26,10 +27,11 @@ def _write_minimal_sbom_inputs(root: Path) -> None:
         + "\n",
         encoding="utf-8",
     )
-    (root / "PROJECT_MANIFEST.json").write_text(
-        json.dumps({"aggregate_sha256": "a" * 64}) + "\n",
-        encoding="utf-8",
-    )
+    if include_manifest:
+        (root / "PROJECT_MANIFEST.json").write_text(
+            json.dumps({"aggregate_sha256": "a" * 64}) + "\n",
+            encoding="utf-8",
+        )
 
 
 def test_build_repository_sbom_allows_public_checkout_without_upstream_registry() -> None:
@@ -93,3 +95,13 @@ def test_build_repository_sbom_rejects_partial_upstream_ledger_state() -> None:
         )
         with pytest.raises(ValueError, match="upstream provenance ledger is incomplete"):
             build_repository_sbom(root)
+
+
+def test_build_repository_sbom_falls_back_to_in_memory_manifest_aggregate() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        _write_minimal_sbom_inputs(root, include_manifest=False)
+        expected = str(build_manifest(root)["aggregate_sha256"])
+        sbom = build_repository_sbom(root)
+
+    assert sbom.source_manifest_sha256 == expected

@@ -115,6 +115,46 @@ def _authenticode_state() -> str:
     return BLOCKED_EXTERNAL_SIGNING_IDENTITY_MISSING
 
 
+def _materialize_public_license_inventory(
+    output_dir: Path,
+    *,
+    sbom: SoftwareBillOfMaterials,
+) -> str:
+    payload = {
+        "schema_version": "1.0.0",
+        "generated_for": "PUBLIC_SOURCE_CHECKOUT",
+        "components": [
+            {
+                "component_id": component.component_id,
+                "name": component.name,
+                "version": component.version,
+                "component_type": component.component_type,
+                "license": component.license,
+                "source": component.source,
+            }
+            for component in sbom.components
+        ],
+    }
+    path = output_dir / "provenance" / "license_policy.generated.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return path.as_posix()
+
+
+def _resolve_license_inventory_path(
+    root: Path, output_dir: Path, *, sbom: SoftwareBillOfMaterials
+) -> str:
+    license_path = root / "provenance" / "license_policy.json"
+    if license_path.is_file():
+        return "provenance/license_policy.json"
+    if (root / "provenance").exists():
+        raise ValueError("license policy is missing")
+    return _materialize_public_license_inventory(output_dir, sbom=sbom)
+
+
 def bind_bundle_supply_chain(
     root: Path, bundle: ReleaseBundle, *, extract_kind: str = "source_archive"
 ) -> SupplyBinding:
@@ -177,9 +217,7 @@ def bind_bundle_supply_chain(
     archive = next(item for item in bundle.artifacts if item.kind == extract_kind and item.bound)
     extracted = extract_zip_safely(output / archive.name, output / "clean-extract")
     _scan_secrets(extracted)
-    license_path = "provenance/license_policy.json"
-    if not (root / license_path).is_file():
-        raise ValueError("license policy is missing")
+    license_path = _resolve_license_inventory_path(root, output, sbom=sbom)
     return SupplyBinding(
         bundle_cache_key=bundle.cache_key,
         sbom_sha256=sbom_sha256,
