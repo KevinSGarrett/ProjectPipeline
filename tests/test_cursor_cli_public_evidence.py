@@ -5,6 +5,7 @@ from pathlib import Path
 
 from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
     _materialize_builtin_public_evidence,
+    qualify_cursor_cli_provider,
 )
 from project_pipeline.lifecycle.attestation_recovery import (
     EXPECTED_PUBLIC_ATTESTATION_BYTES,
@@ -39,3 +40,47 @@ def test_materialize_builtin_public_evidence_is_idempotent() -> None:
 
     assert first is True
     assert second is False
+
+
+def test_signed_coordinator_relay_never_materializes_private_evidence(
+    tmp_path: Path, monkeypatch
+) -> None:
+    candidate = tmp_path / "candidate"
+    candidate.mkdir()
+    private_source = tmp_path / "private-source"
+    for evidence_ref in (PUBLIC_ATTESTATION_REF, PUBLIC_QUALIFICATION_REF):
+        evidence_path = private_source / evidence_ref
+        evidence_path.parent.mkdir(parents=True, exist_ok=True)
+        evidence_path.write_bytes(b"private coordinator evidence")
+
+    def forbidden(*_args, **_kwargs):
+        raise AssertionError("a signed relay must not process raw private evidence")
+
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.cursor_cli_qualification.recover_and_restore", forbidden
+    )
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.cursor_cli_qualification.evaluate_attestation_recovery",
+        forbidden,
+    )
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.cursor_cli_qualification._materialize_builtin_public_evidence",
+        forbidden,
+    )
+
+    report = qualify_cursor_cli_provider(
+        repository_root=candidate,
+        disposable_root=tmp_path / "disposable",
+        source_root=private_source,
+        coordinator_attestation={
+            "valid": True,
+            "signature_verified": True,
+            "relay": "signed-private-attestation",
+        },
+    )
+
+    discovery = report["phases"][0]["observations"]
+    assert discovery["relay_prevented_raw_evidence_materialization"] is True
+    assert not (candidate / PUBLIC_ATTESTATION_REF).exists()
+    assert not (candidate / PUBLIC_QUALIFICATION_REF).exists()
+    assert not (tmp_path / "disposable" / "evidence-verify").exists()

@@ -162,3 +162,17 @@ def test_hosted_setup_exe_is_nsis_not_native_executable(tmp_path: Path) -> None:
     assert found["executable"] == pe
     assert found["nsis"] == setup
     assert found["msi"] == msi
+
+
+def test_hosted_artifacts_prefer_staged_executable_over_nested_build_helper(tmp_path: Path) -> None:
+    hosted = tmp_path / "desktop-artifacts"
+    staged = hosted / "project-pipeline-command-center.exe"
+    helper = hosted / "cargo-target" / "release" / "build" / "crate" / "build_script_build.exe"
+    staged.parent.mkdir(parents=True)
+    helper.parent.mkdir(parents=True)
+    staged.write_bytes(b"staged-command-center")
+    helper.write_bytes(b"cargo-build-helper")
+
+    found = discover_desktop_artifacts(tmp_path, hosted_dir=hosted)
+
+    assert found["executable"] == staged
