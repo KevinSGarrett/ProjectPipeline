@@ -315,10 +315,16 @@ def build_repository_sbom(
 ) -> SoftwareBillOfMaterials:
     root = root.resolve()
     lock = json.loads((root / "requirements/environment.lock.json").read_text(encoding="utf-8"))
+    licenses = lock.get("licenses")
+    if not isinstance(licenses, dict):
+        raise ValueError("environment lock license inventory is missing")
     components: list[SBOMComponent] = []
     for package in sorted(
         lock.get("packages", []), key=lambda item: (item["name"].casefold(), item["version"])
     ):
+        license_value = licenses.get(package["name"])
+        if not isinstance(license_value, str) or not license_value.strip():
+            raise ValueError(f"environment lock license is missing: {package['name']}")
         components.append(
             SBOMComponent(
                 component_id=security_identifier(
@@ -327,6 +333,7 @@ def build_repository_sbom(
                 name=package["name"],
                 version=package["version"],
                 component_type="python-package",
+                license=license_value,
                 source="requirements/environment.lock.json",
                 metadata_sha256=package.get("metadata_sha256"),
             )

@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from project_pipeline.release_factory.bundle import BoundArtifact, ReleaseBundle
-from project_pipeline.release_factory.supply import bind_bundle_supply_chain
+from project_pipeline.release_factory.supply import bind_bundle_supply_chain, verify_supply_binding
 from project_pipeline.release_factory.version import ReleaseVersionAuthority
 
 
@@ -24,7 +24,8 @@ def _write_minimal_lock(root: Path) -> None:
                         "version": "1.2.3",
                         "metadata_sha256": "d" * 64,
                     }
-                ]
+                ],
+                "licenses": {"example-package": "MIT"},
             }
         )
         + "\n",
@@ -88,8 +89,21 @@ def test_bind_bundle_supply_chain_generates_public_license_inventory() -> None:
 
         binding = bind_bundle_supply_chain(root, bundle)
         generated = output / binding.license_inventory_path
+        provenance = json.loads((output / "provenance.json").read_text(encoding="utf-8"))
         assert generated.name == "license_policy.generated.json"
         assert generated.is_file()
+        assert (
+            binding.license_inventory_sha256 == hashlib.sha256(generated.read_bytes()).hexdigest()
+        )
+        assert (
+            json.loads(generated.read_text(encoding="utf-8"))["components"][0]["license"] == "MIT"
+        )
+        assert binding.license_inventory_path in provenance["declared_artifact_paths"]
+        assert binding.license_inventory_integrity_id in provenance["artifact_integrity_ids"]
+        verify_supply_binding(output, binding)
+        generated.write_text("tampered\n", encoding="utf-8")
+        with pytest.raises(ValueError, match="bound license inventory digest mismatch"):
+            verify_supply_binding(output, binding)
 
 
 def test_bind_bundle_supply_chain_rejects_partial_provenance_state() -> None:
@@ -104,3 +118,18 @@ def test_bind_bundle_supply_chain_rejects_partial_provenance_state() -> None:
 
         with pytest.raises(ValueError, match="license policy is missing"):
             bind_bundle_supply_chain(root, bundle)
+
+
+def test_bind_bundle_supply_chain_rejects_missing_verified_license(tmp_path: Path) -> None:
+    root = tmp_path / "repo"
+    output = tmp_path / "bundle"
+    root.mkdir()
+    output.mkdir()
+    _write_minimal_lock(root)
+    lock_path = root / "requirements" / "environment.lock.json"
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    lock["licenses"] = {}
+    lock_path.write_text(json.dumps(lock), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="environment lock license is missing"):
+        bind_bundle_supply_chain(root, _fixture_bundle(output))

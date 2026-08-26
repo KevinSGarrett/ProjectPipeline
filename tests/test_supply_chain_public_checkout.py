@@ -21,7 +21,8 @@ def _write_minimal_sbom_inputs(root: Path, *, include_manifest: bool = True) -> 
                         "version": "1.2.3",
                         "metadata_sha256": "d" * 64,
                     }
-                ]
+                ],
+                "licenses": {"example-package": "MIT"},
             }
         )
         + "\n",
@@ -105,3 +106,16 @@ def test_build_repository_sbom_falls_back_to_in_memory_manifest_aggregate() -> N
         sbom = build_repository_sbom(root)
 
     assert sbom.source_manifest_sha256 == expected
+
+
+def test_build_repository_sbom_rejects_missing_license_inventory() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        _write_minimal_sbom_inputs(root)
+        lock_path = root / "requirements" / "environment.lock.json"
+        lock = json.loads(lock_path.read_text(encoding="utf-8"))
+        lock.pop("licenses")
+        lock_path.write_text(json.dumps(lock), encoding="utf-8")
+
+        with pytest.raises(ValueError, match="environment lock license inventory is missing"):
+            build_repository_sbom(root)

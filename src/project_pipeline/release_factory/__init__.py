@@ -17,6 +17,7 @@ from project_pipeline.release_factory.supply import (
     SupplyBinding,
     bind_bundle_supply_chain,
     extract_zip_safely,
+    verify_supply_binding,
 )
 from project_pipeline.release_factory.validation import validate_release_factory
 from project_pipeline.release_factory.version import (
@@ -42,6 +43,7 @@ __all__ = [
     "resolve_release_version_authority",
     "validate_release_factory",
     "verify_acquired_assets",
+    "verify_supply_binding",
     "write_acquired_assets",
     "write_fixture_artifacts",
 ]
