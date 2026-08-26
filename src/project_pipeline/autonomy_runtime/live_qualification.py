@@ -662,7 +662,9 @@ def create_coordinator_attestation_receipt(
 
     head, tree = _git_identity(repository_root)
     if head is None or tree is None:
-        raise RuntimeError("coordinator attestation receipt requires a valid Git candidate identity")
+        raise RuntimeError(
+            "coordinator attestation receipt requires a valid Git candidate identity"
+        )
     policy = load_current_attestation_policy(repository_root)
     attestation = _coordinator_attestation_subject(
         attestation_source_root / PUBLIC_ATTESTATION_REF,
