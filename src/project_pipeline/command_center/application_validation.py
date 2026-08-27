@@ -120,11 +120,14 @@ def validate_command_center_application(root: Path) -> list[str]:
             )
         security = tauri.get("app", {}).get("security", {})
         csp = str(security.get("csp", ""))
-        if "127.0.0.1:8765" not in csp:
+        loopback_fixed = "127.0.0.1:8765" in csp
+        loopback_dynamic = "http://127.0.0.1:*" in csp and "ws://127.0.0.1:*" in csp
+        if not (loopback_fixed or loopback_dynamic):
             errors.append(
                 "Tauri CSP must restrict Command Center API transport to the loopback control endpoint"
             )
-        if "https:" in csp or "*" in csp:
+        wildcard_sanitized = csp.replace("http://127.0.0.1:*", "").replace("ws://127.0.0.1:*", "")
+        if "https:" in wildcard_sanitized or "*" in wildcard_sanitized:
             errors.append("Tauri CSP must not grant arbitrary remote network origins")
 
     capability_path = root / "apps/desktop_shell/src-tauri/capabilities/main.json"

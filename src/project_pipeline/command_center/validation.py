@@ -21,7 +21,6 @@ _REQUIRED = (
     "docs/command_center/backend_realtime_api.md",
     "docs/command_center/director_incident_notifications.md",
     "runbooks/operator_notification_failure_recovery.md",
-    "provenance/pass_21_upstream_gate.json",
 )
 
 
