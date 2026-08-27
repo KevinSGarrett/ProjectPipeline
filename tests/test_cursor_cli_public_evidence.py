@@ -3,6 +3,8 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
     _materialize_builtin_public_evidence,
     qualify_cursor_cli_provider,
@@ -59,6 +61,17 @@ def test_builtin_evidence_bootstrap_never_mutates_candidate_checkout(tmp_path: P
     assert not (candidate / ".local").exists()
     assert (disposable / "cursor-cli-durable" / "privacy_attestation.json").is_file()
     assert (disposable / "cursor-cli-durable" / "provider_qualification.json").is_file()
+
+
+def test_cursor_cli_qualification_rejects_candidate_nested_state(tmp_path: Path) -> None:
+    candidate = tmp_path / "candidate"
+    candidate.mkdir()
+
+    with pytest.raises(ValueError, match="outside the immutable candidate checkout"):
+        qualify_cursor_cli_provider(
+            repository_root=candidate,
+            disposable_root=candidate / ".local" / "cursor-cli",
+        )
 
 
 def test_signed_coordinator_relay_never_materializes_private_evidence(

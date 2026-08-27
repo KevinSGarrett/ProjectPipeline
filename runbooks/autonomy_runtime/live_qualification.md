@@ -34,6 +34,11 @@ separate attestation source and writes its derived records only below the
 worker-owned durable or disposable root. It never materializes ignored evidence
 or `.local` state inside the candidate checkout.
 
+Pass a worker-owned `--disposable-root` outside the candidate for every run;
+the command rejects candidate-nested writable roots. Evidence output defaults
+under that disposable root and may likewise be redirected only to an external
+worker-owned location.
+
 ## Coordinator-owned governance relay
 
 When the CPU worker does not hold a GitHub or Jira credential, the coordinator
@@ -63,6 +68,7 @@ governance probe; it must never reuse stale evidence.
 $env:PYTHONPATH = "src"
 python -m project_pipeline attestation recover --root .
 python scripts/run_live_qualification.py --root . `
+  --disposable-root <worker-owned-disposable-root> `
   --attestation-source-root <verified-public-evidence-root> `
   --durable-dir <worker-owned-durable-root> `
   --coordinator-github-receipt <github-receipt.json> `
@@ -70,6 +76,7 @@ python scripts/run_live_qualification.py --root . `
   --coordinator-jira-receipt <jira-receipt.json> `
   --coordinator-jira-signature <jira-receipt.sig>
 python scripts/run_live_qualification.py --root . --write-evidence `
+  --disposable-root <worker-owned-disposable-root> `
   --attestation-source-root <verified-public-evidence-root> `
   --durable-dir <worker-owned-durable-root> `
   --coordinator-github-receipt <github-receipt.json> `

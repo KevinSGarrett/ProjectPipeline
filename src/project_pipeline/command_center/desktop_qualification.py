@@ -25,6 +25,9 @@ from project_pipeline.release_factory.supply import extract_zip_safely
 from project_pipeline.validation.product_outcome import runtime_qualification_is_bound
 
 DEFAULT_SERVICE_PORT = 8765
+_PORTABLE_BUNDLE_MANIFEST = "project-pipeline-portable-manifest.json"
+_GNU_DESKTOP_TARGET = "x86_64-pc-windows-gnu"
+_GNU_REQUIRED_PORTABLE_FILES = frozenset({"WebView2Loader.dll"})
 NOT_APPLICABLE_NO_GOVERNED_PREDECESSOR = "NOT_APPLICABLE_NO_GOVERNED_PREDECESSOR"
 
 
@@ -219,6 +222,51 @@ def launch_native_process(
     }
 
 
+def _portable_bundle_inventory(bundle: Path) -> tuple[dict[str, Any] | None, str | None]:
+    """Validate the portable bundle's declared entrypoint and loader set."""
+
+    try:
+        with zipfile.ZipFile(bundle) as archive:
+            members = tuple(info.filename for info in archive.infolist() if not info.is_dir())
+            normalized_members = tuple(member.casefold() for member in members)
+            if len(normalized_members) != len(set(normalized_members)):
+                return None, "PORTABLE_BUNDLE_DUPLICATE_MEMBER"
+            if _PORTABLE_BUNDLE_MANIFEST not in members:
+                return None, "PORTABLE_BUNDLE_MANIFEST_MISSING"
+            try:
+                manifest = json.loads(archive.read(_PORTABLE_BUNDLE_MANIFEST))
+            except (KeyError, UnicodeDecodeError, json.JSONDecodeError):
+                return None, "PORTABLE_BUNDLE_MANIFEST_INVALID"
+    except (OSError, zipfile.BadZipFile):
+        return None, "PORTABLE_BUNDLE_EXTRACTION_FAILED"
+    if not isinstance(manifest, dict) or manifest.get("schema_version") != "1.0.0":
+        return None, "PORTABLE_BUNDLE_MANIFEST_INVALID"
+    entrypoint = manifest.get("entrypoint")
+    required_files = manifest.get("required_files")
+    build_target = manifest.get("build_target")
+    if (
+        not isinstance(entrypoint, str)
+        or not entrypoint.lower().endswith(".exe")
+        or "/" in entrypoint
+        or "\\" in entrypoint
+        or not isinstance(required_files, list)
+        or not isinstance(build_target, str)
+        or any(not isinstance(item, str) or "/" in item or "\\" in item for item in required_files)
+    ):
+        return None, "PORTABLE_BUNDLE_MANIFEST_INVALID"
+    if build_target == _GNU_DESKTOP_TARGET and not _GNU_REQUIRED_PORTABLE_FILES.issubset(
+        required_files
+    ):
+        return None, "PORTABLE_BUNDLE_REQUIRED_FILE_MISSING"
+    missing = [name for name in (entrypoint, *required_files) if name not in members]
+    if missing:
+        return None, "PORTABLE_BUNDLE_REQUIRED_FILE_MISSING"
+    executables = [name for name in members if name.lower().endswith(".exe")]
+    if executables != [entrypoint]:
+        return None, "PORTABLE_BUNDLE_EXECUTABLE_INVALID"
+    return {"entrypoint": entrypoint, "required_files": tuple(required_files)}, None
+
+
 def launch_portable_bundle(
     bundle: Path,
     *,
@@ -230,23 +278,24 @@ def launch_portable_bundle(
 
     if not bundle.is_file():
         return {"launched": False, "reason": "PORTABLE_BUNDLE_MISSING", "pid": None}
+    inventory, error = _portable_bundle_inventory(bundle)
+    if inventory is None:
+        return {"launched": False, "reason": error, "pid": None}
     try:
         with tempfile.TemporaryDirectory(prefix="projectpipeline-portable-launch-") as directory:
             extracted = Path(directory)
             extract_zip_safely(bundle, extracted)
-            executables = sorted(
-                path
-                for path in extracted.rglob("*.exe")
-                if path.is_file() and "setup" not in path.name.casefold()
-            )
-            if len(executables) != 1:
+            executable = extracted / str(inventory["entrypoint"])
+            if not executable.is_file() or any(
+                not (extracted / dependency).is_file() for dependency in inventory["required_files"]
+            ):
                 return {
                     "launched": False,
-                    "reason": "PORTABLE_BUNDLE_EXECUTABLE_INVALID",
+                    "reason": "PORTABLE_BUNDLE_REQUIRED_FILE_MISSING",
                     "pid": None,
                 }
             result = launch_native_process(
-                executables[0],
+                executable,
                 extra_args=extra_args,
                 extra_env=extra_env,
                 wait_window_s=wait_window_s,

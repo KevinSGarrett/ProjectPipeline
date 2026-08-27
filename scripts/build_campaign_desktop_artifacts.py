@@ -27,6 +27,8 @@ from project_pipeline.resilience.host_safety import require_safe_local_host  # n
 _GNU_TARGET = "x86_64-pc-windows-gnu"
 _MSVC_TARGET = "x86_64-pc-windows-msvc"
 _GNU_GCC = "x86_64-w64-mingw32-gcc.exe"
+_PORTABLE_BUNDLE_MANIFEST = "project-pipeline-portable-manifest.json"
+_GNU_PORTABLE_DEPENDENCIES = ("WebView2Loader.dll",)
 
 
 def _sha256(path: Path) -> str:
@@ -60,7 +62,13 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
     )
 
 
-def _stage_portable_desktop_bundle(executable: Path, *, release_dir: Path, output: Path) -> Path:
+def _stage_portable_desktop_bundle(
+    executable: Path,
+    *,
+    release_dir: Path,
+    output: Path,
+    build_target: str,
+) -> Path:
     """Create the single portable desktop release asset with every loader dependency.
 
     GNU-linked Tauri binaries require ``WebView2Loader.dll`` next to the PE at
@@ -69,16 +77,31 @@ def _stage_portable_desktop_bundle(executable: Path, *, release_dir: Path, outpu
     """
 
     portable = output / canonical_release_asset_name(f"{executable.stem}-portable.zip")
-    loader = release_dir / "WebView2Loader.dll"
-    entries = [executable]
-    if loader.is_file():
-        entries.append(loader)
+    required_dependencies = _GNU_PORTABLE_DEPENDENCIES if build_target == _GNU_TARGET else ()
+    dependency_paths = tuple(release_dir / dependency for dependency in required_dependencies)
+    missing = [path.name for path in dependency_paths if not path.is_file()]
+    if missing:
+        raise RuntimeError(f"desktop-build-portable-dependency-missing:{','.join(missing)}")
+    manifest = {
+        "schema_version": "1.0.0",
+        "entrypoint": executable.name,
+        "required_files": list(required_dependencies),
+        "build_target": build_target,
+    }
+    entries = [(executable.name, executable.read_bytes())]
+    entries.extend((path.name, path.read_bytes()) for path in dependency_paths)
+    entries.append(
+        (
+            _PORTABLE_BUNDLE_MANIFEST,
+            (json.dumps(manifest, indent=2, sort_keys=True) + "\n").encode("utf-8"),
+        )
+    )
     temporary = portable.with_suffix(portable.suffix + ".tmp")
     with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        for path in sorted(entries, key=lambda item: item.name.casefold()):
-            info = zipfile.ZipInfo(path.name, _ra.FIXED_ZIP_TIMESTAMP)
+        for name, payload in sorted(entries, key=lambda item: item[0].casefold()):
+            info = zipfile.ZipInfo(name, _ra.FIXED_ZIP_TIMESTAMP)
             info.compress_type = zipfile.ZIP_DEFLATED
-            archive.writestr(info, path.read_bytes())
+            archive.writestr(info, payload)
     temporary.replace(portable)
     return portable
 
@@ -247,7 +270,10 @@ def build_artifacts(
         if not executable.is_file() or len(installers) != 1:
             raise RuntimeError("desktop-build-artifacts-missing")
         staged_executable = _stage_portable_desktop_bundle(
-            executable, release_dir=release_dir, output=output
+            executable,
+            release_dir=release_dir,
+            output=output,
+            build_target=build_target,
         )
         staged_installer = output / canonical_release_asset_name(installers[0].name)
         shutil.copy2(installers[0], staged_installer)

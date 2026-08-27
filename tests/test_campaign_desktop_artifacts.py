@@ -66,7 +66,12 @@ def test_campaign_desktop_builder_stages_candidate_bound_native_artifacts(tmp_pa
     portable = output / result["artifacts"]["windows_executable"]["name"]
     assert portable.suffix == ".zip"
     with zipfile.ZipFile(portable) as archive:
-        assert archive.namelist() == ["project-pipeline-command-center.exe", "WebView2Loader.dll"]
+        assert archive.namelist() == [
+            "project-pipeline-command-center.exe",
+            "project-pipeline-portable-manifest.json",
+        ]
+        manifest = json.loads(archive.read("project-pipeline-portable-manifest.json"))
+        assert manifest["required_files"] == []
 
 
 def test_campaign_desktop_builder_rejects_preseeded_output(tmp_path, monkeypatch):
@@ -152,7 +157,59 @@ def test_campaign_desktop_builder_stages_gnu_target_artifacts(tmp_path, monkeypa
     assert result["build_target"] == module._GNU_TARGET
     assert result["compiler"] == "x86_64-w64-mingw32-gcc.exe"
     assert result["rust_toolchain"] == "1.97.1-x86_64-pc-windows-gnu"
-    assert (output / "project-pipeline-command-center-portable.zip").is_file()
+    portable = output / "project-pipeline-command-center-portable.zip"
+    assert portable.is_file()
+    with zipfile.ZipFile(portable) as archive:
+        manifest = json.loads(archive.read("project-pipeline-portable-manifest.json"))
+        assert manifest["required_files"] == ["WebView2Loader.dll"]
+        assert "WebView2Loader.dll" in archive.namelist()
+
+
+def test_campaign_desktop_builder_rejects_gnu_bundle_without_required_loader(tmp_path, monkeypatch):
+    module = _load_builder()
+    root = tmp_path / "candidate"
+    frontend = root / "apps" / "command_center"
+    frontend.mkdir(parents=True)
+    (frontend / "package-lock.json").write_text("{}\n", encoding="utf-8")
+    (root / "rust-toolchain.toml").write_text('[toolchain]\nchannel = "1.97.1"\n', encoding="utf-8")
+    output = tmp_path / "desktop-artifacts"
+    sha = "a" * 40
+    tree = "b" * 40
+    monkeypatch.setattr(
+        module,
+        "inspect_worktree_identity",
+        lambda _root: {"ok": True, "dirty": False, "sha": sha, "tree": tree},
+    )
+    monkeypatch.setattr(module, "require_safe_local_host", lambda _root: {"state": "SAFE"})
+    monkeypatch.setattr(module.shutil, "which", lambda _name, path=None: "npm")
+    monkeypatch.setattr(
+        module,
+        "_prepare_native_build_environment",
+        lambda environment, *, workspace: (environment, module._GNU_TARGET, "gcc", None),
+    )
+    monkeypatch.setattr(module, "_gnu_rust_toolchain", lambda _root: "1.97.1-x86_64-pc-windows-gnu")
+
+    def fake_run(command, *, cwd, environment):
+        if "tauri:build" in command:
+            release = Path(environment["CARGO_TARGET_DIR"]) / module._GNU_TARGET / "release"
+            (release / "bundle" / "nsis").mkdir(parents=True)
+            (release / "project-pipeline-command-center.exe").write_bytes(b"MZ-native")
+            (release / "bundle" / "nsis" / "ProjectPipeline-setup.exe").write_bytes(b"MZ-installer")
+
+    monkeypatch.setattr(module, "_run", fake_run)
+
+    with pytest.raises(
+        RuntimeError,
+        match=r"desktop-build-portable-dependency-missing:WebView2Loader\.dll",
+    ):
+        module.build_artifacts(
+            root=root,
+            output_dir=output,
+            expected_sha=sha,
+            expected_tree=tree,
+        )
+
+    assert not output.exists()
 
 
 def test_campaign_desktop_builder_discovers_winget_winlibs(tmp_path, monkeypatch):

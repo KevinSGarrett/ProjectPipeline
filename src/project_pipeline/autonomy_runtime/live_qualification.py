@@ -3,12 +3,11 @@ from __future__ import annotations
 import hashlib
 import json
 import os
-import shutil
 import subprocess
 import sys
 import tempfile
 import time
-from contextlib import suppress
+import uuid
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from enum import StrEnum
@@ -1532,9 +1531,6 @@ def _qualify_cursor_cli_provider(
         runner=runner,
         coordinator_attestation=coordinator_attestation,
     )
-    if runner is None and disposable_root.name == ".pp384_cursor_cli_runtime":
-        with suppress(OSError):
-            shutil.rmtree(disposable_root)
     outcome = StageOutcome(report["outcome"])
     return StageResult(
         stage_id="cursor_cli_provider_dispatch",
@@ -1544,15 +1540,17 @@ def _qualify_cursor_cli_provider(
     )
 
 
-def _cursor_cli_disposable_root(repository_root: Path, live_root: Path, runner: Any | None) -> Path:
-    # A real Cursor Agent must operate inside the governed checkout so shared
-    # rules and shell hooks are active. The repository's .local directory is
-    # intentionally .cursorignore-protected, so use an allowlisted tests path
-    # and remove it immediately after qualification. Injected test runners keep
-    # using the caller's disposable root.
-    if runner is not None:
-        return live_root
-    return repository_root / "tests" / ".pp384_cursor_cli_runtime"
+def _cursor_cli_disposable_root(
+    _repository_root: Path, live_root: Path, _runner: Any | None
+) -> Path:
+    """Keep Cursor qualification output in the worker-owned live root.
+
+    The adapter receives a dedicated workspace and an explicit contract, so it
+    does not need to write below the immutable candidate merely to inherit its
+    rules.  This is intentionally external even when a real provider is used.
+    """
+
+    return live_root / "cursor-cli"
 
 
 def _git_identity(repository_root: Path) -> tuple[str | None, str | None]:
@@ -1596,6 +1594,53 @@ def _git_checkout_clean(repository_root: Path) -> bool:
     return completed.returncode == 0 and not completed.stdout.strip()
 
 
+def _git_ignored_snapshot(repository_root: Path) -> dict[str, Any] | None:
+    """Return a content-addressed snapshot of ignored candidate path names."""
+
+    try:
+        completed = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(repository_root),
+                "ls-files",
+                "--others",
+                "--ignored",
+                "--exclude-standard",
+                "-z",
+            ],
+            capture_output=True,
+            timeout=30,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if completed.returncode != 0:
+        return None
+    entries = tuple(item for item in completed.stdout.split(b"\0") if item)
+    return {
+        "count": len(entries),
+        "paths_sha256": hashlib.sha256(completed.stdout).hexdigest(),
+    }
+
+
+def _require_external_worker_root(repository_root: Path, path: Path, *, label: str) -> Path:
+    """Reject writable runtime paths nested below a frozen candidate checkout."""
+
+    resolved = path.resolve()
+    try:
+        resolved.relative_to(repository_root)
+    except ValueError:
+        return resolved
+    raise ValueError(f"{label} must be outside the immutable candidate checkout")
+
+
+def _default_live_qualification_root() -> Path:
+    """Create a unique worker-local path rather than using candidate ``.local``."""
+
+    return (Path(tempfile.gettempdir()) / f"projectpipeline-pp384-{uuid.uuid4().hex}").resolve()
+
+
 def run_live_qualification(
     *,
     repository_root: Path,
@@ -1611,8 +1656,17 @@ def run_live_qualification(
     coordinator_attestation_signature: Path | None = None,
 ) -> dict[str, Any]:
     repository_root = repository_root.resolve()
-    default_root = repository_root / ".local" / "live_qualification_runtime"
-    root = (disposable_root or default_root).resolve()
+    root = _require_external_worker_root(
+        repository_root,
+        disposable_root or _default_live_qualification_root(),
+        label="disposable_root",
+    )
+    if durable_dir is not None:
+        durable_dir = _require_external_worker_root(
+            repository_root,
+            durable_dir,
+            label="durable_dir",
+        )
     if root.exists() and not remove_disposable_workspace(root):
         raise RuntimeError(f"disposable live qualification root is still locked: {root}")
     root.mkdir(parents=True, exist_ok=True)
@@ -1628,6 +1682,7 @@ def run_live_qualification(
         )
     candidate_head, candidate_tree = _git_identity(repository_root)
     candidate_clean_before = _git_checkout_clean(repository_root)
+    candidate_ignored_before = _git_ignored_snapshot(repository_root)
     coordinator_attestation = _coordinator_attestation_receipt_probe(
         coordinator_attestation_receipt,
         coordinator_attestation_signature,
@@ -1659,6 +1714,7 @@ def run_live_qualification(
     )
     observed_head, observed_tree = _git_identity(repository_root)
     candidate_clean_after = _git_checkout_clean(repository_root)
+    candidate_ignored_after = _git_ignored_snapshot(repository_root)
     candidate_integrity_ok = (
         candidate_head is not None
         and candidate_tree is not None
@@ -1666,6 +1722,7 @@ def run_live_qualification(
         and candidate_head == observed_head
         and candidate_tree == observed_tree
         and candidate_clean_after
+        and candidate_ignored_before == candidate_ignored_after
     )
     stages += (
         StageResult(
@@ -1675,13 +1732,15 @@ def run_live_qualification(
                 "initial_head": candidate_head,
                 "initial_tree": candidate_tree,
                 "initial_checkout_clean": candidate_clean_before,
+                "initial_ignored_snapshot": candidate_ignored_before,
                 "final_head": observed_head,
                 "final_tree": observed_tree,
                 "final_checkout_clean": candidate_clean_after,
+                "final_ignored_snapshot": candidate_ignored_after,
             },
             reasons=()
             if candidate_integrity_ok
-            else ("candidate identity changed, is unavailable, or checkout is not clean",),
+            else ("candidate identity, tracked cleanliness, or ignored-path snapshot changed",),
         ),
     )
     body: dict[str, Any] = {
@@ -1738,8 +1797,10 @@ def write_live_qualification_evidence(
         coordinator_attestation_receipt=coordinator_attestation_receipt,
         coordinator_attestation_signature=coordinator_attestation_signature,
     )
-    target = evidence_dir or (
-        repository_root / ".local" / "evidence" / "autonomy_runtime" / "live_qualification"
+    target = _require_external_worker_root(
+        repository_root,
+        evidence_dir or Path(report["disposable_root"]) / "evidence",
+        label="evidence_dir",
     )
     target.mkdir(parents=True, exist_ok=True)
     output = target / "live_qualification_latest.json"

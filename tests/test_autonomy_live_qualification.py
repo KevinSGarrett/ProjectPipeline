@@ -78,16 +78,19 @@ def test_live_qualification_passes_local_stages_and_blocks_cursor_cli(tmp_path: 
 def test_write_live_qualification_evidence(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     _scaffold_repo(repo)
-    output = write_live_qualification_evidence(
-        repository_root=repo, disposable_root=tmp_path / "runtime"
-    )
-    payload = json.loads(output.read_text(encoding="utf-8"))
-    assert payload["task_id"] == "PP-TASK-000384"
-    assert output.name == "live_qualification_latest.json"
-    assert output.parent == repo / ".local" / "evidence" / "autonomy_runtime" / "live_qualification"
-    assert payload["report_sha256"]
-    assert "bound_head" in payload
-    assert "bound_tree" in payload
+    runtime = tmp_path / "runtime"
+    try:
+        output = write_live_qualification_evidence(repository_root=repo, disposable_root=runtime)
+        payload = json.loads(output.read_text(encoding="utf-8"))
+        assert payload["task_id"] == "PP-TASK-000384"
+        assert output.name == "live_qualification_latest.json"
+        assert output.parent == runtime / "evidence"
+        assert not (repo / ".local").exists()
+        assert payload["report_sha256"]
+        assert "bound_head" in payload
+        assert "bound_tree" in payload
+    finally:
+        live_qualification_module.remove_disposable_workspace(runtime)
 
 
 def test_live_qualification_rerun_clears_same_disposable_root(tmp_path: Path) -> None:
@@ -99,6 +102,33 @@ def test_live_qualification_rerun_clears_same_disposable_root(tmp_path: Path) ->
     second = run_live_qualification(repository_root=repo, disposable_root=runtime)
     assert second["stages"][1]["stage_id"] == "command_center_truth"
     assert second["stages"][1]["outcome"] == StageOutcome.PASSED.value
+
+
+def test_default_live_qualification_root_never_writes_inside_candidate(tmp_path: Path) -> None:
+    repo = tmp_path / "candidate"
+    _scaffold_repo(repo)
+    report = run_live_qualification(repository_root=repo)
+    runtime = Path(report["disposable_root"])
+    try:
+        assert not runtime.is_relative_to(repo)
+        assert not (repo / ".local").exists()
+        assert not (repo / "tests" / ".pp384_cursor_cli_runtime").exists()
+    finally:
+        live_qualification_module.remove_disposable_workspace(runtime)
+
+
+def test_live_qualification_rejects_candidate_nested_writable_roots(tmp_path: Path) -> None:
+    repo = tmp_path / "candidate"
+    _scaffold_repo(repo)
+
+    with pytest.raises(ValueError, match="outside the immutable candidate checkout"):
+        run_live_qualification(repository_root=repo, disposable_root=repo / ".local" / "runtime")
+    with pytest.raises(ValueError, match="outside the immutable candidate checkout"):
+        run_live_qualification(
+            repository_root=repo,
+            disposable_root=tmp_path / "runtime",
+            durable_dir=repo / ".local" / "takeover",
+        )
 
 
 def test_credential_environment_keeps_process_bound_references_over_mutable_env_file(

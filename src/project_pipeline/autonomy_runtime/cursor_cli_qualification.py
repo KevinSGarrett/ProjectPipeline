@@ -426,6 +426,17 @@ def _readback_artifact(workspace: Path, idempotency_key: str) -> dict[str, Any]:
     }
 
 
+def _require_external_candidate_workspace(repository_root: Path, path: Path, *, label: str) -> Path:
+    """Reject a Cursor qualification workspace nested below the candidate."""
+
+    resolved = path.resolve()
+    try:
+        resolved.relative_to(repository_root)
+    except ValueError:
+        return resolved
+    raise ValueError(f"{label} must be outside the immutable candidate checkout")
+
+
 def qualify_cursor_cli_provider(
     *,
     repository_root: Path,
@@ -440,11 +451,20 @@ def qualify_cursor_cli_provider(
     coordinator_attestation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     repository_root = repository_root.resolve()
+    disposable_root = _require_external_candidate_workspace(
+        repository_root,
+        disposable_root,
+        label="disposable_root",
+    )
     # Qualification must not create ignored local state in an immutable release
     # candidate. A campaign may pass its owned durable directory explicitly;
     # an ad-hoc rehearsal keeps the records under its disposable root.
     durable_dir = (
-        durable_dir.resolve()
+        _require_external_candidate_workspace(
+            repository_root,
+            durable_dir,
+            label="durable_dir",
+        )
         if durable_dir is not None
         else (disposable_root / "cursor-cli-durable").resolve()
     )

@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import json
 import shutil
 import zipfile
 from pathlib import Path
 from subprocess import CompletedProcess
+
+import pytest
 
 from project_pipeline.command_center.desktop_qualification import (
     NOT_APPLICABLE_NO_GOVERNED_PREDECESSOR,
@@ -17,6 +20,18 @@ from project_pipeline.command_center.desktop_qualification import (
     resolve_predecessor_release,
 )
 from project_pipeline.validation.product_outcome import runtime_qualification_is_bound
+
+
+def _portable_manifest(*, required_files: list[str]) -> str:
+    return json.dumps(
+        {
+            "schema_version": "1.0.0",
+            "entrypoint": "project-pipeline-command-center.exe",
+            "required_files": required_files,
+            "build_target": "x86_64-pc-windows-gnu",
+        }
+    )
+
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -202,6 +217,10 @@ def test_portable_bundle_launches_after_extracting_the_webview_loader(
     with zipfile.ZipFile(portable, "w") as archive:
         archive.writestr("project-pipeline-command-center.exe", b"MZ")
         archive.writestr("WebView2Loader.dll", b"loader")
+        archive.writestr(
+            "project-pipeline-portable-manifest.json",
+            _portable_manifest(required_files=["WebView2Loader.dll"]),
+        )
 
     def fake_launch(executable: Path, **_kwargs):
         assert executable.name == "project-pipeline-command-center.exe"
@@ -216,3 +235,46 @@ def test_portable_bundle_launches_after_extracting_the_webview_loader(
 
     assert result["launched"] is True
     assert result["portable_bundle"] == portable.as_posix()
+
+
+def test_portable_bundle_rejects_a_manifest_declaring_a_missing_loader(
+    tmp_path: Path, monkeypatch
+) -> None:
+    portable = tmp_path / "project-pipeline-command-center-portable.zip"
+    with zipfile.ZipFile(portable, "w") as archive:
+        archive.writestr("project-pipeline-command-center.exe", b"MZ")
+        archive.writestr(
+            "project-pipeline-portable-manifest.json",
+            _portable_manifest(required_files=["WebView2Loader.dll"]),
+        )
+    monkeypatch.setattr(
+        "project_pipeline.command_center.desktop_qualification.launch_native_process",
+        lambda *_args, **_kwargs: pytest.fail("a missing loader must prevent launch"),
+    )
+
+    result = launch_portable_bundle(portable)
+
+    assert result == {
+        "launched": False,
+        "reason": "PORTABLE_BUNDLE_REQUIRED_FILE_MISSING",
+        "pid": None,
+    }
+
+
+def test_portable_bundle_rejects_a_gnu_manifest_that_omits_its_loader(tmp_path: Path) -> None:
+    portable = tmp_path / "project-pipeline-command-center-portable.zip"
+    with zipfile.ZipFile(portable, "w") as archive:
+        archive.writestr("project-pipeline-command-center.exe", b"MZ")
+        archive.writestr("WebView2Loader.dll", b"loader")
+        archive.writestr(
+            "project-pipeline-portable-manifest.json",
+            _portable_manifest(required_files=[]),
+        )
+
+    result = launch_portable_bundle(portable)
+
+    assert result == {
+        "launched": False,
+        "reason": "PORTABLE_BUNDLE_REQUIRED_FILE_MISSING",
+        "pid": None,
+    }
