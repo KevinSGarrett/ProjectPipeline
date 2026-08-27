@@ -128,7 +128,11 @@ def _sha256_hex(payload: bytes) -> str:
 
 
 def _find_archive(acquired: Path) -> Path:
-    preferred = sorted(acquired.glob("project-pipeline-*.zip"))
+    preferred = sorted(
+        path
+        for path in acquired.glob("project-pipeline-*.zip")
+        if "command-center-portable" not in path.name
+    )
     archives = preferred or sorted(acquired.glob("*.zip"))
     if not archives:
         raise ValueError("acquired candidate has no zip archive")
