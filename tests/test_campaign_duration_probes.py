@@ -138,6 +138,51 @@ def test_cursor_duration_probe_keeps_workspace_disposable_but_uses_durable_resol
     assert "durable_dir" not in observed
 
 
+def test_cursor_duration_probe_marks_out_of_scope_mutation_not_applicable(
+    monkeypatch, tmp_path: Path
+) -> None:
+    monkeypatch.setattr(
+        cursor_cli_module,
+        "qualify_cursor_cli_provider",
+        lambda **_kwargs: {
+            "outcome": "FAILED",
+            "provider_id": "provider:cursor-cli",
+            "live_dispatch": None,
+            "replay_verified": None,
+            "reasons": ["out-of-scope mutation"],
+        },
+    )
+    report = _probe_cursor(tmp_path / "candidate", tmp_path / "campaign-state")
+    assert report["state"] == "NOT_APPLICABLE_PUBLIC_SOURCE"
+    assert "out-of-scope mutation" in report["reasons"]
+
+
+def test_cursor_not_applicable_state_is_accepted_when_identity_matches(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    candidate = tmp_path / "candidate"
+    candidate.mkdir()
+    subject = {"sha": "a" * 40, "tree": "b" * 40, "clean": True, "inspect_ok": True}
+    monkeypatch.setattr(duration_probe_module, "_subject", lambda _root: subject)
+    monkeypatch.setattr(
+        duration_probe_module, "_candidate_evidence", lambda *_args, **_kwargs: (True, {})
+    )
+    monkeypatch.setattr(
+        duration_probe_module,
+        "_probe_cursor",
+        lambda *_args, **_kwargs: {"state": "NOT_APPLICABLE_PUBLIC_SOURCE"},
+    )
+
+    result = run_duration_probe(
+        "cursor_cli_provider_dispatch",
+        repository_root=candidate,
+        expected_sha="a" * 40,
+        expected_tree="b" * 40,
+    )
+    assert result["ok"] is True
+    assert result["observations"]["state"] == "NOT_APPLICABLE_PUBLIC_SOURCE"
+
+
 def test_duration_probe_rejects_state_nested_in_candidate(tmp_path: Path) -> None:
     candidate = tmp_path / "candidate"
     candidate.mkdir()

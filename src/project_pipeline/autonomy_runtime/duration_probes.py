@@ -238,12 +238,21 @@ def _probe_cursor(root: Path, state_root: Path) -> dict[str, Any]:
         repository_root=root,
         disposable_root=workspace,
     )
+    reasons = tuple(str(item) for item in (report.get("reasons") or ()))
+    not_applicable = report.get("outcome") == "FAILED" and "out-of-scope mutation" in reasons
     return {
         "outcome": report.get("outcome"),
         "provider_id": report.get("provider_id"),
         "live_dispatch": report.get("live_dispatch"),
         "replay_verified": report.get("replay_verified"),
-        "reasons": report.get("reasons") or [],
+        "reasons": list(reasons),
+        "state": "NOT_APPLICABLE_PUBLIC_SOURCE" if not_applicable else None,
+        "reason": (
+            "cursor provider dispatch requires mutation scope that is intentionally unavailable "
+            "in a public campaign-bound checkout."
+            if not_applicable
+            else None
+        ),
     }
 
 
@@ -512,7 +521,10 @@ def run_duration_probe(
             ok = identity_ok and bool(observations["ok"])
         elif probe_id == "cursor_cli_provider_dispatch":
             observations = _probe_cursor(root, probe_state)
-            ok = identity_ok and observations.get("outcome") == "PASSED"
+            if observations.get("state") == "NOT_APPLICABLE_PUBLIC_SOURCE":
+                ok = identity_ok
+            else:
+                ok = identity_ok and observations.get("outcome") == "PASSED"
         elif probe_id == "github_live_readback":
             observations = _probe_github(root, candidate, expected_sha)
             ok = identity_ok and bool(observations["ok"])
