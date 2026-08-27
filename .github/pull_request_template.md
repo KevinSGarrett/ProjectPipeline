@@ -1,24 +1,32 @@
-
 ## Summary
 
-Explain the problem and the user-facing result of this change.
+Explain the problem and the user-facing outcome of this change.
 
 ## What changed
 
 -
 
-## How it was verified
+## Verification
 
-- Tests or checks run:
-- Manual verification, if relevant:
+- Automated tests or checks:
+- Manual verification:
+- Evidence or screenshots, if relevant:
+
+## Risk and operations
+
+- Security/privacy impact:
+- Compatibility or migration impact:
+- Rollback approach:
+- Known limitations or follow-up work:
 
 ## Contributor checklist
 
-- [ ] The change is focused and includes the necessary tests and documentation.
+- [ ] I am authorized to contribute under this repository's source-available license.
+- [ ] The change is focused and includes necessary tests and public documentation.
 - [ ] No credentials, private data, generated local state, or machine-specific files are included.
-- [ ] Compatibility, accessibility, and security impacts have been considered where relevant.
-- [ ] Known limitations or follow-up work are described below.
+- [ ] Accessibility, security, compatibility, and failure/recovery behavior were considered where relevant.
+- [ ] User-visible claims are supported by current implementation or clearly identified evidence.
 
-## Notes for reviewers
+## Reviewer notes
 
-Call out migration, deployment, rollback, or integration considerations here.
+Call out the files, decisions, or risk boundaries that deserve the closest review.

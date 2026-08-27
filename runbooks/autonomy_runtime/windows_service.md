@@ -20,9 +20,9 @@ All paths are explicit. Never place credential values in command lines, logs, or
 ## Foreground diagnostic
 
 ```powershell
-& 'C:\Project_X\.venv\Scripts\python.exe' scripts\run_autonomy_runtime_service.py --foreground --root <disposable-root> --max-seconds 5
-& 'C:\Project_X\.venv\Scripts\python.exe' scripts\run_autonomy_runtime_service.py --status --root <disposable-root>
-& 'C:\Project_X\.venv\Scripts\python.exe' scripts\run_autonomy_runtime_service.py --plan --root <disposable-root>
+& '<project-root>\.venv\Scripts\python.exe' scripts\run_autonomy_runtime_service.py --foreground --root <disposable-root> --max-seconds 5
+& '<project-root>\.venv\Scripts\python.exe' scripts\run_autonomy_runtime_service.py --status --root <disposable-root>
+& '<project-root>\.venv\Scripts\python.exe' scripts\run_autonomy_runtime_service.py --plan --root <disposable-root>
 ```
 
 ## SCM command generation
