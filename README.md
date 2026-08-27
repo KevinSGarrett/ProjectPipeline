@@ -86,9 +86,11 @@ Leases, fencing tokens, idempotency keys, checkpoints, and unknown-outcome recon
 
 Models and execution providers are capabilities, not authorities. Routing can evolve without moving scheduling, security, repository, or completion control outside the project.
 
-## Quick start
+## Quick start (authorized users)
 
 ProjectPipeline requires **Python 3.11, 3.12, or 3.13**.
+
+Before using these commands, confirm that you are the copyright holder or an explicitly authorized contributor under the [license](LICENSE). Public visibility does not expand the repository's license grant.
 
 ### Windows PowerShell
 

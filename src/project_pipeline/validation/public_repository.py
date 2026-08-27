@@ -192,6 +192,12 @@ def readme_surface_errors(root: Path) -> tuple[str, ...]:
 
 
 def validate_public_repository_surface(root: Path) -> list[str]:
+    """Validate curated presentation and known maintainer-only path invariants.
+
+    Broad source-tree secret, placeholder, and Markdown checks remain the
+    responsibility of the repository validator that calls this focused check.
+    """
+
     root = root.resolve()
     errors = [
         f"required public repository path is missing: {relative}"

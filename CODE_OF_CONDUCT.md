@@ -29,7 +29,7 @@ This Code of Conduct applies in repository issues, pull requests, discussions, r
 
 ## Reporting and enforcement
 
-For an immediate GitHub platform-safety concern, use [GitHub's private abuse-reporting process](https://support.github.com/contact/report-abuse). For a project-community concern, contact the maintainer privately through the contact method on the [maintainer's GitHub profile](https://github.com/KevinSGarrett).
+For an immediate GitHub platform-safety concern, use [GitHub's private abuse-reporting process](https://support.github.com/contact/report-abuse). For a private project-community report, use the repository's [private reporting form](https://github.com/KevinSGarrett/ProjectPipeline/security/advisories/new) and begin the title with `[Conduct]`. That route is monitored by repository maintainers and keeps the report out of public issues and discussions.
 
 Reports will be reviewed as promptly and confidentially as practical. Maintainers may edit or remove content, issue a warning, restrict participation, or permanently exclude a participant when necessary to protect the community. Knowingly false or retaliatory reports may also result in corrective action.
 
