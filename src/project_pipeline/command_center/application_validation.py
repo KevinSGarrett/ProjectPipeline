@@ -126,9 +126,7 @@ def validate_command_center_application(root: Path) -> list[str]:
             errors.append(
                 "Tauri CSP must restrict Command Center API transport to the loopback control endpoint"
             )
-        wildcard_sanitized = (
-            csp.replace("http://127.0.0.1:*", "").replace("ws://127.0.0.1:*", "")
-        )
+        wildcard_sanitized = csp.replace("http://127.0.0.1:*", "").replace("ws://127.0.0.1:*", "")
         if "https:" in wildcard_sanitized or "*" in wildcard_sanitized:
             errors.append("Tauri CSP must not grant arbitrary remote network origins")
 
