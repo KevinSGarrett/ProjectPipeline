@@ -281,28 +281,38 @@ def launch_portable_bundle(
     inventory, error = _portable_bundle_inventory(bundle)
     if inventory is None:
         return {"launched": False, "reason": error, "pid": None}
+    extracted = Path(tempfile.mkdtemp(prefix="projectpipeline-portable-launch-"))
+    cleanup_failed = False
+    result: dict[str, Any]
     try:
-        with tempfile.TemporaryDirectory(prefix="projectpipeline-portable-launch-") as directory:
-            extracted = Path(directory)
-            extract_zip_safely(bundle, extracted)
-            executable = extracted / str(inventory["entrypoint"])
-            if not executable.is_file() or any(
-                not (extracted / dependency).is_file() for dependency in inventory["required_files"]
-            ):
-                return {
-                    "launched": False,
-                    "reason": "PORTABLE_BUNDLE_REQUIRED_FILE_MISSING",
-                    "pid": None,
-                }
-            result = launch_native_process(
+        extract_zip_safely(bundle, extracted)
+        executable = extracted / str(inventory["entrypoint"])
+        if not executable.is_file() or any(
+            not (extracted / dependency).is_file() for dependency in inventory["required_files"]
+        ):
+            result = {
+                "launched": False,
+                "reason": "PORTABLE_BUNDLE_REQUIRED_FILE_MISSING",
+                "pid": None,
+            }
+        else:
+            launched = launch_native_process(
                 executable,
                 extra_args=extra_args,
                 extra_env=extra_env,
                 wait_window_s=wait_window_s,
             )
-            return {**result, "portable_bundle": bundle.as_posix()}
+            result = {**launched, "portable_bundle": bundle.as_posix()}
     except (OSError, ValueError, zipfile.BadZipFile):
-        return {"launched": False, "reason": "PORTABLE_BUNDLE_EXTRACTION_FAILED", "pid": None}
+        result = {"launched": False, "reason": "PORTABLE_BUNDLE_EXTRACTION_FAILED", "pid": None}
+    finally:
+        try:
+            shutil.rmtree(extracted)
+        except OSError:
+            cleanup_failed = True
+    if cleanup_failed:
+        result = {**result, "portable_bundle_cleanup": "FAILED"}
+    return result
 
 
 def _find_window_for_pid(pid: int) -> str | None:

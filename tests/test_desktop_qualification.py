@@ -237,6 +237,37 @@ def test_portable_bundle_launches_after_extracting_the_webview_loader(
     assert result["portable_bundle"] == portable.as_posix()
 
 
+def test_portable_bundle_launch_survives_cleanup_race(tmp_path: Path, monkeypatch) -> None:
+    portable = tmp_path / "project-pipeline-command-center-portable.zip"
+    with zipfile.ZipFile(portable, "w") as archive:
+        archive.writestr("project-pipeline-command-center.exe", b"MZ")
+        archive.writestr("WebView2Loader.dll", b"loader")
+        archive.writestr(
+            "project-pipeline-portable-manifest.json",
+            _portable_manifest(required_files=["WebView2Loader.dll"]),
+        )
+
+    def fake_launch(executable: Path, **_kwargs):
+        return {"launched": True, "reason": "PROCESS_STARTED", "pid": 321}
+
+    def flaky_cleanup(_path: Path):
+        raise OSError("cleanup race")
+
+    monkeypatch.setattr(
+        "project_pipeline.command_center.desktop_qualification.launch_native_process", fake_launch
+    )
+    monkeypatch.setattr(
+        "project_pipeline.command_center.desktop_qualification.shutil.rmtree",
+        flaky_cleanup,
+    )
+
+    result = launch_portable_bundle(portable)
+
+    assert result["launched"] is True
+    assert result["portable_bundle"] == portable.as_posix()
+    assert result["portable_bundle_cleanup"] == "FAILED"
+
+
 def test_portable_bundle_rejects_a_manifest_declaring_a_missing_loader(
     tmp_path: Path, monkeypatch
 ) -> None:
