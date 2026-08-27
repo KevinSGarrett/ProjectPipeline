@@ -15,10 +15,12 @@ from project_pipeline.autonomy_runtime.command_execution import (
 )
 from project_pipeline.autonomy_runtime.duration_probes import (
     _probe_cursor,
+    _probe_director_restart,
     _probe_jira,
     required_probe_ids,
     run_duration_probe,
 )
+from project_pipeline.command_center import autonomy_director as autonomy_director_module
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -184,6 +186,49 @@ def test_duration_probe_default_state_root_is_external_to_candidate(
     assert result["ok"] is True
     assert not observed["state_root"].is_relative_to(candidate)
     assert not (candidate / ".local").exists()
+
+
+def test_director_restart_probe_is_not_applicable_without_private_traceability(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    def raise_missing_requirements(*_args, **_kwargs):  # type: ignore[no-untyped-def]
+        raise FileNotFoundError("plans/_traceability/requirements.jsonl")
+
+    monkeypatch.setattr(
+        autonomy_director_module, "evaluate_live_control", raise_missing_requirements
+    )
+    result = _probe_director_restart(tmp_path / "candidate", tmp_path / "state")
+    assert result["state"] == "NOT_APPLICABLE_PUBLIC_SOURCE"
+    assert result["recovered"] is True
+    assert result["persisted_decision_count"] == 1
+
+
+def test_director_restart_not_applicable_state_is_accepted_when_identity_matches(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    candidate = tmp_path / "candidate"
+    candidate.mkdir()
+    subject = {"sha": "a" * 40, "tree": "b" * 40, "clean": True, "inspect_ok": True}
+
+    monkeypatch.setattr(duration_probe_module, "_subject", lambda _root: subject)
+    monkeypatch.setattr(
+        duration_probe_module, "_candidate_evidence", lambda *_args, **_kwargs: (True, {})
+    )
+    monkeypatch.setattr(
+        duration_probe_module,
+        "_probe_director_restart",
+        lambda *_args, **_kwargs: {"state": "NOT_APPLICABLE_PUBLIC_SOURCE"},
+    )
+
+    result = run_duration_probe(
+        "autonomy_director_restart",
+        repository_root=candidate,
+        expected_sha="a" * 40,
+        expected_tree="b" * 40,
+    )
+
+    assert result["ok"] is True
+    assert result["observations"]["state"] == "NOT_APPLICABLE_PUBLIC_SOURCE"
 
 
 def test_jira_duration_probe_uses_remote_issue_status_name(monkeypatch) -> None:
