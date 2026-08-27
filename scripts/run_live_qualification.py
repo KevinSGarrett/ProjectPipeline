@@ -21,6 +21,8 @@ def main() -> int:
     parser.add_argument("--evidence-dir", type=Path)
     parser.add_argument("--attestation-source-root", type=Path)
     parser.add_argument("--durable-dir", type=Path)
+    parser.add_argument("--coordinator-github-receipt", type=Path)
+    parser.add_argument("--coordinator-github-signature", type=Path)
     parser.add_argument("--coordinator-jira-receipt", type=Path)
     parser.add_argument("--coordinator-jira-signature", type=Path)
     parser.add_argument("--coordinator-attestation-receipt", type=Path)
@@ -34,6 +36,8 @@ def main() -> int:
             disposable_root=args.disposable_root,
             attestation_source_root=args.attestation_source_root,
             durable_dir=args.durable_dir,
+            coordinator_github_receipt=args.coordinator_github_receipt,
+            coordinator_github_signature=args.coordinator_github_signature,
             coordinator_jira_receipt=args.coordinator_jira_receipt,
             coordinator_jira_signature=args.coordinator_jira_signature,
             coordinator_attestation_receipt=args.coordinator_attestation_receipt,
@@ -46,6 +50,8 @@ def main() -> int:
         disposable_root=args.disposable_root,
         attestation_source_root=args.attestation_source_root,
         durable_dir=args.durable_dir,
+        coordinator_github_receipt=args.coordinator_github_receipt,
+        coordinator_github_signature=args.coordinator_github_signature,
         coordinator_jira_receipt=args.coordinator_jira_receipt,
         coordinator_jira_signature=args.coordinator_jira_signature,
         coordinator_attestation_receipt=args.coordinator_attestation_receipt,

@@ -954,6 +954,50 @@ def test_duration_probe_default_surface_is_risk_based(tmp_path: Path):
         "campaign_persistence_integrity",
         "recovery_isolation",
     }
+    for item in duration_entries:
+        argv = list(item["argv"])
+        state_root = Path(argv[argv.index("--state-root") + 1])
+        candidate_evidence = Path(argv[argv.index("--candidate-evidence") + 1])
+        assert not state_root.is_relative_to(ROOT)
+        assert not candidate_evidence.is_relative_to(ROOT)
+
+
+def test_campaign_rejects_candidate_nested_runtime_paths(tmp_path: Path):
+    pp384 = _pp384_evidence(tmp_path / "pp384.json")
+    candidate_runtime = ROOT / ".local" / "candidate-runtime"
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        with pytest.raises(ValueError, match="state_path must be outside"):
+            controller.start(
+                state_path=candidate_runtime / "state",
+                evidence_path=tmp_path / "evidence",
+                pp384_evidence=pp384,
+            )
+        with pytest.raises(ValueError, match="evidence_path must be outside"):
+            controller.start(
+                state_path=tmp_path / "state",
+                evidence_path=candidate_runtime / "evidence",
+                pp384_evidence=pp384,
+            )
+        with pytest.raises(ValueError, match="pp384_evidence must be outside"):
+            controller.start(
+                state_path=tmp_path / "state",
+                evidence_path=tmp_path / "evidence",
+                pp384_evidence=candidate_runtime / "pp384.json",
+            )
+    finally:
+        controller.close()
+
+    with pytest.raises(ValueError, match="campaign_database must be outside"):
+        CampaignController(
+            candidate_runtime / "campaign.sqlite3",
+            repository_root=ROOT,
+            inspect_identity=lambda _root: _identity(),
+        )
 
 
 def test_cursor_duration_probe_timeout_scales_with_campaign_heartbeat(tmp_path: Path):

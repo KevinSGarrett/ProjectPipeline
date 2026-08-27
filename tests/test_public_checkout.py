@@ -4,9 +4,16 @@ import importlib.util
 import sys
 import tempfile
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
+from project_pipeline import cli
+from project_pipeline.quality import (
+    CONTROL_WORKSPACE_COVERAGE_FLOOR,
+    PUBLIC_SOURCE_COVERAGE_FLOOR,
+    coverage_floor,
+)
 from project_pipeline.validation.repository import RepositoryValidator
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -61,6 +68,39 @@ def test_public_cold_start_routes_to_public_documentation() -> None:
     assert payload["mode"] == "PUBLIC_SOURCE"
     assert payload["first_read"] == ["README.md", "CONTRIBUTING.md", "SECURITY.md"]
     assert payload["routing"] == {}
+
+
+@pytest.mark.parametrize("action", ("evaluate", "sequence", "readiness", "scope"))
+def test_public_checkout_control_reads_are_explicitly_not_applicable(action: str) -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        make_public_checkout(root)
+        payload, code = cli._run_control_command(SimpleNamespace(action=action, root=root))
+
+    assert code == 0
+    assert payload["state"] == "NOT_APPLICABLE_PUBLIC_SOURCE"
+    assert payload["command"] == f"control {action}"
+
+
+def test_public_checkout_jira_validation_is_explicitly_not_applicable() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        make_public_checkout(root)
+        payload, code = cli._run_jira_command(SimpleNamespace(action="validate", root=root))
+
+    assert code == 0
+    assert payload["valid"] is True
+    assert payload["state"] == "NOT_APPLICABLE_PUBLIC_SOURCE"
+
+
+def test_coverage_floor_matches_the_public_checkout_test_corpus() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        root = Path(directory)
+        make_public_checkout(root)
+        assert coverage_floor(root) == PUBLIC_SOURCE_COVERAGE_FLOOR
+
+        (root / "instructions").mkdir()
+        assert coverage_floor(root) == CONTROL_WORKSPACE_COVERAGE_FLOOR
 
 
 def test_unmarked_checkout_does_not_suppress_private_control_validation() -> None:

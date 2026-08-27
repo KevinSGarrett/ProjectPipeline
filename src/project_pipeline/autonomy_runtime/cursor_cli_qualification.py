@@ -31,8 +31,6 @@ from project_pipeline.lifecycle.attestation_recovery import (
     bootstrap_machine_local_attestation_records,
     evaluate_attestation_recovery,
     load_current_attestation_policy,
-    recover_and_restore,
-    resolve_durable_dir,
     sha256_bytes,
 )
 
@@ -428,6 +426,17 @@ def _readback_artifact(workspace: Path, idempotency_key: str) -> dict[str, Any]:
     }
 
 
+def _require_external_candidate_workspace(repository_root: Path, path: Path, *, label: str) -> Path:
+    """Reject a Cursor qualification workspace nested below the candidate."""
+
+    resolved = path.resolve()
+    try:
+        resolved.relative_to(repository_root)
+    except ValueError:
+        return resolved
+    raise ValueError(f"{label} must be outside the immutable candidate checkout")
+
+
 def qualify_cursor_cli_provider(
     *,
     repository_root: Path,
@@ -442,7 +451,23 @@ def qualify_cursor_cli_provider(
     coordinator_attestation: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     repository_root = repository_root.resolve()
-    durable_dir = resolve_durable_dir(repository_root, durable_dir)
+    disposable_root = _require_external_candidate_workspace(
+        repository_root,
+        disposable_root,
+        label="disposable_root",
+    )
+    # Qualification must not create ignored local state in an immutable release
+    # candidate. A campaign may pass its owned durable directory explicitly;
+    # an ad-hoc rehearsal keeps the records under its disposable root.
+    durable_dir = (
+        _require_external_candidate_workspace(
+            repository_root,
+            durable_dir,
+            label="durable_dir",
+        )
+        if durable_dir is not None
+        else (disposable_root / "cursor-cli-durable").resolve()
+    )
     workspace = (disposable_root / "cursor-cli-qualification").resolve()
     if workspace.exists() and not _remove_workspace(workspace):
         raise RuntimeError(f"disposable qualification workspace is still locked: {workspace}")
@@ -456,8 +481,9 @@ def qualify_cursor_cli_provider(
         and coordinator_attestation.get("relay") == "signed-private-attestation"
     )
 
-    public_attestation = repository_root / PUBLIC_ATTESTATION_REF
-    public_qualification = repository_root / PUBLIC_QUALIFICATION_REF
+    evidence_root = repository_root
+    public_attestation = evidence_root / PUBLIC_ATTESTATION_REF
+    public_qualification = evidence_root / PUBLIC_QUALIFICATION_REF
     discovery: dict[str, Any] = {
         "public_attestation_found": public_attestation.is_file(),
         "public_qualification_found": public_qualification.is_file(),
@@ -473,27 +499,28 @@ def qualify_cursor_cli_provider(
     elif (
         not discovery["public_attestation_found"] or not discovery["public_qualification_found"]
     ) and discovery["recoverable_source_present"]:
-        try:
-            recover_and_restore(
-                repository_root=repository_root,
-                source_root=source_root,
-                durable_dir=durable_dir,
-                verification_dir=disposable_root / "recovery-verify",
-                apply=True,
-            )
-        except Exception as error:
-            discovery["recovery_error"] = error.__class__.__name__
+        # Read the recovery source through the disposable verifier instead of
+        # restoring ignored files to the candidate checkout.
+        evidence_root = source_root.resolve()
+        public_attestation = evidence_root / PUBLIC_ATTESTATION_REF
+        public_qualification = evidence_root / PUBLIC_QUALIFICATION_REF
+        discovery["recovery_source_used_without_candidate_restore"] = True
         discovery["public_attestation_found"] = public_attestation.is_file()
         discovery["public_qualification_found"] = public_qualification.is_file()
     elif not discovery["public_attestation_found"] or not discovery["public_qualification_found"]:
         try:
+            evidence_root = workspace / "public-evidence"
+            public_attestation = evidence_root / PUBLIC_ATTESTATION_REF
+            public_qualification = evidence_root / PUBLIC_QUALIFICATION_REF
             discovery["bootstrap_materialized_builtin_public_evidence"] = (
-                _materialize_builtin_public_evidence(repository_root)
+                _materialize_builtin_public_evidence(evidence_root)
             )
             bootstrap = bootstrap_machine_local_attestation_records(
                 repository_root=repository_root,
                 durable_dir=durable_dir,
                 verification_dir=disposable_root / "bootstrap-verify",
+                public_evidence_root=evidence_root,
+                machine_local_root=disposable_root,
             )
             discovery["bootstrap_machine_local_records"] = bool(
                 bootstrap.get("evaluation", {}).get("accepted_for_restore")

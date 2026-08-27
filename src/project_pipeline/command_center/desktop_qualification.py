@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import ctypes
+import hashlib
 import json
 import os
 import shutil
 import socket
 import subprocess
 import sys
+import tempfile
 import time
+import zipfile
 from collections.abc import Callable
 from ctypes import wintypes
 from pathlib import Path
@@ -18,9 +21,13 @@ from project_pipeline.command_center.desktop_reproducibility import (
     normalize_artifact,
 )
 from project_pipeline.command_center.desktop_session import current_os_identity, scan_secret_residue
+from project_pipeline.release_factory.supply import extract_zip_safely
 from project_pipeline.validation.product_outcome import runtime_qualification_is_bound
 
 DEFAULT_SERVICE_PORT = 8765
+_PORTABLE_BUNDLE_MANIFEST = "project-pipeline-portable-manifest.json"
+_GNU_DESKTOP_TARGET = "x86_64-pc-windows-gnu"
+_GNU_REQUIRED_PORTABLE_FILES = frozenset({"WebView2Loader.dll"})
 NOT_APPLICABLE_NO_GOVERNED_PREDECESSOR = "NOT_APPLICABLE_NO_GOVERNED_PREDECESSOR"
 
 
@@ -72,13 +79,15 @@ def _run_version(executable: str | None, args: list[str] | None = None) -> str |
 
 
 def classify_desktop_artifact(path: Path) -> str | None:
-    """Classify a staged PE, MSI, or NSIS file without depending on walk order."""
+    """Classify a staged desktop release asset without depending on walk order."""
 
     if not path.is_file():
         return None
     suffix = path.suffix.lower()
     name = path.name.lower()
     parent = path.parent.name.lower()
+    if suffix == ".zip" and name.endswith("-portable.zip"):
+        return "portable"
     if suffix == ".msi":
         return "msi"
     if suffix != ".exe":
@@ -131,6 +140,15 @@ def bind_artifact_identities(root: Path, artifacts: dict[str, Path]) -> dict[str
     schema = load_nondeterminism_schema(root)
     identities: dict[str, Any] = {}
     for kind, path in artifacts.items():
+        if kind == "portable":
+            raw_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+            identities[kind] = {
+                "path": path.as_posix(),
+                "raw_sha256": raw_sha256,
+                "normalized_sha256": raw_sha256,
+                "removed_fields": [],
+            }
+            continue
         normalized = normalize_artifact(path, schema)
         identities[kind] = {
             "path": path.as_posix(),
@@ -202,6 +220,99 @@ def launch_native_process(
         "handshake_present": handshake.is_file(),
         "terminated": terminate,
     }
+
+
+def _portable_bundle_inventory(bundle: Path) -> tuple[dict[str, Any] | None, str | None]:
+    """Validate the portable bundle's declared entrypoint and loader set."""
+
+    try:
+        with zipfile.ZipFile(bundle) as archive:
+            members = tuple(info.filename for info in archive.infolist() if not info.is_dir())
+            normalized_members = tuple(member.casefold() for member in members)
+            if len(normalized_members) != len(set(normalized_members)):
+                return None, "PORTABLE_BUNDLE_DUPLICATE_MEMBER"
+            if _PORTABLE_BUNDLE_MANIFEST not in members:
+                return None, "PORTABLE_BUNDLE_MANIFEST_MISSING"
+            try:
+                manifest = json.loads(archive.read(_PORTABLE_BUNDLE_MANIFEST))
+            except (KeyError, UnicodeDecodeError, json.JSONDecodeError):
+                return None, "PORTABLE_BUNDLE_MANIFEST_INVALID"
+    except (OSError, zipfile.BadZipFile):
+        return None, "PORTABLE_BUNDLE_EXTRACTION_FAILED"
+    if not isinstance(manifest, dict) or manifest.get("schema_version") != "1.0.0":
+        return None, "PORTABLE_BUNDLE_MANIFEST_INVALID"
+    entrypoint = manifest.get("entrypoint")
+    required_files = manifest.get("required_files")
+    build_target = manifest.get("build_target")
+    if (
+        not isinstance(entrypoint, str)
+        or not entrypoint.lower().endswith(".exe")
+        or "/" in entrypoint
+        or "\\" in entrypoint
+        or not isinstance(required_files, list)
+        or not isinstance(build_target, str)
+        or any(not isinstance(item, str) or "/" in item or "\\" in item for item in required_files)
+    ):
+        return None, "PORTABLE_BUNDLE_MANIFEST_INVALID"
+    if build_target == _GNU_DESKTOP_TARGET and not _GNU_REQUIRED_PORTABLE_FILES.issubset(
+        required_files
+    ):
+        return None, "PORTABLE_BUNDLE_REQUIRED_FILE_MISSING"
+    missing = [name for name in (entrypoint, *required_files) if name not in members]
+    if missing:
+        return None, "PORTABLE_BUNDLE_REQUIRED_FILE_MISSING"
+    executables = [name for name in members if name.lower().endswith(".exe")]
+    if executables != [entrypoint]:
+        return None, "PORTABLE_BUNDLE_EXECUTABLE_INVALID"
+    return {"entrypoint": entrypoint, "required_files": tuple(required_files)}, None
+
+
+def launch_portable_bundle(
+    bundle: Path,
+    *,
+    extra_args: list[str] | None = None,
+    extra_env: dict[str, str] | None = None,
+    wait_window_s: float = 20.0,
+) -> dict[str, Any]:
+    """Extract and launch the exact portable release bundle in a disposable directory."""
+
+    if not bundle.is_file():
+        return {"launched": False, "reason": "PORTABLE_BUNDLE_MISSING", "pid": None}
+    inventory, error = _portable_bundle_inventory(bundle)
+    if inventory is None:
+        return {"launched": False, "reason": error, "pid": None}
+    extracted = Path(tempfile.mkdtemp(prefix="projectpipeline-portable-launch-"))
+    cleanup_failed = False
+    result: dict[str, Any]
+    try:
+        extract_zip_safely(bundle, extracted)
+        executable = extracted / str(inventory["entrypoint"])
+        if not executable.is_file() or any(
+            not (extracted / dependency).is_file() for dependency in inventory["required_files"]
+        ):
+            result = {
+                "launched": False,
+                "reason": "PORTABLE_BUNDLE_REQUIRED_FILE_MISSING",
+                "pid": None,
+            }
+        else:
+            launched = launch_native_process(
+                executable,
+                extra_args=extra_args,
+                extra_env=extra_env,
+                wait_window_s=wait_window_s,
+            )
+            result = {**launched, "portable_bundle": bundle.as_posix()}
+    except (OSError, ValueError, zipfile.BadZipFile):
+        result = {"launched": False, "reason": "PORTABLE_BUNDLE_EXTRACTION_FAILED", "pid": None}
+    finally:
+        try:
+            shutil.rmtree(extracted)
+        except OSError:
+            cleanup_failed = True
+    if cleanup_failed:
+        result = {**result, "portable_bundle_cleanup": "FAILED"}
+    return result
 
 
 def _find_window_for_pid(pid: int) -> str | None:
@@ -519,6 +630,12 @@ def qualify_desktop_slice(
             wait_window_s=wait_window_s,
         )
         if "executable" in artifacts
+        else launch_portable_bundle(
+            artifacts["portable"],
+            extra_env=extra_env,
+            wait_window_s=wait_window_s,
+        )
+        if "portable" in artifacts
         else {"launched": False, "reason": "EXECUTABLE_MISSING", "pid": None}
     )
     predecessor = resolve_predecessor_release(root)

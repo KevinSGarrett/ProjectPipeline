@@ -1,7 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::fs;
-use std::net::TcpStream;
+use std::net::{TcpListener, TcpStream};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::sync::Mutex;
@@ -10,8 +10,6 @@ use std::time::{Duration, Instant};
 
 use serde::Serialize;
 use serde_json::Value;
-
-const DEFAULT_PORT: u16 = 8765;
 
 #[derive(Clone, Serialize)]
 struct Handshake {
@@ -32,6 +30,29 @@ fn os_identity() -> String {
 
 fn loopback_open(port: u16) -> bool {
     TcpStream::connect_timeout(&([127, 0, 0, 1], port).into(), Duration::from_millis(250)).is_ok()
+}
+
+fn reserve_loopback_port() -> Result<u16, String> {
+    let listener = TcpListener::bind(("127.0.0.1", 0)).map_err(|error| error.to_string())?;
+    let port = listener
+        .local_addr()
+        .map_err(|error| error.to_string())?
+        .port();
+    drop(listener);
+    Ok(port)
+}
+
+fn handshake_port(handshake: &Handshake) -> Result<u16, String> {
+    let remainder = handshake
+        .url
+        .strip_prefix("http://127.0.0.1:")
+        .ok_or("handshake url is not a loopback HTTP endpoint")?;
+    let port = remainder
+        .split_once('/')
+        .map(|(value, _)| value)
+        .unwrap_or(remainder);
+    port.parse::<u16>()
+        .map_err(|_| "handshake url has an invalid port".to_string())
 }
 
 fn handshake_path() -> PathBuf {
@@ -62,8 +83,9 @@ fn read_handshake(path: &Path) -> Result<Handshake, String> {
     })
 }
 
-fn spawn_loopback_service(root: &str, handshake: &Path) -> Result<(), String> {
+fn spawn_loopback_service(root: &str, handshake: &Path, port: u16) -> Result<(), String> {
     let python = std::env::var("PROJECT_PIPELINE_PYTHON").unwrap_or_else(|_| "python".to_string());
+    let port_value = port.to_string();
     let mut command = Command::new(python);
     command
         .args([
@@ -77,7 +99,7 @@ fn spawn_loopback_service(root: &str, handshake: &Path) -> Result<(), String> {
             "--host",
             "127.0.0.1",
             "--port",
-            &DEFAULT_PORT.to_string(),
+            &port_value,
             "--handshake-file",
             handshake.to_str().ok_or("handshake path is not unicode")?,
         ])
@@ -96,8 +118,14 @@ fn desktop_os_identity() -> String {
 }
 
 #[tauri::command]
-fn service_running() -> bool {
-    loopback_open(DEFAULT_PORT)
+fn service_running(state: tauri::State<AppState>) -> bool {
+    state
+        .handshake
+        .lock()
+        .ok()
+        .and_then(|guard| guard.clone())
+        .and_then(|handshake| handshake_port(&handshake).ok())
+        .is_some_and(loopback_open)
 }
 
 #[tauri::command]
@@ -108,30 +136,33 @@ fn start_or_attach_service(
     let repo = root.unwrap_or_else(|| {
         std::env::var("PROJECT_PIPELINE_ROOT").unwrap_or_else(|_| String::from("."))
     });
-    if !loopback_open(DEFAULT_PORT) {
-        let path = handshake_path();
-        let _ = fs::remove_file(&path);
-        spawn_loopback_service(&repo, &path)?;
-        let deadline = Instant::now() + Duration::from_secs(20);
-        while Instant::now() < deadline {
-            if path.is_file() && loopback_open(DEFAULT_PORT) {
-                break;
-            }
-            thread::sleep(Duration::from_millis(100));
-        }
-        let handshake = read_handshake(&path)?;
-        *state.handshake.lock().map_err(|error| error.to_string())? = Some(handshake.clone());
-        return Ok(handshake);
-    }
     if let Some(existing) = state
         .handshake
         .lock()
         .map_err(|error| error.to_string())?
         .clone()
     {
-        return Ok(existing);
+        if handshake_port(&existing).is_ok_and(loopback_open) {
+            return Ok(existing);
+        }
     }
-    Err("loopback service is running but no unused handshake remains; restart the service".into())
+    let port = reserve_loopback_port()?;
+    let path = handshake_path();
+    let _ = fs::remove_file(&path);
+    spawn_loopback_service(&repo, &path, port)?;
+    let deadline = Instant::now() + Duration::from_secs(20);
+    while Instant::now() < deadline {
+        if path.is_file() {
+            let handshake = read_handshake(&path)?;
+            if handshake_port(&handshake)? == port && loopback_open(port) {
+                *state.handshake.lock().map_err(|error| error.to_string())? =
+                    Some(handshake.clone());
+                return Ok(handshake);
+            }
+        }
+        thread::sleep(Duration::from_millis(100));
+    }
+    Err("loopback service did not produce a matching handshake before the startup deadline".into())
 }
 
 fn main() {

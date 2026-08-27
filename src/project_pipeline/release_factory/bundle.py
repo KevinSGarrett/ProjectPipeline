@@ -258,12 +258,15 @@ def build_release_bundle(
     else:
         paths = _build_python_distributions(root, dest)
         if desktop_artifact_dir is not None:
-            for kind, pattern in (
-                ("windows_executable", "*.exe"),
-                ("windows_installer", "*setup.exe"),
+            for kind, patterns in (
+                ("windows_executable", ("*.exe", "*portable.zip")),
+                ("windows_installer", ("*setup.exe",)),
             ):
                 matches = sorted(
-                    path for path in desktop_artifact_dir.glob(pattern) if path.is_file()
+                    path
+                    for pattern in patterns
+                    for path in desktop_artifact_dir.glob(pattern)
+                    if path.is_file()
                 )
                 if kind == "windows_executable":
                     matches = [path for path in matches if "setup" not in path.name.lower()]

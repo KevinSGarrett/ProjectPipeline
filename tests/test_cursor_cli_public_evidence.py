@@ -3,6 +3,8 @@ from __future__ import annotations
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
     _materialize_builtin_public_evidence,
     qualify_cursor_cli_provider,
@@ -42,6 +44,36 @@ def test_materialize_builtin_public_evidence_is_idempotent() -> None:
     assert second is False
 
 
+def test_builtin_evidence_bootstrap_never_mutates_candidate_checkout(tmp_path: Path) -> None:
+    candidate = tmp_path / "candidate"
+    candidate.mkdir()
+    disposable = tmp_path / "disposable"
+
+    report = qualify_cursor_cli_provider(
+        repository_root=candidate,
+        disposable_root=disposable,
+    )
+
+    discovery = report["phases"][0]["observations"]
+    assert discovery["bootstrap_materialized_builtin_public_evidence"] is True
+    assert not (candidate / PUBLIC_ATTESTATION_REF).exists()
+    assert not (candidate / PUBLIC_QUALIFICATION_REF).exists()
+    assert not (candidate / ".local").exists()
+    assert (disposable / "cursor-cli-durable" / "privacy_attestation.json").is_file()
+    assert (disposable / "cursor-cli-durable" / "provider_qualification.json").is_file()
+
+
+def test_cursor_cli_qualification_rejects_candidate_nested_state(tmp_path: Path) -> None:
+    candidate = tmp_path / "candidate"
+    candidate.mkdir()
+
+    with pytest.raises(ValueError, match="outside the immutable candidate checkout"):
+        qualify_cursor_cli_provider(
+            repository_root=candidate,
+            disposable_root=candidate / ".local" / "cursor-cli",
+        )
+
+
 def test_signed_coordinator_relay_never_materializes_private_evidence(
     tmp_path: Path, monkeypatch
 ) -> None:
@@ -56,9 +88,6 @@ def test_signed_coordinator_relay_never_materializes_private_evidence(
     def forbidden(*_args, **_kwargs):
         raise AssertionError("a signed relay must not process raw private evidence")
 
-    monkeypatch.setattr(
-        "project_pipeline.autonomy_runtime.cursor_cli_qualification.recover_and_restore", forbidden
-    )
     monkeypatch.setattr(
         "project_pipeline.autonomy_runtime.cursor_cli_qualification.evaluate_attestation_recovery",
         forbidden,

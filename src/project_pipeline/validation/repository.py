@@ -71,6 +71,30 @@ CONTROL_WORKSPACE_MARKERS = (
 )
 
 
+def is_standalone_public_source_checkout(root: Path) -> bool:
+    """Return whether *root* is a distributable source checkout, not Control state."""
+
+    root = root.resolve()
+    public_markers = (
+        "pyproject.toml",
+        "README.md",
+        "LICENSE",
+        "src/project_pipeline",
+    )
+    try:
+        pyproject = tomllib.loads((root / "pyproject.toml").read_text(encoding="utf-8"))
+    except (OSError, tomllib.TOMLDecodeError):
+        return False
+    tool = pyproject.get("tool")
+    project_pipeline = tool.get("project_pipeline") if isinstance(tool, dict) else None
+    return (
+        isinstance(project_pipeline, dict)
+        and project_pipeline.get("checkout_kind") == "PUBLIC_SOURCE"
+        and all((root / marker).exists() for marker in public_markers)
+        and all(not (root / path).exists() for path in CONTROL_WORKSPACE_MARKERS)
+    )
+
+
 class RepositoryValidator:
     """Run deterministic repository-contract checks without external dependencies."""
 
@@ -188,24 +212,7 @@ class RepositoryValidator:
 
     def _is_standalone_public_source_checkout(self) -> bool:
         """Return whether *root* is a distributable source checkout, not a control workspace."""
-        public_markers = (
-            "pyproject.toml",
-            "README.md",
-            "LICENSE",
-            "src/project_pipeline",
-        )
-        try:
-            pyproject = tomllib.loads((self.root / "pyproject.toml").read_text(encoding="utf-8"))
-        except (OSError, tomllib.TOMLDecodeError):
-            return False
-        tool = pyproject.get("tool")
-        project_pipeline = tool.get("project_pipeline") if isinstance(tool, dict) else None
-        return (
-            isinstance(project_pipeline, dict)
-            and project_pipeline.get("checkout_kind") == "PUBLIC_SOURCE"
-            and all((self.root / marker).exists() for marker in public_markers)
-            and all(not (self.root / path).exists() for path in CONTROL_WORKSPACE_MARKERS)
-        )
+        return is_standalone_public_source_checkout(self.root)
 
     def _validate_standalone_public_source_checkout(self) -> ValidationReport:
         """Validate the source distribution without requiring private delivery records."""

@@ -73,6 +73,19 @@ REQUIRED_CAMPAIGN_MIGRATION = "PPDB-0023"
 IdentityInspector = Callable[[Path], dict[str, Any]]
 
 
+def _require_external_campaign_runtime_path(
+    repository_root: Path, path: Path, *, label: str
+) -> Path:
+    """Reject mutable campaign state and evidence below a frozen candidate."""
+
+    resolved = path.resolve()
+    try:
+        resolved.relative_to(repository_root)
+    except ValueError:
+        return resolved
+    raise ValueError(f"{label} must be outside the immutable candidate checkout")
+
+
 class CampaignSchemaError(RuntimeError):
     """Legacy or incomplete campaign schema. Next action is machine-owned."""
 
@@ -501,8 +514,12 @@ class CampaignController:
         allow_unbound_candidate_for_tests: bool = False,
         command_environment: Mapping[str, str] | None = None,
     ) -> None:
-        self.path = path
         self.repository_root = repository_root.resolve()
+        self.path = _require_external_campaign_runtime_path(
+            self.repository_root,
+            path,
+            label="campaign_database",
+        )
         self.clock = clock or SystemClock()
         self.heartbeat_seconds = float(heartbeat_seconds)
         if self.heartbeat_seconds <= 0:
@@ -598,6 +615,21 @@ class CampaignController:
         service_identity: str | None = None,
         prior_campaign_id: str | None = None,
     ) -> dict[str, Any]:
+        state_path = _require_external_campaign_runtime_path(
+            self.repository_root,
+            state_path,
+            label="state_path",
+        )
+        evidence_path = _require_external_campaign_runtime_path(
+            self.repository_root,
+            evidence_path,
+            label="evidence_path",
+        )
+        pp384_evidence = _require_external_campaign_runtime_path(
+            self.repository_root,
+            pp384_evidence,
+            label="pp384_evidence",
+        )
         identity = self._require_clean_identity()
         admission = evaluate_pp384_admission(pp384_evidence)
         if not admission["admitted"]:
@@ -1489,8 +1521,29 @@ class CampaignController:
         expected_sha = str(source.get("integrated_sha") or "")
         expected_tree = str(source.get("integrated_tree") or "")
         campaign_id = str(source.get("campaign_id") or "")
-        evidence_root = Path(str(source.get("evidence_path") or self.repository_root / ".local"))
-        state_root = Path(str(source.get("state_path") or self.repository_root / ".local"))
+        if row is None:
+            unbound_root = self.path.parent / f"duration-probe-plan-{uuid4().hex}"
+            evidence_root = unbound_root / "evidence"
+            state_root = unbound_root / "state"
+        else:
+            raw_evidence_root = str(source.get("evidence_path") or "").strip()
+            raw_state_root = str(source.get("state_path") or "").strip()
+            if not raw_evidence_root or not raw_state_root:
+                raise ValueError(
+                    "bound duration probe plan requires external evidence and state roots"
+                )
+            evidence_root = Path(raw_evidence_root)
+            state_root = Path(raw_state_root)
+        evidence_root = _require_external_campaign_runtime_path(
+            self.repository_root,
+            evidence_root,
+            label="evidence_path",
+        )
+        state_root = _require_external_campaign_runtime_path(
+            self.repository_root,
+            state_root,
+            label="state_path",
+        )
         # The live Cursor qualification is intentionally bounded but can take longer
         # than a local health probe.  Keep its allowance below the stale-owner
         # boundary while scaling it with the heartbeat used by the running campaign.
