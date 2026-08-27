@@ -79,6 +79,19 @@ def test_repository_validation_pass_summary_is_machine_classified() -> None:
     assert passed["reason"] == "repository-validation-pass"
     assert passed["parsed"] == {"checks": 44, "errors": [], "warnings": 0}
 
+    passed_with_notice = evaluate_command_semantics(
+        command,
+        exit_code=0,
+        stdout=(
+            "Repository validation: PASS\n"
+            "Checks: 44 | Errors: 0 | Warnings: 0\n"
+            "INFO PUBLIC001 [README.md]: Validated a standalone public source checkout; "
+            "local delivery records are optional.\n"
+        ),
+    )
+    assert passed_with_notice["result"] == "PASSED"
+    assert passed_with_notice["reason"] == "repository-validation-pass"
+
     rejected = evaluate_command_semantics(
         command,
         exit_code=0,

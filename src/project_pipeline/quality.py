@@ -13,6 +13,10 @@ from typing import Any
 from project_pipeline.contracts import validate_schemas
 from project_pipeline.dependencies import validate_dependency_lock
 from project_pipeline.validation import RepositoryValidator
+from project_pipeline.validation.repository import is_standalone_public_source_checkout
+
+PUBLIC_SOURCE_COVERAGE_FLOOR = 60
+CONTROL_WORKSPACE_COVERAGE_FLOOR = 70
 
 
 class QualityState(StrEnum):
@@ -117,15 +121,31 @@ def _schema_check(root: Path) -> QualityCheck:
     )
 
 
+def coverage_floor(root: Path) -> int:
+    """Return the coverage floor that belongs to this checkout's test corpus.
+
+    Public source distributions intentionally omit the private Control test
+    corpus.  Their published GitHub workflow consequently enforces the public
+    60% floor.  A Control workspace retains the 70% floor for its complete
+    corpus; this function prevents the local ``quality`` command from silently
+    applying the wrong corpus' policy.
+    """
+
+    if is_standalone_public_source_checkout(root):
+        return PUBLIC_SOURCE_COVERAGE_FLOOR
+    return CONTROL_WORKSPACE_COVERAGE_FLOOR
+
+
 def run_quality(root: Path, *, strict_tools: bool = False, coverage: bool = False) -> QualityReport:
     root = root.resolve()
+    coverage_threshold = coverage_floor(root)
     test_command = (
         (
             "pytest",
             "-q",
             "--cov=project_pipeline",
             "--cov-report=term-missing",
-            "--cov-fail-under=70",
+            f"--cov-fail-under={coverage_threshold}",
         )
         if coverage
         else ("pytest", "-q")

@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 import tomllib
+import zipfile
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +21,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity  # noqa: E402
 from project_pipeline.github_steward.asset_names import canonical_release_asset_name  # noqa: E402
 from project_pipeline.release_factory.bundle import BoundArtifact  # noqa: E402
+from project_pipeline.release_hardening import disposable_rehearsal as _ra  # noqa: E402
 from project_pipeline.resilience.host_safety import require_safe_local_host  # noqa: E402
 
 _GNU_TARGET = "x86_64-pc-windows-gnu"
@@ -56,6 +58,29 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
         encoding="utf-8",
         newline="\n",
     )
+
+
+def _stage_portable_desktop_bundle(executable: Path, *, release_dir: Path, output: Path) -> Path:
+    """Create the single portable desktop release asset with every loader dependency.
+
+    GNU-linked Tauri binaries require ``WebView2Loader.dll`` next to the PE at
+    process start. The release asset is therefore a deterministic portable ZIP,
+    not an orphaned executable that can only work in the build directory.
+    """
+
+    portable = output / canonical_release_asset_name(f"{executable.stem}-portable.zip")
+    loader = release_dir / "WebView2Loader.dll"
+    entries = [executable]
+    if loader.is_file():
+        entries.append(loader)
+    temporary = portable.with_suffix(portable.suffix + ".tmp")
+    with zipfile.ZipFile(temporary, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+        for path in sorted(entries, key=lambda item: item.name.casefold()):
+            info = zipfile.ZipInfo(path.name, _ra.FIXED_ZIP_TIMESTAMP)
+            info.compress_type = zipfile.ZIP_DEFLATED
+            archive.writestr(info, path.read_bytes())
+    temporary.replace(portable)
+    return portable
 
 
 def _run(command: list[str], *, cwd: Path, environment: dict[str, str]) -> None:
@@ -221,9 +246,10 @@ def build_artifacts(
         )
         if not executable.is_file() or len(installers) != 1:
             raise RuntimeError("desktop-build-artifacts-missing")
-        staged_executable = output / canonical_release_asset_name(executable.name)
+        staged_executable = _stage_portable_desktop_bundle(
+            executable, release_dir=release_dir, output=output
+        )
         staged_installer = output / canonical_release_asset_name(installers[0].name)
-        shutil.copy2(executable, staged_executable)
         shutil.copy2(installers[0], staged_installer)
         artifacts = {
             "windows_executable": _artifact_payload(

@@ -15,7 +15,7 @@ it can be accepted; absent or altered license metadata fails closed.
 
 ## Dedup
 
-- Native desktop compilation remains `C16-UX-01`. This factory **binds already-qualified** Windows executable/installer bytes.
+- Native desktop compilation remains `C16-UX-01`. This factory **binds already-qualified** Windows portable application bundle and installer bytes. The portable bundle includes any loader DLL required at process start and is exercised after clean extraction.
 - Local installer residue remains `C16-UX-05`. This factory acquires **remote draft bytes** by exact hash in a separate directory.
 
 ## Signing

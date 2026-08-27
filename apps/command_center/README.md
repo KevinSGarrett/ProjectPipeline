@@ -19,7 +19,7 @@ npm install
 npm run dev
 ```
 
-The Python backend should be served separately on `127.0.0.1:8765`; Vite proxies `/api` only during development. A production web deployment must use the same origin or an explicitly approved reverse proxy.
+During development, the Python backend is served on `127.0.0.1:8765` and Vite proxies `/api`. The packaged desktop application reserves an isolated loopback port for its own backend and verifies a one-time handshake before using it, so an unrelated local service cannot be attached accidentally. A production web deployment must use the same origin or an explicitly approved reverse proxy.
 
 ## Verification
 

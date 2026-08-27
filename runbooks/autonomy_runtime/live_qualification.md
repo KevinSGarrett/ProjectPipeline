@@ -28,20 +28,54 @@ migrates the retired human-work storage value to `BLOCKED_EXTERNAL`; no current
 report, schema, plan, Jira projection, or evidence may emit it. Live reports
 must not assign any routine project action outside the autonomy runtime.
 
-Exact PP-379 public bytes are recovered only through
-`python -m project_pipeline attestation recover --root . --apply`. Arbitrary JSON
-copied to the expected paths cannot pass. Durable private records default to the
-machine-local takeover directory when those files exist; otherwise they resolve
-under `<root>/.local/state/takeover`. Override with `--durable-dir`.
+Exact PP-379 public bytes are verified by the recovery evaluator; arbitrary JSON
+copied to expected paths cannot pass. A release-candidate qualification reads a
+separate attestation source and writes its derived records only below the
+worker-owned durable or disposable root. It never materializes ignored evidence
+or `.local` state inside the candidate checkout.
+
+## Coordinator-owned governance relay
+
+When the CPU worker does not hold a GitHub or Jira credential, the coordinator
+performs each governed read/write/readback and writes a fresh, signed,
+candidate-bound receipt. Transfer only that receipt and its signature through
+the approved content-addressed channel. The credential, signing key, and their
+plaintext values remain on the coordinator. The worker rejects a receipt whose
+signature, age, candidate SHA/tree, or write/readback proof does not match.
+
+Create the GitHub receipt on the authenticated coordinator using its
+machine-bound signing-key reference:
+
+```powershell
+python scripts/run_coordinator_github_governance_probe.py `
+  --root . --output <receipt.json> --signature <receipt.sig> `
+  --signing-key <machine-bound-signing-key>
+```
+
+Create the matching Jira receipt through the existing coordinator probe. On the
+CPU worker, provide both verified receipt pairs to the live-qualification
+command. A scheduler must regenerate the short-lived receipts before each
+governance probe; it must never reuse stale evidence.
 
 ## Run
 
 ```powershell
 $env:PYTHONPATH = "src"
 python -m project_pipeline attestation recover --root .
-python -m project_pipeline attestation recover --root . --apply
-python scripts/run_live_qualification.py --root .
-python scripts/run_live_qualification.py --root . --write-evidence
+python scripts/run_live_qualification.py --root . `
+  --attestation-source-root <verified-public-evidence-root> `
+  --durable-dir <worker-owned-durable-root> `
+  --coordinator-github-receipt <github-receipt.json> `
+  --coordinator-github-signature <github-receipt.sig> `
+  --coordinator-jira-receipt <jira-receipt.json> `
+  --coordinator-jira-signature <jira-receipt.sig>
+python scripts/run_live_qualification.py --root . --write-evidence `
+  --attestation-source-root <verified-public-evidence-root> `
+  --durable-dir <worker-owned-durable-root> `
+  --coordinator-github-receipt <github-receipt.json> `
+  --coordinator-github-signature <github-receipt.sig> `
+  --coordinator-jira-receipt <jira-receipt.json> `
+  --coordinator-jira-signature <jira-receipt.sig>
 ```
 
 ## Tests

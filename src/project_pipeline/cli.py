@@ -301,6 +301,7 @@ from project_pipeline.upstream_integrations.security import (
     ZizmorAdapter,
 )
 from project_pipeline.validation import RepositoryValidator
+from project_pipeline.validation.repository import is_standalone_public_source_checkout
 from project_pipeline.verification import (
     VerificationHarness,
     VerificationStore,
@@ -1873,6 +1874,18 @@ def _run_github_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 
 def _run_control_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
+    if args.action in {
+        "evaluate",
+        "sequence",
+        "readiness",
+        "scope",
+    } and is_standalone_public_source_checkout(args.root):
+        return {
+            "schema_version": "1.0.0",
+            "state": "NOT_APPLICABLE_PUBLIC_SOURCE",
+            "command": f"control {args.action}",
+            "reason": "Project Control requires private delivery records that are intentionally absent from a public source checkout.",
+        }, 0
     configuration = _load_configuration(args)
     database = _state_database_path(args, configuration)
     project_id = args.project_id or configuration.settings.project_id
@@ -2197,6 +2210,13 @@ def _run_agent_router_command(args: argparse.Namespace) -> tuple[dict[str, Any],
 
 def _run_jira_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     if args.action == "validate":
+        if is_standalone_public_source_checkout(args.root):
+            return {
+                "schema_version": "1.0.0",
+                "valid": True,
+                "state": "NOT_APPLICABLE_PUBLIC_SOURCE",
+                "reason": "Jira mirror records are private delivery metadata and are intentionally absent from a public source checkout.",
+            }, 0
         report = JiraMirrorRepository(args.root).validate()
         return report.as_dict(), 0 if report.valid else 1
     if args.action == "export":

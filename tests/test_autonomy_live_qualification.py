@@ -13,8 +13,10 @@ from project_pipeline.autonomy_runtime import live_qualification as live_qualifi
 from project_pipeline.autonomy_runtime.live_qualification import (
     StageOutcome,
     _branch_absent_after_delete_readback,
+    _coordinator_github_receipt_probe,
     _coordinator_jira_receipt_probe,
     _qualify_github_jira_governance,
+    create_coordinator_github_governance_receipt,
     create_coordinator_jira_governance_receipt,
     run_live_qualification,
     write_live_qualification_evidence,
@@ -351,6 +353,30 @@ def _coordinator_jira_receipt(*, sha: str, tree: str) -> dict[str, object]:
     return receipt
 
 
+def _coordinator_github_receipt(*, sha: str, tree: str) -> dict[str, object]:
+    receipt: dict[str, object] = {
+        "schema_version": "1.0.0",
+        "kind": "pp384_coordinator_github_governance",
+        "status": "PASSED",
+        "generated_at_utc": datetime.now(UTC).isoformat(),
+        "task_id": "PP-TASK-000384",
+        "coordinator_id": "PRIMARY-CODEX-WORKSTATION",
+        "candidate": {"sha": sha, "tree": tree},
+        "repository_slug": "KevinSGarrett/ProjectPipeline",
+        "github_probe": {"read_ok": True},
+        "github_write_probe": {
+            "write_readback_ok": True,
+            "branch": "qual/pp384-live-probe",
+            "observed_after_create": True,
+            "observed_after_delete": True,
+            "provider_id": "github-rest",
+        },
+        "secret_value_observed": False,
+    }
+    receipt["receipt_sha256"] = live_qualification_module._coordinator_jira_receipt_digest(receipt)
+    return receipt
+
+
 def _coordinator_attestation_receipt(*, sha: str, tree: str) -> dict[str, object]:
     policy = SimpleNamespace(
         project_id="PROJECT-PIPELINE",
@@ -423,6 +449,42 @@ def test_coordinator_jira_receipt_requires_fresh_exact_candidate(
     )
     assert rejected["valid"] is False
     assert rejected["reason"] == "coordinator_jira_receipt_policy_mismatch"
+
+
+def test_coordinator_github_receipt_requires_fresh_exact_candidate(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    sha = "a" * 40
+    tree = "b" * 40
+    receipt = tmp_path / "coordinator-github.json"
+    signature = tmp_path / "coordinator-github.sig"
+    receipt.write_text(
+        json.dumps(_coordinator_github_receipt(sha=sha, tree=tree)), encoding="utf-8"
+    )
+    signature.write_bytes(b"test signature")
+    monkeypatch.setattr(
+        live_qualification_module, "_verify_coordinator_github_signature", lambda **_kwargs: True
+    )
+
+    accepted = _coordinator_github_receipt_probe(
+        receipt,
+        signature,
+        repository_root=tmp_path,
+        expected_head=sha,
+        expected_tree=tree,
+    )
+    assert accepted["valid"] is True
+    assert accepted["write_readback_ok"] is True
+
+    rejected = _coordinator_github_receipt_probe(
+        receipt,
+        signature,
+        repository_root=tmp_path,
+        expected_head="c" * 40,
+        expected_tree=tree,
+    )
+    assert rejected["valid"] is False
+    assert rejected["reason"] == "coordinator_github_receipt_policy_mismatch"
 
 
 def test_coordinator_attestation_relay_requires_signed_exact_fresh_candidate(
@@ -571,6 +633,104 @@ def test_coordinator_jira_receipt_satisfies_cpu_governance_without_a_jira_secret
     assert stage.outcome is StageOutcome.PASSED
     assert stage.observations["jira_write_probe"]["execution_owner"] == "coordinator-receipt"
     assert stage.observations["local_jira_probe"]["not_attempted"] is True
+
+
+def test_coordinator_receipts_satisfy_cpu_governance_without_github_or_jira_secrets(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    sha = "a" * 40
+    tree = "b" * 40
+    github_receipt = tmp_path / "coordinator-github.json"
+    github_signature = tmp_path / "coordinator-github.sig"
+    jira_receipt = tmp_path / "coordinator-jira.json"
+    jira_signature = tmp_path / "coordinator-jira.sig"
+    github_receipt.write_text(
+        json.dumps(_coordinator_github_receipt(sha=sha, tree=tree)), encoding="utf-8"
+    )
+    github_signature.write_bytes(b"test signature")
+    jira_receipt.write_text(
+        json.dumps(_coordinator_jira_receipt(sha=sha, tree=tree)), encoding="utf-8"
+    )
+    jira_signature.write_bytes(b"test signature")
+    repo = tmp_path / "repo"
+    _scaffold_repo(repo)
+    monkeypatch.setattr(
+        live_qualification_module, "_verify_coordinator_github_signature", lambda **_kwargs: True
+    )
+    monkeypatch.setattr(
+        live_qualification_module, "_verify_coordinator_jira_signature", lambda **_kwargs: True
+    )
+    monkeypatch.setattr(
+        live_qualification_module,
+        "_probe_github_read",
+        lambda _slug: pytest.fail("CPU must not read GitHub after verifying coordinator proof"),
+    )
+    monkeypatch.setattr(
+        live_qualification_module,
+        "_resolve_github_token",
+        lambda _root: pytest.fail(
+            "CPU must not resolve a GitHub token after verifying coordinator proof"
+        ),
+    )
+    monkeypatch.setattr(
+        live_qualification_module,
+        "_probe_jira_read",
+        lambda _root: pytest.fail("CPU must not read Jira after verifying coordinator proof"),
+    )
+    monkeypatch.setattr(
+        live_qualification_module,
+        "_probe_jira_write_readback",
+        lambda _root: pytest.fail("CPU must not write Jira after verifying coordinator proof"),
+    )
+
+    stage = _qualify_github_jira_governance(
+        repo,
+        candidate_head=sha,
+        candidate_tree=tree,
+        coordinator_github_receipt=github_receipt,
+        coordinator_github_signature=github_signature,
+        coordinator_jira_receipt=jira_receipt,
+        coordinator_jira_signature=jira_signature,
+    )
+
+    assert stage.outcome is StageOutcome.PASSED
+    assert stage.observations["github_write_probe"]["execution_owner"] == "coordinator-receipt"
+    assert stage.observations["local_github_probe"]["not_attempted"] is True
+
+
+def test_coordinator_github_probe_receipt_contains_no_github_secret(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        live_qualification_module, "_git_identity", lambda _root: ("a" * 40, "b" * 40)
+    )
+    monkeypatch.setattr(
+        live_qualification_module, "_repository_slug_for", lambda _root: "owner/repo"
+    )
+    monkeypatch.setattr(
+        live_qualification_module, "_probe_github_read", lambda _slug: {"read_ok": True}
+    )
+    monkeypatch.setattr(
+        live_qualification_module,
+        "_resolve_github_token",
+        lambda _root: ("scoped-token", "test"),
+    )
+    monkeypatch.setattr(
+        live_qualification_module,
+        "_probe_github_write_readback",
+        lambda _slug, _token: {
+            "write_readback_ok": True,
+            "branch": "qual/pp384-live-probe",
+            "observed_after_create": True,
+            "observed_after_delete": True,
+        },
+    )
+
+    receipt = create_coordinator_github_governance_receipt(repository_root=Path("."))
+
+    assert receipt["status"] == "PASSED"
+    assert len(str(receipt["receipt_sha256"])) == 64
+    assert receipt["secret_value_observed"] is False
 
 
 def test_coordinator_probe_receipt_contains_no_jira_secret(monkeypatch: pytest.MonkeyPatch) -> None:

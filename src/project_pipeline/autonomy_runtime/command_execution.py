@@ -47,8 +47,8 @@ _SECRET_RE = re.compile(
     r"(?i)(authorization|api[_-]?token|api[_-]?key|secret|password|bearer)\s*[:=]\s*\S+"
 )
 _REPOSITORY_VALIDATE_PASS = re.compile(
-    r"^Repository validation: PASS\r?\n"
-    r"Checks: (?P<checks>[1-9][0-9]*) \| Errors: 0 \| Warnings: (?P<warnings>[0-9]+)$"
+    r"Repository validation: PASS\r?\n"
+    r"Checks: (?P<checks>[1-9][0-9]*) \| Errors: 0 \| Warnings: (?P<warnings>[0-9]+)"
 )
 
 
@@ -440,7 +440,7 @@ def evaluate_command_semantics(
             "documents": documents,
         }
     if kind == "validate.repository" and not documents:
-        summary = _REPOSITORY_VALIDATE_PASS.fullmatch(stdout.strip())
+        summary = _REPOSITORY_VALIDATE_PASS.search(stdout)
         if summary is not None:
             return {
                 "kind": kind,

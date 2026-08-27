@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import shutil
+import zipfile
 from pathlib import Path
 from subprocess import CompletedProcess
 
@@ -9,6 +10,7 @@ from project_pipeline.command_center.desktop_qualification import (
     classify_desktop_artifact,
     discover_desktop_artifacts,
     evaluate_installer_lifecycle,
+    launch_portable_bundle,
     observe_desktop_toolchain,
     probe_loopback_service,
     qualify_desktop_slice,
@@ -176,3 +178,41 @@ def test_hosted_artifacts_prefer_staged_executable_over_nested_build_helper(tmp_
     found = discover_desktop_artifacts(tmp_path, hosted_dir=hosted)
 
     assert found["executable"] == staged
+
+
+def test_hosted_portable_bundle_is_discovered_without_mistaking_it_for_an_installer(
+    tmp_path: Path,
+) -> None:
+    hosted = tmp_path / "desktop-artifacts"
+    hosted.mkdir()
+    portable = hosted / "project-pipeline-command-center-portable.zip"
+    with zipfile.ZipFile(portable, "w") as archive:
+        archive.writestr("project-pipeline-command-center.exe", b"MZ")
+
+    found = discover_desktop_artifacts(tmp_path, hosted_dir=hosted)
+
+    assert found["portable"] == portable
+    assert "executable" not in found
+
+
+def test_portable_bundle_launches_after_extracting_the_webview_loader(
+    tmp_path: Path, monkeypatch
+) -> None:
+    portable = tmp_path / "project-pipeline-command-center-portable.zip"
+    with zipfile.ZipFile(portable, "w") as archive:
+        archive.writestr("project-pipeline-command-center.exe", b"MZ")
+        archive.writestr("WebView2Loader.dll", b"loader")
+
+    def fake_launch(executable: Path, **_kwargs):
+        assert executable.name == "project-pipeline-command-center.exe"
+        assert (executable.parent / "WebView2Loader.dll").read_bytes() == b"loader"
+        return {"launched": True, "reason": "PROCESS_STARTED", "pid": 123}
+
+    monkeypatch.setattr(
+        "project_pipeline.command_center.desktop_qualification.launch_native_process", fake_launch
+    )
+
+    result = launch_portable_bundle(portable)
+
+    assert result["launched"] is True
+    assert result["portable_bundle"] == portable.as_posix()

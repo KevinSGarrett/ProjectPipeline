@@ -18,3 +18,8 @@ Local environments without Ruff or Mypy receive an explicit unavailable result u
 PYTHONPATH=src python -m project_pipeline quality --root .
 PYTHONPATH=src python -m project_pipeline quality --root . --strict-tools --coverage
 ```
+
+The command uses the coverage floor that belongs to the checkout's test
+corpus: 70% for a complete Control workspace and 60% for the intentionally
+slim public source distribution.  The latter matches the published GitHub
+workflow; neither mode substitutes a lower floor for the other.

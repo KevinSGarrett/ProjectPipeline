@@ -123,15 +123,21 @@ def _write_local_record_once(path: Path, payload: dict[str, Any]) -> dict[str, A
     }
 
 
-def _resolve_bootstrap_durable_dir(repository_root: Path, durable_dir: Path | None) -> Path:
+def _resolve_bootstrap_durable_dir(
+    repository_root: Path,
+    durable_dir: Path | None,
+    *,
+    machine_local_root: Path | None = None,
+) -> Path:
     """Return a worker-local destination for newly derived private records.
 
     ``resolve_durable_dir`` deliberately supports legacy recovery flows that may
     use the canonical coordinator state.  A new isolated-worker bootstrap has a
     stricter ownership boundary: both its default and any explicit destination
-    must live under this clone's ``.local`` directory.
+    must live under the worker's private local-state root. A caller may provide
+    a machine-owned root outside an immutable candidate checkout.
     """
-    local_root = (repository_root / ".local").resolve()
+    local_root = (machine_local_root or repository_root / ".local").resolve()
     target = (durable_dir or local_root / "state" / "takeover").resolve()
     try:
         target.relative_to(local_root)
@@ -147,6 +153,8 @@ def bootstrap_machine_local_attestation_records(
     repository_root: Path,
     durable_dir: Path | None = None,
     verification_dir: Path | None = None,
+    public_evidence_root: Path | None = None,
+    machine_local_root: Path | None = None,
 ) -> dict[str, Any]:
     """Establish CPU-local attestation records from accepted public evidence.
 
@@ -157,16 +165,21 @@ def bootstrap_machine_local_attestation_records(
     re-evaluated before it is returned.
     """
     repository_root = repository_root.resolve()
-    target = _resolve_bootstrap_durable_dir(repository_root, durable_dir)
+    evidence_root = (public_evidence_root or repository_root).resolve()
+    target = _resolve_bootstrap_durable_dir(
+        repository_root,
+        durable_dir,
+        machine_local_root=machine_local_root,
+    )
     verify = (verification_dir or target / "bootstrap-verification").resolve()
     policy = load_current_attestation_policy(repository_root)
     public_attestation = _parse_public_record(
-        repository_root / PUBLIC_ATTESTATION_REF,
+        evidence_root / PUBLIC_ATTESTATION_REF,
         expected_sha256=EXPECTED_PUBLIC_ATTESTATION_SHA256,
         expected_bytes=EXPECTED_PUBLIC_ATTESTATION_BYTES,
     )
     public_qualification = _parse_public_record(
-        repository_root / PUBLIC_QUALIFICATION_REF,
+        evidence_root / PUBLIC_QUALIFICATION_REF,
         expected_sha256=EXPECTED_PUBLIC_QUALIFICATION_SHA256,
         expected_bytes=EXPECTED_PUBLIC_QUALIFICATION_BYTES,
     )
@@ -199,8 +212,8 @@ def bootstrap_machine_local_attestation_records(
     )
     preexisting = evaluate_attestation_recovery(
         repository_root=repository_root,
-        source_attestation=repository_root / PUBLIC_ATTESTATION_REF,
-        source_qualification=repository_root / PUBLIC_QUALIFICATION_REF,
+        source_attestation=evidence_root / PUBLIC_ATTESTATION_REF,
+        source_qualification=evidence_root / PUBLIC_QUALIFICATION_REF,
         durable_attestation_path=target / "privacy_attestation.json",
         durable_qualification_path=target / "provider_qualification.json",
         verification_dir=verify / "before-bootstrap",

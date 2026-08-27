@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import zipfile
 from pathlib import Path
 
 import pytest
@@ -43,6 +44,7 @@ def test_campaign_desktop_builder_stages_candidate_bound_native_artifacts(tmp_pa
             release = Path(environment["CARGO_TARGET_DIR"]) / "release"
             (release / "bundle" / "nsis").mkdir(parents=True)
             (release / "project-pipeline-command-center.exe").write_bytes(b"MZ-native")
+            (release / "WebView2Loader.dll").write_bytes(b"webview-loader")
             (release / "bundle" / "nsis" / "ProjectPipeline-setup.exe").write_bytes(b"MZ-installer")
 
     monkeypatch.setattr(module, "_run", fake_run)
@@ -61,6 +63,10 @@ def test_campaign_desktop_builder_stages_candidate_bound_native_artifacts(tmp_pa
         assert sidecar["kind"] == kind
         assert sidecar["source_sha"] == sha
         assert sidecar["source_tree"] == tree
+    portable = output / result["artifacts"]["windows_executable"]["name"]
+    assert portable.suffix == ".zip"
+    with zipfile.ZipFile(portable) as archive:
+        assert archive.namelist() == ["project-pipeline-command-center.exe", "WebView2Loader.dll"]
 
 
 def test_campaign_desktop_builder_rejects_preseeded_output(tmp_path, monkeypatch):
@@ -132,6 +138,7 @@ def test_campaign_desktop_builder_stages_gnu_target_artifacts(tmp_path, monkeypa
             release = Path(environment["CARGO_TARGET_DIR"]) / module._GNU_TARGET / "release"
             (release / "bundle" / "nsis").mkdir(parents=True)
             (release / "project-pipeline-command-center.exe").write_bytes(b"MZ-native")
+            (release / "WebView2Loader.dll").write_bytes(b"webview-loader")
             (release / "bundle" / "nsis" / "ProjectPipeline-setup.exe").write_bytes(b"MZ-installer")
 
     monkeypatch.setattr(module, "_run", fake_run)
@@ -145,7 +152,7 @@ def test_campaign_desktop_builder_stages_gnu_target_artifacts(tmp_path, monkeypa
     assert result["build_target"] == module._GNU_TARGET
     assert result["compiler"] == "x86_64-w64-mingw32-gcc.exe"
     assert result["rust_toolchain"] == "1.97.1-x86_64-pc-windows-gnu"
-    assert (output / "project-pipeline-command-center.exe").is_file()
+    assert (output / "project-pipeline-command-center-portable.zip").is_file()
 
 
 def test_campaign_desktop_builder_discovers_winget_winlibs(tmp_path, monkeypatch):

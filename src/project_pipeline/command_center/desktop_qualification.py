@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import ctypes
+import hashlib
 import json
 import os
 import shutil
 import socket
 import subprocess
 import sys
+import tempfile
 import time
+import zipfile
 from collections.abc import Callable
 from ctypes import wintypes
 from pathlib import Path
@@ -18,6 +21,7 @@ from project_pipeline.command_center.desktop_reproducibility import (
     normalize_artifact,
 )
 from project_pipeline.command_center.desktop_session import current_os_identity, scan_secret_residue
+from project_pipeline.release_factory.supply import extract_zip_safely
 from project_pipeline.validation.product_outcome import runtime_qualification_is_bound
 
 DEFAULT_SERVICE_PORT = 8765
@@ -72,13 +76,15 @@ def _run_version(executable: str | None, args: list[str] | None = None) -> str |
 
 
 def classify_desktop_artifact(path: Path) -> str | None:
-    """Classify a staged PE, MSI, or NSIS file without depending on walk order."""
+    """Classify a staged desktop release asset without depending on walk order."""
 
     if not path.is_file():
         return None
     suffix = path.suffix.lower()
     name = path.name.lower()
     parent = path.parent.name.lower()
+    if suffix == ".zip" and name.endswith("-portable.zip"):
+        return "portable"
     if suffix == ".msi":
         return "msi"
     if suffix != ".exe":
@@ -131,6 +137,15 @@ def bind_artifact_identities(root: Path, artifacts: dict[str, Path]) -> dict[str
     schema = load_nondeterminism_schema(root)
     identities: dict[str, Any] = {}
     for kind, path in artifacts.items():
+        if kind == "portable":
+            raw_sha256 = hashlib.sha256(path.read_bytes()).hexdigest()
+            identities[kind] = {
+                "path": path.as_posix(),
+                "raw_sha256": raw_sha256,
+                "normalized_sha256": raw_sha256,
+                "removed_fields": [],
+            }
+            continue
         normalized = normalize_artifact(path, schema)
         identities[kind] = {
             "path": path.as_posix(),
@@ -202,6 +217,43 @@ def launch_native_process(
         "handshake_present": handshake.is_file(),
         "terminated": terminate,
     }
+
+
+def launch_portable_bundle(
+    bundle: Path,
+    *,
+    extra_args: list[str] | None = None,
+    extra_env: dict[str, str] | None = None,
+    wait_window_s: float = 20.0,
+) -> dict[str, Any]:
+    """Extract and launch the exact portable release bundle in a disposable directory."""
+
+    if not bundle.is_file():
+        return {"launched": False, "reason": "PORTABLE_BUNDLE_MISSING", "pid": None}
+    try:
+        with tempfile.TemporaryDirectory(prefix="projectpipeline-portable-launch-") as directory:
+            extracted = Path(directory)
+            extract_zip_safely(bundle, extracted)
+            executables = sorted(
+                path
+                for path in extracted.rglob("*.exe")
+                if path.is_file() and "setup" not in path.name.casefold()
+            )
+            if len(executables) != 1:
+                return {
+                    "launched": False,
+                    "reason": "PORTABLE_BUNDLE_EXECUTABLE_INVALID",
+                    "pid": None,
+                }
+            result = launch_native_process(
+                executables[0],
+                extra_args=extra_args,
+                extra_env=extra_env,
+                wait_window_s=wait_window_s,
+            )
+            return {**result, "portable_bundle": bundle.as_posix()}
+    except (OSError, ValueError, zipfile.BadZipFile):
+        return {"launched": False, "reason": "PORTABLE_BUNDLE_EXTRACTION_FAILED", "pid": None}
 
 
 def _find_window_for_pid(pid: int) -> str | None:
@@ -519,6 +571,12 @@ def qualify_desktop_slice(
             wait_window_s=wait_window_s,
         )
         if "executable" in artifacts
+        else launch_portable_bundle(
+            artifacts["portable"],
+            extra_env=extra_env,
+            wait_window_s=wait_window_s,
+        )
+        if "portable" in artifacts
         else {"launched": False, "reason": "EXECUTABLE_MISSING", "pid": None}
     )
     predecessor = resolve_predecessor_release(root)
