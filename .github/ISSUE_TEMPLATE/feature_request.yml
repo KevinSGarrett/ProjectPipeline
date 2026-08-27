@@ -1,25 +1,53 @@
 name: Feature request
-description: Suggest an improvement to ProjectPipeline
+description: Propose a concrete improvement to ProjectPipeline
 title: "[Feature]: "
 labels: ["enhancement"]
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Start with the user problem and desired outcome. Early or open-ended ideas usually fit better in GitHub Discussions.
   - type: textarea
     id: problem
     attributes:
-      label: What problem would this solve?
-      description: Tell us who is affected and what is difficult today.
+      label: Problem
+      description: Who is affected, and what is difficult or impossible today?
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Describe observable success without prescribing implementation details.
     validations:
       required: true
   - type: textarea
     id: proposal
     attributes:
       label: Proposed approach
-      description: A concrete proposal, sketch, or example is helpful.
+      description: Share a concrete workflow, interface, example, or implementation direction if you have one.
     validations:
-      required: true
+      required: false
   - type: textarea
     id: alternatives
     attributes:
       label: Alternatives considered
+      description: What workarounds or alternative designs have you tried?
     validations:
       required: false
+  - type: textarea
+    id: considerations
+    attributes:
+      label: Safety and compatibility considerations
+      description: Note effects on local-first behavior, security, external writes, providers, platforms, migrations, or existing contracts.
+    validations:
+      required: false
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Submission checks
+      options:
+        - label: I searched existing issues and discussions for this request.
+          required: true
+        - label: I have not included credentials, private data, or confidential project material.
+          required: true

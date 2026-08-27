@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: Questions and ideas
+  - name: Questions, setup help, and ideas
     url: https://github.com/KevinSGarrett/ProjectPipeline/discussions
-    about: Start a Discussion for support, design feedback, and general questions.
+    about: Use Discussions for support, design feedback, and conversations that are not reproducible defects.
+  - name: Support guide
+    url: https://github.com/KevinSGarrett/ProjectPipeline/blob/main/SUPPORT.md
+    about: Find the right public or private channel for your request.
   - name: Security vulnerability
     url: https://github.com/KevinSGarrett/ProjectPipeline/security/advisories/new
     about: Report potential security issues privately. Do not disclose vulnerabilities in a public issue.

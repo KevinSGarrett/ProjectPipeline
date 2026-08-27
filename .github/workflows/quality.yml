@@ -50,7 +50,9 @@ jobs:
           python scripts/validate_instructions.py --root .
           python scripts/instruction_cold_start.py --root .
       - name: Repository self-validation
-        run: project-pipeline validate --root .
+        run: |
+          project-pipeline validate --root .
+          python scripts/validate_public_repository.py --root .
       - name: Enforce cohesive delivery progress
         if: github.event_name == 'pull_request' && matrix.python-version == '3.11'
         run: >-

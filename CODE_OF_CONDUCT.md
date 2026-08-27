@@ -1,20 +1,38 @@
-# Code of Conduct
+# ProjectPipeline Code of Conduct
 
-## Our pledge
+## Our commitment
 
-We want participation in ProjectPipeline to be welcoming, respectful, and constructive for everyone, regardless of experience, identity, background, or perspective.
+ProjectPipeline is committed to a welcoming, respectful, and constructive community. We welcome people of every background, identity, experience level, and perspective who participate in good faith.
 
 ## Expected behavior
 
 - Be kind, specific, and professional.
-- Assume good intent while discussing technical disagreement.
-- Focus feedback on ideas, code, and outcomes—not people.
-- Respect privacy and do not share another person's private information.
+- Discuss ideas, code, evidence, and outcomes—not personal characteristics.
+- Assume good intent while remaining open to correction.
+- Give and receive technical feedback constructively.
+- Respect privacy, confidentiality, and attribution.
+- Help make project spaces useful to newcomers as well as experienced contributors.
 
 ## Unacceptable behavior
 
-Harassment, discriminatory language, personal attacks, threats, doxxing, and repeated bad-faith disruption are not acceptable.
+The following behavior is not tolerated:
 
-## Enforcement
+- harassment, discrimination, threats, stalking, or intimidation;
+- personal attacks, insults, or sexualized language or attention;
+- publishing another person's private information without permission;
+- deliberately disruptive, deceptive, or bad-faith participation;
+- retaliation against someone who reports a concern.
 
-Report conduct concerns privately through the repository owner's contact path. Reports will be reviewed fairly and confidentially where possible. Maintainers may remove content or restrict participation when needed to protect the community.
+## Scope
+
+This Code of Conduct applies in repository issues, pull requests, discussions, reviews, and other public or private spaces where someone is representing ProjectPipeline.
+
+## Reporting and enforcement
+
+For an immediate GitHub platform-safety concern, use [GitHub's private abuse-reporting process](https://support.github.com/contact/report-abuse). For a private project-community report, use the repository's [private reporting form](https://github.com/KevinSGarrett/ProjectPipeline/security/advisories/new) and begin the title with `[Conduct]`. That route is monitored by repository maintainers and keeps the report out of public issues and discussions.
+
+Reports will be reviewed as promptly and confidentially as practical. Maintainers may edit or remove content, issue a warning, restrict participation, or permanently exclude a participant when necessary to protect the community. Knowingly false or retaliatory reports may also result in corrective action.
+
+## Attribution
+
+This policy is informed by established open-source community standards and is intentionally written for ProjectPipeline's current community and maintainership model.

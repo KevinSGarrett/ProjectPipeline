@@ -48,6 +48,7 @@ from project_pipeline.validation.product_model_audit import (
     validate_independent_product_model_audit,
 )
 from project_pipeline.validation.product_outcome import validate_product_outcome
+from project_pipeline.validation.public_repository import validate_public_repository_surface
 from project_pipeline.validation.registries import (
     check_adr_registry,
     check_evidence_ledger,
@@ -223,6 +224,7 @@ class RepositoryValidator:
             "README.md",
         )
         self._run("public_source_layout", self._check_public_source_layout)
+        self._run("public_repository_surface", self._check_public_repository_surface)
         self._run("json_documents", lambda: check_json_documents(self.root, self.report))
         self._run("runtime_configuration", self._check_runtime_configuration)
         self._run("dependency_lock", self._check_dependency_lock)
@@ -272,6 +274,10 @@ class RepositoryValidator:
                     f"Public source checkout is missing required path: {relative}",
                     relative,
                 )
+
+    def _check_public_repository_surface(self) -> None:
+        for error in validate_public_repository_surface(self.root):
+            self.report.add("ERROR", "PUBLIC003", error, "README.md")
 
     def _check_autonomous_external_preconditions(self) -> None:
         for error in validate_autonomous_external_preconditions(self.root):

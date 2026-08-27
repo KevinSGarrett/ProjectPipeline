@@ -80,12 +80,15 @@ terraform.rc
 !.env.example
 !.env.sample
 !.env.template
+.envrc
 *.local.env
 .secrets/
 *.pem
 *.key
 *.p12
 *.pfx
+/credentials.json
+/secrets.json
 
 # Generated retrieval benchmark outputs (corpus.jsonl is source-controlled)
 /benchmarks/retrieval/latest.json
@@ -107,7 +110,12 @@ terraform.rc
 # These files belong to a developer's local workspace, not a public clone.
 /.codex*
 /.claude/
+/.continue/
 /.cursor/
+/.gemini/
+/.openrouter/
+/.runpod/
+/.windsurf/
 /.agents/
 /.cursorignore
 /AGENTS.md
