@@ -254,7 +254,16 @@ def evaluate_campaign_aware_health(
         campaign_lock_live is not None and campaign_lock_live.get("alive") is not False
     )
 
-    if lock_live and (binding_complete or (pid_identity or {}).get("executable")):
+    lock_identity_observed = bool(
+        campaign_lock_live
+        and str(campaign_lock_live.get("executable") or "").strip()
+        and str(campaign_lock_live.get("started_at_utc") or "").strip()
+    )
+    if (
+        lock_live
+        and lock_identity_observed
+        and (binding_complete or (pid_identity or {}).get("executable"))
+    ):
         bound = {
             "process_id": int(
                 (campaign_lock_live or {}).get("process_id")

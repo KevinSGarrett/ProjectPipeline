@@ -2044,6 +2044,43 @@ def test_campaign_aware_health_treats_stale_lock_and_live_child_as_one_owner():
     assert "sha_mismatch" in mismatched["reasons"]
 
 
+def test_campaign_aware_health_accepts_unavailable_lock_inspection_with_bound_owner():
+    from project_pipeline.autonomy_runtime.campaign import evaluate_campaign_aware_health
+
+    campaign = {
+        "status": "RUNNING",
+        "process_id": 51876,
+        "integrated_sha": "a" * 40,
+        "integrated_tree": "b" * 40,
+        "fence": "CFENCE-1",
+        "last_heartbeat_utc": datetime.now(UTC).isoformat(),
+    }
+    verdict = evaluate_campaign_aware_health(
+        campaign=campaign,
+        owner_binding={
+            "executable_identity": "python.exe",
+            "process_started_at_utc": "2026-01-01T00:00:00+00:00",
+        },
+        pid_identity={
+            "process_id": 51876,
+            "executable": "python.exe",
+            "started_at_utc": "2026-01-01T00:00:00+00:00",
+        },
+        campaign_lock_live={
+            "process_id": 51876,
+            "alive": None,
+            "inspection": "unavailable",
+        },
+        expected_sha="a" * 40,
+        expected_tree="b" * 40,
+        expected_fence="CFENCE-1",
+        heartbeat_max_age_seconds=90.0,
+    )
+    assert verdict["healthy"] is True
+    assert verdict["owner_kind"] == "campaign_lock"
+    assert "pid_reuse" not in verdict["reasons"]
+
+
 def test_missing_live_scheduled_task_is_not_user_action() -> None:
     class _Result:
         stdout = ""
