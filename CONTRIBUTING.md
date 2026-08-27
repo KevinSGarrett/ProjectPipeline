@@ -52,6 +52,7 @@ At minimum, run the affected tests and public-checkout validation:
 ```bash
 PYTHONPATH=src python -m pytest -q
 PYTHONPATH=src python -m project_pipeline validate --root .
+python scripts/validate_public_repository.py --root .
 ```
 
 ## Open a pull request
