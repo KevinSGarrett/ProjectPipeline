@@ -11,8 +11,10 @@ import hashlib
 import json
 import sqlite3
 import subprocess
+import tempfile
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
 
@@ -86,6 +88,25 @@ def _subject(root: Path) -> dict[str, Any]:
         "clean": not bool(identity.get("dirty")),
         "inspect_ok": bool(identity.get("ok")),
     }
+
+
+def _require_external_worker_root(repository_root: Path, path: Path, *, label: str) -> Path:
+    """Reject probe state nested below the immutable candidate checkout."""
+
+    resolved = path.resolve()
+    try:
+        resolved.relative_to(repository_root)
+    except ValueError:
+        return resolved
+    raise ValueError(f"{label} must be outside the immutable candidate checkout")
+
+
+def _default_duration_probe_root() -> Path:
+    """Allocate an external, worker-local root for an ad-hoc duration probe."""
+
+    return (
+        Path(tempfile.gettempdir()) / f"projectpipeline-duration-probes-{uuid4().hex}"
+    ).resolve()
 
 
 def _probe_command_center(root: Path) -> dict[str, Any]:
@@ -439,6 +460,11 @@ def run_duration_probe(
     """Run one bounded observation and return a content-addressed result."""
 
     root = repository_root.resolve()
+    probe_state = _require_external_worker_root(
+        root,
+        state_root or _default_duration_probe_root(),
+        label="state_root",
+    )
     subject = _subject(root)
     identity_ok = (
         subject["inspect_ok"]
@@ -449,7 +475,6 @@ def run_duration_probe(
     candidate_ok, candidate = _candidate_evidence(
         candidate_evidence, expected_sha=expected_sha, expected_tree=expected_tree
     )
-    probe_state = (state_root or root / ".local" / "campaign-duration-probes").resolve()
     observations: dict[str, Any]
     try:
         if probe_id == "candidate_identity":
