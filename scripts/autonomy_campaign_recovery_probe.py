@@ -52,6 +52,7 @@ from project_pipeline.autonomy_runtime.campaign import (  # noqa: E402
     CampaignController,
     evaluate_campaign_aware_health,
 )
+from project_pipeline.autonomy_runtime.qualification import _pid_alive  # noqa: E402
 from project_pipeline.autonomy_runtime.campaign_status import CampaignStatusError  # noqa: E402
 from project_pipeline.autonomy_runtime.process_identity import inspect_process  # noqa: E402
 from project_pipeline.configuration.campaign_environment import (  # noqa: E402
@@ -99,6 +100,8 @@ def _qualification_owner_live(controller: CampaignController) -> dict | None:
     live = inspect_process(owner_pid)
     if live is not None:
         return live
+    if not _pid_alive(owner_pid):
+        return None
     return {"process_id": owner_pid, "alive": None, "inspection": "unavailable"}
 
 
@@ -115,6 +118,8 @@ def _campaign_lock_live(controller: CampaignController) -> dict | None:
     live = inspect_process(owner_pid)
     if live is not None:
         return live
+    if not _pid_alive(owner_pid):
+        return None
     return {"process_id": owner_pid, "alive": None, "inspection": "unavailable"}
 
 
