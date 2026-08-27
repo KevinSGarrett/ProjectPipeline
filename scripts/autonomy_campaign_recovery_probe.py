@@ -95,7 +95,11 @@ def _qualification_owner_live(controller: CampaignController) -> dict | None:
         return None
     if lock is None:
         return None
-    return inspect_process(int(lock["process_id"]))
+    owner_pid = int(lock["process_id"])
+    live = inspect_process(owner_pid)
+    if live is not None:
+        return live
+    return {"process_id": owner_pid, "alive": None, "inspection": "unavailable"}
 
 
 def _campaign_lock_live(controller: CampaignController) -> dict | None:
@@ -107,7 +111,11 @@ def _campaign_lock_live(controller: CampaignController) -> dict | None:
         return None
     if lock is None:
         return None
-    return inspect_process(int(lock["process_id"]))
+    owner_pid = int(lock["process_id"])
+    live = inspect_process(owner_pid)
+    if live is not None:
+        return live
+    return {"process_id": owner_pid, "alive": None, "inspection": "unavailable"}
 
 
 def _healthy(
