@@ -41,6 +41,7 @@ def test_campaign_lock_live_returns_unavailable_sentinel_when_inspection_fails(
 ) -> None:
     probe = _load_probe_module()
     monkeypatch.setattr(probe, "inspect_process", lambda _pid: None)
+    monkeypatch.setattr(probe, "_pid_alive", lambda _pid: True)
 
     observed = probe._campaign_lock_live(_Controller({"process_id": 4321}))
 
@@ -52,7 +53,18 @@ def test_qualification_lock_live_returns_unavailable_sentinel_when_inspection_fa
 ) -> None:
     probe = _load_probe_module()
     monkeypatch.setattr(probe, "inspect_process", lambda _pid: None)
+    monkeypatch.setattr(probe, "_pid_alive", lambda _pid: True)
 
     observed = probe._qualification_owner_live(_Controller({"process_id": 8765}))
 
     assert observed == {"process_id": 8765, "alive": None, "inspection": "unavailable"}
+
+
+def test_campaign_lock_live_returns_none_for_dead_pid(monkeypatch) -> None:
+    probe = _load_probe_module()
+    monkeypatch.setattr(probe, "inspect_process", lambda _pid: None)
+    monkeypatch.setattr(probe, "_pid_alive", lambda _pid: False)
+
+    observed = probe._campaign_lock_live(_Controller({"process_id": 4321}))
+
+    assert observed is None
