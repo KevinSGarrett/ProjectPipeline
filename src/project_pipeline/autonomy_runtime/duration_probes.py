@@ -12,6 +12,7 @@ import json
 import sqlite3
 import subprocess
 import tempfile
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -239,21 +240,32 @@ def _probe_cursor(root: Path, state_root: Path) -> dict[str, Any]:
         disposable_root=workspace,
     )
     reasons = tuple(str(item) for item in (report.get("reasons") or ()))
-    not_applicable = report.get("outcome") == "FAILED" and "out-of-scope mutation" in reasons
+    outcome = report.get("outcome")
     return {
-        "outcome": report.get("outcome"),
+        "outcome": outcome,
         "provider_id": report.get("provider_id"),
         "live_dispatch": report.get("live_dispatch"),
         "replay_verified": report.get("replay_verified"),
         "reasons": list(reasons),
-        "state": "NOT_APPLICABLE_PUBLIC_SOURCE" if not_applicable else None,
-        "reason": (
-            "cursor provider dispatch requires mutation scope that is intentionally unavailable "
-            "in a public campaign-bound checkout."
-            if not_applicable
-            else None
-        ),
+        "state": None,
+        "reason": None if outcome == "PASSED" else "; ".join(reasons) or None,
     }
+
+
+def _cursor_probe_ok(observations: Mapping[str, Any], *, identity_ok: bool) -> bool:
+    """Decide whether a cursor provider-dispatch observation satisfies the probe.
+
+    REQ-PDEF-0011 forbids satisfying qualification by simulation, and the
+    Completion Gate requires a verified qualified_real_worker_provider_dispatch
+    stage. Only an observed live dispatch that the provider itself reports as
+    PASSED can clear this probe; no not-applicable state may substitute for it.
+    """
+
+    if not identity_ok:
+        return False
+    if observations.get("state") == "NOT_APPLICABLE_PUBLIC_SOURCE":
+        return False
+    return observations.get("outcome") == "PASSED" and observations.get("live_dispatch") is not None
 
 
 def verify_remote_candidate(
@@ -521,10 +533,7 @@ def run_duration_probe(
             ok = identity_ok and bool(observations["ok"])
         elif probe_id == "cursor_cli_provider_dispatch":
             observations = _probe_cursor(root, probe_state)
-            if observations.get("state") == "NOT_APPLICABLE_PUBLIC_SOURCE":
-                ok = identity_ok
-            else:
-                ok = identity_ok and observations.get("outcome") == "PASSED"
+            ok = _cursor_probe_ok(observations, identity_ok=identity_ok)
         elif probe_id == "github_live_readback":
             observations = _probe_github(root, candidate, expected_sha)
             ok = identity_ok and bool(observations["ok"])

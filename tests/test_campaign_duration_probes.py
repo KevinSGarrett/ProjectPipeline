@@ -138,7 +138,7 @@ def test_cursor_duration_probe_keeps_workspace_disposable_but_uses_durable_resol
     assert "durable_dir" not in observed
 
 
-def test_cursor_duration_probe_marks_out_of_scope_mutation_not_applicable(
+def test_cursor_duration_probe_reports_out_of_scope_mutation_as_failure(
     monkeypatch, tmp_path: Path
 ) -> None:
     monkeypatch.setattr(
@@ -153,11 +153,12 @@ def test_cursor_duration_probe_marks_out_of_scope_mutation_not_applicable(
         },
     )
     report = _probe_cursor(tmp_path / "candidate", tmp_path / "campaign-state")
-    assert report["state"] == "NOT_APPLICABLE_PUBLIC_SOURCE"
+    assert report["state"] is None
+    assert report["outcome"] == "FAILED"
     assert "out-of-scope mutation" in report["reasons"]
 
 
-def test_cursor_not_applicable_state_is_accepted_when_identity_matches(
+def test_cursor_not_applicable_state_is_rejected_even_when_identity_matches(
     monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     candidate = tmp_path / "candidate"
@@ -179,7 +180,7 @@ def test_cursor_not_applicable_state_is_accepted_when_identity_matches(
         expected_sha="a" * 40,
         expected_tree="b" * 40,
     )
-    assert result["ok"] is True
+    assert result["ok"] is False
     assert result["observations"]["state"] == "NOT_APPLICABLE_PUBLIC_SOURCE"
 
 
