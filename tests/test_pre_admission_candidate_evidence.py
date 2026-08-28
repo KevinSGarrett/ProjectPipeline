@@ -44,6 +44,10 @@ REQUIRED_KINDS = (
 )
 
 
+def _relative(path: Path) -> str:
+    return path.relative_to(REPO_ROOT).as_posix()
+
+
 def _identifier(prefix: str, seed: str) -> str:
     return f"{prefix}-{hashlib.sha256(seed.encode()).hexdigest()[:20].upper()}"
 
@@ -78,7 +82,7 @@ def _integrity_records(
     return tuple(
         ArtifactIntegrityRecord(
             integrity_id=_identifier("INTEGRITY", path.name),
-            artifact_path=str(path),
+            artifact_path=_relative(path),
             sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
             size_bytes=path.stat().st_size,
             signature_state="NOT_REQUIRED",
@@ -102,7 +106,7 @@ def _candidate_evidence(
     real_sbom_sha = _sbom_sha256(build_repository_sbom(REPO_ROOT))
     provenance_id = _identifier("PROV", "candidate-evidence-test")
     records = _integrity_records(artifacts, provenance_id if bind_provenance else None)
-    paths = declared if declared is not None else tuple(str(path) for path in artifacts)
+    paths = declared if declared is not None else tuple(_relative(path) for path in artifacts)
     observed = datetime.now(UTC)
     result_sha256 = hashlib.sha256(b"scan-result").hexdigest()
     scan = ScannerEvidence(
