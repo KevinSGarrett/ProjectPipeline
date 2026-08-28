@@ -787,10 +787,27 @@ def _finish(
             _remove_workspace(workspace)
     elif workspace.exists() and outcome != "PASSED":
         _remove_workspace(workspace)
-    report = {
+    # Consumers gate on the dispatch itself, not just the outcome word, so the
+    # recorded dispatch and replay observations are surfaced as first-class
+    # fields rather than left buried in the phase list.
+    live_dispatch: dict[str, Any] | None = None
+    replay_verified: bool | None = None
+    for entry in phases:
+        observations = entry.get("observations")
+        if not isinstance(observations, dict):
+            continue
+        if entry.get("phase") == QualificationPhase.LIVE_DISPATCH.value:
+            if observations.get("provider_id") == PROVIDER_ID:
+                live_dispatch = observations
+        elif entry.get("phase") == QualificationPhase.REPLAY.value:
+            replay_verified = bool(observations.get("ok"))
+
+    report: dict[str, Any] = {
         "provider_id": PROVIDER_ID,
         "outcome": outcome,
         "phases": phases,
+        "live_dispatch": live_dispatch,
+        "replay_verified": replay_verified,
         "reasons": list(reasons),
         "generated_at_utc": _utc_now(),
         "expected_public_attestation_sha256": EXPECTED_PUBLIC_ATTESTATION_SHA256,
