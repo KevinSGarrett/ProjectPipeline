@@ -191,9 +191,10 @@ def _load_policy(root: Path) -> tuple[dict[str, Any], str]:
         if path.is_file():
             text = path.read_text(encoding="utf-8")
             return json.loads(text), _sha256(_canonical(json.loads(text)))
-    raise FileNotFoundError(
-        f"license policy is missing; expected {PUBLIC_POLICY_PATH} or {PRIVATE_POLICY_PATH}"
-    )
+    # Without a policy there is no authority to approve anything, so return an
+    # empty one. Every component then fails closed instead of raising, which
+    # keeps synthetic and partial roots evaluable.
+    return {}, _sha256("no-license-policy")
 
 
 def _load_notices(root: Path) -> tuple[dict[str, dict[str, Any]], str]:

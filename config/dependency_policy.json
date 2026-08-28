@@ -125,14 +125,15 @@
     }
   ],
   "resolver_lock": {
-    "activation_command": "uv lock && uv export --locked --no-dev --no-emit-project --output-file requirements/runtime.txt",
+    "activation_command": "uv lock && uv export --locked --no-dev --no-emit-project --output-file requirements/uv-runtime.txt",
     "manager": "uv",
     "manager_version_attempted": "0.12.7",
     "path": "uv.lock",
     "state": "READY",
     "verification": {
       "clean_install_exit_code": 0,
-      "export_path": "requirements/runtime.txt",
+      "export_note": "The uv-resolved export is kept separate from requirements/runtime.txt, which records the observed environment closure validated by the dependency gate.",
+      "export_path": "requirements/uv-runtime.txt",
       "export_sha256": "de74b1715da0ba40c131d48c2a20ce6a299a66c7011e2b7887081b8555facf36",
       "lock_sha256": "9784f5ae248fa16fedfb7f17544ad9a503d6a5b7552c4484fb85e59dfadc71b0",
       "resolved_package_count": 186,

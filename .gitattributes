@@ -13,3 +13,4 @@ dummy/ export-ignore
 uv.lock -text
 requirements/runtime.txt -text
 third_party/NOTICES.generated.json -text
+requirements/uv-runtime.txt -text
