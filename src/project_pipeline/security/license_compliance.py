@@ -183,7 +183,10 @@ class LicenseComplianceAuthority:
 
 
 def _load_policy(root: Path) -> tuple[dict[str, Any], str]:
-    for relative in (PRIVATE_POLICY_PATH, PUBLIC_POLICY_PATH):
+    # The tracked public policy is canonical: it is reviewed, tested, and
+    # identical for public and provisioned checkouts. A private copy may exist
+    # for historical reasons but must not silently diverge from it.
+    for relative in (PUBLIC_POLICY_PATH, PRIVATE_POLICY_PATH):
         path = root / relative
         if path.is_file():
             text = path.read_text(encoding="utf-8")

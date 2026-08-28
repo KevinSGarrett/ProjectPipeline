@@ -76,7 +76,7 @@ def evaluate_pre_admission_release_gate(root: Path) -> PreAdmissionVerdict:
     try:
         gate, _ = evaluate_supply_chain(root, release_mode=True)
         supply_chain_state = gate.state.value
-    except Exception as error:  # noqa: BLE001 - surfaced as an explicit ERROR verdict
+    except Exception as error:
         return PreAdmissionVerdict(
             state=PreAdmissionState.ERROR,
             blockers=(f"supply-chain evaluation failed: {error}",),

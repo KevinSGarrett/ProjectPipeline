@@ -10,8 +10,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import pytest
-
 from project_pipeline.domain.security import SBOMComponentCompliance
 from project_pipeline.release_hardening.hardening import build_hardening_report
 from project_pipeline.release_hardening.pre_admission import (
@@ -215,10 +213,6 @@ def test_public_checkout_validates_without_private_control_plane() -> None:
     assert authority.automatic_approval_spdx
 
 
-@pytest.mark.skipif(
-    not (REPO_ROOT / "provenance/license_policy.json").is_file(),
-    reason="requires a provisioned private control plane",
-)
-def test_provisioned_control_plane_still_validates() -> None:
-    sbom = build_repository_sbom(REPO_ROOT)
-    assert sbom.components
+def test_public_checkout_has_no_unresolved_license_findings() -> None:
+    gate, _ = evaluate_supply_chain(REPO_ROOT, release_mode=True)
+    assert [f.message for f in gate.findings if f.kind.value == "LICENSE"] == []

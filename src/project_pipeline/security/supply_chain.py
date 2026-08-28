@@ -26,7 +26,6 @@ from project_pipeline.domain.security import (
 )
 from project_pipeline.manifest import build_manifest
 from project_pipeline.security.license_compliance import (
-    LicenseComplianceAuthority,
     license_compliance_authority,
     notice_key,
 )
@@ -566,20 +565,48 @@ def release_distribution_scope(root: Path) -> frozenset[str]:
     in scope because adopted implementations ship inside the product.
     """
 
-    lock_path = root / "requirements/environment.lock.json"
-    if not lock_path.is_file():
-        return frozenset()
-    lock = json.loads(lock_path.read_text(encoding="utf-8"))
     keys = set()
-    for package in lock.get("packages", []):
-        if "runtime" in (package.get("closure_groups") or []):
-            keys.add(notice_key("python-package", package["name"], package["version"]))
+    lock_path = root / "requirements/environment.lock.json"
+    if lock_path.is_file():
+        lock = json.loads(lock_path.read_text(encoding="utf-8"))
+        for package in lock.get("packages", []):
+            if "runtime" in (package.get("closure_groups") or []):
+                keys.add(notice_key("python-package", package["name"], package["version"]))
+
+    # An upstream integration is only distributed when the release actually
+    # carries upstream material: copied source paths, or an incorporated asset.
+    # Adapter implementations and independently implemented patterns
+    # redistribute nothing, so distribution obligations do not attach.
+    registry_path = root / "provenance/upstream_registry.json"
+    usage_path = root / "provenance/upstream_usage.jsonl"
+    if registry_path.is_file() and usage_path.is_file():
+        registry = {
+            item["upstream_id"]: item
+            for item in json.loads(registry_path.read_text(encoding="utf-8")).get("entries", [])
+        }
+        for line in usage_path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            carries_source = bool(record.get("copied_source_paths")) or (
+                record.get("usage_state") == "INCORPORATED_ASSET"
+            )
+            if not carries_source:
+                continue
+            item = registry.get(record["upstream_id"])
+            if item is None:
+                continue
+            keys.add(
+                notice_key(
+                    "upstream-integration",
+                    f"{item['owner']}/{item['repository']}",
+                    item.get("inspected_revision", "unknown"),
+                )
+            )
     return frozenset(keys)
 
 
 def _is_distributed(component: SBOMComponent, distributed: frozenset[str]) -> bool:
-    if component.component_type != "python-package":
-        return True
     return (
         notice_key(component.component_type, component.name, component.version) in distributed
     )
@@ -589,7 +616,7 @@ def _evaluate_license_policy(
     root: Path, components: tuple[SBOMComponent, ...]
 ) -> tuple[SupplyChainFinding, ...]:
     authority = license_compliance_authority(root)
-    auto_approved = set(authority.automatic_approval_spdx)
+
     prohibited = set(authority.prohibited_spdx)
     review_required = set(authority.review_required_spdx)
     rules = authority.rules
