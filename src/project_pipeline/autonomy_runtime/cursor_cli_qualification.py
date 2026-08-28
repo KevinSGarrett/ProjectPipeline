@@ -509,7 +509,11 @@ def qualify_cursor_cli_provider(
         discovery["public_qualification_found"] = public_qualification.is_file()
     elif not discovery["public_attestation_found"] or not discovery["public_qualification_found"]:
         try:
-            evidence_root = workspace / "public-evidence"
+            # Bootstrap evidence is harness-owned, so it must live beside the
+            # provider workspace rather than inside it. The workspace is audited
+            # for files the provider created, and anything the harness writes
+            # there is indistinguishable from an out-of-scope provider mutation.
+            evidence_root = (disposable_root / "public-evidence").resolve()
             public_attestation = evidence_root / PUBLIC_ATTESTATION_REF
             public_qualification = evidence_root / PUBLIC_QUALIFICATION_REF
             discovery["bootstrap_materialized_builtin_public_evidence"] = (
