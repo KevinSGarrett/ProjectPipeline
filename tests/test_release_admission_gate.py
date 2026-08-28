@@ -189,7 +189,11 @@ def test_publication_requires_independent_completion_gate() -> None:
 
     verdict = evaluate_final_publication_gate(
         REPO_ROOT,
-        duration_evidence={"UNATTENDED_4_HOUR": True, "UNATTENDED_24_HOUR": True, "UNATTENDED_72_HOUR": True},
+        duration_evidence={
+            "UNATTENDED_4_HOUR": True,
+            "UNATTENDED_24_HOUR": True,
+            "UNATTENDED_72_HOUR": True,
+        },
         completion_gate_complete=False,
         published_bytes_verified=True,
     )

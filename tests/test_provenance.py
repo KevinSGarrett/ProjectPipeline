@@ -39,9 +39,7 @@ def test_generated_notices_are_in_sync_with_the_lock() -> None:
 
 def test_notice_document_is_deterministic() -> None:
     document = json.loads(NOTICES.read_text(encoding="utf-8"))
-    rebuilt = build_notice_document(
-        entries=list(document["entries"]), scope=document["scope"]
-    )
+    rebuilt = build_notice_document(entries=list(document["entries"]), scope=document["scope"])
     assert rebuilt["entries_sha256"] == document["entries_sha256"]
     shuffled = list(reversed(document["entries"]))
     assert (
@@ -67,7 +65,9 @@ def test_every_compliance_provenance_reference_resolves() -> None:
 
 def test_unreferenced_notice_lookup_returns_none() -> None:
     authority = license_compliance_authority(REPO_ROOT)
-    assert authority.resolve_notice("third_party/NOTICES.generated.json#python-package:nope@0") is None
+    assert (
+        authority.resolve_notice("third_party/NOTICES.generated.json#python-package:nope@0") is None
+    )
 
 
 def test_modification_obligations_track_license_family() -> None:

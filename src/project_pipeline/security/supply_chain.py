@@ -607,9 +607,7 @@ def release_distribution_scope(root: Path) -> frozenset[str]:
 
 
 def _is_distributed(component: SBOMComponent, distributed: frozenset[str]) -> bool:
-    return (
-        notice_key(component.component_type, component.name, component.version) in distributed
-    )
+    return notice_key(component.component_type, component.name, component.version) in distributed
 
 
 def _evaluate_license_policy(

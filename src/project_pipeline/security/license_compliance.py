@@ -222,20 +222,18 @@ def license_compliance_authority(root: Path) -> LicenseComplianceAuthority:
         review_required_spdx=frozenset(
             str(item).strip() for item in policy.get("review_required_spdx", [])
         ),
-        prohibited_spdx=frozenset(
-            str(item).strip() for item in policy.get("prohibited_spdx", [])
-        ),
+        prohibited_spdx=frozenset(str(item).strip() for item in policy.get("prohibited_spdx", [])),
         rules=tuple(str(item).strip() for item in policy.get("rules", [])),
         notices=notices,
     )
 
 
-def build_notice_document(
-    *, entries: list[dict[str, Any]], scope: str
-) -> dict[str, Any]:
+def build_notice_document(*, entries: list[dict[str, Any]], scope: str) -> dict[str, Any]:
     """Build the deterministic notice document written to disk."""
 
-    ordered = sorted(entries, key=lambda item: (item["component_type"], item["name"], item["version"]))
+    ordered = sorted(
+        entries, key=lambda item: (item["component_type"], item["name"], item["version"])
+    )
     return {
         "schema_version": "1.0.0",
         "scope": scope,

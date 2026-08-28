@@ -20,9 +20,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 def test_no_license_findings_remain_in_release_mode() -> None:
     gate, _ = evaluate_supply_chain(REPO_ROOT, release_mode=True)
-    license_findings = [
-        finding for finding in gate.findings if finding.kind.value == "LICENSE"
-    ]
+    license_findings = [finding for finding in gate.findings if finding.kind.value == "LICENSE"]
     assert license_findings == []
 
 
@@ -34,7 +32,10 @@ def test_every_distributed_component_has_verifiable_compliance() -> None:
     for component in sbom.components:
         if component.component_type != "python-package":
             continue
-        if notice_key(component.component_type, component.name, component.version) not in distributed:
+        if (
+            notice_key(component.component_type, component.name, component.version)
+            not in distributed
+        ):
             continue
         checked += 1
         assert component.compliance is not None, component.name
