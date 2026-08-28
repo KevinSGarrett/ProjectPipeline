@@ -28,6 +28,7 @@ from project_pipeline.manifest import build_manifest
 from project_pipeline.security.license_compliance import (
     LicenseComplianceAuthority,
     license_compliance_authority,
+    notice_key,
 )
 
 _SHA_ACTION = re.compile(r"^[0-9a-f]{40}$")
@@ -556,6 +557,34 @@ def _sbom_sha256(sbom: SoftwareBillOfMaterials) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def release_distribution_scope(root: Path) -> frozenset[str]:
+    """Return notice keys for components the release actually distributes.
+
+    The environment lock observes every active dependency group, including
+    test-only closure members. Only the runtime closure is shipped, so license
+    distribution obligations are scoped to it. Upstream integrations are always
+    in scope because adopted implementations ship inside the product.
+    """
+
+    lock_path = root / "requirements/environment.lock.json"
+    if not lock_path.is_file():
+        return frozenset()
+    lock = json.loads(lock_path.read_text(encoding="utf-8"))
+    keys = set()
+    for package in lock.get("packages", []):
+        if "runtime" in (package.get("closure_groups") or []):
+            keys.add(notice_key("python-package", package["name"], package["version"]))
+    return frozenset(keys)
+
+
+def _is_distributed(component: SBOMComponent, distributed: frozenset[str]) -> bool:
+    if component.component_type != "python-package":
+        return True
+    return (
+        notice_key(component.component_type, component.name, component.version) in distributed
+    )
+
+
 def _evaluate_license_policy(
     root: Path, components: tuple[SBOMComponent, ...]
 ) -> tuple[SupplyChainFinding, ...]:
@@ -564,9 +593,15 @@ def _evaluate_license_policy(
     prohibited = set(authority.prohibited_spdx)
     review_required = set(authority.review_required_spdx)
     rules = authority.rules
+    distributed = release_distribution_scope(root)
     findings: list[SupplyChainFinding] = []
     for component in components:
         license_expression = (component.license or "").strip()
+        # Prohibited licenses are rejected everywhere. Every other obligation
+        # applies only to what the release actually distributes; development
+        # and test-only closure members are not shipped.
+        if license_expression not in prohibited and not _is_distributed(component, distributed):
+            continue
         if not license_expression:
             findings.append(
                 _release_requirement_finding(

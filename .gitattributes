@@ -8,3 +8,8 @@
 *.gif binary
 *.zip binary
 dummy/ export-ignore
+
+# Content-addressed release artifacts must keep byte-exact contents.
+uv.lock -text
+requirements/runtime.txt -text
+third_party/NOTICES.generated.json -text

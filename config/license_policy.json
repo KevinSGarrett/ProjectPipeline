@@ -1,14 +1,17 @@
 {
+  "automatic_approval_evidence": "config/license_policy_evidence.json",
   "automatic_approval_spdx": [
     "Apache-2.0",
     "BSD-2-Clause",
     "BSD-3-Clause",
     "MIT",
     "MIT OR Apache-2.0",
+    "PSF-2.0",
     "PostgreSQL"
   ],
   "default_dependency_activation": "DENIED_PENDING_REVIEW",
   "default_source_copy": "DENIED_UNLESS_APPROVED_BOUNDED",
+  "distribution_scope": "Release license obligations apply to the runtime closure of requirements/environment.lock.json; prohibited licenses are rejected in every group.",
   "prohibited_spdx": [
     "AGPL-3.0-only",
     "AGPL-3.0-or-later",
