@@ -26,8 +26,10 @@ from project_pipeline.domain.security import (
     SupplyChainFindingKind,
 )
 from project_pipeline.release_hardening.pre_admission import (
+    REQUIRED_DURATION_STAGES,
     CandidateReleaseEvidence,
     PreAdmissionState,
+    evaluate_final_publication_gate,
     evaluate_pre_admission_release_gate,
 )
 from project_pipeline.security.supply_chain import (
@@ -217,6 +219,43 @@ def test_artifact_bytes_must_match_the_integrity_record(artifacts: tuple[Path, .
     verdict = evaluate_pre_admission_release_gate(REPO_ROOT, evidence)
     assert verdict.state is not PreAdmissionState.PASS
     assert verdict.blockers
+
+
+def test_publication_gate_accepts_candidate_evidence(artifacts: tuple[Path, ...]) -> None:
+    """Publication must be able to receive the same candidate evidence.
+
+    Otherwise it stays supply-chain blocked forever, which is safe but wrong.
+    """
+
+    evidence = _candidate_evidence(artifacts)
+    stages = dict.fromkeys(REQUIRED_DURATION_STAGES, True)
+
+    blocked = evaluate_final_publication_gate(
+        REPO_ROOT,
+        duration_evidence=stages,
+        completion_gate_complete=True,
+        published_bytes_verified=True,
+    )
+    assert blocked.eligible is False, "no candidate evidence must stay blocked"
+
+    eligible = evaluate_final_publication_gate(
+        REPO_ROOT,
+        duration_evidence=stages,
+        completion_gate_complete=True,
+        published_bytes_verified=True,
+        candidate=evidence,
+    )
+    assert eligible.eligible is True, eligible.blockers
+
+    # The Completion Gate remains decisive even with complete candidate evidence.
+    without_gate = evaluate_final_publication_gate(
+        REPO_ROOT,
+        duration_evidence=stages,
+        completion_gate_complete=False,
+        published_bytes_verified=True,
+        candidate=evidence,
+    )
+    assert without_gate.eligible is False
 
 
 def test_missing_artifact_file_is_surfaced(artifacts: tuple[Path, ...]) -> None:

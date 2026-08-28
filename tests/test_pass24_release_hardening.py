@@ -73,6 +73,37 @@ def test_stale_blocked_external_cannot_survive_successful_verification() -> None
         assert verification.get("supersedes_state") == "BLOCKED_EXTERNAL"
 
 
+def test_resolver_ready_is_rejected_when_the_lock_no_longer_matches(tmp_path: Path) -> None:
+    """A READY state must not outlive the lock it was verified against."""
+
+    import shutil
+
+    from project_pipeline.release_hardening.pre_admission import _resolver_lock_state
+
+    policy = json.loads((REPO_ROOT / "config/dependency_policy.json").read_text(encoding="utf-8"))
+    resolver = policy["resolver_lock"]
+    if resolver["state"] != "READY":
+        return
+
+    state, verified = _resolver_lock_state(REPO_ROOT)
+    assert (state, verified) == ("READY", True)
+
+    (tmp_path / "config").mkdir()
+    (tmp_path / "requirements").mkdir()
+    shutil.copy2(
+        REPO_ROOT / "config/dependency_policy.json", tmp_path / "config/dependency_policy.json"
+    )
+    shutil.copy2(
+        REPO_ROOT / resolver["verification"]["export_path"],
+        tmp_path / resolver["verification"]["export_path"],
+    )
+    (tmp_path / resolver["path"]).write_bytes(b"a-different-lock")
+
+    drifted_state, drifted_verified = _resolver_lock_state(tmp_path)
+    assert drifted_state == "READY"
+    assert drifted_verified is False
+
+
 def test_recorded_lock_hashes_match_the_committed_artifacts() -> None:
     import hashlib
 

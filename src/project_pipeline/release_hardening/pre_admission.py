@@ -9,6 +9,8 @@ that still defers to the deterministic Completion Gate.
 
 from __future__ import annotations
 
+import hashlib
+import json
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
@@ -60,19 +62,31 @@ class PublicationVerdict:
 
 
 def _resolver_lock_state(root: Path) -> tuple[str, bool]:
-    import json
 
     policy = json.loads((root / "config/dependency_policy.json").read_text(encoding="utf-8"))
     resolver = policy.get("resolver_lock", {})
     state = str(resolver.get("state", "UNKNOWN"))
     verification = resolver.get("verification") or {}
-    verified = bool(
-        state == "READY"
-        and verification.get("lock_sha256")
+    if state != "READY" or not (
+        verification.get("lock_sha256")
         and verification.get("uv_version")
         and verification.get("verification_command")
-    )
-    return state, verified
+    ):
+        return state, False
+    # Recorded hashes must still describe the committed artifacts, so a READY
+    # state cannot outlive the lock it was verified against.
+    for relative, expected in (
+        (resolver.get("path"), verification.get("lock_sha256")),
+        (verification.get("export_path"), verification.get("export_sha256")),
+    ):
+        if not relative or not expected:
+            continue
+        artifact = root / str(relative)
+        if not artifact.is_file():
+            return state, False
+        if hashlib.sha256(artifact.read_bytes()).hexdigest() != expected:
+            return state, False
+    return state, True
 
 
 @dataclass(frozen=True)
@@ -142,6 +156,7 @@ def evaluate_final_publication_gate(
     duration_evidence: dict[str, bool],
     completion_gate_complete: bool,
     published_bytes_verified: bool,
+    candidate: CandidateReleaseEvidence | None = None,
 ) -> PublicationVerdict:
     """Fail-closed publication gate; never satisfied by pre-admission alone."""
 
@@ -150,7 +165,7 @@ def evaluate_final_publication_gate(
         if not duration_evidence.get(stage, False):
             blockers.append(f"{stage} duration evidence is missing or invalid")
 
-    pre_admission = evaluate_pre_admission_release_gate(root)
+    pre_admission = evaluate_pre_admission_release_gate(root, candidate)
     if pre_admission.state is not PreAdmissionState.PASS:
         blockers.extend(pre_admission.blockers)
 
