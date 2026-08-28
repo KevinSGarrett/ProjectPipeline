@@ -186,3 +186,4 @@ $RECYCLE.BIN/
 *.bak
 *.orig
 *.rej
+.pytest-candidate-artifacts/

@@ -9,10 +9,16 @@ that still defers to the deterministic Completion Gate.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
 
+from project_pipeline.domain.security import (
+    ArtifactIntegrityRecord,
+    ReleaseProvenance,
+    ScannerEvidence,
+)
 from project_pipeline.security.supply_chain import evaluate_supply_chain
 
 REQUIRED_DURATION_STAGES = (
@@ -69,12 +75,42 @@ def _resolver_lock_state(root: Path) -> tuple[str, bool]:
     return state, verified
 
 
-def evaluate_pre_admission_release_gate(root: Path) -> PreAdmissionVerdict:
+@dataclass(frozen=True)
+class CandidateReleaseEvidence:
+    """Candidate-bound evidence produced once the release artifacts exist.
+
+    Scan evidence, provenance, and artifact integrity records can only be
+    generated against built artifacts, so they are supplied here rather than
+    discovered from the source tree. Passing nothing keeps the gate failing
+    closed, which is the correct verdict before a candidate is built.
+    """
+
+    scanner_evidence: tuple[ScannerEvidence, ...] = ()
+    integrity_records: tuple[ArtifactIntegrityRecord, ...] = ()
+    provenance: ReleaseProvenance | None = None
+    release_artifact_paths: tuple[str, ...] = ()
+    signing_profile_enabled: bool = False
+    scanner_target_coverage: Mapping[str, tuple[str, ...]] | None = None
+
+
+def evaluate_pre_admission_release_gate(
+    root: Path, candidate: CandidateReleaseEvidence | None = None
+) -> PreAdmissionVerdict:
     """Evaluate only the prerequisites satisfiable before the duration ladder."""
 
+    evidence = candidate or CandidateReleaseEvidence()
     blockers: list[str] = []
     try:
-        gate, _ = evaluate_supply_chain(root, release_mode=True)
+        gate, _ = evaluate_supply_chain(
+            root,
+            release_mode=True,
+            scanner_evidence=evidence.scanner_evidence,
+            integrity_records=evidence.integrity_records,
+            provenance=evidence.provenance,
+            release_artifact_paths=evidence.release_artifact_paths,
+            signing_profile_enabled=evidence.signing_profile_enabled,
+            scanner_target_coverage=evidence.scanner_target_coverage,
+        )
         supply_chain_state = gate.state.value
     except Exception as error:
         return PreAdmissionVerdict(
@@ -82,7 +118,11 @@ def evaluate_pre_admission_release_gate(root: Path) -> PreAdmissionVerdict:
             blockers=(f"supply-chain evaluation failed: {error}",),
         )
     if supply_chain_state != "PASS":
-        blockers.append("release supply-chain evidence is incomplete")
+        blockers.extend(
+            f"release supply-chain: {finding.message}"
+            for finding in gate.findings
+            if finding.blocking
+        )
 
     resolver_state, resolver_verified = _resolver_lock_state(root)
     if not resolver_verified:
