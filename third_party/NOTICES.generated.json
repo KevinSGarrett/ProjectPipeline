@@ -1,0 +1,271 @@
+{
+  "entries": [
+    {
+      "component_type": "python-package",
+      "digest": "8c24d70c5d9153d22123353a906042fd7603df2d15c2196290b0f8a962558c46",
+      "license": "MIT",
+      "name": "annotated-doc",
+      "source": "requirements/environment.lock.json",
+      "version": "0.0.5"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "614985b278f601b8ef863f82783b991cc3ada4b89f592eb71c7c48c5f2ef2298",
+      "license": "MIT",
+      "name": "annotated-types",
+      "source": "requirements/environment.lock.json",
+      "version": "0.8.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "c5e6fc4dfd833319913b287be7a30d9935e9208c7ef917630621855aaac4d419",
+      "license": "MIT",
+      "name": "anyio",
+      "source": "requirements/environment.lock.json",
+      "version": "4.14.2"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "4cd40e690f23bf37cbcad34efd6758e062df1df07c86833f7e3ce95bf1fa38cc",
+      "license": "MIT",
+      "name": "attrs",
+      "source": "requirements/environment.lock.json",
+      "version": "26.1.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "ef5af1638fbb23676ac3c5777dfcfc2cd9c348fe4172ed5ba3d277655b248090",
+      "license": "MPL-2.0",
+      "name": "certifi",
+      "source": "requirements/environment.lock.json",
+      "version": "2026.7.22"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "194c9dd81d567f9081f026c7e401060fbafa7bc147c8e0a58b3668b40a64c031",
+      "license": "BSD-3-Clause",
+      "name": "click",
+      "source": "requirements/environment.lock.json",
+      "version": "8.4.2"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "7baed29eb50c3b29bdb33ff84e3177bf1bc05784f7685ecdcaa4471c7dd810cc",
+      "license": "BSD License",
+      "name": "colorama",
+      "source": "requirements/environment.lock.json",
+      "version": "0.4.6"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "24b6db6cd8f171393bccfe0a116f6b18f36a6ed89302e11ee34ae4f9961b18cd",
+      "license": "Apache-2.0",
+      "name": "coverage",
+      "source": "requirements/environment.lock.json",
+      "version": "7.15.4"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "1010c29547b4026bdb3cd1c406e0570b9d79bb448b5a61fa4d5bb5a5eb0b752c",
+      "license": "MIT",
+      "name": "fastapi",
+      "source": "requirements/environment.lock.json",
+      "version": "0.141.1"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "28f326098ac09fcba79b8f180f96087c841fe2456215cb7b872a9c7d5cd19d64",
+      "license": "MIT",
+      "name": "h11",
+      "source": "requirements/environment.lock.json",
+      "version": "0.16.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "fe2d4fda6199128978779e0cf27f3c045c531863fcdd987eacc74f3a18d41c21",
+      "license": "BSD-3-Clause",
+      "name": "httpcore",
+      "source": "requirements/environment.lock.json",
+      "version": "1.0.9"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "febb9b0f8f3e80d57c8199c304f35c4336e8581d1d18d7983c92766b82793b25",
+      "license": "BSD-3-Clause",
+      "name": "httpx",
+      "source": "requirements/environment.lock.json",
+      "version": "0.28.1"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "46dfe6e5ac462d0f680ecd9abcf66e829b6a2334824b4d9e3979b31135caf281",
+      "license": "BSD-3-Clause",
+      "name": "idna",
+      "source": "requirements/environment.lock.json",
+      "version": "3.18"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "40d773f84e4e112f495bbf4f1be9cbd2d456c0aeb6ef5311f75d1bf322f2165b",
+      "license": "MIT",
+      "name": "iniconfig",
+      "source": "requirements/environment.lock.json",
+      "version": "2.3.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "05b189866ca98a96da3934bf6b83687ced3ff85325273b77e16b705f6d8b26d2",
+      "license": "MIT",
+      "name": "jsonschema",
+      "source": "requirements/environment.lock.json",
+      "version": "4.26.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "35abd41757f32b4ea24756920ded47b70173d77cbc052a5a6d3ab583b2e8d89d",
+      "license": "MIT",
+      "name": "jsonschema-specifications",
+      "source": "requirements/environment.lock.json",
+      "version": "2025.9.1"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "aca5d94a97d1f70f301d033addb635f6e66be8973a00aba4127637eed2ef316a",
+      "license": "BSD-3-Clause",
+      "name": "networkx",
+      "source": "requirements/environment.lock.json",
+      "version": "3.6.1"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "42aabbbacd266627b5c3839a515150ca90c18f80c9d85ca6f6fa10d440a7eeaa",
+      "license": "Apache-2.0",
+      "name": "opentelemetry-api",
+      "source": "requirements/environment.lock.json",
+      "version": "1.44.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "12cf968ea4d637e6adaa8a9b767f34c70a527e092fc7c7f0eb3e93d06148e7e0",
+      "license": "Apache-2.0",
+      "name": "opentelemetry-sdk",
+      "source": "requirements/environment.lock.json",
+      "version": "1.44.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "93f167ca7673cbc0ed24ba8e052fb8c3936b260dff53b7106c574f515ec1deab",
+      "license": "Apache-2.0",
+      "name": "opentelemetry-semantic-conventions",
+      "source": "requirements/environment.lock.json",
+      "version": "0.65b0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "70fdb89fc4d4a9a043bf7372b8972bcc883fddff34ab55e9cf80d73875384763",
+      "license": "Apache-2.0 OR BSD-2-Clause",
+      "name": "packaging",
+      "source": "requirements/environment.lock.json",
+      "version": "26.3"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "7438c35ee25a095eb7416f84b461c2d74425c5e734ad54c3912453c65244e01c",
+      "license": "MIT",
+      "name": "pluggy",
+      "source": "requirements/environment.lock.json",
+      "version": "1.6.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "d1e56c3412492512fb6b59a9dfc25ab7af2a8204585cd7bca000513023133394",
+      "license": "MIT",
+      "name": "pydantic",
+      "source": "requirements/environment.lock.json",
+      "version": "2.13.4"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "e2d0298dfb8712190ad250722e11a46a4391e71d687d5c7667c09e935cadc63b",
+      "license": "MIT",
+      "name": "pydantic-core",
+      "source": "requirements/environment.lock.json",
+      "version": "2.46.4"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "e0528f51b30427fae94723662ba622f8d8db2a4d8d3f1365698d67a52450a845",
+      "license": "BSD-2-Clause",
+      "name": "pygments",
+      "source": "requirements/environment.lock.json",
+      "version": "2.20.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "c5d032518012789cabc870d46589aca3aeda36cf9fa4399ee88bda3d10438451",
+      "license": "MIT",
+      "name": "pytest",
+      "source": "requirements/environment.lock.json",
+      "version": "9.1.1"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "d670e42439ea5a87c46d5659cfcbf64e29aaf7da3aca69dc03eecdafe7e4894c",
+      "license": "MIT",
+      "name": "pytest-cov",
+      "source": "requirements/environment.lock.json",
+      "version": "7.1.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "c93b00e6ab1524fd60848376604c189a114374776475c25a31d57be47b29de6a",
+      "license": "MIT",
+      "name": "referencing",
+      "source": "requirements/environment.lock.json",
+      "version": "0.37.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "e9deba3569d39352c663fd09d01d53a649c8ab2c28de1c37e80b3e2beaf84926",
+      "license": "MIT",
+      "name": "rpds-py",
+      "source": "requirements/environment.lock.json",
+      "version": "2026.6.3"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "43f6240f976044f4cf9a573506d96d895391094717c55682700c931d5cd3c5a2",
+      "license": "BSD-3-Clause",
+      "name": "starlette",
+      "source": "requirements/environment.lock.json",
+      "version": "1.6.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "b05084ca1d50879865178d9fff9fabeab61bdfb1f361bfbde95421ffc8f9be46",
+      "license": "PSF-2.0",
+      "name": "typing-extensions",
+      "source": "requirements/environment.lock.json",
+      "version": "4.16.0"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "bad3d9e6342ef6750cf5128ec942327b8bebdce0b6e4d6f67cb15b27ae5118da",
+      "license": "MIT",
+      "name": "typing-inspection",
+      "source": "requirements/environment.lock.json",
+      "version": "0.4.4"
+    },
+    {
+      "component_type": "python-package",
+      "digest": "1df2c18ce1cd176adcada42e9960997703575101738207182f28ff14c36536b9",
+      "license": "BSD-3-Clause",
+      "name": "uvicorn",
+      "source": "requirements/environment.lock.json",
+      "version": "0.52.3"
+    }
+  ],
+  "entries_sha256": "816238ade847da26f43a4e2600f10b3ec753c127d014b9ba9711618606897f4c",
+  "schema_version": "1.0.0",
+  "scope": "python-runtime-closure"
+}
