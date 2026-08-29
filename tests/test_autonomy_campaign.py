@@ -1034,14 +1034,31 @@ def test_external_dependency_duration_probes_retry_before_breaking_the_window(tm
     finally:
         controller.close()
     budgets = {str(item["probe_id"]): int(item["retry_budget"]) for item in plan}
-    for probe_id in (
+    external = {
         "cursor_cli_provider_dispatch",
         "github_live_readback",
         "jira_live_readback",
-    ):
+    }
+    for probe_id in external:
         assert budgets[probe_id] >= 1, probe_id
-    for probe_id in ("candidate_identity", "runtime_doctor", "repository_validate"):
-        assert budgets[probe_id] == 0, probe_id
+    for probe_id, budget in budgets.items():
+        if probe_id not in external:
+            assert budget == 0, probe_id
+
+
+def test_completion_proof_grace_absorbs_the_granted_probe_retry_allowance():
+    """Tolerating a transient in one probe must not report a healthy probe stale.
+
+    Probes run serially, so the staleness window has to account for the retry
+    wall time the plan itself grants.
+    """
+
+    plan = [
+        {"probe_id": "local", "retry_budget": 0, "timeout_seconds": 60.0},
+        {"probe_id": "remote", "retry_budget": 2, "timeout_seconds": 45.0},
+    ]
+    assert CampaignController._probe_retry_allowance(plan) == pytest.approx(90.0)
+    assert CampaignController._probe_retry_allowance([plan[0]]) == 0.0
 
 
 def test_duration_probe_surface_rejects_doctor_control_jira_only(tmp_path: Path):

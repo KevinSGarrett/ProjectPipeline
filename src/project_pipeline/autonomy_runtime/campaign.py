@@ -1777,6 +1777,7 @@ class CampaignController:
                 raise ValueError("duration probe timeout exceeds heartbeat window")
             attempt = 0
             receipt: dict[str, Any] | None = None
+            superseded_receipt_ids: list[str] = []
             while attempt <= retries:
                 self._mark_duration_probe_running(campaign_id, row, probe_id, attempt)
                 receipt = self.execute(
@@ -1794,6 +1795,7 @@ class CampaignController:
                 )
                 if receipt.get("result") == "PASSED":
                     break
+                superseded_receipt_ids.append(str(receipt["receipt_id"]))
                 attempt += 1
             if receipt is None:
                 continue
@@ -1806,6 +1808,8 @@ class CampaignController:
                     "receipt_id": receipt.get("receipt_id"),
                     "result_semantics": receipt.get("result_semantics"),
                     "semantic_state": receipt.get("semantic_state"),
+                    "attempts": attempt + 1,
+                    "superseded_receipt_ids": list(superseded_receipt_ids),
                     "final_completion_gate_satisfied": bool(
                         receipt.get("final_completion_gate_satisfied")
                     ),
@@ -1829,6 +1833,21 @@ class CampaignController:
                 raise ValueError(f"duration probe failed: {probe_id}")
         label = "probe:" + ",".join(receipt_ids)
         return label
+
+    @staticmethod
+    def _probe_retry_allowance(plan: list[dict[str, Any]]) -> float:
+        """Return the worst-case extra wall time one probe cycle may spend retrying.
+
+        Probes run serially, so a retried probe delays every later probe in the
+        same cycle. Staleness must be measured against the retry allowance the
+        plan actually grants, otherwise tolerating a transient fault in one probe
+        would report stale evidence for an unrelated healthy probe.
+        """
+
+        return sum(
+            max(0, int(item.get("retry_budget", 0))) * float(item.get("timeout_seconds", 0.0))
+            for item in plan
+        )
 
     def _assert_duration_completion_proof(
         self, campaign_id: str, row: sqlite3.Row | dict[str, Any]
@@ -1901,7 +1920,7 @@ class CampaignController:
                     continue
                 observations[probe_id].append(stamp)
         now = datetime.now(UTC)
-        grace_seconds = max(self.heartbeat_seconds * 3.0, 90.0)
+        grace_seconds = max(self.heartbeat_seconds * 3.0, 90.0) + self._probe_retry_allowance(plan)
         for item in plan:
             probe_id = str(item.get("probe_id") or "")
             if probe_id not in required:
