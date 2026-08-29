@@ -71,6 +71,10 @@ TABLE_INTRODUCED_BY = {
 }
 REQUIRED_CAMPAIGN_MIGRATION = "PPDB-0023"
 IdentityInspector = Callable[[Path], dict[str, Any]]
+# Probes that dispatch to a third-party service inherit its transient failure
+# modes. A required probe must still ultimately PASS, but one transport-level
+# fault must not break an otherwise healthy multi-day window.
+_EXTERNAL_DEPENDENCY_PROBE_RETRY_BUDGET = 2
 
 
 def _require_external_campaign_runtime_path(
@@ -1563,6 +1567,7 @@ class CampaignController:
             *,
             cadence_seconds: float = cadence,
             timeout_seconds: float = 75.0,
+            retry_budget: int = 0,
         ) -> dict[str, Any]:
             return self._build_duration_probe_entry(
                 probe_id,
@@ -1588,7 +1593,7 @@ class CampaignController:
                 ],
                 cadence_seconds=cadence_seconds,
                 timeout_seconds=timeout_seconds,
-                retry_budget=0,
+                retry_budget=retry_budget,
                 required=True,
             )
 
@@ -1641,9 +1646,18 @@ class CampaignController:
                 "cursor_cli_provider_dispatch",
                 cadence_seconds=max(cadence, 4 * 60 * 60),
                 timeout_seconds=cursor_timeout,
+                retry_budget=_EXTERNAL_DEPENDENCY_PROBE_RETRY_BUDGET,
             ),
-            duration_probe("github_live_readback", timeout_seconds=45.0),
-            duration_probe("jira_live_readback", timeout_seconds=45.0),
+            duration_probe(
+                "github_live_readback",
+                timeout_seconds=45.0,
+                retry_budget=_EXTERNAL_DEPENDENCY_PROBE_RETRY_BUDGET,
+            ),
+            duration_probe(
+                "jira_live_readback",
+                timeout_seconds=45.0,
+                retry_budget=_EXTERNAL_DEPENDENCY_PROBE_RETRY_BUDGET,
+            ),
             duration_probe("campaign_persistence_integrity", timeout_seconds=30.0),
             duration_probe("recovery_isolation", timeout_seconds=30.0),
         ]

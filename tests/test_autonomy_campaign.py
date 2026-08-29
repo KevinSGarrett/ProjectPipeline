@@ -1016,6 +1016,34 @@ def test_cursor_duration_probe_timeout_scales_with_campaign_heartbeat(tmp_path: 
     assert float(cursor["timeout_seconds"]) < max(controller.heartbeat_seconds * 3.0, 90.0)
 
 
+def test_external_dependency_duration_probes_retry_before_breaking_the_window(tmp_path: Path):
+    """One transient third-party fault must not disqualify a healthy window.
+
+    A required probe must still ultimately PASS; only the attempt budget differs
+    between locally deterministic probes and probes that call a remote service.
+    """
+
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=60.0,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        plan = controller._default_duration_probe_plan()
+    finally:
+        controller.close()
+    budgets = {str(item["probe_id"]): int(item["retry_budget"]) for item in plan}
+    for probe_id in (
+        "cursor_cli_provider_dispatch",
+        "github_live_readback",
+        "jira_live_readback",
+    ):
+        assert budgets[probe_id] >= 1, probe_id
+    for probe_id in ("candidate_identity", "runtime_doctor", "repository_validate"):
+        assert budgets[probe_id] == 0, probe_id
+
+
 def test_duration_probe_surface_rejects_doctor_control_jira_only(tmp_path: Path):
     controller = CampaignController(
         tmp_path / "campaign.sqlite3",
