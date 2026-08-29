@@ -22,6 +22,28 @@ PRIVATE_POLICY_PATH = "provenance/license_policy.json"
 PUBLIC_NOTICE_PATH = "third_party/NOTICES.generated.json"
 PRIVATE_NOTICE_PATH = "provenance/upstream_notices.generated.json"
 
+# SPDX identifiers accepted by long-standing policy. Anything beyond this set is
+# a Tier-I policy change and must carry executable evidence before the gate will
+# treat it as automatically approved.
+BASELINE_AUTOMATIC_APPROVAL_SPDX = frozenset(
+    {
+        "Apache-2.0",
+        "BSD-2-Clause",
+        "BSD-3-Clause",
+        "MIT",
+        "MIT OR Apache-2.0",
+        "PostgreSQL",
+    }
+)
+
+REQUIRED_TIER_ONE_EVIDENCE_FIELDS = (
+    "spdx_id",
+    "tier",
+    "metadata_authority",
+    "license_text_authority",
+    "obligations",
+)
+
 _FIELD_SEPARATOR = "\x1f"
 
 
@@ -132,6 +154,11 @@ class LicenseComplianceAuthority:
             return None
         if notice.get("license") != expression:
             return None
+        # The notice must describe the same artifact the SBOM evaluated.
+        if notice.get("digest") != digest:
+            return None
+        if notice.get("source") != source:
+            return None
         identity = self._identity_digest(
             name=name,
             version=version,
@@ -207,7 +234,42 @@ def _load_notices(root: Path) -> tuple[dict[str, dict[str, Any]], str]:
         for entry in document.get("entries", []):
             key = notice_key(entry["component_type"], entry["name"], entry["version"])
             notices[key] = entry
-    return notices, _sha256(_canonical(sorted(notices)))
+    # Hash the full entry bodies, not just their keys. Hashing keys alone would
+    # leave compliance records verifiable after notice metadata was edited.
+    return notices, _sha256(_canonical([(key, notices[key]) for key in sorted(notices)]))
+
+
+def _evidenced_automatic_approvals(root: Path, policy: dict[str, Any]) -> frozenset[str]:
+    """Return approvals the policy may actually exercise.
+
+    A declared approval beyond the baseline is only honoured when the referenced
+    evidence document records it as a Tier-I change with metadata authority,
+    license-text authority, and obligations. Declaring an identifier in policy
+    alone is therefore not sufficient to approve it.
+    """
+
+    declared = {str(item).strip() for item in policy.get("automatic_approval_spdx", [])}
+    beyond_baseline = declared - BASELINE_AUTOMATIC_APPROVAL_SPDX
+    if not beyond_baseline:
+        return frozenset(declared)
+
+    reference = policy.get("automatic_approval_evidence")
+    evidence_path = root / str(reference) if reference else None
+    if evidence_path is None or not evidence_path.is_file():
+        return frozenset(declared - beyond_baseline)
+
+    document = json.loads(evidence_path.read_text(encoding="utf-8"))
+    evidenced = set()
+    for record in document.get("automatic_approval_additions", []):
+        if any(not record.get(field) for field in REQUIRED_TIER_ONE_EVIDENCE_FIELDS):
+            continue
+        if record.get("tier") != "TIER_I_POLICY_CHANGE":
+            continue
+        text_authority = record.get("license_text_authority") or {}
+        if not text_authority.get("sha256") or not text_authority.get("bytes"):
+            continue
+        evidenced.add(str(record["spdx_id"]).strip())
+    return frozenset((declared - beyond_baseline) | (beyond_baseline & evidenced))
 
 
 def license_compliance_authority(root: Path) -> LicenseComplianceAuthority:
@@ -216,9 +278,7 @@ def license_compliance_authority(root: Path) -> LicenseComplianceAuthority:
     return LicenseComplianceAuthority(
         policy_sha256=policy_sha256,
         notices_sha256=notices_sha256,
-        automatic_approval_spdx=frozenset(
-            str(item).strip() for item in policy.get("automatic_approval_spdx", [])
-        ),
+        automatic_approval_spdx=_evidenced_automatic_approvals(root, policy),
         review_required_spdx=frozenset(
             str(item).strip() for item in policy.get("review_required_spdx", [])
         ),

@@ -569,8 +569,14 @@ def release_distribution_scope(root: Path) -> frozenset[str]:
     lock_path = root / "requirements/environment.lock.json"
     if lock_path.is_file():
         lock = json.loads(lock_path.read_text(encoding="utf-8"))
+        # Two views of the runtime closure exist: per-package closure_groups and
+        # the closure map used to render the shipped export. Take the union so
+        # drift between them can only widen enforcement, never narrow it below
+        # what the release actually installs.
+        shipped = {str(name) for name in (lock.get("closure") or {}).get("runtime", [])}
         for package in lock.get("packages", []):
-            if "runtime" in (package.get("closure_groups") or []):
+            in_groups = "runtime" in (package.get("closure_groups") or [])
+            if in_groups or package["name"] in shipped:
                 keys.add(notice_key("python-package", package["name"], package["version"]))
 
     # An upstream integration is only distributed when the release actually
