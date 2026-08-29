@@ -169,6 +169,40 @@ def test_tier_one_license_text_must_stay_inside_the_repository(mirrored_root: Pa
     assert not license_compliance_authority(mirrored_root).is_automatically_approved("PSF-2.0")
 
 
+def test_a_drive_relative_license_path_is_rejected(mirrored_root: Path) -> None:
+    """ "C:license.txt" is neither absolute nor traversing, but can escape."""
+
+    evidence = _read(mirrored_root, EVIDENCE_PATH)
+    for record in evidence["automatic_approval_additions"]:
+        record["license_text_authority"]["repository_path"] = "C:typing_extensions-LICENSE.txt"
+    _write(mirrored_root, EVIDENCE_PATH, evidence)
+
+    assert not license_compliance_authority(mirrored_root).is_automatically_approved("PSF-2.0")
+
+
+def test_a_license_text_symlinked_outside_the_repository_is_rejected(
+    mirrored_root: Path, tmp_path_factory: pytest.TempPathFactory
+) -> None:
+    outside = tmp_path_factory.mktemp("outside") / "LICENSE"
+    outside.write_bytes((mirrored_root / LICENSE_TEXT_PATH).read_bytes())
+
+    link = mirrored_root / "third_party/licenses/PSF-2.0/linked-LICENSE.txt"
+    try:
+        link.symlink_to(outside)
+    except (OSError, NotImplementedError):
+        pytest.skip("symbolic links are unavailable in this environment")
+
+    evidence = _read(mirrored_root, EVIDENCE_PATH)
+    for record in evidence["automatic_approval_additions"]:
+        record["license_text_authority"]["repository_path"] = (
+            "third_party/licenses/PSF-2.0/linked-LICENSE.txt"
+        )
+    _write(mirrored_root, EVIDENCE_PATH, evidence)
+
+    # The bytes and digest match exactly; only containment rejects this.
+    assert not license_compliance_authority(mirrored_root).is_automatically_approved("PSF-2.0")
+
+
 def test_a_deleted_license_text_withdraws_the_approval(mirrored_root: Path) -> None:
     (mirrored_root / LICENSE_TEXT_PATH).unlink()
     assert not license_compliance_authority(mirrored_root).is_automatically_approved("PSF-2.0")

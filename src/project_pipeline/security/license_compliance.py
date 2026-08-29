@@ -249,12 +249,24 @@ def _license_text_matches(root: Path, text_authority: dict[str, Any]) -> bool:
 
     relative = str(text_authority["repository_path"])
     # A path that escapes the repository is not repository-controlled authority.
-    if Path(relative).is_absolute() or ".." in Path(relative).parts:
+    # Rejecting only "absolute" and ".." would still admit a Windows
+    # drive-relative path such as "C:license.txt", or a symlink whose target
+    # lives outside the tree, so containment is confirmed after resolution.
+    candidate = Path(relative)
+    if candidate.is_absolute() or candidate.drive or candidate.root:
         return False
-    artifact = root / relative
+    if ".." in candidate.parts:
+        return False
+    artifact = root / candidate
     if not artifact.is_file():
         return False
-    payload = artifact.read_bytes()
+    try:
+        resolved = artifact.resolve(strict=True)
+    except OSError:
+        return False
+    if not resolved.is_relative_to(root.resolve()):
+        return False
+    payload = resolved.read_bytes()
     if len(payload) != int(text_authority["bytes"]):
         return False
     return hashlib.sha256(payload).hexdigest() == str(text_authority["sha256"])
