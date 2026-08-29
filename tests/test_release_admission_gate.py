@@ -61,17 +61,40 @@ def test_compliance_changes_when_component_identity_changes(tmp_path: Path) -> N
     sbom = build_repository_sbom(REPO_ROOT)
     approved = next(c for c in sbom.components if c.compliance is not None)
     authority = license_compliance_authority(REPO_ROOT)
-    rebound = authority.compliance_for(
+
+    # A different provenance digest no longer describes the notice authority's
+    # artifact, so compliance is withdrawn rather than rebound.
+    assert (
+        authority.compliance_for(
+            name=approved.name,
+            version=approved.version,
+            component_type=approved.component_type,
+            license_expression=approved.license or "",
+            source=approved.source,
+            digest="f" * 64,
+        )
+        is None
+    )
+
+    # Identity still participates in the record: the same inputs against a
+    # different notice authority produce different ids.
+    identity = authority._identity_digest(
         name=approved.name,
         version=approved.version,
         component_type=approved.component_type,
         license_expression=approved.license or "",
-        source=approved.source,
+        source=approved.source or "",
+        digest=approved.metadata_sha256 or "",
+    )
+    other = authority._identity_digest(
+        name=approved.name,
+        version=approved.version,
+        component_type=approved.component_type,
+        license_expression=approved.license or "",
+        source=approved.source or "",
         digest="f" * 64,
     )
-    assert rebound is not None
-    assert rebound.provenance_reference_id != approved.compliance.provenance_reference_id
-    assert rebound.permitted_use_record_id != approved.compliance.permitted_use_record_id
+    assert identity != other
 
     # An unknown version has no notice authority, so it must not be approved.
     assert (

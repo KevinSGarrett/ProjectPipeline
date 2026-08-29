@@ -141,6 +141,10 @@ def evaluate_pre_admission_release_gate(
     resolver_state, resolver_verified = _resolver_lock_state(root)
     if not resolver_verified:
         blockers.append(f"resolver lock is not verified READY (state={resolver_state})")
+        # Reporting a bare READY here would let an unverified lock look verified
+        # in any evidence record built from this verdict.
+        if resolver_state == "READY":
+            resolver_state = "READY_UNVERIFIED"
 
     return PreAdmissionVerdict(
         state=PreAdmissionState.PASS if not blockers else PreAdmissionState.FAIL,
