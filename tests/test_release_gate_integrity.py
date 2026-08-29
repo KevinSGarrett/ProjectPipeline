@@ -175,6 +175,29 @@ def test_closure_desync_cannot_narrow_enforcement(mirrored_root: Path) -> None:
     )
 
 
+def test_resolver_reports_unverified_when_the_lock_no_longer_matches() -> None:
+    """An unverified lock must not be reported as plain READY."""
+
+    from project_pipeline.release_hardening.pre_admission import (
+        evaluate_pre_admission_release_gate,
+    )
+
+    baseline = evaluate_pre_admission_release_gate(REPO_ROOT)
+    assert baseline.resolver_lock_state == "READY"
+
+    lock = REPO_ROOT / "uv.lock"
+    original = lock.read_bytes()
+    try:
+        lock.write_bytes(original + b"\n# tamper\n")
+        verdict = evaluate_pre_admission_release_gate(REPO_ROOT)
+    finally:
+        lock.write_bytes(original)
+
+    assert verdict.resolver_lock_state == "READY_UNVERIFIED"
+    assert any("resolver lock is not verified" in blocker for blocker in verdict.blockers)
+    assert evaluate_pre_admission_release_gate(REPO_ROOT).resolver_lock_state == "READY"
+
+
 def test_both_closure_views_agree_in_the_committed_lock() -> None:
     """Drift between the two views should surface as a test failure."""
 
