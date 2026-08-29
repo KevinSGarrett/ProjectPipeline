@@ -194,6 +194,40 @@ def test_overclaimed_target_coverage_is_rejected(artifacts: tuple[Path, ...]) ->
         _build(artifacts, scanner_runs=(_scanner_run(payload=payload),))
 
 
+def test_uninformative_report_cannot_claim_coverage(artifacts: tuple[Path, ...]) -> None:
+    """Corroboration must fail closed: proving nothing may declare nothing."""
+
+    payload = {"SchemaVersion": 2, "Results": []}
+    with pytest.raises(CandidateEvidenceError):
+        _build(artifacts, scanner_runs=(_scanner_run(payload=payload),))
+
+
+def test_partially_signed_release_is_not_fully_verified(artifacts: tuple[Path, ...]) -> None:
+    """One verified artifact must not confer VERIFIED on the others."""
+
+    signed = artifacts[0].resolve().relative_to(REPO_ROOT).as_posix()
+    bundle = _build(
+        artifacts,
+        scanner_runs=(_scanner_run(),),
+        signing_profile_enabled=True,
+        verified_signature_paths=[signed],
+    )
+    states = {record.artifact_path: record.signature_state for record in bundle.integrity_records}
+    assert states[signed] == "VERIFIED"
+    assert sorted(states.values()) == ["UNVERIFIED", "VERIFIED"]
+    verdict = evaluate_pre_admission_release_gate(REPO_ROOT, bundle.evidence)
+    assert verdict.state is not PreAdmissionState.PASS
+
+
+def test_unknown_signature_path_is_rejected(artifacts: tuple[Path, ...]) -> None:
+    with pytest.raises(CandidateEvidenceError):
+        _build(
+            artifacts,
+            signing_profile_enabled=True,
+            verified_signature_paths=["dist/not-a-declared-artifact.whl"],
+        )
+
+
 def test_partial_target_coverage_is_rejected(artifacts: tuple[Path, ...]) -> None:
     """Declaring fewer classes than required must not pass."""
 

@@ -42,6 +42,10 @@ from project_pipeline.security.supply_chain import (
 
 _INTEGRITY_BINDING_TOOL = "integrity"
 
+# Tools whose reports describe what they inspected, so a declared target class
+# can be checked against evidence instead of taken on trust.
+_CORROBORATED_TOOLS = frozenset({"trivy"})
+
 SignatureState = Literal["NOT_REQUIRED", "UNVERIFIED", "VERIFIED", "FAILED"]
 
 # Trivy reports the configuration language it parsed. Map that to the release
@@ -130,10 +134,12 @@ def _trivy_covered_targets(payload: Mapping[str, Any] | Sequence[Any]) -> frozen
 
 
 def _covered_targets(tool: str, payload: Mapping[str, Any] | Sequence[Any]) -> frozenset[str]:
-    if tool.strip().casefold() == "trivy":
+    if tool == "trivy":
         return _trivy_covered_targets(payload)
-    # Other governed scanners do not describe target classes in their reports,
-    # so their declared coverage cannot be corroborated here.
+    # Other governed scanners do not describe target classes in their reports.
+    # They also cannot carry both required release scan kinds, so they can never
+    # be the qualifying release scan; adding one that can must extend
+    # _CORROBORATED_TOOLS rather than inherit unchecked trust.
     return frozenset()
 
 
@@ -171,8 +177,11 @@ def _scanner_records(
     coverage: dict[str, tuple[str, ...]] = {}
     for run in runs:
         declared = tuple(dict.fromkeys(item.strip().casefold() for item in run.target_classes))
-        corroborated = _covered_targets(run.tool, run.payload)
-        if corroborated:
+        normalized_tool = run.tool.strip().casefold()
+        if normalized_tool in _CORROBORATED_TOOLS:
+            # Fail closed: a report that proves nothing may declare nothing,
+            # otherwise a caller could evade this check by supplying less.
+            corroborated = _covered_targets(normalized_tool, run.payload)
             overclaimed = sorted(set(declared) - corroborated)
             if overclaimed:
                 raise CandidateEvidenceError(
@@ -232,9 +241,18 @@ def build_candidate_release_evidence(
 
     scanner_evidence, coverage = _scanner_records(scanner_runs, aggregate=aggregate, now=now)
 
-    verified_signatures = {
-        normalize_release_artifact_path(root, item).casefold() for item in verified_signature_paths
-    }
+    declared_keys = {item.casefold() for item in declared}
+    verified_signatures: set[str] = set()
+    for item in verified_signature_paths:
+        try:
+            normalized = normalize_release_artifact_path(root, item).casefold()
+        except ValueError as error:
+            raise CandidateEvidenceError(f"verified signature path is invalid: {error}") from error
+        if normalized not in declared_keys:
+            raise CandidateEvidenceError(
+                f"verified signature path is not a declared release artifact: {item}"
+            )
+        verified_signatures.add(normalized)
 
     base_records = tuple(artifact_integrity(root, relative) for relative in declared)
 
