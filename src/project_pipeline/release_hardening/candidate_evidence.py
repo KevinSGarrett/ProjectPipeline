@@ -8,8 +8,9 @@ tests. This module builds them from the bundle that was actually produced.
 
 Every field is derived from observed state: hashes are read from the artifact
 bytes on disk, the source aggregate and SBOM digest are recomputed from the
-checkout, and scanner records are normalized from real scanner output. Nothing
-here manufactures a result that was not observed.
+checkout, target-class coverage is inferred from the scanner's own report, and
+signature state is only ever reported as verified when a verifier says so.
+Nothing here manufactures a result that was not observed.
 """
 
 from __future__ import annotations
@@ -41,6 +42,21 @@ from project_pipeline.security.supply_chain import (
 
 _INTEGRITY_BINDING_TOOL = "integrity"
 
+SignatureState = Literal["NOT_REQUIRED", "UNVERIFIED", "VERIFIED", "FAILED"]
+
+# Trivy reports the configuration language it parsed. Map that to the release
+# target class the finding actually proves coverage of.
+_TRIVY_CONFIG_TARGETS: Mapping[str, str] = {
+    "dockerfile": "container",
+    "docker": "container",
+    "terraform": "infrastructure",
+    "terraformplan": "infrastructure",
+    "cloudformation": "infrastructure",
+    "kubernetes": "infrastructure",
+    "helm": "infrastructure",
+    "azure-arm": "infrastructure",
+}
+
 
 class CandidateEvidenceError(RuntimeError):
     """Raised when candidate evidence cannot be assembled from observed state."""
@@ -50,9 +66,9 @@ class CandidateEvidenceError(RuntimeError):
 class ScannerRun:
     """One real scanner execution over the candidate checkout.
 
-    ``target_classes`` declares what the invocation actually covered. It is a
-    claim the gate verifies against its required coverage, so callers must pass
-    the classes the scanner genuinely inspected, never the full required set.
+    ``target_classes`` declares what the invocation covered. It is not taken on
+    trust: the declared classes are checked against the classes the scanner's
+    own report proves it inspected, so a run cannot overclaim coverage.
     """
 
     tool: str
@@ -76,8 +92,54 @@ class CandidateEvidenceBundle:
     sbom_sha256: str
 
 
+def _require_aware(value: datetime, *, field: str) -> datetime:
+    if value.tzinfo is None or value.utcoffset() is None:
+        raise CandidateEvidenceError(f"{field} must be timezone-aware")
+    return value.astimezone(UTC)
+
+
+def _trivy_covered_targets(payload: Mapping[str, Any] | Sequence[Any]) -> frozenset[str]:
+    """Infer the target classes a Trivy report proves were inspected."""
+
+    if not isinstance(payload, Mapping):
+        return frozenset()
+    results = payload.get("Results")
+    if not isinstance(results, list):
+        return frozenset()
+    covered: set[str] = set()
+    for entry in results:
+        if not isinstance(entry, Mapping):
+            continue
+        result_class = str(entry.get("Class") or "").strip().casefold()
+        result_type = str(entry.get("Type") or "").strip().casefold()
+        if result_class == "lang-pkgs":
+            covered.add("dependency")
+        elif result_class == "os-pkgs":
+            covered.add("container")
+        elif result_class in {"config", "secret", "license"}:
+            mapped = _TRIVY_CONFIG_TARGETS.get(result_type)
+            if mapped:
+                covered.add(mapped)
+    # A filesystem or repository scan walks the source tree itself.
+    artifact_type = str(payload.get("ArtifactType") or "").strip().casefold()
+    if artifact_type in {"filesystem", "repository"}:
+        covered.add("source")
+    if artifact_type in {"container_image", "image"}:
+        covered.add("container")
+    return frozenset(covered)
+
+
+def _covered_targets(tool: str, payload: Mapping[str, Any] | Sequence[Any]) -> frozenset[str]:
+    if tool.strip().casefold() == "trivy":
+        return _trivy_covered_targets(payload)
+    # Other governed scanners do not describe target classes in their reports,
+    # so their declared coverage cannot be corroborated here.
+    return frozenset()
+
+
 def _resolve_artifact_paths(root: Path, artifact_paths: Iterable[str | Path]) -> tuple[str, ...]:
     resolved: list[str] = []
+    seen: set[str] = set()
     for item in artifact_paths:
         raw = item.as_posix() if isinstance(item, Path) else str(item)
         if Path(raw).is_absolute():
@@ -91,8 +153,11 @@ def _resolve_artifact_paths(root: Path, artifact_paths: Iterable[str | Path]) ->
             normalized = normalize_release_artifact_path(root, raw)
         except ValueError as error:
             raise CandidateEvidenceError(str(error)) from error
-        if normalized in resolved:
+        # Windows paths differ only by case for the same file on disk.
+        key = normalized.casefold()
+        if key in seen:
             raise CandidateEvidenceError(f"duplicate release artifact declared: {normalized}")
+        seen.add(key)
         resolved.append(normalized)
     if not resolved:
         raise CandidateEvidenceError("release evidence requires at least one built artifact")
@@ -105,20 +170,34 @@ def _scanner_records(
     records: list[ScannerEvidence] = []
     coverage: dict[str, tuple[str, ...]] = {}
     for run in runs:
+        declared = tuple(dict.fromkeys(item.strip().casefold() for item in run.target_classes))
+        corroborated = _covered_targets(run.tool, run.payload)
+        if corroborated:
+            overclaimed = sorted(set(declared) - corroborated)
+            if overclaimed:
+                raise CandidateEvidenceError(
+                    f"{run.tool} report does not prove coverage for declared target classes: "
+                    + ", ".join(overclaimed)
+                )
+        observed = (
+            _require_aware(run.observed_at_utc, field="scanner observation time")
+            if run.observed_at_utc is not None
+            else now
+        )
         try:
             evidence = build_scanner_evidence(
                 tool=run.tool,
                 payload=run.payload,
                 execution_state=run.execution_state,
                 source_manifest_sha256=aggregate,
-                observed_at_utc=run.observed_at_utc or now,
+                observed_at_utc=observed,
                 scanned_kinds=run.scanned_kinds,
                 evidence_path=run.evidence_path,
             )
         except ValueError as error:
             raise CandidateEvidenceError(f"scanner evidence rejected: {error}") from error
         records.append(evidence)
-        coverage[evidence.scanner_evidence_id] = tuple(run.target_classes)
+        coverage[evidence.scanner_evidence_id] = declared
     return tuple(records), coverage
 
 
@@ -130,28 +209,58 @@ def build_candidate_release_evidence(
     builder_identity_id: str,
     project_id: str = "PROJECT-PIPELINE",
     signing_profile_enabled: bool = False,
+    verified_signature_paths: Iterable[str] = (),
     now_utc: datetime | None = None,
 ) -> CandidateEvidenceBundle:
-    """Build candidate release evidence bound to this checkout and these bytes."""
+    """Build candidate release evidence bound to this checkout and these bytes.
+
+    ``verified_signature_paths`` must come from a real signature verification.
+    Artifacts absent from it are reported ``UNVERIFIED`` when a signing profile
+    is enabled, so the gate — not this producer — decides whether that is
+    acceptable.
+    """
 
     root = root.resolve()
-    now = (now_utc or datetime.now(UTC)).astimezone(UTC)
+    now = (
+        _require_aware(now_utc, field="evidence generation time")
+        if now_utc is not None
+        else datetime.now(UTC)
+    )
     aggregate = source_manifest_aggregate(root)
     digest = sbom_sha256(build_repository_sbom(root, project_id=project_id))
     declared = _resolve_artifact_paths(root, artifact_paths)
 
     scanner_evidence, coverage = _scanner_records(scanner_runs, aggregate=aggregate, now=now)
 
-    provenance_id = security_identifier("PROV", aggregate, digest, *declared)
-    signature_state: Literal["NOT_REQUIRED", "VERIFIED"] = (
-        "VERIFIED" if signing_profile_enabled else "NOT_REQUIRED"
+    verified_signatures = {
+        normalize_release_artifact_path(root, item).casefold() for item in verified_signature_paths
+    }
+
+    base_records = tuple(artifact_integrity(root, relative) for relative in declared)
+
+    provenance_id = security_identifier(
+        "PROV",
+        project_id,
+        aggregate,
+        builder_identity_id,
+        digest,
+        now.isoformat(),
+        *(f"{record.artifact_path}:{record.sha256}" for record in base_records),
     )
 
+    def _signature_state(relative: str) -> SignatureState:
+        if not signing_profile_enabled:
+            return "NOT_REQUIRED"
+        return "VERIFIED" if relative.casefold() in verified_signatures else "UNVERIFIED"
+
     integrity_records = tuple(
-        artifact_integrity(root, relative).model_copy(
-            update={"provenance_id": provenance_id, "signature_state": signature_state}
+        record.model_copy(
+            update={
+                "provenance_id": provenance_id,
+                "signature_state": _signature_state(record.artifact_path),
+            }
         )
-        for relative in declared
+        for record in base_records
     )
 
     bindings = (
@@ -185,14 +294,14 @@ def build_candidate_release_evidence(
         source_aggregate_sha256=aggregate,
         builder_identity_id=builder_identity_id,
         sbom_sha256=digest,
-        # Earned, not asserted: every declared artifact was rehashed from disk,
-        # and each hash, the source aggregate, and the SBOM digest are bound below.
-        verification_state="VERIFIED",
+        # Locally derived: this process rehashed the artifacts and recomputed
+        # the source and SBOM digests. No independent attestation is claimed.
+        verification_state="VERIFIED_LOCAL",
         evidence_ids=tuple(binding.evidence_id for binding in bindings),
         declared_artifact_paths=declared,
         artifact_integrity_ids=tuple(sorted(record.integrity_id for record in integrity_records)),
         evidence_bindings=bindings,
-        required_signature_state=signature_state,
+        required_signature_state="VERIFIED" if signing_profile_enabled else "NOT_REQUIRED",
         generated_at_utc=now,
     )
 
