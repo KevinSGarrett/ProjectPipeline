@@ -281,6 +281,34 @@ def test_advance_disqualifies_a_timed_window_without_probe_receipts(
     controller.close()
 
 
+def test_advance_does_not_disqualify_a_freshly_admitted_stage(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """A stage that just opened has no probe evidence inside its own window yet.
+
+    Completion proof asserts that a finished window was healthy, so demanding it
+    one heartbeat after admission would terminally disqualify a campaign for
+    surviving a successful stage transition.
+    """
+
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    monkeypatch.setattr(
+        controller,
+        "_run_due_duration_probes",
+        lambda _campaign_id, _row, _now, label: label,
+    )
+    result = controller.advance(admitted["campaign_id"])
+    assert result["status"] == "RUNNING"
+    assert result["stage"] == "UNATTENDED_4_HOUR"
+    controller.close()
+
+
 def test_seeded_attested_24h_auto_admits_72h(tmp_path: Path):
     controller = _controller(tmp_path)
     started = controller.start(
