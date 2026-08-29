@@ -1795,7 +1795,8 @@ class CampaignController:
                 )
                 if receipt.get("result") == "PASSED":
                     break
-                superseded_receipt_ids.append(str(receipt["receipt_id"]))
+                if attempt < retries:
+                    superseded_receipt_ids.append(str(receipt["receipt_id"]))
                 attempt += 1
             if receipt is None:
                 continue
@@ -1808,7 +1809,7 @@ class CampaignController:
                     "receipt_id": receipt.get("receipt_id"),
                     "result_semantics": receipt.get("result_semantics"),
                     "semantic_state": receipt.get("semantic_state"),
-                    "attempts": attempt + 1,
+                    "attempts": len(superseded_receipt_ids) + 1,
                     "superseded_receipt_ids": list(superseded_receipt_ids),
                     "final_completion_gate_satisfied": bool(
                         receipt.get("final_completion_gate_satisfied")
@@ -1842,10 +1843,15 @@ class CampaignController:
         same cycle. Staleness must be measured against the retry allowance the
         plan actually grants, otherwise tolerating a transient fault in one probe
         would report stale evidence for an unrelated healthy probe.
+
+        The whole-plan sum is deliberately conservative: a probe early in the
+        cycle inherits the allowance of probes ordered after it. Liveness is
+        already enforced per attempt by the timeout and the heartbeat, so this
+        backstop is better slightly loose than prone to false staleness.
         """
 
         return sum(
-            max(0, int(item.get("retry_budget", 0))) * float(item.get("timeout_seconds", 0.0))
+            max(0, int(item.get("retry_budget", 0))) * float(item.get("timeout_seconds", 120.0))
             for item in plan
         )
 
