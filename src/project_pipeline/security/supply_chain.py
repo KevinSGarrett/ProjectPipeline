@@ -1491,3 +1491,25 @@ def assess_self_modification(changed_paths: tuple[str, ...]) -> SelfModification
         requires_security_verification=touches,
         reasons=reasons,
     )
+
+
+def source_manifest_aggregate(root: Path) -> str:
+    """Return the aggregate source-manifest digest the release gate binds to."""
+
+    return _manifest_aggregate(root)
+
+
+def sbom_sha256(sbom: SoftwareBillOfMaterials) -> str:
+    """Return the canonical digest of one software bill of materials."""
+
+    return _sbom_sha256(sbom)
+
+
+def normalize_release_artifact_path(root: Path, artifact_path: str) -> str:
+    """Return one repository-relative release artifact path.
+
+    Raises ``ValueError`` when the path is empty, absolute, escapes the
+    repository root, or does not name an existing file.
+    """
+
+    return _normalize_release_artifact_path(root, artifact_path)
