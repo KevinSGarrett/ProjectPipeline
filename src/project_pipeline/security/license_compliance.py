@@ -44,6 +44,11 @@ REQUIRED_TIER_ONE_EVIDENCE_FIELDS = (
     "obligations",
 )
 
+# Tier-I evidence must name a license text committed to the repository so its
+# recorded digest can be recomputed at gate time. A digest that only describes a
+# file inside somebody's virtual environment proves nothing here.
+REQUIRED_LICENSE_TEXT_AUTHORITY_FIELDS = ("repository_path", "sha256", "bytes")
+
 _FIELD_SEPARATOR = "\x1f"
 
 
@@ -239,6 +244,22 @@ def _load_notices(root: Path) -> tuple[dict[str, dict[str, Any]], str]:
     return notices, _sha256(_canonical([(key, notices[key]) for key in sorted(notices)]))
 
 
+def _license_text_matches(root: Path, text_authority: dict[str, Any]) -> bool:
+    """Recompute the recorded license-text digest from the committed bytes."""
+
+    relative = str(text_authority["repository_path"])
+    # A path that escapes the repository is not repository-controlled authority.
+    if Path(relative).is_absolute() or ".." in Path(relative).parts:
+        return False
+    artifact = root / relative
+    if not artifact.is_file():
+        return False
+    payload = artifact.read_bytes()
+    if len(payload) != int(text_authority["bytes"]):
+        return False
+    return hashlib.sha256(payload).hexdigest() == str(text_authority["sha256"])
+
+
 def _evidenced_automatic_approvals(root: Path, policy: dict[str, Any]) -> frozenset[str]:
     """Return approvals the policy may actually exercise.
 
@@ -266,17 +287,37 @@ def _evidenced_automatic_approvals(root: Path, policy: dict[str, Any]) -> frozen
         if record.get("tier") != "TIER_I_POLICY_CHANGE":
             continue
         text_authority = record.get("license_text_authority") or {}
-        if not text_authority.get("sha256") or not text_authority.get("bytes"):
+        if any(not text_authority.get(field) for field in REQUIRED_LICENSE_TEXT_AUTHORITY_FIELDS):
+            continue
+        if not _license_text_matches(root, text_authority):
             continue
         evidenced.add(str(record["spdx_id"]).strip())
     return frozenset((declared - beyond_baseline) | (beyond_baseline & evidenced))
+
+
+def _policy_authority_digest(root: Path, policy: dict[str, Any], policy_sha256: str) -> str:
+    """Fold the referenced evidence document into the policy identity.
+
+    Compliance ids are derived from this digest, so editing Tier-I evidence
+    invalidates every record that depended on it instead of silently swapping
+    the justification underneath an already-verifiable approval.
+    """
+
+    reference = policy.get("automatic_approval_evidence")
+    if not reference:
+        return policy_sha256
+    evidence_path = root / str(reference)
+    if not evidence_path.is_file():
+        return _sha256(_canonical([policy_sha256, "missing-evidence"]))
+    evidence_sha256 = hashlib.sha256(evidence_path.read_bytes()).hexdigest()
+    return _sha256(_canonical([policy_sha256, evidence_sha256]))
 
 
 def license_compliance_authority(root: Path) -> LicenseComplianceAuthority:
     policy, policy_sha256 = _load_policy(root)
     notices, notices_sha256 = _load_notices(root)
     return LicenseComplianceAuthority(
-        policy_sha256=policy_sha256,
+        policy_sha256=_policy_authority_digest(root, policy, policy_sha256),
         notices_sha256=notices_sha256,
         automatic_approval_spdx=_evidenced_automatic_approvals(root, policy),
         review_required_spdx=frozenset(

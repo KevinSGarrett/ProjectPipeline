@@ -8,6 +8,7 @@ narrower than what the release actually installs. These tests pin each fix.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import shutil
 from pathlib import Path
@@ -30,13 +31,14 @@ LOCK_PATH = "requirements/environment.lock.json"
 NOTICES_PATH = "third_party/NOTICES.generated.json"
 POLICY_PATH = "config/license_policy.json"
 EVIDENCE_PATH = "config/license_policy_evidence.json"
+LICENSE_TEXT_PATH = "third_party/licenses/PSF-2.0/typing_extensions-4.16.0-LICENSE.txt"
 
 
 @pytest.fixture
 def mirrored_root(tmp_path: Path) -> Path:
     """Copy just the authority inputs so they can be tampered with safely."""
 
-    for relative in (LOCK_PATH, NOTICES_PATH, POLICY_PATH, EVIDENCE_PATH):
+    for relative in (LOCK_PATH, NOTICES_PATH, POLICY_PATH, EVIDENCE_PATH, LICENSE_TEXT_PATH):
         target = tmp_path / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO_ROOT / relative, target)
@@ -125,6 +127,72 @@ def test_tier_one_evidence_missing_required_fields_is_rejected(mirrored_root: Pa
 
     authority = license_compliance_authority(mirrored_root)
     assert not authority.is_automatically_approved("PSF-2.0")
+
+
+def test_tier_one_evidence_must_name_a_committed_license_text(mirrored_root: Path) -> None:
+    """A digest describing a file outside the repository proves nothing."""
+
+    evidence = _read(mirrored_root, EVIDENCE_PATH)
+    for record in evidence["automatic_approval_additions"]:
+        record["license_text_authority"].pop("repository_path")
+    _write(mirrored_root, EVIDENCE_PATH, evidence)
+
+    assert not license_compliance_authority(mirrored_root).is_automatically_approved("PSF-2.0")
+
+
+def test_tier_one_license_text_digest_is_recomputed(mirrored_root: Path) -> None:
+    """A fabricated digest cannot unlock a beyond-baseline approval."""
+
+    evidence = _read(mirrored_root, EVIDENCE_PATH)
+    for record in evidence["automatic_approval_additions"]:
+        record["license_text_authority"]["sha256"] = "a" * 64
+    _write(mirrored_root, EVIDENCE_PATH, evidence)
+
+    assert not license_compliance_authority(mirrored_root).is_automatically_approved("PSF-2.0")
+
+
+def test_tier_one_license_text_byte_count_is_enforced(mirrored_root: Path) -> None:
+    evidence = _read(mirrored_root, EVIDENCE_PATH)
+    for record in evidence["automatic_approval_additions"]:
+        record["license_text_authority"]["bytes"] = 1
+    _write(mirrored_root, EVIDENCE_PATH, evidence)
+
+    assert not license_compliance_authority(mirrored_root).is_automatically_approved("PSF-2.0")
+
+
+def test_tier_one_license_text_must_stay_inside_the_repository(mirrored_root: Path) -> None:
+    evidence = _read(mirrored_root, EVIDENCE_PATH)
+    for record in evidence["automatic_approval_additions"]:
+        record["license_text_authority"]["repository_path"] = "../outside/LICENSE"
+    _write(mirrored_root, EVIDENCE_PATH, evidence)
+
+    assert not license_compliance_authority(mirrored_root).is_automatically_approved("PSF-2.0")
+
+
+def test_a_deleted_license_text_withdraws_the_approval(mirrored_root: Path) -> None:
+    (mirrored_root / LICENSE_TEXT_PATH).unlink()
+    assert not license_compliance_authority(mirrored_root).is_automatically_approved("PSF-2.0")
+
+
+def test_editing_evidence_invalidates_compliance_identity(mirrored_root: Path) -> None:
+    """Swapping the justification must not leave records verifiable."""
+
+    baseline = license_compliance_authority(mirrored_root).policy_sha256
+
+    evidence = _read(mirrored_root, EVIDENCE_PATH)
+    evidence["automatic_approval_additions"][0]["verified_on_host"] = "SOMEWHERE-ELSE"
+    _write(mirrored_root, EVIDENCE_PATH, evidence)
+
+    assert license_compliance_authority(mirrored_root).policy_sha256 != baseline
+
+
+def test_the_committed_license_text_matches_its_recorded_digest() -> None:
+    evidence = json.loads((REPO_ROOT / EVIDENCE_PATH).read_text(encoding="utf-8"))
+    for record in evidence["automatic_approval_additions"]:
+        authority = record["license_text_authority"]
+        payload = (REPO_ROOT / authority["repository_path"]).read_bytes()
+        assert len(payload) == authority["bytes"]
+        assert hashlib.sha256(payload).hexdigest() == authority["sha256"]
 
 
 def test_baseline_approvals_do_not_require_evidence(mirrored_root: Path) -> None:

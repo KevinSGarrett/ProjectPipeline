@@ -19,6 +19,8 @@
       },
       "license_text_authority": {
         "path": "typing_extensions-4.16.0.dist-info/licenses/LICENSE",
+        "repository_path": "third_party/licenses/PSF-2.0/typing_extensions-4.16.0-LICENSE.txt",
+        "repository_path_note": "Byte-exact copy of the distributed license text, vendored so the gate can verify the recorded digest without a network or an installed environment.",
         "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
         "bytes": 13936,
         "identified_as": "Python Software Foundation License Version 2 (PSF-2.0), including the CWI/CNRI/BeOpen history sections"
