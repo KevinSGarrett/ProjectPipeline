@@ -27,6 +27,7 @@ from project_pipeline.autonomy_runtime.process_identity import (
 )
 from project_pipeline.autonomy_runtime.qualification import (
     ACTIVE,
+    DURATION_SECONDS,
     H4,
     H24,
     H72,
@@ -75,11 +76,6 @@ IdentityInspector = Callable[[Path], dict[str, Any]]
 # modes. A required probe must still ultimately PASS, but one transport-level
 # fault must not break an otherwise healthy multi-day window.
 _EXTERNAL_DEPENDENCY_PROBE_RETRY_BUDGET = 2
-_STAGE_DURATIONS = {
-    "UNATTENDED_4_HOUR": H4,
-    "UNATTENDED_24_HOUR": H24,
-    "UNATTENDED_72_HOUR": H72,
-}
 
 
 def _require_external_campaign_runtime_path(
@@ -962,10 +958,9 @@ class CampaignController:
         if stage in TIMED_STAGES and row["qualification_run_id"]:
             run_id = str(row["qualification_run_id"])
             try:
-                self.heartbeat(campaign_id)
-                row = self.get(campaign_id)
+                row = self.heartbeat(campaign_id)
                 if not self._duration_window_elapsed(run_id, stage):
-                    return self.get(campaign_id)
+                    return row
                 self._assert_duration_completion_proof(campaign_id, row)
                 attested = self.qualification.complete(run_id)
             except ValueError:
@@ -1872,14 +1867,14 @@ class CampaignController:
         campaign one heartbeat after a successful stage transition.
         """
 
-        required = _STAGE_DURATIONS.get(stage)
+        required = DURATION_SECONDS.get(stage)
         if required is None:
             return True
         run = self.qualification.get(run_id)
         started = datetime.fromisoformat(str(run["started_at_utc"]))
         if started.tzinfo is None:
             started = started.replace(tzinfo=UTC)
-        return (datetime.now(UTC) - started).total_seconds() >= required.total_seconds()
+        return (datetime.now(UTC) - started).total_seconds() >= required
 
     def _assert_duration_completion_proof(
         self, campaign_id: str, row: sqlite3.Row | dict[str, Any]

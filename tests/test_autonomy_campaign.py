@@ -309,6 +309,78 @@ def test_advance_does_not_disqualify_a_freshly_admitted_stage(
     controller.close()
 
 
+def test_advance_survives_the_transition_into_the_next_timed_stage(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """The 4h -> 24h boundary is where probe cadence carries over from the prior stage.
+
+    Probe evidence earned in the 4-hour window sits before the 24-hour run's
+    start, so the newly admitted stage legitimately has no evidence of its own
+    yet and must not be disqualified for it.
+    """
+
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted4 = controller.admit_4h(started["campaign_id"])
+    _seed_attested(controller, admitted4["qualification_run_id"], 4)
+    admitted24 = controller.admit_24h(started["campaign_id"])
+    assert admitted24["stage"] == "UNATTENDED_24_HOUR"
+    monkeypatch.setattr(
+        controller,
+        "_run_due_duration_probes",
+        lambda _campaign_id, _row, _now, label: label,
+    )
+    result = controller.advance(admitted24["campaign_id"])
+    assert result["status"] == "RUNNING"
+    assert result["stage"] == "UNATTENDED_24_HOUR"
+    controller.close()
+
+
+def test_advance_rejects_a_completed_window_proved_only_by_earlier_evidence(tmp_path: Path):
+    """Evidence earned before a window opened cannot attest that window."""
+
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    controller.heartbeat(admitted["campaign_id"])
+    probe_events = controller._db.execute(
+        "SELECT COUNT(*) AS total FROM campaign_events WHERE campaign_id = ? AND action = 'PROBE'",
+        (admitted["campaign_id"],),
+    ).fetchone()
+    assert int(probe_events["total"]) > 0, "the window must hold probe evidence to invalidate"
+
+    # Reopen the window after that evidence was earned, then let it fully elapse.
+    reopened = datetime.now(UTC) + timedelta(seconds=1)
+    controller.qualification._db.execute(
+        "UPDATE qualification_runs SET started_at_utc = ? WHERE run_id = ?",
+        (
+            (reopened - timedelta(hours=4, seconds=1)).isoformat(),
+            admitted["qualification_run_id"],
+        ),
+    )
+    controller.qualification._db.commit()
+    controller._db.execute(
+        "UPDATE campaign_events SET created_at_utc = ? WHERE campaign_id = ? AND action = 'PROBE'",
+        (
+            (reopened - timedelta(hours=4, seconds=30)).isoformat(),
+            admitted["campaign_id"],
+        ),
+    )
+    controller._db.commit()
+
+    result = controller.advance(admitted["campaign_id"])
+    assert result["status"] == "DISQUALIFIED"
+    controller.close()
+
+
 def test_seeded_attested_24h_auto_admits_72h(tmp_path: Path):
     controller = _controller(tmp_path)
     started = controller.start(
@@ -1100,7 +1172,10 @@ def test_exhausted_retry_budget_records_the_true_attempt_count(tmp_path: Path):
     controller = CampaignController(
         tmp_path / "campaign.sqlite3",
         repository_root=ROOT,
-        heartbeat_seconds=0.05,
+        # Each retried attempt spawns a real interpreter, so the heartbeat budget
+        # has to outlast three of them or the window breaks before the probe
+        # exhausts its retries and this test stops observing what it is about.
+        heartbeat_seconds=120.0,
         inspect_identity=lambda _root: _identity(),
         finalize_commands=[_probe_command()],
         duration_probe_commands=[failing],
