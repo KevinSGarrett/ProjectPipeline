@@ -219,12 +219,27 @@ def test_partially_signed_release_is_not_fully_verified(artifacts: tuple[Path, .
     assert verdict.state is not PreAdmissionState.PASS
 
 
-def test_unknown_signature_path_is_rejected(artifacts: tuple[Path, ...]) -> None:
-    with pytest.raises(CandidateEvidenceError):
+def test_undeclared_signature_path_is_rejected(artifacts: tuple[Path, ...]) -> None:
+    """A real file that was not declared must not be accepted as signed."""
+
+    undeclared = artifacts[0].parent / "not-a-declared-artifact.whl"
+    undeclared.write_bytes(b"other-bytes")
+    with pytest.raises(CandidateEvidenceError, match="not a declared release artifact"):
         _build(
             artifacts,
             signing_profile_enabled=True,
-            verified_signature_paths=["dist/not-a-declared-artifact.whl"],
+            verified_signature_paths=[
+                undeclared.resolve().relative_to(REPO_ROOT).as_posix(),
+            ],
+        )
+
+
+def test_missing_signature_path_is_rejected(artifacts: tuple[Path, ...]) -> None:
+    with pytest.raises(CandidateEvidenceError, match="invalid"):
+        _build(
+            artifacts,
+            signing_profile_enabled=True,
+            verified_signature_paths=["dist/does-not-exist-on-disk.whl"],
         )
 
 
