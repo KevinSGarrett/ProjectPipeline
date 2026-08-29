@@ -171,7 +171,11 @@ if ($RepetitionDays -lt 1 -or $RepetitionDays -gt 31) {
 $exec = New-ScheduledTaskAction -Execute $python -Argument "`"$probe`" --config `"$configPath`"" -WorkingDirectory $root
 $trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes $IntervalMinutes) -RepetitionDuration (New-TimeSpan -Days $RepetitionDays)
 $settings = New-ScheduledTaskSettingsSet -Hidden -StartWhenAvailable -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 4) -MultipleInstances IgnoreNew
-$principal = New-ScheduledTaskPrincipal -UserId $scheduledPrincipalSid -LogonType Interactive -RunLevel Limited
+# Register-ScheduledTask rejects a raw SID for UserId ("The parameter is
+# incorrect. (n,8):UserId:"), so bind by account name. Windows normalizes the
+# stored UserId to the SID, which the readback above verifies, so the identity
+# binding is unchanged.
+$principal = New-ScheduledTaskPrincipal -UserId $scheduledPrincipalIdentity -LogonType Interactive -RunLevel Limited
 Register-ScheduledTask -TaskName $TaskName -Action $exec -Trigger $trigger -Settings $settings -Principal $principal -Force | Out-Null
 [ordered]@{
     task_name = $TaskName
