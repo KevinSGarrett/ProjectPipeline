@@ -340,8 +340,15 @@ def test_advance_survives_the_transition_into_the_next_timed_stage(
     controller.close()
 
 
-def test_advance_rejects_a_completed_window_proved_only_by_earlier_evidence(tmp_path: Path):
-    """Evidence earned before a window opened cannot attest that window."""
+def test_advance_rejects_a_completed_window_proved_only_by_earlier_evidence(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Evidence earned before a window opened cannot attest that window.
+
+    No fresh probe is allowed to run during the deciding advance, so the only
+    evidence on offer is the backdated evidence. Crediting it would leave the
+    observation set non-empty, which is why the expected reason is asserted.
+    """
 
     controller = _controller(tmp_path)
     started = controller.start(
@@ -376,8 +383,14 @@ def test_advance_rejects_a_completed_window_proved_only_by_earlier_evidence(tmp_
     )
     controller._db.commit()
 
+    monkeypatch.setattr(
+        controller,
+        "_run_due_duration_probes",
+        lambda _campaign_id, _row, _now, label: label,
+    )
     result = controller.advance(admitted["campaign_id"])
     assert result["status"] == "DISQUALIFIED"
+    assert str(result["last_probe"]).startswith("disqualify:duration-completion-probe-missing")
     controller.close()
 
 
