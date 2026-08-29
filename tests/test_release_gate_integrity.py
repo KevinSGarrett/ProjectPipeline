@@ -189,7 +189,7 @@ def test_a_license_text_symlinked_outside_the_repository_is_rejected(
     link = mirrored_root / "third_party/licenses/PSF-2.0/linked-LICENSE.txt"
     try:
         link.symlink_to(outside)
-    except (OSError, NotImplementedError):
+    except OSError:
         pytest.skip("symbolic links are unavailable in this environment")
 
     evidence = _read(mirrored_root, EVIDENCE_PATH)
