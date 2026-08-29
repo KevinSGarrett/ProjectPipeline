@@ -27,6 +27,7 @@ from project_pipeline.autonomy_runtime.process_identity import (
 )
 from project_pipeline.autonomy_runtime.qualification import (
     ACTIVE,
+    DURATION_SECONDS,
     H4,
     H24,
     H72,
@@ -957,8 +958,9 @@ class CampaignController:
         if stage in TIMED_STAGES and row["qualification_run_id"]:
             run_id = str(row["qualification_run_id"])
             try:
-                self.heartbeat(campaign_id)
-                row = self.get(campaign_id)
+                row = self.heartbeat(campaign_id)
+                if not self._duration_window_elapsed(run_id, stage):
+                    return row
                 self._assert_duration_completion_proof(campaign_id, row)
                 attested = self.qualification.complete(run_id)
             except ValueError:
@@ -1854,6 +1856,25 @@ class CampaignController:
             max(0, int(item.get("retry_budget", 0))) * float(item.get("timeout_seconds", 120.0))
             for item in plan
         )
+
+    def _duration_window_elapsed(self, run_id: str, stage: str) -> bool:
+        """Report whether the timed run has already served its full stage duration.
+
+        Completion proof is a claim that the window finished, so it may only be
+        evaluated once the window could actually be finished. A stage that has
+        just been admitted has no probe evidence inside its own window yet, and
+        treating that as missing evidence would terminally disqualify a healthy
+        campaign one heartbeat after a successful stage transition.
+        """
+
+        required = DURATION_SECONDS.get(stage)
+        if required is None:
+            return True
+        run = self.qualification.get(run_id)
+        started = datetime.fromisoformat(str(run["started_at_utc"]))
+        if started.tzinfo is None:
+            started = started.replace(tzinfo=UTC)
+        return (datetime.now(UTC) - started).total_seconds() >= required
 
     def _assert_duration_completion_proof(
         self, campaign_id: str, row: sqlite3.Row | dict[str, Any]
