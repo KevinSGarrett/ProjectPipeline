@@ -25,6 +25,10 @@ from project_pipeline.domain.security import (
     security_identifier,
 )
 from project_pipeline.manifest import build_manifest
+from project_pipeline.security.license_compliance import (
+    license_compliance_authority,
+    notice_key,
+)
 
 _SHA_ACTION = re.compile(r"^[0-9a-f]{40}$")
 _PROVENANCE_EVIDENCE_ID = re.compile(r"^(SCANEVID|INTEGRITY|SIG|EVID)-[A-Z0-9-]{8,}$")
@@ -318,6 +322,7 @@ def build_repository_sbom(
     licenses = lock.get("licenses")
     if not isinstance(licenses, dict):
         raise ValueError("environment lock license inventory is missing")
+    authority = license_compliance_authority(root)
     components: list[SBOMComponent] = []
     for package in sorted(
         lock.get("packages", []), key=lambda item: (item["name"].casefold(), item["version"])
@@ -325,6 +330,8 @@ def build_repository_sbom(
         license_value = licenses.get(package["name"])
         if not isinstance(license_value, str) or not license_value.strip():
             raise ValueError(f"environment lock license is missing: {package['name']}")
+        source = "requirements/environment.lock.json"
+        digest = package.get("metadata_sha256")
         components.append(
             SBOMComponent(
                 component_id=security_identifier(
@@ -334,8 +341,16 @@ def build_repository_sbom(
                 version=package["version"],
                 component_type="python-package",
                 license=license_value,
-                source="requirements/environment.lock.json",
-                metadata_sha256=package.get("metadata_sha256"),
+                source=source,
+                metadata_sha256=digest,
+                compliance=authority.compliance_for(
+                    name=package["name"],
+                    version=package["version"],
+                    component_type="python-package",
+                    license_expression=license_value,
+                    source=source,
+                    digest=digest,
+                ),
             )
         )
     registry_path = root / "provenance/upstream_registry.json"
@@ -379,6 +394,14 @@ def build_repository_sbom(
                     component_type="upstream-integration",
                     license=item.get("license"),
                     source=item.get("canonical_url"),
+                    compliance=authority.compliance_for(
+                        name=name,
+                        version=revision,
+                        component_type="upstream-integration",
+                        license_expression=item.get("license") or "",
+                        source=item.get("canonical_url"),
+                        digest=item.get("inspected_revision"),
+                    ),
                 )
             )
     aggregate = _manifest_aggregate(root)
@@ -533,33 +556,77 @@ def _sbom_sha256(sbom: SoftwareBillOfMaterials) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def release_distribution_scope(root: Path) -> frozenset[str]:
+    """Return notice keys for components the release actually distributes.
+
+    The environment lock observes every active dependency group, including
+    test-only closure members. Only the runtime closure is shipped, so license
+    distribution obligations are scoped to it. Upstream integrations are always
+    in scope because adopted implementations ship inside the product.
+    """
+
+    keys = set()
+    lock_path = root / "requirements/environment.lock.json"
+    if lock_path.is_file():
+        lock = json.loads(lock_path.read_text(encoding="utf-8"))
+        for package in lock.get("packages", []):
+            if "runtime" in (package.get("closure_groups") or []):
+                keys.add(notice_key("python-package", package["name"], package["version"]))
+
+    # An upstream integration is only distributed when the release actually
+    # carries upstream material: copied source paths, or an incorporated asset.
+    # Adapter implementations and independently implemented patterns
+    # redistribute nothing, so distribution obligations do not attach.
+    registry_path = root / "provenance/upstream_registry.json"
+    usage_path = root / "provenance/upstream_usage.jsonl"
+    if registry_path.is_file() and usage_path.is_file():
+        registry = {
+            item["upstream_id"]: item
+            for item in json.loads(registry_path.read_text(encoding="utf-8")).get("entries", [])
+        }
+        for line in usage_path.read_text(encoding="utf-8").splitlines():
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            carries_source = bool(record.get("copied_source_paths")) or (
+                record.get("usage_state") == "INCORPORATED_ASSET"
+            )
+            if not carries_source:
+                continue
+            item = registry.get(record["upstream_id"])
+            if item is None:
+                continue
+            keys.add(
+                notice_key(
+                    "upstream-integration",
+                    f"{item['owner']}/{item['repository']}",
+                    item.get("inspected_revision", "unknown"),
+                )
+            )
+    return frozenset(keys)
+
+
+def _is_distributed(component: SBOMComponent, distributed: frozenset[str]) -> bool:
+    return notice_key(component.component_type, component.name, component.version) in distributed
+
+
 def _evaluate_license_policy(
     root: Path, components: tuple[SBOMComponent, ...]
 ) -> tuple[SupplyChainFinding, ...]:
-    policy = _mapping(
-        json.loads((root / "provenance/license_policy.json").read_text(encoding="utf-8")),
-        context="license policy",
-    )
-    auto_approved = {
-        str(item).strip()
-        for item in _rows(
-            policy.get("automatic_approval_spdx", []), context="automatic_approval_spdx"
-        )
-    }
-    prohibited = {
-        str(item).strip()
-        for item in _rows(policy.get("prohibited_spdx", []), context="prohibited_spdx")
-    }
-    review_required = {
-        str(item).strip()
-        for item in _rows(policy.get("review_required_spdx", []), context="review_required_spdx")
-    }
-    rules = tuple(
-        str(item).strip() for item in _rows(policy.get("rules", []), context="license rules")
-    )
+    authority = license_compliance_authority(root)
+
+    prohibited = set(authority.prohibited_spdx)
+    review_required = set(authority.review_required_spdx)
+    rules = authority.rules
+    distributed = release_distribution_scope(root)
     findings: list[SupplyChainFinding] = []
     for component in components:
         license_expression = (component.license or "").strip()
+        # Prohibited licenses are rejected everywhere. Every other obligation
+        # applies only to what the release actually distributes; development
+        # and test-only closure members are not shipped.
+        if license_expression not in prohibited and not _is_distributed(component, distributed):
+            continue
         if not license_expression:
             findings.append(
                 _release_requirement_finding(
@@ -598,7 +665,7 @@ def _evaluate_license_policy(
                 )
             )
             continue
-        if license_expression not in auto_approved:
+        if not authority.is_automatically_approved(license_expression):
             findings.append(
                 _release_requirement_finding(
                     kind=SupplyChainFindingKind.LICENSE,
@@ -630,6 +697,29 @@ def _evaluate_license_policy(
                     message=(
                         "approved license still requires compliance records (notice, permitted use, "
                         "modification obligations, and provenance binding)"
+                    ),
+                )
+            )
+            continue
+        if not authority.verify(
+            component.compliance,
+            name=component.name,
+            version=component.version,
+            component_type=component.component_type,
+            license_expression=license_expression,
+            source=component.source,
+            digest=component.metadata_sha256
+            if component.component_type == "python-package"
+            else component.version,
+        ):
+            findings.append(
+                _release_requirement_finding(
+                    kind=SupplyChainFindingKind.LICENSE,
+                    subject=component.name,
+                    code="license-compliance-unverifiable",
+                    message=(
+                        "compliance record does not recompute from component identity, policy, "
+                        "and notice authority"
                     ),
                 )
             )

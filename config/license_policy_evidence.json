@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0.0",
+  "purpose": "Executable evidence backing each Tier-I addition to automatic_approval_spdx and each release distribution-scope decision.",
+  "automatic_approval_additions": [
+    {
+      "spdx_id": "PSF-2.0",
+      "tier": "TIER_I_POLICY_CHANGE",
+      "representative_component": {
+        "name": "typing-extensions",
+        "version": "4.16.0",
+        "closure_groups": ["group:test", "runtime"],
+        "distributed_in_runtime_release": true
+      },
+      "metadata_authority": {
+        "source": "installed distribution metadata (importlib.metadata)",
+        "field": "License-Expression",
+        "declared_value": "PSF-2.0",
+        "note": "The SPDX identifier is declared by the distribution itself in a machine-readable field; it was not inferred from a Trove classifier string."
+      },
+      "license_text_authority": {
+        "path": "typing_extensions-4.16.0.dist-info/licenses/LICENSE",
+        "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf",
+        "bytes": 13936,
+        "identified_as": "Python Software Foundation License Version 2 (PSF-2.0), including the CWI/CNRI/BeOpen history sections"
+      },
+      "obligations": {
+        "class": "RETAIN_NOTICE_AND_COPYRIGHT",
+        "distribution": "Unmodified redistribution requires retaining the PSF copyright notice and license text.",
+        "copyleft": false,
+        "source_disclosure_required": false,
+        "modification_permitted": true
+      },
+      "verified_on_host": "COMFY-V4-CPU-01",
+      "verified_at_utc": "2026-08-28T22:45:00Z",
+      "independent_review": "REQUIRED_VIA_HOSTED_AUTOMATED_SECURITY_AND_RELEASE_REVIEW"
+    }
+  ],
+  "distribution_scope_exclusions": [
+    {
+      "name": "certifi",
+      "version": "2026.7.22",
+      "declared_license": "MPL-2.0",
+      "policy_class": "REVIEW_REQUIRED",
+      "closure_groups": ["group:test"],
+      "in_runtime_closure": false,
+      "decision": "OUT_OF_RELEASE_DISTRIBUTION_SCOPE",
+      "evidence": [
+        "requirements/environment.lock.json records closure_groups=['group:test'] with no runtime membership",
+        "a clean virtual environment installed from the declared locked export (uv export --locked --no-dev) does not contain certifi"
+      ],
+      "note": "MPL-2.0 remains review-required in policy and was not added to automatic approvals. The component is not distributed by the runtime release, so distribution obligations do not attach."
+    },
+    {
+      "name": "colorama",
+      "version": "0.4.6",
+      "declared_license": "BSD License",
+      "policy_class": "NOT_SPDX_NORMALIZED",
+      "closure_groups": ["group:test"],
+      "in_runtime_closure": false,
+      "decision": "OUT_OF_RELEASE_DISTRIBUTION_SCOPE",
+      "evidence": [
+        "requirements/environment.lock.json records closure_groups=['group:test'] with no runtime membership",
+        "a clean virtual environment installed from the declared locked export (uv export --locked --no-dev) does not contain colorama"
+      ],
+      "note": "The ambiguous 'BSD License' classifier string was deliberately NOT normalized to any SPDX identifier. Normalization requires the exact distributed license text, and the component is out of release distribution scope, so no normalization decision is asserted."
+    }
+  ]
+}

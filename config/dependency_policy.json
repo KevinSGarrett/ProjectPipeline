@@ -88,12 +88,12 @@
       "state": "DECLARED_NOT_LIVE_VERIFIED"
     },
     {
-      "name": "numpy",
       "license": "BSD-3-Clause",
+      "name": "numpy",
+      "provenance": "PyPI release metadata and clean GitHub Actions Python 3.13 failure evidence.",
+      "rationale": "Constrain the types-networkx NumPy dependency to stubs parseable for the configured Python 3.11 mypy target on every CI interpreter.",
       "requirement": "numpy==2.3.5",
       "source": "https://pypi.org/project/numpy/",
-      "rationale": "Constrain the types-networkx NumPy dependency to stubs parseable for the configured Python 3.11 mypy target on every CI interpreter.",
-      "provenance": "PyPI release metadata and clean GitHub Actions Python 3.13 failure evidence.",
       "state": "DECLARED_CI_COMPATIBILITY_PIN"
     },
     {
@@ -115,22 +115,36 @@
       "state": "DECLARED_NOT_LIVE_VERIFIED"
     },
     {
-      "name": "types-networkx",
       "license": "Apache-2.0",
+      "name": "types-networkx",
+      "provenance": "PyPI release metadata and clean GitHub Actions mypy failure evidence.",
+      "rationale": "Provide strict static types for the runtime NetworkX dependency without suppressing missing-stub errors.",
       "requirement": "types-networkx==3.6.1.20260728",
       "source": "https://pypi.org/project/types-networkx/",
-      "rationale": "Provide strict static types for the runtime NetworkX dependency without suppressing missing-stub errors.",
-      "provenance": "PyPI release metadata and clean GitHub Actions mypy failure evidence.",
       "state": "DECLARED_CI_REQUIRED"
     }
   ],
   "resolver_lock": {
-    "activation_command": "uv lock && uv export --locked --no-dev --no-emit-project --output-file requirements/runtime.txt",
-    "blocker": "The execution environment cannot resolve package-index DNS; uv cannot obtain registry metadata not already cached.",
+    "activation_command": "uv lock && uv export --locked --no-dev --no-emit-project --output-file requirements/uv-runtime.txt",
     "manager": "uv",
-    "manager_version_attempted": "0.10.0",
+    "manager_version_attempted": "0.12.7",
     "path": "uv.lock",
-    "state": "BLOCKED_EXTERNAL",
+    "state": "READY",
+    "verification": {
+      "clean_install_exit_code": 0,
+      "export_note": "The uv-resolved export is kept separate from requirements/runtime.txt, which records the observed environment closure validated by the dependency gate.",
+      "export_path": "requirements/uv-runtime.txt",
+      "export_sha256": "de74b1715da0ba40c131d48c2a20ce6a299a66c7011e2b7887081b8555facf36",
+      "lock_sha256": "9784f5ae248fa16fedfb7f17544ad9a503d6a5b7552c4484fb85e59dfadc71b0",
+      "resolved_package_count": 186,
+      "supersedes_reason": "package-index DNS now resolves on the authorized host; the prior classification was stale",
+      "supersedes_state": "BLOCKED_EXTERNAL",
+      "uv_version": "0.12.7",
+      "verification_command": "uv lock --check",
+      "verification_exit_code": 0,
+      "verified_at_utc": "2026-08-28T22:35:00Z",
+      "verified_on_host": "COMFY-V4-CPU-01"
+    },
     "verification_command": "uv lock --check"
   },
   "rules": {

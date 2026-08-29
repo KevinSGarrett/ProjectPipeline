@@ -30,7 +30,12 @@ PASS24_TOOLS = (
 
 
 def _registry(root: Path) -> dict[str, dict[str, Any]]:
-    document = json.loads((root / "provenance/upstream_registry.json").read_text(encoding="utf-8"))
+    # The upstream ledger is private control-plane content and is absent from
+    # public checkouts; callers must degrade to UNKNOWN rather than crash.
+    path = root / "provenance/upstream_registry.json"
+    if not path.is_file():
+        return {}
+    document = json.loads(path.read_text(encoding="utf-8"))
     return {item["upstream_id"]: item for item in document["entries"]}
 
 
@@ -39,7 +44,7 @@ def qualify_tools(root: Path) -> tuple[ToolQualification, ...]:
     policy = json.loads((root / "config/release_policy.json").read_text(encoding="utf-8"))
     results = []
     for upstream_id, name, executable, role in PASS24_TOOLS:
-        record = registry[upstream_id]
+        record = registry.get(upstream_id, {})
         license_value = str(record.get("license", "UNKNOWN"))
         available = bool(executable and shutil.which(executable))
         notes = []

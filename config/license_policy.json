@@ -1,0 +1,38 @@
+{
+  "automatic_approval_evidence": "config/license_policy_evidence.json",
+  "automatic_approval_spdx": [
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "MIT",
+    "MIT OR Apache-2.0",
+    "PSF-2.0",
+    "PostgreSQL"
+  ],
+  "default_dependency_activation": "DENIED_PENDING_REVIEW",
+  "default_source_copy": "DENIED_UNLESS_APPROVED_BOUNDED",
+  "distribution_scope": "Release license obligations apply to the runtime closure of requirements/environment.lock.json; prohibited licenses are rejected in every group.",
+  "prohibited_spdx": [
+    "AGPL-3.0-only",
+    "AGPL-3.0-or-later",
+    "BUSL-1.1",
+    "SSPL-1.0"
+  ],
+  "review_required_spdx": [
+    "Apache-2.0 OR GPL-2.0",
+    "MPL-2.0",
+    "NOASSERTION",
+    "OTHER",
+    "UNKNOWN_NOT_INSPECTED"
+  ],
+  "rules": [
+    "Permissive license metadata can make a packaged dependency eligible for activation; it does not by itself authorize source adaptation; bounded incorporation requires a separate adaptation review.",
+    "Mixed-license repositories are scoped by path; enterprise or separately licensed directories are excluded unless independently approved.",
+    "MPL dependencies require notice and file-level compliance review before activation or distribution.",
+    "Unasserted, unknown, source-available, reciprocal, or custom licenses require explicit human legal approval for the affected use.",
+    "Every activated dependency must record a pinned version or digest, notices, vulnerability evidence, compatibility tests, SBOM coverage, and rollback.",
+    "Mined architecture and test ideas must be independently implemented without copied source unless a separate adaptation review authorizes exact files, paths, notices, hashes, and tests.",
+    "Approved bounded source adaptations require an exact upstream revision, source path, Project Pipeline path, content hash, notice path, and behavioral test evidence."
+  ],
+  "schema_version": "1.0.0"
+}
