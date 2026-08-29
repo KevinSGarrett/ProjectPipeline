@@ -1016,6 +1016,98 @@ def test_cursor_duration_probe_timeout_scales_with_campaign_heartbeat(tmp_path: 
     assert float(cursor["timeout_seconds"]) < max(controller.heartbeat_seconds * 3.0, 90.0)
 
 
+def test_external_dependency_duration_probes_retry_before_breaking_the_window(tmp_path: Path):
+    """One transient third-party fault must not disqualify a healthy window.
+
+    A required probe must still ultimately PASS; only the attempt budget differs
+    between locally deterministic probes and probes that call a remote service.
+    """
+
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=60.0,
+        inspect_identity=lambda _root: _identity(),
+    )
+    try:
+        plan = controller._default_duration_probe_plan()
+    finally:
+        controller.close()
+    budgets = {str(item["probe_id"]): int(item["retry_budget"]) for item in plan}
+    external = {
+        "cursor_cli_provider_dispatch",
+        "github_live_readback",
+        "jira_live_readback",
+    }
+    for probe_id in external:
+        assert budgets[probe_id] >= 1, probe_id
+    for probe_id, budget in budgets.items():
+        if probe_id not in external:
+            assert budget == 0, probe_id
+
+
+def test_probe_retry_allowance_covers_the_wall_time_the_plan_grants():
+    """Tolerating a transient in one probe must not report a healthy probe stale.
+
+    Probes run serially, so the staleness window has to account for the retry
+    wall time the plan itself grants.
+    """
+
+    plan = [
+        {"probe_id": "local", "retry_budget": 0, "timeout_seconds": 60.0},
+        {"probe_id": "remote", "retry_budget": 2, "timeout_seconds": 45.0},
+    ]
+    assert CampaignController._probe_retry_allowance(plan) == pytest.approx(90.0)
+    assert CampaignController._probe_retry_allowance([plan[0]]) == 0.0
+
+
+def test_exhausted_retry_budget_records_the_true_attempt_count(tmp_path: Path):
+    """A postmortem must not be told a probe was retried more often than it was.
+
+    The decisive receipt is the one that disqualified the campaign, so it is
+    reported as the outcome and never as a superseded attempt.
+    """
+
+    failing = [sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=0.05,
+        inspect_identity=lambda _root: _identity(),
+        finalize_commands=[_probe_command()],
+        duration_probe_commands=[failing],
+        probe_interval_seconds=0.0,
+        allow_unbound_candidate_for_tests=True,
+    )
+    plan = controller._duration_probe_plan
+    controller._duration_probe_plan = lambda row=None: [  # type: ignore[method-assign]
+        {**entry, "retry_budget": 2} for entry in plan(row)
+    ]
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    with pytest.raises(ValueError, match="duration probe failed"):
+        controller.heartbeat(admitted["campaign_id"])
+
+    probes = [
+        probe
+        for event in controller._db.execute(
+            "SELECT payload_json FROM campaign_events WHERE campaign_id = ? AND action = 'PROBE'",
+            (admitted["campaign_id"],),
+        ).fetchall()
+        for probe in json.loads(str(event["payload_json"])).get("probes", [])
+    ]
+    assert probes, "the failing probe must be recorded"
+    recorded = probes[-1]
+    assert recorded["attempts"] == 3
+    assert len(recorded["superseded_receipt_ids"]) == 2
+    assert recorded["receipt_id"] not in recorded["superseded_receipt_ids"]
+    controller.close()
+
+
 def test_duration_probe_surface_rejects_doctor_control_jira_only(tmp_path: Path):
     controller = CampaignController(
         tmp_path / "campaign.sqlite3",
