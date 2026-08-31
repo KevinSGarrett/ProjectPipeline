@@ -229,6 +229,18 @@ def _run_json(argv: list[str], *, cwd: Path, timeout_seconds: float = 45.0) -> d
     }
 
 
+def _dispatch_failure_detail(report: Mapping[str, Any]) -> str | None:
+    """Return the live-dispatch phase's provider diagnostic, when one exists."""
+
+    for phase in report.get("phases") or ():
+        if not isinstance(phase, Mapping) or phase.get("phase") != "LIVE_DISPATCH":
+            continue
+        observations = phase.get("observations")
+        if isinstance(observations, Mapping) and observations.get("error_detail"):
+            return str(observations["error_detail"])
+    return None
+
+
 def _probe_cursor(root: Path, state_root: Path) -> dict[str, Any]:
     from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
         qualify_cursor_cli_provider,
@@ -247,6 +259,7 @@ def _probe_cursor(root: Path, state_root: Path) -> dict[str, Any]:
         "live_dispatch": report.get("live_dispatch"),
         "replay_verified": report.get("replay_verified"),
         "reasons": list(reasons),
+        "dispatch_failure_detail": _dispatch_failure_detail(report),
         "state": None,
         "reason": None if outcome == "PASSED" else "; ".join(reasons) or None,
     }

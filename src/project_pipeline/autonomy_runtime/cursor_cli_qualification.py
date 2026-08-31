@@ -437,6 +437,18 @@ def _require_external_candidate_workspace(repository_root: Path, path: Path, *, 
     raise ValueError(f"{label} must be outside the immutable candidate checkout")
 
 
+def _bounded_provider_detail(error: ProviderAdapterError) -> str:
+    """Return a bounded single-line excerpt of a provider dispatch failure.
+
+    The adapter already truncates the provider's stderr before building the
+    message; this bounds it again and flattens newlines so the excerpt stays a
+    small, stable evidence field.
+    """
+
+    detail = " ".join(str(error).split())
+    return detail[:280]
+
+
 def qualify_cursor_cli_provider(
     *,
     repository_root: Path,
@@ -668,7 +680,14 @@ def qualify_cursor_cli_provider(
         phases.append(
             {
                 "phase": QualificationPhase.LIVE_DISPATCH.value,
-                "observations": {"error_kind": error.kind, "provider_state": error.provider_state},
+                "observations": {
+                    "error_kind": error.kind,
+                    "provider_state": error.provider_state,
+                    # Without the provider's own diagnostic text a dispatch
+                    # failure reduces to an opaque kind, which cannot be
+                    # classified as transient or terminal after the fact.
+                    "error_detail": _bounded_provider_detail(error),
+                },
             }
         )
         return _finish(

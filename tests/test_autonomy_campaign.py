@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pytest
 
+from project_pipeline.autonomy_runtime import campaign as campaign_module
 from project_pipeline.autonomy_runtime.campaign import (
     REQUIRED_PP384_STAGES,
     CampaignController,
@@ -1170,17 +1171,57 @@ def test_probe_retry_allowance_covers_the_wall_time_the_plan_grants():
         {"probe_id": "local", "retry_budget": 0, "timeout_seconds": 60.0},
         {"probe_id": "remote", "retry_budget": 2, "timeout_seconds": 45.0},
     ]
-    assert CampaignController._probe_retry_allowance(plan) == pytest.approx(90.0)
+    backoff = campaign_module._probe_retry_backoff_seconds(
+        0
+    ) + campaign_module._probe_retry_backoff_seconds(1)
+    assert CampaignController._probe_retry_allowance(plan) == pytest.approx(90.0 + backoff)
     assert CampaignController._probe_retry_allowance([plan[0]]) == 0.0
 
 
-def test_exhausted_retry_budget_records_the_true_attempt_count(tmp_path: Path):
+def test_probe_retry_backoff_spaces_attempts_and_is_bounded():
+    """An unspaced retry budget cannot survive the transient it exists to absorb.
+
+    Cycle 16-B lost a real four-hour window when three attempts against a
+    third-party dispatch were spent inside seven seconds, so the budget expired
+    while the upstream fault was still present. Spacing must grow between
+    attempts yet stay well under the stale-owner boundary.
+    """
+
+    first = campaign_module._probe_retry_backoff_seconds(0)
+    second = campaign_module._probe_retry_backoff_seconds(1)
+    assert first > 0.0
+    assert second > first
+    assert campaign_module._probe_retry_backoff_seconds(9) <= 30.0
+    # Two retries must span appreciably more than the seven-second burst that
+    # was too short to outlast the observed fault.
+    assert first + second >= 30.0
+
+
+def test_probe_retry_allowance_includes_the_backoff_it_grants():
+    """Staleness must be measured against spacing the plan actually spends."""
+
+    plan = [{"probe_id": "remote", "retry_budget": 2, "timeout_seconds": 45.0}]
+    expected_attempts = 2 * 45.0
+    expected_backoff = campaign_module._probe_retry_backoff_seconds(
+        0
+    ) + campaign_module._probe_retry_backoff_seconds(1)
+    assert CampaignController._probe_retry_allowance(plan) == pytest.approx(
+        expected_attempts + expected_backoff
+    )
+
+
+def test_exhausted_retry_budget_records_the_true_attempt_count(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     """A postmortem must not be told a probe was retried more often than it was.
 
     The decisive receipt is the one that disqualified the campaign, so it is
     reported as the outcome and never as a superseded attempt.
     """
 
+    # This test is about attempt accounting, not spacing, so the real backoff is
+    # removed to keep it fast; spacing has its own dedicated tests.
+    monkeypatch.setattr(campaign_module, "_probe_retry_backoff_seconds", lambda _attempt: 0.0)
     failing = [sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]
     controller = CampaignController(
         tmp_path / "campaign.sqlite3",

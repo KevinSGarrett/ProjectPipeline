@@ -76,6 +76,24 @@ IdentityInspector = Callable[[Path], dict[str, Any]]
 # modes. A required probe must still ultimately PASS, but one transport-level
 # fault must not break an otherwise healthy multi-day window.
 _EXTERNAL_DEPENDENCY_PROBE_RETRY_BUDGET = 2
+# Retrying a third-party fault immediately re-enters the same fault. An unspaced
+# budget is spent inside a few seconds, so any transient lasting longer than the
+# burst still disqualifies the window that the budget exists to protect. Attempt
+# N waits _PROBE_RETRY_BACKOFF_SECONDS * 2**(N-1), bounded so the spacing can
+# never approach the stale-owner boundary.
+_PROBE_RETRY_BACKOFF_SECONDS = 15.0
+_PROBE_RETRY_BACKOFF_MAXIMUM_SECONDS = 30.0
+
+
+def _probe_retry_backoff_seconds(attempt: int) -> float:
+    """Return the delay to observe before probe attempt ``attempt + 1``."""
+
+    if attempt < 0:
+        return 0.0
+    return min(
+        _PROBE_RETRY_BACKOFF_SECONDS * float(2**attempt),
+        _PROBE_RETRY_BACKOFF_MAXIMUM_SECONDS,
+    )
 
 
 def _require_external_campaign_runtime_path(
@@ -1799,6 +1817,13 @@ class CampaignController:
                     break
                 if attempt < retries:
                     superseded_receipt_ids.append(str(receipt["receipt_id"]))
+                    backoff = _probe_retry_backoff_seconds(attempt)
+                    if backoff > 0.0:
+                        # The heartbeat must keep advancing across the wait, or
+                        # spacing a retry would itself look like a stalled owner.
+                        self.heartbeat(campaign_id)
+                        time.sleep(backoff)
+                        self.heartbeat(campaign_id)
                 attempt += 1
             if receipt is None:
                 continue
@@ -1852,10 +1877,14 @@ class CampaignController:
         backstop is better slightly loose than prone to false staleness.
         """
 
-        return sum(
-            max(0, int(item.get("retry_budget", 0))) * float(item.get("timeout_seconds", 120.0))
-            for item in plan
-        )
+        allowance = 0.0
+        for item in plan:
+            retries = max(0, int(item.get("retry_budget", 0)))
+            allowance += retries * float(item.get("timeout_seconds", 120.0))
+            # Spacing between attempts is wall time the plan grants just as
+            # deliberately as the attempts themselves.
+            allowance += sum(_probe_retry_backoff_seconds(index) for index in range(retries))
+        return allowance
 
     def _duration_window_elapsed(self, run_id: str, stage: str) -> bool:
         """Report whether the timed run has already served its full stage duration.
