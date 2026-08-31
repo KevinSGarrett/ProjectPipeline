@@ -1819,11 +1819,12 @@ class CampaignController:
                     superseded_receipt_ids.append(str(receipt["receipt_id"]))
                     backoff = _probe_retry_backoff_seconds(attempt)
                     if backoff > 0.0:
-                        # The heartbeat must keep advancing across the wait, or
-                        # spacing a retry would itself look like a stalled owner.
-                        self.heartbeat(campaign_id)
+                        # The probe still owns the runner while it waits, so
+                        # liveness is refreshed through the same primitive the
+                        # attempts use. Calling heartbeat() here would re-enter
+                        # this function, because heartbeat() is what runs probes.
+                        self._mark_duration_probe_running(campaign_id, row, probe_id, attempt)
                         time.sleep(backoff)
-                        self.heartbeat(campaign_id)
                 attempt += 1
             if receipt is None:
                 continue

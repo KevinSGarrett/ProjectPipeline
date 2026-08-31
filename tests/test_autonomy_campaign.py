@@ -1197,6 +1197,69 @@ def test_probe_retry_backoff_spaces_attempts_and_is_bounded():
     assert first + second >= 30.0
 
 
+def test_probe_retry_backoff_refreshes_liveness_without_reentering_probes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Spacing a retry must not recurse through the probe runner.
+
+    ``heartbeat`` is the caller that runs due duration probes, so refreshing
+    liveness with it from inside the retry loop would re-enter probe execution.
+    The wait must instead refresh through the same bounded primitive the
+    attempts use, and it must refresh at least once per wait so a spaced retry
+    is never mistaken for a stalled owner.
+    """
+
+    monkeypatch.setattr(campaign_module, "_probe_retry_backoff_seconds", lambda _attempt: 0.01)
+    failing = [sys.executable, str(ROOT / "scripts" / "run_autonomy_campaign.py")]
+    controller = CampaignController(
+        tmp_path / "campaign.sqlite3",
+        repository_root=ROOT,
+        heartbeat_seconds=120.0,
+        inspect_identity=lambda _root: _identity(),
+        finalize_commands=[_probe_command()],
+        duration_probe_commands=[failing],
+        probe_interval_seconds=0.0,
+        allow_unbound_candidate_for_tests=True,
+    )
+    plan = controller._duration_probe_plan
+    controller._duration_probe_plan = lambda row=None: [  # type: ignore[method-assign]
+        {**entry, "retry_budget": 2} for entry in plan(row)
+    ]
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+
+    marks: list[int] = []
+    original = controller._mark_duration_probe_running
+
+    def record(campaign_id, row, probe_id, attempt):
+        marks.append(int(attempt))
+        return original(campaign_id, row, probe_id, attempt)
+
+    controller._mark_duration_probe_running = record  # type: ignore[method-assign]
+
+    entered = 0
+    original_run = controller._run_due_duration_probes
+
+    def count(*args, **kwargs):
+        nonlocal entered
+        entered += 1
+        return original_run(*args, **kwargs)
+
+    controller._run_due_duration_probes = count  # type: ignore[method-assign]
+
+    with pytest.raises(ValueError, match="duration probe failed"):
+        controller.heartbeat(admitted["campaign_id"])
+
+    assert entered == 1, "spacing a retry must not re-enter probe execution"
+    # Three attempts plus a liveness refresh inside each of the two waits.
+    assert len(marks) == 5
+    controller.close()
+
+
 def test_probe_retry_allowance_includes_the_backoff_it_grants():
     """Staleness must be measured against spacing the plan actually spends."""
 
