@@ -493,3 +493,75 @@ def test_remote_done_alignment_is_still_an_implementation_lifecycle(tmp_path: Pa
     assert decision.state is DeliveryGateState.BLOCKED
     assert decision.lifecycle_only_task_ids == ("PP-TASK-000001",)
     assert "lifecycle transitions" in decision.reasons[0]
+
+
+def _seed_dependency_batch_files(root: Path) -> None:
+    (root / "pyproject.toml").write_text('[project]\nname = "demo"\n', encoding="utf-8")
+    _write_json(root / "config" / "dependency_policy.json", {"schema_version": "1.0.0"})
+    (root / "uv.lock").write_text("version = 1\n", encoding="utf-8")
+    (root / "requirements").mkdir(parents=True, exist_ok=True)
+    (root / "requirements" / "environment.lock.json").write_text("{}\n", encoding="utf-8")
+    (root / "requirements" / "runtime.txt").write_text("demo==1.0.0\n", encoding="utf-8")
+    (root / "requirements" / "development.txt").write_text("demo==1.0.0\n", encoding="utf-8")
+    (root / "requirements" / "quality-tools.txt").write_text("ruff==0.1.0\n", encoding="utf-8")
+    (root / "tests" / "test_delivery_progress.py").write_text(
+        "def test_delivery_progress_placeholder():\n    assert True\n",
+        encoding="utf-8",
+    )
+
+
+def test_cohesive_dependency_currency_batch_is_objective_progress(tmp_path: Path) -> None:
+    root, base = _repository(tmp_path)
+    _seed_dependency_batch_files(root)
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "seed dependency surfaces")
+    base = _git(root, "rev-parse", "HEAD")
+
+    (root / "pyproject.toml").write_text(
+        '[project]\nname = "demo"\ndependencies = ["pydantic==2.13.5"]\n',
+        encoding="utf-8",
+    )
+    _write_json(
+        root / "config" / "dependency_policy.json",
+        {"schema_version": "1.0.0", "quality_tool_intents": [{"name": "ruff"}]},
+    )
+    (root / "uv.lock").write_text('version = 1\nname = "pydantic"\n', encoding="utf-8")
+    (root / "requirements" / "environment.lock.json").write_text(
+        '{"packages":[{"name":"pydantic","version":"2.13.5"}]}\n',
+        encoding="utf-8",
+    )
+    (root / "requirements" / "runtime.txt").write_text("pydantic==2.13.5\n", encoding="utf-8")
+    (root / "requirements" / "development.txt").write_text(
+        "pydantic==2.13.5\npydantic-core==2.46.5\n",
+        encoding="utf-8",
+    )
+    (root / "requirements" / "quality-tools.txt").write_text("ruff==0.16.5\n", encoding="utf-8")
+    (root / "tests" / "test_delivery_progress.py").write_text(
+        "def test_dependency_batch_admission():\n    assert True\n",
+        encoding="utf-8",
+    )
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "cohesive dependency currency batch")
+
+    decision = evaluate_delivery_gate(root, base_ref=base)
+
+    assert decision.state is DeliveryGateState.PASS
+    assert decision.objective_progress_units >= 1
+    assert any("dependency-currency" in reason for reason in decision.reasons)
+
+
+def test_incomplete_dependency_pin_change_is_not_progress(tmp_path: Path) -> None:
+    root, _ = _repository(tmp_path)
+    _seed_dependency_batch_files(root)
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "seed dependency surfaces")
+    base = _git(root, "rev-parse", "HEAD")
+
+    (root / "requirements" / "runtime.txt").write_text("pydantic==2.13.5\n", encoding="utf-8")
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "pin-only change without cohesive lockstep")
+
+    decision = evaluate_delivery_gate(root, base_ref=base)
+
+    assert decision.state is DeliveryGateState.BLOCKED
+    assert "objective progress unit" in decision.reasons[0]

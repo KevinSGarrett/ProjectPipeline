@@ -33,7 +33,7 @@
       "name": "websockets",
       "provenance": "Installed distribution metadata and the project API optional-dependency declaration.",
       "rationale": "Uvicorn needs a WebSocket implementation to serve the Command Center realtime path advertised by the API.",
-      "requirement": "websockets>=15,<16",
+      "requirement": "websockets>=15,<18",
       "source": "https://pypi.org/project/websockets/"
     }
   ],
@@ -77,13 +77,13 @@
   "quality_tool_intents": [
     {
       "name": "build",
-      "requirement": "build==1.5.0",
+      "requirement": "build==1.6.0",
       "source": "https://pypi.org/project/build/",
       "state": "DECLARED_NOT_LIVE_VERIFIED"
     },
     {
       "name": "mypy",
-      "requirement": "mypy==2.3.0",
+      "requirement": "mypy==2.3.1",
       "source": "https://pypi.org/project/mypy/",
       "state": "DECLARED_NOT_LIVE_VERIFIED"
     },
@@ -92,7 +92,7 @@
       "name": "numpy",
       "provenance": "PyPI release metadata and clean GitHub Actions Python 3.13 failure evidence.",
       "rationale": "Constrain the types-networkx NumPy dependency to stubs parseable for the configured Python 3.11 mypy target on every CI interpreter.",
-      "requirement": "numpy==2.3.5",
+      "requirement": "numpy==2.4.6",
       "source": "https://pypi.org/project/numpy/",
       "state": "DECLARED_CI_COMPATIBILITY_PIN"
     },
@@ -104,13 +104,13 @@
     },
     {
       "name": "pre-commit",
-      "requirement": "pre-commit==4.6.0",
+      "requirement": "pre-commit==4.6.2",
       "source": "https://pypi.org/project/pre-commit/",
       "state": "DECLARED_NOT_LIVE_VERIFIED"
     },
     {
       "name": "ruff",
-      "requirement": "ruff==0.16.3",
+      "requirement": "ruff==0.16.5",
       "source": "https://pypi.org/project/ruff/",
       "state": "DECLARED_NOT_LIVE_VERIFIED"
     },
@@ -127,23 +127,23 @@
   "resolver_lock": {
     "activation_command": "uv lock && uv export --locked --no-dev --no-emit-project --output-file requirements/uv-runtime.txt",
     "manager": "uv",
-    "manager_version_attempted": "0.12.7",
+    "manager_version_attempted": "0.9.26",
     "path": "uv.lock",
     "state": "READY",
     "verification": {
       "clean_install_exit_code": 0,
       "export_note": "The uv-resolved export is kept separate from requirements/runtime.txt, which records the observed environment closure validated by the dependency gate.",
       "export_path": "requirements/uv-runtime.txt",
-      "export_sha256": "de74b1715da0ba40c131d48c2a20ce6a299a66c7011e2b7887081b8555facf36",
-      "lock_sha256": "9784f5ae248fa16fedfb7f17544ad9a503d6a5b7552c4484fb85e59dfadc71b0",
+      "export_sha256": "331abd0f97347c5b4aa4158be83ca3ee6acd341d19577edbda71e17ccc600c8c",
+      "lock_sha256": "1f415fb68f6f83d468e7e62155d33744e342c6bc1b40dad3dbb6d14059fb5909",
       "resolved_package_count": 186,
-      "supersedes_reason": "package-index DNS now resolves on the authorized host; the prior classification was stale",
-      "supersedes_state": "BLOCKED_EXTERNAL",
-      "uv_version": "0.12.7",
+      "supersedes_reason": "Cycle 17 cohesive dependency-currency batch regenerated uv.lock for quality-tool pins and websockets upper bound",
+      "supersedes_state": "READY",
+      "uv_version": "0.9.26",
       "verification_command": "uv lock --check",
       "verification_exit_code": 0,
-      "verified_at_utc": "2026-08-28T22:35:00Z",
-      "verified_on_host": "COMFY-V4-CPU-01"
+      "verified_at_utc": "2026-08-31T23:45:00Z",
+      "verified_on_host": "windows-local-c17-dependency-currency-batch"
     },
     "verification_command": "uv lock --check"
   },

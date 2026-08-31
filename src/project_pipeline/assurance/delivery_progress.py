@@ -372,6 +372,34 @@ def _material_governance_slice(changed: Sequence[str], *, has_lifecycle: bool) -
     )
 
 
+def _cohesive_dependency_currency_batch(changed: Sequence[str], *, has_lifecycle: bool) -> bool:
+    """Admit one cohesive dependency-currency repair that removes a resolver blocker.
+
+    A Dependabot-style split that only retargets pins is not enough: the candidate must
+    refresh the authoritative declaration, governed policy, observed environment lock,
+    portable exports, and the uv resolver lock together. The delivery-progress regression
+    that locks this admission path must ship in the same slice.
+    """
+    if has_lifecycle:
+        return False
+    changed_set = set(changed)
+    required = {
+        "pyproject.toml",
+        "config/dependency_policy.json",
+        "uv.lock",
+        "requirements/environment.lock.json",
+        "tests/test_delivery_progress.py",
+    }
+    if not required.issubset(changed_set):
+        return False
+    exports = {
+        "requirements/runtime.txt",
+        "requirements/development.txt",
+        "requirements/quality-tools.txt",
+    }
+    return bool(changed_set.intersection(exports))
+
+
 def evaluate_delivery_gate(
     root: Path,
     *,
@@ -456,11 +484,14 @@ def evaluate_delivery_gate(
     material_governance = _material_governance_slice(
         changed, has_lifecycle=bool(lifecycle_task_ids)
     )
+    dependency_currency_batch = _cohesive_dependency_currency_batch(
+        changed, has_lifecycle=bool(lifecycle_task_ids)
+    )
     catalog_backed_implementation = requirement_units > 0 and generic_tested_implementation
     material_implementation_slice = (
         issue_bound_material
         if lifecycle_task_ids
-        else generic_tested_implementation or material_governance
+        else generic_tested_implementation or material_governance or dependency_currency_batch
     )
     before_criteria = sum(_verified_criteria(pair[0]) for pair in issue_pairs.values())
     after_criteria = sum(_verified_criteria(pair[1]) for pair in issue_pairs.values())
@@ -526,9 +557,18 @@ def evaluate_delivery_gate(
             f"evidence-backed reconciliation batch contains {len(lifecycle_task_ids)} compatible items"
         )
     elif progress_delta.meaningful_progress:
-        reasons.append(
-            "objective Progress Delta records implementation, acceptance, blocker, failure, or evidence advancement"
-        )
+        if dependency_currency_batch and not (
+            generic_tested_implementation or material_governance or issue_bound_material
+        ):
+            reasons.append(
+                "cohesive dependency-currency batch removes a resolver blocker with "
+                "declaration, policy, observed lock, portable exports, and uv.lock in lockstep"
+            )
+        else:
+            reasons.append(
+                "objective Progress Delta records implementation, acceptance, blocker, "
+                "failure, or evidence advancement"
+            )
     elif (
         not lifecycle_task_ids
         and non_issue_nongenerated

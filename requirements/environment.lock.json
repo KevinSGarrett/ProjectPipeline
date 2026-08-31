@@ -41,6 +41,7 @@
       "opentelemetry-api",
       "opentelemetry-sdk",
       "opentelemetry-semantic-conventions",
+      "packaging",
       "pydantic",
       "pydantic-core",
       "typing-extensions",
@@ -60,10 +61,10 @@
       "networkx",
       "opentelemetry-api",
       "opentelemetry-sdk",
+      "packaging",
       "pydantic"
     ]
   },
-  "lock_kind": "OBSERVED_ENVIRONMENT",
   "licenses": {
     "annotated-doc": "MIT",
     "annotated-types": "MIT",
@@ -99,6 +100,7 @@
     "typing-inspection": "MIT",
     "uvicorn": "BSD-3-Clause"
   },
+  "lock_kind": "OBSERVED_ENVIRONMENT",
   "package_count": 33,
   "packages": [
     {
@@ -160,12 +162,10 @@
         "group:test"
       ],
       "direct_groups": [],
-      "metadata_sha256": "194c9dd81d567f9081f026c7e401060fbafa7bc147c8e0a58b3668b40a64c031",
+      "metadata_sha256": "e87bce0bd194de70dfb8e708e0a6b0483009f25611804eaf87bfeb63e6c20501",
       "name": "click",
-      "requires_dist": [
-        "colorama; platform_system == \"Windows\""
-      ],
-      "version": "8.4.2"
+      "requires_dist": [],
+      "version": "8.5.0"
     },
     {
       "closure_groups": [
@@ -182,10 +182,10 @@
         "group:test"
       ],
       "direct_groups": [],
-      "metadata_sha256": "24b6db6cd8f171393bccfe0a116f6b18f36a6ed89302e11ee34ae4f9961b18cd",
+      "metadata_sha256": "791928e83475362b2309bafd4620b1530a06b4e57a210248930959bae5e6fb8b",
       "name": "coverage",
       "requires_dist": [],
-      "version": "7.15.4"
+      "version": "7.16.0"
     },
     {
       "closure_groups": [
@@ -250,10 +250,10 @@
         "group:test"
       ],
       "direct_groups": [],
-      "metadata_sha256": "46dfe6e5ac462d0f680ecd9abcf66e829b6a2334824b4d9e3979b31135caf281",
+      "metadata_sha256": "4d113161aca8582e8d28fddf3ea50f19b607209c2b3e4364379a163454680084",
       "name": "idna",
       "requires_dist": [],
-      "version": "3.18"
+      "version": "3.19"
     },
     {
       "closure_groups": [
@@ -351,9 +351,12 @@
     },
     {
       "closure_groups": [
-        "group:test"
+        "group:test",
+        "runtime"
       ],
-      "direct_groups": [],
+      "direct_groups": [
+        "runtime"
+      ],
       "metadata_sha256": "70fdb89fc4d4a9a043bf7372b8972bcc883fddff34ab55e9cf80d73875384763",
       "name": "packaging",
       "requires_dist": [],
@@ -377,15 +380,15 @@
       "direct_groups": [
         "runtime"
       ],
-      "metadata_sha256": "d1e56c3412492512fb6b59a9dfc25ab7af2a8204585cd7bca000513023133394",
+      "metadata_sha256": "0685830d13647bd6f3f05526043d32a8b2a221d86b53773053d6c52bb17a9c07",
       "name": "pydantic",
       "requires_dist": [
         "annotated-types>=0.6.0",
-        "pydantic-core==2.46.4",
+        "pydantic-core==2.46.5",
         "typing-extensions>=4.14.1",
         "typing-inspection>=0.4.2"
       ],
-      "version": "2.13.4"
+      "version": "2.13.5"
     },
     {
       "closure_groups": [
@@ -393,22 +396,22 @@
         "runtime"
       ],
       "direct_groups": [],
-      "metadata_sha256": "e2d0298dfb8712190ad250722e11a46a4391e71d687d5c7667c09e935cadc63b",
+      "metadata_sha256": "a193d0a16e9372c99b84b9216e274e28521fe5e5bf7be7b8b11be1c3c50cd9ca",
       "name": "pydantic-core",
       "requires_dist": [
         "typing-extensions>=4.14.1"
       ],
-      "version": "2.46.4"
+      "version": "2.46.5"
     },
     {
       "closure_groups": [
         "group:test"
       ],
       "direct_groups": [],
-      "metadata_sha256": "e0528f51b30427fae94723662ba622f8d8db2a4d8d3f1365698d67a52450a845",
+      "metadata_sha256": "1dde075570136774c706bf0009183a793fe0ee262e4a5590cc6eff8453eedd43",
       "name": "pygments",
       "requires_dist": [],
-      "version": "2.20.0"
+      "version": "2.21.0"
     },
     {
       "closure_groups": [
@@ -512,13 +515,13 @@
       "direct_groups": [
         "group:test"
       ],
-      "metadata_sha256": "1df2c18ce1cd176adcada42e9960997703575101738207182f28ff14c36536b9",
+      "metadata_sha256": "6cea83c70e4f2746374ca19af72a52406aa706ad8735b11d72fbd5fd82f7cbff",
       "name": "uvicorn",
       "requires_dist": [
         "click>=7.0",
         "h11>=0.8"
       ],
-      "version": "0.52.3"
+      "version": "0.52.4"
     }
   ],
   "python": {
@@ -528,6 +531,6 @@
     "version": "3.11.9"
   },
   "reproducibility_scope": "Exact versions and installed metadata for active dependency groups",
-  "resolver_lock_state": "BLOCKED_EXTERNAL",
+  "resolver_lock_state": "READY",
   "schema_version": "1.0.0"
 }
