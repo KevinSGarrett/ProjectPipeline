@@ -229,6 +229,27 @@ def _run_json(argv: list[str], *, cwd: Path, timeout_seconds: float = 45.0) -> d
     }
 
 
+def _dispatch_failure_detail(report: Mapping[str, Any]) -> str | None:
+    """Return the live-dispatch phase's provider diagnostic, when one exists."""
+
+    # Imported here for the same reason _probe_cursor does: importing the
+    # qualification module at file scope would form an import cycle.
+    from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
+        DISPATCH_ERROR_DETAIL_KEY,
+        QualificationPhase,
+    )
+
+    for phase in report.get("phases") or ():
+        if not isinstance(phase, Mapping):
+            continue
+        if phase.get("phase") != QualificationPhase.LIVE_DISPATCH.value:
+            continue
+        observations = phase.get("observations")
+        if isinstance(observations, Mapping) and observations.get(DISPATCH_ERROR_DETAIL_KEY):
+            return str(observations[DISPATCH_ERROR_DETAIL_KEY])
+    return None
+
+
 def _probe_cursor(root: Path, state_root: Path) -> dict[str, Any]:
     from project_pipeline.autonomy_runtime.cursor_cli_qualification import (
         qualify_cursor_cli_provider,
@@ -247,6 +268,7 @@ def _probe_cursor(root: Path, state_root: Path) -> dict[str, Any]:
         "live_dispatch": report.get("live_dispatch"),
         "replay_verified": report.get("replay_verified"),
         "reasons": list(reasons),
+        "dispatch_failure_detail": _dispatch_failure_detail(report),
         "state": None,
         "reason": None if outcome == "PASSED" else "; ".join(reasons) or None,
     }

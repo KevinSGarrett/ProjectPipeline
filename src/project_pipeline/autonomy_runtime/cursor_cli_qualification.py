@@ -20,6 +20,7 @@ from project_pipeline.agent_router.adapters import (
     build_adapter,
 )
 from project_pipeline.agent_router.registry import load_agent_registry
+from project_pipeline.autonomy_runtime.command_execution import redact_output
 from project_pipeline.domain.agents import ExecutionTaskContract
 from project_pipeline.lifecycle.attestation_recovery import (
     EXPECTED_PUBLIC_ATTESTATION_SHA256,
@@ -437,6 +438,26 @@ def _require_external_candidate_workspace(repository_root: Path, path: Path, *, 
     raise ValueError(f"{label} must be outside the immutable candidate checkout")
 
 
+# The probe reads the dispatch diagnostic back out of the report, so producer
+# and consumer share one key rather than two literals that can drift apart.
+DISPATCH_ERROR_DETAIL_KEY = "error_detail"
+
+
+def _bounded_provider_detail(error: ProviderAdapterError) -> str:
+    """Return a bounded single-line excerpt of a provider dispatch failure.
+
+    The excerpt is raw third-party stderr and is written into preserved
+    evidence, so it is redacted before it is bounded: a provider may echo
+    credential material back in a message such as an invalid-key error.
+    The adapter already truncates stderr before building the message; this
+    bounds it again and flattens newlines so the excerpt stays a small,
+    stable evidence field.
+    """
+
+    detail = " ".join(redact_output(str(error)).split())
+    return detail[:280]
+
+
 def qualify_cursor_cli_provider(
     *,
     repository_root: Path,
@@ -668,7 +689,14 @@ def qualify_cursor_cli_provider(
         phases.append(
             {
                 "phase": QualificationPhase.LIVE_DISPATCH.value,
-                "observations": {"error_kind": error.kind, "provider_state": error.provider_state},
+                "observations": {
+                    "error_kind": error.kind,
+                    "provider_state": error.provider_state,
+                    # Without the provider's own diagnostic text a dispatch
+                    # failure reduces to an opaque kind, which cannot be
+                    # classified as transient or terminal after the fact.
+                    DISPATCH_ERROR_DETAIL_KEY: _bounded_provider_detail(error),
+                },
             }
         )
         return _finish(
