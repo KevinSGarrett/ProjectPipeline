@@ -104,7 +104,9 @@ def test_opa_conformance_deny_can_only_tighten(context: ActionContext) -> None:
         context,
     )
     assert decision.allowed is False
-    assert any("rego deny" in reason or "CONFORM" in decision.decision_id for reason in decision.reasons)
+    assert any(
+        "rego deny" in reason or "CONFORM" in decision.decision_id for reason in decision.reasons
+    )
 
 
 def test_policy_dir_escape_rejected() -> None:
