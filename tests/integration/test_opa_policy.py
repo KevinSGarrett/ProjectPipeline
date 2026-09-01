@@ -96,7 +96,7 @@ def test_opa_conformance_deny_can_only_tighten(context: ActionContext) -> None:
             return SimpleNamespace(returncode=0, stdout='{"allow": false, "deny": ["rego deny"]}')
 
     fake = FakeOpa()
-    fake._execute_enabled = True  # noqa: SLF001
+    fake._execute_enabled = True
     port = OpaConformancePolicyPort(repository_root=ROOT, opa=fake)
     decision = port.evaluate(
         "read",
