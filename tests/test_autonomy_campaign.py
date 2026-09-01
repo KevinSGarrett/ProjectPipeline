@@ -341,6 +341,61 @@ def test_advance_survives_the_transition_into_the_next_timed_stage(
     controller.close()
 
 
+def test_advance_prefers_probe_missing_over_qualification_heartbeat_gap(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    """Elapsed windows must surface probe-missing even after a heartbeat-gap halt.
+
+    Controllers under test use heartbeat_seconds=0.05. If wall time between the
+    setup heartbeat and advance exceeds the qualification cadence allowance,
+    qualification.heartbeat raises first. Completion proof for an elapsed window
+    must still win so the disqualify reason stays duration-completion-probe-missing.
+    """
+
+    controller = _controller(tmp_path)
+    started = controller.start(
+        state_path=tmp_path / "state",
+        evidence_path=tmp_path / "evidence",
+        pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    admitted = controller.admit_4h(started["campaign_id"])
+    controller.heartbeat(admitted["campaign_id"])
+    probe_events = controller._db.execute(
+        "SELECT COUNT(*) AS total FROM campaign_events WHERE campaign_id = ? AND action = 'PROBE'",
+        (admitted["campaign_id"],),
+    ).fetchone()
+    assert int(probe_events["total"]) > 0
+
+    reopened = datetime.now(UTC) + timedelta(seconds=1)
+    controller.qualification._db.execute(
+        "UPDATE qualification_runs SET started_at_utc = ?, last_heartbeat_utc = ? WHERE run_id = ?",
+        (
+            (reopened - timedelta(hours=4, seconds=1)).isoformat(),
+            (datetime.now(UTC) - timedelta(seconds=5)).isoformat(),
+            admitted["qualification_run_id"],
+        ),
+    )
+    controller.qualification._db.commit()
+    controller._db.execute(
+        "UPDATE campaign_events SET created_at_utc = ? WHERE campaign_id = ? AND action = 'PROBE'",
+        (
+            (reopened - timedelta(hours=4, seconds=30)).isoformat(),
+            admitted["campaign_id"],
+        ),
+    )
+    controller._db.commit()
+
+    monkeypatch.setattr(
+        controller,
+        "_run_due_duration_probes",
+        lambda _campaign_id, _row, _now, label: label,
+    )
+    result = controller.advance(admitted["campaign_id"])
+    assert result["status"] == "DISQUALIFIED"
+    assert str(result["last_probe"]).startswith("disqualify:duration-completion-probe-missing")
+    controller.close()
+
+
 def test_advance_rejects_a_completed_window_proved_only_by_earlier_evidence(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):

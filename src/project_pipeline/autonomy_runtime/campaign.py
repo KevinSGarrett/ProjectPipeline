@@ -984,6 +984,16 @@ class CampaignController:
             except ValueError:
                 if str(self.get(campaign_id)["status"]) == "DISQUALIFIED":
                     return self.get(campaign_id)
+                # A qualification-store integrity halt during heartbeat must not
+                # mask missing in-window duration proof once the stage window has
+                # already elapsed. Prefer the explicit probe-missing/gap/stale
+                # reasons from completion proof over a generic integrity label.
+                if self._duration_window_elapsed(run_id, stage):
+                    try:
+                        self._assert_duration_completion_proof(campaign_id, self.get(campaign_id))
+                    except ValueError:
+                        if str(self.get(campaign_id)["status"]) == "DISQUALIFIED":
+                            return self.get(campaign_id)
                 current = self.qualification.get(run_id)
                 if str(current["status"]) in {"DISQUALIFIED", "FAILED", "STOPPED"}:
                     self._disqualify(campaign_id, "qualification-completion-integrity-failed")
