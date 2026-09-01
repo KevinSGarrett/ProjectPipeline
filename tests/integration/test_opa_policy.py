@@ -85,14 +85,14 @@ def test_opa_conformance_deny_can_only_tighten(context: ActionContext) -> None:
         def available(self) -> bool:
             return True
 
-        def plan_eval(self, root, *, policy_dir, query, input_document):  # noqa: ANN001
+        def plan_eval(self, root, *, policy_dir, query, input_document):
             return SimpleNamespace(
                 argv=("opa", "eval"),
                 cwd=str(root),
                 evidence_sources=("open-policy-agent/opa:docs",),
             )
 
-        def execute(self, plan):  # noqa: ANN001
+        def execute(self, plan):
             return SimpleNamespace(returncode=0, stdout='{"allow": false, "deny": ["rego deny"]}')
 
     fake = FakeOpa()
