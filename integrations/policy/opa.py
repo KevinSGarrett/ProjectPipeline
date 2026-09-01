@@ -187,9 +187,7 @@ class OpaConformancePolicyPort:
             disposition=disposition,
             reasons=deny_reasons
             or (
-                ("opa conformance allow",)
-                if disposition == "ALLOW"
-                else ("opa conformance deny",)
+                ("opa conformance allow",) if disposition == "ALLOW" else ("opa conformance deny",)
             ),
             evidence_sources=tuple(plan.evidence_sources),
             raw=raw,
