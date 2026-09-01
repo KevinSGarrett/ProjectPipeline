@@ -384,6 +384,23 @@ def test_advance_rejects_a_completed_window_proved_only_by_earlier_evidence(
     )
     controller._db.commit()
 
+    # Controllers under test use heartbeat_seconds=0.05, so a wall-clock pause
+    # longer than ~1s between the setup heartbeat and advance() would trip
+    # qualification heartbeat-gap and mask the intended probe-missing reason as
+    # qualification-completion-integrity-failed. Refresh last_heartbeat_utc to
+    # the deciding instant so only the backdated probe evidence is under test.
+    deciding = datetime.now(UTC)
+    controller.qualification._db.execute(
+        "UPDATE qualification_runs SET last_heartbeat_utc = ? WHERE run_id = ?",
+        (deciding.isoformat(), admitted["qualification_run_id"]),
+    )
+    controller.qualification._db.commit()
+    controller._db.execute(
+        "UPDATE campaign_runs SET last_heartbeat_utc = ? WHERE campaign_id = ?",
+        (deciding.isoformat(), admitted["campaign_id"]),
+    )
+    controller._db.commit()
+
     monkeypatch.setattr(
         controller,
         "_run_due_duration_probes",
