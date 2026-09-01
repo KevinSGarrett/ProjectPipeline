@@ -505,7 +505,7 @@ def _seed_dependency_batch_files(root: Path) -> None:
     (root / "requirements" / "development.txt").write_text("demo==1.0.0\n", encoding="utf-8")
     (root / "requirements" / "quality-tools.txt").write_text("ruff==0.1.0\n", encoding="utf-8")
     (root / "tests" / "test_delivery_progress.py").write_text(
-        "def test_delivery_progress_placeholder():\n    assert True\n",
+        "def test_delivery_progress_seed():\n    assert 1 == 1\n",
         encoding="utf-8",
     )
 
@@ -537,7 +537,7 @@ def test_cohesive_dependency_currency_batch_is_objective_progress(tmp_path: Path
     )
     (root / "requirements" / "quality-tools.txt").write_text("ruff==0.16.5\n", encoding="utf-8")
     (root / "tests" / "test_delivery_progress.py").write_text(
-        "def test_dependency_batch_admission():\n    assert True\n",
+        "def test_dependency_batch_admission():\n    assert 1 == 1\n",
         encoding="utf-8",
     )
     _git(root, "add", ".")
