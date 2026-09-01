@@ -138,7 +138,7 @@
       "lock_sha256": "1f415fb68f6f83d468e7e62155d33744e342c6bc1b40dad3dbb6d14059fb5909",
       "resolved_package_count": 186,
       "supersedes_reason": "Cycle 17 cohesive dependency-currency batch regenerated uv.lock for quality-tool pins and websockets upper bound",
-      "supersedes_state": "READY",
+      "supersedes_state": "BLOCKED_EXTERNAL",
       "uv_version": "0.9.26",
       "verification_command": "uv lock --check",
       "verification_exit_code": 0,

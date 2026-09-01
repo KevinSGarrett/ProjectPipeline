@@ -42,11 +42,11 @@
     },
     {
       "component_type": "python-package",
-      "digest": "194c9dd81d567f9081f026c7e401060fbafa7bc147c8e0a58b3668b40a64c031",
+      "digest": "e87bce0bd194de70dfb8e708e0a6b0483009f25611804eaf87bfeb63e6c20501",
       "license": "BSD-3-Clause",
       "name": "click",
       "source": "requirements/environment.lock.json",
-      "version": "8.4.2"
+      "version": "8.5.0"
     },
     {
       "component_type": "python-package",
@@ -58,11 +58,11 @@
     },
     {
       "component_type": "python-package",
-      "digest": "24b6db6cd8f171393bccfe0a116f6b18f36a6ed89302e11ee34ae4f9961b18cd",
+      "digest": "791928e83475362b2309bafd4620b1530a06b4e57a210248930959bae5e6fb8b",
       "license": "Apache-2.0",
       "name": "coverage",
       "source": "requirements/environment.lock.json",
-      "version": "7.15.4"
+      "version": "7.16.0"
     },
     {
       "component_type": "python-package",
@@ -98,11 +98,11 @@
     },
     {
       "component_type": "python-package",
-      "digest": "46dfe6e5ac462d0f680ecd9abcf66e829b6a2334824b4d9e3979b31135caf281",
+      "digest": "4d113161aca8582e8d28fddf3ea50f19b607209c2b3e4364379a163454680084",
       "license": "BSD-3-Clause",
       "name": "idna",
       "source": "requirements/environment.lock.json",
-      "version": "3.18"
+      "version": "3.19"
     },
     {
       "component_type": "python-package",
@@ -178,27 +178,27 @@
     },
     {
       "component_type": "python-package",
-      "digest": "d1e56c3412492512fb6b59a9dfc25ab7af2a8204585cd7bca000513023133394",
+      "digest": "0685830d13647bd6f3f05526043d32a8b2a221d86b53773053d6c52bb17a9c07",
       "license": "MIT",
       "name": "pydantic",
       "source": "requirements/environment.lock.json",
-      "version": "2.13.4"
+      "version": "2.13.5"
     },
     {
       "component_type": "python-package",
-      "digest": "e2d0298dfb8712190ad250722e11a46a4391e71d687d5c7667c09e935cadc63b",
+      "digest": "a193d0a16e9372c99b84b9216e274e28521fe5e5bf7be7b8b11be1c3c50cd9ca",
       "license": "MIT",
       "name": "pydantic-core",
       "source": "requirements/environment.lock.json",
-      "version": "2.46.4"
+      "version": "2.46.5"
     },
     {
       "component_type": "python-package",
-      "digest": "e0528f51b30427fae94723662ba622f8d8db2a4d8d3f1365698d67a52450a845",
+      "digest": "1dde075570136774c706bf0009183a793fe0ee262e4a5590cc6eff8453eedd43",
       "license": "BSD-2-Clause",
       "name": "pygments",
       "source": "requirements/environment.lock.json",
-      "version": "2.20.0"
+      "version": "2.21.0"
     },
     {
       "component_type": "python-package",
@@ -258,14 +258,14 @@
     },
     {
       "component_type": "python-package",
-      "digest": "1df2c18ce1cd176adcada42e9960997703575101738207182f28ff14c36536b9",
+      "digest": "6cea83c70e4f2746374ca19af72a52406aa706ad8735b11d72fbd5fd82f7cbff",
       "license": "BSD-3-Clause",
       "name": "uvicorn",
       "source": "requirements/environment.lock.json",
-      "version": "0.52.3"
+      "version": "0.52.4"
     }
   ],
-  "entries_sha256": "816238ade847da26f43a4e2600f10b3ec753c127d014b9ba9711618606897f4c",
+  "entries_sha256": "5f30a9bcc3d7aa9ac4470ec4d6a6e71e2a1a161e96fa6909d0cc9bea4651b072",
   "schema_version": "1.0.0",
   "scope": "python-runtime-closure"
 }
