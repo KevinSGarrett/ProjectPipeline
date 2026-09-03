@@ -845,6 +845,31 @@ def test_campaign_publication_eligibility_recomputes_qualification_event_hashes(
     controller.close()
 
 
+def test_campaign_publication_eligibility_recomputes_campaign_event_hashes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = controller.advance(_ready_after_72h(controller, tmp_path)["campaign_id"])
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.campaign.inspect_worktree_identity",
+        lambda _root: _identity(),
+    )
+    controller.qualification._db.execute(
+        """
+        UPDATE campaign_events
+        SET payload_json = ?
+        WHERE campaign_id = ? AND action = 'READY_TO_PUBLISH'
+        """,
+        ('{"admitted_inventory_sha256":"' + ("d" * 64) + '"}', ready["campaign_id"]),
+    )
+    controller.qualification._db.commit()
+    with pytest.raises(ValueError, match="campaign event digest is invalid"):
+        verify_campaign_publication_eligibility(
+            tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
+        )
+    controller.close()
+
+
 def test_advance_auto_finalizes_after_ready(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     controller = _controller(tmp_path)
     ready = _ready_after_72h(controller, tmp_path)

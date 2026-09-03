@@ -516,6 +516,40 @@ def verify_campaign_publication_eligibility(
             previous = computed
         if previous != str(qualification["last_event_sha256"]):
             raise ValueError("campaign qualification event chain is incomplete")
+        campaign_events = connection.execute(
+            """
+            SELECT action, status, payload_json, prev_event_sha256, event_sha256, created_at_utc
+            FROM campaign_events
+            WHERE campaign_id = ? ORDER BY rowid
+            """,
+            (campaign_id,),
+        ).fetchall()
+        previous_campaign: str | None = None
+        for event in campaign_events:
+            if event["prev_event_sha256"] != previous_campaign or not event["event_sha256"]:
+                raise ValueError("campaign event chain is incomplete")
+            try:
+                campaign_payload = json.loads(str(event["payload_json"]))
+            except json.JSONDecodeError as exc:
+                raise ValueError("campaign event payload is malformed") from exc
+            if not isinstance(campaign_payload, dict):
+                raise ValueError("campaign event payload is malformed")
+            campaign_body = {
+                "campaign_id": campaign_id,
+                "action": str(event["action"]),
+                "status": str(event["status"]),
+                "payload": campaign_payload,
+                "prev_event_sha256": previous_campaign,
+                "created_at_utc": str(event["created_at_utc"]),
+            }
+            computed_campaign = hashlib.sha256(
+                json.dumps(campaign_body, sort_keys=True).encode()
+            ).hexdigest()
+            if computed_campaign != str(event["event_sha256"]):
+                raise ValueError("campaign event digest is invalid")
+            previous_campaign = computed_campaign
+        if previous_campaign != str(campaign["last_event_sha256"] or ""):
+            raise ValueError("campaign event chain is incomplete")
         attested_inventory = None
         for item in connection.execute(
             """
