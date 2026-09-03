@@ -167,7 +167,7 @@ def test_campaign_release_publication_finalizes_only_after_remote_bytes_verify(
     assert not any(call[0] == "create_draft_release" for call in remote.calls)
 
 
-def test_campaign_release_publication_rejects_unbound_desktop_artifacts(
+def test_campaign_release_publication_publishes_admitted_remote_bytes_without_local_desktop(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
     bundle = _bundle(tmp_path, desktop_bound=False)
@@ -176,24 +176,9 @@ def test_campaign_release_publication_rejects_unbound_desktop_artifacts(
     remote = MockGitHubAdapter(repository_slug="owner/repo")
     remote.provider_id = "github-rest"
     _seed_admitted(remote, bundle, tmp_path / "evidence")
-    _patch_campaign_gate(monkeypatch)
-    monkeypatch.setattr(
-        release_publication,
-        "build_release_bundle",
-        lambda *_args, **_kwargs: bundle,
-    )
-    with pytest.raises(GitHubStewardError, match="real bound desktop artifacts"):
-        release_publication.publish_campaign_release(
-            repository_root=ROOT,
-            campaign_database=tmp_path / "campaign.sqlite3",
-            campaign_id="QCAMP-TEST",
-            evidence_path=tmp_path / "evidence",
-            repository_slug="owner/repo",
-            remote=remote,
-            actor_id="actor:test",
-            authorization_id="auth:test",
-            correlation_id="corr:test",
-        )
+    result, remote, _ = _publish(tmp_path, monkeypatch, bundle=bundle, remote=remote)
+    assert result["publication"]["state"] == "PUBLISHED"
+    assert not any(call[0] == "create_draft_release" for call in remote.calls)
 
 
 def test_campaign_release_publication_rejects_fixture_desktop_for_live_provider(
@@ -234,7 +219,7 @@ def test_campaign_release_publication_rejects_mock_remote(
         )
 
 
-def test_publication_rejects_changed_bytes_at_same_source_identity(
+def test_publication_ignores_local_rebuild_and_keeps_admitted_remote_bytes(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):
     admitted = _bundle(tmp_path, payload=b"admitted-bytes")
@@ -248,18 +233,22 @@ def test_publication_rejects_changed_bytes_at_same_source_identity(
     monkeypatch.setattr(
         release_publication, "build_release_bundle", lambda *_args, **_kwargs: rebuilt
     )
-    with pytest.raises(GitHubStewardError, match="changed bytes"):
-        release_publication.publish_campaign_release(
-            repository_root=ROOT,
-            campaign_database=tmp_path / "campaign.sqlite3",
-            campaign_id="QCAMP-TEST",
-            evidence_path=tmp_path / "evidence",
-            repository_slug="owner/repo",
-            remote=remote,
-            actor_id="actor:test",
-            authorization_id="auth:test",
-            correlation_id="corr:test",
-        )
+    result = release_publication.publish_campaign_release(
+        repository_root=ROOT,
+        campaign_database=tmp_path / "campaign.sqlite3",
+        campaign_id="QCAMP-TEST",
+        evidence_path=tmp_path / "evidence",
+        repository_slug="owner/repo",
+        remote=remote,
+        actor_id="actor:test",
+        authorization_id="auth:test",
+        correlation_id="corr:test",
+    )
+    assert result["publication"]["state"] == "PUBLISHED"
+    assert (
+        result["publication"]["assets"][0]["sha256"]
+        == hashlib.sha256(b"admitted-bytes").hexdigest()
+    )
 
 
 def test_publication_rejects_missing_or_substituted_draft_identity(

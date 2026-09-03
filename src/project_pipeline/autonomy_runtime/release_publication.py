@@ -96,7 +96,8 @@ def _reconcile_interrupted_writes(
     service: GitHubDraftReleaseService,
     *,
     repository_slug: str,
-    bundle: Any,
+    source_sha: str,
+    tag_name: str,
     artifact_payloads: dict[str, bytes],
     campaign_id: str,
 ) -> None:
@@ -107,10 +108,10 @@ def _reconcile_interrupted_writes(
             operation = service.store.mark_interrupted_pending_unknown(operation)
         if operation.state.value != "UNKNOWN_OUTCOME":
             continue
-        if operation.expected_head_sha != bundle.version.source_sha:
+        if operation.expected_head_sha != source_sha:
             continue
         if operation.operation_type.value == "CREATE_DRAFT_RELEASE":
-            if operation.payload.get("tag_name") == bundle.version.tag_name:
+            if operation.payload.get("tag_name") == tag_name:
                 service.reconcile_create_draft(operation)
         elif operation.operation_type.value == "UPLOAD_RELEASE_ASSET":
             name = canonical_release_asset_name(str(operation.payload.get("name") or ""))
@@ -220,66 +221,45 @@ def publish_campaign_release(
         or inventory["source_tree"] != str(eligibility["integrated_tree"]).lower()
     ):
         raise GitHubStewardError("admitted inventory is not bound to the attested campaign")
-    bundle = build_release_bundle(
-        root,
-        evidence / "release-bundle",
-        desktop_artifact_dir=desktop_artifact_dir,
-        fixture_desktop=fixture_desktop,
-    )
-    if (
-        bundle.version.source_sha != eligibility["integrated_sha"]
-        or bundle.version.source_tree != eligibility["integrated_tree"]
-    ):
-        raise GitHubStewardError("release bundle identity differs from the attested campaign")
     if remote.provider_id != "github-rest":
         raise GitHubStewardError("campaign publication requires the GitHub REST adapter")
     if fixture_desktop:
         raise GitHubStewardError("fixture desktop artifacts are test-only and cannot be published")
-    if not bundle.desktop_bound and not fixture_desktop:
-        raise GitHubStewardError("release publication requires real bound desktop artifacts")
-    expected_assets = _assert_bundle_matches_admitted(bundle, inventory)
-    local_payloads = _artifact_payloads(bundle)
-    if {name: hashlib.sha256(payload).hexdigest() for name, payload in local_payloads.items()} != (
-        expected_assets
-    ):
-        raise GitHubStewardError("release bundle bytes differ from its canonical asset manifest")
-    for name, digest in expected_assets.items():
-        if name not in local_payloads:
-            raise GitHubStewardError("admitted asset is missing from the local bundle cache")
-        payload = local_payloads[name]
-        if hashlib.sha256(payload).hexdigest() != digest or len(payload) != next(
-            int(item["size_bytes"]) for item in inventory["assets"] if item["name"] == name
-        ):
-            raise GitHubStewardError("changed bytes at the same source SHA/tree")
+    source_sha = str(eligibility["integrated_sha"]).lower()
+    source_tree = str(eligibility["integrated_tree"]).lower()
+    tag_name = str(inventory["tag_name"])
+    expected_assets = admitted_asset_sha256s(inventory)
+    if desktop_artifact_dir is not None:
+        bundle = build_release_bundle(
+            root,
+            evidence / "release-bundle",
+            desktop_artifact_dir=desktop_artifact_dir,
+            fixture_desktop=False,
+        )
+        if bundle.version.source_sha != source_sha or bundle.version.source_tree != source_tree:
+            raise GitHubStewardError("release bundle identity differs from the attested campaign")
+        _assert_bundle_matches_admitted(bundle, inventory)
 
     evidence.mkdir(parents=True, exist_ok=True)
     store_path = evidence / "release-steward.sqlite3"
     with GitHubStewardStore(store_path, root) as store:
         service = GitHubDraftReleaseService(remote=remote, store=store)
-        _reconcile_interrupted_writes(
-            service,
-            repository_slug=repository_slug,
-            bundle=bundle,
-            artifact_payloads=local_payloads,
-            campaign_id=campaign_id,
-        )
         release = _require_admitted_draft(
             remote,
             repository_slug=repository_slug,
             inventory=inventory,
-            source_sha=bundle.version.source_sha,
-            source_tree=bundle.version.source_tree,
-            tag_name=bundle.version.tag_name,
+            source_sha=source_sha,
+            source_tree=source_tree,
+            tag_name=tag_name,
         )
         listed = service.find_draft(
             repository_slug,
-            tag_name=bundle.version.tag_name,
-            target_commitish=bundle.version.source_sha,
+            tag_name=tag_name,
+            target_commitish=source_sha,
         )
         if listed is not None and int(listed.api_id) != int(inventory["draft_id"]):
             raise GitHubStewardError("admitted draft identity was substituted")
         release_id = release.api_id
-
         existing_assets = {
             canonical_release_asset_name(asset.name): asset for asset in release.assets
         }
@@ -303,22 +283,29 @@ def publish_campaign_release(
                 raise GitHubStewardError("remote draft contains an asset with divergent bytes")
             if int(existing.api_id) != admitted_ids[name]:
                 raise GitHubStewardError("admitted asset identity was substituted")
-
-        release = remote.get_release(repository_slug, release_id)
-        if release is None:
-            raise GitHubStewardError("release disappeared before finalization")
         draft_bytes = service.acquire_assets(
             repository_slug,
             release_id=release_id,
             expected_sha256s=expected_assets,
-            expected_head_sha=bundle.version.source_sha,
+            expected_head_sha=source_sha,
         )
+        _reconcile_interrupted_writes(
+            service,
+            repository_slug=repository_slug,
+            source_sha=source_sha,
+            tag_name=tag_name,
+            artifact_payloads=draft_bytes,
+            campaign_id=campaign_id,
+        )
+        release = remote.get_release(repository_slug, release_id)
+        if release is None:
+            raise GitHubStewardError("release disappeared before finalization")
         if release.draft:
             finalize = service.plan_finalize(
                 repository_slug,
                 release_id=release_id,
-                expected_head_sha=bundle.version.source_sha,
-                expected_source_tree=bundle.version.source_tree,
+                expected_head_sha=source_sha,
+                expected_source_tree=source_tree,
                 campaign_database=campaign_database,
                 campaign_id=campaign_id,
                 repository_root=root,
@@ -343,8 +330,8 @@ def publish_campaign_release(
                 retry = service.plan_finalize(
                     repository_slug,
                     release_id=release_id,
-                    expected_head_sha=bundle.version.source_sha,
-                    expected_source_tree=bundle.version.source_tree,
+                    expected_head_sha=source_sha,
+                    expected_source_tree=source_tree,
                     campaign_database=campaign_database,
                     campaign_id=campaign_id,
                     repository_root=root,
@@ -373,21 +360,21 @@ def publish_campaign_release(
         final_release = remote.get_release(repository_slug, release_id)
         if final_release is None or final_release.draft:
             raise GitHubStewardError("published release readback is absent or still a draft")
-        if final_release.target_commitish.lower() != bundle.version.source_sha:
+        if final_release.target_commitish.lower() != source_sha:
             raise GitHubStewardError("published release target differs from the campaign candidate")
         remote_bytes = service.acquire_assets(
             repository_slug,
             release_id=final_release.api_id,
             expected_sha256s=expected_assets,
-            expected_head_sha=bundle.version.source_sha,
+            expected_head_sha=source_sha,
         )
         if remote_bytes != draft_bytes:
             raise GitHubStewardError("published release bytes differ from the verified draft bytes")
         acquired_path = write_acquired_assets(
             candidate_acquired_dir(
                 evidence,
-                source_sha=bundle.version.source_sha,
-                source_tree=bundle.version.source_tree,
+                source_sha=source_sha,
+                source_tree=source_tree,
             ),
             remote_bytes,
         )
@@ -411,8 +398,8 @@ def publish_campaign_release(
                 "provider": remote.provider_id,
                 "release_id": final_release.api_id,
                 "tag_name": final_release.tag_name,
-                "source_sha": bundle.version.source_sha,
-                "source_tree": bundle.version.source_tree,
+                "source_sha": source_sha,
+                "source_tree": source_tree,
                 "assets": assets,
             },
         )
@@ -422,8 +409,8 @@ def publish_campaign_release(
             "draft": False,
             "release_id": final_release.api_id,
             "tag_name": final_release.tag_name,
-            "target_commitish": bundle.version.source_sha,
-            "source_tree": bundle.version.source_tree,
+            "target_commitish": source_sha,
+            "source_tree": source_tree,
             "provider": remote.provider_id,
             "fixture_desktop": False,
             "assets": assets,

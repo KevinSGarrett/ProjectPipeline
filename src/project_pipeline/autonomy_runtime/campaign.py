@@ -2215,7 +2215,6 @@ class CampaignController:
         if row is None:
             raise ValueError("campaign publication requires the bound campaign row")
         evidence = Path(str(row["evidence_path"]))
-        desktop_dir = evidence / "desktop-artifacts"
         return [
             *self._default_finalize_commands(row),
             [
@@ -2229,8 +2228,6 @@ class CampaignController:
                 str(row["campaign_id"]),
                 "--evidence-path",
                 str(evidence),
-                "--desktop-dir",
-                str(desktop_dir),
             ],
         ]
 

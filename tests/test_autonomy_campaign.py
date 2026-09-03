@@ -1132,6 +1132,7 @@ def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):
     assert any(" -m project_pipeline validate --root " in row for row in rendered)
     assert any("campaign_release_publication.py" in row for row in rendered)
     assert all("build_campaign_desktop_artifacts.py" not in row for row in rendered)
+    assert all("--desktop-dir" not in row for row in rendered)
     assert command_kind(post_release[0]) == "release.remote-lifecycle"
     assert command_is_allowlisted(post_release[0], repository_root=ROOT) is True
     acquired_dir = Path(post_release[0][post_release[0].index("--acquired-dir") + 1])
