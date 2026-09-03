@@ -6,6 +6,7 @@ A rebuild is not a license to replace the qualified draft or its assets.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -42,6 +43,13 @@ def load_admitted_release_inventory(evidence_path: Path) -> dict[str, Any]:
     except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         raise GitHubStewardError("admitted release inventory is malformed") from exc
     return validate_admitted_release_inventory(payload)
+
+
+def admitted_inventory_digest(evidence_path: Path) -> str:
+    path = admitted_inventory_path(evidence_path)
+    if not path.is_file():
+        raise GitHubStewardError("publication requires an admitted release inventory")
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def validate_admitted_release_inventory(payload: dict[str, Any]) -> dict[str, Any]:

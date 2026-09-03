@@ -801,6 +801,17 @@ def test_campaign_publication_eligibility_requires_attested_72h(
     )
     assert eligibility["attested_elapsed_seconds"] == 72 * 3600
     assert eligibility["admitted_draft_id"] == 380237674
+    replaced = json.loads(
+        (tmp_path / "evidence" / "admitted_release_inventory.json").read_text(encoding="utf-8")
+    )
+    replaced["draft_id"] = 1
+    (tmp_path / "evidence" / "admitted_release_inventory.json").write_text(
+        json.dumps(replaced), encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="inventory digest drifted"):
+        verify_campaign_publication_eligibility(
+            tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
+        )
     controller.qualification._db.execute(
         "UPDATE qualification_runs SET attested_elapsed_seconds = ? WHERE run_id = ?",
         (71 * 3600, ready["qualification_run_id"]),

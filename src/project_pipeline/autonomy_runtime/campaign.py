@@ -13,6 +13,8 @@ from typing import Any, cast
 from uuid import uuid4
 
 from project_pipeline.autonomy_runtime.admitted_release import (
+    admitted_inventory_digest,
+    admitted_inventory_path,
     load_admitted_release_inventory,
     write_admitted_release_inventory,
 )
@@ -514,6 +516,27 @@ def verify_campaign_publication_eligibility(
             previous = computed
         if previous != str(qualification["last_event_sha256"]):
             raise ValueError("campaign qualification event chain is incomplete")
+        attested_inventory = None
+        for item in connection.execute(
+            """
+            SELECT payload_json FROM campaign_events
+            WHERE campaign_id = ? AND action IN ('ADMIT_4H', 'READY_TO_PUBLISH')
+            ORDER BY rowid
+            """,
+            (campaign_id,),
+        ):
+            try:
+                payload = json.loads(str(item["payload_json"]))
+            except json.JSONDecodeError as exc:
+                raise ValueError("campaign event payload is malformed") from exc
+            digest = str(payload.get("admitted_inventory_sha256") or "")
+            if len(digest) == 64:
+                attested_inventory = digest
+        if attested_inventory is None:
+            raise ValueError("admitted release inventory was not attested")
+        current_digest = admitted_inventory_digest(Path(str(campaign["evidence_path"])))
+        if attested_inventory != current_digest:
+            raise ValueError("admitted release inventory digest drifted after attestation")
     finally:
         connection.close()
     identity = inspect_worktree_identity(repository_root)
@@ -827,7 +850,10 @@ class CampaignController:
                 campaign_id,
                 "ADMIT_4H",
                 "RUNNING",
-                {"qualification_run_id": started["run_id"]},
+                {
+                    "qualification_run_id": started["run_id"],
+                    **self._admitted_inventory_attestation(row),
+                },
                 now,
             )
         return self.get(campaign_id)
@@ -1397,7 +1423,7 @@ class CampaignController:
                 """,
                 (now.isoformat(), "ready-to-publish", campaign_id),
             )
-            self._append_event(campaign_id, "READY_TO_PUBLISH", "READY_TO_PUBLISH", {}, now)
+            self._append_event(campaign_id, "READY_TO_PUBLISH", "READY_TO_PUBLISH", self._admitted_inventory_attestation(row), now)
         return self.get(campaign_id)
 
     def _require_clean_identity(self) -> dict[str, Any]:
@@ -1557,6 +1583,34 @@ class CampaignController:
             },
         )
 
+    def _admitted_inventory_attestation(self, row: sqlite3.Row | dict[str, Any]) -> dict[str, Any]:
+        evidence = Path(str(row["evidence_path"]))
+        if not admitted_inventory_path(evidence).is_file():
+            if self._allow_unbound_candidate_for_tests:
+                return {}
+            raise ValueError("campaign requires an admitted release inventory")
+        return {"admitted_inventory_sha256": admitted_inventory_digest(evidence)}
+
+    def _attested_inventory_digest(self, campaign_id: str) -> str | None:
+        rows = self._db.execute(
+            """
+            SELECT payload_json FROM campaign_events
+            WHERE campaign_id = ? AND action IN ('ADMIT_4H', 'READY_TO_PUBLISH')
+            ORDER BY rowid
+            """,
+            (campaign_id,),
+        ).fetchall()
+        attested: str | None = None
+        for item in rows:
+            try:
+                payload = json.loads(str(item["payload_json"]))
+            except json.JSONDecodeError:
+                continue
+            digest = str(payload.get("admitted_inventory_sha256") or "")
+            if len(digest) == 64:
+                attested = digest
+        return attested
+
     def _require_bound_admitted_inventory(self, row: sqlite3.Row | dict[str, Any]) -> None:
         inventory = load_admitted_release_inventory(Path(str(row["evidence_path"])))
         if (
@@ -1565,6 +1619,12 @@ class CampaignController:
             or inventory["target_commitish"] != str(row["integrated_sha"]).lower()
         ):
             raise ValueError("admitted release inventory is not bound to the attested campaign")
+        digest = admitted_inventory_digest(Path(str(row["evidence_path"])))
+        attested = self._attested_inventory_digest(str(row["campaign_id"]))
+        if attested is None:
+            raise ValueError("admitted release inventory was not attested")
+        if attested != digest:
+            raise ValueError("admitted release inventory digest drifted after attestation")
 
     def _assert_identity(self, row: sqlite3.Row | dict[str, Any]) -> None:
         identity = self._inspect_identity(self.repository_root)
