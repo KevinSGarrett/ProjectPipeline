@@ -21,6 +21,7 @@ from project_pipeline.agent_router.adapters import (
 )
 from project_pipeline.agent_router.registry import load_agent_registry
 from project_pipeline.autonomy_runtime.command_execution import redact_output
+from project_pipeline.configuration.campaign_environment import cursor_cli_child_environment
 from project_pipeline.domain.agents import ExecutionTaskContract
 from project_pipeline.lifecycle.attestation_recovery import (
     EXPECTED_PUBLIC_ATTESTATION_SHA256,
@@ -146,6 +147,7 @@ def locate_cursor_cli_launch(explicit: str | None = None) -> dict[str, Any] | No
         and not line.strip().rstrip("\x00").lower().startswith("docker")
     )
     for distribution in distributions:
+        wsl_env = cursor_cli_child_environment(os.environ, (wsl, "-d", distribution, "--"))
         try:
             located = subprocess.run(
                 [
@@ -161,6 +163,7 @@ def locate_cursor_cli_launch(explicit: str | None = None) -> dict[str, Any] | No
                 timeout=15,
                 check=False,
                 shell=False,
+                env=wsl_env,
             )
         except (OSError, subprocess.TimeoutExpired):
             continue
@@ -175,6 +178,7 @@ def locate_cursor_cli_launch(explicit: str | None = None) -> dict[str, Any] | No
                 timeout=15,
                 check=False,
                 shell=False,
+                env=wsl_env,
             )
         except (OSError, subprocess.TimeoutExpired):
             continue
@@ -189,6 +193,7 @@ def locate_cursor_cli_launch(explicit: str | None = None) -> dict[str, Any] | No
                 timeout=30,
                 check=False,
                 shell=False,
+                env=wsl_env,
             )
             status_ok = status.returncode == 0
         except subprocess.TimeoutExpired:

@@ -10,6 +10,7 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any, Protocol, cast
 
+from project_pipeline.configuration.campaign_environment import cursor_cli_child_environment
 from project_pipeline.domain.agents import (
     ExecutionTaskContract,
     NormalizedUsage,
@@ -525,6 +526,7 @@ class CursorCliProviderAdapter:
                 timeout=self.timeout_seconds,
                 check=False,
                 shell=False,
+                env=cursor_cli_child_environment(os.environ, self.command_prefix),
             )
         except FileNotFoundError as error:
             raise ProviderAdapterError(

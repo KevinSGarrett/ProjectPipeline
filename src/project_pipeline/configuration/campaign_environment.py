@@ -6,7 +6,7 @@ import os
 import re
 import sqlite3
 import subprocess
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -384,3 +384,30 @@ def require_cursor_cli_duration_credentials(environment: Mapping[str, str]) -> N
             "campaign duration environment lacks CURSOR_API_KEY; "
             "agent login sessions are not durable across the 4-hour cursor probe cadence"
         )
+
+
+def cursor_cli_child_environment(
+    parent: Mapping[str, str],
+    command_prefix: Sequence[str] = (),
+) -> dict[str, str]:
+    """Copy the parent env and, for WSL launches, export CURSOR_API_KEY via WSLENV.
+
+    ``wsl.exe`` does not forward Windows process variables into the distribution
+    unless they are named in ``WSLENV``. Duration dispatch uses the API key, not
+    an ``agent login`` session, so a WSL child must receive the same key the
+    Windows parent already inherited. The secret value is never logged.
+    """
+
+    result = {key: value for key, value in parent.items() if value is not None}
+    if not command_prefix:
+        return result
+    launcher = Path(str(command_prefix[0])).name.casefold()
+    if launcher not in {"wsl.exe", "wsl"}:
+        return result
+    if not str(result.get("CURSOR_API_KEY") or "").strip():
+        return result
+    existing = [part for part in str(result.get("WSLENV") or "").split(":") if part.strip()]
+    if not any(part.split("/", 1)[0] == "CURSOR_API_KEY" for part in existing):
+        existing.append("CURSOR_API_KEY")
+    result["WSLENV"] = ":".join(existing)
+    return result

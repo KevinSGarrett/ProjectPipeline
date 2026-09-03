@@ -39,6 +39,7 @@ _CURSOR_DURATION_AUTH_ACTIONS = frozenset(
         "admit-24h",
         "admit-72h",
         "run",
+        "heartbeat",
         "execute",
         "advance",
     }

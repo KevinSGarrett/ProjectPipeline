@@ -207,8 +207,9 @@ def test_cursor_cli_adapter_requires_explicit_mutation_admission(tmp_path: Path)
     assert "--force" in observed["argv"]
 
 
-def test_cursor_cli_adapter_supports_shell_free_wsl_prefix(tmp_path: Path):
+def test_cursor_cli_adapter_supports_shell_free_wsl_prefix(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     observed = {}
+    monkeypatch.setenv("CURSOR_API_KEY", "cursor-duration-key")
 
     def runner(argv, **kwargs):
         observed.update(argv=argv, kwargs=kwargs)
@@ -229,6 +230,8 @@ def test_cursor_cli_adapter_supports_shell_free_wsl_prefix(tmp_path: Path):
         "/home/kevin/.local/bin/cursor-agent",
     ]
     assert observed["kwargs"]["shell"] is False
+    wsenv = (observed["kwargs"].get("env") or {}).get("WSLENV", "")
+    assert "CURSOR_API_KEY" in wsenv.split(":")
 
 
 def test_cursor_cli_adapter_replays_existing_idempotent_artifact(tmp_path: Path):

@@ -29,6 +29,7 @@ from project_pipeline.configuration import (
 from project_pipeline.configuration.campaign_environment import (
     campaign_credential_envelope_scope,
     campaign_runtime_environment_from_process,
+    cursor_cli_child_environment,
     limited_campaign_subprocess_environment,
     load_campaign_runtime_environment,
     require_cursor_cli_duration_credentials,
@@ -381,6 +382,21 @@ class ConfigurationTests(unittest.TestCase):
         self.assertNotIn("cursor-duration-key", str(raised.exception))
         self.assertIn("CURSOR_API_KEY", str(raised.exception))
         require_cursor_cli_duration_credentials(present)
+
+    def test_wsl_cursor_child_environment_names_api_key_in_wsenv(self) -> None:
+        parent = {
+            "PATH": "safe-path",
+            "CURSOR_API_KEY": "cursor-duration-key",
+            "WSLENV": "EXISTING_VAR",
+        }
+        native = cursor_cli_child_environment(parent, ())
+        self.assertEqual(native["WSLENV"], "EXISTING_VAR")
+        forwarded = cursor_cli_child_environment(
+            parent, ("C:\\Windows\\System32\\wsl.exe", "-d", "Ubuntu", "--")
+        )
+        self.assertIn("CURSOR_API_KEY", forwarded["WSLENV"].split(":"))
+        self.assertIn("EXISTING_VAR", forwarded["WSLENV"].split(":"))
+        self.assertNotIn("cursor-duration-key", forwarded["WSLENV"])
 
     def test_campaign_runtime_environment_rejects_non_campaign_secret_schemes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
