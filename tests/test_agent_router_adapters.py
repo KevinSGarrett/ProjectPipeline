@@ -207,7 +207,9 @@ def test_cursor_cli_adapter_requires_explicit_mutation_admission(tmp_path: Path)
     assert "--force" in observed["argv"]
 
 
-def test_cursor_cli_adapter_supports_shell_free_wsl_prefix(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_cursor_cli_adapter_supports_shell_free_wsl_prefix(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     observed = {}
     monkeypatch.setenv("CURSOR_API_KEY", "cursor-duration-key")
 

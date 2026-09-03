@@ -107,7 +107,9 @@ def test_campaign_run_fails_closed_without_cursor_api_key(monkeypatch, tmp_path:
         module.main()
 
 
-def test_campaign_heartbeat_fails_closed_without_cursor_api_key(monkeypatch, tmp_path: Path) -> None:
+def test_campaign_heartbeat_fails_closed_without_cursor_api_key(
+    monkeypatch, tmp_path: Path
+) -> None:
     module = _load_script()
     bound_database = tmp_path / "bound.sqlite3"
     bound_database.touch()
