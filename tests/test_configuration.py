@@ -392,8 +392,13 @@ class ConfigurationTests(unittest.TestCase):
         native = cursor_cli_child_environment(parent, ())
         self.assertEqual(native["WSLENV"], "EXISTING_VAR")
         forwarded = cursor_cli_child_environment(
-            parent, ("C:\\Windows\\System32\\wsl.exe", "-d", "Ubuntu", "--")
+            parent, (r"C:\Windows\System32\wsl.exe", "-d", "Ubuntu", "--")
         )
+        posix_forwarded = cursor_cli_child_environment(
+            parent, ("/mnt/c/Windows/System32/wsl.exe", "-d", "Ubuntu", "--")
+        )
+        self.assertIn("CURSOR_API_KEY", forwarded["WSLENV"].split(":"))
+        self.assertIn("CURSOR_API_KEY", posix_forwarded["WSLENV"].split(":"))
         self.assertIn("CURSOR_API_KEY", forwarded["WSLENV"].split(":"))
         self.assertIn("EXISTING_VAR", forwarded["WSLENV"].split(":"))
         self.assertNotIn("cursor-duration-key", forwarded["WSLENV"])

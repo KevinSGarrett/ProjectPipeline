@@ -401,7 +401,7 @@ def cursor_cli_child_environment(
     result = {key: value for key, value in parent.items() if value is not None}
     if not command_prefix:
         return result
-    launcher = Path(str(command_prefix[0])).name.casefold()
+    launcher = Path(str(command_prefix[0]).replace("\\", "/")).name.casefold()
     if launcher not in {"wsl.exe", "wsl"}:
         return result
     if not str(result.get("CURSOR_API_KEY") or "").strip():
