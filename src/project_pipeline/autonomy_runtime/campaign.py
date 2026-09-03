@@ -1457,7 +1457,13 @@ class CampaignController:
                 """,
                 (now.isoformat(), "ready-to-publish", campaign_id),
             )
-            self._append_event(campaign_id, "READY_TO_PUBLISH", "READY_TO_PUBLISH", self._admitted_inventory_attestation(row), now)
+            self._append_event(
+                campaign_id,
+                "READY_TO_PUBLISH",
+                "READY_TO_PUBLISH",
+                self._admitted_inventory_attestation(row),
+                now,
+            )
         return self.get(campaign_id)
 
     def _require_clean_identity(self) -> dict[str, Any]:
@@ -1587,7 +1593,9 @@ class CampaignController:
             raise ValueError("candidate-admission draft tag is missing")
         assets: list[dict[str, Any]] = []
         by_name = {
-            str(item.get("name")): item for item in draft.get("assets") or [] if isinstance(item, dict)
+            str(item.get("name")): item
+            for item in draft.get("assets") or []
+            if isinstance(item, dict)
         }
         for artifact in artifacts:
             name = str(artifact["name"])
@@ -1596,7 +1604,9 @@ class CampaignController:
             try:
                 asset_id = int(remote_asset.get("id") or remote_asset.get("api_id"))
             except (TypeError, ValueError) as error:
-                raise ValueError("candidate-admission draft asset identity is incomplete") from error
+                raise ValueError(
+                    "candidate-admission draft asset identity is incomplete"
+                ) from error
             assets.append(
                 {
                     "id": asset_id,

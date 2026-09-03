@@ -22,7 +22,9 @@ ADMITTED_DRAFT_ID = 380237674
 ADMITTED_ASSET_ID = 539058355
 
 
-def _bundle(tmp_path: Path, *, desktop_bound: bool = True, payload: bytes = b"candidate-bytes") -> ReleaseBundle:
+def _bundle(
+    tmp_path: Path, *, desktop_bound: bool = True, payload: bytes = b"candidate-bytes"
+) -> ReleaseBundle:
     output = tmp_path / "bundle"
     output.mkdir(exist_ok=True)
     artifact = output / "project_pipeline-0.9.0-py3-none-any.whl"
@@ -65,7 +67,9 @@ def _eligible(*_args: object, **_kwargs: object) -> dict[str, object]:
     }
 
 
-def _inventory_for(bundle: ReleaseBundle, *, draft_id: int = ADMITTED_DRAFT_ID) -> dict[str, object]:
+def _inventory_for(
+    bundle: ReleaseBundle, *, draft_id: int = ADMITTED_DRAFT_ID
+) -> dict[str, object]:
     artifact = bundle.artifacts[0]
     return {
         "draft_id": draft_id,
@@ -128,18 +132,22 @@ def _publish(
         ).MockGitHubAdapter(repository_slug="owner/repo")
         remote.provider_id = "github-rest"
         _seed_admitted(remote, bundle, tmp_path / "evidence")
-    return release_publication.publish_campaign_release(
-        repository_root=ROOT,
-        campaign_database=tmp_path / "campaign.sqlite3",
-        campaign_id="QCAMP-TEST",
-        evidence_path=tmp_path / "evidence",
-        repository_slug="owner/repo",
-        remote=remote,
-        actor_id="actor:test",
-        authorization_id="auth:test",
-        correlation_id="corr:test",
-        fixture_desktop=fixture_desktop,
-    ), remote, bundle
+    return (
+        release_publication.publish_campaign_release(
+            repository_root=ROOT,
+            campaign_database=tmp_path / "campaign.sqlite3",
+            campaign_id="QCAMP-TEST",
+            evidence_path=tmp_path / "evidence",
+            repository_slug="owner/repo",
+            remote=remote,
+            actor_id="actor:test",
+            authorization_id="auth:test",
+            correlation_id="corr:test",
+            fixture_desktop=fixture_desktop,
+        ),
+        remote,
+        bundle,
+    )
 
 
 def test_campaign_release_publication_finalizes_only_after_remote_bytes_verify(

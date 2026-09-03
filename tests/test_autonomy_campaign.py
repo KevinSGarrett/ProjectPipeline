@@ -11,8 +11,8 @@ from pathlib import Path
 
 import pytest
 
-from project_pipeline.autonomy_runtime.admitted_release import write_admitted_release_inventory
 from project_pipeline.autonomy_runtime import campaign as campaign_module
+from project_pipeline.autonomy_runtime.admitted_release import write_admitted_release_inventory
 from project_pipeline.autonomy_runtime.campaign import (
     REQUIRED_PP384_STAGES,
     CampaignController,

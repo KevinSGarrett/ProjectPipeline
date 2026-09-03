@@ -292,11 +292,14 @@ def publish_campaign_release(
         if missing_assets:
             raise GitHubStewardError("remote draft is missing admitted assets")
         admitted_ids = {str(item["name"]): int(item["id"]) for item in inventory["assets"]}
-        admitted_sizes = {str(item["name"]): int(item["size_bytes"]) for item in inventory["assets"]}
+        admitted_sizes = {
+            str(item["name"]): int(item["size_bytes"]) for item in inventory["assets"]
+        }
         for name, existing in existing_assets.items():
-            if existing.sha256 != expected_assets[name] or int(existing.size_bytes) != admitted_sizes[
-                name
-            ]:
+            if (
+                existing.sha256 != expected_assets[name]
+                or int(existing.size_bytes) != admitted_sizes[name]
+            ):
                 raise GitHubStewardError("remote draft contains an asset with divergent bytes")
             if int(existing.api_id) != admitted_ids[name]:
                 raise GitHubStewardError("admitted asset identity was substituted")
