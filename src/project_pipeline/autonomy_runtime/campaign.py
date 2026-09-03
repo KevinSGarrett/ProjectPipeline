@@ -2047,18 +2047,6 @@ class CampaignController:
             *self._default_finalize_commands(row),
             [
                 self._python(),
-                str(self.repository_root / "scripts" / "build_campaign_desktop_artifacts.py"),
-                "--repository-root",
-                str(self.repository_root),
-                "--output-dir",
-                str(desktop_dir),
-                "--expected-sha",
-                str(row["integrated_sha"]),
-                "--expected-tree",
-                str(row["integrated_tree"]),
-            ],
-            [
-                self._python(),
                 str(self.repository_root / "scripts" / "campaign_release_publication.py"),
                 "--repository-root",
                 str(self.repository_root),
