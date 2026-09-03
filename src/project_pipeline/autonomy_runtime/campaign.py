@@ -1601,8 +1601,11 @@ class CampaignController:
             name = str(artifact["name"])
             remote_asset = by_name.get(name) or {}
             path = Path(str(artifact["path"]))
+            raw_id = remote_asset.get("id", remote_asset.get("api_id"))
+            if raw_id is None:
+                raise ValueError("candidate-admission draft asset identity is incomplete")
             try:
-                asset_id = int(remote_asset.get("id") or remote_asset.get("api_id"))
+                asset_id = int(raw_id)
             except (TypeError, ValueError) as error:
                 raise ValueError(
                     "candidate-admission draft asset identity is incomplete"
