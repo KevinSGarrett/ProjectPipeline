@@ -11,6 +11,7 @@ from pathlib import Path
 
 import pytest
 
+from project_pipeline.autonomy_runtime.admitted_release import write_admitted_release_inventory
 from project_pipeline.autonomy_runtime import campaign as campaign_module
 from project_pipeline.autonomy_runtime.campaign import (
     REQUIRED_PP384_STAGES,
@@ -140,6 +141,24 @@ def _ready_after_72h(controller: CampaignController, tmp_path: Path) -> dict:
         state_path=tmp_path / "state",
         evidence_path=tmp_path / "evidence",
         pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    write_admitted_release_inventory(
+        tmp_path / "evidence",
+        {
+            "draft_id": 380237674,
+            "tag_name": "v0.9.0-rc." + ("a" * 12),
+            "target_commitish": "a" * 40,
+            "source_sha": "a" * 40,
+            "source_tree": "b" * 40,
+            "assets": [
+                {
+                    "id": 539058355,
+                    "name": "project_pipeline-0.9.0-py3-none-any.whl",
+                    "sha256": "c" * 64,
+                    "size_bytes": 16,
+                }
+            ],
+        },
     )
     admitted4 = controller.admit_4h(started["campaign_id"])
     _seed_attested(controller, admitted4["qualification_run_id"], 4)
@@ -781,6 +800,7 @@ def test_campaign_publication_eligibility_requires_attested_72h(
         tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
     )
     assert eligibility["attested_elapsed_seconds"] == 72 * 3600
+    assert eligibility["admitted_draft_id"] == 380237674
     controller.qualification._db.execute(
         "UPDATE qualification_runs SET attested_elapsed_seconds = ? WHERE run_id = ?",
         (71 * 3600, ready["qualification_run_id"]),
@@ -1506,8 +1526,16 @@ def test_production_four_hour_admission_accepts_bound_remote_candidate(
                     "draft_release": {
                         "release_id": 1,
                         "draft": True,
+                        "tag_name": "v0.9.0-rc." + ("a" * 12),
                         "target_commitish": "a" * 40,
-                        "assets": [{"name": artifact.name}],
+                        "assets": [
+                            {
+                                "id": 1,
+                                "name": artifact.name,
+                                "sha256": digest,
+                                "size_bytes": artifact.stat().st_size,
+                            }
+                        ],
                     },
                     "remote_lifecycle": {
                         "state": "VERIFIED",

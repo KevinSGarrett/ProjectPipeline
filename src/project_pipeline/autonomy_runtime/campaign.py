@@ -12,6 +12,10 @@ from pathlib import Path
 from typing import Any, cast
 from uuid import uuid4
 
+from project_pipeline.autonomy_runtime.admitted_release import (
+    load_admitted_release_inventory,
+    write_admitted_release_inventory,
+)
 from project_pipeline.autonomy_runtime.campaign_status import (
     build_status_projection,
     write_status_projection,
@@ -520,12 +524,22 @@ def verify_campaign_publication_eligibility(
         or identity.get("tree") != str(campaign["integrated_tree"])
     ):
         raise ValueError("campaign publication candidate identity drifted")
+    inventory = load_admitted_release_inventory(Path(str(campaign["evidence_path"])))
+    if (
+        inventory["source_sha"] != str(campaign["integrated_sha"]).lower()
+        or inventory["source_tree"] != str(campaign["integrated_tree"]).lower()
+        or inventory["target_commitish"] != str(campaign["integrated_sha"]).lower()
+    ):
+        raise ValueError("admitted release inventory is not bound to the attested campaign")
     return {
         "campaign_id": campaign_id,
         "integrated_sha": str(campaign["integrated_sha"]),
         "integrated_tree": str(campaign["integrated_tree"]),
         "qualification_run_id": run_id,
         "attested_elapsed_seconds": float(qualification["attested_elapsed_seconds"]),
+        "admitted_draft_id": int(inventory["draft_id"]),
+        "admitted_tag_name": str(inventory["tag_name"]),
+        "admitted_assets": tuple(inventory["assets"]),
     }
 
 
@@ -1370,6 +1384,8 @@ class CampaignController:
         return self.get(campaign_id)
 
     def _mark_ready_to_publish(self, campaign_id: str) -> dict[str, Any]:
+        row = self._require(campaign_id)
+        self._require_bound_admitted_inventory(row)
         now = datetime.now(UTC)
         with self._db:
             self._db.execute(
@@ -1496,6 +1512,59 @@ class CampaignController:
         )
         if remote.get("ok") is not True:
             raise ValueError("candidate-admission live remote draft verification failed")
+        self._bind_admitted_inventory_from_admission(evidence_root, payload, row)
+
+    def _bind_admitted_inventory_from_admission(
+        self,
+        evidence_root: Path,
+        payload: dict[str, Any],
+        row: sqlite3.Row | dict[str, Any],
+    ) -> None:
+        draft = payload["draft_release"]
+        artifacts = payload["artifacts"]
+        tag_name = str(draft.get("tag_name") or payload.get("tag_name") or "")
+        if not tag_name:
+            raise ValueError("candidate-admission draft tag is missing")
+        assets: list[dict[str, Any]] = []
+        by_name = {
+            str(item.get("name")): item for item in draft.get("assets") or [] if isinstance(item, dict)
+        }
+        for artifact in artifacts:
+            name = str(artifact["name"])
+            remote_asset = by_name.get(name) or {}
+            path = Path(str(artifact["path"]))
+            try:
+                asset_id = int(remote_asset.get("id") or remote_asset.get("api_id"))
+            except (TypeError, ValueError) as error:
+                raise ValueError("candidate-admission draft asset identity is incomplete") from error
+            assets.append(
+                {
+                    "id": asset_id,
+                    "name": name,
+                    "sha256": str(artifact["sha256"]),
+                    "size_bytes": int(path.stat().st_size),
+                }
+            )
+        write_admitted_release_inventory(
+            evidence_root,
+            {
+                "draft_id": int(draft["release_id"]),
+                "tag_name": tag_name,
+                "target_commitish": str(row["integrated_sha"]),
+                "source_sha": str(row["integrated_sha"]),
+                "source_tree": str(row["integrated_tree"]),
+                "assets": assets,
+            },
+        )
+
+    def _require_bound_admitted_inventory(self, row: sqlite3.Row | dict[str, Any]) -> None:
+        inventory = load_admitted_release_inventory(Path(str(row["evidence_path"])))
+        if (
+            inventory["source_sha"] != str(row["integrated_sha"]).lower()
+            or inventory["source_tree"] != str(row["integrated_tree"]).lower()
+            or inventory["target_commitish"] != str(row["integrated_sha"]).lower()
+        ):
+            raise ValueError("admitted release inventory is not bound to the attested campaign")
 
     def _assert_identity(self, row: sqlite3.Row | dict[str, Any]) -> None:
         identity = self._inspect_identity(self.repository_root)

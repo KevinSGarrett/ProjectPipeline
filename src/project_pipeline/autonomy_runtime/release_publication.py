@@ -288,83 +288,18 @@ def publish_campaign_release(
         extra_assets = set(existing_assets) - set(expected_assets)
         if extra_assets:
             raise GitHubStewardError("remote draft contains extra assets")
-        for artifact in bundle.artifacts:
-            if not artifact.bound:
-                continue
-            name = canonical_release_asset_name(artifact.name)
-            existing = existing_assets.get(name)
-            if existing is not None:
-                if existing.sha256 != artifact.sha256 or int(existing.size_bytes) != int(
-                    artifact.size_bytes
-                ):
-                    raise GitHubStewardError("remote draft contains an asset with divergent bytes")
-                continue
-            if not release.draft:
-                raise GitHubStewardError("published release is missing a candidate artifact")
-            payload = local_payloads[name]
-            operation = service.plan_upload_asset(
-                repository_slug,
-                release_id=release_id,
-                name=name,
-                sha256=artifact.sha256,
-                source_sha=bundle.version.source_sha,
-                actor_id=actor_id,
-                correlation_id=correlation_id,
-            )
-
-            def apply_upload(operation: Any = operation, payload: bytes = payload) -> Any:
-                return service.apply_upload_asset(
-                    operation,
-                    content=payload,
-                    content_type="application/octet-stream",
-                    action_intent=_intent(
-                        repository_slug=repository_slug,
-                        operation="github.draft-release.upload",
-                        idempotency_key=operation.idempotency_key,
-                        actor_id=actor_id,
-                        correlation_id=correlation_id,
-                    ),
-                    authorization_id=authorization_id,
-                )
-
-            def retry_upload(
-                name: str = name,
-                artifact: Any = artifact,
-                payload: bytes = payload,
-            ) -> Any:
-                retry = service.plan_upload_asset(
-                    repository_slug,
-                    release_id=release_id,
-                    name=name,
-                    sha256=artifact.sha256,
-                    source_sha=bundle.version.source_sha,
-                    actor_id=actor_id,
-                    correlation_id=correlation_id,
-                )
-                return service.apply_upload_asset(
-                    retry,
-                    content=payload,
-                    content_type="application/octet-stream",
-                    action_intent=_intent(
-                        repository_slug=repository_slug,
-                        operation="github.draft-release.upload",
-                        idempotency_key=retry.idempotency_key,
-                        actor_id=actor_id,
-                        correlation_id=correlation_id,
-                    ),
-                    authorization_id=authorization_id,
-                )
-
-            def reconcile_upload(operation: Any = operation, payload: bytes = payload) -> Any:
-                return service.reconcile_upload_asset(operation, content=payload)
-
-            receipt = _settle_write(
-                apply_upload(),
-                operation=f"asset upload {name}",
-                reconcile=reconcile_upload,
-                retry_after_readback=retry_upload,
-            )
-            _require_applied(receipt, operation=f"asset upload {name}")
+        missing_assets = set(expected_assets) - set(existing_assets)
+        if missing_assets:
+            raise GitHubStewardError("remote draft is missing admitted assets")
+        admitted_ids = {str(item["name"]): int(item["id"]) for item in inventory["assets"]}
+        admitted_sizes = {str(item["name"]): int(item["size_bytes"]) for item in inventory["assets"]}
+        for name, existing in existing_assets.items():
+            if existing.sha256 != expected_assets[name] or int(existing.size_bytes) != admitted_sizes[
+                name
+            ]:
+                raise GitHubStewardError("remote draft contains an asset with divergent bytes")
+            if int(existing.api_id) != admitted_ids[name]:
+                raise GitHubStewardError("admitted asset identity was substituted")
 
         release = remote.get_release(repository_slug, release_id)
         if release is None:

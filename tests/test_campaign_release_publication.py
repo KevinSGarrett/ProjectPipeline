@@ -379,9 +379,64 @@ def test_publication_path_does_not_require_post_publication_completion_gate(
     assert called["gate"] is False
 
 
+def test_publication_rejects_missing_or_substituted_assets(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    bundle = _bundle(tmp_path)
+    from project_pipeline.github_steward.mock import MockGitHubAdapter
+
+    remote = MockGitHubAdapter(repository_slug="owner/repo")
+    remote.provider_id = "github-rest"
+    write_admitted_release_inventory(tmp_path / "evidence", _inventory_for(bundle))
+    _patch_campaign_gate(monkeypatch)
+    monkeypatch.setattr(
+        release_publication, "build_release_bundle", lambda *_args, **_kwargs: bundle
+    )
+    remote.seed_admitted_draft(
+        repository_slug="owner/repo",
+        release_id=ADMITTED_DRAFT_ID,
+        tag_name=bundle.version.tag_name,
+        target_commitish=SHA,
+        assets={},
+    )
+    with pytest.raises(GitHubStewardError, match="missing admitted assets"):
+        release_publication.publish_campaign_release(
+            repository_root=ROOT,
+            campaign_database=tmp_path / "campaign.sqlite3",
+            campaign_id="QCAMP-TEST",
+            evidence_path=tmp_path / "evidence",
+            repository_slug="owner/repo",
+            remote=remote,
+            actor_id="actor:test",
+            authorization_id="auth:test",
+            correlation_id="corr:test",
+        )
+
+    remote.seed_admitted_draft(
+        repository_slug="owner/repo",
+        release_id=ADMITTED_DRAFT_ID,
+        tag_name=bundle.version.tag_name,
+        target_commitish=SHA,
+        assets={bundle.artifacts[0].name: b"candidate-bytes"},
+        asset_ids={bundle.artifacts[0].name: 999},
+    )
+    with pytest.raises(GitHubStewardError, match="admitted asset identity was substituted"):
+        release_publication.publish_campaign_release(
+            repository_root=ROOT,
+            campaign_database=tmp_path / "campaign.sqlite3",
+            campaign_id="QCAMP-TEST",
+            evidence_path=tmp_path / "evidence",
+            repository_slug="owner/repo",
+            remote=remote,
+            actor_id="actor:test",
+            authorization_id="auth:test",
+            correlation_id="corr:test",
+        )
+
+
 @pytest.mark.parametrize(
     "boundary",
-    ["upload_release_asset", "finalize_release"],
+    ["finalize_release"],
 )
 def test_campaign_release_reconciles_lost_response_after_remote_success(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, boundary: str
@@ -427,7 +482,6 @@ def test_campaign_release_reconciles_lost_response_after_remote_success(
 @pytest.mark.parametrize(
     ("boundary", "operation_type"),
     [
-        ("upload_release_asset", "UPLOAD_RELEASE_ASSET"),
         ("finalize_release", "FINALIZE_RELEASE"),
     ],
 )
