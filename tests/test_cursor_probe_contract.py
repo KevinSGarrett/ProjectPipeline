@@ -16,11 +16,13 @@ decided by reinterpreting a failure after the fact.
 
 from __future__ import annotations
 
+import inspect
 from pathlib import Path
 from typing import Any
 
 import pytest
 
+from project_pipeline.autonomy_runtime import cursor_cli_qualification as cursor_cli_module
 from project_pipeline.autonomy_runtime import duration_probes
 
 
@@ -153,3 +155,13 @@ def test_not_applicable_never_counts_as_a_pass_for_this_probe() -> None:
         "live_dispatch": None,
     }
     assert not duration_probes._cursor_probe_ok(observations, identity_ok=True)
+
+
+def test_duration_cursor_dispatch_pins_cheapest_model_not_auto() -> None:
+    """Live duration dispatches must not use ``auto``; that selected high-cost models."""
+
+    assert cursor_cli_module.DURATION_CURSOR_CLI_MODEL == "gpt-5.4-nano-none"
+    assert cursor_cli_module.DURATION_CURSOR_CLI_MODEL != "auto"
+    source = inspect.getsource(cursor_cli_module._dispatch_via_registered_adapter)
+    assert "DURATION_CURSOR_CLI_MODEL" in source
+    assert 'model_name="auto"' not in source
