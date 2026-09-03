@@ -12,6 +12,12 @@ from pathlib import Path
 from typing import Any, cast
 from uuid import uuid4
 
+from project_pipeline.autonomy_runtime.admitted_release import (
+    admitted_inventory_digest,
+    admitted_inventory_path,
+    load_admitted_release_inventory,
+    write_admitted_release_inventory,
+)
 from project_pipeline.autonomy_runtime.campaign_status import (
     build_status_projection,
     write_status_projection,
@@ -510,6 +516,61 @@ def verify_campaign_publication_eligibility(
             previous = computed
         if previous != str(qualification["last_event_sha256"]):
             raise ValueError("campaign qualification event chain is incomplete")
+        campaign_events = connection.execute(
+            """
+            SELECT action, status, payload_json, prev_event_sha256, event_sha256, created_at_utc
+            FROM campaign_events
+            WHERE campaign_id = ? ORDER BY rowid
+            """,
+            (campaign_id,),
+        ).fetchall()
+        previous_campaign: str | None = None
+        for event in campaign_events:
+            if event["prev_event_sha256"] != previous_campaign or not event["event_sha256"]:
+                raise ValueError("campaign event chain is incomplete")
+            try:
+                campaign_payload = json.loads(str(event["payload_json"]))
+            except json.JSONDecodeError as exc:
+                raise ValueError("campaign event payload is malformed") from exc
+            if not isinstance(campaign_payload, dict):
+                raise ValueError("campaign event payload is malformed")
+            campaign_body = {
+                "campaign_id": campaign_id,
+                "action": str(event["action"]),
+                "status": str(event["status"]),
+                "payload": campaign_payload,
+                "prev_event_sha256": previous_campaign,
+                "created_at_utc": str(event["created_at_utc"]),
+            }
+            computed_campaign = hashlib.sha256(
+                json.dumps(campaign_body, sort_keys=True).encode()
+            ).hexdigest()
+            if computed_campaign != str(event["event_sha256"]):
+                raise ValueError("campaign event digest is invalid")
+            previous_campaign = computed_campaign
+        if previous_campaign != str(campaign["last_event_sha256"] or ""):
+            raise ValueError("campaign event chain is incomplete")
+        attested_inventory = None
+        for item in connection.execute(
+            """
+            SELECT payload_json FROM campaign_events
+            WHERE campaign_id = ? AND action IN ('ADMIT_4H', 'READY_TO_PUBLISH')
+            ORDER BY rowid
+            """,
+            (campaign_id,),
+        ):
+            try:
+                payload = json.loads(str(item["payload_json"]))
+            except json.JSONDecodeError as exc:
+                raise ValueError("campaign event payload is malformed") from exc
+            digest = str(payload.get("admitted_inventory_sha256") or "")
+            if len(digest) == 64:
+                attested_inventory = digest
+        if attested_inventory is None:
+            raise ValueError("admitted release inventory was not attested")
+        current_digest = admitted_inventory_digest(Path(str(campaign["evidence_path"])))
+        if attested_inventory != current_digest:
+            raise ValueError("admitted release inventory digest drifted after attestation")
     finally:
         connection.close()
     identity = inspect_worktree_identity(repository_root)
@@ -520,12 +581,22 @@ def verify_campaign_publication_eligibility(
         or identity.get("tree") != str(campaign["integrated_tree"])
     ):
         raise ValueError("campaign publication candidate identity drifted")
+    inventory = load_admitted_release_inventory(Path(str(campaign["evidence_path"])))
+    if (
+        inventory["source_sha"] != str(campaign["integrated_sha"]).lower()
+        or inventory["source_tree"] != str(campaign["integrated_tree"]).lower()
+        or inventory["target_commitish"] != str(campaign["integrated_sha"]).lower()
+    ):
+        raise ValueError("admitted release inventory is not bound to the attested campaign")
     return {
         "campaign_id": campaign_id,
         "integrated_sha": str(campaign["integrated_sha"]),
         "integrated_tree": str(campaign["integrated_tree"]),
         "qualification_run_id": run_id,
         "attested_elapsed_seconds": float(qualification["attested_elapsed_seconds"]),
+        "admitted_draft_id": int(inventory["draft_id"]),
+        "admitted_tag_name": str(inventory["tag_name"]),
+        "admitted_assets": tuple(inventory["assets"]),
     }
 
 
@@ -813,7 +884,10 @@ class CampaignController:
                 campaign_id,
                 "ADMIT_4H",
                 "RUNNING",
-                {"qualification_run_id": started["run_id"]},
+                {
+                    "qualification_run_id": started["run_id"],
+                    **self._admitted_inventory_attestation(row),
+                },
                 now,
             )
         return self.get(campaign_id)
@@ -1370,6 +1444,8 @@ class CampaignController:
         return self.get(campaign_id)
 
     def _mark_ready_to_publish(self, campaign_id: str) -> dict[str, Any]:
+        row = self._require(campaign_id)
+        self._require_bound_admitted_inventory(row)
         now = datetime.now(UTC)
         with self._db:
             self._db.execute(
@@ -1381,7 +1457,13 @@ class CampaignController:
                 """,
                 (now.isoformat(), "ready-to-publish", campaign_id),
             )
-            self._append_event(campaign_id, "READY_TO_PUBLISH", "READY_TO_PUBLISH", {}, now)
+            self._append_event(
+                campaign_id,
+                "READY_TO_PUBLISH",
+                "READY_TO_PUBLISH",
+                self._admitted_inventory_attestation(row),
+                now,
+            )
         return self.get(campaign_id)
 
     def _require_clean_identity(self) -> dict[str, Any]:
@@ -1496,6 +1578,100 @@ class CampaignController:
         )
         if remote.get("ok") is not True:
             raise ValueError("candidate-admission live remote draft verification failed")
+        self._bind_admitted_inventory_from_admission(evidence_root, payload, row)
+
+    def _bind_admitted_inventory_from_admission(
+        self,
+        evidence_root: Path,
+        payload: dict[str, Any],
+        row: sqlite3.Row | dict[str, Any],
+    ) -> None:
+        draft = payload["draft_release"]
+        artifacts = payload["artifacts"]
+        tag_name = str(draft.get("tag_name") or payload.get("tag_name") or "")
+        if not tag_name:
+            raise ValueError("candidate-admission draft tag is missing")
+        assets: list[dict[str, Any]] = []
+        by_name = {
+            str(item.get("name")): item
+            for item in draft.get("assets") or []
+            if isinstance(item, dict)
+        }
+        for artifact in artifacts:
+            name = str(artifact["name"])
+            remote_asset = by_name.get(name) or {}
+            path = Path(str(artifact["path"]))
+            raw_id = remote_asset.get("id", remote_asset.get("api_id"))
+            if raw_id is None:
+                raise ValueError("candidate-admission draft asset identity is incomplete")
+            try:
+                asset_id = int(raw_id)
+            except (TypeError, ValueError) as error:
+                raise ValueError(
+                    "candidate-admission draft asset identity is incomplete"
+                ) from error
+            assets.append(
+                {
+                    "id": asset_id,
+                    "name": name,
+                    "sha256": str(artifact["sha256"]),
+                    "size_bytes": int(path.stat().st_size),
+                }
+            )
+        write_admitted_release_inventory(
+            evidence_root,
+            {
+                "draft_id": int(draft["release_id"]),
+                "tag_name": tag_name,
+                "target_commitish": str(row["integrated_sha"]),
+                "source_sha": str(row["integrated_sha"]),
+                "source_tree": str(row["integrated_tree"]),
+                "assets": assets,
+            },
+        )
+
+    def _admitted_inventory_attestation(self, row: sqlite3.Row | dict[str, Any]) -> dict[str, Any]:
+        evidence = Path(str(row["evidence_path"]))
+        if not admitted_inventory_path(evidence).is_file():
+            if self._allow_unbound_candidate_for_tests:
+                return {}
+            raise ValueError("campaign requires an admitted release inventory")
+        return {"admitted_inventory_sha256": admitted_inventory_digest(evidence)}
+
+    def _attested_inventory_digest(self, campaign_id: str) -> str | None:
+        rows = self._db.execute(
+            """
+            SELECT payload_json FROM campaign_events
+            WHERE campaign_id = ? AND action IN ('ADMIT_4H', 'READY_TO_PUBLISH')
+            ORDER BY rowid
+            """,
+            (campaign_id,),
+        ).fetchall()
+        attested: str | None = None
+        for item in rows:
+            try:
+                payload = json.loads(str(item["payload_json"]))
+            except json.JSONDecodeError:
+                continue
+            digest = str(payload.get("admitted_inventory_sha256") or "")
+            if len(digest) == 64:
+                attested = digest
+        return attested
+
+    def _require_bound_admitted_inventory(self, row: sqlite3.Row | dict[str, Any]) -> None:
+        inventory = load_admitted_release_inventory(Path(str(row["evidence_path"])))
+        if (
+            inventory["source_sha"] != str(row["integrated_sha"]).lower()
+            or inventory["source_tree"] != str(row["integrated_tree"]).lower()
+            or inventory["target_commitish"] != str(row["integrated_sha"]).lower()
+        ):
+            raise ValueError("admitted release inventory is not bound to the attested campaign")
+        digest = admitted_inventory_digest(Path(str(row["evidence_path"])))
+        attested = self._attested_inventory_digest(str(row["campaign_id"]))
+        if attested is None:
+            raise ValueError("admitted release inventory was not attested")
+        if attested != digest:
+            raise ValueError("admitted release inventory digest drifted after attestation")
 
     def _assert_identity(self, row: sqlite3.Row | dict[str, Any]) -> None:
         identity = self._inspect_identity(self.repository_root)
@@ -2042,21 +2218,8 @@ class CampaignController:
         if row is None:
             raise ValueError("campaign publication requires the bound campaign row")
         evidence = Path(str(row["evidence_path"]))
-        desktop_dir = evidence / "desktop-artifacts"
         return [
             *self._default_finalize_commands(row),
-            [
-                self._python(),
-                str(self.repository_root / "scripts" / "build_campaign_desktop_artifacts.py"),
-                "--repository-root",
-                str(self.repository_root),
-                "--output-dir",
-                str(desktop_dir),
-                "--expected-sha",
-                str(row["integrated_sha"]),
-                "--expected-tree",
-                str(row["integrated_tree"]),
-            ],
             [
                 self._python(),
                 str(self.repository_root / "scripts" / "campaign_release_publication.py"),
@@ -2068,8 +2231,6 @@ class CampaignController:
                 str(row["campaign_id"]),
                 "--evidence-path",
                 str(evidence),
-                "--desktop-dir",
-                str(desktop_dir),
             ],
         ]
 

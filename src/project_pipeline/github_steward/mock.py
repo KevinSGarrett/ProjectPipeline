@@ -451,6 +451,53 @@ class MockGitHubAdapter(GitHubRemotePort):
         del repository_slug
         return published
 
+    def seed_admitted_draft(
+        self,
+        *,
+        repository_slug: str,
+        release_id: int,
+        tag_name: str,
+        target_commitish: str,
+        assets: Mapping[str, bytes],
+        asset_ids: Mapping[str, int] | None = None,
+        name: str | None = None,
+    ) -> GitHubReleaseSnapshot:
+        """Install a pre-existing draft identity for exact-byte publication tests."""
+
+        built: list[GitHubReleaseAsset] = []
+        for asset_name, content in assets.items():
+            api_id = int((asset_ids or {}).get(asset_name) or self._next_asset)
+            if api_id >= self._next_asset:
+                self._next_asset = api_id + 1
+            asset = bound_asset(
+                asset_name,
+                content,
+                api_id=api_id,
+                content_type="application/octet-stream",
+            )
+            self._asset_bytes[api_id] = content
+            built.append(asset)
+        item = GitHubReleaseSnapshot(
+            record_id=github_identifier("GHREL", repository_slug, tag_name, str(release_id)),
+            repository_slug=repository_slug,
+            api_id=release_id,
+            tag_name=tag_name,
+            name=name or f"ProjectPipeline draft {release_id}",
+            draft=True,
+            prerelease=True,
+            target_commitish=target_commitish,
+            html_url=f"https://github.com/{repository_slug}/releases/{release_id}",
+            upload_url=(
+                f"https://uploads.github.test/repos/{repository_slug}/releases/{release_id}/assets"
+            ),
+            body="Admitted qualified draft",
+            assets=tuple(built),
+        )
+        self._releases[release_id] = item
+        if release_id >= self._next_release:
+            self._next_release = release_id + 1
+        return item
+
     def seed_review(self, number: int, review: PullRequestReview) -> None:
         self._reviews.setdefault(number, []).append(review)
 

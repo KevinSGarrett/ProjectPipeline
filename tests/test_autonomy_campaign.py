@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from project_pipeline.autonomy_runtime import campaign as campaign_module
+from project_pipeline.autonomy_runtime.admitted_release import write_admitted_release_inventory
 from project_pipeline.autonomy_runtime.campaign import (
     REQUIRED_PP384_STAGES,
     CampaignController,
@@ -140,6 +141,24 @@ def _ready_after_72h(controller: CampaignController, tmp_path: Path) -> dict:
         state_path=tmp_path / "state",
         evidence_path=tmp_path / "evidence",
         pp384_evidence=_pp384_evidence(tmp_path / "pp384.json"),
+    )
+    write_admitted_release_inventory(
+        tmp_path / "evidence",
+        {
+            "draft_id": 380237674,
+            "tag_name": "v0.9.0-rc." + ("a" * 12),
+            "target_commitish": "a" * 40,
+            "source_sha": "a" * 40,
+            "source_tree": "b" * 40,
+            "assets": [
+                {
+                    "id": 539058355,
+                    "name": "project_pipeline-0.9.0-py3-none-any.whl",
+                    "sha256": "c" * 64,
+                    "size_bytes": 16,
+                }
+            ],
+        },
     )
     admitted4 = controller.admit_4h(started["campaign_id"])
     _seed_attested(controller, admitted4["qualification_run_id"], 4)
@@ -781,6 +800,18 @@ def test_campaign_publication_eligibility_requires_attested_72h(
         tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
     )
     assert eligibility["attested_elapsed_seconds"] == 72 * 3600
+    assert eligibility["admitted_draft_id"] == 380237674
+    replaced = json.loads(
+        (tmp_path / "evidence" / "admitted_release_inventory.json").read_text(encoding="utf-8")
+    )
+    replaced["draft_id"] = 1
+    (tmp_path / "evidence" / "admitted_release_inventory.json").write_text(
+        json.dumps(replaced), encoding="utf-8"
+    )
+    with pytest.raises(ValueError, match="inventory digest drifted"):
+        verify_campaign_publication_eligibility(
+            tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
+        )
     controller.qualification._db.execute(
         "UPDATE qualification_runs SET attested_elapsed_seconds = ? WHERE run_id = ?",
         (71 * 3600, ready["qualification_run_id"]),
@@ -808,6 +839,31 @@ def test_campaign_publication_eligibility_recomputes_qualification_event_hashes(
     )
     controller.qualification._db.commit()
     with pytest.raises(ValueError, match="event digest is invalid"):
+        verify_campaign_publication_eligibility(
+            tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
+        )
+    controller.close()
+
+
+def test_campaign_publication_eligibility_recomputes_campaign_event_hashes(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    controller = _controller(tmp_path)
+    ready = controller.advance(_ready_after_72h(controller, tmp_path)["campaign_id"])
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.campaign.inspect_worktree_identity",
+        lambda _root: _identity(),
+    )
+    controller.qualification._db.execute(
+        """
+        UPDATE campaign_events
+        SET payload_json = ?
+        WHERE campaign_id = ? AND action = 'READY_TO_PUBLISH'
+        """,
+        ('{"admitted_inventory_sha256":"' + ("d" * 64) + '"}', ready["campaign_id"]),
+    )
+    controller.qualification._db.commit()
+    with pytest.raises(ValueError, match="campaign event digest is invalid"):
         verify_campaign_publication_eligibility(
             tmp_path / "campaign.sqlite3", repository_root=ROOT, campaign_id=ready["campaign_id"]
         )
@@ -1075,7 +1131,8 @@ def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):
     rendered_gate = [" ".join(item) for item in gate]
     assert any(" -m project_pipeline validate --root " in row for row in rendered)
     assert any("campaign_release_publication.py" in row for row in rendered)
-    assert any("build_campaign_desktop_artifacts.py" in row for row in rendered)
+    assert all("build_campaign_desktop_artifacts.py" not in row for row in rendered)
+    assert all("--desktop-dir" not in row for row in rendered)
     assert command_kind(post_release[0]) == "release.remote-lifecycle"
     assert command_is_allowlisted(post_release[0], repository_root=ROOT) is True
     acquired_dir = Path(post_release[0][post_release[0].index("--acquired-dir") + 1])
@@ -1506,8 +1563,16 @@ def test_production_four_hour_admission_accepts_bound_remote_candidate(
                     "draft_release": {
                         "release_id": 1,
                         "draft": True,
+                        "tag_name": "v0.9.0-rc." + ("a" * 12),
                         "target_commitish": "a" * 40,
-                        "assets": [{"name": artifact.name}],
+                        "assets": [
+                            {
+                                "id": 1,
+                                "name": artifact.name,
+                                "sha256": digest,
+                                "size_bytes": artifact.stat().st_size,
+                            }
+                        ],
                     },
                     "remote_lifecycle": {
                         "state": "VERIFIED",
