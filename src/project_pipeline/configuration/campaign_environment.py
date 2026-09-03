@@ -69,6 +69,10 @@ _PROCESS_PASSTHROUGH_KEYS = (
     "PROGRAMFILES(X86)",
     "TEMP",
     "TMP",
+    # Cursor Agent CLI login sessions expire inside the 4-hour
+    # cursor_cli_provider_dispatch cadence. Duration children must inherit the
+    # API key from the scheduled parent; it is never stored in campaign_runtime.env.
+    "CURSOR_API_KEY",
 )
 
 
@@ -362,3 +366,21 @@ def limited_campaign_subprocess_environment(
     result["PYTHONPATH"] = str(root.resolve() / "src")
     result["PYTHONUTF8"] = "1"
     return result
+
+
+def require_cursor_cli_duration_credentials(environment: Mapping[str, str]) -> None:
+    """Fail closed before a timed stage if Cursor CLI cannot authenticate for 100h.
+
+    A Windows ``agent login`` session is not duration-durable: the required
+    ``cursor_cli_provider_dispatch`` probe runs at a 4-hour cadence, and a
+    login session that expires in that window disqualifies the campaign. The
+    documented unattended credential is ``CURSOR_API_KEY`` inherited by
+    campaign children. This check never returns or logs the secret value.
+    """
+
+    present = bool(str(environment.get("CURSOR_API_KEY") or "").strip())
+    if not present:
+        raise ConfigurationError(
+            "campaign duration environment lacks CURSOR_API_KEY; "
+            "agent login sessions are not durable across the 4-hour cursor probe cadence"
+        )

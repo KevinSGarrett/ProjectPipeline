@@ -39,6 +39,10 @@ PROVIDER_ID = "provider:cursor-cli"
 ADAPTER_ID = "adapter:cursor-cli"
 IDEMPOTENCY_KEY = "pp384-cursor-cli-qualification-v1"
 ARTIFACT_NAME = "pp384_cursor_cli_qualification_artifact.json"
+# Duration and qualification dispatches must not use ``auto``: that selected
+# high-cost models and burned quota on a repeating 4-hour probe. Pin the
+# cheapest currently listed Cursor Agent CLI model.
+DURATION_CURSOR_CLI_MODEL = "gpt-5.4-nano-none"
 FORBIDDEN_LIVE_PHRASES = (
     "operator session",
     "await human",
@@ -398,7 +402,7 @@ def _dispatch_via_registered_adapter(
         context={"idempotency_key": idempotency_key, "artifact": ARTIFACT_NAME},
         allow_data_egress=False,
     )
-    result = adapter.execute(contract, model_name="auto")
+    result = adapter.execute(contract, model_name=DURATION_CURSOR_CLI_MODEL)
     return {
         "provider_id": result.provider_id,
         "model_id": result.model_id,

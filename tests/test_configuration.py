@@ -31,6 +31,7 @@ from project_pipeline.configuration.campaign_environment import (
     campaign_runtime_environment_from_process,
     limited_campaign_subprocess_environment,
     load_campaign_runtime_environment,
+    require_cursor_cli_duration_credentials,
     validate_campaign_runtime_binding,
 )
 from project_pipeline.configuration.secrets import (
@@ -342,12 +343,44 @@ class ConfigurationTests(unittest.TestCase):
                     "SYSTEMROOT": "safe-root",
                     "JIRA_API_TOKEN": "must-not-reach-recovery",
                     "UNRELATED_SECRET": "no",
+                    "CURSOR_API_KEY": "cursor-duration-key",
                 },
             )
         self.assertEqual(values["JIRA_API_TOKEN_REF"], "dpapi://C16B_JIRA_TOKEN")
         self.assertEqual(environment["GITHUB_TOKEN_REF"], "dpapi://C16B_GITHUB_TOKEN")
+        self.assertEqual(environment["CURSOR_API_KEY"], "cursor-duration-key")
         self.assertNotIn("UNRELATED_SECRET", environment)
         self.assertNotIn("JIRA_API_TOKEN", environment)
+
+    def test_campaign_duration_requires_cursor_api_key_without_exposing_it(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            env_file = Path(directory) / "campaign-runtime.env"
+            env_file.write_text(
+                _campaign_runtime_text(
+                    expiry=datetime.now(UTC) + timedelta(days=6),
+                    deadline=datetime.now(UTC) + timedelta(hours=101),
+                ),
+                encoding="utf-8",
+            )
+            missing = limited_campaign_subprocess_environment(
+                ROOT,
+                env_file,
+                source={"PATH": "safe-path", "SYSTEMROOT": "safe-root"},
+            )
+            present = limited_campaign_subprocess_environment(
+                ROOT,
+                env_file,
+                source={
+                    "PATH": "safe-path",
+                    "SYSTEMROOT": "safe-root",
+                    "CURSOR_API_KEY": "cursor-duration-key",
+                },
+            )
+        with self.assertRaises(ConfigurationError) as raised:
+            require_cursor_cli_duration_credentials(missing)
+        self.assertNotIn("cursor-duration-key", str(raised.exception))
+        self.assertIn("CURSOR_API_KEY", str(raised.exception))
+        require_cursor_cli_duration_credentials(present)
 
     def test_campaign_runtime_environment_rejects_non_campaign_secret_schemes(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

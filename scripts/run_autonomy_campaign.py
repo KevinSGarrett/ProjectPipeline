@@ -10,8 +10,10 @@ from project_pipeline.configuration.campaign_environment import (
     apply_campaign_runtime_environment,
     campaign_runtime_database_path,
     limited_campaign_subprocess_environment,
+    require_cursor_cli_duration_credentials,
     validate_campaign_runtime_binding,
 )
+from project_pipeline.configuration.loader import ConfigurationError
 from project_pipeline.resilience.host_safety import evaluate_local_host_safety
 
 _HOST_SAFETY_REQUIRED_ACTIONS = frozenset(
@@ -29,6 +31,16 @@ _RUNTIME_BOUND_ACTIONS = frozenset(
         "execute",
         "finalize",
         "claim-runner",
+    }
+)
+_CURSOR_DURATION_AUTH_ACTIONS = frozenset(
+    {
+        "admit-4h",
+        "admit-24h",
+        "admit-72h",
+        "run",
+        "execute",
+        "advance",
     }
 )
 
@@ -88,6 +100,11 @@ def main() -> int:
         command_environment = limited_campaign_subprocess_environment(
             root, args.runtime_environment_file
         )
+        if args.action in _CURSOR_DURATION_AUTH_ACTIONS:
+            try:
+                require_cursor_cli_duration_credentials(command_environment)
+            except ConfigurationError as error:
+                raise SystemExit(str(error)) from error
         os.environ.clear()
         os.environ.update(command_environment)
     if args.action in _RUNTIME_BOUND_ACTIONS and runtime_environment is None:

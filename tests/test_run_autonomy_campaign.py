@@ -73,3 +73,35 @@ def test_campaign_runner_rejects_a_database_other_than_the_runtime_binding(
 
     with pytest.raises(SystemExit, match="must match the bound campaign runtime database"):
         module.main()
+
+
+def test_campaign_run_fails_closed_without_cursor_api_key(monkeypatch, tmp_path: Path) -> None:
+    module = _load_script()
+    bound_database = tmp_path / "bound.sqlite3"
+    bound_database.touch()
+    monkeypatch.setattr(module, "apply_campaign_runtime_environment", lambda *_args, **_kwargs: {})
+    monkeypatch.setattr(
+        module, "campaign_runtime_database_path", lambda _environment: bound_database
+    )
+    monkeypatch.setattr(
+        module,
+        "limited_campaign_subprocess_environment",
+        lambda *_args, **_kwargs: {"PATH": "safe-path"},
+    )
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "run_autonomy_campaign.py",
+            "run",
+            "--database",
+            str(bound_database),
+            "--campaign-id",
+            "QCAMP-C16B-TEST",
+            "--runtime-environment-file",
+            str(tmp_path / "campaign.runtime.env"),
+        ],
+    )
+
+    with pytest.raises(SystemExit, match="CURSOR_API_KEY"):
+        module.main()
