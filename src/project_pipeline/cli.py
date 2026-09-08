@@ -2010,6 +2010,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             from project_pipeline.command_center.fleet import FleetRegistry
             from project_pipeline.scheduler.fleet import select_target
             from project_pipeline.scheduler.host_observation import (
+                COMFY_MACHINE_ID,
                 XEON_MACHINE_ID,
                 apply_inventory_observation,
                 apply_local_control_observation,
@@ -2046,9 +2047,10 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     }
                     for row in fleet.projection()
                 }
-                xeon = hosts.get(XEON_MACHINE_ID)
-                if xeon and xeon["freshness"] == "fresh":
-                    xeon["state"] = "READY"
+                enrolled_ids = {XEON_MACHINE_ID, COMFY_MACHINE_ID}
+                for machine_id, host in hosts.items():
+                    if machine_id in enrolled_ids and host["freshness"] == "fresh":
+                        host["state"] = "READY"
                 record = observation_admission_record(
                     existing,
                     hosts=hosts,
@@ -2073,8 +2075,9 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 envelope = RemoteJobEnvelope.model_validate(
                     json.loads(args.signals_file.read_text(encoding="utf-8"))
                 )
-                adapter = SshDispatchAdapter()
-                if envelope.host_id != adapter.machine_id:
+                try:
+                    adapter = SshDispatchAdapter.for_machine(envelope.host_id)
+                except ValueError:
                     return {
                         "database": str(database),
                         "executed": {"outcome": "REJECTED", "reason": "wrong_host"},
