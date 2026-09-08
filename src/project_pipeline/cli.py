@@ -1994,13 +1994,14 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             from project_pipeline.command_center.fleet import FleetRegistry
             from project_pipeline.scheduler.fleet import select_target
             from project_pipeline.scheduler.host_observation import (
+                apply_local_control_observation,
                 declared_profiles,
                 enrollment_blockers,
             )
 
             fleet_state = Path(database).with_name("fleet_state.json")
-            profiles = declared_profiles()
-            fleet = FleetRegistry.load_or_declared(fleet_state, profiles)
+            fleet = FleetRegistry.load_or_declared(fleet_state, declared_profiles())
+            fleet.replace(apply_local_control_observation(fleet.profiles()))
             if args.action == "fleet":
                 return {
                     "database": str(database),
@@ -2033,8 +2034,6 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 result = fleet.drain(args.machine_id, actor=args.actor_id)
             else:
                 result = fleet.resume(args.machine_id, actor=args.actor_id)
-            if result.get("ok"):
-                fleet.persist(fleet_state)
             code = 0 if result.get("ok") else 2
             return {"database": str(database), "state_path": str(fleet_state), **result}, code
         if args.action in {"renew", "release"}:

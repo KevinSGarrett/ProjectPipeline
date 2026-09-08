@@ -18,6 +18,7 @@ from project_pipeline.domain.assurance import (
     FailureCategory,
     GateState,
 )
+from project_pipeline.io import sha256_canonical_file
 
 
 def facts(**overrides: object) -> CompletionGateFacts:
@@ -247,10 +248,16 @@ def test_unattended_qualification_requires_complete_72_hour_receipt(tmp_path) ->
         ),
         encoding="utf-8",
     )
-    row = {"artifact_path": "evidence/qualification.json"}
+    row = {
+        "artifact_path": "evidence/qualification.json",
+        "sha256": sha256_canonical_file(artifact),
+    }
     summary_row = {"artifact_path": "evidence/summary_only.json"}
 
     assert not _valid_unattended_qualification(tmp_path, summary_row)
+    assert not _valid_unattended_qualification(
+        tmp_path, {"artifact_path": "evidence/qualification.json"}
+    )
     assert _valid_unattended_qualification(tmp_path, row)
     assert not _valid_unattended_qualification(tmp_path, {"artifact_path": "missing.json"})
 

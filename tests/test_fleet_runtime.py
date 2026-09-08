@@ -27,6 +27,7 @@ from project_pipeline.scheduler.fleet import (
     MachineProfile,
     bind_profile_claims,
     physical_claims_for_machine,
+    resume_host,
     select_target,
 )
 from project_pipeline.scheduler.host_observation import classify_gpu, declared_profiles
@@ -164,6 +165,12 @@ def test_remote_job_accepts_once_and_rejects_tamper_and_wrong_host(tmp_path: Pat
     controller.expire_fence("fence-1")
     expired = controller.accept(envelope, result, expected_host="COMFY-V4-CPU-01", now=NOW)
     assert expired["reason"] == "expired_fence"
+    mismatched = result.model_copy(update={"job_id": "job-other"})
+    controller_fresh = RemoteJobController()
+    wrong_job = controller_fresh.accept(
+        envelope, mismatched, expected_host="COMFY-V4-CPU-01", now=NOW
+    )
+    assert wrong_job["reason"] == "wrong_job"
 
 
 def test_isolated_worker_process_loss_recovers_without_reboot(tmp_path: Path) -> None:
@@ -222,12 +229,43 @@ def test_quadro_is_not_modern_cuda() -> None:
 
 
 def test_declared_xeon_is_enrollment_pending() -> None:
-    profiles = {item.machine_id: item for item in declared_profiles(when=NOW)}
+    profiles = {item.machine_id: item for item in declared_profiles()}
     assert profiles["WIN-EVSH1DN8H5O"].state == "ENROLLMENT_PENDING"
     chosen, denials = select_target(tuple(profiles.values()), when=NOW)
-    assert chosen is not None
-    assert chosen.machine_id == "COMFY-V4-CPU-01"
+    assert chosen is None
     assert any("ENROLLMENT_PENDING" in item for item in denials)
+    assert any("stale_capacity" in item for item in denials)
+    observed = declared_profiles(when=NOW, observation_source="test_fixture")
+    chosen_observed, observed_denials = select_target(observed, when=NOW)
+    assert chosen_observed is not None
+    assert chosen_observed.machine_id == "COMFY-V4-CPU-01"
+    assert any("ENROLLMENT_PENDING" in item for item in observed_denials)
+
+
+def test_declared_profiles_are_stale_without_observation_source() -> None:
+    profiles = declared_profiles(when=NOW)
+    assert all(not item.fresh_at(NOW) for item in profiles)
+    observed = declared_profiles(when=NOW, observation_source="test_fixture")
+    assert all(item.fresh_at(NOW) for item in observed)
+
+
+def test_resume_does_not_refresh_stale_observation() -> None:
+    stale = _profile("COMFY-V4-CPU-01", observed_at_utc=NOW - timedelta(hours=2), state="DRAINED")
+    resumed = resume_host(stale, when=NOW)
+    assert resumed.state == "READY"
+    assert resumed.observed_at_utc == stale.observed_at_utc
+    assert resumed.fresh_at(NOW) is False
+
+
+def test_fleet_registry_persists_drain_to_shared_state(tmp_path: Path) -> None:
+    path = tmp_path / "fleet_state.json"
+    profile = _profile("COMFY-V4-CPU-01", observed_at_utc=NOW)
+    first = FleetRegistry((profile,), persist_path=path)
+    drained = first.drain("COMFY-V4-CPU-01", actor="actor:test")
+    assert drained["ok"] is True
+    second = FleetRegistry.load_or_declared(path, declared_profiles())
+    assert second.profiles()[0].state == "DRAINED"
+    assert second.profiles()[0].machine_id == "COMFY-V4-CPU-01"
 
 
 def test_bind_profile_claims_rewrites_local_machine() -> None:

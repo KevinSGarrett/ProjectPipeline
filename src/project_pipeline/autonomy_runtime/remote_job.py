@@ -97,6 +97,8 @@ class RemoteJobController:
         now: datetime | None = None,
     ) -> dict[str, Any]:
         now = (now or datetime.now(UTC)).astimezone(UTC)
+        if result.job_id != envelope.job_id:
+            return {"outcome": "REJECTED", "reason": "wrong_job"}
         if result.host_id != expected_host or result.host_id != envelope.host_id:
             return {"outcome": "REJECTED", "reason": "wrong_host"}
         if envelope.fence in self._expired_fences or result.fence != envelope.fence:

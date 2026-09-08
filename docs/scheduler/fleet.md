@@ -9,6 +9,10 @@ those physical claims are rewritten onto that host's registered pools.
 - Unregistered physical pools are denied.
 - Stale, offline, drained, quarantined, or enrollment-pending hosts cannot
   receive new work.
+- Declared host records are not observations. Without an observation source,
+  declared capacity is stale. Command Center and CLI share `fleet_state.json`
+  next to the scheduler database. Drain/resume persist there. Resume does not
+  refresh `observed_at_utc`.
 - Fermi-class GPUs (Quadro 6000, compute capability 2.0) are ineligible for
   modern CUDA dispatch.
 - AVX2 wheels may be denied on older Xeon ISA.

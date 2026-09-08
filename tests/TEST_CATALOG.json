@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 728,
+  "test_count": 732,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3583,6 +3583,11 @@
       "test_id": "TEST-C18-ACCEPT-010"
     },
     {
+      "callable": "test_nonduration_rejects_duration_binding_with_wrong_source_identity",
+      "path": "tests/test_c18_acceptance_integrity.py",
+      "test_id": "TEST-C18-ACCEPT-011"
+    },
+    {
       "callable": "test_unregistered_physical_pool_is_denied",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-001"
@@ -3641,6 +3646,21 @@
       "callable": "test_resume_of_enrollment_pending_host_is_denied",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-012"
+    },
+    {
+      "callable": "test_declared_profiles_are_stale_without_observation_source",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-013"
+    },
+    {
+      "callable": "test_resume_does_not_refresh_stale_observation",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-014"
+    },
+    {
+      "callable": "test_fleet_registry_persists_drain_to_shared_state",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-015"
     }
   ]
 }

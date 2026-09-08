@@ -9,6 +9,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
 from project_pipeline.io import read_json, read_jsonl
 
 NON_DURATION_STAGES = (
@@ -95,19 +96,29 @@ def _catalog_ids(root: Path) -> set[str]:
     return {str(item.get("test_id")) for item in catalog.get("tests", [])}
 
 
+def _bound_to_current_source(root: Path, bound: Mapping[str, Any]) -> bool:
+    identity = inspect_worktree_identity(root)
+    sha = str(identity.get("sha") or "").strip().lower()
+    tree = str(identity.get("tree") or "").strip().lower()
+    bound_head = str(bound.get("bound_head") or bound.get("source_sha") or "").strip().lower()
+    bound_tree = str(bound.get("bound_tree") or bound.get("source_tree") or "").strip().lower()
+    return len(sha) == 40 and len(tree) == 40 and bound_head == sha and bound_tree == tree
+
+
+def _has_duration_release_flags(payload: Mapping[str, Any]) -> bool:
+    return all(
+        bool(payload.get(key))
+        for key in ("attested_4h", "attested_24h", "attested_72h", "publication_verified")
+    )
+
+
 def duration_release_evidence_is_bound(
     root: Path, evidence: Mapping[str, Any] | None = None
 ) -> bool:
     """True only when 4h/24h/72h plus publication evidence is bound to this tree."""
 
     payload = dict(evidence or {})
-    required = (
-        "attested_4h",
-        "attested_24h",
-        "attested_72h",
-        "publication_verified",
-    )
-    if all(bool(payload.get(key)) for key in required):
+    if _has_duration_release_flags(payload) and _bound_to_current_source(root, payload):
         return True
     marker = root / "evidence" / "autonomy_runtime" / "duration_release_binding.json"
     if not marker.is_file():
@@ -116,12 +127,7 @@ def duration_release_evidence_is_bound(
         bound = read_json(marker)
     except (OSError, ValueError):
         return False
-    if not all(bool(bound.get(key)) for key in required):
-        return False
-    return (
-        len(str(bound.get("bound_head") or "")) == 40
-        and len(str(bound.get("bound_tree") or "")) == 40
-    )
+    return _has_duration_release_flags(bound) and _bound_to_current_source(root, bound)
 
 
 def evaluate_nonduration_qualification(

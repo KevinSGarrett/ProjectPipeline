@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import subprocess
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -27,6 +28,57 @@ from project_pipeline.release_factory.lifecycle import (
 ROOT = Path(__file__).resolve().parents[1]
 SHA = "a" * 40
 TREE = "b" * 40
+
+
+def _git(root: Path, *args: str, text: bool = False) -> subprocess.CompletedProcess[Any]:
+    return subprocess.run(
+        ["git", "-C", str(root), *args],
+        check=True,
+        capture_output=True,
+        text=text,
+    )
+
+
+def _init_git_repo(
+    root: Path, tracked: str = "tracked.txt", contents: str = "ok\n"
+) -> dict[str, str]:
+    _git(root, "init", "-b", "main")
+    _git(root, "config", "user.email", "c18@example.test")
+    _git(root, "config", "user.name", "C18")
+    (root / tracked).write_text(contents, encoding="utf-8")
+    _git(root, "add", ".")
+    _git(root, "commit", "-m", "init")
+    identity = inspect_worktree_identity(root)
+    return {"sha": str(identity["sha"]), "tree": str(identity["tree"])}
+
+
+def _write_pdef0011(root: Path, *, implementation_state: str) -> None:
+    requirements = root / "plans" / "_traceability"
+    requirements.mkdir(parents=True, exist_ok=True)
+    (requirements / "requirements.jsonl").write_text(
+        json.dumps(
+            {
+                "requirement_id": "REQ-PDEF-0011",
+                "implementation_state": implementation_state,
+            }
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    tests_dir = root / "tests"
+    tests_dir.mkdir(exist_ok=True)
+    (tests_dir / "TEST_CATALOG.json").write_text(json.dumps({"tests": []}), encoding="utf-8")
+
+
+def _attested_duration(**overrides: object) -> dict[str, object]:
+    payload: dict[str, object] = {
+        "attested_4h": True,
+        "attested_24h": True,
+        "attested_72h": True,
+        "publication_verified": True,
+    }
+    payload.update(overrides)
+    return payload
 
 
 def _chain() -> list[dict[str, str]]:
@@ -55,22 +107,7 @@ def _duration_payload(**overrides: object) -> dict[str, object]:
 
 
 def test_nonduration_rejects_live_verified_without_duration_evidence(tmp_path: Path) -> None:
-    requirements = tmp_path / "plans" / "_traceability"
-    requirements.mkdir(parents=True)
-    (requirements / "requirements.jsonl").write_text(
-        json.dumps(
-            {
-                "requirement_id": "REQ-PDEF-0011",
-                "implementation_state": "LIVE_VERIFIED",
-            }
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-    (tmp_path / "tests").mkdir()
-    (tmp_path / "tests" / "TEST_CATALOG.json").write_text(
-        json.dumps({"tests": []}), encoding="utf-8"
-    )
+    _write_pdef0011(tmp_path, implementation_state="LIVE_VERIFIED")
     report = evaluate_nonduration_qualification(tmp_path)
     assert report["ok"] is False
     assert any("LIVE_VERIFIED" in item for item in report["missing"])
@@ -79,30 +116,14 @@ def test_nonduration_rejects_live_verified_without_duration_evidence(tmp_path: P
 def test_nonduration_allows_live_verified_when_duration_evidence_is_bound(
     tmp_path: Path,
 ) -> None:
-    requirements = tmp_path / "plans" / "_traceability"
-    requirements.mkdir(parents=True)
-    (requirements / "requirements.jsonl").write_text(
-        json.dumps(
-            {
-                "requirement_id": "REQ-PDEF-0011",
-                "implementation_state": "LIVE_VERIFIED",
-            }
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-    (tmp_path / "tests").mkdir()
-    (tmp_path / "tests" / "TEST_CATALOG.json").write_text(
-        json.dumps({"tests": []}), encoding="utf-8"
-    )
+    identity = _init_git_repo(tmp_path)
+    _write_pdef0011(tmp_path, implementation_state="LIVE_VERIFIED")
     report = evaluate_nonduration_qualification(
         tmp_path,
-        duration_release_evidence={
-            "attested_4h": True,
-            "attested_24h": True,
-            "attested_72h": True,
-            "publication_verified": True,
-        },
+        duration_release_evidence=_attested_duration(
+            bound_head=identity["sha"],
+            bound_tree=identity["tree"],
+        ),
     )
     assert report["implementation_state"] == "LIVE_VERIFIED"
     assert report["remaining_acceptance"] == []
@@ -110,31 +131,27 @@ def test_nonduration_allows_live_verified_when_duration_evidence_is_bound(
     assert not any("LIVE_VERIFIED requires" in item for item in report["missing"])
 
 
-def test_nonduration_still_rejects_implemented_label(tmp_path: Path) -> None:
-    requirements = tmp_path / "plans" / "_traceability"
-    requirements.mkdir(parents=True)
-    (requirements / "requirements.jsonl").write_text(
-        json.dumps(
-            {
-                "requirement_id": "REQ-PDEF-0011",
-                "implementation_state": "IMPLEMENTED",
-            }
-        )
-        + "\n",
-        encoding="utf-8",
-    )
-    (tmp_path / "tests").mkdir()
-    (tmp_path / "tests" / "TEST_CATALOG.json").write_text(
-        json.dumps({"tests": []}), encoding="utf-8"
-    )
+def test_nonduration_rejects_duration_binding_with_wrong_source_identity(
+    tmp_path: Path,
+) -> None:
+    _init_git_repo(tmp_path)
+    _write_pdef0011(tmp_path, implementation_state="LIVE_VERIFIED")
     report = evaluate_nonduration_qualification(
         tmp_path,
-        duration_release_evidence={
-            "attested_4h": True,
-            "attested_24h": True,
-            "attested_72h": True,
-            "publication_verified": True,
-        },
+        duration_release_evidence=_attested_duration(
+            bound_head="c" * 40,
+            bound_tree="d" * 40,
+        ),
+    )
+    assert report["duration_release_evidence_bound"] is False
+    assert any("LIVE_VERIFIED requires" in item for item in report["missing"])
+
+
+def test_nonduration_still_rejects_implemented_label(tmp_path: Path) -> None:
+    _write_pdef0011(tmp_path, implementation_state="IMPLEMENTED")
+    report = evaluate_nonduration_qualification(
+        tmp_path,
+        duration_release_evidence=_attested_duration(),
     )
     assert report["ok"] is False
     assert any("cannot be IMPLEMENTED" in item for item in report["missing"])
@@ -143,37 +160,10 @@ def test_nonduration_still_rejects_implemented_label(tmp_path: Path) -> None:
 def test_skip_worktree_hidden_bytes_make_identity_dirty(tmp_path: Path) -> None:
     repo = tmp_path / "repo"
     repo.mkdir()
-    subprocess.run(["git", "init", "-b", "main"], cwd=repo, check=True, capture_output=True)
-    subprocess.run(
-        ["git", "-C", str(repo), "config", "user.email", "c18@example.test"],
-        check=True,
-        capture_output=True,
-    )
-    subprocess.run(
-        ["git", "-C", str(repo), "config", "user.name", "C18"],
-        check=True,
-        capture_output=True,
-    )
-    tracked = repo / "tracked.py"
-    tracked.write_text("original\n", encoding="utf-8")
-    subprocess.run(["git", "-C", str(repo), "add", "."], check=True, capture_output=True)
-    subprocess.run(
-        ["git", "-C", str(repo), "commit", "-m", "init"],
-        check=True,
-        capture_output=True,
-    )
-    subprocess.run(
-        ["git", "-C", str(repo), "update-index", "--skip-worktree", "tracked.py"],
-        check=True,
-        capture_output=True,
-    )
-    tracked.write_text("hidden-patch\n", encoding="utf-8")
-    porcelain = subprocess.run(
-        ["git", "-C", str(repo), "status", "--porcelain"],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
+    _init_git_repo(repo, tracked="tracked.py", contents="original\n")
+    _git(repo, "update-index", "--skip-worktree", "tracked.py")
+    (repo / "tracked.py").write_text("hidden-patch\n", encoding="utf-8")
+    porcelain = _git(repo, "status", "--porcelain", text=True)
     assert porcelain.stdout.strip() == ""
     identity = inspect_worktree_identity(repo)
     assert identity["dirty"] is True

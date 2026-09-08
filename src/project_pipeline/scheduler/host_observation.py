@@ -6,10 +6,13 @@ never treats an unauthenticated Tailscale host as an admitted worker.
 
 from __future__ import annotations
 
+import socket
 from datetime import UTC, datetime
 from typing import Any
 
 from project_pipeline.scheduler.fleet import MachineProfile
+
+UNOBSERVED_AT = datetime(1970, 1, 1, tzinfo=UTC)
 
 DECLARED_HOSTS: tuple[dict[str, Any], ...] = (
     {
@@ -87,29 +90,51 @@ def classify_gpu(*, name: str | None, compute_capability: float | None) -> dict[
     return {"modern_cuda_eligible": True, "reason": "modern CUDA eligible"}
 
 
-def declared_profiles(*, when: datetime | None = None) -> tuple[MachineProfile, ...]:
-    observed = (when or datetime.now(UTC)).astimezone(UTC)
-    profiles: list[MachineProfile] = []
-    for item in DECLARED_HOSTS:
-        profiles.append(
-            MachineProfile(
-                machine_id=str(item["machine_id"]),
-                hostname=str(item["hostname"]),
-                role=str(item["role"]),
-                state=str(item["state"]),
-                observed_at_utc=observed,
-                os_family=str(item["os_family"]),
-                isa_flags=tuple(item["isa_flags"]),
-                cuda_compute_capability=item["cuda_compute_capability"],
-                gpu_name=item["gpu_name"],
-                cpu_slots=int(item["cpu_slots"]),
-                memory_mb=int(item["memory_mb"]),
-                disk_mb=int(item["disk_mb"]),
-                principal=str(item["principal"]),
-                modern_cuda_eligible=bool(item["modern_cuda_eligible"]),
-            )
+def declared_profiles(
+    *, when: datetime | None = None, observation_source: str | None = None
+) -> tuple[MachineProfile, ...]:
+    observed = (when or datetime.now(UTC)).astimezone(UTC) if observation_source else UNOBSERVED_AT
+    return tuple(
+        MachineProfile(
+            machine_id=str(item["machine_id"]),
+            hostname=str(item["hostname"]),
+            role=str(item["role"]),
+            state=str(item["state"]),
+            observed_at_utc=observed,
+            os_family=str(item["os_family"]),
+            isa_flags=tuple(item["isa_flags"]),
+            cuda_compute_capability=item["cuda_compute_capability"],
+            gpu_name=item["gpu_name"],
+            cpu_slots=int(item["cpu_slots"]),
+            memory_mb=int(item["memory_mb"]),
+            disk_mb=int(item["disk_mb"]),
+            principal=str(item["principal"]),
+            modern_cuda_eligible=bool(item["modern_cuda_eligible"]),
         )
-    return tuple(profiles)
+        for item in DECLARED_HOSTS
+    )
+
+
+def _matches_local_hostname(profile: MachineProfile, hostname: str) -> bool:
+    names = {profile.hostname.upper(), profile.machine_id.upper()}
+    if profile.role == "PRIMARY_CONTROL_CANDIDATE":
+        names.add("KEVIN")
+    return hostname in names
+
+
+def apply_local_control_observation(
+    profiles: tuple[MachineProfile, ...], *, when: datetime | None = None
+) -> tuple[MachineProfile, ...]:
+    """Stamp freshness only for the workstation this process is actually running on."""
+
+    hostname = socket.gethostname().upper()
+    observed = (when or datetime.now(UTC)).astimezone(UTC)
+    return tuple(
+        profile.model_copy(update={"observed_at_utc": observed})
+        if _matches_local_hostname(profile, hostname)
+        else profile
+        for profile in profiles
+    )
 
 
 def enrollment_blockers() -> tuple[dict[str, str], ...]:

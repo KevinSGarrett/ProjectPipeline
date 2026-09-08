@@ -207,9 +207,9 @@ def drain_host(profile: MachineProfile) -> MachineProfile:
 
 
 def resume_host(profile: MachineProfile, *, when: datetime | None = None) -> MachineProfile:
-    return profile.model_copy(
-        update={"state": "READY", "observed_at_utc": (when or datetime.now(UTC)).astimezone(UTC)}
-    )
+    """Restore READY without treating resume as a freshness observation."""
+
+    return profile.model_copy(update={"state": "READY"})
 
 
 def fleet_projection(

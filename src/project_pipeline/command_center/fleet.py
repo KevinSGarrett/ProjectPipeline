@@ -16,9 +16,14 @@ from project_pipeline.scheduler.fleet import (
 
 
 class FleetRegistry:
-    def __init__(self, profiles: tuple[MachineProfile, ...] = ()) -> None:
+    def __init__(
+        self,
+        profiles: tuple[MachineProfile, ...] = (),
+        persist_path: Path | None = None,
+    ) -> None:
         self._profiles = {item.machine_id: item for item in profiles}
         self.audit: list[dict[str, Any]] = []
+        self.persist_path = persist_path
 
     def replace(self, profiles: tuple[MachineProfile, ...]) -> None:
         self._profiles = {item.machine_id: item for item in profiles}
@@ -29,6 +34,21 @@ class FleetRegistry:
     def projection(self, *, when: datetime | None = None) -> list[dict[str, Any]]:
         when = (when or datetime.now(UTC)).astimezone(UTC)
         return fleet_projection(self.profiles(), when=when)
+
+    def _commit(self) -> None:
+        if self.persist_path is not None:
+            self.persist(self.persist_path)
+
+    def _record_action(self, action: str, machine_id: str, actor: str) -> dict[str, Any]:
+        record = {
+            "action": action,
+            "machine_id": machine_id,
+            "actor": actor,
+            "at_utc": datetime.now(UTC).isoformat(),
+        }
+        self.audit.append(record)
+        self._commit()
+        return record
 
     def drain(self, machine_id: str, *, actor: str) -> dict[str, Any]:
         profile = self._profiles.get(machine_id)
@@ -42,14 +62,11 @@ class FleetRegistry:
             }
         updated = drain_host(profile)
         self._profiles[machine_id] = updated
-        record = {
-            "action": "drain",
-            "machine_id": machine_id,
-            "actor": actor,
-            "at_utc": datetime.now(UTC).isoformat(),
+        return {
+            "ok": True,
+            "profile": updated.model_dump(mode="json"),
+            "audit": self._record_action("drain", machine_id, actor),
         }
-        self.audit.append(record)
-        return {"ok": True, "profile": updated.model_dump(mode="json"), "audit": record}
 
     def resume(self, machine_id: str, *, actor: str) -> dict[str, Any]:
         profile = self._profiles.get(machine_id)
@@ -63,14 +80,11 @@ class FleetRegistry:
             }
         updated = resume_host(profile)
         self._profiles[machine_id] = updated
-        record = {
-            "action": "resume",
-            "machine_id": machine_id,
-            "actor": actor,
-            "at_utc": datetime.now(UTC).isoformat(),
+        return {
+            "ok": True,
+            "profile": updated.model_dump(mode="json"),
+            "audit": self._record_action("resume", machine_id, actor),
         }
-        self.audit.append(record)
-        return {"ok": True, "profile": updated.model_dump(mode="json"), "audit": record}
 
     def persist(self, path: Path) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
@@ -83,15 +97,19 @@ class FleetRegistry:
 
     @classmethod
     def load_or_declared(cls, path: Path, declared: tuple[MachineProfile, ...]) -> FleetRegistry:
-        if not path.is_file():
-            return cls(declared)
-        try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            return cls(declared)
-        hosts = payload.get("hosts") if isinstance(payload, dict) else None
+        payload: Any = None
+        if path.is_file():
+            try:
+                payload = json.loads(path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                payload = None
+        if not isinstance(payload, dict):
+            return cls(declared, persist_path=path)
+        hosts = payload.get("hosts")
         if not isinstance(hosts, list) or not hosts:
-            return cls(declared)
-        registry = cls(tuple(MachineProfile.model_validate(item) for item in hosts))
+            return cls(declared, persist_path=path)
+        registry = cls(
+            tuple(MachineProfile.model_validate(item) for item in hosts), persist_path=path
+        )
         registry.audit = list(payload.get("audit") or [])
         return registry
