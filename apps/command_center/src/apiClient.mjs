@@ -47,6 +47,9 @@ export class CommandCenterClient {
       body: JSON.stringify(command)
     });
   }
+  fleet() { return this.request("/command-center/fleet"); }
+  drainHost(machineId) { return this.request(`/command-center/fleet/${encodeURIComponent(machineId)}/drain`, { method: "POST" }); }
+  resumeHost(machineId) { return this.request(`/command-center/fleet/${encodeURIComponent(machineId)}/resume`, { method: "POST" }); }
 
   eventSource(afterSequence = 0) {
     const url = `${API_ROOT}/command-center/events?after_sequence=${Number(afterSequence)}&follow=true`;

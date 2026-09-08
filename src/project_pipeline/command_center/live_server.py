@@ -27,6 +27,7 @@ from project_pipeline.command_center.desktop_session import (
     is_loopback_host,
     validate_bind_host,
 )
+from project_pipeline.command_center.fleet import FleetRegistry
 from project_pipeline.command_center.inbox import AttentionNotificationBroker
 from project_pipeline.command_center.incidents import IncidentManager
 from project_pipeline.command_center.models import (
@@ -41,6 +42,10 @@ from project_pipeline.command_center.realtime import RealtimeEventBroker
 from project_pipeline.configuration import load_runtime_configuration
 from project_pipeline.domain.control import ControlSnapshot
 from project_pipeline.jira import load_issues
+from project_pipeline.scheduler.host_observation import (
+    apply_local_control_observation,
+    declared_profiles,
+)
 
 _uvicorn: Any
 try:
@@ -146,6 +151,9 @@ def create_live_command_center_app(
         session_issuer.seed_static_token(token, actor_id="actor:command-center")
 
     runtime_database = load_runtime_configuration(root).settings.database_path(root)
+    fleet_state = Path(runtime_database).with_name("fleet_state.json")
+    fleet_registry = FleetRegistry.load_or_declared(fleet_state, declared_profiles())
+    fleet_registry.replace(apply_local_control_observation(fleet_registry.profiles()))
     app = create_command_center_app(
         snapshot_provider=lambda: snapshot_from_repository(root),
         event_broker=broker,
@@ -157,6 +165,7 @@ def create_live_command_center_app(
         control_provider=lambda: live_control_snapshot(root),
         repository_root=root,
         runtime_database=runtime_database,
+        fleet_registry=fleet_registry,
     )
     preview = root / "apps/command_center/preview/index.html"
 

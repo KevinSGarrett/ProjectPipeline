@@ -31,6 +31,10 @@ HEALTH_CHECKS = (
     "uninstall",
     "state_restoration",
 )
+MIGRATION_NOT_EXECUTED = "NOT_EXECUTED_NO_SQLITE_MIGRATION_JOURNEY"
+MIGRATION_COPY_ONLY = "NOT_EXECUTED_COPY_ONLY"
+DIRECTOR_NOT_EXECUTED = "NOT_EXECUTED_NO_PERSISTENT_DIRECTOR_JOURNEY"
+COMMAND_CENTER_PROCESS_LIVENESS_ONLY = "PROCESS_LIVENESS_ONLY"
 
 
 class AcquiredCandidateLifecycle(ContractModel):
@@ -372,7 +376,7 @@ def _run_native_desktop_checks(acquired: Path, work: Path) -> dict[str, str]:
     return {
         "desktop_install": "PASS",
         "desktop_launch": "PASS",
-        "command_center": "PASS_NATIVE_DESKTOP_LAUNCH",
+        "command_center": COMMAND_CENTER_PROCESS_LIVENESS_ONLY,
         "upgrade": "PASS_REINSTALL_FROM_REMOTE_BYTES",
         "rollback": "PASS_RESTORE_REMOTE_INSTALL_SNAPSHOT",
         "uninstall": "PASS",
@@ -461,12 +465,12 @@ def exercise_acquired_lifecycle(
         native_checks = _run_native_desktop_checks(acquired, work)
         checks = {
             "install": "PASS",
-            "migration": "PASS_SQLITE_REMOTE_INSTALL",
+            "migration": MIGRATION_NOT_EXECUTED,
             "startup": "PASS",
             "health": "PASS",
             "desktop_launch": native_checks["desktop_launch"],
             "command_center": native_checks["command_center"],
-            "director_journey": "PASS_INSTALLED_CLI_AND_NATIVE_DESKTOP",
+            "director_journey": DIRECTOR_NOT_EXECUTED,
             "upgrade": native_checks["upgrade"],
             "rollback": native_checks["rollback"],
             "uninstall": native_checks["uninstall"],
@@ -489,12 +493,12 @@ def exercise_acquired_lifecycle(
         restored = not install.exists() and previous.exists()
         checks = {
             "install": "PASS",
-            "migration": "PASS_SQLITE_COPY",
+            "migration": MIGRATION_COPY_ONLY,
             "startup": "PASS",
             "health": "PASS",
             "desktop_launch": desktop_state,
-            "command_center": "PASS_FROM_ACQUIRED_BYTES",
-            "director_journey": "PASS_FROM_ACQUIRED_BYTES",
+            "command_center": COMMAND_CENTER_PROCESS_LIVENESS_ONLY,
+            "director_journey": DIRECTOR_NOT_EXECUTED,
             "upgrade": "PASS",
             "rollback": "PASS",
             "uninstall": "PASS",

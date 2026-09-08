@@ -405,13 +405,79 @@ def inspect_worktree_identity(root: Path) -> dict[str, Any]:
     head_rc, sha = git("rev-parse", "HEAD")
     tree_rc, tree = git("rev-parse", "HEAD^{tree}")
     status_rc, porcelain = git("status", "--porcelain")
-    dirty = bool(porcelain)
+    index_flags = _inspect_special_index_flags(root)
+    hidden_modifications = tuple(item for item in index_flags if not item.get("bytes_match", True))
+    dirty = bool(porcelain) or bool(hidden_modifications)
     return {
         "sha": sha,
         "tree": tree,
         "dirty": dirty,
+        "porcelain": porcelain,
+        "index_flags": index_flags,
+        "hidden_source_modifications": hidden_modifications,
         "ok": head_rc == 0 and tree_rc == 0 and status_rc == 0 and bool(sha) and bool(tree),
     }
+
+
+def _inspect_special_index_flags(root: Path) -> tuple[dict[str, Any], ...]:
+    """Detect skip-worktree and assume-unchanged tracked-byte differences.
+
+    ``git status --porcelain`` omits skip-worktree working-tree edits. Exact
+    published-source evaluation must compare HEAD blobs to working blobs for
+    every special index flag rather than trusting a clean porcelain status.
+    """
+
+    completed = subprocess.run(
+        ["git", "ls-files", "-v", "-z"],
+        cwd=str(root),
+        capture_output=True,
+        check=False,
+        shell=False,
+    )
+    if int(completed.returncode) != 0 or not completed.stdout:
+        return ()
+    entries: list[dict[str, Any]] = []
+    for raw in completed.stdout.split(b"\0"):
+        if not raw:
+            continue
+        flag = chr(raw[0])
+        path = raw[1:].lstrip().decode("utf-8", errors="replace").replace("\\", "/")
+        if flag not in {"S", "s", "h"}:
+            continue
+        working = subprocess.run(
+            ["git", "hash-object", "--", path],
+            cwd=str(root),
+            capture_output=True,
+            text=True,
+            check=False,
+            shell=False,
+        )
+        head = subprocess.run(
+            ["git", "rev-parse", f"HEAD:{path}"],
+            cwd=str(root),
+            capture_output=True,
+            text=True,
+            check=False,
+            shell=False,
+        )
+        working_blob = (working.stdout or "").strip()
+        head_blob = (head.stdout or "").strip()
+        entries.append(
+            {
+                "path": path,
+                "flag": flag,
+                "skip_worktree": flag in {"S", "s"},
+                "assume_unchanged": flag in {"h", "s"},
+                "working_blob": working_blob,
+                "head_blob": head_blob,
+                "bytes_match": bool(working_blob)
+                and bool(head_blob)
+                and working_blob == head_blob
+                and int(working.returncode) == 0
+                and int(head.returncode) == 0,
+            }
+        )
+    return tuple(entries)
 
 
 def evaluate_pp384_admission(evidence_path: Path) -> dict[str, Any]:
@@ -1465,6 +1531,64 @@ class CampaignController:
                 now,
             )
         return self.get(campaign_id)
+
+    def reconcile_failed_finalization(
+        self,
+        campaign_id: str,
+        *,
+        reason: str,
+        lineage: Mapping[str, Any],
+    ) -> dict[str, Any]:
+        """Governed FAILED -> READY_TO_PUBLISH when 72-hour attestation remains valid.
+
+        Preserves the FAILED status event. Direct SQL status-only repairs are
+        rejected; lineage must name the original discrepancy and operator.
+        """
+
+        row = self._require(campaign_id)
+        status = str(row["status"])
+        if status != "FAILED":
+            raise ValueError("finalization reconciliation requires a FAILED campaign")
+        if not str(reason).strip():
+            raise ValueError("finalization reconciliation requires an explicit reason")
+        lineage_payload = dict(lineage)
+        if not lineage_payload.get("original_failure") or not lineage_payload.get("method"):
+            raise ValueError("finalization reconciliation requires explicit lineage")
+        if str(lineage_payload.get("method")) == "direct_sql_status_update":
+            raise ValueError("direct SQL status repair is not a supported reconciliation method")
+        run_id = str(row["qualification_run_id"] or "")
+        qualification = self.qualification.get(run_id) if run_id else None
+        if (
+            qualification is None
+            or str(qualification.get("stage")) != "UNATTENDED_72_HOUR"
+            or str(qualification.get("status")) != "ATTESTED"
+            or float(qualification.get("attested_elapsed_seconds") or 0) < H72.total_seconds()
+        ):
+            raise ValueError(
+                "finalization reconciliation requires an attested 72-hour qualification"
+            )
+        actions = {
+            str(item["action"])
+            for item in self._db.execute(
+                "SELECT action FROM campaign_events WHERE campaign_id = ?", (campaign_id,)
+            ).fetchall()
+        }
+        if "72H_ATTESTED" not in actions:
+            raise ValueError("finalization reconciliation requires a preserved 72H_ATTESTED event")
+        now = datetime.now(UTC)
+        with self._db:
+            self._append_event(
+                campaign_id,
+                "FAILED_FINALIZATION_RECONCILED",
+                "FAILED",
+                {
+                    "reason": str(reason).strip(),
+                    "lineage": lineage_payload,
+                    "preserved_failed_status": True,
+                },
+                now,
+            )
+        return self._mark_ready_to_publish(campaign_id)
 
     def _require_clean_identity(self) -> dict[str, Any]:
         identity = self._inspect_identity(self.repository_root)

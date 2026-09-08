@@ -2,6 +2,7 @@ export const NAV_ITEMS = Object.freeze([
   ["overview", "Overview"],
   ["graph", "Project Graph"],
   ["work", "Live Work"],
+  ["fleet", "Fleet"],
   ["health", "Health & Risk"],
   ["budgets", "Budgets"],
   ["providers", "Providers"],

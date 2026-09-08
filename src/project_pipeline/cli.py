@@ -916,6 +916,10 @@ def build_parser() -> argparse.ArgumentParser:
             "acquire",
             "renew",
             "release",
+            "fleet",
+            "place",
+            "drain",
+            "resume",
         ),
     )
     scheduler.add_argument("--root", type=_root, default=Path.cwd())
@@ -924,6 +928,7 @@ def build_parser() -> argparse.ArgumentParser:
     scheduler.add_argument("--max-lanes", type=int)
     scheduler.add_argument("--signals-file", type=Path)
     scheduler.add_argument("--task-id")
+    scheduler.add_argument("--machine-id")
     scheduler.add_argument("--holder-id", default="actor:local-scheduler")
     scheduler.add_argument("--lease-id")
     scheduler.add_argument("--fencing-token", type=int)
@@ -1985,6 +1990,52 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     item.model_dump(mode="json") for item in scheduler_store.list_active_leases()
                 ],
             }, 0
+        if args.action in {"fleet", "place", "drain", "resume"}:
+            from project_pipeline.command_center.fleet import FleetRegistry
+            from project_pipeline.scheduler.fleet import select_target
+            from project_pipeline.scheduler.host_observation import (
+                apply_local_control_observation,
+                declared_profiles,
+                enrollment_blockers,
+            )
+
+            fleet_state = Path(database).with_name("fleet_state.json")
+            fleet = FleetRegistry.load_or_declared(fleet_state, declared_profiles())
+            fleet.replace(apply_local_control_observation(fleet.profiles()))
+            if args.action == "fleet":
+                return {
+                    "database": str(database),
+                    "hosts": fleet.projection(),
+                    "enrollment_blockers": list(enrollment_blockers()),
+                    "state_path": str(fleet_state),
+                }, 0
+            if args.action == "place":
+                chosen, denials = select_target(
+                    fleet.profiles(),
+                    when=datetime.now(UTC),
+                    require_modern_cuda=False,
+                    require_avx2=False,
+                )
+                if chosen is not None:
+                    scheduler_store.ensure_machine_pools(chosen.physical_pools())
+                return {
+                    "database": str(database),
+                    "chosen": None if chosen is None else chosen.model_dump(mode="json"),
+                    "denials": denials,
+                    "enrollment_blockers": list(enrollment_blockers()),
+                }, 0 if chosen is not None else 2
+            if not args.machine_id:
+                raise ConfigurationError(f"scheduler {args.action} requires --machine-id")
+            if not args.apply or not args.approve:
+                raise ConfigurationError(
+                    f"scheduler {args.action} requires both --apply and --approve"
+                )
+            if args.action == "drain":
+                result = fleet.drain(args.machine_id, actor=args.actor_id)
+            else:
+                result = fleet.resume(args.machine_id, actor=args.actor_id)
+            code = 0 if result.get("ok") else 2
+            return {"database": str(database), "state_path": str(fleet_state), **result}, code
         if args.action in {"renew", "release"}:
             if not args.apply or not args.approve:
                 raise ConfigurationError(
@@ -2020,6 +2071,10 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             control = kernel.evaluate()
 
         profiles = profiles_from_repository(args.root, control)
+        if args.machine_id and args.machine_id != "machine:local":
+            from project_pipeline.scheduler.fleet import bind_profile_claims
+
+            profiles = tuple(bind_profile_claims(item, args.machine_id) for item in profiles)
         registry = scheduler_store.registry_snapshot()
         if args.signals_file:
             signal_path = (

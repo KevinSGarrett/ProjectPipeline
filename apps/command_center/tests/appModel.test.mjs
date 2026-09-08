@@ -4,7 +4,7 @@ import { NAV_ITEMS, filterGraph, healthTone, makeControlCommand, makeDirectorReq
 
 test("navigation contains all Pass 21 operator surfaces", () => {
   const ids = NAV_ITEMS.map(([id]) => id);
-  for (const required of ["overview","graph","work","health","budgets","providers","context","recovery","director","incidents","approvals","sync","evidence"]) assert.ok(ids.includes(required));
+  for (const required of ["overview","graph","work","fleet","health","budgets","providers","context","recovery","director","incidents","approvals","sync","evidence"]) assert.ok(ids.includes(required));
 });
 
 test("summary keeps readiness dimensions distinct", () => {

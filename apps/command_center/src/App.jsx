@@ -98,6 +98,8 @@ export function App() {
   });
   const [incidentStatus, setIncidentStatus] = useState("Incident resolution requires verification and reconciliation evidence.");
   const [notificationStatus, setNotificationStatus] = useState("Remote delivery is disabled unless explicitly configured; desktop action-click qualification remains separate.");
+  const [fleet, setFleet] = useState({ hosts: [], audit: [] });
+  const [fleetStatus, setFleetStatus] = useState("Fleet drain and resume require an authenticated Command Center session; stale hosts stay stale.");
   const summary = useMemo(() => summarize(data.snapshot, data.application), [data]);
   const graph = useMemo(() => filterGraph(data.application.graph, graphSearch), [data.application.graph, graphSearch]);
 
@@ -126,6 +128,7 @@ export function App() {
         setConnection("LIVE");
         client.incidents().then((incidents) => setData((currentData) => ({ ...currentData, incidents }))).catch(() => undefined);
         client.autonomyDirector().then(setAutonomy).catch(() => undefined);
+        client.fleet().then(setFleet).catch(() => setFleetStatus("Fleet API unavailable or unauthenticated; hosts remain unknown."));
       } catch {
         if (!cancelled) setConnection("DEGRADED");
       }
@@ -179,6 +182,23 @@ export function App() {
       setIncidentStatus(`${action}: canonical incident state is now ${result.state}.`);
       client.incidents().then((incidents) => setData((currentData) => ({ ...currentData, incidents }))).catch(() => undefined);
     } catch (error) { setIncidentStatus(`${action}: ${error.message}`); }
+  }
+
+  async function fleetAction(machineId, action) {
+    const current = session.get();
+    if (!current.token) {
+      setFleetStatus(`${action}: preview only; live authentication is required before drain or resume.`);
+      return;
+    }
+    try {
+      const client = new CommandCenterClient(current);
+      const result = action === "drain" ? await client.drainHost(machineId) : await client.resumeHost(machineId);
+      setFleetStatus(`${action} ${machineId}: ${result.profile?.state || "unknown"}`);
+      const listed = await client.fleet();
+      setFleet(listed);
+    } catch (error) {
+      setFleetStatus(`${action}: ${error.message}`);
+    }
   }
 
   async function handleInbox(item, mode) {
@@ -243,6 +263,11 @@ export function App() {
 
             <Section id="work" kicker="EXECUTION" title="Live work">
               <div className="table-wrap"><table><caption className="sr-only">Current and queued work</caption><thead><tr><th>Work</th><th>Owner</th><th>Stage</th><th>State</th><th>Progress</th><th>Next</th></tr></thead><tbody>{(data.application.live_work || []).map((item) => <tr key={item.id}><td><strong>{item.title}</strong><small>{item.id}</small></td><td>{item.owner}</td><td>{item.stage}</td><td><Badge tone={item.state === "RUNNING" ? "good" : "neutral"}>{item.state}</Badge></td><td>{percent(item.progress)}</td><td>{item.next}</td></tr>)}</tbody></table></div>
+            </Section>
+
+            <Section id="fleet" kicker="FLEET" title="Three-host fleet">
+              <div className="table-wrap"><table><caption className="sr-only">Declared versus observed fleet hosts</caption><thead><tr><th>Host</th><th>Role</th><th>State</th><th>Freshness</th><th>CPU / RAM / Disk</th><th>GPU</th><th>Eligibility</th><th>Actions</th></tr></thead><tbody>{(fleet.hosts || []).length ? (fleet.hosts || []).map((host) => <tr key={host.machine_id}><td><strong>{host.hostname}</strong><small>{host.machine_id}</small></td><td>{host.role}</td><td><Badge tone={host.state === "READY" && host.freshness === "fresh" ? "good" : "warn"}>{host.state}</Badge></td><td><Badge tone={host.freshness === "fresh" ? "good" : "warn"}>{host.freshness}</Badge></td><td>{host.cpu_slots} / {host.memory_mb} / {host.disk_mb}</td><td>{host.gpu_name || "none"}{host.cuda_compute_capability != null ? ` CC${host.cuda_compute_capability}` : ""}</td><td>{host.eligibility}{(host.denial_reasons || []).length ? <small>{host.denial_reasons.join(", ")}</small> : null}</td><td><div className="inbox-actions"><button type="button" onClick={() => fleetAction(host.machine_id, "drain")}>Drain</button><button type="button" onClick={() => fleetAction(host.machine_id, "resume")}>Resume</button></div></td></tr>) : <tr><td colSpan={8}>No live fleet observation; hosts are unknown until the authenticated fleet API returns.</td></tr>}</tbody></table></div>
+              <p className="control-status" role="status">{fleetStatus}</p>
             </Section>
 
             <Section id="health" kicker="OPERATIONS" title="Layered health & risk">

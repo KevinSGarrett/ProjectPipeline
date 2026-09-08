@@ -26,6 +26,7 @@ from project_pipeline.command_center.director import (
     DirectorChatService,
     DirectorContextBuilder,
 )
+from project_pipeline.command_center.fleet import FleetRegistry
 from project_pipeline.command_center.inbox import AttentionNotificationBroker
 from project_pipeline.command_center.incidents import IncidentManager
 from project_pipeline.command_center.models import (
@@ -73,6 +74,7 @@ def create_command_center_app(
     control_provider: Callable[[], ControlSnapshot] | None = None,
     repository_root: Path | None = None,
     runtime_database: Path | None = None,
+    fleet_registry: FleetRegistry | None = None,
 ) -> FastAPI:
     app = FastAPI(title="Project Pipeline Command Center API", version="1.1.0")
     auth = auth or CommandCenterAuth.deny_all()
@@ -98,6 +100,7 @@ def create_command_center_app(
             "director_chat": director_chat is not None,
             "persistent_autonomy_director": autonomy_director is not None,
             "incident_management": incident_manager is not None,
+            "fleet": fleet_registry is not None,
             "notification_delivery": {
                 "configured": notification_service is not None,
                 "remote_enabled": bool(
@@ -432,5 +435,29 @@ def create_command_center_app(
             return control_gateway.execute(command).model_dump(mode="json")
         except PermissionError as exc:
             raise HTTPException(status_code=403, detail=str(exc)) from exc
+
+    @app.get("/api/v1/command-center/fleet")
+    def fleet_status(_actor: str = Depends(principal)) -> dict[str, Any]:
+        if fleet_registry is None:
+            raise HTTPException(status_code=503, detail="fleet registry not configured")
+        return {"hosts": fleet_registry.projection(), "audit": list(fleet_registry.audit)}
+
+    @app.post("/api/v1/command-center/fleet/{machine_id}/drain")
+    def fleet_drain(machine_id: str, actor: str = Depends(principal)) -> dict[str, Any]:
+        if fleet_registry is None:
+            raise HTTPException(status_code=503, detail="fleet registry not configured")
+        result = fleet_registry.drain(machine_id, actor=actor)
+        if not result["ok"]:
+            raise HTTPException(status_code=404, detail=str(result.get("reason")))
+        return result
+
+    @app.post("/api/v1/command-center/fleet/{machine_id}/resume")
+    def fleet_resume(machine_id: str, actor: str = Depends(principal)) -> dict[str, Any]:
+        if fleet_registry is None:
+            raise HTTPException(status_code=503, detail="fleet registry not configured")
+        result = fleet_registry.resume(machine_id, actor=actor)
+        if not result["ok"]:
+            raise HTTPException(status_code=409, detail=str(result.get("reason")))
+        return result
 
     return app

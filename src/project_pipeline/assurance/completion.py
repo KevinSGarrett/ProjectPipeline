@@ -5,6 +5,9 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.assurance.qualification_environments import compile_qualification_environments
+from project_pipeline.assurance.unattended_evidence import (
+    evaluate_unattended_operating_loop_evidence,
+)
 from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
 from project_pipeline.domain.assurance import (
     CandidateCompletionAssessment,
@@ -19,6 +22,7 @@ from project_pipeline.domain.assurance import (
     assurance_identifier,
 )
 from project_pipeline.domain.requirements import ImplementationState, RequirementDisposition
+from project_pipeline.io import sha256_canonical_file, sha256_file
 from project_pipeline.jira import load_issues
 from project_pipeline.requirements import load_requirement_catalog
 
@@ -459,26 +463,31 @@ def _question_five_reason(
     return "integrated autonomous-runtime qualification is incomplete; " + "; ".join(parts)
 
 
+def _read_in_repo_json(root: Path, artifact_path: object) -> tuple[Path, Any] | None:
+    if not isinstance(artifact_path, str):
+        return None
+    path = (root / artifact_path).resolve()
+    if not path.is_relative_to(root.resolve()):
+        return None
+    if not path.is_file() or path.suffix.lower() != ".json":
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    return path, payload
+
+
 def _evidence_matches_current_identity(
     root: Path, row: dict[str, Any], sha: str, tree: str
 ) -> bool:
     environment = str(row.get("environment") or "")
     if environment not in _AUTONOMOUS_RUNTIME_EVIDENCE_ENVIRONMENTS:
         return True
-    artifact_path = row.get("artifact_path")
-    if not isinstance(artifact_path, str):
+    loaded = _read_in_repo_json(root, row.get("artifact_path"))
+    if loaded is None:
         return False
-    path = (root / artifact_path).resolve()
-    try:
-        path.relative_to(root.resolve())
-    except ValueError:
-        return False
-    if not path.is_file() or path.suffix.lower() != ".json":
-        return False
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
-        return False
+    _, payload = loaded
     bound_head = str(payload.get("bound_head") or "").strip().lower()
     bound_tree = str(payload.get("bound_tree") or "").strip().lower()
     return bound_head == sha and bound_tree == tree and len(sha) == 40 and len(tree) == 40
@@ -495,25 +504,29 @@ def _evidence_rows(root: Path) -> tuple[dict[str, Any], ...]:
 
 
 def _valid_unattended_qualification(root: Path, row: dict[str, Any]) -> bool:
-    artifact_path = row.get("artifact_path")
-    if not isinstance(artifact_path, str):
+    loaded = _read_in_repo_json(root, row.get("artifact_path"))
+    if loaded is None:
         return False
-    path = (root / artifact_path).resolve()
-    try:
-        path.relative_to(root.resolve())
-    except ValueError:
-        return False
-    if not path.is_file() or path.suffix.lower() != ".json":
-        return False
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
-        return False
-    return (
-        float(payload.get("duration_hours", 0)) >= 72
-        and payload.get("end_to_end") is True
-        and payload.get("restart_recovery") is True
-        and payload.get("external_reconciliation") is True
-        and payload.get("windows_native_verified") is True
-        and payload.get("unattended") is True
+    path, payload = loaded
+    identity = inspect_worktree_identity(root)
+    algorithm = str(payload.get("hash_algorithm") or row.get("hash_algorithm") or "")
+    artifact_digest = (
+        sha256_file(path) if algorithm == "sha256_raw" else sha256_canonical_file(path)
     )
+    ledger_digest = str(row.get("sha256") or "")
+    if len(ledger_digest) != 64 or ledger_digest != artifact_digest:
+        return False
+    payload_digest = str(payload.get("sha256") or payload.get("artifact_sha256") or "")
+    if payload_digest and payload_digest != ledger_digest:
+        return False
+    bound_payload = dict(payload) if isinstance(payload, dict) else {}
+    bound_payload["sha256"] = ledger_digest
+    if algorithm and not str(bound_payload.get("hash_algorithm") or ""):
+        bound_payload["hash_algorithm"] = algorithm
+    result = evaluate_unattended_operating_loop_evidence(
+        bound_payload,
+        expected_sha=str(identity.get("sha") or ""),
+        expected_tree=str(identity.get("tree") or ""),
+        artifact_sha256=ledger_digest,
+    )
+    return bool(result.get("duration_qualified"))
