@@ -13,8 +13,6 @@ from pathlib import Path
 from typing import Any
 
 ACCEPTED_C18_DISPOSITIONS = frozenset({"PM_ACCEPTED", "PM_ACCEPTED_WITH_FOLLOWUP"})
-REMOTE_DENY_STATES = frozenset({"ENROLLMENT_PENDING", "OFFLINE", "QUARANTINED", "DRAINED", "STALE"})
-STALE_FRESHNESS = frozenset({"stale", "unknown", ""})
 PRIMARY_CONTROL_MACHINE_ID = "PRIMARY-CODEX-WORKSTATION"
 GIT_IDENTITY_LENGTH = 40
 
@@ -42,7 +40,7 @@ def _remote_host_failures(hosts: Mapping[str, Any]) -> tuple[str, ...]:
             continue
         state = str(host.get("state") or "")
         freshness = str(host.get("freshness") or "unknown")
-        if state in REMOTE_DENY_STATES or freshness in STALE_FRESHNESS:
+        if state != "READY" or freshness != "fresh":
             failures.append(f"remote_denied:{machine_id}:{state or 'UNDECLARED'}:{freshness}")
             continue
         enrolled_fresh += 1
@@ -67,7 +65,7 @@ def chosen_host_admitted(
         return {"ok": False, "failures": (f"unchosen_host:{machine_id}",)}
     state = str(host.get("state") or "")
     freshness = str(host.get("freshness") or "unknown")
-    if state in REMOTE_DENY_STATES or freshness in STALE_FRESHNESS:
+    if state != "READY" or freshness != "fresh":
         return {
             "ok": False,
             "failures": (f"remote_denied:{machine_id}:{state or 'UNDECLARED'}:{freshness}",),

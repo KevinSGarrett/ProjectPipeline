@@ -2024,23 +2024,35 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     expected_sha=str(identity.get("sha") or ""),
                     expected_tree=str(identity.get("tree") or ""),
                 )
+                dirty_source = bool(identity.get("dirty")) or not bool(identity.get("ok"))
+                candidates = []
+                extra_denials: list[str] = []
+                if dirty_source:
+                    extra_denials.append("dirty_or_unbound_source")
+                for profile in fleet.profiles():
+                    if profile.role == "PRIMARY_CONTROL_CANDIDATE":
+                        candidates.append(profile)
+                        continue
+                    if dirty_source:
+                        extra_denials.append(f"remote_denied:{profile.machine_id}:dirty_source")
+                        continue
+                    host_gate = chosen_host_admitted(
+                        record,
+                        profile.machine_id,
+                        expected_sha=str(identity.get("sha") or ""),
+                        expected_tree=str(identity.get("tree") or ""),
+                    )
+                    if host_gate["ok"]:
+                        candidates.append(profile)
+                    else:
+                        extra_denials.extend(str(item) for item in host_gate["failures"])
                 chosen, denials = select_target(
-                    fleet.profiles(),
+                    tuple(candidates),
                     when=datetime.now(UTC),
                     require_modern_cuda=False,
                     require_avx2=False,
                 )
-                remote_chosen = chosen is not None and chosen.role != "PRIMARY_CONTROL_CANDIDATE"
-                if remote_chosen:
-                    host_gate = chosen_host_admitted(
-                        record,
-                        chosen.machine_id,
-                        expected_sha=str(identity.get("sha") or ""),
-                        expected_tree=str(identity.get("tree") or ""),
-                    )
-                    if not host_gate["ok"]:
-                        denials = (*denials, *host_gate["failures"])
-                        chosen = None
+                denials = (*denials, *extra_denials, *gate["failures"])
                 if chosen is not None:
                     scheduler_store.ensure_machine_pools(chosen.physical_pools())
                 return {

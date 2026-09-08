@@ -362,3 +362,13 @@ def test_chosen_host_must_be_the_admitted_worker() -> None:
     denied = chosen_host_admitted(record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE)
     assert denied["ok"] is False
     assert any("unchosen_host:WIN-EVSH1DN8H5O" in item for item in denied["failures"])
+    malformed = chosen_host_admitted(
+        _admission_record(hosts={"COMFY-V4-CPU-01": {"state": "BROKEN", "freshness": "recent"}}),
+        "COMFY-V4-CPU-01",
+        expected_sha=_SHA,
+        expected_tree=_TREE,
+    )
+    assert malformed["ok"] is False
+    assert any(
+        "remote_denied:COMFY-V4-CPU-01:BROKEN:recent" in item for item in malformed["failures"]
+    )
