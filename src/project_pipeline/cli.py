@@ -265,6 +265,7 @@ from project_pipeline.scheduler import (
 from project_pipeline.scheduler import (
     simulate_scenario as simulate_scheduler_scenario,
 )
+from project_pipeline.scheduler.admission import evaluate_admission, load_admission_record
 from project_pipeline.security import (
     SecurityStore,
     build_repository_sbom,
@@ -1991,6 +1992,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 ],
             }, 0
         if args.action in {"fleet", "place", "drain", "resume"}:
+            from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
             from project_pipeline.command_center.fleet import FleetRegistry
             from project_pipeline.scheduler.fleet import select_target
             from project_pipeline.scheduler.host_observation import (
@@ -2010,12 +2012,23 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     "state_path": str(fleet_state),
                 }, 0
             if args.action == "place":
+                identity = inspect_worktree_identity(args.root)
+                admission_path = Path(database).with_name("fleet_admission.json")
+                gate = evaluate_admission(
+                    load_admission_record(admission_path),
+                    expected_sha=str(identity.get("sha") or ""),
+                    expected_tree=str(identity.get("tree") or ""),
+                )
                 chosen, denials = select_target(
                     fleet.profiles(),
                     when=datetime.now(UTC),
                     require_modern_cuda=False,
                     require_avx2=False,
                 )
+                remote_chosen = chosen is not None and chosen.role != "PRIMARY_CONTROL_CANDIDATE"
+                if remote_chosen and not gate["remote_ok"]:
+                    denials = (*denials, *gate["failures"])
+                    chosen = None
                 if chosen is not None:
                     scheduler_store.ensure_machine_pools(chosen.physical_pools())
                 return {
@@ -2023,6 +2036,8 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     "chosen": None if chosen is None else chosen.model_dump(mode="json"),
                     "denials": denials,
                     "enrollment_blockers": list(enrollment_blockers()),
+                    "admission": gate,
+                    "admission_path": str(admission_path),
                 }, 0 if chosen is not None else 2
             if not args.machine_id:
                 raise ConfigurationError(f"scheduler {args.action} requires --machine-id")

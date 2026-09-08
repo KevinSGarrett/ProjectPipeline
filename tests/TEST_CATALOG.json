@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 732,
+  "test_count": 736,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3661,6 +3661,26 @@
       "callable": "test_fleet_registry_persists_drain_to_shared_state",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-015"
+    },
+    {
+      "callable": "test_missing_admission_record_denies_remote_placement",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-016"
+    },
+    {
+      "callable": "test_independent_c18_followup_does_not_admit_unenrolled_hosts",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-017"
+    },
+    {
+      "callable": "test_self_authored_acceptance_is_not_independent",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-018"
+    },
+    {
+      "callable": "test_fresh_enrolled_worker_is_remotely_admitted",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-019"
     }
   ]
 }

@@ -26,6 +26,9 @@ Tailscale SSH-server is not the Windows transport.
 ## Operations
 
 - `python -m project_pipeline.cli scheduler fleet`
-- `python -m project_pipeline.cli scheduler place`
+- `python -m project_pipeline.cli scheduler place` loads `fleet_admission.json`
+  next to the scheduler database. Missing records, self-authored PM labels,
+  wrong SHA/tree, stale hosts, and `ENROLLMENT_PENDING` deny remote placement.
+  Local `machine:local` claims remain the default without that file.
 - Authenticated Command Center `GET /api/v1/command-center/fleet` plus
   drain/resume POSTs.
