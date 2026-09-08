@@ -2039,7 +2039,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 hosts: dict[str, Any] = {}
                 for row in fleet.projection():
                     hosts[str(row["machine_id"])] = {
-                        "state": row["state"] if row["freshness"] == "fresh" else row["state"],
+                        "state": row["state"],
                         "freshness": row["freshness"],
                         "principal": row["principal"],
                     }
@@ -2047,9 +2047,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     hosts["WIN-EVSH1DN8H5O"]["state"] = "READY"
                 record = {
                     "schema_version": "1.0.0",
-                    "c18_disposition": existing.get(
-                        "c18_disposition", "PM_ACCEPTED_WITH_FOLLOWUP"
-                    ),
+                    "c18_disposition": existing.get("c18_disposition", "PM_ACCEPTED_WITH_FOLLOWUP"),
                     "reviewer_id": existing.get(
                         "reviewer_id", "isolated-pm-disposition-c19-2652b873"
                     ),

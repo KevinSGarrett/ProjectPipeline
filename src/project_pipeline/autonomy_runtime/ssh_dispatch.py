@@ -164,7 +164,8 @@ class SshDispatchAdapter:
             "stdout": stdout,
             "stderr": stderr,
             "timed_out": timed_out,
-            "output_truncated": len(raw_stdout) > max_output_bytes or len(raw_stderr) > max_output_bytes,
+            "output_truncated": len(raw_stdout) > max_output_bytes
+            or len(raw_stderr) > max_output_bytes,
             "stdout_sha256": hashlib.sha256(stdout.encode("utf-8")).hexdigest(),
             "stderr_sha256": hashlib.sha256(stderr.encode("utf-8")).hexdigest(),
         }

@@ -536,7 +536,5 @@ def test_fresh_xeon_host_is_remotely_admitted() -> None:
         record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE
     )
     assert allowed["ok"] is True
-    denied = chosen_host_admitted(
-        record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE
-    )
+    denied = chosen_host_admitted(record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE)
     assert denied["ok"] is False
