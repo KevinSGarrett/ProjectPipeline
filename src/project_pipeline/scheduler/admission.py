@@ -51,6 +51,34 @@ def _remote_host_failures(hosts: Mapping[str, Any]) -> tuple[str, ...]:
     return tuple(failures)
 
 
+def chosen_host_admitted(
+    record: Mapping[str, Any] | None,
+    machine_id: str,
+    *,
+    expected_sha: str,
+    expected_tree: str,
+) -> dict[str, Any]:
+    gate = evaluate_admission(record, expected_sha=expected_sha, expected_tree=expected_tree)
+    if record is None or not gate["c18_accepted"]:
+        return {"ok": False, "failures": gate["failures"]}
+    hosts = record.get("hosts") if isinstance(record.get("hosts"), Mapping) else {}
+    host = hosts.get(machine_id)
+    if not isinstance(host, Mapping):
+        return {"ok": False, "failures": (f"unchosen_host:{machine_id}",)}
+    state = str(host.get("state") or "")
+    freshness = str(host.get("freshness") or "unknown")
+    if state in REMOTE_DENY_STATES or freshness in STALE_FRESHNESS:
+        return {
+            "ok": False,
+            "failures": (f"remote_denied:{machine_id}:{state or 'UNDECLARED'}:{freshness}",),
+        }
+    sha_ok = _identity_matches(record.get("source_sha"), expected_sha)
+    tree_ok = _identity_matches(record.get("source_tree"), expected_tree)
+    if not sha_ok or not tree_ok:
+        return {"ok": False, "failures": gate["failures"]}
+    return {"ok": True, "failures": ()}
+
+
 def evaluate_admission(
     record: Mapping[str, Any] | None,
     *,

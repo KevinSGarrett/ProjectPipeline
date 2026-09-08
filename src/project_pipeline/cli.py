@@ -265,7 +265,11 @@ from project_pipeline.scheduler import (
 from project_pipeline.scheduler import (
     simulate_scenario as simulate_scheduler_scenario,
 )
-from project_pipeline.scheduler.admission import evaluate_admission, load_admission_record
+from project_pipeline.scheduler.admission import (
+    chosen_host_admitted,
+    evaluate_admission,
+    load_admission_record,
+)
 from project_pipeline.security import (
     SecurityStore,
     build_repository_sbom,
@@ -2014,8 +2018,9 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             if args.action == "place":
                 identity = inspect_worktree_identity(args.root)
                 admission_path = Path(database).with_name("fleet_admission.json")
+                record = load_admission_record(admission_path)
                 gate = evaluate_admission(
-                    load_admission_record(admission_path),
+                    record,
                     expected_sha=str(identity.get("sha") or ""),
                     expected_tree=str(identity.get("tree") or ""),
                 )
@@ -2026,9 +2031,16 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     require_avx2=False,
                 )
                 remote_chosen = chosen is not None and chosen.role != "PRIMARY_CONTROL_CANDIDATE"
-                if remote_chosen and not gate["remote_ok"]:
-                    denials = (*denials, *gate["failures"])
-                    chosen = None
+                if remote_chosen:
+                    host_gate = chosen_host_admitted(
+                        record,
+                        chosen.machine_id,
+                        expected_sha=str(identity.get("sha") or ""),
+                        expected_tree=str(identity.get("tree") or ""),
+                    )
+                    if not host_gate["ok"]:
+                        denials = (*denials, *host_gate["failures"])
+                        chosen = None
                 if chosen is not None:
                     scheduler_store.ensure_machine_pools(chosen.physical_pools())
                 return {

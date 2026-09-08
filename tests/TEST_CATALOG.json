@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 736,
+  "test_count": 737,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3681,6 +3681,11 @@
       "callable": "test_fresh_enrolled_worker_is_remotely_admitted",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-019"
+    },
+    {
+      "callable": "test_chosen_host_must_be_the_admitted_worker",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-020"
     }
   ]
 }

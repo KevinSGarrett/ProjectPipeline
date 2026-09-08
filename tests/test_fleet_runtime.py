@@ -23,7 +23,7 @@ from project_pipeline.domain.scheduler import (
     ResourceRegistrySnapshot,
     ResourceType,
 )
-from project_pipeline.scheduler.admission import evaluate_admission
+from project_pipeline.scheduler.admission import chosen_host_admitted, evaluate_admission
 from project_pipeline.scheduler.fleet import (
     MachineProfile,
     bind_profile_claims,
@@ -351,3 +351,14 @@ def test_fresh_enrolled_worker_is_remotely_admitted() -> None:
     assert result["c18_accepted"] is True
     assert result["remote_ok"] is True
     assert result["failures"] == ()
+
+
+def test_chosen_host_must_be_the_admitted_worker() -> None:
+    record = _admission_record()
+    allowed = chosen_host_admitted(
+        record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE
+    )
+    assert allowed["ok"] is True
+    denied = chosen_host_admitted(record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE)
+    assert denied["ok"] is False
+    assert any("unchosen_host:WIN-EVSH1DN8H5O" in item for item in denied["failures"])
