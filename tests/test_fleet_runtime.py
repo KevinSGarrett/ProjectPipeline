@@ -719,3 +719,28 @@ def test_ssh_adapter_for_machine_binds_comfy(tmp_path: Path) -> None:
     executed = RemoteJobController(adapter).execute(envelope, now=NOW)
     assert executed["outcome"] == "EXECUTED"
     assert executed["result"].host_id == "COMFY-V4-CPU-01"
+
+
+def test_inventory_observation_preserves_drained_comfy() -> None:
+    inventory = {
+        "hostname": "COMFY-V4-CPU-01",
+        "whoami": r"comfy-v4-cpu-01\windows 11",
+        "totalRAMGB": 31.79,
+        "cpuLogical": 8,
+        "disks": [{"DeviceID": "C:", "FreeGB": 28.5}],
+        "gpus": [{"Name": "Intel(R) UHD Graphics 630"}],
+        "isa": {"sse42": True, "avx": True, "avx2": True},
+    }
+    profiles = tuple(
+        item.model_copy(update={"state": "DRAINED"})
+        if item.machine_id == "COMFY-V4-CPU-01"
+        else item
+        for item in declared_profiles()
+    )
+    observed = apply_inventory_observation(profiles, inventory, when=NOW)
+    comfy = {item.machine_id: item for item in observed}["COMFY-V4-CPU-01"]
+    assert comfy.state == "DRAINED"
+    assert comfy.fresh_at(NOW) is True
+    chosen, denials = select_target(observed, when=NOW)
+    assert chosen is None or chosen.machine_id != "COMFY-V4-CPU-01"
+    assert any("host_state:DRAINED" in item or "COMFY-V4-CPU-01" in item for item in denials)

@@ -2048,8 +2048,13 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     for row in fleet.projection()
                 }
                 enrolled_ids = {XEON_MACHINE_ID, COMFY_MACHINE_ID}
+                hold_states = {"DRAINED", "QUARANTINED", "OFFLINE"}
                 for machine_id, host in hosts.items():
-                    if machine_id in enrolled_ids and host["freshness"] == "fresh":
+                    if (
+                        machine_id in enrolled_ids
+                        and host["freshness"] == "fresh"
+                        and host["state"] not in hold_states
+                    ):
                         host["state"] = "READY"
                 record = observation_admission_record(
                     existing,
@@ -2081,6 +2086,33 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     return {
                         "database": str(database),
                         "executed": {"outcome": "REJECTED", "reason": "wrong_host"},
+                    }, 2
+                identity = inspect_worktree_identity(args.root)
+                admission_path = Path(database).with_name("fleet_admission.json")
+                record = load_admission_record(admission_path)
+                host_gate = chosen_host_admitted(
+                    record,
+                    envelope.host_id,
+                    expected_sha=str(identity.get("sha") or ""),
+                    expected_tree=str(identity.get("tree") or ""),
+                )
+                if not host_gate["ok"]:
+                    return {
+                        "database": str(database),
+                        "executed": {
+                            "outcome": "REJECTED",
+                            "reason": "admission_denied",
+                            "failures": list(host_gate["failures"]),
+                        },
+                    }, 2
+                profile = next(
+                    (item for item in fleet.profiles() if item.machine_id == envelope.host_id),
+                    None,
+                )
+                if profile is None or profile.state in {"DRAINED", "QUARANTINED", "OFFLINE"}:
+                    return {
+                        "database": str(database),
+                        "executed": {"outcome": "REJECTED", "reason": "host_not_runnable"},
                     }, 2
                 controller = RemoteJobController(adapter)
                 executed = controller.execute(envelope)

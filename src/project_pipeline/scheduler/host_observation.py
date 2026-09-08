@@ -20,6 +20,7 @@ COMFY_MACHINE_ID = "COMFY-V4-CPU-01"
 XEON_TTL_SECONDS = 3600
 COMFY_TTL_SECONDS = 3600
 GIB_TO_MIB = 1024
+OPERATIONAL_HOLD_STATES = frozenset({"DRAINED", "QUARANTINED", "OFFLINE"})
 
 DECLARED_HOSTS: tuple[dict[str, Any], ...] = (
     {
@@ -258,10 +259,14 @@ def apply_inventory_observation(
 ) -> tuple[MachineProfile, ...]:
     for builder in (profile_from_xeon_inventory, profile_from_comfy_inventory):
         observed = builder(inventory, when=when)
-        if observed is not None:
-            return tuple(
-                observed if item.machine_id == observed.machine_id else item for item in profiles
-            )
+        if observed is None:
+            continue
+        existing = next((item for item in profiles if item.machine_id == observed.machine_id), None)
+        if existing is not None and existing.state in OPERATIONAL_HOLD_STATES:
+            observed = observed.model_copy(update={"state": existing.state})
+        return tuple(
+            observed if item.machine_id == observed.machine_id else item for item in profiles
+        )
     return profiles
 
 

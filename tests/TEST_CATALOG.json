@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 748,
+  "test_count": 749,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3741,6 +3741,11 @@
       "callable": "test_ssh_adapter_for_machine_binds_comfy",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-031"
+    },
+    {
+      "callable": "test_inventory_observation_preserves_drained_comfy",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-032"
     }
   ]
 }
