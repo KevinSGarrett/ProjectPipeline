@@ -1,0 +1,130 @@
+"""Machine-readable Cycle 18 acceptance and fleet admission preconditions.
+
+Prose blockers are not admission. Remote placement requires an independent
+C18 disposition, matching source identity, and fresh enrolled hosts.
+Local ``machine:local`` behavior stays available without this record.
+"""
+
+from __future__ import annotations
+
+import json
+from collections.abc import Mapping
+from pathlib import Path
+from typing import Any
+
+ACCEPTED_C18_DISPOSITIONS = frozenset({"PM_ACCEPTED", "PM_ACCEPTED_WITH_FOLLOWUP"})
+PRIMARY_CONTROL_MACHINE_ID = "PRIMARY-CODEX-WORKSTATION"
+GIT_IDENTITY_LENGTH = 40
+
+
+def load_admission_record(path: Path) -> dict[str, Any] | None:
+    if not path.is_file():
+        return None
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _identity_matches(actual: object, expected: str) -> bool:
+    token = str(actual or "").strip().lower()
+    return token == expected.strip().lower() and len(token) == GIT_IDENTITY_LENGTH
+
+
+def _remote_host_failures(hosts: Mapping[str, Any]) -> tuple[str, ...]:
+    failures: list[str] = []
+    enrolled_fresh = 0
+    for machine_id, host in hosts.items():
+        if not isinstance(host, Mapping) or str(machine_id) == PRIMARY_CONTROL_MACHINE_ID:
+            continue
+        state = str(host.get("state") or "")
+        freshness = str(host.get("freshness") or "unknown")
+        if state != "READY" or freshness != "fresh":
+            failures.append(f"remote_denied:{machine_id}:{state or 'UNDECLARED'}:{freshness}")
+            continue
+        enrolled_fresh += 1
+    if enrolled_fresh < 1:
+        failures.append("no_enrolled_fresh_worker")
+    return tuple(failures)
+
+
+def chosen_host_admitted(
+    record: Mapping[str, Any] | None,
+    machine_id: str,
+    *,
+    expected_sha: str,
+    expected_tree: str,
+) -> dict[str, Any]:
+    gate = evaluate_admission(record, expected_sha=expected_sha, expected_tree=expected_tree)
+    if record is None or not gate["c18_accepted"]:
+        return {"ok": False, "failures": gate["failures"]}
+    hosts = record.get("hosts") if isinstance(record.get("hosts"), Mapping) else {}
+    host = hosts.get(machine_id)
+    if not isinstance(host, Mapping):
+        return {"ok": False, "failures": (f"unchosen_host:{machine_id}",)}
+    state = str(host.get("state") or "")
+    freshness = str(host.get("freshness") or "unknown")
+    if state != "READY" or freshness != "fresh":
+        return {
+            "ok": False,
+            "failures": (f"remote_denied:{machine_id}:{state or 'UNDECLARED'}:{freshness}",),
+        }
+    sha_ok = _identity_matches(record.get("source_sha"), expected_sha)
+    tree_ok = _identity_matches(record.get("source_tree"), expected_tree)
+    if not sha_ok or not tree_ok:
+        return {"ok": False, "failures": gate["failures"]}
+    return {"ok": True, "failures": ()}
+
+
+def evaluate_admission(
+    record: Mapping[str, Any] | None,
+    *,
+    expected_sha: str,
+    expected_tree: str,
+) -> dict[str, Any]:
+    if record is None:
+        return {
+            "ok": False,
+            "c18_accepted": False,
+            "remote_ok": False,
+            "failures": ("admission_record_missing",),
+        }
+
+    failures: list[str] = []
+    disposition = str(record.get("c18_disposition") or "")
+    reviewer = str(record.get("reviewer_id") or "")
+    implementer = str(record.get("implementer_id") or "")
+    hosts = record.get("hosts")
+    if not isinstance(hosts, Mapping):
+        hosts = {}
+
+    disposition_ok = disposition in ACCEPTED_C18_DISPOSITIONS
+    independent = bool(reviewer) and reviewer != implementer
+    sha_ok = _identity_matches(record.get("source_sha"), expected_sha)
+    tree_ok = _identity_matches(record.get("source_tree"), expected_tree)
+    if not disposition_ok:
+        failures.append("c18_acceptance_missing")
+    if not independent:
+        failures.append("independent_reviewer_missing")
+    if not sha_ok:
+        failures.append("wrong_source_sha")
+    if not tree_ok:
+        failures.append("wrong_source_tree")
+
+    c18_accepted = disposition_ok and independent
+    if c18_accepted:
+        host_failures = _remote_host_failures(hosts)
+        failures.extend(host_failures)
+        remote_ok = not host_failures and sha_ok and tree_ok
+    else:
+        remote_ok = False
+
+    return {
+        "ok": not failures,
+        "c18_accepted": c18_accepted,
+        "remote_ok": remote_ok,
+        "failures": tuple(failures),
+        "disposition": disposition or None,
+        "reviewer_id": reviewer or None,
+    }

@@ -23,6 +23,7 @@ from project_pipeline.domain.scheduler import (
     ResourceRegistrySnapshot,
     ResourceType,
 )
+from project_pipeline.scheduler.admission import chosen_host_admitted, evaluate_admission
 from project_pipeline.scheduler.fleet import (
     MachineProfile,
     bind_profile_claims,
@@ -290,3 +291,84 @@ def test_bind_profile_claims_rewrites_local_machine() -> None:
     bound = bind_profile_claims(profile, "COMFY-V4-CPU-01")
     assert bound.claims[0].machine_id == "COMFY-V4-CPU-01"
     assert bound.claims[0].resource_key == "COMFY-V4-CPU-01/cpu_slots"
+
+
+_SHA = "a" * 40
+_TREE = "b" * 40
+
+
+def _admission_record(**overrides: object) -> dict[str, object]:
+    record: dict[str, object] = {
+        "c18_disposition": "PM_ACCEPTED_WITH_FOLLOWUP",
+        "reviewer_id": "isolated-pm-disposition-c19-2652b873",
+        "implementer_id": "cursor-implementer-c19-c18-correction",
+        "source_sha": _SHA,
+        "source_tree": _TREE,
+        "hosts": {"COMFY-V4-CPU-01": {"state": "READY", "freshness": "fresh"}},
+    }
+    record.update(overrides)
+    return record
+
+
+def _evaluate_admission(record: dict[str, object] | None) -> dict[str, object]:
+    return evaluate_admission(record, expected_sha=_SHA, expected_tree=_TREE)
+
+
+def test_missing_admission_record_denies_remote_placement() -> None:
+    result = _evaluate_admission(None)
+    assert result["c18_accepted"] is False
+    assert result["remote_ok"] is False
+    assert "admission_record_missing" in result["failures"]
+
+
+def test_independent_c18_followup_does_not_admit_unenrolled_hosts() -> None:
+    result = _evaluate_admission(
+        _admission_record(
+            hosts={
+                "WIN-EVSH1DN8H5O": {"state": "ENROLLMENT_PENDING", "freshness": "unknown"},
+                "COMFY-V4-CPU-01": {"state": "READY", "freshness": "stale"},
+            }
+        )
+    )
+    assert result["c18_accepted"] is True
+    assert result["remote_ok"] is False
+    assert any("remote_denied:WIN-EVSH1DN8H5O" in item for item in result["failures"])
+
+
+def test_self_authored_acceptance_is_not_independent() -> None:
+    result = _evaluate_admission(
+        _admission_record(
+            c18_disposition="PM_ACCEPTED",
+            reviewer_id="cursor-implementer-c19-c18-correction",
+        )
+    )
+    assert result["c18_accepted"] is False
+    assert "independent_reviewer_missing" in result["failures"]
+
+
+def test_fresh_enrolled_worker_is_remotely_admitted() -> None:
+    result = _evaluate_admission(_admission_record())
+    assert result["c18_accepted"] is True
+    assert result["remote_ok"] is True
+    assert result["failures"] == ()
+
+
+def test_chosen_host_must_be_the_admitted_worker() -> None:
+    record = _admission_record()
+    allowed = chosen_host_admitted(
+        record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE
+    )
+    assert allowed["ok"] is True
+    denied = chosen_host_admitted(record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE)
+    assert denied["ok"] is False
+    assert any("unchosen_host:WIN-EVSH1DN8H5O" in item for item in denied["failures"])
+    malformed = chosen_host_admitted(
+        _admission_record(hosts={"COMFY-V4-CPU-01": {"state": "BROKEN", "freshness": "recent"}}),
+        "COMFY-V4-CPU-01",
+        expected_sha=_SHA,
+        expected_tree=_TREE,
+    )
+    assert malformed["ok"] is False
+    assert any(
+        "remote_denied:COMFY-V4-CPU-01:BROKEN:recent" in item for item in malformed["failures"]
+    )

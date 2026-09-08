@@ -265,6 +265,11 @@ from project_pipeline.scheduler import (
 from project_pipeline.scheduler import (
     simulate_scenario as simulate_scheduler_scenario,
 )
+from project_pipeline.scheduler.admission import (
+    chosen_host_admitted,
+    evaluate_admission,
+    load_admission_record,
+)
 from project_pipeline.security import (
     SecurityStore,
     build_repository_sbom,
@@ -1991,6 +1996,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 ],
             }, 0
         if args.action in {"fleet", "place", "drain", "resume"}:
+            from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
             from project_pipeline.command_center.fleet import FleetRegistry
             from project_pipeline.scheduler.fleet import select_target
             from project_pipeline.scheduler.host_observation import (
@@ -2010,12 +2016,43 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     "state_path": str(fleet_state),
                 }, 0
             if args.action == "place":
+                identity = inspect_worktree_identity(args.root)
+                admission_path = Path(database).with_name("fleet_admission.json")
+                record = load_admission_record(admission_path)
+                gate = evaluate_admission(
+                    record,
+                    expected_sha=str(identity.get("sha") or ""),
+                    expected_tree=str(identity.get("tree") or ""),
+                )
+                dirty_source = bool(identity.get("dirty")) or not bool(identity.get("ok"))
+                candidates = []
+                extra_denials: list[str] = []
+                if dirty_source:
+                    extra_denials.append("dirty_or_unbound_source")
+                for profile in fleet.profiles():
+                    if profile.role == "PRIMARY_CONTROL_CANDIDATE":
+                        candidates.append(profile)
+                        continue
+                    if dirty_source:
+                        extra_denials.append(f"remote_denied:{profile.machine_id}:dirty_source")
+                        continue
+                    host_gate = chosen_host_admitted(
+                        record,
+                        profile.machine_id,
+                        expected_sha=str(identity.get("sha") or ""),
+                        expected_tree=str(identity.get("tree") or ""),
+                    )
+                    if host_gate["ok"]:
+                        candidates.append(profile)
+                    else:
+                        extra_denials.extend(str(item) for item in host_gate["failures"])
                 chosen, denials = select_target(
-                    fleet.profiles(),
+                    tuple(candidates),
                     when=datetime.now(UTC),
                     require_modern_cuda=False,
                     require_avx2=False,
                 )
+                denials = (*denials, *extra_denials, *gate["failures"])
                 if chosen is not None:
                     scheduler_store.ensure_machine_pools(chosen.physical_pools())
                 return {
@@ -2023,6 +2060,8 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     "chosen": None if chosen is None else chosen.model_dump(mode="json"),
                     "denials": denials,
                     "enrollment_blockers": list(enrollment_blockers()),
+                    "admission": gate,
+                    "admission_path": str(admission_path),
                 }, 0 if chosen is not None else 2
             if not args.machine_id:
                 raise ConfigurationError(f"scheduler {args.action} requires --machine-id")
