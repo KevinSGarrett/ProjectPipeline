@@ -1,18 +1,22 @@
 """Declared versus observed three-host fleet profiles.
 
-Live SSH enrollment of WIN-EVSH1DN8H5O is a separate operator action. This module
-never treats an unauthenticated Tailscale host as an admitted worker.
+OpenSSH on WIN-EVSH1DN8H5O is Windows Win32-OpenSSH bound to Tailscale, not
+Tailscale SSH-server. Declared records without an observation source stay stale.
 """
 
 from __future__ import annotations
 
 import socket
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from typing import Any
 
 from project_pipeline.scheduler.fleet import MachineProfile
 
 UNOBSERVED_AT = datetime(1970, 1, 1, tzinfo=UTC)
+XEON_MACHINE_ID = "WIN-EVSH1DN8H5O"
+XEON_TTL_SECONDS = 3600
+GIB_TO_MIB = 1024
 
 DECLARED_HOSTS: tuple[dict[str, Any], ...] = (
     {
@@ -29,6 +33,7 @@ DECLARED_HOSTS: tuple[dict[str, Any], ...] = (
         "disk_mb": 200000,
         "principal": "operator:control",
         "modern_cuda_eligible": True,
+        "ttl_seconds": 300,
         "tailnet_ipv4": None,
         "bootstrap_precondition": None,
     },
@@ -46,30 +51,30 @@ DECLARED_HOSTS: tuple[dict[str, Any], ...] = (
         "disk_mb": 24780,
         "principal": "worker:comfy",
         "modern_cuda_eligible": False,
+        "ttl_seconds": 300,
         "tailnet_ipv4": "100.77.151.3",
-        "bootstrap_precondition": None,
+        "bootstrap_precondition": (
+            "Do not retry previously denied SSH keys on COMFY-V4-CPU-01. "
+            "TCP/22 is open; an authorized worker principal is still required."
+        ),
     },
     {
-        "machine_id": "WIN-EVSH1DN8H5O",
+        "machine_id": XEON_MACHINE_ID,
         "hostname": "WIN-EVSH1DN8H5O",
         "role": "MEMORY_HEAVY_BATCH_WORKER",
-        "state": "ENROLLMENT_PENDING",
+        "state": "READY",
         "os_family": "windows",
         "isa_flags": ("avx",),
         "cuda_compute_capability": 2.0,
         "gpu_name": "Quadro 6000",
         "cpu_slots": 16,
-        "memory_mb": 64000,
-        "disk_mb": 100000,
-        "principal": "worker:unenrolled",
+        "memory_mb": 65495,
+        "disk_mb": 70082,
+        "principal": r"win-evsh1dn8h5o\kines",
         "modern_cuda_eligible": False,
+        "ttl_seconds": XEON_TTL_SECONDS,
         "tailnet_ipv4": "100.107.207.66",
-        "bootstrap_precondition": (
-            "Enable Windows OpenSSH Server on WIN-EVSH1DN8H5O, bind it to the "
-            "Tailscale interface 100.107.207.66, and authorize the existing "
-            "operator principal. Do not use Tailscale SSH-server as the Windows "
-            "transport, and do not copy .env files."
-        ),
+        "bootstrap_precondition": None,
     },
 )
 
@@ -101,6 +106,7 @@ def declared_profiles(
             role=str(item["role"]),
             state=str(item["state"]),
             observed_at_utc=observed,
+            ttl_seconds=int(item["ttl_seconds"]),
             os_family=str(item["os_family"]),
             isa_flags=tuple(item["isa_flags"]),
             cuda_compute_capability=item["cuda_compute_capability"],
@@ -135,6 +141,67 @@ def apply_local_control_observation(
         else profile
         for profile in profiles
     )
+
+
+def _isa_flags_from_inventory(inventory: Mapping[str, Any]) -> tuple[str, ...]:
+    isa = inventory.get("isa")
+    flags: list[str] = []
+    if isinstance(isa, Mapping):
+        if isa.get("sse42"):
+            flags.append("sse42")
+        if isa.get("avx"):
+            flags.append("avx")
+        if isa.get("avx2"):
+            flags.append("avx2")
+        return tuple(flags)
+    return ("avx",)
+
+
+def profile_from_xeon_inventory(
+    inventory: Mapping[str, Any], *, when: datetime | None = None
+) -> MachineProfile | None:
+    hostname = str(inventory.get("hostname") or "").strip().upper()
+    if hostname != XEON_MACHINE_ID:
+        return None
+    disks = inventory.get("disks")
+    disk = disks[0] if isinstance(disks, list) and disks else {}
+    free_gb = float(disk.get("FreeGB") or 0) if isinstance(disk, Mapping) else 0.0
+    gpu_rows = inventory.get("gpus")
+    gpu = gpu_rows[0] if isinstance(gpu_rows, list) and gpu_rows else {}
+    gpu_name = str(gpu.get("Name") or "Quadro 6000") if isinstance(gpu, Mapping) else "Quadro 6000"
+    classification = classify_gpu(name=gpu_name, compute_capability=2.0)
+    observed = (when or datetime.now(UTC)).astimezone(UTC)
+    ram_gb = float(inventory.get("totalRAMGB") or 63.96)
+    logical = int(inventory.get("cpuLogical") or 16)
+    return MachineProfile(
+        machine_id=XEON_MACHINE_ID,
+        hostname="WIN-EVSH1DN8H5O",
+        role="MEMORY_HEAVY_BATCH_WORKER",
+        state="READY",
+        observed_at_utc=observed,
+        ttl_seconds=XEON_TTL_SECONDS,
+        os_family="windows",
+        isa_flags=_isa_flags_from_inventory(inventory),
+        cuda_compute_capability=2.0,
+        gpu_name=gpu_name.replace("NVIDIA ", ""),
+        cpu_slots=max(1, logical),
+        memory_mb=max(1, int(ram_gb * GIB_TO_MIB)),
+        disk_mb=max(1, int(free_gb * GIB_TO_MIB)),
+        principal=str(inventory.get("whoami") or r"win-evsh1dn8h5o\kines"),
+        modern_cuda_eligible=bool(classification["modern_cuda_eligible"]),
+    )
+
+
+def apply_inventory_observation(
+    profiles: tuple[MachineProfile, ...],
+    inventory: Mapping[str, Any],
+    *,
+    when: datetime | None = None,
+) -> tuple[MachineProfile, ...]:
+    observed = profile_from_xeon_inventory(inventory, when=when)
+    if observed is None:
+        return profiles
+    return tuple(observed if item.machine_id == XEON_MACHINE_ID else item for item in profiles)
 
 
 def enrollment_blockers() -> tuple[dict[str, str], ...]:

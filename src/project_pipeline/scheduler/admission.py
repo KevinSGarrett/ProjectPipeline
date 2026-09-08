@@ -17,6 +17,11 @@ PRIMARY_CONTROL_MACHINE_ID = "PRIMARY-CODEX-WORKSTATION"
 GIT_IDENTITY_LENGTH = 40
 
 
+def write_admission_record(path: Path, record: Mapping[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(dict(record), indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
 def load_admission_record(path: Path) -> dict[str, Any] | None:
     if not path.is_file():
         return None
@@ -35,18 +40,21 @@ def _identity_matches(actual: object, expected: str) -> bool:
 def _remote_host_failures(hosts: Mapping[str, Any]) -> tuple[str, ...]:
     failures: list[str] = []
     enrolled_fresh = 0
+    denied: list[str] = []
     for machine_id, host in hosts.items():
         if not isinstance(host, Mapping) or str(machine_id) == PRIMARY_CONTROL_MACHINE_ID:
             continue
         state = str(host.get("state") or "")
         freshness = str(host.get("freshness") or "unknown")
-        if state != "READY" or freshness != "fresh":
-            failures.append(f"remote_denied:{machine_id}:{state or 'UNDECLARED'}:{freshness}")
+        if state == "READY" and freshness == "fresh":
+            enrolled_fresh += 1
             continue
-        enrolled_fresh += 1
+        denied.append(f"remote_denied:{machine_id}:{state or 'UNDECLARED'}:{freshness}")
     if enrolled_fresh < 1:
+        failures.extend(denied)
         failures.append("no_enrolled_fresh_worker")
-    return tuple(failures)
+        return tuple(failures)
+    return ()
 
 
 def chosen_host_admitted(

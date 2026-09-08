@@ -6,7 +6,7 @@ import hashlib
 import json
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Literal
+from typing import Any, Literal, Protocol
 
 from pydantic import Field
 
@@ -14,6 +14,18 @@ from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAda
 from project_pipeline.domain.base import DomainModel
 
 JobOutcome = Literal["ACCEPTED", "REJECTED", "UNKNOWN_OUTCOME"]
+
+
+class DispatchAdapter(Protocol):
+    def execute(
+        self,
+        *,
+        command: list[str],
+        working_directory: Path,
+        timeout_seconds: int = 60,
+        max_output_bytes: int = 65536,
+        extra_env: dict[str, str] | None = None,
+    ) -> dict[str, Any]: ...
 
 
 class RemoteJobEnvelope(DomainModel):
@@ -54,8 +66,8 @@ class RemoteJobResult(DomainModel):
 
 
 class RemoteJobController:
-    def __init__(self, adapter: LocalSubprocessDispatchAdapter | None = None) -> None:
-        self.adapter = adapter or LocalSubprocessDispatchAdapter()
+    def __init__(self, adapter: DispatchAdapter | None = None) -> None:
+        self.adapter: DispatchAdapter = adapter or LocalSubprocessDispatchAdapter()
         self._accepted: dict[str, RemoteJobResult] = {}
         self._expired_fences: set[str] = set()
 
@@ -71,12 +83,15 @@ class RemoteJobController:
         if now > envelope.deadline_utc:
             return {"outcome": "UNKNOWN_OUTCOME", "reason": "deadline_elapsed"}
         workspace = Path(envelope.workspace)
-        if not workspace.is_dir():
+        remote = bool(getattr(self.adapter, "remote_host", False))
+        if not remote and not workspace.is_dir():
             return {"outcome": "REJECTED", "reason": "workspace_missing"}
         payload = self.adapter.execute(
             command=list(envelope.argv),
             working_directory=workspace,
         )
+        if payload.get("timed_out"):
+            return {"outcome": "UNKNOWN_OUTCOME", "reason": "lost_acknowledgement"}
         result = RemoteJobResult(
             job_id=envelope.job_id,
             host_id=envelope.host_id,

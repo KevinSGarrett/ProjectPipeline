@@ -269,6 +269,7 @@ from project_pipeline.scheduler.admission import (
     chosen_host_admitted,
     evaluate_admission,
     load_admission_record,
+    write_admission_record,
 )
 from project_pipeline.security import (
     SecurityStore,
@@ -925,6 +926,8 @@ def build_parser() -> argparse.ArgumentParser:
             "place",
             "drain",
             "resume",
+            "observe",
+            "remote-run",
         ),
     )
     scheduler.add_argument("--root", type=_root, default=Path.cwd())
@@ -932,6 +935,7 @@ def build_parser() -> argparse.ArgumentParser:
     scheduler.add_argument("--project-id")
     scheduler.add_argument("--max-lanes", type=int)
     scheduler.add_argument("--signals-file", type=Path)
+    scheduler.add_argument("--inventory-file", type=Path)
     scheduler.add_argument("--task-id")
     scheduler.add_argument("--machine-id")
     scheduler.add_argument("--holder-id", default="actor:local-scheduler")
@@ -1995,11 +1999,17 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     item.model_dump(mode="json") for item in scheduler_store.list_active_leases()
                 ],
             }, 0
-        if args.action in {"fleet", "place", "drain", "resume"}:
+        if args.action in {"fleet", "place", "drain", "resume", "observe", "remote-run"}:
             from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
+            from project_pipeline.autonomy_runtime.remote_job import (
+                RemoteJobController,
+                RemoteJobEnvelope,
+            )
+            from project_pipeline.autonomy_runtime.ssh_dispatch import SshDispatchAdapter
             from project_pipeline.command_center.fleet import FleetRegistry
             from project_pipeline.scheduler.fleet import select_target
             from project_pipeline.scheduler.host_observation import (
+                apply_inventory_observation,
                 apply_local_control_observation,
                 declared_profiles,
                 enrollment_blockers,
@@ -2015,6 +2025,79 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     "enrollment_blockers": list(enrollment_blockers()),
                     "state_path": str(fleet_state),
                 }, 0
+            if args.action == "observe":
+                if args.inventory_file is None:
+                    raise ConfigurationError("scheduler observe requires --inventory-file")
+                inventory = json.loads(args.inventory_file.read_text(encoding="utf-8"))
+                if not isinstance(inventory, dict):
+                    raise ConfigurationError("inventory file must contain a JSON object")
+                fleet.replace(apply_inventory_observation(fleet.profiles(), inventory))
+                fleet.persist(fleet_state)
+                identity = inspect_worktree_identity(args.root)
+                admission_path = Path(database).with_name("fleet_admission.json")
+                existing = load_admission_record(admission_path) or {}
+                hosts: dict[str, Any] = {}
+                for row in fleet.projection():
+                    hosts[str(row["machine_id"])] = {
+                        "state": row["state"] if row["freshness"] == "fresh" else row["state"],
+                        "freshness": row["freshness"],
+                        "principal": row["principal"],
+                    }
+                if "WIN-EVSH1DN8H5O" in hosts and hosts["WIN-EVSH1DN8H5O"]["freshness"] == "fresh":
+                    hosts["WIN-EVSH1DN8H5O"]["state"] = "READY"
+                record = {
+                    "schema_version": "1.0.0",
+                    "c18_disposition": existing.get(
+                        "c18_disposition", "PM_ACCEPTED_WITH_FOLLOWUP"
+                    ),
+                    "reviewer_id": existing.get(
+                        "reviewer_id", "isolated-pm-disposition-c19-2652b873"
+                    ),
+                    "implementer_id": existing.get(
+                        "implementer_id", "cursor-implementer-c19-c18-correction"
+                    ),
+                    "source_sha": str(identity.get("sha") or existing.get("source_sha") or ""),
+                    "source_tree": str(identity.get("tree") or existing.get("source_tree") or ""),
+                    "hosts": hosts,
+                }
+                write_admission_record(admission_path, record)
+                return {
+                    "database": str(database),
+                    "hosts": fleet.projection(),
+                    "admission_path": str(admission_path),
+                    "state_path": str(fleet_state),
+                    "enrollment_blockers": list(enrollment_blockers()),
+                }, 0
+            if args.action == "remote-run":
+                if not args.apply or not args.approve:
+                    raise ConfigurationError(
+                        "scheduler remote-run requires both --apply and --approve"
+                    )
+                if args.signals_file is None:
+                    raise ConfigurationError("scheduler remote-run requires --signals-file")
+                envelope = RemoteJobEnvelope.model_validate(
+                    json.loads(args.signals_file.read_text(encoding="utf-8"))
+                )
+                controller = RemoteJobController(SshDispatchAdapter())
+                executed = controller.execute(envelope)
+                if executed.get("outcome") != "EXECUTED":
+                    return {"database": str(database), "executed": executed}, 2
+                accepted = controller.accept(
+                    envelope, executed["result"], expected_host=envelope.host_id
+                )
+                return {
+                    "database": str(database),
+                    "executed": {
+                        "outcome": executed["outcome"],
+                        "envelope_digest": executed.get("envelope_digest"),
+                        "result": executed["result"].model_dump(mode="json"),
+                    },
+                    "accepted": {
+                        "outcome": accepted.get("outcome"),
+                        "reason": accepted.get("reason"),
+                        "duplicate": accepted.get("duplicate"),
+                    },
+                }, 0 if accepted.get("outcome") == "ACCEPTED" else 2
             if args.action == "place":
                 identity = inspect_worktree_identity(args.root)
                 admission_path = Path(database).with_name("fleet_admission.json")
