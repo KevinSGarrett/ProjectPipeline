@@ -7,7 +7,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from project_pipeline.scheduler.fleet import MachineProfile, drain_host, fleet_projection, resume_host
+from project_pipeline.scheduler.fleet import (
+    MachineProfile,
+    drain_host,
+    fleet_projection,
+    resume_host,
+)
 
 
 class FleetRegistry:

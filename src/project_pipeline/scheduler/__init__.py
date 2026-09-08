@@ -28,6 +28,7 @@ from project_pipeline.scheduler.validation import validate_scheduler_foundation
 
 __all__ = [
     "DynamicLaneScheduler",
+    "MachineProfile",
     "ResourceAdmissionError",
     "SchedulerConflictError",
     "SchedulerStore",
@@ -40,7 +41,6 @@ __all__ = [
     "claims_for_task",
     "evaluate_backpressure",
     "evaluate_productive_idle",
-    "MachineProfile",
     "physical_claims_for_machine",
     "profiles_from_repository",
     "select_target",

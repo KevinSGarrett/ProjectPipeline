@@ -5,9 +5,10 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.assurance.qualification_environments import compile_qualification_environments
-from project_pipeline.assurance.unattended_evidence import evaluate_unattended_operating_loop_evidence
+from project_pipeline.assurance.unattended_evidence import (
+    evaluate_unattended_operating_loop_evidence,
+)
 from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
-from project_pipeline.io import sha256_canonical_file, sha256_file
 from project_pipeline.domain.assurance import (
     CandidateCompletionAssessment,
     CandidateCompletionState,
@@ -21,6 +22,7 @@ from project_pipeline.domain.assurance import (
     assurance_identifier,
 )
 from project_pipeline.domain.requirements import ImplementationState, RequirementDisposition
+from project_pipeline.io import sha256_canonical_file, sha256_file
 from project_pipeline.jira import load_issues
 from project_pipeline.requirements import load_requirement_catalog
 

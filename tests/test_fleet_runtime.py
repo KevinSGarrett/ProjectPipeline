@@ -20,7 +20,6 @@ from project_pipeline.command_center.realtime import RealtimeEventBroker
 from project_pipeline.domain.scheduler import (
     AccessMode,
     ResourceClaim,
-    ResourcePool,
     ResourceRegistrySnapshot,
     ResourceType,
 )
@@ -170,9 +169,7 @@ def test_remote_job_accepts_once_and_rejects_tamper_and_wrong_host(tmp_path: Pat
 def test_isolated_worker_process_loss_recovers_without_reboot(tmp_path: Path) -> None:
     workspace = tmp_path / "proc"
     workspace.mkdir()
-    process = start_isolated_job(
-        [sys.executable, "-c", "import time; time.sleep(30)"], workspace
-    )
+    process = start_isolated_job([sys.executable, "-c", "import time; time.sleep(30)"], workspace)
     recovered = recover_isolated_job(process)
     assert recovered["ok"] is True
     assert recovered["running"] is False
@@ -200,14 +197,10 @@ def test_fleet_api_drain_resume_changes_state() -> None:
     listed = client.get("/api/v1/command-center/fleet", headers=headers)
     assert listed.status_code == 200
     assert listed.json()["hosts"][0]["freshness"] == "fresh"
-    drained = client.post(
-        "/api/v1/command-center/fleet/COMFY-V4-CPU-01/drain", headers=headers
-    )
+    drained = client.post("/api/v1/command-center/fleet/COMFY-V4-CPU-01/drain", headers=headers)
     assert drained.status_code == 200
     assert drained.json()["profile"]["state"] == "DRAINED"
-    resumed = client.post(
-        "/api/v1/command-center/fleet/COMFY-V4-CPU-01/resume", headers=headers
-    )
+    resumed = client.post("/api/v1/command-center/fleet/COMFY-V4-CPU-01/resume", headers=headers)
     assert resumed.status_code == 200
     assert resumed.json()["profile"]["state"] == "READY"
     denied = client.get("/api/v1/command-center/fleet")
