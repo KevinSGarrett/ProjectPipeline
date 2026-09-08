@@ -22,10 +22,11 @@ OpenSSH on Tailscale `100.107.207.66` as `kines@`. Do not SSH as `kevin@`.
 Tailscale SSH-server is not the Windows transport. Quadro 6000 remains
 Fermi CC2.0 and is ineligible for modern CUDA. E5-2670 has AVX and not AVX2.
 
-`COMFY-V4-CPU-01` (Tailscale `100.77.151.3`) is a CPU-only worker candidate.
-TCP/22 is open. `kevin@` and `kines@` with existing laptop keys were denied;
-do not retry those principals or keys. Enrollment still requires an authorized
-OpenSSH principal on the box, not Tailscale SSH-server and not a copied `.env`.
+`COMFY-V4-CPU-01` is enrolled as a CPU-only worker over Windows OpenSSH on
+Tailscale `100.77.151.3` as `-l "Windows 11"` (`comfy-v4-cpu-01\windows 11`).
+Do not SSH as `kevin@` or `kines@` on this host. Intel UHD Graphics 630 is not
+a discrete CUDA device. The laptop `id_ed25519` is authorized in
+`C:\ProgramData\ssh\administrators_authorized_keys`. Do not copy `.env`.
 
 ## Operations
 

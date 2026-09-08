@@ -1,7 +1,8 @@
 """Declared versus observed three-host fleet profiles.
 
-OpenSSH on WIN-EVSH1DN8H5O is Windows Win32-OpenSSH bound to Tailscale, not
-Tailscale SSH-server. Declared records without an observation source stay stale.
+OpenSSH on WIN-EVSH1DN8H5O and COMFY-V4-CPU-01 is Windows Win32-OpenSSH bound to
+Tailscale, not Tailscale SSH-server. Declared records without an observation
+source stay stale.
 """
 
 from __future__ import annotations
@@ -15,8 +16,11 @@ from project_pipeline.scheduler.fleet import MachineProfile
 
 UNOBSERVED_AT = datetime(1970, 1, 1, tzinfo=UTC)
 XEON_MACHINE_ID = "WIN-EVSH1DN8H5O"
+COMFY_MACHINE_ID = "COMFY-V4-CPU-01"
 XEON_TTL_SECONDS = 3600
+COMFY_TTL_SECONDS = 3600
 GIB_TO_MIB = 1024
+OPERATIONAL_HOLD_STATES = frozenset({"DRAINED", "QUARANTINED", "OFFLINE"})
 
 DECLARED_HOSTS: tuple[dict[str, Any], ...] = (
     {
@@ -38,25 +42,22 @@ DECLARED_HOSTS: tuple[dict[str, Any], ...] = (
         "bootstrap_precondition": None,
     },
     {
-        "machine_id": "COMFY-V4-CPU-01",
+        "machine_id": COMFY_MACHINE_ID,
         "hostname": "COMFY-V4-CPU-01",
         "role": "CPU_WORKER",
         "state": "READY",
         "os_family": "windows",
         "isa_flags": ("avx", "avx2"),
         "cuda_compute_capability": None,
-        "gpu_name": None,
+        "gpu_name": "Intel UHD Graphics 630",
         "cpu_slots": 8,
-        "memory_mb": 32000,
-        "disk_mb": 24780,
-        "principal": "worker:comfy",
+        "memory_mb": 32552,
+        "disk_mb": 29184,
+        "principal": r"comfy-v4-cpu-01\windows 11",
         "modern_cuda_eligible": False,
-        "ttl_seconds": 300,
+        "ttl_seconds": COMFY_TTL_SECONDS,
         "tailnet_ipv4": "100.77.151.3",
-        "bootstrap_precondition": (
-            "Do not retry denied kevin@ or kines@ keys on COMFY-V4-CPU-01. "
-            "TCP/22 is open; install an authorized OpenSSH principal on-box."
-        ),
+        "bootstrap_precondition": None,
     },
     {
         "machine_id": XEON_MACHINE_ID,
@@ -157,38 +158,96 @@ def _isa_flags_from_inventory(inventory: Mapping[str, Any]) -> tuple[str, ...]:
     return ("avx",)
 
 
+def _hostname_token(inventory: Mapping[str, Any]) -> str:
+    return str(inventory.get("hostname") or "").strip().upper()
+
+
+def _inventory_first_row(inventory: Mapping[str, Any], key: str) -> object:
+    rows = inventory.get(key)
+    return rows[0] if isinstance(rows, list) and rows else {}
+
+
+def _inventory_disk_free_gb(inventory: Mapping[str, Any]) -> float:
+    disk = _inventory_first_row(inventory, "disks")
+    return float(disk.get("FreeGB") or 0) if isinstance(disk, Mapping) else 0.0
+
+
+def _observed_worker_profile(
+    inventory: Mapping[str, Any],
+    *,
+    machine_id: str,
+    role: str,
+    ttl_seconds: int,
+    gpu_name: str | None,
+    compute_capability: float | None,
+    default_ram_gb: float,
+    default_logical: int,
+    default_principal: str,
+    when: datetime | None,
+) -> MachineProfile:
+    classification = classify_gpu(name=gpu_name, compute_capability=compute_capability)
+    ram_gb = float(inventory.get("totalRAMGB") or default_ram_gb)
+    logical = int(inventory.get("cpuLogical") or default_logical)
+    return MachineProfile(
+        machine_id=machine_id,
+        hostname=machine_id,
+        role=role,
+        state="READY",
+        observed_at_utc=(when or datetime.now(UTC)).astimezone(UTC),
+        ttl_seconds=ttl_seconds,
+        os_family="windows",
+        isa_flags=_isa_flags_from_inventory(inventory),
+        cuda_compute_capability=compute_capability,
+        gpu_name=gpu_name,
+        cpu_slots=max(1, logical),
+        memory_mb=max(1, int(ram_gb * GIB_TO_MIB)),
+        disk_mb=max(1, int(_inventory_disk_free_gb(inventory) * GIB_TO_MIB)),
+        principal=str(inventory.get("whoami") or default_principal),
+        modern_cuda_eligible=bool(classification["modern_cuda_eligible"]),
+    )
+
+
 def profile_from_xeon_inventory(
     inventory: Mapping[str, Any], *, when: datetime | None = None
 ) -> MachineProfile | None:
-    hostname = str(inventory.get("hostname") or "").strip().upper()
-    if hostname != XEON_MACHINE_ID:
+    if _hostname_token(inventory) != XEON_MACHINE_ID:
         return None
-    disks = inventory.get("disks")
-    disk = disks[0] if isinstance(disks, list) and disks else {}
-    free_gb = float(disk.get("FreeGB") or 0) if isinstance(disk, Mapping) else 0.0
-    gpu_rows = inventory.get("gpus")
-    gpu = gpu_rows[0] if isinstance(gpu_rows, list) and gpu_rows else {}
+    gpu = _inventory_first_row(inventory, "gpus")
     gpu_name = str(gpu.get("Name") or "Quadro 6000") if isinstance(gpu, Mapping) else "Quadro 6000"
-    classification = classify_gpu(name=gpu_name, compute_capability=2.0)
-    observed = (when or datetime.now(UTC)).astimezone(UTC)
-    ram_gb = float(inventory.get("totalRAMGB") or 63.96)
-    logical = int(inventory.get("cpuLogical") or 16)
-    return MachineProfile(
+    return _observed_worker_profile(
+        inventory,
         machine_id=XEON_MACHINE_ID,
-        hostname="WIN-EVSH1DN8H5O",
         role="MEMORY_HEAVY_BATCH_WORKER",
-        state="READY",
-        observed_at_utc=observed,
         ttl_seconds=XEON_TTL_SECONDS,
-        os_family="windows",
-        isa_flags=_isa_flags_from_inventory(inventory),
-        cuda_compute_capability=2.0,
         gpu_name=gpu_name.replace("NVIDIA ", ""),
-        cpu_slots=max(1, logical),
-        memory_mb=max(1, int(ram_gb * GIB_TO_MIB)),
-        disk_mb=max(1, int(free_gb * GIB_TO_MIB)),
-        principal=str(inventory.get("whoami") or r"win-evsh1dn8h5o\kines"),
-        modern_cuda_eligible=bool(classification["modern_cuda_eligible"]),
+        compute_capability=2.0,
+        default_ram_gb=63.96,
+        default_logical=16,
+        default_principal=r"win-evsh1dn8h5o\kines",
+        when=when,
+    )
+
+
+def profile_from_comfy_inventory(
+    inventory: Mapping[str, Any], *, when: datetime | None = None
+) -> MachineProfile | None:
+    if _hostname_token(inventory) != COMFY_MACHINE_ID:
+        return None
+    gpu = _inventory_first_row(inventory, "gpus")
+    gpu_name = (
+        str(gpu.get("Name") or "Intel UHD Graphics 630") if isinstance(gpu, Mapping) else None
+    )
+    return _observed_worker_profile(
+        inventory,
+        machine_id=COMFY_MACHINE_ID,
+        role="CPU_WORKER",
+        ttl_seconds=COMFY_TTL_SECONDS,
+        gpu_name=gpu_name,
+        compute_capability=None,
+        default_ram_gb=31.79,
+        default_logical=8,
+        default_principal=r"comfy-v4-cpu-01\windows 11",
+        when=when,
     )
 
 
@@ -198,10 +257,17 @@ def apply_inventory_observation(
     *,
     when: datetime | None = None,
 ) -> tuple[MachineProfile, ...]:
-    observed = profile_from_xeon_inventory(inventory, when=when)
-    if observed is None:
-        return profiles
-    return tuple(observed if item.machine_id == XEON_MACHINE_ID else item for item in profiles)
+    for builder in (profile_from_xeon_inventory, profile_from_comfy_inventory):
+        observed = builder(inventory, when=when)
+        if observed is None:
+            continue
+        existing = next((item for item in profiles if item.machine_id == observed.machine_id), None)
+        if existing is not None and existing.state in OPERATIONAL_HOLD_STATES:
+            observed = observed.model_copy(update={"state": existing.state})
+        return tuple(
+            observed if item.machine_id == observed.machine_id else item for item in profiles
+        )
+    return profiles
 
 
 def enrollment_blockers() -> tuple[dict[str, str], ...]:

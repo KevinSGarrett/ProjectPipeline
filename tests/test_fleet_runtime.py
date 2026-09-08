@@ -47,6 +47,7 @@ from project_pipeline.scheduler.host_observation import (
     apply_inventory_observation,
     classify_gpu,
     declared_profiles,
+    enrollment_blockers,
 )
 from project_pipeline.scheduler.resources import admission_reasons
 
@@ -250,6 +251,8 @@ def test_declared_xeon_is_enrollment_pending() -> None:
     xeon = profiles["WIN-EVSH1DN8H5O"]
     assert xeon.state == "READY"
     assert xeon.principal == r"win-evsh1dn8h5o\kines"
+    assert profiles["COMFY-V4-CPU-01"].principal == r"comfy-v4-cpu-01\windows 11"
+    assert enrollment_blockers() == ()
     assert "avx2" not in {flag.lower() for flag in xeon.isa_flags}
     chosen, denials = select_target(tuple(profiles.values()), when=NOW)
     assert chosen is None
@@ -430,8 +433,10 @@ def test_ssh_dispatch_builds_argv_without_env_or_kevin_principal(tmp_path: Path)
     assert "PROGRAMDATA" in SSH_CLIENT_ENV_KEYS
     assert argv[0] == "ssh"
     assert "-i" in argv
-    assert "kines@100.107.207.66" in argv
+    assert argv[argv.index("-l") + 1] == "kines"
+    assert "100.107.207.66" in argv
     assert "kevin@" not in " ".join(argv)
+    assert "kines@" not in " ".join(argv)
     assert remote_command_allowed(("hostname",)) is True
     assert remote_command_allowed(("python", r"C:\Users\kines\pp_jobs\job.py")) is True
     assert remote_command_allowed(("python", "-c", "print(1)")) is False
@@ -618,3 +623,124 @@ def test_remote_controller_rejects_envelope_host_mismatch(tmp_path: Path) -> Non
     )
     assert executed["outcome"] == "REJECTED"
     assert executed["reason"] == "wrong_host"
+
+
+def test_inventory_observation_admits_comfy_cpu_not_cuda() -> None:
+    inventory = {
+        "hostname": "comfy-v4-cpu-01",
+        "whoami": r"comfy-v4-cpu-01\windows 11",
+        "totalRAMGB": 31.79,
+        "cpuLogical": 8,
+        "disks": [{"DeviceID": "C:", "FreeGB": 28.5}],
+        "gpus": [{"Name": "Intel(R) UHD Graphics 630"}],
+        "isa": {"sse42": True, "avx": True, "avx2": True},
+    }
+    observed = apply_inventory_observation(declared_profiles(), inventory, when=NOW)
+    comfy = {item.machine_id: item for item in observed}["COMFY-V4-CPU-01"]
+    assert comfy.fresh_at(NOW) is True
+    assert comfy.modern_cuda_eligible is False
+    assert "avx2" in {flag.lower() for flag in comfy.isa_flags}
+    assert comfy.principal.lower() == r"comfy-v4-cpu-01\windows 11"
+    chosen, _denials = select_target(observed, when=NOW)
+    assert chosen is not None
+    assert chosen.machine_id == "COMFY-V4-CPU-01"
+    cuda_chosen, cuda_reasons = select_target(observed, when=NOW, require_modern_cuda=True)
+    assert cuda_chosen is None or cuda_chosen.machine_id != "COMFY-V4-CPU-01"
+    assert any("unsupported_gpu" in item for item in cuda_reasons)
+
+
+def test_comfy_ssh_uses_windows_11_login_and_rejects_denied_principals(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("not-a-real-key\n", encoding="utf-8")
+    argv = build_ssh_argv(
+        identity=identity,
+        user="Windows 11",
+        host="100.77.151.3",
+        remote_argv=["hostname"],
+        remote_cwd=r"C:\Users\Windows 11\pp_jobs",
+    )
+    assert argv[argv.index("-l") + 1] == "Windows 11"
+    assert "100.77.151.3" in argv
+    assert "kevin@" not in " ".join(argv)
+    assert "kines@" not in " ".join(argv)
+    for denied_user in ("kevin", "kines"):
+        try:
+            build_ssh_argv(
+                identity=identity,
+                user=denied_user,
+                host="100.77.151.3",
+                remote_argv=["hostname"],
+                remote_cwd=r"C:\Users\Windows 11\pp_jobs",
+            )
+        except ValueError as error:
+            assert denied_user in str(error).lower()
+        else:
+            raise AssertionError(f"{denied_user}@ principal must be rejected on COMFY")
+
+
+def test_ssh_adapter_for_machine_binds_comfy(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("not-a-real-key\n", encoding="utf-8")
+
+    class _Completed:
+        returncode = 0
+        stdout = "comfy-v4-cpu-01\n"
+        stderr = ""
+
+    def _runner(*_args: object, **_kwargs: object) -> _Completed:
+        return _Completed()
+
+    adapter = SshDispatchAdapter.for_machine("COMFY-V4-CPU-01", identity=identity, runner=_runner)
+    assert adapter.machine_id == "COMFY-V4-CPU-01"
+    assert adapter.user == "Windows 11"
+    payload = adapter.execute(
+        command=["hostname"],
+        working_directory=Path(r"C:\Users\Windows 11\pp_jobs"),
+    )
+    assert payload["exit_code"] == 0
+    envelope = RemoteJobEnvelope(
+        job_id="job-comfy-1",
+        host_id="COMFY-V4-CPU-01",
+        profile_id="cpu",
+        principal=r"comfy-v4-cpu-01\windows 11",
+        lease_id="LEASE-EEEEEEEEEEEEEEEEEEEE",
+        fence="fence-comfy",
+        source_sha="a" * 40,
+        source_tree="b" * 40,
+        overlay_sha256="c" * 64,
+        input_sha256="d" * 64,
+        argv=("hostname",),
+        workspace=r"C:\Users\Windows 11\pp_jobs",
+        deadline_utc=NOW + timedelta(minutes=5),
+        cpu_ceiling=1,
+        memory_mb_ceiling=512,
+        correlation_id="corr-comfy",
+    )
+    executed = RemoteJobController(adapter).execute(envelope, now=NOW)
+    assert executed["outcome"] == "EXECUTED"
+    assert executed["result"].host_id == "COMFY-V4-CPU-01"
+
+
+def test_inventory_observation_preserves_drained_comfy() -> None:
+    inventory = {
+        "hostname": "COMFY-V4-CPU-01",
+        "whoami": r"comfy-v4-cpu-01\windows 11",
+        "totalRAMGB": 31.79,
+        "cpuLogical": 8,
+        "disks": [{"DeviceID": "C:", "FreeGB": 28.5}],
+        "gpus": [{"Name": "Intel(R) UHD Graphics 630"}],
+        "isa": {"sse42": True, "avx": True, "avx2": True},
+    }
+    profiles = tuple(
+        item.model_copy(update={"state": "DRAINED"})
+        if item.machine_id == "COMFY-V4-CPU-01"
+        else item
+        for item in declared_profiles()
+    )
+    observed = apply_inventory_observation(profiles, inventory, when=NOW)
+    comfy = {item.machine_id: item for item in observed}["COMFY-V4-CPU-01"]
+    assert comfy.state == "DRAINED"
+    assert comfy.fresh_at(NOW) is True
+    chosen, denials = select_target(observed, when=NOW)
+    assert chosen is None or chosen.machine_id != "COMFY-V4-CPU-01"
+    assert any("host_state:DRAINED" in item or "COMFY-V4-CPU-01" in item for item in denials)

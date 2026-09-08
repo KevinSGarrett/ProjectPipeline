@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 745,
+  "test_count": 749,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3726,6 +3726,26 @@
       "callable": "test_remote_controller_rejects_envelope_host_mismatch",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-028"
+    },
+    {
+      "callable": "test_inventory_observation_admits_comfy_cpu_not_cuda",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-029"
+    },
+    {
+      "callable": "test_comfy_ssh_uses_windows_11_login_and_rejects_denied_principals",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-030"
+    },
+    {
+      "callable": "test_ssh_adapter_for_machine_binds_comfy",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-031"
+    },
+    {
+      "callable": "test_inventory_observation_preserves_drained_comfy",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-032"
     }
   ]
 }
