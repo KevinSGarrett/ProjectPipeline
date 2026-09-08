@@ -6,6 +6,11 @@ from project_pipeline.scheduler.conflicts import (
     claims_conflict,
 )
 from project_pipeline.scheduler.engine import DynamicLaneScheduler
+from project_pipeline.scheduler.fleet import (
+    MachineProfile,
+    physical_claims_for_machine,
+    select_target,
+)
 from project_pipeline.scheduler.persistence import SchedulerStore
 from project_pipeline.scheduler.productive_idle import (
     apply_productive_idle_progress,
@@ -35,7 +40,10 @@ __all__ = [
     "claims_for_task",
     "evaluate_backpressure",
     "evaluate_productive_idle",
+    "MachineProfile",
+    "physical_claims_for_machine",
     "profiles_from_repository",
+    "select_target",
     "simulate_scenario",
     "validate_scheduler_foundation",
     "waiting_lane_ids",

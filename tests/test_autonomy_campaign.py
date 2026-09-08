@@ -1100,6 +1100,8 @@ def test_inspect_worktree_identity_reports_git_fields():
     assert identity["ok"] is True
     assert len(identity["sha"]) == 40
     assert len(identity["tree"]) == 40
+    assert "index_flags" in identity
+    assert "hidden_source_modifications" in identity
 
 
 def test_production_default_commands_use_existing_cli_grammar(tmp_path: Path):

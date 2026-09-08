@@ -90,6 +90,11 @@ class SchedulerStore:
         self.register_pools(pools)
         return pools
 
+    def ensure_machine_pools(self, pools: Iterable[ResourcePool]) -> tuple[ResourcePool, ...]:
+        registered = tuple(pools)
+        self.register_pools(registered)
+        return registered
+
     def list_pools(self) -> tuple[ResourcePool, ...]:
         rows = self.db.execute(
             "SELECT payload_json FROM scheduler_resource_pools ORDER BY resource_key"

@@ -107,8 +107,14 @@ def profiles_from_repository(
     return tuple(profiles)
 
 
-def claims_for_task(root: Path, task_id: str) -> tuple[ResourceClaim, ...]:
-    """Recover deterministic claims for one task from Jira issue metadata."""
+def claims_for_task(
+    root: Path, task_id: str, *, machine_id: str | None = None
+) -> tuple[ResourceClaim, ...]:
+    """Recover deterministic claims for one task from Jira issue metadata.
+
+    Local ``machine:local`` CPU/process claims remain the default. When a remote
+    machine is selected, physical claims are rewritten onto that host's pools.
+    """
     issues = {item["local_id"]: item for item in load_issues(root)}
     issue = issues.get(task_id)
     if issue is None:
@@ -170,4 +176,22 @@ def claims_for_task(root: Path, task_id: str) -> tuple[ResourceClaim, ...]:
             continue
         seen.add(key)
         deduped.append(claim)
+    if machine_id and machine_id != "machine:local":
+        rewritten: list[ResourceClaim] = []
+        for claim in deduped:
+            if claim.machine_id in {None, "machine:local"} and claim.resource_type in {
+                ResourceType.CPU_SLOT,
+                ResourceType.MEMORY_MB,
+                ResourceType.DISK_MB,
+                ResourceType.PROCESS_SLOT,
+                ResourceType.GPU,
+                ResourceType.GPU_MEMORY_MB,
+            }:
+                key = claim.resource_key.replace("machine:local", machine_id)
+                rewritten.append(
+                    claim.model_copy(update={"resource_key": key, "machine_id": machine_id})
+                )
+            else:
+                rewritten.append(claim)
+        return tuple(rewritten)
     return tuple(deduped)

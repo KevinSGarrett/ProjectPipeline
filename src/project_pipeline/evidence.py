@@ -4,7 +4,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from project_pipeline.io import sha256_canonical_file
+from project_pipeline.io import sha256_canonical_file, sha256_file
 
 
 def evidence_record(
@@ -23,6 +23,7 @@ def evidence_record(
     artifact = root / artifact_path
     if not artifact.exists():
         raise FileNotFoundError(artifact)
+    hash_algorithm = "sha256_canonical_file"
     return {
         "schema_version": "1.0.0",
         "evidence_id": evidence_id,
@@ -31,7 +32,9 @@ def evidence_record(
         "criterion_ids": criterion_ids or [],
         "method": method,
         "artifact_path": artifact_path,
+        "hash_algorithm": hash_algorithm,
         "sha256": sha256_canonical_file(artifact),
+        "sha256_raw": sha256_file(artifact),
         "observed_at_utc": datetime.now(UTC).isoformat(),
         "environment": environment,
         "result": result,

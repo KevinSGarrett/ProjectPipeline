@@ -5,7 +5,9 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.assurance.qualification_environments import compile_qualification_environments
+from project_pipeline.assurance.unattended_evidence import evaluate_unattended_operating_loop_evidence
 from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
+from project_pipeline.io import sha256_canonical_file, sha256_file
 from project_pipeline.domain.assurance import (
     CandidateCompletionAssessment,
     CandidateCompletionState,
@@ -509,11 +511,19 @@ def _valid_unattended_qualification(root: Path, row: dict[str, Any]) -> bool:
         payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
         return False
-    return (
-        float(payload.get("duration_hours", 0)) >= 72
-        and payload.get("end_to_end") is True
-        and payload.get("restart_recovery") is True
-        and payload.get("external_reconciliation") is True
-        and payload.get("windows_native_verified") is True
-        and payload.get("unattended") is True
+    identity = inspect_worktree_identity(root)
+    algorithm = str(payload.get("hash_algorithm") or row.get("hash_algorithm") or "")
+    if algorithm == "sha256_raw":
+        artifact_digest = sha256_file(path)
+    else:
+        artifact_digest = sha256_canonical_file(path)
+    declared = str(row.get("sha256") or payload.get("sha256") or "")
+    if declared and declared != artifact_digest:
+        return False
+    result = evaluate_unattended_operating_loop_evidence(
+        payload,
+        expected_sha=str(identity.get("sha") or ""),
+        expected_tree=str(identity.get("tree") or ""),
+        artifact_sha256=artifact_digest,
     )
+    return bool(result.get("duration_qualified"))

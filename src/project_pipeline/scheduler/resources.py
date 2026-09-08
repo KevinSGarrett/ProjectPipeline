@@ -9,6 +9,18 @@ from project_pipeline.domain.scheduler import (
     ResourceLease,
     ResourcePool,
     ResourceRegistrySnapshot,
+    ResourceType,
+)
+
+PHYSICAL_RESOURCE_TYPES = frozenset(
+    {
+        ResourceType.CPU_SLOT,
+        ResourceType.MEMORY_MB,
+        ResourceType.DISK_MB,
+        ResourceType.PROCESS_SLOT,
+        ResourceType.GPU,
+        ResourceType.GPU_MEMORY_MB,
+    }
 )
 
 
@@ -45,14 +57,20 @@ def admission_reasons(
     reasons: set[str] = set()
     for claim in claims:
         pool = pools.get(claim.resource_key)
-        if pool is not None:
-            available = pool.allocatable_units - usage.get(claim.resource_key, 0)
-            if claim.quantity > available:
-                reasons.add(f"capacity:{claim.resource_key}:{claim.quantity}>{max(0, available)}")
+        if pool is None:
+            if claim.resource_type in PHYSICAL_RESOURCE_TYPES:
+                reasons.add(f"unregistered_pool:{claim.resource_key}")
+                continue
+            for lease in leases:
+                if claim.conflicts_with(lease.claim):
+                    reasons.add(f"lease:{claim.resource_key}:held_by:{lease.holder_id}")
             continue
-        for lease in leases:
-            if claim.conflicts_with(lease.claim):
-                reasons.add(f"lease:{claim.resource_key}:held_by:{lease.holder_id}")
+        if claim.machine_id and pool.machine_id and claim.machine_id != pool.machine_id:
+            reasons.add(f"wrong_machine:{claim.machine_id}!={pool.machine_id}")
+            continue
+        available = pool.allocatable_units - usage.get(claim.resource_key, 0)
+        if claim.quantity > available:
+            reasons.add(f"capacity:{claim.resource_key}:{claim.quantity}>{max(0, available)}")
     return tuple(sorted(reasons))
 
 
