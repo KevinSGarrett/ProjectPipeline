@@ -75,8 +75,9 @@ def remote_command_allowed(argv: tuple[str, ...]) -> bool:
     if name == "hostname" and len(argv) == 1:
         return True
     if name in PYTHON_NAMES and len(argv) == 2:
-        remote_path = Path(argv[1])
-        return remote_path.suffix.lower() == ".py" and "pp_jobs" in remote_path.parts
+        posix = argv[1].replace("\\", "/")
+        remote_path = Path(posix)
+        return remote_path.suffix.lower() == ".py" and "pp_jobs" in Path(posix).parts
     if name in PYTHON_NAMES and len(argv) >= 3 and argv[1] == "-c":
         script = argv[2]
         return not any(token in script for token in SHELL_METATOKENS)
