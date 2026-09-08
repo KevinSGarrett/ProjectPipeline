@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import json
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 from project_pipeline.scheduler.fleet import MachineProfile, drain_host, fleet_projection, resume_host
@@ -27,6 +29,12 @@ class FleetRegistry:
         profile = self._profiles.get(machine_id)
         if profile is None:
             return {"ok": False, "reason": "unknown_host"}
+        if profile.state == "ENROLLMENT_PENDING":
+            return {
+                "ok": False,
+                "reason": "drain_denied:ENROLLMENT_PENDING",
+                "profile": profile.model_dump(mode="json"),
+            }
         updated = drain_host(profile)
         self._profiles[machine_id] = updated
         record = {
@@ -42,6 +50,12 @@ class FleetRegistry:
         profile = self._profiles.get(machine_id)
         if profile is None:
             return {"ok": False, "reason": "unknown_host"}
+        if profile.state in {"ENROLLMENT_PENDING", "QUARANTINED", "OFFLINE"}:
+            return {
+                "ok": False,
+                "reason": f"resume_denied:{profile.state}",
+                "profile": profile.model_dump(mode="json"),
+            }
         updated = resume_host(profile)
         self._profiles[machine_id] = updated
         record = {
@@ -52,3 +66,27 @@ class FleetRegistry:
         }
         self.audit.append(record)
         return {"ok": True, "profile": updated.model_dump(mode="json"), "audit": record}
+
+    def persist(self, path: Path) -> None:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "schema_version": "1.0.0",
+            "hosts": [item.model_dump(mode="json") for item in self.profiles()],
+            "audit": list(self.audit),
+        }
+        path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    @classmethod
+    def load_or_declared(cls, path: Path, declared: tuple[MachineProfile, ...]) -> FleetRegistry:
+        if not path.is_file():
+            return cls(declared)
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return cls(declared)
+        hosts = payload.get("hosts") if isinstance(payload, dict) else None
+        if not isinstance(hosts, list) or not hosts:
+            return cls(declared)
+        registry = cls(tuple(MachineProfile.model_validate(item) for item in hosts))
+        registry.audit = list(payload.get("audit") or [])
+        return registry

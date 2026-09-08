@@ -35,8 +35,11 @@ def evaluate_unattended_operating_loop_evidence(
     if algorithm not in SUPPORTED_HASH_ALGORITHMS:
         failures.append("undeclared_hash_algorithm")
     declared_digest = str(payload.get("sha256") or payload.get("artifact_sha256") or "")
-    if artifact_sha256 and declared_digest and declared_digest != artifact_sha256:
-        failures.append("altered_evidence_bytes")
+    if artifact_sha256:
+        if not declared_digest:
+            failures.append("undeclared_evidence_digest")
+        elif declared_digest != artifact_sha256:
+            failures.append("altered_evidence_bytes")
     duration = float(payload.get("duration_hours") or payload.get("attested_elapsed_hours") or 0)
     if duration < 72:
         failures.append("duration_below_72h")
@@ -73,7 +76,9 @@ def evaluate_unattended_operating_loop_evidence(
         and "wrong_source_tree" not in failures
         and "incomplete_event_chain" not in failures
         and "undeclared_hash_algorithm" not in failures
-        and "altered_evidence_bytes" not in failures,
+        and "altered_evidence_bytes" not in failures
+        and "undeclared_evidence_digest" not in failures
+        and "stale_runtime_ownership" not in failures,
         "recovery_state": recovery_state,
         "hash_algorithm": algorithm or None,
         "uninterrupted_duration": not claimed_recovery,

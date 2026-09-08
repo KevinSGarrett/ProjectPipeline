@@ -209,6 +209,21 @@ def test_unattended_evidence_rejects_forged_and_wrong_source() -> None:
         expected_tree=TREE,
     )
     assert "incomplete_event_chain" in incomplete["failures"]
+    stale = evaluate_unattended_operating_loop_evidence(
+        _duration_payload(runtime_owner=""),
+        expected_sha=SHA,
+        expected_tree=TREE,
+    )
+    assert "stale_runtime_ownership" in stale["failures"]
+    assert stale["duration_qualified"] is False
+    missing_digest = evaluate_unattended_operating_loop_evidence(
+        _duration_payload(sha256=""),
+        expected_sha=SHA,
+        expected_tree=TREE,
+        artifact_sha256="e" * 64,
+    )
+    assert "undeclared_evidence_digest" in missing_digest["failures"]
+    assert missing_digest["duration_qualified"] is False
 
 
 def test_recovery_claim_without_registered_task_is_not_a_recovery_pass() -> None:

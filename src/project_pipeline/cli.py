@@ -1998,17 +1998,19 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 enrollment_blockers,
             )
 
+            fleet_state = Path(database).with_name("fleet_state.json")
             profiles = declared_profiles()
-            fleet = FleetRegistry(profiles)
+            fleet = FleetRegistry.load_or_declared(fleet_state, profiles)
             if args.action == "fleet":
                 return {
                     "database": str(database),
                     "hosts": fleet.projection(),
                     "enrollment_blockers": list(enrollment_blockers()),
+                    "state_path": str(fleet_state),
                 }, 0
             if args.action == "place":
                 chosen, denials = select_target(
-                    profiles,
+                    fleet.profiles(),
                     when=datetime.now(UTC),
                     require_modern_cuda=False,
                     require_avx2=False,
@@ -2031,8 +2033,10 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 result = fleet.drain(args.machine_id, actor=args.actor_id)
             else:
                 result = fleet.resume(args.machine_id, actor=args.actor_id)
+            if result.get("ok"):
+                fleet.persist(fleet_state)
             code = 0 if result.get("ok") else 2
-            return {"database": str(database), **result}, code
+            return {"database": str(database), "state_path": str(fleet_state), **result}, code
         if args.action in {"renew", "release"}:
             if not args.apply or not args.approve:
                 raise ConfigurationError(

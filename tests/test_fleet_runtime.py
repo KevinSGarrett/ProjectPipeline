@@ -214,6 +214,15 @@ def test_fleet_api_drain_resume_changes_state() -> None:
     assert denied.status_code == 401
 
 
+def test_resume_of_enrollment_pending_host_is_denied() -> None:
+    pending = _profile("WIN-EVSH1DN8H5O", state="ENROLLMENT_PENDING")
+    registry = FleetRegistry((pending,))
+    denied = registry.resume("WIN-EVSH1DN8H5O", actor="actor:test")
+    assert denied["ok"] is False
+    assert "ENROLLMENT_PENDING" in str(denied["reason"])
+    assert registry.profiles()[0].state == "ENROLLMENT_PENDING"
+
+
 def test_quadro_is_not_modern_cuda() -> None:
     classification = classify_gpu(name="NVIDIA Quadro 6000", compute_capability=2.0)
     assert classification["modern_cuda_eligible"] is False

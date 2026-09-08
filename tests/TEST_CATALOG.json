@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 727,
+  "test_count": 728,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3636,6 +3636,11 @@
       "callable": "test_bind_profile_claims_rewrites_local_machine",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-011"
+    },
+    {
+      "callable": "test_resume_of_enrollment_pending_host_is_denied",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-012"
     }
   ]
 }

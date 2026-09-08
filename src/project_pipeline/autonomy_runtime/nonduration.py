@@ -116,7 +116,12 @@ def duration_release_evidence_is_bound(
         bound = read_json(marker)
     except (OSError, ValueError):
         return False
-    return all(bool(bound.get(key)) for key in required)
+    if not all(bool(bound.get(key)) for key in required):
+        return False
+    return (
+        len(str(bound.get("bound_head") or "")) == 40
+        and len(str(bound.get("bound_tree") or "")) == 40
+    )
 
 
 def evaluate_nonduration_qualification(
