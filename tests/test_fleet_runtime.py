@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -7,6 +9,12 @@ from pathlib import Path
 from fastapi.testclient import TestClient
 
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
+from project_pipeline.autonomy_runtime.ssh_dispatch import (
+    SSH_CLIENT_ENV_KEYS,
+    SshDispatchAdapter,
+    build_ssh_argv,
+    remote_command_allowed,
+)
 from project_pipeline.autonomy_runtime.worker_supervision import (
     recover_isolated_job,
     start_isolated_job,
@@ -23,7 +31,11 @@ from project_pipeline.domain.scheduler import (
     ResourceRegistrySnapshot,
     ResourceType,
 )
-from project_pipeline.scheduler.admission import chosen_host_admitted, evaluate_admission
+from project_pipeline.scheduler.admission import (
+    chosen_host_admitted,
+    evaluate_admission,
+    observation_admission_record,
+)
 from project_pipeline.scheduler.fleet import (
     MachineProfile,
     bind_profile_claims,
@@ -31,7 +43,11 @@ from project_pipeline.scheduler.fleet import (
     resume_host,
     select_target,
 )
-from project_pipeline.scheduler.host_observation import classify_gpu, declared_profiles
+from project_pipeline.scheduler.host_observation import (
+    apply_inventory_observation,
+    classify_gpu,
+    declared_profiles,
+)
 from project_pipeline.scheduler.resources import admission_reasons
 
 NOW = datetime(2026, 9, 8, tzinfo=UTC)
@@ -231,16 +247,20 @@ def test_quadro_is_not_modern_cuda() -> None:
 
 def test_declared_xeon_is_enrollment_pending() -> None:
     profiles = {item.machine_id: item for item in declared_profiles()}
-    assert profiles["WIN-EVSH1DN8H5O"].state == "ENROLLMENT_PENDING"
+    xeon = profiles["WIN-EVSH1DN8H5O"]
+    assert xeon.state == "READY"
+    assert xeon.principal == r"win-evsh1dn8h5o\kines"
+    assert "avx2" not in {flag.lower() for flag in xeon.isa_flags}
     chosen, denials = select_target(tuple(profiles.values()), when=NOW)
     assert chosen is None
-    assert any("ENROLLMENT_PENDING" in item for item in denials)
     assert any("stale_capacity" in item for item in denials)
     observed = declared_profiles(when=NOW, observation_source="test_fixture")
-    chosen_observed, observed_denials = select_target(observed, when=NOW)
+    chosen_observed, _observed_denials = select_target(observed, when=NOW)
     assert chosen_observed is not None
-    assert chosen_observed.machine_id == "COMFY-V4-CPU-01"
-    assert any("ENROLLMENT_PENDING" in item for item in observed_denials)
+    assert chosen_observed.machine_id == "WIN-EVSH1DN8H5O"
+    cuda_chosen, cuda_reasons = select_target(observed, when=NOW, require_modern_cuda=True)
+    assert cuda_chosen is None or cuda_chosen.machine_id != "WIN-EVSH1DN8H5O"
+    assert any("unsupported_gpu" in item for item in cuda_reasons)
 
 
 def test_declared_profiles_are_stale_without_observation_source() -> None:
@@ -372,3 +392,229 @@ def test_chosen_host_must_be_the_admitted_worker() -> None:
     assert any(
         "remote_denied:COMFY-V4-CPU-01:BROKEN:recent" in item for item in malformed["failures"]
     )
+
+
+def test_inventory_observation_admits_xeon_cpu_not_cuda() -> None:
+    inventory = {
+        "hostname": "WIN-EVSH1DN8H5O",
+        "whoami": r"win-evsh1dn8h5o\kines",
+        "totalRAMGB": 63.96,
+        "cpuLogical": 16,
+        "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
+        "gpus": [{"Name": "NVIDIA Quadro 6000"}],
+        "isa": {"sse42": True, "avx": True, "avx2": False},
+    }
+    observed = apply_inventory_observation(declared_profiles(), inventory, when=NOW)
+    xeon = {item.machine_id: item for item in observed}["WIN-EVSH1DN8H5O"]
+    assert xeon.fresh_at(NOW) is True
+    assert xeon.modern_cuda_eligible is False
+    assert "avx2" not in xeon.isa_flags
+    chosen, _denials = select_target(observed, when=NOW)
+    assert chosen is not None
+    assert chosen.machine_id == "WIN-EVSH1DN8H5O"
+    cuda_chosen, cuda_reasons = select_target(observed, when=NOW, require_modern_cuda=True)
+    assert cuda_chosen is None or cuda_chosen.machine_id != "WIN-EVSH1DN8H5O"
+    assert any("unsupported_gpu" in item for item in cuda_reasons)
+
+
+def test_ssh_dispatch_builds_argv_without_env_or_kevin_principal(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("not-a-real-key\n", encoding="utf-8")
+    argv = build_ssh_argv(
+        identity=identity,
+        user="kines",
+        host="100.107.207.66",
+        remote_argv=["hostname"],
+        remote_cwd=r"C:\Users\kines\pp_jobs",
+    )
+    assert "PROGRAMDATA" in SSH_CLIENT_ENV_KEYS
+    assert argv[0] == "ssh"
+    assert "-i" in argv
+    assert "kines@100.107.207.66" in argv
+    assert "kevin@" not in " ".join(argv)
+    assert remote_command_allowed(("hostname",)) is True
+    assert remote_command_allowed(("python", r"C:\Users\kines\pp_jobs\job.py")) is True
+    assert remote_command_allowed(("python", "-c", "print(1)")) is False
+    assert remote_command_allowed(("python", "-c", "__import__('os').system('whoami')")) is False
+    try:
+        build_ssh_argv(
+            identity=identity,
+            user="kevin",
+            host="100.107.207.66",
+            remote_argv=["hostname"],
+            remote_cwd=r"C:\Users\kines\pp_jobs",
+        )
+    except ValueError as error:
+        assert "kevin@" in str(error)
+    else:
+        raise AssertionError("kevin@ principal must be rejected")
+
+
+def test_ssh_adapter_execute_uses_injected_runner(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("not-a-real-key\n", encoding="utf-8")
+
+    class _Completed:
+        returncode = 0
+        stdout = "WIN-EVSH1DN8H5O\n"
+        stderr = ""
+
+    def _runner(*_args: object, **_kwargs: object) -> _Completed:
+        return _Completed()
+
+    adapter = SshDispatchAdapter(identity=identity, runner=_runner)
+    payload = adapter.execute(
+        command=["hostname"],
+        working_directory=Path(r"C:\Users\kines\pp_jobs"),
+    )
+    assert payload["exit_code"] == 0
+    assert payload["transport"] == "openssh_tailscale"
+    assert "USERPROFILE" not in json.dumps(payload)
+    envelope = RemoteJobEnvelope(
+        job_id="job-ssh-1",
+        host_id="WIN-EVSH1DN8H5O",
+        profile_id="memory-cpu",
+        principal=r"win-evsh1dn8h5o\kines",
+        lease_id="LEASE-BBBBBBBBBBBBBBBBBBBB",
+        fence="fence-ssh",
+        source_sha="a" * 40,
+        source_tree="b" * 40,
+        overlay_sha256="c" * 64,
+        input_sha256="d" * 64,
+        argv=("hostname",),
+        workspace=r"C:\Users\kines\pp_jobs",
+        deadline_utc=NOW + timedelta(minutes=5),
+        cpu_ceiling=2,
+        memory_mb_ceiling=1024,
+        correlation_id="corr-ssh",
+    )
+    controller = RemoteJobController(adapter)
+    executed = controller.execute(envelope, now=NOW)
+    assert executed["outcome"] == "EXECUTED"
+    accepted = controller.accept(
+        envelope, executed["result"], expected_host="WIN-EVSH1DN8H5O", now=NOW
+    )
+    assert accepted["outcome"] == "ACCEPTED"
+
+
+def test_timed_out_remote_job_is_unknown_outcome(tmp_path: Path) -> None:
+    workspace = tmp_path / "job"
+    workspace.mkdir()
+
+    class _TimeoutAdapter:
+        def execute(self, **_kwargs: object) -> dict[str, object]:
+            return {"timed_out": True, "exit_code": 124}
+
+    envelope = RemoteJobEnvelope(
+        job_id="job-timeout",
+        host_id="WIN-EVSH1DN8H5O",
+        profile_id="memory-cpu",
+        principal=r"win-evsh1dn8h5o\kines",
+        lease_id="LEASE-CCCCCCCCCCCCCCCCCCCC",
+        fence="fence-timeout",
+        source_sha="a" * 40,
+        source_tree="b" * 40,
+        overlay_sha256="c" * 64,
+        input_sha256="d" * 64,
+        argv=(sys.executable, "-c", "print('ok')"),
+        workspace=str(workspace),
+        deadline_utc=NOW + timedelta(minutes=5),
+        cpu_ceiling=1,
+        memory_mb_ceiling=512,
+        correlation_id="corr-timeout",
+    )
+    result = RemoteJobController(_TimeoutAdapter()).execute(envelope, now=NOW)
+    assert result["outcome"] == "UNKNOWN_OUTCOME"
+    assert result["reason"] == "lost_acknowledgement"
+
+
+def test_fresh_xeon_host_is_remotely_admitted() -> None:
+    record = _admission_record(
+        hosts={
+            "WIN-EVSH1DN8H5O": {"state": "READY", "freshness": "fresh"},
+            "COMFY-V4-CPU-01": {"state": "STALE", "freshness": "stale"},
+        }
+    )
+    result = _evaluate_admission(record)
+    assert result["c18_accepted"] is True
+    assert result["remote_ok"] is True
+    allowed = chosen_host_admitted(
+        record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE
+    )
+    assert allowed["ok"] is True
+    denied = chosen_host_admitted(record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE)
+    assert denied["ok"] is False
+
+
+def test_observation_does_not_mint_c18_acceptance() -> None:
+    minted = observation_admission_record(
+        {},
+        hosts={"WIN-EVSH1DN8H5O": {"state": "READY", "freshness": "fresh"}},
+        source_sha=_SHA,
+        source_tree=_TREE,
+    )
+    result = _evaluate_admission(minted)
+    assert result["c18_accepted"] is False
+    assert "c18_acceptance_missing" in result["failures"]
+    copied = observation_admission_record(
+        {
+            "c18_disposition": "PM_ACCEPTED_WITH_FOLLOWUP",
+            "reviewer_id": "isolated-pr158-reviewer",
+            "implementer_id": "cursor-implementer-c19-c18-correction",
+        },
+        hosts={"WIN-EVSH1DN8H5O": {"state": "READY", "freshness": "fresh"}},
+        source_sha=_SHA,
+        source_tree=_TREE,
+    )
+    copied_result = _evaluate_admission(copied)
+    assert copied_result["c18_accepted"] is True
+
+
+def test_ssh_timeout_expired_text_buffers_are_not_decoded(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("not-a-real-key\n", encoding="utf-8")
+
+    def _runner(*_args: object, **_kwargs: object) -> None:
+        raise subprocess.TimeoutExpired(cmd="ssh", timeout=1, output="partial", stderr="late")
+
+    adapter = SshDispatchAdapter(identity=identity, runner=_runner)
+    payload = adapter.execute(
+        command=["hostname"],
+        working_directory=Path(r"C:\Users\kines\pp_jobs"),
+    )
+    assert payload["timed_out"] is True
+    assert payload["exit_code"] == 124
+    assert payload["stdout"] == "partial"
+    assert payload["stderr"] == "late"
+
+
+def test_remote_controller_rejects_envelope_host_mismatch(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("not-a-real-key\n", encoding="utf-8")
+
+    def _runner(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("SSH must not run for the wrong host")
+
+    envelope = RemoteJobEnvelope(
+        job_id="job-wrong-host",
+        host_id="COMFY-V4-CPU-01",
+        profile_id="cpu",
+        principal="worker:comfy",
+        lease_id="LEASE-DDDDDDDDDDDDDDDDDDDD",
+        fence="fence-wrong",
+        source_sha="a" * 40,
+        source_tree="b" * 40,
+        overlay_sha256="c" * 64,
+        input_sha256="d" * 64,
+        argv=("hostname",),
+        workspace=r"C:\Users\kines\pp_jobs",
+        deadline_utc=NOW + timedelta(minutes=5),
+        cpu_ceiling=1,
+        memory_mb_ceiling=512,
+        correlation_id="corr-wrong",
+    )
+    executed = RemoteJobController(SshDispatchAdapter(identity=identity, runner=_runner)).execute(
+        envelope, now=NOW
+    )
+    assert executed["outcome"] == "REJECTED"
+    assert executed["reason"] == "wrong_host"

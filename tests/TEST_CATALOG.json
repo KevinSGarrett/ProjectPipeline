@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 737,
+  "test_count": 745,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3686,6 +3686,46 @@
       "callable": "test_chosen_host_must_be_the_admitted_worker",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-020"
+    },
+    {
+      "callable": "test_inventory_observation_admits_xeon_cpu_not_cuda",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-021"
+    },
+    {
+      "callable": "test_ssh_dispatch_builds_argv_without_env_or_kevin_principal",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-022"
+    },
+    {
+      "callable": "test_ssh_adapter_execute_uses_injected_runner",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-023"
+    },
+    {
+      "callable": "test_timed_out_remote_job_is_unknown_outcome",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-024"
+    },
+    {
+      "callable": "test_fresh_xeon_host_is_remotely_admitted",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-025"
+    },
+    {
+      "callable": "test_observation_does_not_mint_c18_acceptance",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-026"
+    },
+    {
+      "callable": "test_ssh_timeout_expired_text_buffers_are_not_decoded",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-027"
+    },
+    {
+      "callable": "test_remote_controller_rejects_envelope_host_mismatch",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-028"
     }
   ]
 }
