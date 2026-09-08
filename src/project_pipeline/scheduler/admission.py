@@ -17,6 +17,27 @@ PRIMARY_CONTROL_MACHINE_ID = "PRIMARY-CODEX-WORKSTATION"
 GIT_IDENTITY_LENGTH = 40
 
 
+def observation_admission_record(
+    existing: Mapping[str, Any],
+    *,
+    hosts: Mapping[str, Any],
+    source_sha: str,
+    source_tree: str,
+) -> dict[str, Any]:
+    """Bind observed hosts without minting a Cycle 18 PM disposition."""
+
+    record: dict[str, Any] = {
+        "schema_version": "1.0.0",
+        "hosts": dict(hosts),
+        "source_sha": source_sha,
+        "source_tree": source_tree,
+    }
+    for key in ("c18_disposition", "reviewer_id", "implementer_id"):
+        if existing.get(key):
+            record[key] = existing[key]
+    return record
+
+
 def write_admission_record(path: Path, record: Mapping[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(dict(record), indent=2, sort_keys=True) + "\n", encoding="utf-8")

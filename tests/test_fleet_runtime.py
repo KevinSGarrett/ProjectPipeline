@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -30,7 +31,11 @@ from project_pipeline.domain.scheduler import (
     ResourceRegistrySnapshot,
     ResourceType,
 )
-from project_pipeline.scheduler.admission import chosen_host_admitted, evaluate_admission
+from project_pipeline.scheduler.admission import (
+    chosen_host_admitted,
+    evaluate_admission,
+    observation_admission_record,
+)
 from project_pipeline.scheduler.fleet import (
     MachineProfile,
     bind_profile_claims,
@@ -429,7 +434,8 @@ def test_ssh_dispatch_builds_argv_without_env_or_kevin_principal(tmp_path: Path)
     assert "kevin@" not in " ".join(argv)
     assert remote_command_allowed(("hostname",)) is True
     assert remote_command_allowed(("python", r"C:\Users\kines\pp_jobs\job.py")) is True
-    assert remote_command_allowed(("python", "-c", "import os; os.system('x')")) is False
+    assert remote_command_allowed(("python", "-c", "print(1)")) is False
+    assert remote_command_allowed(("python", "-c", "__import__('os').system('whoami')")) is False
     try:
         build_ssh_argv(
             identity=identity,
@@ -538,3 +544,77 @@ def test_fresh_xeon_host_is_remotely_admitted() -> None:
     assert allowed["ok"] is True
     denied = chosen_host_admitted(record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE)
     assert denied["ok"] is False
+
+
+def test_observation_does_not_mint_c18_acceptance() -> None:
+    minted = observation_admission_record(
+        {},
+        hosts={"WIN-EVSH1DN8H5O": {"state": "READY", "freshness": "fresh"}},
+        source_sha=_SHA,
+        source_tree=_TREE,
+    )
+    result = _evaluate_admission(minted)
+    assert result["c18_accepted"] is False
+    assert "c18_acceptance_missing" in result["failures"]
+    copied = observation_admission_record(
+        {
+            "c18_disposition": "PM_ACCEPTED_WITH_FOLLOWUP",
+            "reviewer_id": "isolated-pr158-reviewer",
+            "implementer_id": "cursor-implementer-c19-c18-correction",
+        },
+        hosts={"WIN-EVSH1DN8H5O": {"state": "READY", "freshness": "fresh"}},
+        source_sha=_SHA,
+        source_tree=_TREE,
+    )
+    copied_result = _evaluate_admission(copied)
+    assert copied_result["c18_accepted"] is True
+
+
+def test_ssh_timeout_expired_text_buffers_are_not_decoded(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("not-a-real-key\n", encoding="utf-8")
+
+    def _runner(*_args: object, **_kwargs: object) -> None:
+        raise subprocess.TimeoutExpired(cmd="ssh", timeout=1, output="partial", stderr="late")
+
+    adapter = SshDispatchAdapter(identity=identity, runner=_runner)
+    payload = adapter.execute(
+        command=["hostname"],
+        working_directory=Path(r"C:\Users\kines\pp_jobs"),
+    )
+    assert payload["timed_out"] is True
+    assert payload["exit_code"] == 124
+    assert payload["stdout"] == "partial"
+    assert payload["stderr"] == "late"
+
+
+def test_remote_controller_rejects_envelope_host_mismatch(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("not-a-real-key\n", encoding="utf-8")
+
+    def _runner(*_args: object, **_kwargs: object) -> None:
+        raise AssertionError("SSH must not run for the wrong host")
+
+    envelope = RemoteJobEnvelope(
+        job_id="job-wrong-host",
+        host_id="COMFY-V4-CPU-01",
+        profile_id="cpu",
+        principal="worker:comfy",
+        lease_id="LEASE-DDDDDDDDDDDDDDDDDDDD",
+        fence="fence-wrong",
+        source_sha="a" * 40,
+        source_tree="b" * 40,
+        overlay_sha256="c" * 64,
+        input_sha256="d" * 64,
+        argv=("hostname",),
+        workspace=r"C:\Users\kines\pp_jobs",
+        deadline_utc=NOW + timedelta(minutes=5),
+        cpu_ceiling=1,
+        memory_mb_ceiling=512,
+        correlation_id="corr-wrong",
+    )
+    executed = RemoteJobController(SshDispatchAdapter(identity=identity, runner=_runner)).execute(
+        envelope, now=NOW
+    )
+    assert executed["outcome"] == "REJECTED"
+    assert executed["reason"] == "wrong_host"

@@ -21,12 +21,20 @@ from project_pipeline.autonomy_runtime.service import (
     SAFE_ENV_KEYS,
 )
 
+XEON_MACHINE_ID = "WIN-EVSH1DN8H5O"
 XEON_TAILNET_IPV4 = "100.107.207.66"
 XEON_SSH_USER = "kines"
 DEFAULT_IDENTITY = Path.home() / ".ssh" / "id_ed25519"
-SHELL_METATOKENS = frozenset({";", "|", "&", "`", "$", "\n", "\r"})
 PYTHON_NAMES = frozenset({"python", "python.exe", "python3", "python3.exe"})
 SSH_CLIENT_ENV_KEYS = SAFE_ENV_KEYS | frozenset({"PROGRAMDATA"})
+
+
+def timeout_output_text(value: object) -> str:
+    if value is None:
+        return ""
+    if isinstance(value, bytes):
+        return value.decode("utf-8", errors="replace")
+    return str(value)
 
 
 def default_identity_path() -> Path:
@@ -72,16 +80,12 @@ def remote_command_allowed(argv: tuple[str, ...]) -> bool:
     if not argv:
         return False
     name = Path(argv[0]).name.lower()
-    if name == "hostname" and len(argv) == 1:
-        return True
-    if name in PYTHON_NAMES and len(argv) == 2:
-        posix = argv[1].replace("\\", "/")
-        remote_path = Path(posix)
-        return remote_path.suffix.lower() == ".py" and "pp_jobs" in Path(posix).parts
-    if name in PYTHON_NAMES and len(argv) >= 3 and argv[1] == "-c":
-        script = argv[2]
-        return not any(token in script for token in SHELL_METATOKENS)
-    return False
+    if name == "hostname":
+        return len(argv) == 1
+    if name not in PYTHON_NAMES or len(argv) != 2:
+        return False
+    posix = argv[1].replace("\\", "/")
+    return posix.lower().endswith(".py") and "pp_jobs" in posix.split("/")
 
 
 class SshDispatchAdapter:
@@ -100,6 +104,7 @@ class SshDispatchAdapter:
     ) -> None:
         self.host = host
         self.user = user
+        self.machine_id = XEON_MACHINE_ID
         self.identity = identity or default_identity_path()
         self.connect_timeout = connect_timeout
         self.runner = runner
@@ -125,32 +130,23 @@ class SshDispatchAdapter:
         )
         allowed = {item.upper() for item in SSH_CLIENT_ENV_KEYS}
         env = {key: value for key, value in os.environ.items() if key.upper() in allowed}
+        runner = self.runner or subprocess.run
         try:
-            if self.runner is not None:
-                completed = self.runner(
-                    argv,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    timeout=timeout_seconds,
-                    env=env,
-                )
-            else:
-                completed = subprocess.run(
-                    argv,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    timeout=timeout_seconds,
-                    env=env,
-                )
+            completed = runner(
+                argv,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=timeout_seconds,
+                env=env,
+            )
             raw_stdout = completed.stdout or ""
             raw_stderr = completed.stderr or ""
             timed_out = False
             exit_code = completed.returncode
         except subprocess.TimeoutExpired as error:
-            raw_stdout = error.stdout.decode("utf-8", errors="replace") if error.stdout else ""
-            raw_stderr = error.stderr.decode("utf-8", errors="replace") if error.stderr else ""
+            raw_stdout = timeout_output_text(error.stdout or error.output)
+            raw_stderr = timeout_output_text(error.stderr)
             timed_out = True
             exit_code = 124
         stdout = raw_stdout[:max_output_bytes]

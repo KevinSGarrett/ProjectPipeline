@@ -269,6 +269,7 @@ from project_pipeline.scheduler.admission import (
     chosen_host_admitted,
     evaluate_admission,
     load_admission_record,
+    observation_admission_record,
     write_admission_record,
 )
 from project_pipeline.security import (
@@ -2009,6 +2010,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             from project_pipeline.command_center.fleet import FleetRegistry
             from project_pipeline.scheduler.fleet import select_target
             from project_pipeline.scheduler.host_observation import (
+                XEON_MACHINE_ID,
                 apply_inventory_observation,
                 apply_local_control_observation,
                 declared_profiles,
@@ -2036,28 +2038,23 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 identity = inspect_worktree_identity(args.root)
                 admission_path = Path(database).with_name("fleet_admission.json")
                 existing = load_admission_record(admission_path) or {}
-                hosts: dict[str, Any] = {}
-                for row in fleet.projection():
-                    hosts[str(row["machine_id"])] = {
+                hosts = {
+                    str(row["machine_id"]): {
                         "state": row["state"],
                         "freshness": row["freshness"],
                         "principal": row["principal"],
                     }
-                if "WIN-EVSH1DN8H5O" in hosts and hosts["WIN-EVSH1DN8H5O"]["freshness"] == "fresh":
-                    hosts["WIN-EVSH1DN8H5O"]["state"] = "READY"
-                record = {
-                    "schema_version": "1.0.0",
-                    "c18_disposition": existing.get("c18_disposition", "PM_ACCEPTED_WITH_FOLLOWUP"),
-                    "reviewer_id": existing.get(
-                        "reviewer_id", "isolated-pm-disposition-c19-2652b873"
-                    ),
-                    "implementer_id": existing.get(
-                        "implementer_id", "cursor-implementer-c19-c18-correction"
-                    ),
-                    "source_sha": str(identity.get("sha") or existing.get("source_sha") or ""),
-                    "source_tree": str(identity.get("tree") or existing.get("source_tree") or ""),
-                    "hosts": hosts,
+                    for row in fleet.projection()
                 }
+                xeon = hosts.get(XEON_MACHINE_ID)
+                if xeon and xeon["freshness"] == "fresh":
+                    xeon["state"] = "READY"
+                record = observation_admission_record(
+                    existing,
+                    hosts=hosts,
+                    source_sha=str(identity.get("sha") or existing.get("source_sha") or ""),
+                    source_tree=str(identity.get("tree") or existing.get("source_tree") or ""),
+                )
                 write_admission_record(admission_path, record)
                 return {
                     "database": str(database),
@@ -2076,7 +2073,13 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 envelope = RemoteJobEnvelope.model_validate(
                     json.loads(args.signals_file.read_text(encoding="utf-8"))
                 )
-                controller = RemoteJobController(SshDispatchAdapter())
+                adapter = SshDispatchAdapter()
+                if envelope.host_id != adapter.machine_id:
+                    return {
+                        "database": str(database),
+                        "executed": {"outcome": "REJECTED", "reason": "wrong_host"},
+                    }, 2
+                controller = RemoteJobController(adapter)
                 executed = controller.execute(envelope)
                 if executed.get("outcome") != "EXECUTED":
                     return {"database": str(database), "executed": executed}, 2

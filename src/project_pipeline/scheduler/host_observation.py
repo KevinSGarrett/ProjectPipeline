@@ -54,8 +54,8 @@ DECLARED_HOSTS: tuple[dict[str, Any], ...] = (
         "ttl_seconds": 300,
         "tailnet_ipv4": "100.77.151.3",
         "bootstrap_precondition": (
-            "Do not retry previously denied SSH keys on COMFY-V4-CPU-01. "
-            "TCP/22 is open; an authorized worker principal is still required."
+            "Do not retry denied kevin@ or kines@ keys on COMFY-V4-CPU-01. "
+            "TCP/22 is open; install an authorized OpenSSH principal on-box."
         ),
     },
     {

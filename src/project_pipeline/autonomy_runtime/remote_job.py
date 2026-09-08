@@ -84,6 +84,9 @@ class RemoteJobController:
             return {"outcome": "UNKNOWN_OUTCOME", "reason": "deadline_elapsed"}
         workspace = Path(envelope.workspace)
         remote = bool(getattr(self.adapter, "remote_host", False))
+        adapter_host = getattr(self.adapter, "machine_id", None)
+        if remote and envelope.host_id != adapter_host:
+            return {"outcome": "REJECTED", "reason": "wrong_host"}
         if not remote and not workspace.is_dir():
             return {"outcome": "REJECTED", "reason": "workspace_missing"}
         payload = self.adapter.execute(
@@ -94,7 +97,7 @@ class RemoteJobController:
             return {"outcome": "UNKNOWN_OUTCOME", "reason": "lost_acknowledgement"}
         result = RemoteJobResult(
             job_id=envelope.job_id,
-            host_id=envelope.host_id,
+            host_id=str(adapter_host or envelope.host_id),
             fence=envelope.fence,
             exit_code=int(payload["exit_code"]),
             stdout_sha256=str(payload["stdout_sha256"]),

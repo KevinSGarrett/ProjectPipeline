@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 742,
+  "test_count": 745,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3711,6 +3711,21 @@
       "callable": "test_fresh_xeon_host_is_remotely_admitted",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-025"
+    },
+    {
+      "callable": "test_observation_does_not_mint_c18_acceptance",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-026"
+    },
+    {
+      "callable": "test_ssh_timeout_expired_text_buffers_are_not_decoded",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-027"
+    },
+    {
+      "callable": "test_remote_controller_rejects_envelope_host_mismatch",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-028"
     }
   ]
 }
