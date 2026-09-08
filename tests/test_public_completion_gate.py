@@ -1,3 +1,8 @@
+from __future__ import annotations
+
+import json
+import subprocess
+
 from project_pipeline.assurance.completion import (
     _evidence_matches_current_identity,
     _evidence_rows,
@@ -6,6 +11,7 @@ from project_pipeline.assurance.completion import (
     assess_candidate_completion,
     evaluate_completion_gate,
 )
+from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
 from project_pipeline.domain.assurance import (
     CandidateCompletionState,
     CompletionGateFacts,
@@ -185,21 +191,66 @@ def test_evidence_ledger_reader_ignores_empty_lines(tmp_path) -> None:
 
 
 def test_unattended_qualification_requires_complete_72_hour_receipt(tmp_path) -> None:
+    subprocess.run(["git", "init", "-b", "main"], cwd=tmp_path, check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(tmp_path), "config", "user.email", "c18@example.test"],
+        check=True,
+        capture_output=True,
+    )
+    subprocess.run(
+        ["git", "-C", str(tmp_path), "config", "user.name", "C18"],
+        check=True,
+        capture_output=True,
+    )
+    tracked = tmp_path / "tracked.txt"
+    tracked.write_text("ok\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(tmp_path), "add", "."], check=True, capture_output=True)
+    subprocess.run(
+        ["git", "-C", str(tmp_path), "commit", "-m", "init"],
+        check=True,
+        capture_output=True,
+    )
+    identity = inspect_worktree_identity(tmp_path)
     artifact = tmp_path / "evidence" / "qualification.json"
     artifact.parent.mkdir()
+    summary_only = tmp_path / "evidence" / "summary_only.json"
+    summary_only.write_text(
+        json.dumps(
+            {
+                "duration_hours": 72,
+                "end_to_end": True,
+                "restart_recovery": True,
+                "external_reconciliation": True,
+                "windows_native_verified": True,
+                "unattended": True,
+            }
+        ),
+        encoding="utf-8",
+    )
     artifact.write_text(
-        """{
-  "duration_hours": 72,
-  "end_to_end": true,
-  "restart_recovery": true,
-  "external_reconciliation": true,
-  "windows_native_verified": true,
-  "unattended": true
-}""",
+        json.dumps(
+            {
+                "duration_hours": 72,
+                "bound_head": identity["sha"],
+                "bound_tree": identity["tree"],
+                "hash_algorithm": "sha256_canonical_file",
+                "runtime_owner": "fence-1",
+                "recovery_task_registered": True,
+                "restart_recovery": True,
+                "result": "PASS",
+                "events": [
+                    {"event_sha256": "1" * 64, "prev_event_sha256": None},
+                    {"event_sha256": "2" * 64, "prev_event_sha256": "1" * 64},
+                    {"event_sha256": "3" * 64, "prev_event_sha256": "2" * 64},
+                ],
+            }
+        ),
         encoding="utf-8",
     )
     row = {"artifact_path": "evidence/qualification.json"}
+    summary_row = {"artifact_path": "evidence/summary_only.json"}
 
+    assert not _valid_unattended_qualification(tmp_path, summary_row)
     assert _valid_unattended_qualification(tmp_path, row)
     assert not _valid_unattended_qualification(tmp_path, {"artifact_path": "missing.json"})
 

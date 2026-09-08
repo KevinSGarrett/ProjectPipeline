@@ -522,8 +522,11 @@ def _valid_unattended_qualification(root: Path, row: dict[str, Any]) -> bool:
     declared = str(row.get("sha256") or payload.get("sha256") or "")
     if declared and declared != artifact_digest:
         return False
+    bound_payload = dict(payload) if isinstance(payload, dict) else {}
+    if not str(bound_payload.get("sha256") or ""):
+        bound_payload["sha256"] = artifact_digest
     result = evaluate_unattended_operating_loop_evidence(
-        payload,
+        bound_payload,
         expected_sha=str(identity.get("sha") or ""),
         expected_tree=str(identity.get("tree") or ""),
         artifact_sha256=artifact_digest,
