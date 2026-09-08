@@ -173,8 +173,14 @@ def evaluate_nonduration_qualification(
             )
     elif state not in {"PLANNED_ONLY", "PARTIALLY_IMPLEMENTED"}:
         missing.append("REQ-PDEF-0011 cannot be IMPLEMENTED before duration and release stages")
-    reported_state = "LIVE_VERIFIED" if state == "LIVE_VERIFIED" and duration_bound else (
-        state if state in {"PLANNED_ONLY", "PARTIALLY_IMPLEMENTED", "LIVE_VERIFIED"} else "PARTIALLY_IMPLEMENTED"
+    reported_state = (
+        "LIVE_VERIFIED"
+        if state == "LIVE_VERIFIED" and duration_bound
+        else (
+            state
+            if state in {"PLANNED_ONLY", "PARTIALLY_IMPLEMENTED", "LIVE_VERIFIED"}
+            else "PARTIALLY_IMPLEMENTED"
+        )
     )
     remaining = [] if duration_bound and state == "LIVE_VERIFIED" else list(REMAINING_ACCEPTANCE)
     return {

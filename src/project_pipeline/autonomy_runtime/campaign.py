@@ -406,9 +406,7 @@ def inspect_worktree_identity(root: Path) -> dict[str, Any]:
     tree_rc, tree = git("rev-parse", "HEAD^{tree}")
     status_rc, porcelain = git("status", "--porcelain")
     index_flags = _inspect_special_index_flags(root)
-    hidden_modifications = tuple(
-        item for item in index_flags if not item.get("bytes_match", True)
-    )
+    hidden_modifications = tuple(item for item in index_flags if not item.get("bytes_match", True))
     dirty = bool(porcelain) or bool(hidden_modifications)
     return {
         "sha": sha,
@@ -1566,7 +1564,9 @@ class CampaignController:
             or str(qualification.get("status")) != "ATTESTED"
             or float(qualification.get("attested_elapsed_seconds") or 0) < H72.total_seconds()
         ):
-            raise ValueError("finalization reconciliation requires an attested 72-hour qualification")
+            raise ValueError(
+                "finalization reconciliation requires an attested 72-hour qualification"
+            )
         actions = {
             str(item["action"])
             for item in self._db.execute(

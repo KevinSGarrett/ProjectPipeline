@@ -70,9 +70,7 @@ def run_command_center_api_journey() -> dict[str, Any]:
     )
     client = TestClient(app)
     health = client.get("/healthz")
-    status = client.get(
-        "/api/v1/command-center/status", headers={"Authorization": "Bearer good"}
-    )
+    status = client.get("/api/v1/command-center/status", headers={"Authorization": "Bearer good"})
     denied = client.get("/api/v1/command-center/status")
     return {
         "ok": health.status_code == 200

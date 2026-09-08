@@ -62,7 +62,9 @@ class RemoteJobController:
     def expire_fence(self, fence: str) -> None:
         self._expired_fences.add(fence)
 
-    def execute(self, envelope: RemoteJobEnvelope, *, now: datetime | None = None) -> dict[str, Any]:
+    def execute(
+        self, envelope: RemoteJobEnvelope, *, now: datetime | None = None
+    ) -> dict[str, Any]:
         now = (now or datetime.now(UTC)).astimezone(UTC)
         if envelope.fence in self._expired_fences:
             return {"outcome": "REJECTED", "reason": "expired_fence"}

@@ -182,9 +182,7 @@ def select_target(
     return chosen, tuple(denials)
 
 
-def bind_profile_claims(
-    profile: SchedulerTaskProfile, machine_id: str
-) -> SchedulerTaskProfile:
+def bind_profile_claims(profile: SchedulerTaskProfile, machine_id: str) -> SchedulerTaskProfile:
     rewritten: list[ResourceClaim] = []
     for claim in profile.claims:
         if claim.machine_id in {None, "machine:local"} and claim.resource_type in {
@@ -214,7 +212,9 @@ def resume_host(profile: MachineProfile, *, when: datetime | None = None) -> Mac
     )
 
 
-def fleet_projection(profiles: tuple[MachineProfile, ...], *, when: datetime) -> list[dict[str, Any]]:
+def fleet_projection(
+    profiles: tuple[MachineProfile, ...], *, when: datetime
+) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for profile in profiles:
         reasons = profile.eligibility_reasons(when=when)
