@@ -11,6 +11,8 @@ from project_pipeline.scheduler.fleet import (
     MachineProfile,
     drain_host,
     fleet_projection,
+    merge_occupancy,
+    occupancy_from_jobs,
     resume_host,
 )
 
@@ -23,6 +25,7 @@ class FleetRegistry:
     ) -> None:
         self._profiles = {item.machine_id: item for item in profiles}
         self.audit: list[dict[str, Any]] = []
+        self.jobs: list[dict[str, Any]] = []
         self.persist_path = persist_path
 
     def replace(self, profiles: tuple[MachineProfile, ...]) -> None:
@@ -31,9 +34,28 @@ class FleetRegistry:
     def profiles(self) -> tuple[MachineProfile, ...]:
         return tuple(self._profiles.values())
 
-    def projection(self, *, when: datetime | None = None) -> list[dict[str, Any]]:
+    def projection(
+        self,
+        *,
+        when: datetime | None = None,
+        occupancy: dict[str, dict[str, Any]] | None = None,
+    ) -> list[dict[str, Any]]:
         when = (when or datetime.now(UTC)).astimezone(UTC)
-        return fleet_projection(self.profiles(), when=when)
+        job_occupancy = occupancy_from_jobs(self.jobs, when=when)
+        if occupancy is None and not job_occupancy:
+            return fleet_projection(self.profiles(), when=when)
+        return fleet_projection(
+            self.profiles(),
+            when=when,
+            occupancy=merge_occupancy(job_occupancy, occupancy or {}),
+        )
+
+    def record_job(self, job: dict[str, Any]) -> dict[str, Any]:
+        record = dict(job)
+        self.jobs = [item for item in self.jobs if item.get("job_id") != record.get("job_id")]
+        self.jobs.append(record)
+        self._commit()
+        return record
 
     def _commit(self) -> None:
         if self.persist_path is not None:
@@ -92,6 +114,7 @@ class FleetRegistry:
             "schema_version": "1.0.0",
             "hosts": [item.model_dump(mode="json") for item in self.profiles()],
             "audit": list(self.audit),
+            "jobs": list(self.jobs),
         }
         path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
@@ -112,4 +135,8 @@ class FleetRegistry:
             tuple(MachineProfile.model_validate(item) for item in hosts), persist_path=path
         )
         registry.audit = list(payload.get("audit") or [])
+        jobs = payload.get("jobs")
+        registry.jobs = (
+            [item for item in jobs if isinstance(item, dict)] if isinstance(jobs, list) else []
+        )
         return registry

@@ -42,10 +42,12 @@ from project_pipeline.command_center.realtime import RealtimeEventBroker
 from project_pipeline.configuration import load_runtime_configuration
 from project_pipeline.domain.control import ControlSnapshot
 from project_pipeline.jira import load_issues
+from project_pipeline.scheduler.fleet import occupancy_from_leases
 from project_pipeline.scheduler.host_observation import (
     apply_local_control_observation,
     declared_profiles,
 )
+from project_pipeline.scheduler.persistence import SchedulerStore
 
 _uvicorn: Any
 try:
@@ -154,6 +156,11 @@ def create_live_command_center_app(
     fleet_state = Path(runtime_database).with_name("fleet_state.json")
     fleet_registry = FleetRegistry.load_or_declared(fleet_state, declared_profiles())
     fleet_registry.replace(apply_local_control_observation(fleet_registry.profiles()))
+
+    def occupancy_provider() -> dict[str, dict[str, Any]]:
+        with SchedulerStore(runtime_database, root) as store:
+            return occupancy_from_leases(store.list_active_leases())
+
     app = create_command_center_app(
         snapshot_provider=lambda: snapshot_from_repository(root),
         event_broker=broker,
@@ -166,6 +173,7 @@ def create_live_command_center_app(
         repository_root=root,
         runtime_database=runtime_database,
         fleet_registry=fleet_registry,
+        occupancy_provider=occupancy_provider,
     )
     preview = root / "apps/command_center/preview/index.html"
 

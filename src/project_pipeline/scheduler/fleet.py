@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterable, Mapping
 from datetime import UTC, datetime, timedelta
 from typing import Any, Literal
 
@@ -11,6 +12,7 @@ from project_pipeline.domain.base import DomainModel
 from project_pipeline.domain.scheduler import (
     AccessMode,
     ResourceClaim,
+    ResourceLease,
     ResourcePool,
     ResourceType,
     SchedulerTaskProfile,
@@ -212,13 +214,124 @@ def resume_host(profile: MachineProfile, *, when: datetime | None = None) -> Mac
     return profile.model_copy(update={"state": "READY"})
 
 
+def _join_ids(values: Iterable[str]) -> str:
+    return ",".join(sorted(values))
+
+
+def _token_set(*values: object) -> set[str]:
+    tokens: set[str] = set()
+    for value in values:
+        for item in str(value or "").split(","):
+            if item and item != "none":
+                tokens.add(item)
+    return tokens
+
+
+def occupancy_from_leases(leases: Iterable[ResourceLease]) -> dict[str, dict[str, Any]]:
+    grouped: dict[str, list[ResourceLease]] = {}
+    for lease in leases:
+        machine_id = lease.claim.machine_id
+        if not machine_id:
+            continue
+        grouped.setdefault(machine_id, []).append(lease)
+    occupancy: dict[str, dict[str, Any]] = {}
+    for machine_id, items in grouped.items():
+        tasks = {item.task_id for item in items}
+        lease_ids = {item.lease_id for item in items}
+        fences = {str(item.fencing_token) for item in items}
+        occupancy[machine_id] = {
+            "active_jobs": len(tasks),
+            "lease_id": _join_ids(lease_ids),
+            "assignment": _join_ids(tasks),
+            "fence": _join_ids(fences),
+        }
+    return occupancy
+
+
+def occupancy_from_jobs(
+    jobs: Iterable[Mapping[str, Any]], *, when: datetime
+) -> dict[str, dict[str, Any]]:
+    when = when.astimezone(UTC)
+    grouped: dict[str, list[Mapping[str, Any]]] = {}
+    for job in jobs:
+        host_id = str(job.get("host_id") or "")
+        outcome = str(job.get("outcome") or "")
+        if not host_id or outcome not in {"ACCEPTED", "EXECUTED"}:
+            continue
+        deadline_raw = job.get("deadline_utc")
+        if deadline_raw:
+            deadline = datetime.fromisoformat(str(deadline_raw).replace("Z", "+00:00"))
+            if deadline.astimezone(UTC) <= when:
+                continue
+        grouped.setdefault(host_id, []).append(job)
+    occupancy: dict[str, dict[str, Any]] = {}
+    for machine_id, items in grouped.items():
+        job_ids = {str(item.get("job_id") or item.get("assignment") or "") for item in items}
+        job_ids.discard("")
+        lease_ids = {str(item.get("lease_id") or "") for item in items}
+        lease_ids.discard("")
+        fences = {str(item.get("fence") or "") for item in items}
+        fences.discard("")
+        occupancy[machine_id] = {
+            "active_jobs": len(job_ids) or len(items),
+            "lease_id": _join_ids(lease_ids) if lease_ids else "none",
+            "assignment": _join_ids(job_ids) if job_ids else "none",
+            "fence": _join_ids(fences) if fences else "none",
+        }
+    return occupancy
+
+
+def merge_occupancy(
+    *sources: Mapping[str, Mapping[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    merged: dict[str, dict[str, Any]] = {}
+    for source in sources:
+        for machine_id, row in source.items():
+            existing = merged.get(machine_id)
+            if existing is None:
+                merged[machine_id] = dict(row)
+                continue
+            jobs = max(int(existing.get("active_jobs") or 0), int(row.get("active_jobs") or 0))
+            lease_ids = _token_set(existing.get("lease_id"), row.get("lease_id"))
+            assignments = _token_set(existing.get("assignment"), row.get("assignment"))
+            fences = _token_set(existing.get("fence"), row.get("fence"))
+            merged[machine_id] = {
+                "active_jobs": jobs,
+                "lease_id": _join_ids(lease_ids) if lease_ids else "none",
+                "assignment": _join_ids(assignments) if assignments else "none",
+                "fence": _join_ids(fences) if fences else "none",
+            }
+    return merged
+
+
 def fleet_projection(
-    profiles: tuple[MachineProfile, ...], *, when: datetime
+    profiles: tuple[MachineProfile, ...],
+    *,
+    when: datetime,
+    occupancy: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
+    known = occupancy is not None
+    occupancy = occupancy or {}
     for profile in profiles:
         reasons = profile.eligibility_reasons(when=when)
         freshness = "fresh" if profile.fresh_at(when) else "stale"
+        bound = occupancy.get(profile.machine_id)
+        if bound is not None:
+            active_jobs: int | str = int(bound.get("active_jobs") or 0)
+            lease_id = str(bound.get("lease_id") or "none")
+            assignment = str(bound.get("assignment") or "none")
+            fence = str(bound.get("fence") or "none")
+        elif known:
+            active_jobs = 0
+            lease_id = "none"
+            assignment = "none"
+            fence = "none"
+        else:
+            active_jobs = "unknown"
+            lease_id = "unknown"
+            assignment = "unknown"
+            fence = "unknown"
         rows.append(
             {
                 "machine_id": profile.machine_id,
@@ -235,9 +348,10 @@ def fleet_projection(
                 "cuda_compute_capability": profile.cuda_compute_capability,
                 "principal": profile.principal,
                 "observed_at_utc": profile.observed_at_utc.isoformat(),
-                "active_jobs": "unknown",
-                "lease_id": "unknown",
-                "assignment": "unknown",
+                "active_jobs": active_jobs,
+                "lease_id": lease_id,
+                "assignment": assignment,
+                "fence": fence,
             }
         )
     return rows

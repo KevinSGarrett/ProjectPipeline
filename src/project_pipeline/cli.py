@@ -2008,7 +2008,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             )
             from project_pipeline.autonomy_runtime.ssh_dispatch import SshDispatchAdapter
             from project_pipeline.command_center.fleet import FleetRegistry
-            from project_pipeline.scheduler.fleet import select_target
+            from project_pipeline.scheduler.fleet import occupancy_from_leases, select_target
             from project_pipeline.scheduler.host_observation import (
                 COMFY_MACHINE_ID,
                 XEON_MACHINE_ID,
@@ -2021,10 +2021,11 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             fleet_state = Path(database).with_name("fleet_state.json")
             fleet = FleetRegistry.load_or_declared(fleet_state, declared_profiles())
             fleet.replace(apply_local_control_observation(fleet.profiles()))
+            occupancy = occupancy_from_leases(scheduler_store.list_active_leases())
             if args.action == "fleet":
                 return {
                     "database": str(database),
-                    "hosts": fleet.projection(),
+                    "hosts": fleet.projection(occupancy=occupancy),
                     "enrollment_blockers": list(enrollment_blockers()),
                     "state_path": str(fleet_state),
                 }, 0
@@ -2045,7 +2046,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                         "freshness": row["freshness"],
                         "principal": row["principal"],
                     }
-                    for row in fleet.projection()
+                    for row in fleet.projection(occupancy=occupancy)
                 }
                 enrolled_ids = {XEON_MACHINE_ID, COMFY_MACHINE_ID}
                 hold_states = {"DRAINED", "QUARANTINED", "OFFLINE"}
@@ -2065,7 +2066,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 write_admission_record(admission_path, record)
                 return {
                     "database": str(database),
-                    "hosts": fleet.projection(),
+                    "hosts": fleet.projection(occupancy=occupancy),
                     "admission_path": str(admission_path),
                     "state_path": str(fleet_state),
                     "enrollment_blockers": list(enrollment_blockers()),
@@ -2121,6 +2122,19 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 accepted = controller.accept(
                     envelope, executed["result"], expected_host=envelope.host_id
                 )
+                if accepted.get("outcome") == "ACCEPTED":
+                    fleet.record_job(
+                        {
+                            "job_id": envelope.job_id,
+                            "host_id": envelope.host_id,
+                            "lease_id": envelope.lease_id,
+                            "fence": envelope.fence,
+                            "assignment": envelope.job_id,
+                            "deadline_utc": envelope.deadline_utc.isoformat(),
+                            "outcome": accepted.get("outcome"),
+                        }
+                    )
+                    fleet.persist(fleet_state)
                 return {
                     "database": str(database),
                     "executed": {

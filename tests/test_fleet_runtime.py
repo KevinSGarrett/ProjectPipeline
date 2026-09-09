@@ -28,8 +28,10 @@ from project_pipeline.command_center.realtime import RealtimeEventBroker
 from project_pipeline.domain.scheduler import (
     AccessMode,
     ResourceClaim,
+    ResourceLease,
     ResourceRegistrySnapshot,
     ResourceType,
+    scheduler_identifier,
 )
 from project_pipeline.scheduler.admission import (
     chosen_host_admitted,
@@ -39,6 +41,8 @@ from project_pipeline.scheduler.admission import (
 from project_pipeline.scheduler.fleet import (
     MachineProfile,
     bind_profile_claims,
+    fleet_projection,
+    occupancy_from_leases,
     physical_claims_for_machine,
     resume_host,
     select_target,
@@ -744,3 +748,73 @@ def test_inventory_observation_preserves_drained_comfy() -> None:
     chosen, denials = select_target(observed, when=NOW)
     assert chosen is None or chosen.machine_id != "COMFY-V4-CPU-01"
     assert any("host_state:DRAINED" in item or "COMFY-V4-CPU-01" in item for item in denials)
+
+
+def _lease(machine_id: str, task_id: str, *, token: int = 1) -> ResourceLease:
+    claim = physical_claims_for_machine(machine_id)[0]
+    return ResourceLease(
+        lease_id=scheduler_identifier("LEASE", machine_id, task_id, str(token)),
+        task_id=task_id,
+        holder_id=f"worker:{machine_id}",
+        claim=claim,
+        fencing_token=token,
+        acquired_at_utc=NOW,
+        expires_at_utc=NOW + timedelta(minutes=15),
+    )
+
+
+def test_missing_occupancy_stays_unknown_not_green() -> None:
+    rows = fleet_projection((_profile("WIN-EVSH1DN8H5O"),), when=NOW)
+    assert rows[0]["active_jobs"] == "unknown"
+    assert rows[0]["lease_id"] == "unknown"
+    assert rows[0]["assignment"] == "unknown"
+
+
+def test_idle_occupancy_is_zero_none_not_unknown() -> None:
+    rows = fleet_projection((_profile("WIN-EVSH1DN8H5O"),), when=NOW, occupancy={})
+    assert rows[0]["active_jobs"] == 0
+    assert rows[0]["lease_id"] == "none"
+    assert rows[0]["assignment"] == "none"
+
+
+def test_lease_occupancy_binds_jobs_and_does_not_paint_other_hosts() -> None:
+    xeon = _profile("WIN-EVSH1DN8H5O")
+    comfy = _profile("COMFY-V4-CPU-01")
+    occupancy = occupancy_from_leases((_lease("WIN-EVSH1DN8H5O", "PP-TASK-000512"),))
+    rows = {
+        row["machine_id"]: row
+        for row in fleet_projection((xeon, comfy), when=NOW, occupancy=occupancy)
+    }
+    assert rows["WIN-EVSH1DN8H5O"]["active_jobs"] == 1
+    assert rows["WIN-EVSH1DN8H5O"]["assignment"] == "PP-TASK-000512"
+    assert rows["WIN-EVSH1DN8H5O"]["lease_id"].startswith("LEASE-")
+    assert rows["COMFY-V4-CPU-01"]["active_jobs"] == 0
+    assert rows["COMFY-V4-CPU-01"]["lease_id"] == "none"
+
+
+def test_fleet_api_binds_lease_occupancy() -> None:
+    profile = _profile("COMFY-V4-CPU-01", observed_at_utc=datetime.now(UTC))
+    registry = FleetRegistry((profile,))
+    lease = _lease("COMFY-V4-CPU-01", "PP-TASK-000515")
+    snapshot = CommandCenterProjectionService().build_snapshot(
+        snapshot_id="cc:fleet-occupancy",
+        project_id="PROJECT-PIPELINE",
+        operating_mode="NORMAL",
+        health=(HealthDimension(name="control", state=HealthState.HEALTHY, reason="ok"),),
+    )
+    app = create_command_center_app(
+        snapshot_provider=lambda: snapshot,
+        event_broker=RealtimeEventBroker(),
+        inbox=AttentionNotificationBroker(),
+        auth=CommandCenterAuth(lambda token: "actor:test" if token == "good" else None),
+        fleet_registry=registry,
+        occupancy_provider=lambda: occupancy_from_leases((lease,)),
+    )
+    listed = TestClient(app).get(
+        "/api/v1/command-center/fleet", headers={"Authorization": "Bearer good"}
+    )
+    assert listed.status_code == 200
+    host = listed.json()["hosts"][0]
+    assert host["active_jobs"] == 1
+    assert host["assignment"] == "PP-TASK-000515"
+    assert host["lease_id"].startswith("LEASE-")
