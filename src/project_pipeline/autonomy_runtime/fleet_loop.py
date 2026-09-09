@@ -35,7 +35,11 @@ from project_pipeline.command_center.autonomy_director import (
     evaluate_live_control,
 )
 from project_pipeline.overlay import bound_overlay, control_input_root, inspect_source_identity
-from project_pipeline.scheduler.admission import write_admission_record
+from project_pipeline.scheduler.admission import (
+    load_admission_record,
+    observation_admission_record,
+    write_admission_record,
+)
 from project_pipeline.scheduler.fleet import MachineProfile
 from project_pipeline.scheduler.host_observation import (
     apply_inventory_observation,
@@ -149,6 +153,65 @@ def run_loop(
         }
 
 
+def run_available_work(
+    *,
+    root: Path,
+    database: Path,
+    ready: list[str],
+    blocked: str | None,
+    profiles: tuple[MachineProfile, ...],
+    adapter: Any,
+    workspace: Path,
+    workspace_root: Path,
+    source_sha: str,
+    source_tree: str,
+    overlay_sha256: str,
+    principal: str,
+    now: datetime | None = None,
+    deadline: datetime | None = None,
+) -> dict[str, Any]:
+    """Dispatch every currently ready independent job, then stop. Empty ready fails closed."""
+
+    if not ready:
+        return {
+            "ok": False,
+            "reason": "director_ready_empty",
+            "completed_jobs": [],
+            "next_job": None,
+            "selected": [],
+        }
+    completed: list[dict[str, Any]] = []
+    remaining = [item for item in ready if item != blocked and item not in HISTORICAL_NOT_NEW_WORK]
+    while remaining and (deadline is None or datetime.now(UTC) < deadline):
+        result = run_loop(
+            root=root,
+            database=database,
+            ready=remaining,
+            blocked=blocked,
+            profiles=profiles,
+            adapter=adapter,
+            workspace=workspace,
+            workspace_root=workspace_root,
+            source_sha=source_sha,
+            source_tree=source_tree,
+            overlay_sha256=overlay_sha256,
+            principal=principal,
+            now=now,
+        )
+        completed.append(result)
+        done = set(result.get("selected") or [])
+        remaining = [item for item in remaining if item not in done]
+        if not result.get("next_job"):
+            break
+    return {
+        "ok": True,
+        "completed_jobs": completed,
+        "next_job": remaining[0] if remaining else None,
+        "selected": [job_id for item in completed for job_id in (item.get("selected") or [])],
+        "blocked": blocked,
+    }
+
+
 def _observation_dir(root: Path) -> Path:
     path = root.resolve() / ".local" / "cycle20_observation"
     path.mkdir(parents=True, exist_ok=True)
@@ -207,15 +270,15 @@ def run_observation(
         workspace.mkdir(exist_ok=True)
     db = database or (out / "scheduler.sqlite3")
     profiles = _xeon_profiles(when=started, inventory=inventory if live_ssh else None)
+    admission_path = Path(db).with_name("fleet_admission.json")
+    existing = load_admission_record(admission_path) or load_admission_record(
+        root / ".local" / "state" / "fleet_admission.json"
+    ) or {}
     write_admission_record(
-        Path(db).with_name("fleet_admission.json"),
-        {
-            "c18_disposition": "PM_ACCEPTED",
-            "reviewer_id": "rev-c20",
-            "implementer_id": "impl-c20",
-            "source_sha": identity.get("sha") or "a" * 40,
-            "source_tree": identity.get("tree") or "b" * 40,
-            "hosts": {
+        admission_path,
+        observation_admission_record(
+            existing,
+            hosts={
                 XEON_MACHINE_ID: {
                     "state": "READY",
                     "freshness": "fresh",
@@ -224,12 +287,14 @@ def run_observation(
                     or started.isoformat(),
                 }
             },
-        },
+            source_sha=str(identity.get("sha") or existing.get("source_sha") or "a" * 40),
+            source_tree=str(identity.get("tree") or existing.get("source_tree") or "b" * 40),
+        ),
     )
     control_ready = control_ready_task_ids(root, Path(db)) if live_ssh else []
-    ready = control_ready or ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"]
+    ready = control_ready if live_ssh else ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"]
     blocked = "PP-TASK-000518"
-    first = run_loop(
+    available = run_available_work(
         root=root,
         database=Path(db),
         ready=ready,
@@ -243,8 +308,10 @@ def run_observation(
         overlay_sha256=str(overlay.get("digest") or "c" * 64),
         principal=principal,
         now=started,
+        deadline=deadline,
     )
-    completed_jobs.append(first)
+    completed_jobs = list(available.get("completed_jobs") or [])
+    first = completed_jobs[0] if completed_jobs else {"selected": [], "results": [], "next_job": None}
     selected_job = (first["selected"] or ["none"])[0]
     live_pid = None
     for item in first.get("results") or []:
@@ -323,10 +390,38 @@ def run_observation(
                 "status": "ACCEPTED",
             }
         )
-    next_ready = first.get("next_job")
+    next_ready = available.get("next_job")
+    selected_ids = set(available.get("selected") or [])
     while datetime.now(UTC) < deadline:
         now = datetime.now(UTC)
         remaining = (deadline - now).total_seconds()
+        if live_ssh:
+            refreshed = [
+                item
+                for item in control_ready_task_ids(root, Path(db))
+                if item not in selected_ids and item != blocked
+            ]
+            if refreshed:
+                more = run_available_work(
+                    root=root,
+                    database=Path(db),
+                    ready=refreshed,
+                    blocked=blocked,
+                    profiles=profiles,
+                    adapter=adapter,
+                    workspace=workspace,
+                    workspace_root=out,
+                    source_sha=str(identity.get("sha") or "a" * 40),
+                    source_tree=str(identity.get("tree") or "b" * 40),
+                    overlay_sha256=str(overlay.get("digest") or "c" * 64),
+                    principal=principal,
+                    now=now,
+                    deadline=deadline,
+                )
+                completed_jobs.extend(list(more.get("completed_jobs") or []))
+                selected_ids.update(more.get("selected") or [])
+                next_ready = more.get("next_job")
+                continue
         heartbeats.append({"at_utc": now.isoformat(), "remaining_seconds": remaining})
         status_path.write_text(
             json.dumps(
@@ -376,15 +471,40 @@ def run_production(*, root: Path, database: Path | None = None) -> dict[str, Any
     identity = inspect_source_identity(root)
     overlay = bound_overlay(root)
     db = database or (root / ".local" / "state" / "scheduler.sqlite3")
+    if not ready:
+        return {
+            "ok": False,
+            "reason": "director_ready_empty",
+            "selected": [],
+            "blocked": blocked,
+        }
     inventory = measure_remote_inventory(host=XEON_TAILNET_IPV4, user=XEON_SSH_USER)
     now = datetime.now(UTC)
     profiles = _xeon_profiles(when=now, inventory=inventory)
     adapter = SshDispatchAdapter.for_machine(XEON_MACHINE_ID)
     workspace = Path(REMOTE_JOB_WORKSPACES[XEON_MACHINE_ID])
-    return run_loop(
+    admission_path = Path(db).with_name("fleet_admission.json")
+    existing = load_admission_record(admission_path) or {}
+    write_admission_record(
+        admission_path,
+        observation_admission_record(
+            existing,
+            hosts={
+                XEON_MACHINE_ID: {
+                    "state": "READY",
+                    "freshness": "fresh",
+                    "observation_kind": inventory.get("observation_kind") or "MEASURED",
+                    "observed_at_utc": inventory.get("measured_at_utc") or now.isoformat(),
+                }
+            },
+            source_sha=str(identity.get("sha") or existing.get("source_sha") or ""),
+            source_tree=str(identity.get("tree") or existing.get("source_tree") or ""),
+        ),
+    )
+    return run_available_work(
         root=root,
         database=Path(db),
-        ready=ready or ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"],
+        ready=ready,
         blocked=blocked,
         profiles=profiles,
         adapter=adapter,

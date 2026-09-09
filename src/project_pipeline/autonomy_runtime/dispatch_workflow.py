@@ -104,6 +104,55 @@ class DispatchWorkflow:
             }
         fence = str(bundle.leases[0].fencing_token)
         lease_id = bundle.leases[0].lease_id
+        try:
+            return self._dispatch_with_bundle(
+                task_id=task_id,
+                holder_id=holder_id,
+                argv=argv,
+                workspace=workspace,
+                workspace_root=workspace_root,
+                principal=principal,
+                input_sha256=input_sha256,
+                now=now,
+                cpu=cpu,
+                memory_mb=memory_mb,
+                adapter=adapter,
+                output_contract_sha256=output_contract_sha256,
+                chosen=chosen,
+                denials=denials,
+                fence=fence,
+                lease_id=lease_id,
+            )
+        finally:
+            for lease in bundle.leases:
+                self.store.release_lease(
+                    lease.lease_id,
+                    holder_id=holder_id,
+                    fencing_token=lease.fencing_token,
+                    now=now,
+                )
+
+    def _dispatch_with_bundle(
+        self,
+        *,
+        task_id: str,
+        holder_id: str,
+        argv: tuple[str, ...],
+        workspace: str,
+        workspace_root: str,
+        principal: str,
+        input_sha256: str,
+        now: datetime,
+        cpu: int,
+        memory_mb: int,
+        adapter: Any,
+        output_contract_sha256: str | None,
+        chosen: MachineProfile,
+        denials: tuple[str, ...],
+        fence: str,
+        lease_id: str,
+    ) -> dict[str, Any]:
+        del denials
         envelope = RemoteJobEnvelope(
             job_id=task_id,
             host_id=chosen.machine_id,

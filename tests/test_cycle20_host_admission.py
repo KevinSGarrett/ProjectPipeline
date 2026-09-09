@@ -105,6 +105,7 @@ def test_literal_1970_freshness_is_not_admission() -> None:
             XEON: {
                 "state": "READY",
                 "freshness": "fresh",
+                "observation_kind": "MEASURED",
                 "observed_at_utc": "1970-01-01T00:00:00+00:00",
             }
         },
@@ -230,3 +231,22 @@ def test_primary_measured_disk_is_not_declared_200000() -> None:
     assert laptop.observation_kind == "MEASURED"
     assert laptop.disk_mb != 200000
     assert laptop.disk_mb == int(180.25 * 1024)
+
+
+def test_missing_observation_kind_is_not_measured_admission() -> None:
+    record = {
+        "c18_disposition": "PM_ACCEPTED",
+        "reviewer_id": "rev",
+        "implementer_id": "impl",
+        "source_sha": SHA,
+        "source_tree": TREE,
+        "hosts": {
+            XEON: {
+                "state": "READY",
+                "freshness": "fresh",
+                "observed_at_utc": NOW.isoformat(),
+            }
+        },
+    }
+    denied = chosen_host_admitted(record, XEON, expected_sha=SHA, expected_tree=TREE)
+    assert denied["ok"] is False

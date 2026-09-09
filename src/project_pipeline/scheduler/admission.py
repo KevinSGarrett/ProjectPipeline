@@ -61,13 +61,14 @@ def _identity_matches(actual: object, expected: str) -> bool:
 
 def _measurement_ok(host: Mapping[str, Any]) -> bool:
     kind = str(host.get("observation_kind") or "")
-    if kind in {"HOSTNAME_ONLY", "PARTIAL", "DECLARED"}:
+    if kind != "MEASURED":
         return False
     raw = host.get("observed_at_utc") or host.get("measured_at_utc")
-    if raw:
-        observed = datetime.fromisoformat(str(raw).replace("Z", "+00:00")).astimezone(UTC)
-        if observed.year <= 1970 or observed > datetime.now(UTC) + timedelta(seconds=300):
-            return False
+    if not raw:
+        return False
+    observed = datetime.fromisoformat(str(raw).replace("Z", "+00:00")).astimezone(UTC)
+    if observed.year <= 1970 or observed > datetime.now(UTC) + timedelta(seconds=300):
+        return False
     return str(host.get("freshness") or "unknown") == "fresh"
 
 

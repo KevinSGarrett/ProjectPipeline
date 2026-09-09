@@ -442,20 +442,25 @@ def isolated_remote_worker_loss(
             "ssh_client_termination": process.poll() is not None,
         }
     kill_payload = adapter.kill_pid(int(remote_pid), workspace=workspace)
+    ssh_client_killed = False
     try:
         process.wait(timeout=20)
     except subprocess.TimeoutExpired:
         process.kill()
         process.wait(timeout=5)
+        ssh_client_killed = True
     worker = parse_worker_stdout(str(kill_payload.get("stdout") or ""))
+    killed = bool(worker.get("killed") or worker.get("already_gone"))
+    ok = bool(killed and not ssh_client_killed)
     return {
-        "ok": True,
+        "ok": ok,
         "kind": "isolated_worker_process_loss",
-        "recovered": True,
+        "recovered": ok,
         "remote_pid": remote_pid,
-        "killed": bool(worker.get("killed") or worker.get("already_gone")),
-        "ssh_client_termination": False,
-        "timed_out": False,
+        "killed": killed,
+        "ssh_client_termination": ssh_client_killed,
+        "timed_out": ssh_client_killed,
         "kill_exit_code": kill_payload.get("exit_code"),
         "ssh_exit_code": process.returncode,
+        "reason": None if ok else "ssh_client_kill_or_remote_kill_unconfirmed",
     }

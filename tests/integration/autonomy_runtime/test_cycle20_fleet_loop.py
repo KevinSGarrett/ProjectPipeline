@@ -5,6 +5,7 @@ from pathlib import Path
 
 from project_pipeline.autonomy_runtime.fleet_loop import (
     build_parser,
+    run_available_work,
     run_loop,
     select_two_useful_jobs,
     useful_argv,
@@ -102,6 +103,80 @@ def test_loop_dispatches_local_adapter_and_continues(tmp_path: Path) -> None:
     assert result["next_job"] == "PP-TASK-000519"
     assert result["blocked"] == "PP-TASK-000518"
     assert all(item.get("outcome") == "ACCEPTED" for item in result["results"])
+
+
+def test_available_work_dispatches_next_job_after_first_pair(tmp_path: Path) -> None:
+    database = tmp_path / "state.sqlite3"
+    workspace = tmp_path / "ws"
+    workspace.mkdir()
+    write_admission_record(
+        database.with_name("fleet_admission.json"),
+        {
+            "c18_disposition": "PM_ACCEPTED",
+            "reviewer_id": "rev",
+            "implementer_id": "impl",
+            "source_sha": SHA,
+            "source_tree": TREE,
+            "hosts": {
+                "WIN-EVSH1DN8H5O": {
+                    "state": "READY",
+                    "freshness": "fresh",
+                    "observation_kind": "MEASURED",
+                    "observed_at_utc": NOW.isoformat(),
+                }
+            },
+        },
+    )
+
+    class _RemoteAdapter:
+        remote_host = True
+        machine_id = "WIN-EVSH1DN8H5O"
+
+        def execute(self, **_kwargs: object) -> dict[str, object]:
+            return {
+                "exit_code": 0,
+                "timed_out": False,
+                "stdout_sha256": "1" * 64,
+                "stderr_sha256": "2" * 64,
+                "payload_sha256": "3" * 64,
+                "remote_pid": "4242",
+            }
+
+    result = run_available_work(
+        root=ROOT,
+        database=database,
+        ready=["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"],
+        blocked="PP-TASK-000518",
+        profiles=(_profile(),),
+        adapter=_RemoteAdapter(),
+        workspace=workspace,
+        workspace_root=tmp_path,
+        source_sha=SHA,
+        source_tree=TREE,
+        overlay_sha256="c" * 64,
+        principal=r"win-evsh1dn8h5o\kines",
+        now=NOW,
+    )
+    assert result["ok"] is True
+    assert result["selected"] == ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"]
+    assert len(result["completed_jobs"]) == 2
+    empty = run_available_work(
+        root=ROOT,
+        database=database,
+        ready=[],
+        blocked="PP-TASK-000518",
+        profiles=(_profile(),),
+        adapter=_RemoteAdapter(),
+        workspace=workspace,
+        workspace_root=tmp_path,
+        source_sha=SHA,
+        source_tree=TREE,
+        overlay_sha256="c" * 64,
+        principal=r"win-evsh1dn8h5o\kines",
+        now=NOW,
+    )
+    assert empty["ok"] is False
+    assert empty["reason"] == "director_ready_empty"
 
 
 def test_lifecycle_journal_zero_occupancy_requires_authority(tmp_path: Path) -> None:

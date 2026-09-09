@@ -2064,6 +2064,8 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                         "state": row["state"],
                         "freshness": row["freshness"],
                         "principal": row["principal"],
+                        "observation_kind": row.get("observation_kind") or "",
+                        "observed_at_utc": row.get("observed_at_utc"),
                     }
                     for row in fleet.projection(occupancy=occupancy)
                 }
@@ -2166,9 +2168,9 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     fleet.record_job(
                         {
                             "job_id": envelope.job_id,
-                            "host_id": envelope.host_id,
-                            "lease_id": envelope.lease_id,
-                            "fence": envelope.fence,
+                            "host_id": dispatched.get("host_id") or envelope.host_id,
+                            "lease_id": dispatched.get("lease_id") or envelope.lease_id,
+                            "fence": dispatched.get("fence") or envelope.fence,
                             "assignment": envelope.job_id,
                             "deadline_utc": envelope.deadline_utc.isoformat(),
                             "outcome": "RUNNING"

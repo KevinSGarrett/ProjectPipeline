@@ -342,7 +342,14 @@ def _admission_record(**overrides: object) -> dict[str, object]:
         "implementer_id": "cursor-implementer-c19-c18-correction",
         "source_sha": _SHA,
         "source_tree": _TREE,
-        "hosts": {"COMFY-V4-CPU-01": {"state": "READY", "freshness": "fresh"}},
+        "hosts": {
+            "COMFY-V4-CPU-01": {
+                "state": "READY",
+                "freshness": "fresh",
+                "observation_kind": "MEASURED",
+                "observed_at_utc": NOW.isoformat(),
+            }
+        },
     }
     record.update(overrides)
     return record
@@ -552,7 +559,12 @@ def test_timed_out_remote_job_is_unknown_outcome(tmp_path: Path) -> None:
 def test_fresh_xeon_host_is_remotely_admitted() -> None:
     record = _admission_record(
         hosts={
-            "WIN-EVSH1DN8H5O": {"state": "READY", "freshness": "fresh"},
+            "WIN-EVSH1DN8H5O": {
+                "state": "READY",
+                "freshness": "fresh",
+                "observation_kind": "MEASURED",
+                "observed_at_utc": NOW.isoformat(),
+            },
             "COMFY-V4-CPU-01": {"state": "STALE", "freshness": "stale"},
         }
     )
