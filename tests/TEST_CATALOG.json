@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 794,
+  "test_count": 799,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3971,6 +3971,31 @@
       "callable": "test_available_work_dispatches_next_job_after_first_pair",
       "path": "tests/integration/autonomy_runtime/test_cycle20_fleet_loop.py",
       "test_id": "TEST-C20-LOOP-007"
+    },
+    {
+      "callable": "test_aged_measured_observation_is_stale",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-016"
+    },
+    {
+      "callable": "test_overlay_digest_changes_when_bytes_change",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-015"
+    },
+    {
+      "callable": "test_remote_workspace_must_stay_under_allowed_root",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-016"
+    },
+    {
+      "callable": "test_ssh_stdin_carries_job_identity",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-017"
+    },
+    {
+      "callable": "test_unknown_machine_id_does_not_widen_to_all_hosts",
+      "path": "tests/integration/autonomy_runtime/test_cycle20_fleet_loop.py",
+      "test_id": "TEST-C20-LOOP-008"
     }
   ]
 }

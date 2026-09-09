@@ -67,7 +67,10 @@ class LocalSubprocessDispatchAdapter:
         max_output_bytes: int = DEFAULT_MAX_OUTPUT_BYTES,
         extra_env: dict[str, str] | None = None,
         job_handle: int | None = None,
+        job_id: str | None = None,
+        input_sha256: str | None = None,
     ) -> dict[str, Any]:
+        del job_id, input_sha256
         if not command or any(not isinstance(item, str) or not item for item in command):
             raise ValueError("command must be a non-empty argument array")
         if not working_directory.is_dir():
@@ -121,7 +124,9 @@ class LocalSubprocessDispatchAdapter:
         payload["payload_sha256"] = hashlib.sha256(
             json.dumps(payload, sort_keys=True).encode("utf-8")
         ).hexdigest()
-        payload["remote_pid"] = str(getattr(completed, "pid", "") or "")
+        payload["remote_pid"] = (
+            "" if completed is None else str(getattr(completed, "pid", "") or "")
+        )
         return payload
 
 

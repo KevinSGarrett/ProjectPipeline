@@ -2117,6 +2117,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     envelope.host_id,
                     expected_sha=str(identity.get("sha") or ""),
                     expected_tree=str(identity.get("tree") or ""),
+                    now=datetime.now(UTC),
                 )
                 if not host_gate["ok"]:
                     return {
@@ -2190,6 +2191,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     record,
                     expected_sha=str(identity.get("sha") or ""),
                     expected_tree=str(identity.get("tree") or ""),
+                    now=datetime.now(UTC),
                 )
                 dirty_source = bool(identity.get("dirty")) or not bool(identity.get("ok"))
                 candidates = []
@@ -2208,6 +2210,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                         profile.machine_id,
                         expected_sha=str(identity.get("sha") or ""),
                         expected_tree=str(identity.get("tree") or ""),
+                        now=datetime.now(UTC),
                     )
                     if host_gate["ok"]:
                         candidates.append(profile)

@@ -206,8 +206,11 @@ class ProjectControlKernel:
             )
             priority = state.priority
             lifecycle = state.state
-            if str(issue.get("state") or "") in {"DONE", "CANCELLED"}:
+            issue_state = str(issue.get("state") or "")
+            if issue_state == "DONE":
                 lifecycle = TaskLifecycleState.DONE
+            elif issue_state == "CANCELLED":
+                lifecycle = TaskLifecycleState.CANCELLED
             facts.append(
                 TaskControlFact(
                     task_id=state.task_id,

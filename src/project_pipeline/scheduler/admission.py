@@ -59,7 +59,10 @@ def _identity_matches(actual: object, expected: str) -> bool:
     return token == expected.strip().lower() and len(token) == GIT_IDENTITY_LENGTH
 
 
-def _measurement_ok(host: Mapping[str, Any]) -> bool:
+MAX_MEASUREMENT_AGE_SECONDS = 7200
+
+
+def _measurement_ok(host: Mapping[str, Any], *, now: datetime | None = None) -> bool:
     kind = str(host.get("observation_kind") or "")
     if kind != "MEASURED":
         return False
@@ -67,12 +70,17 @@ def _measurement_ok(host: Mapping[str, Any]) -> bool:
     if not raw:
         return False
     observed = datetime.fromisoformat(str(raw).replace("Z", "+00:00")).astimezone(UTC)
-    if observed.year <= 1970 or observed > datetime.now(UTC) + timedelta(seconds=300):
+    current = (now or datetime.now(UTC)).astimezone(UTC)
+    if observed.year <= 1970 or observed > current + timedelta(seconds=300):
+        return False
+    if (current - observed).total_seconds() > MAX_MEASUREMENT_AGE_SECONDS:
         return False
     return str(host.get("freshness") or "unknown") == "fresh"
 
 
-def _remote_host_failures(hosts: Mapping[str, Any]) -> tuple[str, ...]:
+def _remote_host_failures(
+    hosts: Mapping[str, Any], *, now: datetime | None = None
+) -> tuple[str, ...]:
     failures: list[str] = []
     enrolled_fresh = 0
     denied: list[str] = []
@@ -81,7 +89,7 @@ def _remote_host_failures(hosts: Mapping[str, Any]) -> tuple[str, ...]:
             continue
         state = str(host.get("state") or "")
         freshness = str(host.get("freshness") or "unknown")
-        if state == "READY" and _measurement_ok(host):
+        if state == "READY" and _measurement_ok(host, now=now):
             enrolled_fresh += 1
             continue
         denied.append(f"remote_denied:{machine_id}:{state or 'UNDECLARED'}:{freshness}")
@@ -98,8 +106,11 @@ def chosen_host_admitted(
     *,
     expected_sha: str,
     expected_tree: str,
+    now: datetime | None = None,
 ) -> dict[str, Any]:
-    gate = evaluate_admission(record, expected_sha=expected_sha, expected_tree=expected_tree)
+    gate = evaluate_admission(
+        record, expected_sha=expected_sha, expected_tree=expected_tree, now=now
+    )
     if record is None or not gate["c18_accepted"]:
         return {"ok": False, "failures": gate["failures"]}
     hosts = record.get("hosts") if isinstance(record.get("hosts"), Mapping) else {}
@@ -108,7 +119,7 @@ def chosen_host_admitted(
         return {"ok": False, "failures": (f"unchosen_host:{machine_id}",)}
     state = str(host.get("state") or "")
     freshness = str(host.get("freshness") or "unknown")
-    if state != "READY" or not _measurement_ok(host):
+    if state != "READY" or not _measurement_ok(host, now=now):
         return {
             "ok": False,
             "failures": (f"remote_denied:{machine_id}:{state or 'UNDECLARED'}:{freshness}",),
@@ -125,6 +136,7 @@ def evaluate_admission(
     *,
     expected_sha: str,
     expected_tree: str,
+    now: datetime | None = None,
 ) -> dict[str, Any]:
     if record is None:
         return {
@@ -157,7 +169,7 @@ def evaluate_admission(
 
     c18_accepted = disposition_ok and independent
     if c18_accepted:
-        host_failures = _remote_host_failures(hosts)
+        host_failures = _remote_host_failures(hosts, now=now)
         failures.extend(host_failures)
         remote_ok = not host_failures and sha_ok and tree_ok
     else:

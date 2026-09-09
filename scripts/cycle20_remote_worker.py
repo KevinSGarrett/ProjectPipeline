@@ -34,7 +34,9 @@ def main() -> int:
             print(json.dumps({"ok": False, "reason": "invalid_pid", "exit_code": 2}))
             return 2
         if pid <= 4 or pid == os.getpid():
-            print(json.dumps({"ok": False, "reason": "pid_not_killable", "pid": pid, "exit_code": 2}))
+            print(
+                json.dumps({"ok": False, "reason": "pid_not_killable", "pid": pid, "exit_code": 2})
+            )
             return 2
         if os.name == "nt":
             completed = subprocess.run(
@@ -61,7 +63,11 @@ def main() -> int:
             return 0
         try:
             os.kill(pid, 9)
-            print(json.dumps({"ok": True, "pid": pid, "killed": True, "phase": "kill", "exit_code": 0}))
+            print(
+                json.dumps(
+                    {"ok": True, "pid": pid, "killed": True, "phase": "kill", "exit_code": 0}
+                )
+            )
             return 0
         except OSError:
             print(
@@ -79,7 +85,11 @@ def main() -> int:
             return 0
     argv = payload.get("argv")
     workspace = str(payload.get("workspace") or "")
-    if not isinstance(argv, list) or not argv or any(UNSAFE.search(str(item) or "") for item in argv):
+    if (
+        not isinstance(argv, list)
+        or not argv
+        or any(UNSAFE.search(str(item) or "") for item in argv)
+    ):
         print(json.dumps({"ok": False, "reason": "argv_not_confined", "exit_code": 2}))
         return 2
     if not workspace or UNSAFE.search(workspace) or ".." in workspace:
@@ -87,10 +97,20 @@ def main() -> int:
         return 2
     nested = payload.get("nested_env") if isinstance(payload.get("nested_env"), dict) else {}
     env = os.environ.copy()
+    allowed_nested = {
+        "OMP_NUM_THREADS",
+        "MKL_NUM_THREADS",
+        "OPENBLAS_NUM_THREADS",
+        "NUMEXPR_NUM_THREADS",
+        "VECLIB_MAXIMUM_THREADS",
+    }
     for key, value in nested.items():
-        env[str(key)] = str(value)
+        if str(key) in allowed_nested:
+            env[str(key)] = str(value)
     Path(workspace).mkdir(parents=True, exist_ok=True)
-    print(json.dumps({"ok": True, "pid": os.getpid(), "phase": "started"}, sort_keys=True), flush=True)
+    print(
+        json.dumps({"ok": True, "pid": os.getpid(), "phase": "started"}, sort_keys=True), flush=True
+    )
     completed = subprocess.run(
         [str(item) for item in argv],
         cwd=workspace,

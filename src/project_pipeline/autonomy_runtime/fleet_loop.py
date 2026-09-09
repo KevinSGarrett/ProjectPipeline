@@ -11,6 +11,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.autonomy_runtime.confinement import REMOTE_JOB_WORKSPACES
 from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
@@ -18,7 +19,6 @@ from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAda
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
     REMOTE_HOLD_SCRIPTS,
     REMOTE_JOB_SCRIPTS,
-    REMOTE_JOB_WORKSPACES,
     XEON_MACHINE_ID,
     XEON_SSH_USER,
     XEON_TAILNET_IPV4,
@@ -127,13 +127,14 @@ def run_loop(
         job_workspace = (
             Path(REMOTE_JOB_WORKSPACES.get(host_id, str(workspace))) if remote else workspace
         )
+        bind_root = str(job_workspace) if remote else str(workspace_root)
         for task_id in jobs["selected"]:
             dispatched = workflow.dispatch(
                 task_id=task_id,
                 holder_id="actor:fleet-loop",
                 argv=useful_argv(root, task_id, remote=remote, machine_id=host_id),
                 workspace=str(job_workspace),
-                workspace_root=str(workspace_root),
+                workspace_root=bind_root,
                 principal=principal,
                 input_sha256=_sha256_text(task_id),
                 now=now,
@@ -484,6 +485,25 @@ def run_production(*, root: Path, database: Path | None = None) -> dict[str, Any
         }
     inventory = measure_remote_inventory(host=XEON_TAILNET_IPV4, user=XEON_SSH_USER)
     now = datetime.now(UTC)
+    sha = str(identity.get("sha") or "").strip().lower()
+    tree = str(identity.get("tree") or "").strip().lower()
+    if len(sha) != 40 or len(tree) != 40:
+        return {
+            "ok": False,
+            "reason": "source_identity_missing",
+            "selected": [],
+            "blocked": blocked,
+            "identity": identity,
+        }
+    overlay_digest = str(overlay.get("digest") or "")
+    if overlay.get("ok") is not True or len(overlay_digest) != 64:
+        return {
+            "ok": False,
+            "reason": overlay.get("reason") or "overlay_unbound",
+            "selected": [],
+            "blocked": blocked,
+            "overlay": overlay,
+        }
     profiles = _xeon_profiles(when=now, inventory=inventory)
     adapter = SshDispatchAdapter.for_machine(XEON_MACHINE_ID)
     workspace = Path(REMOTE_JOB_WORKSPACES[XEON_MACHINE_ID])
@@ -501,8 +521,8 @@ def run_production(*, root: Path, database: Path | None = None) -> dict[str, Any
                     "observed_at_utc": inventory.get("measured_at_utc") or now.isoformat(),
                 }
             },
-            source_sha=str(identity.get("sha") or existing.get("source_sha") or ""),
-            source_tree=str(identity.get("tree") or existing.get("source_tree") or ""),
+            source_sha=sha,
+            source_tree=tree,
         ),
     )
     return run_available_work(
@@ -513,10 +533,10 @@ def run_production(*, root: Path, database: Path | None = None) -> dict[str, Any
         profiles=profiles,
         adapter=adapter,
         workspace=workspace,
-        workspace_root=root / ".local",
-        source_sha=str(identity.get("sha") or ""),
-        source_tree=str(identity.get("tree") or ""),
-        overlay_sha256=str(overlay.get("digest") or "c" * 64),
+        workspace_root=workspace,
+        source_sha=sha,
+        source_tree=tree,
+        overlay_sha256=overlay_digest,
         principal=r"win-evsh1dn8h5o\kines",
         now=now,
     )

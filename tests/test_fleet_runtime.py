@@ -8,6 +8,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
+from project_pipeline.autonomy_runtime.confinement import REMOTE_JOB_WORKSPACES
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
     SSH_CLIENT_ENV_KEYS,
@@ -356,7 +357,7 @@ def _admission_record(**overrides: object) -> dict[str, object]:
 
 
 def _evaluate_admission(record: dict[str, object] | None) -> dict[str, object]:
-    return evaluate_admission(record, expected_sha=_SHA, expected_tree=_TREE)
+    return evaluate_admission(record, expected_sha=_SHA, expected_tree=_TREE, now=NOW)
 
 
 def test_missing_admission_record_denies_remote_placement() -> None:
@@ -401,10 +402,12 @@ def test_fresh_enrolled_worker_is_remotely_admitted() -> None:
 def test_chosen_host_must_be_the_admitted_worker() -> None:
     record = _admission_record()
     allowed = chosen_host_admitted(
-        record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE
+        record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE, now=NOW
     )
     assert allowed["ok"] is True
-    denied = chosen_host_admitted(record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE)
+    denied = chosen_host_admitted(
+        record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE, now=NOW
+    )
     assert denied["ok"] is False
     assert any("unchosen_host:WIN-EVSH1DN8H5O" in item for item in denied["failures"])
     malformed = chosen_host_admitted(
@@ -412,6 +415,7 @@ def test_chosen_host_must_be_the_admitted_worker() -> None:
         "COMFY-V4-CPU-01",
         expected_sha=_SHA,
         expected_tree=_TREE,
+        now=NOW,
     )
     assert malformed["ok"] is False
     assert any(
@@ -493,7 +497,7 @@ def test_ssh_adapter_execute_uses_injected_runner(tmp_path: Path) -> None:
     adapter = SshDispatchAdapter(identity=identity, runner=_runner)
     payload = adapter.execute(
         command=["hostname"],
-        working_directory=Path(r"C:\Users\kines\pp_jobs"),
+        working_directory=Path(REMOTE_JOB_WORKSPACES["WIN-EVSH1DN8H5O"]),
     )
     assert payload["exit_code"] == 0
     assert payload["transport"] == "openssh_tailscale"
@@ -510,7 +514,8 @@ def test_ssh_adapter_execute_uses_injected_runner(tmp_path: Path) -> None:
         overlay_sha256="c" * 64,
         input_sha256="d" * 64,
         argv=("hostname",),
-        workspace=r"C:\Users\kines\pp_jobs",
+        workspace=REMOTE_JOB_WORKSPACES["WIN-EVSH1DN8H5O"],
+        workspace_root=REMOTE_JOB_WORKSPACES["WIN-EVSH1DN8H5O"],
         deadline_utc=NOW + timedelta(minutes=5),
         cpu_ceiling=2,
         memory_mb_ceiling=1024,
@@ -572,10 +577,12 @@ def test_fresh_xeon_host_is_remotely_admitted() -> None:
     assert result["c18_accepted"] is True
     assert result["remote_ok"] is True
     allowed = chosen_host_admitted(
-        record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE
+        record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE, now=NOW
     )
     assert allowed["ok"] is True
-    denied = chosen_host_admitted(record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE)
+    denied = chosen_host_admitted(
+        record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE, now=NOW
+    )
     assert denied["ok"] is False
 
 
@@ -724,7 +731,7 @@ def test_ssh_adapter_for_machine_binds_comfy(tmp_path: Path) -> None:
     assert adapter.user == "Windows 11"
     payload = adapter.execute(
         command=["hostname"],
-        working_directory=Path(r"C:\Users\Windows 11\pp_jobs"),
+        working_directory=Path(REMOTE_JOB_WORKSPACES["COMFY-V4-CPU-01"]),
     )
     assert payload["exit_code"] == 0
     envelope = RemoteJobEnvelope(
@@ -739,7 +746,8 @@ def test_ssh_adapter_for_machine_binds_comfy(tmp_path: Path) -> None:
         overlay_sha256="c" * 64,
         input_sha256="d" * 64,
         argv=("hostname",),
-        workspace=r"C:\Users\Windows 11\pp_jobs",
+        workspace=REMOTE_JOB_WORKSPACES["COMFY-V4-CPU-01"],
+        workspace_root=REMOTE_JOB_WORKSPACES["COMFY-V4-CPU-01"],
         deadline_utc=NOW + timedelta(minutes=5),
         cpu_ceiling=1,
         memory_mb_ceiling=512,

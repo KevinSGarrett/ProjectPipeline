@@ -11,10 +11,11 @@ from typing import Any, Literal, Protocol
 from pydantic import Field
 
 from project_pipeline.autonomy_runtime.confinement import (
+    REMOTE_JOB_WORKSPACES,
     ConfinementError,
     argv_is_confined,
     canonicalize_workspace,
-    reject_unsafe_string,
+    confine_remote_workspace,
 )
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.providers import contains_secret_shaped
@@ -170,7 +171,10 @@ class RemoteJobController:
         root = envelope.workspace_root or self.workspace_root
         if remote:
             try:
-                reject_unsafe_string(envelope.workspace, field="workspace")
+                allowed = envelope.workspace_root or REMOTE_JOB_WORKSPACES.get(envelope.host_id)
+                if not allowed:
+                    return {"outcome": "REJECTED", "reason": "workspace_root_missing"}
+                confine_remote_workspace(envelope.workspace, allowed_root=allowed)
             except ConfinementError as error:
                 return {"outcome": "REJECTED", "reason": str(error)}
             workspace = Path(envelope.workspace)
@@ -204,6 +208,8 @@ class RemoteJobController:
                 timeout_seconds=remaining,
                 extra_env=limits.get("env"),
                 job_handle=limits.get("handle"),
+                job_id=envelope.job_id,
+                input_sha256=envelope.input_sha256,
             )
         except TypeError:
             payload = self.adapter.execute(
@@ -211,6 +217,7 @@ class RemoteJobController:
                 working_directory=workspace,
                 timeout_seconds=remaining,
                 extra_env=limits.get("env"),
+                job_handle=limits.get("handle"),
             )
         finally:
             handle = limits.get("handle")

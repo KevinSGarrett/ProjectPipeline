@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 
 from project_pipeline.autonomy_runtime.managed_worker import (
     classify_scheduled_action,
@@ -110,9 +110,9 @@ def test_literal_1970_freshness_is_not_admission() -> None:
             }
         },
     }
-    gate = evaluate_admission(record, expected_sha=SHA, expected_tree=TREE)
+    gate = evaluate_admission(record, expected_sha=SHA, expected_tree=TREE, now=NOW)
     assert gate["remote_ok"] is False
-    denied = chosen_host_admitted(record, XEON, expected_sha=SHA, expected_tree=TREE)
+    denied = chosen_host_admitted(record, XEON, expected_sha=SHA, expected_tree=TREE, now=NOW)
     assert denied["ok"] is False
 
 
@@ -248,5 +248,25 @@ def test_missing_observation_kind_is_not_measured_admission() -> None:
             }
         },
     }
-    denied = chosen_host_admitted(record, XEON, expected_sha=SHA, expected_tree=TREE)
+    denied = chosen_host_admitted(record, XEON, expected_sha=SHA, expected_tree=TREE, now=NOW)
+    assert denied["ok"] is False
+
+
+def test_aged_measured_observation_is_stale() -> None:
+    record = {
+        "c18_disposition": "PM_ACCEPTED",
+        "reviewer_id": "rev",
+        "implementer_id": "impl",
+        "source_sha": SHA,
+        "source_tree": TREE,
+        "hosts": {
+            XEON: {
+                "state": "READY",
+                "freshness": "fresh",
+                "observation_kind": "MEASURED",
+                "observed_at_utc": (NOW - timedelta(hours=3)).isoformat(),
+            }
+        },
+    }
+    denied = chosen_host_admitted(record, XEON, expected_sha=SHA, expected_tree=TREE, now=NOW)
     assert denied["ok"] is False

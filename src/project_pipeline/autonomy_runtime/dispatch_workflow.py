@@ -68,8 +68,14 @@ class DispatchWorkflow:
         candidates = self.profiles
         if machine_id:
             candidates = tuple(item for item in self.profiles if item.machine_id == machine_id)
+            if not candidates:
+                return {
+                    "outcome": "REJECTED",
+                    "reason": "unknown_machine",
+                    "denials": (f"unknown_machine:{machine_id}",),
+                }
         chosen, denials = select_target(
-            candidates or self.profiles,
+            candidates,
             when=now,
             require_avx2=require_avx2,
             require_modern_cuda=require_modern_cuda,
@@ -81,6 +87,7 @@ class DispatchWorkflow:
             chosen.machine_id,
             expected_sha=self.source_sha,
             expected_tree=self.source_tree,
+            now=now,
         )
         if not gate["ok"]:
             return {

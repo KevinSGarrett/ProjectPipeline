@@ -115,12 +115,29 @@ def bound_overlay(root: Path) -> dict[str, Any]:
             "missing": missing,
             "overlay": str(candidate),
         }
+    computed = overlay_digest(candidate)
+    declared = str(manifest.get("digest") or "").strip().lower()
+    if not declared:
+        return {
+            "ok": False,
+            "reason": "overlay_digest_missing",
+            "overlay": str(candidate),
+            "computed": computed,
+        }
+    if declared != computed:
+        return {
+            "ok": False,
+            "reason": "overlay_digest_mismatch",
+            "overlay": str(candidate),
+            "computed": computed,
+            "declared": declared,
+        }
     return {
         "ok": True,
         "root": str(root),
         "overlay": str(candidate.resolve()),
         "identity": identity,
-        "digest": str(manifest.get("digest") or overlay_digest(candidate)),
+        "digest": computed,
         "domains": list(REQUIRED_DOMAINS),
     }
 

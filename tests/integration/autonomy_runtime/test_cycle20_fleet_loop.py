@@ -3,6 +3,8 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from pathlib import Path
 
+from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
+from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.fleet_loop import (
     build_parser,
     run_available_work,
@@ -13,6 +15,7 @@ from project_pipeline.autonomy_runtime.fleet_loop import (
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.scheduler.admission import write_admission_record
 from project_pipeline.scheduler.fleet import MachineProfile
+from project_pipeline.scheduler.persistence import SchedulerStore
 
 NOW = datetime(2026, 9, 8, tzinfo=UTC)
 SHA = "a" * 40
@@ -177,6 +180,51 @@ def test_available_work_dispatches_next_job_after_first_pair(tmp_path: Path) -> 
     )
     assert empty["ok"] is False
     assert empty["reason"] == "director_ready_empty"
+
+
+def test_unknown_machine_id_does_not_widen_to_all_hosts(tmp_path: Path) -> None:
+    database = tmp_path / "state.sqlite3"
+    write_admission_record(
+        database.with_name("fleet_admission.json"),
+        {
+            "c18_disposition": "PM_ACCEPTED",
+            "reviewer_id": "rev",
+            "implementer_id": "impl",
+            "source_sha": SHA,
+            "source_tree": TREE,
+            "hosts": {
+                "WIN-EVSH1DN8H5O": {
+                    "state": "READY",
+                    "freshness": "fresh",
+                    "observation_kind": "MEASURED",
+                    "observed_at_utc": NOW.isoformat(),
+                }
+            },
+        },
+    )
+    with SchedulerStore(database, ROOT) as store:
+        workflow = DispatchWorkflow(
+            store=store,
+            jobs=FleetJobStore(database.with_name("fleet_jobs.sqlite3")),
+            profiles=(_profile(),),
+            admission_path=database.with_name("fleet_admission.json"),
+            source_sha=SHA,
+            source_tree=TREE,
+            overlay_sha256="c" * 64,
+        )
+        result = workflow.dispatch(
+            task_id="PP-TASK-000516",
+            holder_id="actor:test",
+            argv=("python", "-c", "print(1)"),
+            workspace=str(tmp_path),
+            workspace_root=str(tmp_path),
+            principal=r"win-evsh1dn8h5o\kines",
+            input_sha256="d" * 64,
+            now=NOW,
+            machine_id="NO-SUCH-HOST",
+        )
+    assert result["outcome"] == "REJECTED"
+    assert result["reason"] == "unknown_machine"
 
 
 def test_lifecycle_journal_zero_occupancy_requires_authority(tmp_path: Path) -> None:

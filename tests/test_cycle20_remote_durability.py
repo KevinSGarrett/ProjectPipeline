@@ -7,7 +7,11 @@ from pathlib import Path
 
 import pytest
 
-from project_pipeline.autonomy_runtime.confinement import ConfinementError, canonicalize_workspace
+from project_pipeline.autonomy_runtime.confinement import (
+    ConfinementError,
+    canonicalize_workspace,
+    confine_remote_workspace,
+)
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
 from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
@@ -28,6 +32,7 @@ from project_pipeline.autonomy_runtime.worker_supervision import (
     recover_isolated_job,
     start_isolated_job,
 )
+from project_pipeline.overlay import overlay_digest
 
 NOW = datetime(2026, 9, 8, tzinfo=UTC)
 SHA = "a" * 40
@@ -260,3 +265,42 @@ def test_enforce_or_reject_creates_job_object() -> None:
     assert limits["ok"] is True
     assert limits["mechanism"] == "windows_job_object"
     close_job_handle(int(limits["handle"]))
+
+
+def test_overlay_digest_changes_when_bytes_change(tmp_path: Path) -> None:
+    overlay = tmp_path / "overlay"
+    (overlay / "instructions").mkdir(parents=True)
+    target = overlay / "instructions" / "pack.txt"
+    target.write_text("one", encoding="utf-8")
+    first = overlay_digest(overlay)
+    target.write_text("two", encoding="utf-8")
+    assert overlay_digest(overlay) != first
+
+
+def test_remote_workspace_must_stay_under_allowed_root() -> None:
+    allowed = r"C:\Users\kines\ProjectPipeline\jobs"
+    assert confine_remote_workspace(allowed + r"\out", allowed_root=allowed) == allowed + r"\out"
+    with pytest.raises(ConfinementError, match="workspace_outside_root"):
+        confine_remote_workspace(r"C:\Windows\Temp", allowed_root=allowed)
+    with pytest.raises(ConfinementError, match="workspace_outside_root"):
+        confine_remote_workspace(r"C:\Users\kines\pp_jobs", allowed_root=allowed)
+
+
+def test_ssh_stdin_carries_job_identity(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("placeholder", encoding="utf-8")
+    captured: dict[str, str] = {}
+
+    def _runner(*_args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        captured["input"] = str(kwargs.get("input") or "")
+        return subprocess.CompletedProcess(["ssh"], 0, '{"ok": true, "exit_code": 0}', "")
+
+    adapter = SshDispatchAdapter(identity=identity, runner=_runner)
+    adapter.execute(
+        command=["hostname"],
+        working_directory=tmp_path,
+        job_id="PP-TASK-000516",
+        input_sha256="d" * 64,
+    )
+    assert '"job_id": "PP-TASK-000516"' in captured["input"]
+    assert '"input_sha256": "' + ("d" * 64) + '"' in captured["input"]

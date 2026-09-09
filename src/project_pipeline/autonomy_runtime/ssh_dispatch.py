@@ -15,7 +15,10 @@ from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 
-from project_pipeline.autonomy_runtime.confinement import ConfinementError, reject_unsafe_string
+from project_pipeline.autonomy_runtime.confinement import (
+    ConfinementError,
+    reject_unsafe_string,
+)
 from project_pipeline.autonomy_runtime.service import (
     DEFAULT_MAX_OUTPUT_BYTES,
     DEFAULT_TIMEOUT_SECONDS,
@@ -50,10 +53,6 @@ REMOTE_JOB_SCRIPTS = {
 REMOTE_HOLD_SCRIPTS = {
     XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs\cycle20_hold_job.py",
     COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle20_hold_job.py",
-}
-REMOTE_JOB_WORKSPACES = {
-    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs",
-    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs",
 }
 
 
@@ -226,6 +225,8 @@ class SshDispatchAdapter:
         extra: dict[str, str],
         action: str,
         target_pid: int | None,
+        job_id: str | None = None,
+        input_sha256: str | None = None,
     ) -> str:
         payload: dict[str, Any] = {
             "action": action,
@@ -233,7 +234,8 @@ class SshDispatchAdapter:
             "workspace": str(working_directory),
             "host_id": self.machine_id,
             "nested_env": extra,
-            "job_id": extra.get("PP_JOB_ID") if extra else None,
+            "job_id": job_id,
+            "input_sha256": input_sha256,
         }
         if target_pid is not None:
             payload["pid"] = int(target_pid)
@@ -324,11 +326,13 @@ class SshDispatchAdapter:
         job_handle: int | None = None,
         action: str = "execute",
         target_pid: int | None = None,
+        job_id: str | None = None,
+        input_sha256: str | None = None,
     ) -> dict[str, Any]:
         extra = extra_env or {}
         if extra and any(key not in NESTED_POOL_KEYS for key in extra):
             raise ValueError("remote dispatch does not accept extra environment values")
-        del job_handle
+        _ = job_handle
         argv = build_ssh_argv(
             identity=self.identity,
             user=self.user,
@@ -345,6 +349,8 @@ class SshDispatchAdapter:
             extra=extra,
             action=action,
             target_pid=target_pid,
+            job_id=job_id,
+            input_sha256=input_sha256,
         )
         try:
             completed = runner(

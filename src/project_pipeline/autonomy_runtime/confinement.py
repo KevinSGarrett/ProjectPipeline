@@ -10,6 +10,10 @@ UNC_PREFIXES = ("\\\\", "//", "\\\\?\\", "//?/")
 DEVICE_PREFIXES = ("\\\\.\\", "//./", "\\\\?\\", "nul", "con", "aux", "prn")
 XEON_MACHINE_ID = "WIN-EVSH1DN8H5O"
 COMFY_MACHINE_ID = "COMFY-V4-CPU-01"
+REMOTE_JOB_WORKSPACES = {
+    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs",
+    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs",
+}
 
 
 class ConfinementError(ValueError):
@@ -38,6 +42,20 @@ def reject_unsafe_string(value: str, *, field: str) -> str:
     if _looks_like_device(text):
         raise ConfinementError(f"{field}_device")
     return text
+
+
+def confine_remote_workspace(workspace: str, *, allowed_root: str) -> str:
+    """Bind a remote workspace by lexical prefix. Do not resolve it on this host."""
+
+    reject_unsafe_string(workspace, field="workspace")
+    reject_unsafe_string(allowed_root, field="workspace_root")
+    work = str(workspace).replace("/", "\\").rstrip("\\")
+    root = str(allowed_root).replace("/", "\\").rstrip("\\")
+    work_key = work.casefold()
+    root_key = root.casefold()
+    if work_key != root_key and not work_key.startswith(root_key + "\\"):
+        raise ConfinementError("workspace_outside_root")
+    return workspace
 
 
 def canonicalize_workspace(workspace: str, *, root: str, host_id: str | None = None) -> Path:
