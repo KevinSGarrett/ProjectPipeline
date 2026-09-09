@@ -63,6 +63,10 @@ def parse_worker_stdout(stdout: str) -> dict[str, Any]:
     return {}
 
 
+def _is_running_started_record(payload: Mapping[str, Any]) -> bool:
+    return payload.get("pid") is not None and payload.get("phase") == "RUNNING"
+
+
 def timeout_output_text(value: object) -> str:
     if value is None:
         return ""
@@ -275,11 +279,11 @@ class SshDispatchAdapter:
     def read_started_record(
         self, process: subprocess.Popen[str], *, timeout_seconds: int = 12
     ) -> dict[str, Any]:
+        if process.stdout is None:
+            return {}
         deadline = time.time() + max(1, timeout_seconds)
         buf = ""
         while time.time() < deadline:
-            if process.stdout is None:
-                return {}
             line = process.stdout.readline()
             if not line:
                 if process.poll() is not None:
@@ -288,7 +292,7 @@ class SshDispatchAdapter:
                 continue
             buf += line
             parsed = parse_worker_stdout(buf)
-            if parsed.get("pid") is not None:
+            if _is_running_started_record(parsed):
                 return parsed
         return {}
 
