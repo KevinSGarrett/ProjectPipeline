@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 758,
+  "test_count": 800,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -1666,6 +1666,11 @@
       "callable": "test_merge_gate_blocks_draft_failure_and_changes_requested",
       "path": "tests/test_github_steward_domain.py",
       "test_id": "TEST-GITHUB-MERGE-GATE-001"
+    },
+    {
+      "callable": "test_merge_gate_author_comment_is_not_self_approval",
+      "path": "tests/test_github_steward_domain.py",
+      "test_id": "TEST-GITHUB-MERGE-GATE-002"
     },
     {
       "callable": "test_service_merge_gate_and_apply",
@@ -3791,6 +3796,211 @@
       "callable": "test_drain_persist_keeps_recorded_jobs",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-039"
+    },
+    {
+      "callable": "test_restart_rejects_conflicting_expired_result",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-001"
+    },
+    {
+      "callable": "test_concurrent_duplicate_dispatch_does_not_reexecute",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-002"
+    },
+    {
+      "callable": "test_nonzero_exit_and_output_tamper_are_rejected",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-003"
+    },
+    {
+      "callable": "test_caller_envelope_without_intent_is_rejected",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-004"
+    },
+    {
+      "callable": "test_traversal_and_metacharacters_are_rejected",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-005"
+    },
+    {
+      "callable": "test_ssh_does_not_interpolate_remote_cwd",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-006"
+    },
+    {
+      "callable": "test_nested_pools_are_bound",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-007"
+    },
+    {
+      "callable": "test_os_age_alone_does_not_deny_xeon",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-001"
+    },
+    {
+      "callable": "test_hostname_only_and_stale_and_future_are_ineligible",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-002"
+    },
+    {
+      "callable": "test_literal_1970_freshness_is_not_admission",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-003"
+    },
+    {
+      "callable": "test_missing_inventory_fields_are_partial",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-004"
+    },
+    {
+      "callable": "test_incompatible_avx2_and_quadro_still_denied",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-005"
+    },
+    {
+      "callable": "test_scheduled_task_xml_hash_does_not_mutate_host",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-006"
+    },
+    {
+      "callable": "test_xeon_has_no_legacy_memory_ceiling",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-007"
+    },
+    {
+      "callable": "test_selects_two_jobs_and_preserves_blocked_lane",
+      "path": "tests/integration/autonomy_runtime/test_cycle20_fleet_loop.py",
+      "test_id": "TEST-C20-LOOP-001"
+    },
+    {
+      "callable": "test_loop_dispatches_local_adapter_and_continues",
+      "path": "tests/integration/autonomy_runtime/test_cycle20_fleet_loop.py",
+      "test_id": "TEST-C20-LOOP-002"
+    },
+    {
+      "callable": "test_lifecycle_journal_zero_occupancy_requires_authority",
+      "path": "tests/integration/autonomy_runtime/test_cycle20_fleet_loop.py",
+      "test_id": "TEST-C20-LOOP-003"
+    },
+    {
+      "callable": "test_cli_discovers_fleet_loop",
+      "path": "tests/integration/autonomy_runtime/test_cycle20_fleet_loop.py",
+      "test_id": "TEST-C20-LOOP-004"
+    },
+    {
+      "callable": "test_measurement_time_is_not_ingest_time",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-008"
+    },
+    {
+      "callable": "test_scheduled_task_xml_hash_does_not_mutate_host",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-009"
+    },
+    {
+      "callable": "test_os_age_does_not_cap_or_strip_xeon",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-010"
+    },
+    {
+      "callable": "test_primary_measured_disk_is_not_declared_200000",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-011"
+    },
+    {
+      "callable": "test_secret_argv_is_rejected",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-008"
+    },
+    {
+      "callable": "test_worker_side_dedup",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-009"
+    },
+    {
+      "callable": "test_enforce_or_reject_creates_job_object",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-010"
+    },
+    {
+      "callable": "test_lifecycle_has_no_kill_or_recover",
+      "path": "tests/integration/autonomy_runtime/test_cycle20_fleet_loop.py",
+      "test_id": "TEST-C20-LOOP-005"
+    },
+    {
+      "callable": "test_useful_job_writes_artifact",
+      "path": "tests/integration/autonomy_runtime/test_cycle20_fleet_loop.py",
+      "test_id": "TEST-C20-LOOP-006"
+    },
+    {
+      "callable": "test_system_sid_with_pp_jobs_is_not_production_worker",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-012"
+    },
+    {
+      "callable": "test_user_pp_jobs_and_system_protected_are_rejected",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-013"
+    },
+    {
+      "callable": "test_owned_task_retirement_plan_is_scoped",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-014"
+    },
+    {
+      "callable": "test_worker_stdout_pid_is_parsed",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-011"
+    },
+    {
+      "callable": "test_local_adapter_timeout_does_not_raise_unbound_pid",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-012"
+    },
+    {
+      "callable": "test_local_isolated_worker_loss_recovers",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-013"
+    },
+    {
+      "callable": "test_ssh_kill_stdin_uses_action_kill",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-014"
+    },
+    {
+      "callable": "test_missing_observation_kind_is_not_measured_admission",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-015"
+    },
+    {
+      "callable": "test_available_work_dispatches_next_job_after_first_pair",
+      "path": "tests/integration/autonomy_runtime/test_cycle20_fleet_loop.py",
+      "test_id": "TEST-C20-LOOP-007"
+    },
+    {
+      "callable": "test_aged_measured_observation_is_stale",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-016"
+    },
+    {
+      "callable": "test_overlay_digest_changes_when_bytes_change",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-015"
+    },
+    {
+      "callable": "test_remote_workspace_must_stay_under_allowed_root",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-016"
+    },
+    {
+      "callable": "test_ssh_stdin_carries_job_identity",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-017"
+    },
+    {
+      "callable": "test_unknown_machine_id_does_not_widen_to_all_hosts",
+      "path": "tests/integration/autonomy_runtime/test_cycle20_fleet_loop.py",
+      "test_id": "TEST-C20-LOOP-008"
     }
   ]
 }

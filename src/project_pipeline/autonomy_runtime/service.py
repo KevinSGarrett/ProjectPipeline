@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.autonomy_runtime.supervisor import PersistentSupervisor
+from project_pipeline.autonomy_runtime.windows_limits import assign_and_wait
 
 SAFE_ENV_KEYS = frozenset(
     {
@@ -37,6 +38,14 @@ def _sha256_text(payload: str) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def _stream_text(payload: object) -> str:
+    if payload is None:
+        return ""
+    if isinstance(payload, bytes):
+        return payload.decode("utf-8", errors="replace")
+    return str(payload)
+
+
 def _safe_env(extra: dict[str, str] | None = None) -> dict[str, str]:
     inherited = {
         key: value
@@ -57,30 +66,45 @@ class LocalSubprocessDispatchAdapter:
         timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
         max_output_bytes: int = DEFAULT_MAX_OUTPUT_BYTES,
         extra_env: dict[str, str] | None = None,
+        job_handle: int | None = None,
+        job_id: str | None = None,
+        input_sha256: str | None = None,
     ) -> dict[str, Any]:
+        del job_id, input_sha256
         if not command or any(not isinstance(item, str) or not item for item in command):
             raise ValueError("command must be a non-empty argument array")
         if not working_directory.is_dir():
             raise ValueError(f"invalid worktree: {working_directory}")
         raw_stdout = ""
         raw_stderr = ""
+        env = _safe_env(extra_env)
+        completed: subprocess.CompletedProcess[str] | None = None
         try:
-            completed = subprocess.run(
-                command,
-                cwd=str(working_directory),
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=timeout_seconds,
-                env=_safe_env(extra_env),
-            )
-            raw_stdout = completed.stdout
-            raw_stderr = completed.stderr
+            if job_handle:
+                completed = assign_and_wait(
+                    command=command,
+                    working_directory=working_directory,
+                    timeout_seconds=timeout_seconds,
+                    env=env,
+                    handle=int(job_handle),
+                )
+            else:
+                completed = subprocess.run(
+                    command,
+                    cwd=str(working_directory),
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=timeout_seconds,
+                    env=env,
+                )
+            raw_stdout = completed.stdout or ""
+            raw_stderr = completed.stderr or ""
             timed_out = False
             exit_code = completed.returncode
         except subprocess.TimeoutExpired as error:
-            raw_stdout = error.stdout.decode("utf-8", errors="replace") if error.stdout else ""
-            raw_stderr = error.stderr.decode("utf-8", errors="replace") if error.stderr else ""
+            raw_stdout = _stream_text(error.stdout or error.output)
+            raw_stderr = _stream_text(error.stderr)
             timed_out = True
             exit_code = 124
         stdout = raw_stdout[:max_output_bytes]
@@ -100,6 +124,9 @@ class LocalSubprocessDispatchAdapter:
         payload["payload_sha256"] = hashlib.sha256(
             json.dumps(payload, sort_keys=True).encode("utf-8")
         ).hexdigest()
+        payload["remote_pid"] = (
+            "" if completed is None else str(getattr(completed, "pid", "") or "")
+        )
         return payload
 
 

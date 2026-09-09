@@ -929,6 +929,7 @@ def build_parser() -> argparse.ArgumentParser:
             "resume",
             "observe",
             "remote-run",
+            "dispatch",
         ),
     )
     scheduler.add_argument("--root", type=_root, default=Path.cwd())
@@ -949,6 +950,17 @@ def build_parser() -> argparse.ArgumentParser:
     scheduler.add_argument("--correlation-id", default="corr:local-scheduler")
     scheduler.add_argument("--json-output", type=Path)
     _add_configuration_arguments(scheduler)
+
+    fleet_loop = commands.add_parser(
+        "fleet-loop", help="Run the Persistent Director automatic fleet work loop"
+    )
+    fleet_loop.add_argument("action", choices=("run", "observe", "status"))
+    fleet_loop.add_argument("--root", type=_root, default=Path.cwd())
+    fleet_loop.add_argument("--database", type=Path)
+    fleet_loop.add_argument("--duration-seconds", type=int, default=3600)
+    fleet_loop.add_argument("--live-ssh", action="store_true")
+    fleet_loop.add_argument("--json-output", type=Path)
+    _add_configuration_arguments(fleet_loop)
 
     agent_router = commands.add_parser(
         "agent-router", help="Inspect capability registries and evaluate provider-neutral routing"
@@ -2000,10 +2012,17 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     item.model_dump(mode="json") for item in scheduler_store.list_active_leases()
                 ],
             }, 0
-        if args.action in {"fleet", "place", "drain", "resume", "observe", "remote-run"}:
+        if args.action in {
+            "fleet",
+            "place",
+            "drain",
+            "resume",
+            "observe",
+            "remote-run",
+            "dispatch",
+        }:
             from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
             from project_pipeline.autonomy_runtime.remote_job import (
-                RemoteJobController,
                 RemoteJobEnvelope,
             )
             from project_pipeline.autonomy_runtime.ssh_dispatch import SshDispatchAdapter
@@ -2045,6 +2064,8 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                         "state": row["state"],
                         "freshness": row["freshness"],
                         "principal": row["principal"],
+                        "observation_kind": row.get("observation_kind") or "",
+                        "observed_at_utc": row.get("observed_at_utc"),
                     }
                     for row in fleet.projection(occupancy=occupancy)
                 }
@@ -2071,13 +2092,13 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     "state_path": str(fleet_state),
                     "enrollment_blockers": list(enrollment_blockers()),
                 }, 0
-            if args.action == "remote-run":
+            if args.action in {"remote-run", "dispatch"}:
                 if not args.apply or not args.approve:
                     raise ConfigurationError(
-                        "scheduler remote-run requires both --apply and --approve"
+                        f"scheduler {args.action} requires both --apply and --approve"
                     )
                 if args.signals_file is None:
-                    raise ConfigurationError("scheduler remote-run requires --signals-file")
+                    raise ConfigurationError(f"scheduler {args.action} requires --signals-file")
                 envelope = RemoteJobEnvelope.model_validate(
                     json.loads(args.signals_file.read_text(encoding="utf-8"))
                 )
@@ -2096,6 +2117,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     envelope.host_id,
                     expected_sha=str(identity.get("sha") or ""),
                     expected_tree=str(identity.get("tree") or ""),
+                    now=datetime.now(UTC),
                 )
                 if not host_gate["ok"]:
                     return {
@@ -2115,39 +2137,52 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                         "database": str(database),
                         "executed": {"outcome": "REJECTED", "reason": "host_not_runnable"},
                     }, 2
-                controller = RemoteJobController(adapter)
-                executed = controller.execute(envelope)
-                if executed.get("outcome") != "EXECUTED":
-                    return {"database": str(database), "executed": executed}, 2
-                accepted = controller.accept(
-                    envelope, executed["result"], expected_host=envelope.host_id
+                from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
+                from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
+
+                jobs = FleetJobStore(Path(database).with_name("fleet_jobs.sqlite3"))
+                workflow = DispatchWorkflow(
+                    store=scheduler_store,
+                    jobs=jobs,
+                    profiles=tuple(fleet.profiles()),
+                    admission_path=admission_path,
+                    source_sha=str(identity.get("sha") or ""),
+                    source_tree=str(identity.get("tree") or ""),
+                    overlay_sha256=envelope.overlay_sha256,
+                    adapter_factory=lambda _machine_id: adapter,
                 )
-                if accepted.get("outcome") == "ACCEPTED":
+                dispatched = workflow.dispatch(
+                    task_id=envelope.job_id,
+                    holder_id=args.holder_id,
+                    argv=envelope.argv,
+                    workspace=envelope.workspace,
+                    workspace_root=envelope.workspace_root or envelope.workspace,
+                    principal=envelope.principal,
+                    input_sha256=envelope.input_sha256,
+                    adapter=adapter,
+                    cpu=envelope.cpu_ceiling,
+                    memory_mb=envelope.memory_mb_ceiling,
+                    output_contract_sha256=envelope.output_contract_sha256,
+                    machine_id=envelope.host_id,
+                )
+                if dispatched.get("outcome") == "ACCEPTED":
                     fleet.record_job(
                         {
                             "job_id": envelope.job_id,
-                            "host_id": envelope.host_id,
-                            "lease_id": envelope.lease_id,
-                            "fence": envelope.fence,
+                            "host_id": dispatched.get("host_id") or envelope.host_id,
+                            "lease_id": dispatched.get("lease_id") or envelope.lease_id,
+                            "fence": dispatched.get("fence") or envelope.fence,
                             "assignment": envelope.job_id,
                             "deadline_utc": envelope.deadline_utc.isoformat(),
-                            "outcome": accepted.get("outcome"),
+                            "outcome": "RUNNING"
+                            if dispatched.get("lifecycle") == "RUNNING"
+                            else dispatched.get("outcome"),
                         }
                     )
                     fleet.persist(fleet_state)
-                return {
-                    "database": str(database),
-                    "executed": {
-                        "outcome": executed["outcome"],
-                        "envelope_digest": executed.get("envelope_digest"),
-                        "result": executed["result"].model_dump(mode="json"),
-                    },
-                    "accepted": {
-                        "outcome": accepted.get("outcome"),
-                        "reason": accepted.get("reason"),
-                        "duplicate": accepted.get("duplicate"),
-                    },
-                }, 0 if accepted.get("outcome") == "ACCEPTED" else 2
+                return {"database": str(database), "dispatched": dispatched}, (
+                    0 if dispatched.get("outcome") == "ACCEPTED" else 2
+                )
             if args.action == "place":
                 identity = inspect_worktree_identity(args.root)
                 admission_path = Path(database).with_name("fleet_admission.json")
@@ -2156,6 +2191,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     record,
                     expected_sha=str(identity.get("sha") or ""),
                     expected_tree=str(identity.get("tree") or ""),
+                    now=datetime.now(UTC),
                 )
                 dirty_source = bool(identity.get("dirty")) or not bool(identity.get("ok"))
                 candidates = []
@@ -2174,6 +2210,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                         profile.machine_id,
                         expected_sha=str(identity.get("sha") or ""),
                         expected_tree=str(identity.get("tree") or ""),
+                        now=datetime.now(UTC),
                     )
                     if host_gate["ok"]:
                         candidates.append(profile)
@@ -4505,6 +4542,27 @@ def main(argv: Sequence[str] | None = None) -> int:
             return code
         if args.command == "scheduler":
             result, code = _run_scheduler_command(args)
+            _write_json_output(result, args.json_output)
+            return code
+        if args.command == "fleet-loop":
+            from project_pipeline.autonomy_runtime.fleet_loop import main as fleet_loop_main
+
+            code = fleet_loop_main(
+                [
+                    args.action,
+                    "--root",
+                    str(args.root),
+                    "--duration-seconds",
+                    str(args.duration_seconds),
+                    *(
+                        ["--database", str(args.database)]
+                        if getattr(args, "database", None)
+                        else []
+                    ),
+                    *(["--live-ssh"] if getattr(args, "live_ssh", False) else []),
+                ]
+            )
+            result = {"command": "fleet-loop", "action": args.action, "exit_code": code}
             _write_json_output(result, args.json_output)
             return code
         if args.command == "agent-router":

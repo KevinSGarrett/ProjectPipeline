@@ -8,6 +8,7 @@ from pathlib import Path
 
 from fastapi.testclient import TestClient
 
+from project_pipeline.autonomy_runtime.confinement import REMOTE_JOB_WORKSPACES
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
     SSH_CLIENT_ENV_KEYS,
@@ -261,8 +262,18 @@ def test_declared_xeon_is_enrollment_pending() -> None:
     assert "avx2" not in {flag.lower() for flag in xeon.isa_flags}
     chosen, denials = select_target(tuple(profiles.values()), when=NOW)
     assert chosen is None
-    assert any("stale_capacity" in item for item in denials)
-    observed = declared_profiles(when=NOW, observation_source="test_fixture")
+    assert any("stale_capacity" in item or "measurement_incomplete" in item for item in denials)
+    inventory = {
+        "hostname": "WIN-EVSH1DN8H5O",
+        "whoami": r"win-evsh1dn8h5o\kines",
+        "totalRAMGB": 63.96,
+        "cpuLogical": 16,
+        "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
+        "gpus": [{"Name": "NVIDIA Quadro 6000"}],
+        "isa": {"sse42": True, "avx": True, "avx2": False},
+        "measured_at_utc": NOW.isoformat(),
+    }
+    observed = apply_inventory_observation(declared_profiles(), inventory, when=NOW)
     chosen_observed, _observed_denials = select_target(observed, when=NOW)
     assert chosen_observed is not None
     assert chosen_observed.machine_id == "WIN-EVSH1DN8H5O"
@@ -274,8 +285,8 @@ def test_declared_xeon_is_enrollment_pending() -> None:
 def test_declared_profiles_are_stale_without_observation_source() -> None:
     profiles = declared_profiles(when=NOW)
     assert all(not item.fresh_at(NOW) for item in profiles)
-    observed = declared_profiles(when=NOW, observation_source="test_fixture")
-    assert all(item.fresh_at(NOW) for item in observed)
+    named = declared_profiles(when=NOW, observation_source="test_fixture")
+    assert all(not item.fresh_at(NOW) for item in named)
 
 
 def test_resume_does_not_refresh_stale_observation() -> None:
@@ -332,14 +343,21 @@ def _admission_record(**overrides: object) -> dict[str, object]:
         "implementer_id": "cursor-implementer-c19-c18-correction",
         "source_sha": _SHA,
         "source_tree": _TREE,
-        "hosts": {"COMFY-V4-CPU-01": {"state": "READY", "freshness": "fresh"}},
+        "hosts": {
+            "COMFY-V4-CPU-01": {
+                "state": "READY",
+                "freshness": "fresh",
+                "observation_kind": "MEASURED",
+                "observed_at_utc": NOW.isoformat(),
+            }
+        },
     }
     record.update(overrides)
     return record
 
 
 def _evaluate_admission(record: dict[str, object] | None) -> dict[str, object]:
-    return evaluate_admission(record, expected_sha=_SHA, expected_tree=_TREE)
+    return evaluate_admission(record, expected_sha=_SHA, expected_tree=_TREE, now=NOW)
 
 
 def test_missing_admission_record_denies_remote_placement() -> None:
@@ -384,10 +402,12 @@ def test_fresh_enrolled_worker_is_remotely_admitted() -> None:
 def test_chosen_host_must_be_the_admitted_worker() -> None:
     record = _admission_record()
     allowed = chosen_host_admitted(
-        record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE
+        record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE, now=NOW
     )
     assert allowed["ok"] is True
-    denied = chosen_host_admitted(record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE)
+    denied = chosen_host_admitted(
+        record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE, now=NOW
+    )
     assert denied["ok"] is False
     assert any("unchosen_host:WIN-EVSH1DN8H5O" in item for item in denied["failures"])
     malformed = chosen_host_admitted(
@@ -395,6 +415,7 @@ def test_chosen_host_must_be_the_admitted_worker() -> None:
         "COMFY-V4-CPU-01",
         expected_sha=_SHA,
         expected_tree=_TREE,
+        now=NOW,
     )
     assert malformed["ok"] is False
     assert any(
@@ -411,6 +432,7 @@ def test_inventory_observation_admits_xeon_cpu_not_cuda() -> None:
         "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
         "gpus": [{"Name": "NVIDIA Quadro 6000"}],
         "isa": {"sse42": True, "avx": True, "avx2": False},
+        "measured_at_utc": NOW.isoformat(),
     }
     observed = apply_inventory_observation(declared_profiles(), inventory, when=NOW)
     xeon = {item.machine_id: item for item in observed}["WIN-EVSH1DN8H5O"]
@@ -443,7 +465,7 @@ def test_ssh_dispatch_builds_argv_without_env_or_kevin_principal(tmp_path: Path)
     assert "kevin@" not in " ".join(argv)
     assert "kines@" not in " ".join(argv)
     assert remote_command_allowed(("hostname",)) is True
-    assert remote_command_allowed(("python", r"C:\Users\kines\pp_jobs\job.py")) is True
+    assert remote_command_allowed(("python", r"C:\Users\kines\pp_jobs\job.py")) is False
     assert remote_command_allowed(("python", "-c", "print(1)")) is False
     assert remote_command_allowed(("python", "-c", "__import__('os').system('whoami')")) is False
     try:
@@ -475,7 +497,7 @@ def test_ssh_adapter_execute_uses_injected_runner(tmp_path: Path) -> None:
     adapter = SshDispatchAdapter(identity=identity, runner=_runner)
     payload = adapter.execute(
         command=["hostname"],
-        working_directory=Path(r"C:\Users\kines\pp_jobs"),
+        working_directory=Path(REMOTE_JOB_WORKSPACES["WIN-EVSH1DN8H5O"]),
     )
     assert payload["exit_code"] == 0
     assert payload["transport"] == "openssh_tailscale"
@@ -492,7 +514,8 @@ def test_ssh_adapter_execute_uses_injected_runner(tmp_path: Path) -> None:
         overlay_sha256="c" * 64,
         input_sha256="d" * 64,
         argv=("hostname",),
-        workspace=r"C:\Users\kines\pp_jobs",
+        workspace=REMOTE_JOB_WORKSPACES["WIN-EVSH1DN8H5O"],
+        workspace_root=REMOTE_JOB_WORKSPACES["WIN-EVSH1DN8H5O"],
         deadline_utc=NOW + timedelta(minutes=5),
         cpu_ceiling=2,
         memory_mb_ceiling=1024,
@@ -541,7 +564,12 @@ def test_timed_out_remote_job_is_unknown_outcome(tmp_path: Path) -> None:
 def test_fresh_xeon_host_is_remotely_admitted() -> None:
     record = _admission_record(
         hosts={
-            "WIN-EVSH1DN8H5O": {"state": "READY", "freshness": "fresh"},
+            "WIN-EVSH1DN8H5O": {
+                "state": "READY",
+                "freshness": "fresh",
+                "observation_kind": "MEASURED",
+                "observed_at_utc": NOW.isoformat(),
+            },
             "COMFY-V4-CPU-01": {"state": "STALE", "freshness": "stale"},
         }
     )
@@ -549,10 +577,12 @@ def test_fresh_xeon_host_is_remotely_admitted() -> None:
     assert result["c18_accepted"] is True
     assert result["remote_ok"] is True
     allowed = chosen_host_admitted(
-        record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE
+        record, "WIN-EVSH1DN8H5O", expected_sha=_SHA, expected_tree=_TREE, now=NOW
     )
     assert allowed["ok"] is True
-    denied = chosen_host_admitted(record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE)
+    denied = chosen_host_admitted(
+        record, "COMFY-V4-CPU-01", expected_sha=_SHA, expected_tree=_TREE, now=NOW
+    )
     assert denied["ok"] is False
 
 
@@ -639,6 +669,7 @@ def test_inventory_observation_admits_comfy_cpu_not_cuda() -> None:
         "disks": [{"DeviceID": "C:", "FreeGB": 28.5}],
         "gpus": [{"Name": "Intel(R) UHD Graphics 630"}],
         "isa": {"sse42": True, "avx": True, "avx2": True},
+        "measured_at_utc": NOW.isoformat(),
     }
     observed = apply_inventory_observation(declared_profiles(), inventory, when=NOW)
     comfy = {item.machine_id: item for item in observed}["COMFY-V4-CPU-01"]
@@ -700,7 +731,7 @@ def test_ssh_adapter_for_machine_binds_comfy(tmp_path: Path) -> None:
     assert adapter.user == "Windows 11"
     payload = adapter.execute(
         command=["hostname"],
-        working_directory=Path(r"C:\Users\Windows 11\pp_jobs"),
+        working_directory=Path(REMOTE_JOB_WORKSPACES["COMFY-V4-CPU-01"]),
     )
     assert payload["exit_code"] == 0
     envelope = RemoteJobEnvelope(
@@ -715,7 +746,8 @@ def test_ssh_adapter_for_machine_binds_comfy(tmp_path: Path) -> None:
         overlay_sha256="c" * 64,
         input_sha256="d" * 64,
         argv=("hostname",),
-        workspace=r"C:\Users\Windows 11\pp_jobs",
+        workspace=REMOTE_JOB_WORKSPACES["COMFY-V4-CPU-01"],
+        workspace_root=REMOTE_JOB_WORKSPACES["COMFY-V4-CPU-01"],
         deadline_utc=NOW + timedelta(minutes=5),
         cpu_ceiling=1,
         memory_mb_ceiling=512,
@@ -735,6 +767,7 @@ def test_inventory_observation_preserves_drained_comfy() -> None:
         "disks": [{"DeviceID": "C:", "FreeGB": 28.5}],
         "gpus": [{"Name": "Intel(R) UHD Graphics 630"}],
         "isa": {"sse42": True, "avx": True, "avx2": True},
+        "measured_at_utc": NOW.isoformat(),
     }
     profiles = tuple(
         item.model_copy(update={"state": "DRAINED"})

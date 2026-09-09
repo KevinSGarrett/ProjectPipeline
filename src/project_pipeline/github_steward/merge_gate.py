@@ -49,7 +49,8 @@ def evaluate_merge_gate(
         pull_request.reviews, key=lambda item: item.submitted_at_utc or pull_request.updated_at_utc
     ):
         if pull_request.author and review.author and review.author == pull_request.author:
-            blockers.append("self_review")
+            if review.state is ReviewState.APPROVED:
+                blockers.append("self_review")
             continue
         commit_sha = (review.commit_sha or "").lower()
         if commit_sha != evaluated_head:

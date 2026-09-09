@@ -61,8 +61,6 @@ PUBLIC_SOURCE_MARKERS = (
 PUBLIC_SOURCE_CHECKOUT_KIND = "PUBLIC_SOURCE"
 CONTROL_WORKSPACE_MARKERS = (
     ".agents",
-    ".cursor",
-    ".cursorignore",
     "instructions",
     "jira",
     "plans",
@@ -168,16 +166,39 @@ def normalized_id(path: str, text: str | None = None) -> str:
     return f"PP-ASSET-{slug}"
 
 
-def instruction_files(root: Path, manifest: dict[str, Any]) -> list[Path]:
+def resolve_managed_path(relative: str | Path, instruction_root: Path, source_root: Path) -> Path:
+    token = Path(relative).as_posix()
+    overlay_path = instruction_root / token
+    if overlay_path.exists():
+        return overlay_path
+    return source_root / token
+
+
+def relative_managed_path(path: Path, instruction_root: Path, source_root: Path) -> str:
+    resolved = path.resolve()
+    for root in (instruction_root, source_root):
+        try:
+            return resolved.relative_to(root.resolve()).as_posix()
+        except ValueError:
+            continue
+    return path.as_posix()
+
+
+def instruction_files(
+    root: Path, manifest: dict[str, Any], *, source_root: Path | None = None
+) -> list[Path]:
+    source_root = source_root or root
+    instruction_dir = root / "instructions"
     files = [
         path
-        for path in sorted((root / "instructions").rglob("*"))
-        if path.is_file() and path.relative_to(root) != MANIFEST_PATH
+        for path in sorted(instruction_dir.rglob("*"))
+        if instruction_dir.is_dir() and path.is_file() and path.relative_to(root) != MANIFEST_PATH
     ]
     files.extend(sorted((root / ".agents" / "skills").glob("*/SKILL.md")))
+    files.extend(sorted((source_root / ".agents" / "skills").glob("*/SKILL.md")))
     for relative in manifest.get("managed_support_paths", []):
         if isinstance(relative, str):
-            files.append(root / relative)
+            files.append(resolve_managed_path(relative, root, source_root))
     unique = {path.resolve(): path for path in files if path.is_file()}
     return [unique[key] for key in sorted(unique, key=lambda item: item.as_posix().lower())]
 
@@ -275,8 +296,11 @@ def _kind_for(relative: str) -> str:
     return "INTEGRATION_SUPPORT"
 
 
-def check_manifest(root: Path, report: Report, manifest: dict[str, Any]) -> None:
+def check_manifest(
+    root: Path, report: Report, manifest: dict[str, Any], *, source_root: Path | None = None
+) -> None:
     report.checks.append("manifest")
+    source_root = source_root or root
     expected_identity = {
         "schema_version": "1.0.0",
         "instruction_pack_version": "1.3.0",
@@ -334,7 +358,7 @@ def check_manifest(root: Path, report: Report, manifest: dict[str, Any]) -> None
         if relative in paths:
             report.add("ERROR", "IMAN007", f"Duplicate manifest path: {relative}", MANIFEST_PATH)
         paths.add(relative)
-        target = root / relative
+        target = resolve_managed_path(relative, root, source_root)
         if not target.is_file():
             report.add("ERROR", "IMAN008", "Managed file is missing", relative)
             continue
@@ -345,7 +369,8 @@ def check_manifest(root: Path, report: Report, manifest: dict[str, Any]) -> None
             report.add("ERROR", "IMAN010", "Managed file size differs from manifest", relative)
 
     expected_paths = {
-        path.relative_to(root).as_posix() for path in instruction_files(root, manifest)
+        relative_managed_path(path, root, source_root)
+        for path in instruction_files(root, manifest, source_root=source_root)
     }
     for missing in sorted(expected_paths - paths):
         report.add("ERROR", "IMAN011", "Managed instruction asset is absent from manifest", missing)
@@ -361,7 +386,7 @@ def check_manifest(root: Path, report: Report, manifest: dict[str, Any]) -> None
                 report.add("ERROR", "IMAN014", "Malformed command contract", MANIFEST_PATH)
                 continue
             for relative in command.get("requires_paths", []):
-                if not (root / relative).exists():
+                if not resolve_managed_path(relative, root, source_root).exists():
                     report.add(
                         "ERROR",
                         "IMAN015",
@@ -401,8 +426,11 @@ def check_instruction_ids(root: Path, report: Report) -> None:
         report.add("ERROR", "IID004", f"Unexpected numbered instruction ID: {item}", observed[item])
 
 
-def check_coverage(root: Path, report: Report, coverage: dict[str, Any]) -> None:
+def check_coverage(
+    root: Path, report: Report, coverage: dict[str, Any], *, source_root: Path | None = None
+) -> None:
     report.checks.append("coverage_matrix")
+    source_root = source_root or root
     domains = coverage.get("domains")
     if not isinstance(domains, list) or len(domains) < 20:
         report.add("ERROR", "COV001", "Coverage matrix has insufficient domains", COVERAGE_PATH)
@@ -422,7 +450,9 @@ def check_coverage(root: Path, report: Report, coverage: dict[str, Any]) -> None
                 "ERROR", "COV004", f"Domain has multiple primary rows: {domain}", COVERAGE_PATH
             )
         seen.add(domain)
-        if not isinstance(primary, str) or not (root / primary).is_file():
+        if not isinstance(primary, str) or not resolve_managed_path(
+            primary, root, source_root
+        ).is_file():
             report.add(
                 "ERROR",
                 "COV005",
@@ -439,7 +469,9 @@ def check_coverage(root: Path, report: Report, coverage: dict[str, Any]) -> None
             )
             continue
         for relative in supporting:
-            if isinstance(relative, str) and not (root / relative).exists():
+            if isinstance(relative, str) and not resolve_managed_path(
+                relative, root, source_root
+            ).exists():
                 report.add(
                     "ERROR",
                     "COV007",
@@ -535,6 +567,14 @@ def check_json_schemas(root: Path, report: Report, documents: dict[Path, Any]) -
             )
 
 
+def _path_under(path: Path, root: Path) -> bool:
+    try:
+        path.resolve().relative_to(root.resolve())
+        return True
+    except ValueError:
+        return False
+
+
 def managed_text_files(root: Path, manifest: dict[str, Any]) -> Iterable[Path]:
     for path in instruction_files(root, manifest):
         try:
@@ -544,8 +584,17 @@ def managed_text_files(root: Path, manifest: dict[str, Any]) -> Iterable[Path]:
         yield path
 
 
-def check_links(root: Path, report: Report, manifest: dict[str, Any]) -> None:
+def check_links(
+    root: Path,
+    report: Report,
+    manifest: dict[str, Any],
+    *,
+    source_root: Path | None = None,
+) -> None:
     report.checks.append("markdown_links")
+    allowed_roots = [root.resolve()]
+    if source_root is not None:
+        allowed_roots.append(source_root.resolve())
     for path in managed_text_files(root, manifest):
         if path.suffix.lower() != ".md":
             continue
@@ -560,9 +609,9 @@ def check_links(root: Path, report: Report, manifest: dict[str, Any]) -> None:
                 if not target_text:
                     continue
                 target = (path.parent / target_text).resolve()
-                try:
-                    target.relative_to(root.resolve())
-                except ValueError:
+                if not any(
+                    _path_under(target, allowed) for allowed in allowed_roots
+                ):
                     report.add(
                         "ERROR", "LINK001", f"Link escapes repository: {raw}", relative, number
                     )
@@ -571,9 +620,13 @@ def check_links(root: Path, report: Report, manifest: dict[str, Any]) -> None:
                     report.add("ERROR", "LINK002", f"Broken internal link: {raw}", relative, number)
 
 
-def check_content_safety(root: Path, report: Report, manifest: dict[str, Any]) -> None:
+def check_content_safety(
+    root: Path, report: Report, manifest: dict[str, Any], *, policy_root: Path | None = None
+) -> None:
     report.checks.append("content_safety")
-    repository_policy = read_json(root / "config/repository_policy.json", report, "SAFE000") or {}
+    repository_policy = read_json(
+        (policy_root or root) / "config/repository_policy.json", report, "SAFE000"
+    ) or {}
     parts = (
         repository_policy.get("forbidden_term_parts", [])
         if isinstance(repository_policy, dict)
@@ -647,9 +700,13 @@ def check_content_safety(root: Path, report: Report, manifest: dict[str, Any]) -
                 )
 
 
-def check_entry_point(root: Path, report: Report) -> None:
+def check_entry_point(
+    root: Path, report: Report, *, instruction_root: Path | None = None
+) -> None:
     report.checks.append("entry_point")
     path = root / ENTRY_POINT
+    if not path.is_file() and instruction_root is not None:
+        path = instruction_root / ENTRY_POINT
     if not path.is_file():
         report.add("ERROR", "ENTRY001", "Root AGENTS.md is missing", ENTRY_POINT)
         return
@@ -1003,8 +1060,11 @@ def check_scenarios(report: Report, scenarios: dict[str, Any]) -> None:
             )
 
 
-def load_documents(root: Path, report: Report) -> dict[Path, Any]:
-    paths = [
+def load_documents(
+    instruction_root: Path, report: Report, *, source_root: Path | None = None
+) -> dict[Path, Any]:
+    source_root = source_root or instruction_root
+    instruction_paths = [
         MANIFEST_PATH,
         COVERAGE_PATH,
         AUTHORITY_PATH,
@@ -1013,17 +1073,24 @@ def load_documents(root: Path, report: Report) -> dict[Path, Any]:
         BRANCH_POLICY_PATH,
         MUTATION_POLICY_PATH,
         CONTEXT_ROUTING_PATH,
-        SECURITY_POLICY_PATH,
-        JIRA_SYNC_POLICY_PATH,
-        REPOSITORY_POLICY_PATH,
-        ASSURANCE_POLICY_PATH,
         Path("instructions/schemas/instruction_manifest.schema.json"),
         Path("instructions/schemas/instruction_coverage_matrix.schema.json"),
         Path("instructions/schemas/authority_map.schema.json"),
     ]
+    source_paths = [
+        SECURITY_POLICY_PATH,
+        JIRA_SYNC_POLICY_PATH,
+        REPOSITORY_POLICY_PATH,
+        ASSURANCE_POLICY_PATH,
+    ]
     documents: dict[Path, Any] = {}
-    for index, relative in enumerate(paths, 1):
-        documents[relative] = read_json(root / relative, report, f"JSON{index:03d}")
+    index = 1
+    for relative in instruction_paths:
+        documents[relative] = read_json(instruction_root / relative, report, f"JSON{index:03d}")
+        index += 1
+    for relative in source_paths:
+        documents[relative] = read_json(source_root / relative, report, f"JSON{index:03d}")
+        index += 1
     return documents
 
 
@@ -1057,10 +1124,26 @@ def is_standalone_public_source_checkout(root: Path) -> bool:
     )
 
 
+def _bound_overlay_root(source_root: Path) -> Path | None:
+    src = source_root / "src"
+    if str(src) not in sys.path:
+        sys.path.insert(0, str(src))
+    try:
+        from project_pipeline.overlay import bound_overlay
+    except Exception:
+        return None
+    decision = bound_overlay(source_root)
+    if decision.get("ok"):
+        return Path(str(decision["overlay"]))
+    return None
+
+
 def validate_instruction_system(root: Path, *, update: bool = False) -> Report:
-    root = root.resolve()
-    report = Report(root=str(root))
-    if is_standalone_public_source_checkout(root):
+    source_root = root.resolve()
+    overlay = _bound_overlay_root(source_root)
+    instruction_root = overlay if overlay is not None else source_root
+    report = Report(root=str(source_root))
+    if overlay is None and is_standalone_public_source_checkout(source_root):
         if update:
             report.add(
                 "ERROR",
@@ -1077,36 +1160,36 @@ def validate_instruction_system(root: Path, *, update: bool = False) -> Report:
             "README.md",
         )
         return report
-    documents = load_documents(root, report)
+    documents = load_documents(instruction_root, report, source_root=source_root)
     manifest = documents.get(MANIFEST_PATH)
     if not isinstance(manifest, dict):
         return report
     if update:
-        manifest = build_hash_updated_manifest(root, manifest)
+        manifest = build_hash_updated_manifest(instruction_root, manifest)
         documents[MANIFEST_PATH] = manifest
     coverage = documents.get(COVERAGE_PATH)
     authority = documents.get(AUTHORITY_PATH)
     scenarios = documents.get(SCENARIOS_PATH)
     ppqs = documents.get(PPQS_PATH)
 
-    check_manifest(root, report, manifest)
-    check_instruction_ids(root, report)
+    check_manifest(instruction_root, report, manifest, source_root=source_root)
+    check_instruction_ids(instruction_root, report)
     if isinstance(coverage, dict):
-        check_coverage(root, report, coverage)
+        check_coverage(instruction_root, report, coverage, source_root=source_root)
     if isinstance(authority, dict):
         check_authority(report, authority)
-    check_json_schemas(root, report, documents)
-    check_links(root, report, manifest)
-    check_content_safety(root, report, manifest)
-    check_entry_point(root, report)
-    check_policies(root, report, documents)
-    check_actions_pinned(root, report)
+    check_json_schemas(instruction_root, report, documents)
+    check_links(instruction_root, report, manifest, source_root=source_root)
+    check_content_safety(instruction_root, report, manifest, policy_root=source_root)
+    check_entry_point(source_root, report, instruction_root=instruction_root)
+    check_policies(source_root, report, documents)
+    check_actions_pinned(source_root, report)
     if isinstance(ppqs, dict):
-        check_ppqs(root, report, ppqs)
+        check_ppqs(instruction_root, report, ppqs)
     if isinstance(scenarios, dict):
         check_scenarios(report, scenarios)
     if update:
-        commit_hash_update(root, manifest, report)
+        commit_hash_update(instruction_root, manifest, report)
     return report
 
 

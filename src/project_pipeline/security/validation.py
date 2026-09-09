@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from project_pipeline.overlay import locate_input
+
 _REQUIRED = (
     "src/project_pipeline/domain/security.py",
     "src/project_pipeline/security/identity.py",
@@ -44,9 +46,9 @@ _EXPECTED = {
 def validate_security_foundation(root: Path) -> list[str]:
     errors: list[str] = []
     for relative in _REQUIRED:
-        if not (root / relative).exists():
+        if not locate_input(root, relative).exists():
             errors.append(f"security required path missing: {relative}")
-    gate_path = root / "provenance/pass_17_security_upstream_gate.json"
+    gate_path = locate_input(root, "provenance/pass_17_security_upstream_gate.json")
     if gate_path.exists():
         try:
             gate = json.loads(gate_path.read_text(encoding="utf-8"))
@@ -63,7 +65,7 @@ def validate_security_foundation(root: Path) -> list[str]:
                 errors.append("Pass 17 incorrectly repeated historical corrective program")
         except Exception as exc:
             errors.append(f"Pass 17 security upstream gate invalid: {exc}")
-    adoption = root / "provenance/upstream_adoption_gate.json"
+    adoption = locate_input(root, "provenance/upstream_adoption_gate.json")
     if adoption.exists():
         doc = json.loads(adoption.read_text(encoding="utf-8"))
         subsystem = doc.get("subsystems", {}).get("security_supply_chain", {})

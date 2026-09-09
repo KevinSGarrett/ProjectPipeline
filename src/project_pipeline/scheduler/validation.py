@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from project_pipeline.overlay import locate_input
 from project_pipeline.persistence import load_migration_catalog, validate_migration_catalog
 
 _REQUIRED = (
@@ -18,7 +19,7 @@ def validate_scheduler_foundation(root: Path) -> list[str]:
     errors = [
         f"scheduler foundation file is missing: {path}"
         for path in _REQUIRED
-        if not (root / path).exists()
+        if not locate_input(root, path).exists()
     ]
     errors.extend(validate_migration_catalog(root))
     if not errors:

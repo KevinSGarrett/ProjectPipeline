@@ -40,10 +40,24 @@ class MachineProfile(DomainModel):
     disk_mb: int = Field(ge=1)
     principal: str = "worker"
     modern_cuda_eligible: bool = False
+    available_memory_mb: int | None = None
+    available_disk_mb: int | None = None
+    sid: str | None = None
+    os_build: str | None = None
+    os_support_status: str | None = None
+    observation_kind: str = "MEASURED"
+    cpu_physical_cores: int | None = None
 
     def fresh_at(self, when: datetime) -> bool:
         when = when.astimezone(UTC)
-        return when - self.observed_at_utc <= timedelta(seconds=self.ttl_seconds)
+        if self.observation_kind in {"DECLARED", "HOSTNAME_ONLY", "PARTIAL"}:
+            return False
+        observed = self.observed_at_utc.astimezone(UTC)
+        if observed - when > timedelta(seconds=120):
+            return False
+        if when < observed:
+            when = observed
+        return when - observed <= timedelta(seconds=self.ttl_seconds)
 
     def eligibility_reasons(
         self,
@@ -55,10 +69,14 @@ class MachineProfile(DomainModel):
         reasons: list[str] = []
         if self.state in {"STALE", "OFFLINE", "DRAINED", "QUARANTINED", "ENROLLMENT_PENDING"}:
             reasons.append(f"host_state:{self.state}")
+        if self.observation_kind in {"DECLARED", "HOSTNAME_ONLY", "PARTIAL"}:
+            reasons.append("measurement_incomplete")
         if not self.fresh_at(when):
             reasons.append("stale_capacity")
         if require_avx2 and "avx2" not in {item.lower() for item in self.isa_flags}:
             reasons.append("unsupported_isa:avx2")
+        # OS support-age is a nonblocking informational observation. It never
+        # denies, demotes, caps, strips credentials, or forces duplicate verification.
         if require_modern_cuda:
             capability = self.cuda_compute_capability
             if (
@@ -357,6 +375,7 @@ def fleet_projection(
                 "cuda_compute_capability": profile.cuda_compute_capability,
                 "principal": profile.principal,
                 "observed_at_utc": profile.observed_at_utc.isoformat(),
+                "observation_kind": profile.observation_kind,
                 "active_jobs": active_jobs,
                 "lease_id": lease_id,
                 "assignment": assignment,

@@ -7,9 +7,16 @@ source stay stale.
 
 from __future__ import annotations
 
+import base64
+import ctypes
+import json
+import os
 import socket
+import subprocess
 from collections.abc import Mapping
+from ctypes import wintypes
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 from project_pipeline.scheduler.fleet import MachineProfile
@@ -99,14 +106,16 @@ def classify_gpu(*, name: str | None, compute_capability: float | None) -> dict[
 def declared_profiles(
     *, when: datetime | None = None, observation_source: str | None = None
 ) -> tuple[MachineProfile, ...]:
-    observed = (when or datetime.now(UTC)).astimezone(UTC) if observation_source else UNOBSERVED_AT
+    """Declared records stay unmeasured. An observation_source name cannot renew health."""
+
+    del when, observation_source
     return tuple(
         MachineProfile(
             machine_id=str(item["machine_id"]),
             hostname=str(item["hostname"]),
             role=str(item["role"]),
             state=str(item["state"]),
-            observed_at_utc=observed,
+            observed_at_utc=UNOBSERVED_AT,
             ttl_seconds=int(item["ttl_seconds"]),
             os_family=str(item["os_family"]),
             isa_flags=tuple(item["isa_flags"]),
@@ -117,6 +126,8 @@ def declared_profiles(
             disk_mb=int(item["disk_mb"]),
             principal=str(item["principal"]),
             modern_cuda_eligible=bool(item["modern_cuda_eligible"]),
+            observation_kind="DECLARED",
+            os_support_status="UNSUPPORTED_21H1" if item["machine_id"] == XEON_MACHINE_ID else None,
         )
         for item in DECLARED_HOSTS
     )
@@ -132,12 +143,12 @@ def _matches_local_hostname(profile: MachineProfile, hostname: str) -> bool:
 def apply_local_control_observation(
     profiles: tuple[MachineProfile, ...], *, when: datetime | None = None
 ) -> tuple[MachineProfile, ...]:
-    """Stamp freshness only for the workstation this process is actually running on."""
+    """Hostname match alone cannot mint READY capacity."""
 
+    del when
     hostname = socket.gethostname().upper()
-    observed = (when or datetime.now(UTC)).astimezone(UTC)
     return tuple(
-        profile.model_copy(update={"observed_at_utc": observed})
+        profile.model_copy(update={"observation_kind": "HOSTNAME_ONLY"})
         if _matches_local_hostname(profile, hostname)
         else profile
         for profile in profiles
@@ -172,6 +183,14 @@ def _inventory_disk_free_gb(inventory: Mapping[str, Any]) -> float:
     return float(disk.get("FreeGB") or 0) if isinstance(disk, Mapping) else 0.0
 
 
+def _inventory_complete(inventory: Mapping[str, Any]) -> bool:
+    required = ("hostname", "whoami", "totalRAMGB", "cpuLogical", "disks", "isa")
+    if any(not inventory.get(key) for key in required):
+        return False
+    measured_at = inventory.get("measured_at_utc")
+    return measured_at is not None
+
+
 def _observed_worker_profile(
     inventory: Mapping[str, Any],
     *,
@@ -186,24 +205,54 @@ def _observed_worker_profile(
     when: datetime | None,
 ) -> MachineProfile:
     classification = classify_gpu(name=gpu_name, compute_capability=compute_capability)
-    ram_gb = float(inventory.get("totalRAMGB") or default_ram_gb)
-    logical = int(inventory.get("cpuLogical") or default_logical)
+    complete = _inventory_complete(inventory)
+    ram_gb = inventory.get("totalRAMGB")
+    logical = inventory.get("cpuLogical")
+    whoami = inventory.get("whoami")
+    if ram_gb is None or logical is None or not whoami:
+        kind = "PARTIAL"
+        ram_gb = default_ram_gb
+        logical = default_logical
+        whoami = default_principal
+    else:
+        kind = "MEASURED" if complete else "PARTIAL"
+    measured_at = inventory.get("measured_at_utc")
+    if measured_at:
+        observed_at = datetime.fromisoformat(str(measured_at).replace("Z", "+00:00")).astimezone(
+            UTC
+        )
+    else:
+        observed_at = UNOBSERVED_AT
+        kind = "PARTIAL"
+    del when
+    available_ram = inventory.get("availableRAMGB")
+    physical = inventory.get("cpuPhysical")
     return MachineProfile(
         machine_id=machine_id,
-        hostname=machine_id,
+        hostname=str(inventory.get("hostname") or machine_id),
         role=role,
-        state="READY",
-        observed_at_utc=(when or datetime.now(UTC)).astimezone(UTC),
+        state="READY" if kind == "MEASURED" else "STALE",
+        observed_at_utc=observed_at,
         ttl_seconds=ttl_seconds,
         os_family="windows",
         isa_flags=_isa_flags_from_inventory(inventory),
         cuda_compute_capability=compute_capability,
         gpu_name=gpu_name,
-        cpu_slots=max(1, logical),
-        memory_mb=max(1, int(ram_gb * GIB_TO_MIB)),
+        cpu_slots=max(1, int(logical)),
+        memory_mb=max(1, int(float(ram_gb) * GIB_TO_MIB)),
         disk_mb=max(1, int(_inventory_disk_free_gb(inventory) * GIB_TO_MIB)),
-        principal=str(inventory.get("whoami") or default_principal),
+        principal=str(whoami),
         modern_cuda_eligible=bool(classification["modern_cuda_eligible"]),
+        observation_kind=kind,
+        available_memory_mb=(
+            max(1, int(float(available_ram) * GIB_TO_MIB)) if available_ram is not None else None
+        ),
+        sid=str(inventory["sid"]) if inventory.get("sid") else None,
+        os_build=str(inventory["osBuild"]) if inventory.get("osBuild") else None,
+        os_support_status=str(inventory["osSupportStatus"])
+        if inventory.get("osSupportStatus")
+        else None,
+        cpu_physical_cores=int(physical) if physical is not None else None,
     )
 
 
@@ -251,13 +300,43 @@ def profile_from_comfy_inventory(
     )
 
 
+PRIMARY_MACHINE_ID = "PRIMARY-CODEX-WORKSTATION"
+PRIMARY_HOSTNAMES = frozenset({"KEVIN", PRIMARY_MACHINE_ID})
+
+
+def profile_from_primary_inventory(
+    inventory: Mapping[str, Any], *, when: datetime | None = None
+) -> MachineProfile | None:
+    token = _hostname_token(inventory)
+    if token not in PRIMARY_HOSTNAMES and not inventory.get("control_host"):
+        return None
+    gpu = _inventory_first_row(inventory, "gpus")
+    gpu_name = str(gpu.get("Name") or "RTX 5060") if isinstance(gpu, Mapping) else "RTX 5060"
+    return _observed_worker_profile(
+        inventory,
+        machine_id=PRIMARY_MACHINE_ID,
+        role="PRIMARY_CONTROL_CANDIDATE",
+        ttl_seconds=300,
+        gpu_name=gpu_name.replace("NVIDIA ", ""),
+        compute_capability=12.0,
+        default_ram_gb=31.25,
+        default_logical=16,
+        default_principal="operator:control",
+        when=when,
+    )
+
+
 def apply_inventory_observation(
     profiles: tuple[MachineProfile, ...],
     inventory: Mapping[str, Any],
     *,
     when: datetime | None = None,
 ) -> tuple[MachineProfile, ...]:
-    for builder in (profile_from_xeon_inventory, profile_from_comfy_inventory):
+    for builder in (
+        profile_from_xeon_inventory,
+        profile_from_comfy_inventory,
+        profile_from_primary_inventory,
+    ):
         observed = builder(inventory, when=when)
         if observed is None:
             continue
@@ -279,3 +358,169 @@ def enrollment_blockers() -> tuple[dict[str, str], ...]:
         for item in DECLARED_HOSTS
         if item.get("bootstrap_precondition")
     )
+
+
+def detect_isa_flags() -> dict[str, bool]:
+    """Best-effort ISA flags. Missing AVX2 detection stays False rather than guessed True."""
+
+    flags = {"sse42": False, "avx": False, "avx2": False}
+    if os.name != "nt":
+        return flags
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    present = kernel32.IsProcessorFeaturePresent
+    present.argtypes = [wintypes.DWORD]
+    present.restype = wintypes.BOOL
+    flags["sse42"] = bool(present(10))
+    flags["avx"] = bool(present(39))
+    return flags
+
+
+_MEASURE_QUERY = r"""
+$ErrorActionPreference = 'Stop'
+$os = Get-CimInstance Win32_OperatingSystem
+$cs = Get-CimInstance Win32_ComputerSystem
+$cpu = Get-CimInstance Win32_Processor | Select-Object -First 1
+$disks = @(Get-CimInstance Win32_LogicalDisk -Filter "DriveType=3" |
+    Select-Object DeviceID, FreeSpace, Size)
+$identity = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+$isa = $null
+try {
+    $isa = [pscustomobject]@{
+        sse42 = [System.Runtime.Intrinsics.X86.Sse42]::IsSupported
+        avx = [System.Runtime.Intrinsics.X86.Avx]::IsSupported
+        avx2 = [System.Runtime.Intrinsics.X86.Avx2]::IsSupported
+    }
+} catch {
+    $isa = $null
+}
+if ($null -eq $isa) {
+    try {
+        if (-not ('PpCpuId' -as [type])) {
+            Add-Type -TypeDefinition @"
+using System.Runtime.InteropServices;
+public static class PpCpuId {
+    [DllImport("kernel32.dll")]
+    public static extern bool IsProcessorFeaturePresent(uint feature);
+}
+"@
+        }
+        $isa = [pscustomobject]@{
+            sse42 = [PpCpuId]::IsProcessorFeaturePresent(10)
+            avx = [PpCpuId]::IsProcessorFeaturePresent(39)
+            avx2 = $false
+        }
+    } catch {
+        $isa = $null
+    }
+}
+$cpuPhysical = @($cpu.NumberOfCores)[0]
+if (-not $cpuPhysical) { $cpuPhysical = $cs.NumberOfProcessors }
+$row = [pscustomobject]@{
+    hostname = $env:COMPUTERNAME
+    whoami = $identity.Name
+    sid = $identity.User.Value
+    totalRAMGB = [math]::Round(($os.TotalVisibleMemorySize / 1MB), 2)
+    availableRAMGB = [math]::Round(($os.FreePhysicalMemory / 1MB), 2)
+    cpuLogical = $cs.NumberOfLogicalProcessors
+    cpuPhysical = $cpuPhysical
+    osBuild = $os.BuildNumber
+    disks = @($disks | ForEach-Object {
+        [pscustomobject]@{ DeviceID = $_.DeviceID; FreeGB = [math]::Round(($_.FreeSpace / 1GB), 2) }
+    })
+    isa = $isa
+    measured_at_utc = [DateTime]::UtcNow.ToString('o')
+}
+$row | ConvertTo-Json -Compress -Depth 5
+"""
+
+
+def measure_local_inventory(*, query: Any = None) -> dict[str, Any]:
+    """Measure this host. Observation time is the CIM measurement time, not ingest time."""
+
+    runner = query
+    if runner is None:
+        completed = subprocess.run(
+            ["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", _MEASURE_QUERY],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+        if completed.returncode != 0:
+            return {"ok": False, "reason": "measurement_unavailable", "observation_kind": "PARTIAL"}
+        payload = json.loads(completed.stdout or "{}")
+    else:
+        payload = json.loads(runner(_MEASURE_QUERY))
+    if not isinstance(payload, dict) or not payload.get("measured_at_utc"):
+        return {"ok": False, "reason": "measurement_incomplete", "observation_kind": "PARTIAL"}
+    if not payload.get("isa") and runner is None:
+        payload["isa"] = detect_isa_flags()
+    payload["ok"] = True
+    payload["observation_kind"] = "MEASURED" if _inventory_complete(payload) else "PARTIAL"
+    return payload
+
+
+def measure_remote_inventory(
+    *, host: str, user: str, identity: Path | None = None
+) -> dict[str, Any]:
+    """Measure an enrolled worker through OpenSSH. Observation time is the remote CIM time."""
+
+    allowed = {
+        item["host"]: item["user"]
+        for item in (
+            {"host": "100.107.207.66", "user": "kines"},
+            {"host": "100.77.151.3", "user": "Windows 11"},
+        )
+    }
+    if allowed.get(host) != user:
+        return {"ok": False, "reason": "unknown_ssh_target", "observation_kind": "PARTIAL"}
+    key = identity or (Path.home() / ".ssh" / "id_ed25519")
+    if not key.is_file():
+        return {"ok": False, "reason": "ssh_identity_missing", "observation_kind": "PARTIAL"}
+    encoded = base64.b64encode(_MEASURE_QUERY.encode("utf-16le")).decode("ascii")
+    completed = subprocess.run(
+        [
+            "ssh",
+            "-i",
+            str(key),
+            "-o",
+            "IdentitiesOnly=yes",
+            "-o",
+            "BatchMode=yes",
+            "-o",
+            "ConnectTimeout=8",
+            "-l",
+            user,
+            host,
+            "powershell.exe",
+            "-NoProfile",
+            "-NonInteractive",
+            "-EncodedCommand",
+            encoded,
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=45,
+    )
+    if completed.returncode != 0:
+        return {
+            "ok": False,
+            "reason": "remote_measurement_unavailable",
+            "observation_kind": "PARTIAL",
+            "exit_code": completed.returncode,
+        }
+    try:
+        payload = json.loads((completed.stdout or "").strip().splitlines()[-1])
+    except (json.JSONDecodeError, IndexError):
+        return {
+            "ok": False,
+            "reason": "remote_measurement_unparseable",
+            "observation_kind": "PARTIAL",
+        }
+    if not isinstance(payload, dict) or not payload.get("measured_at_utc"):
+        return {"ok": False, "reason": "measurement_incomplete", "observation_kind": "PARTIAL"}
+    payload["ok"] = True
+    payload["observation_kind"] = "MEASURED" if _inventory_complete(payload) else "PARTIAL"
+    payload["tailnet_host"] = host
+    return payload

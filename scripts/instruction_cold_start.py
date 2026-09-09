@@ -27,8 +27,10 @@ def load_instruction_validator(root: Path) -> Any:
 def build_cold_start(root: Path) -> dict[str, Any]:
     root = root.resolve()
     validator = load_instruction_validator(root)
+    overlay = validator._bound_overlay_root(root)
+    instruction_root = overlay if overlay is not None else root
     instruction_report = validator.validate_instruction_system(root)
-    if validator.is_standalone_public_source_checkout(root):
+    if overlay is None and validator.is_standalone_public_source_checkout(root):
         return {
             "schema_version": "1.0.0",
             "mode": "PUBLIC_SOURCE",
@@ -60,17 +62,35 @@ def build_cold_start(root: Path) -> dict[str, Any]:
             "durable_state": ["source control", "release artifacts", "local application data"],
             "scenario_ids": [],
         }
-    manifest = load(root / "instructions/INSTRUCTION_MANIFEST.json")
-    coverage = load(root / "instructions/INSTRUCTION_COVERAGE_MATRIX.json")
-    scenarios = load(root / "instructions/policies/VALIDATION_SCENARIOS.json")
+    manifest = load(instruction_root / "instructions/INSTRUCTION_MANIFEST.json")
+    coverage = load(instruction_root / "instructions/INSTRUCTION_COVERAGE_MATRIX.json")
+    scenarios = load(instruction_root / "instructions/policies/VALIDATION_SCENARIOS.json")
     first_read = list(validator.MANDATORY_BOOTSTRAP)
-    required = [
-        *(root / path for path in first_read),
-        root / "config/project.json",
-        root / "plans/PLAN_CATALOG.json",
-        root / "jira/BOARD_MANIFEST.json",
-    ]
-    missing = [path.relative_to(root).as_posix() for path in required if not path.exists()]
+    required = []
+    for path in first_read:
+        overlay_hit = instruction_root / path
+        source_hit = root / path
+        required.append(overlay_hit if overlay_hit.exists() else source_hit)
+    required.extend(
+        [
+            overlay_hit
+            if (overlay_hit := instruction_root / rel).exists()
+            else root / rel
+            for rel in (
+                "config/project.json",
+                "plans/PLAN_CATALOG.json",
+                "jira/BOARD_MANIFEST.json",
+            )
+        ]
+    )
+    missing: list[str] = []
+    for path in required:
+        if path.exists():
+            continue
+        try:
+            missing.append(path.relative_to(root).as_posix())
+        except ValueError:
+            missing.append(path.as_posix())
     commands = [
         item["command"]
         for item in manifest.get("commands", [])
@@ -83,6 +103,8 @@ def build_cold_start(root: Path) -> dict[str, Any]:
     }
     return {
         "schema_version": "1.0.0",
+        "mode": "OVERLAY_BOUND" if overlay is not None else "CONTROL_CHECKOUT",
+        "overlay": str(instruction_root) if overlay is not None else None,
         "ready": not missing and instruction_report.ok,
         "missing": missing,
         "instruction_validation": {

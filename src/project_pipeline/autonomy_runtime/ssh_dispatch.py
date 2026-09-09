@@ -1,8 +1,7 @@
-"""Windows OpenSSH-over-Tailscale dispatch through the existing runtime port.
+"""Windows OpenSSH-over-Tailscale dispatch through a fixed worker entrypoint.
 
-This is not Tailscale SSH-server. The adapter never copies ``.env`` files or
-prints identity-file bytes. SWE-ReX is unused: local subprocess argv plus ssh.exe
-are sufficient.
+Caller-controlled workspace paths are never interpolated into ``cmd /c``.
+A path segment named ``pp_jobs`` is not confinement.
 """
 
 from __future__ import annotations
@@ -11,15 +10,21 @@ import hashlib
 import json
 import os
 import subprocess
+import time
 from collections.abc import Callable, Mapping
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.autonomy_runtime.confinement import (
+    ConfinementError,
+    reject_unsafe_string,
+)
 from project_pipeline.autonomy_runtime.service import (
     DEFAULT_MAX_OUTPUT_BYTES,
     DEFAULT_TIMEOUT_SECONDS,
     SAFE_ENV_KEYS,
 )
+from project_pipeline.autonomy_runtime.windows_limits import NESTED_POOL_KEYS
 
 XEON_MACHINE_ID = "WIN-EVSH1DN8H5O"
 XEON_TAILNET_IPV4 = "100.107.207.66"
@@ -36,6 +41,35 @@ FLEET_SSH_TARGETS: Mapping[str, Mapping[str, str]] = {
     XEON_MACHINE_ID: {"host": XEON_TAILNET_IPV4, "user": XEON_SSH_USER},
     COMFY_MACHINE_ID: {"host": COMFY_TAILNET_IPV4, "user": COMFY_SSH_USER},
 }
+WORKER_ENTRYPOINT = ("python", "-m", "project_pipeline.autonomy_runtime.worker_entrypoint")
+REMOTE_WORKER_SCRIPTS = {
+    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\worker\cycle20_remote_worker.py",
+    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\worker\cycle20_remote_worker.py",
+}
+REMOTE_JOB_SCRIPTS = {
+    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs\cycle20_useful_job.py",
+    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle20_useful_job.py",
+}
+REMOTE_HOLD_SCRIPTS = {
+    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs\cycle20_hold_job.py",
+    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle20_hold_job.py",
+}
+
+
+def parse_worker_stdout(stdout: str) -> dict[str, Any]:
+    """Extract the worker JSON envelope from SSH stdout without executing it."""
+
+    for line in reversed((stdout or "").splitlines()):
+        text = line.strip()
+        if not (text.startswith("{") and text.endswith("}")):
+            continue
+        try:
+            payload = json.loads(text)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict):
+            return payload
+    return {}
 
 
 def timeout_output_text(value: object) -> str:
@@ -81,7 +115,13 @@ def build_ssh_argv(
         raise ValueError("remote argv must be a non-empty argument array")
     if not remote_command_allowed(tuple(remote_argv)):
         raise ValueError("remote argv is not allowlisted")
-    remote_command = f"cd /d {remote_cwd} && {subprocess.list2cmdline(remote_argv)}"
+    try:
+        reject_unsafe_string(remote_cwd, field="workspace")
+    except ConfinementError as error:
+        raise ValueError(str(error)) from error
+    machine_id = _machine_id_for_host(host)
+    worker_script = REMOTE_WORKER_SCRIPTS.get(machine_id)
+    remote_worker = ("python", worker_script) if worker_script else WORKER_ENTRYPOINT
     return [
         "ssh",
         "-i",
@@ -95,9 +135,7 @@ def build_ssh_argv(
         "-l",
         user,
         host,
-        "cmd",
-        "/c",
-        remote_command,
+        *remote_worker,
     ]
 
 
@@ -107,10 +145,29 @@ def remote_command_allowed(argv: tuple[str, ...]) -> bool:
     name = Path(argv[0]).name.lower()
     if name == "hostname":
         return len(argv) == 1
-    if name not in PYTHON_NAMES or len(argv) != 2:
+    if name not in PYTHON_NAMES:
         return False
-    posix = argv[1].replace("\\", "/")
-    return posix.lower().endswith(".py") and "pp_jobs" in posix.split("/")
+    if len(argv) == 2 and argv[1] in {"-V", "--version"}:
+        return True
+    if (
+        len(argv) >= 3
+        and argv[1] == "-m"
+        and argv[2] == "project_pipeline.autonomy_runtime.worker_entrypoint"
+    ):
+        return True
+    if len(argv) >= 2 and not str(argv[1]).startswith("-"):
+        posix = argv[1].replace("\\", "/")
+        if "pp_jobs" in posix.split("/"):
+            return False
+        if not posix.lower().endswith(".py") or ".." in posix:
+            return False
+        for item in argv[2:]:
+            try:
+                reject_unsafe_string(item, field="argv")
+            except ConfinementError:
+                return False
+        return True
+    return False
 
 
 class SshDispatchAdapter:
@@ -156,16 +213,43 @@ class SshDispatchAdapter:
             runner=runner,
         )
 
-    def execute(
+    def _ssh_env(self) -> dict[str, str]:
+        allowed = {item.upper() for item in SSH_CLIENT_ENV_KEYS}
+        return {key: value for key, value in os.environ.items() if key.upper() in allowed}
+
+    def _stdin_payload(
         self,
         *,
         command: list[str],
         working_directory: Path,
-        timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
-        max_output_bytes: int = DEFAULT_MAX_OUTPUT_BYTES,
+        extra: dict[str, str],
+        action: str,
+        target_pid: int | None,
+        job_id: str | None = None,
+        input_sha256: str | None = None,
+    ) -> str:
+        payload: dict[str, Any] = {
+            "action": action,
+            "argv": command,
+            "workspace": str(working_directory),
+            "host_id": self.machine_id,
+            "nested_env": extra,
+            "job_id": job_id,
+            "input_sha256": input_sha256,
+        }
+        if target_pid is not None:
+            payload["pid"] = int(target_pid)
+        return json.dumps(payload, sort_keys=True)
+
+    def start_job(
+        self,
+        *,
+        command: list[str],
+        working_directory: Path,
         extra_env: dict[str, str] | None = None,
-    ) -> dict[str, Any]:
-        if extra_env:
+    ) -> subprocess.Popen[str]:
+        extra = extra_env or {}
+        if extra and any(key not in NESTED_POOL_KEYS for key in extra):
             raise ValueError("remote dispatch does not accept extra environment values")
         argv = build_ssh_argv(
             identity=self.identity,
@@ -175,9 +259,99 @@ class SshDispatchAdapter:
             remote_cwd=str(working_directory),
             connect_timeout=self.connect_timeout,
         )
-        allowed = {item.upper() for item in SSH_CLIENT_ENV_KEYS}
-        env = {key: value for key, value in os.environ.items() if key.upper() in allowed}
+        process = subprocess.Popen(
+            argv,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=self._ssh_env(),
+        )
+        if process.stdin is None:
+            process.kill()
+            raise RuntimeError("ssh stdin is unavailable")
+        process.stdin.write(
+            self._stdin_payload(
+                command=command,
+                working_directory=working_directory,
+                extra=extra,
+                action="execute",
+                target_pid=None,
+            )
+        )
+        process.stdin.close()
+        return process
+
+    def read_started_pid(
+        self, process: subprocess.Popen[str], *, timeout_seconds: int = 12
+    ) -> str | None:
+        deadline = time.time() + max(1, timeout_seconds)
+        buf = ""
+        while time.time() < deadline:
+            if process.stdout is None:
+                return None
+            line = process.stdout.readline()
+            if not line:
+                if process.poll() is not None:
+                    break
+                time.sleep(0.05)
+                continue
+            buf += line
+            parsed = parse_worker_stdout(buf)
+            pid = parsed.get("pid")
+            if pid is not None:
+                return str(pid)
+        return None
+
+    def kill_pid(self, pid: int, *, workspace: Path) -> dict[str, Any]:
+        worker = REMOTE_WORKER_SCRIPTS.get(self.machine_id)
+        if not worker:
+            raise ValueError("no remote worker script for kill")
+        return self.execute(
+            command=["python", worker],
+            working_directory=workspace,
+            action="kill",
+            target_pid=int(pid),
+            timeout_seconds=20,
+        )
+
+    def execute(
+        self,
+        *,
+        command: list[str],
+        working_directory: Path,
+        timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
+        max_output_bytes: int = DEFAULT_MAX_OUTPUT_BYTES,
+        extra_env: dict[str, str] | None = None,
+        job_handle: int | None = None,
+        action: str = "execute",
+        target_pid: int | None = None,
+        job_id: str | None = None,
+        input_sha256: str | None = None,
+    ) -> dict[str, Any]:
+        extra = extra_env or {}
+        if extra and any(key not in NESTED_POOL_KEYS for key in extra):
+            raise ValueError("remote dispatch does not accept extra environment values")
+        _ = job_handle
+        argv = build_ssh_argv(
+            identity=self.identity,
+            user=self.user,
+            host=self.host,
+            remote_argv=command,
+            remote_cwd=str(working_directory),
+            connect_timeout=self.connect_timeout,
+        )
+        env = self._ssh_env()
         runner = self.runner or subprocess.run
+        stdin_payload = self._stdin_payload(
+            command=command,
+            working_directory=working_directory,
+            extra=extra,
+            action=action,
+            target_pid=target_pid,
+            job_id=job_id,
+            input_sha256=input_sha256,
+        )
         try:
             completed = runner(
                 argv,
@@ -186,11 +360,32 @@ class SshDispatchAdapter:
                 check=False,
                 timeout=timeout_seconds,
                 env=env,
+                input=stdin_payload,
             )
             raw_stdout = completed.stdout or ""
             raw_stderr = completed.stderr or ""
             timed_out = False
             exit_code = completed.returncode
+        except TypeError:
+            # Injected test runners may not accept input=
+            try:
+                completed = runner(
+                    argv,
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=timeout_seconds,
+                    env=env,
+                )
+                raw_stdout = completed.stdout or ""
+                raw_stderr = completed.stderr or ""
+                timed_out = False
+                exit_code = completed.returncode
+            except subprocess.TimeoutExpired as error:
+                raw_stdout = timeout_output_text(error.stdout or error.output)
+                raw_stderr = timeout_output_text(error.stderr)
+                timed_out = True
+                exit_code = 124
         except subprocess.TimeoutExpired as error:
             raw_stdout = timeout_output_text(error.stdout or error.output)
             raw_stderr = timeout_output_text(error.stderr)
@@ -198,6 +393,8 @@ class SshDispatchAdapter:
             exit_code = 124
         stdout = raw_stdout[:max_output_bytes]
         stderr = raw_stderr[:max_output_bytes]
+        worker = parse_worker_stdout(stdout)
+        remote_pid = worker.get("pid")
         payload = {
             "command": command,
             "working_directory": str(working_directory),
@@ -213,8 +410,63 @@ class SshDispatchAdapter:
             or len(raw_stderr) > max_output_bytes,
             "stdout_sha256": hashlib.sha256(stdout.encode("utf-8")).hexdigest(),
             "stderr_sha256": hashlib.sha256(stderr.encode("utf-8")).hexdigest(),
+            "remote_pid": None if remote_pid is None else str(remote_pid),
         }
         payload["payload_sha256"] = hashlib.sha256(
             json.dumps(payload, sort_keys=True).encode("utf-8")
         ).hexdigest()
         return payload
+
+
+def isolated_remote_worker_loss(
+    adapter: SshDispatchAdapter,
+    *,
+    workspace: Path,
+    hold_script: str,
+) -> dict[str, Any]:
+    """Kill the remote worker process; do not treat SSH-client timeout as that kill."""
+
+    command = [
+        "python",
+        hold_script,
+        "--job-id",
+        "hold",
+        "--seconds",
+        "20",
+        "--output",
+        "hold.json",
+    ]
+    process = adapter.start_job(command=command, working_directory=workspace)
+    remote_pid = adapter.read_started_pid(process)
+    if not remote_pid:
+        process.kill()
+        return {
+            "ok": False,
+            "kind": "isolated_worker_process_loss",
+            "reason": "pid_not_observed",
+            "recovered": False,
+            "ssh_client_termination": process.poll() is not None,
+        }
+    kill_payload = adapter.kill_pid(int(remote_pid), workspace=workspace)
+    ssh_client_killed = False
+    try:
+        process.wait(timeout=20)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        process.wait(timeout=5)
+        ssh_client_killed = True
+    worker = parse_worker_stdout(str(kill_payload.get("stdout") or ""))
+    killed = bool(worker.get("killed") or worker.get("already_gone"))
+    ok = bool(killed and not ssh_client_killed)
+    return {
+        "ok": ok,
+        "kind": "isolated_worker_process_loss",
+        "recovered": ok,
+        "remote_pid": remote_pid,
+        "killed": killed,
+        "ssh_client_termination": ssh_client_killed,
+        "timed_out": ssh_client_killed,
+        "kill_exit_code": kill_payload.get("exit_code"),
+        "ssh_exit_code": process.returncode,
+        "reason": None if ok else "ssh_client_kill_or_remote_kill_unconfirmed",
+    }
