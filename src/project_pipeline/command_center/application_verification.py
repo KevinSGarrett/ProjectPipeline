@@ -20,6 +20,7 @@ COMMAND_CENTER_REQUIRED_SECTIONS = (
     "overview",
     "graph",
     "work",
+    "fleet",
     "health",
     "budgets",
     "providers",

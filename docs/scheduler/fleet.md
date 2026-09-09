@@ -38,4 +38,7 @@ a discrete CUDA device. The laptop `id_ed25519` is authorized in
   wrong SHA/tree, stale hosts, and `ENROLLMENT_PENDING` deny remote placement.
   Local `machine:local` claims remain the default without that file.
 - Authenticated Command Center `GET /api/v1/command-center/fleet` plus
-  drain/resume POSTs.
+  drain/resume POSTs. The live verification preview
+  (`apps/command_center/preview/index.html`) includes the `#fleet` surface and
+  hydrates hosts from that API. Stale or unknown freshness stays stale or
+  unknown, never green.

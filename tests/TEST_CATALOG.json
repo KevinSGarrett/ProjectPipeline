@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 749,
+  "test_count": 751,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -866,6 +866,16 @@
       "callable": "test_unhealthy_known_dimension_survives_other_unknown_dimension",
       "path": "tests/test_command_center_models.py",
       "test_id": "TEST-CC-PROJECTION-003"
+    },
+    {
+      "callable": "test_jira_sync_note_uses_mapped_ids_when_reconciled_keys_absent",
+      "path": "tests/test_command_center_projection_contract.py",
+      "test_id": "TEST-CC-PROJECTION-004"
+    },
+    {
+      "callable": "test_fleet_section_is_required_for_live_command_center",
+      "path": "tests/test_command_center_projection_contract.py",
+      "test_id": "TEST-CC-PROJECTION-005"
     },
     {
       "callable": "test_sequence_and_reconnect_replay",
