@@ -235,6 +235,9 @@ def fleet_projection(
                 "cuda_compute_capability": profile.cuda_compute_capability,
                 "principal": profile.principal,
                 "observed_at_utc": profile.observed_at_utc.isoformat(),
+                "active_jobs": "unknown",
+                "lease_id": "unknown",
+                "assignment": "unknown",
             }
         )
     return rows

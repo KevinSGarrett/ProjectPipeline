@@ -269,19 +269,29 @@ class RepositoryApplicationProjectionBuilder:
             counts = readback.get("status_counts") if isinstance(readback, dict) else {}
         if not isinstance(counts, dict):
             counts = {}
-        mappings = guard.get("reconciled_remote_keys") or {}
+        mappings = guard.get("reconciled_remote_keys")
+        if not isinstance(mappings, dict) or not mappings:
+            mappings = guard.get("mapped_ids") or {}
+        if not isinstance(mappings, dict):
+            mappings = {}
         pp385 = mappings.get("PP-TASK-000385") or {}
         pp384 = mappings.get("PP-TASK-000384") or {}
+        if not isinstance(pp385, dict):
+            pp385 = {}
+        if not isinstance(pp384, dict):
+            pp384 = {}
         parity = str(guard.get("parity_status") or "")
         stale = parity != "PARITY_CONFIRMED"
+        pp385_state = str(pp385.get("live_state") or pp385.get("live_status_name") or "")
+        pp384_state = str(pp384.get("live_state") or pp384.get("live_status_name") or "")
         note = (
             f"Observed live readback {counts.get('To Do', '?')}/"
             f"{counts.get('In Progress', '?')}/{counts.get('Done', '?')} "
             f"from snapshot {snapshot.get('snapshot_id')}; "
             f"PP-TASK-000385->{pp385.get('remote_key', 'unbound')} "
-            f"{pp385.get('live_state', '')}; "
+            f"{pp385_state}; "
             f"PP-TASK-000384->{pp384.get('remote_key', 'unbound')} "
-            f"{pp384.get('live_state', '')}. "
+            f"{pp384_state}. "
             "This projection does not perform a remote write."
         )
         return ApplicationSyncStatus(
