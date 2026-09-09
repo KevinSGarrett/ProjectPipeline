@@ -9,6 +9,7 @@ import pytest
 from project_pipeline.autonomy_runtime.confinement import ConfinementError, canonicalize_workspace
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
+from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
     build_ssh_argv,
     parse_worker_stdout,
@@ -185,6 +186,18 @@ def test_secret_argv_is_rejected(tmp_path: Path) -> None:
 def test_worker_stdout_pid_is_parsed() -> None:
     parsed = parse_worker_stdout('noise\n{"ok": true, "pid": 4242, "exit_code": 0}\n')
     assert parsed["pid"] == 4242
+
+
+def test_local_adapter_timeout_does_not_raise_unbound_pid(tmp_path: Path) -> None:
+    adapter = LocalSubprocessDispatchAdapter()
+    payload = adapter.execute(
+        command=[sys.executable, "-c", "import time; time.sleep(30)"],
+        working_directory=tmp_path,
+        timeout_seconds=1,
+    )
+    assert payload["timed_out"] is True
+    assert payload["exit_code"] == 124
+    assert payload["remote_pid"] == ""
 
 
 def test_worker_side_dedup(tmp_path: Path) -> None:

@@ -38,6 +38,14 @@ def _sha256_text(payload: str) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
+def _stream_text(payload: object) -> str:
+    if payload is None:
+        return ""
+    if isinstance(payload, bytes):
+        return payload.decode("utf-8", errors="replace")
+    return str(payload)
+
+
 def _safe_env(extra: dict[str, str] | None = None) -> dict[str, str]:
     inherited = {
         key: value
@@ -67,6 +75,7 @@ class LocalSubprocessDispatchAdapter:
         raw_stdout = ""
         raw_stderr = ""
         env = _safe_env(extra_env)
+        completed: subprocess.CompletedProcess[str] | None = None
         try:
             if job_handle:
                 completed = assign_and_wait(
@@ -91,8 +100,8 @@ class LocalSubprocessDispatchAdapter:
             timed_out = False
             exit_code = completed.returncode
         except subprocess.TimeoutExpired as error:
-            raw_stdout = error.stdout.decode("utf-8", errors="replace") if error.stdout else ""
-            raw_stderr = error.stderr.decode("utf-8", errors="replace") if error.stderr else ""
+            raw_stdout = _stream_text(error.stdout or error.output)
+            raw_stderr = _stream_text(error.stderr)
             timed_out = True
             exit_code = 124
         stdout = raw_stdout[:max_output_bytes]

@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 789,
+  "test_count": 790,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3946,6 +3946,11 @@
       "callable": "test_worker_stdout_pid_is_parsed",
       "path": "tests/test_cycle20_remote_durability.py",
       "test_id": "TEST-C20-DUR-011"
+    },
+    {
+      "callable": "test_local_adapter_timeout_does_not_raise_unbound_pid",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-012"
     }
   ]
 }
