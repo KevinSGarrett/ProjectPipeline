@@ -32,6 +32,7 @@ from project_pipeline.domain.scheduler import (
     ResourceLease,
     ResourceRegistrySnapshot,
     ResourceType,
+    SchedulerTaskProfile,
     scheduler_identifier,
 )
 from project_pipeline.scheduler.admission import (
@@ -266,6 +267,7 @@ def test_declared_xeon_is_enrollment_pending() -> None:
     inventory = {
         "hostname": "WIN-EVSH1DN8H5O",
         "whoami": r"win-evsh1dn8h5o\kines",
+        "sid": "S-1-5-21-xeon",
         "totalRAMGB": 63.96,
         "cpuLogical": 16,
         "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
@@ -309,8 +311,6 @@ def test_fleet_registry_persists_drain_to_shared_state(tmp_path: Path) -> None:
 
 
 def test_bind_profile_claims_rewrites_local_machine() -> None:
-    from project_pipeline.domain.scheduler import SchedulerTaskProfile
-
     profile = SchedulerTaskProfile(
         task_id="PP-TASK-000510",
         project_id="PROJECT-PIPELINE",
@@ -349,6 +349,9 @@ def _admission_record(**overrides: object) -> dict[str, object]:
                 "freshness": "fresh",
                 "observation_kind": "MEASURED",
                 "observed_at_utc": NOW.isoformat(),
+                "sid": "S-1-5-21-comfy",
+                "principal": r"comfy-v4-cpu-01\windows 11",
+                "workspace_root": r"C:\Users\Windows 11\ProjectPipeline\jobs",
             }
         },
     }
@@ -427,6 +430,7 @@ def test_inventory_observation_admits_xeon_cpu_not_cuda() -> None:
     inventory = {
         "hostname": "WIN-EVSH1DN8H5O",
         "whoami": r"win-evsh1dn8h5o\kines",
+        "sid": "S-1-5-21-xeon",
         "totalRAMGB": 63.96,
         "cpuLogical": 16,
         "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
@@ -569,6 +573,9 @@ def test_fresh_xeon_host_is_remotely_admitted() -> None:
                 "freshness": "fresh",
                 "observation_kind": "MEASURED",
                 "observed_at_utc": NOW.isoformat(),
+                "sid": "S-1-5-21-xeon",
+                "principal": r"win-evsh1dn8h5o\kines",
+                "workspace_root": r"C:\Users\kines\ProjectPipeline\jobs",
             },
             "COMFY-V4-CPU-01": {"state": "STALE", "freshness": "stale"},
         }
@@ -664,6 +671,7 @@ def test_inventory_observation_admits_comfy_cpu_not_cuda() -> None:
     inventory = {
         "hostname": "comfy-v4-cpu-01",
         "whoami": r"comfy-v4-cpu-01\windows 11",
+        "sid": "S-1-5-21-comfy",
         "totalRAMGB": 31.79,
         "cpuLogical": 8,
         "disks": [{"DeviceID": "C:", "FreeGB": 28.5}],
@@ -762,6 +770,7 @@ def test_inventory_observation_preserves_drained_comfy() -> None:
     inventory = {
         "hostname": "COMFY-V4-CPU-01",
         "whoami": r"comfy-v4-cpu-01\windows 11",
+        "sid": "S-1-5-21-comfy",
         "totalRAMGB": 31.79,
         "cpuLogical": 8,
         "disks": [{"DeviceID": "C:", "FreeGB": 28.5}],

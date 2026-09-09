@@ -209,6 +209,7 @@ from project_pipeline.orchestration.simulation import (
 from project_pipeline.orchestration.simulation import (
     supported_scenarios,
 )
+from project_pipeline.overlay import bound_overlay
 from project_pipeline.persistence import PersistenceError, SQLiteStateStore
 from project_pipeline.persistence.migrations import SQLiteMigrationRunner
 from project_pipeline.quality import run_quality, write_quality_report
@@ -1901,12 +1902,17 @@ def _run_github_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
 
 
 def _run_control_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
-    if args.action in {
-        "evaluate",
-        "sequence",
-        "readiness",
-        "scope",
-    } and is_standalone_public_source_checkout(args.root):
+    if (
+        args.action
+        in {
+            "evaluate",
+            "sequence",
+            "readiness",
+            "scope",
+        }
+        and is_standalone_public_source_checkout(args.root)
+        and bound_overlay(args.root).get("ok") is not True
+    ):
         return {
             "schema_version": "1.0.0",
             "state": "NOT_APPLICABLE_PUBLIC_SOURCE",
@@ -2474,7 +2480,10 @@ def _run_agent_router_command(args: argparse.Namespace) -> tuple[dict[str, Any],
 
 def _run_jira_command(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
     if args.action == "validate":
-        if is_standalone_public_source_checkout(args.root):
+        if (
+            is_standalone_public_source_checkout(args.root)
+            and bound_overlay(args.root).get("ok") is not True
+        ):
             return {
                 "schema_version": "1.0.0",
                 "valid": True,

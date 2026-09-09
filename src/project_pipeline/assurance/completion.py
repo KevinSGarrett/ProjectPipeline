@@ -24,6 +24,7 @@ from project_pipeline.domain.assurance import (
 from project_pipeline.domain.requirements import ImplementationState, RequirementDisposition
 from project_pipeline.io import sha256_canonical_file, sha256_file
 from project_pipeline.jira import load_issues
+from project_pipeline.overlay import locate_input
 from project_pipeline.requirements import load_requirement_catalog
 
 _COMPLETE = {
@@ -217,9 +218,8 @@ def build_repository_gate_facts(
         if item.get("disposition") == RequirementDisposition.ACCEPTED.value
     ]
     issues = load_issues(root)
-    traceability = json.loads(
-        (root / "plans/_traceability/coverage_report.json").read_text(encoding="utf-8")
-    )
+    coverage_path = locate_input(root, "plans/_traceability/coverage_report.json")
+    traceability = json.loads(coverage_path.read_text(encoding="utf-8"))
     dispositioned = all(item.get("disposition") for item in requirements)
     req_complete = all(item.get("implementation_state") in _COMPLETE for item in accepted)
     traceable = all(
@@ -307,7 +307,7 @@ def build_repository_gate_facts(
     )
     engineer_docs = all((root / path).exists() for path in ("README.md", "docs", "runbooks"))
     ai_continue = all(
-        (root / path).exists()
+        locate_input(root, path).exists()
         for path in (
             "jira/indexes/issues.jsonl",
             "plans/_traceability/requirements.jsonl",

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
@@ -20,11 +21,15 @@ class ResourceLimitError(ValueError):
 
 
 JobObjectExtendedLimitInformation = 9
+JobObjectCpuRateControlInformation = 15
 JOB_OBJECT_LIMIT_PROCESS_MEMORY = 0x100
+JOB_OBJECT_LIMIT_JOB_MEMORY = 0x200
 JOB_OBJECT_LIMIT_ACTIVE_PROCESS = 0x8
 JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE = 0x2000
 JOB_OBJECT_LIMIT_JOB_TIME = 0x4
 JOB_OBJECT_LIMIT_PROCESS_TIME = 0x2
+JOB_OBJECT_CPU_RATE_CONTROL_ENABLE = 0x1
+JOB_OBJECT_CPU_RATE_CONTROL_HARD_CAP = 0x4
 
 
 class LargeInteger(ctypes.Structure if ctypes is not None else object):  # type: ignore[misc]
@@ -71,6 +76,11 @@ class JobObjectExtendedLimitInformationStruct(ctypes.Structure if ctypes is not 
         ]
 
 
+class JobObjectCpuRateControlInformationStruct(ctypes.Structure if ctypes is not None else object):  # type: ignore[misc]
+    if ctypes is not None:
+        _fields_ = [("ControlFlags", wintypes.DWORD), ("CpuRate", wintypes.DWORD)]
+
+
 NESTED_POOL_KEYS = frozenset(
     {
         "OMP_NUM_THREADS",
@@ -104,11 +114,12 @@ def limits_for_adapter(
         if cpu_ceiling < 1 or memory_mb_ceiling < 1 or deadline_seconds < 1:
             raise ResourceLimitError("invalid_limits")
         return {
-            "ok": True,
-            "mechanism": "nested_pool_env_remote",
+            "ok": False,
+            "mechanism": "remote_worker_job_object_required",
             "handle": None,
             "env": nested_pool_env(cpu_ceiling),
             "deadline_seconds": deadline_seconds,
+            "reason": "controller_job_object_not_remote_enforcement",
         }
     if _windows_available():
         return enforce_or_reject(
@@ -154,8 +165,11 @@ def enforce_or_reject(
     info.BasicLimitInformation.PerJobUserTimeLimit = hundred_ns
     info.BasicLimitInformation.LimitFlags = (
         JOB_OBJECT_LIMIT_PROCESS_MEMORY
+        | JOB_OBJECT_LIMIT_JOB_MEMORY
         | JOB_OBJECT_LIMIT_ACTIVE_PROCESS
         | JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE
+        | JOB_OBJECT_LIMIT_JOB_TIME
+        | JOB_OBJECT_LIMIT_PROCESS_TIME
     )
     info.BasicLimitInformation.ActiveProcessLimit = int(process_limit)
     info.ProcessMemoryLimit = memory_bytes
@@ -175,6 +189,22 @@ def enforce_or_reject(
     if not ok:
         kernel32.CloseHandle(handle)
         raise ResourceLimitError("unsupported_limits:job_object_set_failed")
+    nproc = max(1, int(os.cpu_count() or 1))
+    cpu_rate = min(10000, max(1, int((10000 * int(cpu_ceiling)) / nproc)))
+    cpu_info = JobObjectCpuRateControlInformationStruct()
+    cpu_info.ControlFlags = (
+        JOB_OBJECT_CPU_RATE_CONTROL_ENABLE | JOB_OBJECT_CPU_RATE_CONTROL_HARD_CAP
+    )
+    cpu_info.CpuRate = cpu_rate
+    cpu_ok = kernel32.SetInformationJobObject(
+        handle,
+        JobObjectCpuRateControlInformation,
+        ctypes.byref(cpu_info),
+        ctypes.sizeof(cpu_info),
+    )
+    if not cpu_ok:
+        kernel32.CloseHandle(handle)
+        raise ResourceLimitError("unsupported_limits:job_object_cpu_rate_failed")
     return {
         "ok": True,
         "mechanism": "windows_job_object",
@@ -182,6 +212,7 @@ def enforce_or_reject(
         "env": env,
         "process_limit": process_limit,
         "deadline_seconds": deadline_seconds,
+        "cpu_rate": cpu_rate,
     }
 
 
@@ -191,6 +222,35 @@ def close_job_handle(handle: int | None) -> None:
     ctypes.WinDLL("kernel32", use_last_error=True).CloseHandle(handle)
 
 
+def process_creation_filetime(pid: int) -> str | None:
+    """Return the process creation FILETIME as a decimal string, or None."""
+
+    if not _windows_available() or pid <= 0:
+        return None
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
+    kernel32.OpenProcess.restype = wintypes.HANDLE
+    handle = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, False, int(pid))
+    if not handle:
+        return None
+    creation = wintypes.FILETIME()
+    exit_time = wintypes.FILETIME()
+    kernel = wintypes.FILETIME()
+    user = wintypes.FILETIME()
+    ok = kernel32.GetProcessTimes(
+        handle,
+        ctypes.byref(creation),
+        ctypes.byref(exit_time),
+        ctypes.byref(kernel),
+        ctypes.byref(user),
+    )
+    kernel32.CloseHandle(handle)
+    if not ok:
+        return None
+    value = (int(creation.dwHighDateTime) << 32) | int(creation.dwLowDateTime)
+    return str(value)
+
+
 def assign_and_wait(
     *,
     command: list[str],
@@ -198,6 +258,7 @@ def assign_and_wait(
     timeout_seconds: int,
     env: dict[str, str],
     handle: int,
+    on_started: Callable[[int, str | None], None] | None = None,
 ) -> subprocess.CompletedProcess[str]:
     """Assign the child to the Job Object and wait; terminate the job on timeout."""
 
@@ -214,15 +275,19 @@ def assign_and_wait(
         env=env,
         shell=False,
     )
+    creation = process_creation_filetime(int(process.pid))
     assigned = kernel32.AssignProcessToJobObject(handle, int(process._handle))  # type: ignore[attr-defined]
     if not assigned:
         process.kill()
         close_job_handle(handle)
         raise ResourceLimitError("unsupported_limits:job_object_assign_failed")
+    if on_started is not None:
+        on_started(int(process.pid), creation)
     try:
         stdout, stderr = process.communicate(timeout=timeout_seconds)
         completed = subprocess.CompletedProcess(command, process.returncode, stdout, stderr)
         completed.pid = process.pid  # type: ignore[attr-defined]
+        completed.creation_time = creation  # type: ignore[attr-defined]
         return completed
     except subprocess.TimeoutExpired:
         kernel32.TerminateJobObject(handle, 124)

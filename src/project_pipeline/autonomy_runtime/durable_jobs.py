@@ -277,8 +277,54 @@ class FleetJobStore:
             db.execute("COMMIT")
         return {"outcome": "ACCEPTED", "duplicate": False, "result": result}
 
-    def reconcile_unresolved(self, job_id: str, *, reason: str) -> dict[str, Any]:
-        """Allow retry only when no result exists and the prior launch is unresolved."""
+    def claim_launch(self, envelope: dict[str, Any]) -> dict[str, Any]:
+        """Atomically take INTENT -> DISPATCHED for one matching payload."""
+
+        job_id = str(envelope["job_id"])
+        payload = json.dumps(envelope, sort_keys=True, default=str)
+        with self._lock:
+            db = self._connection()
+            db.execute("BEGIN IMMEDIATE")
+            existing = db.execute(
+                "SELECT status, payload_json FROM fleet_dispatch_intents WHERE job_id=?",
+                (job_id,),
+            ).fetchone()
+            if existing is None:
+                db.execute("COMMIT")
+                return {"ok": False, "reason": "intent_missing"}
+            stored = json.loads(existing["payload_json"])
+            stored.pop("status", None)
+            incoming = json.loads(payload)
+            incoming.pop("status", None)
+            if stored != incoming:
+                db.execute("COMMIT")
+                return {"ok": False, "reason": "conflicting_intent"}
+            if existing["status"] in {"DISPATCHED", "RUNNING", "UNKNOWN_OUTCOME", "RECONCILING"}:
+                db.execute("COMMIT")
+                return {"ok": False, "reason": "unresolved_in_flight", "status": existing["status"]}
+            if existing["status"] == "ACCEPTED":
+                db.execute("COMMIT")
+                return {"ok": False, "reason": "already_accepted"}
+            updated = db.execute(
+                """
+                UPDATE fleet_dispatch_intents SET status='DISPATCHED'
+                WHERE job_id=? AND status='INTENT'
+                """,
+                (job_id,),
+            )
+            db.execute("COMMIT")
+            if updated.rowcount != 1:
+                return {"ok": False, "reason": "unresolved_in_flight"}
+            return {"ok": True, "status": "DISPATCHED"}
+
+    def reconcile_unresolved(
+        self,
+        job_id: str,
+        *,
+        reason: str,
+        absence_proof: bool = False,
+    ) -> dict[str, Any]:
+        """Keep RUNNING/UNKNOWN occupancy until absence is proven."""
 
         with self._lock:
             db = self._connection()
@@ -300,11 +346,17 @@ class FleetJobStore:
             if intent["status"] == "ACCEPTED":
                 db.execute("COMMIT")
                 return {"ok": False, "reason": "already_accepted"}
+            if intent["status"] in {"RUNNING", "DISPATCHED", "UNKNOWN_OUTCOME"} and not absence_proof:
+                db.execute("COMMIT")
+                return {
+                    "ok": False,
+                    "reason": "absence_proof_required",
+                    "prior_status": intent["status"],
+                }
             db.execute(
                 "UPDATE fleet_dispatch_intents SET status='RECONCILING' WHERE job_id=?",
                 (job_id,),
             )
-            db.execute("DELETE FROM fleet_dispatch_intents WHERE job_id=?", (job_id,))
             db.execute("COMMIT")
         return {"ok": True, "reason": reason, "prior_status": intent["status"]}
 

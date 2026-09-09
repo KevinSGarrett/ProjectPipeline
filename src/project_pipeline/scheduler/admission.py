@@ -16,6 +16,7 @@ from typing import Any
 ACCEPTED_C18_DISPOSITIONS = frozenset({"PM_ACCEPTED", "PM_ACCEPTED_WITH_FOLLOWUP"})
 PRIMARY_CONTROL_MACHINE_ID = "PRIMARY-CODEX-WORKSTATION"
 GIT_IDENTITY_LENGTH = 40
+MAX_MEASUREMENT_AGE_SECONDS = 7200
 
 
 def observation_admission_record(
@@ -59,7 +60,46 @@ def _identity_matches(actual: object, expected: str) -> bool:
     return token == expected.strip().lower() and len(token) == GIT_IDENTITY_LENGTH
 
 
-MAX_MEASUREMENT_AGE_SECONDS = 7200
+def host_identity_failures(host: Mapping[str, Any]) -> tuple[str, ...]:
+    """MEASURED admission requires SID, principal, and workspace binding."""
+
+    failures: list[str] = []
+    if not str(host.get("sid") or "").strip():
+        failures.append("sid_missing")
+    if not str(host.get("principal") or host.get("whoami") or "").strip():
+        failures.append("principal_missing")
+    if not str(host.get("workspace_root") or "").strip():
+        failures.append("workspace_root_missing")
+    return tuple(failures)
+
+
+def measured_host_record(
+    inventory: Mapping[str, Any],
+    *,
+    workspace_root: str,
+    state: str = "READY",
+) -> dict[str, Any]:
+    """Copy a measurement into an admission host row without inventing identity."""
+
+    kind = str(inventory.get("observation_kind") or "PARTIAL")
+    principal = str(inventory.get("whoami") or inventory.get("principal") or "").strip()
+    sid = str(inventory.get("sid") or "").strip()
+    workspace = str(workspace_root or "").strip()
+    if kind == "MEASURED" and host_identity_failures(
+        {"sid": sid, "principal": principal, "workspace_root": workspace}
+    ):
+        kind = "PARTIAL"
+    measured = kind == "MEASURED"
+    return {
+        "state": state if measured else "STALE",
+        "freshness": "fresh" if measured else "stale",
+        "observation_kind": kind,
+        "observed_at_utc": inventory.get("measured_at_utc") or inventory.get("observed_at_utc"),
+        "sid": sid or None,
+        "principal": principal or None,
+        "workspace_root": workspace or None,
+        "hostname": inventory.get("hostname"),
+    }
 
 
 def _measurement_ok(host: Mapping[str, Any], *, now: datetime | None = None) -> bool:
@@ -75,7 +115,9 @@ def _measurement_ok(host: Mapping[str, Any], *, now: datetime | None = None) -> 
         return False
     if (current - observed).total_seconds() > MAX_MEASUREMENT_AGE_SECONDS:
         return False
-    return str(host.get("freshness") or "unknown") == "fresh"
+    if str(host.get("freshness") or "unknown") != "fresh":
+        return False
+    return not host_identity_failures(host)
 
 
 def _remote_host_failures(

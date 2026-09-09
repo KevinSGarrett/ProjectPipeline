@@ -31,6 +31,18 @@ CREATE TABLE IF NOT EXISTS fleet_lifecycle (
     payload_json TEXT NOT NULL,
     updated_at_utc TEXT NOT NULL
 );
+CREATE TABLE IF NOT EXISTS fleet_lifecycle_events (
+    seq INTEGER PRIMARY KEY AUTOINCREMENT,
+    job_id TEXT NOT NULL,
+    host_id TEXT NOT NULL,
+    lease_id TEXT NOT NULL,
+    fence TEXT NOT NULL,
+    status TEXT NOT NULL,
+    authority TEXT NOT NULL,
+    remote_pid TEXT,
+    payload_json TEXT NOT NULL,
+    published_at_utc TEXT NOT NULL
+);
 """
 
 
@@ -83,6 +95,25 @@ class FleetLifecycleJournal:
                         now,
                     ),
                 )
+                db.execute(
+                    """
+                    INSERT INTO fleet_lifecycle_events (
+                        job_id, host_id, lease_id, fence, status, authority,
+                        remote_pid, payload_json, published_at_utc
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        str(record["job_id"]),
+                        str(record["host_id"]),
+                        str(record.get("lease_id") or "none"),
+                        str(record.get("fence") or "none"),
+                        str(record["status"]),
+                        str(record.get("authority") or "scheduler"),
+                        record.get("remote_pid"),
+                        payload,
+                        now,
+                    ),
+                )
                 db.commit()
             finally:
                 db.close()
@@ -99,7 +130,12 @@ class FleetLifecycleJournal:
         active = []
         for row in rows:
             item = json.loads(row[0])
-            if item.get("status") in {"DISPATCHED", "RUNNING"}:
+            if item.get("status") in {
+                "DISPATCHED",
+                "RUNNING",
+                "UNKNOWN_OUTCOME",
+                "RECONCILING",
+            }:
                 active.append(item)
         if not active:
             return {
@@ -121,7 +157,12 @@ class FleetLifecycleJournal:
             raise ValueError("zero_occupancy_requires_authority")
         grouped: dict[str, list[dict[str, Any]]] = {}
         for item in self.snapshot():
-            if item.get("status") not in {"DISPATCHED", "RUNNING"}:
+            if item.get("status") not in {
+                "DISPATCHED",
+                "RUNNING",
+                "UNKNOWN_OUTCOME",
+                "RECONCILING",
+            }:
                 continue
             grouped.setdefault(str(item.get("host_id")), []).append(item)
         occupancy: dict[str, dict[str, Any]] = {}
@@ -142,3 +183,23 @@ class FleetLifecycleJournal:
         finally:
             db.close()
         return [json.loads(row[0]) for row in rows]
+
+    def events(self) -> list[dict[str, Any]]:
+        db = self._connect()
+        try:
+            rows = list(
+                db.execute(
+                    """
+                    SELECT payload_json, published_at_utc FROM fleet_lifecycle_events
+                    ORDER BY seq
+                    """
+                )
+            )
+        finally:
+            db.close()
+        events = []
+        for row in rows:
+            item = json.loads(row[0])
+            item["published_at_utc"] = row[1]
+            events.append(item)
+        return events

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from collections import Counter, defaultdict
 from dataclasses import dataclass
@@ -15,6 +16,7 @@ from project_pipeline.domain.jira import (
 )
 from project_pipeline.io import read_json, read_jsonl, write_json
 from project_pipeline.jira import ISSUE_DIRECTORIES, build_relationship_edges
+from project_pipeline.overlay import control_input_root
 
 
 class JiraMirrorValidationError(ValueError):
@@ -47,7 +49,7 @@ class JiraMirrorRepository:
     """Typed read-only access to the source-controlled Jira mirror."""
 
     def __init__(self, root: Path) -> None:
-        self.root = root.resolve()
+        self.root = control_input_root(root.resolve())
 
     def load_issues(self) -> tuple[LocalJiraIssue, ...]:
         issues: list[LocalJiraIssue] = []
@@ -67,8 +69,6 @@ class JiraMirrorRepository:
         board = read_json(self.root / "jira" / "BOARD_MANIFEST.json")
         graph = read_json(self.root / "jira" / "relationships" / "graph.json")
         payload = [item.model_dump(mode="json") for item in issues]
-        import hashlib
-
         encoded = json.dumps(
             payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False
         ).encode("utf-8")

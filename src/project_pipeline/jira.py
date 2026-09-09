@@ -5,6 +5,7 @@ from collections.abc import Iterable
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.domain.jira import LocalJiraIssue
 from project_pipeline.io import read_json, write_json, write_jsonl
 from project_pipeline.overlay import control_input_root
 
@@ -68,11 +69,14 @@ def build_relationship_edges(issues: Iterable[dict[str, Any]]) -> list[dict[str,
 
 
 def rebuild_jira_indexes(root: Path) -> dict[str, Any]:
-    issues = load_issues(root)
+    issues = [
+        LocalJiraIssue.model_validate(item).model_dump(mode="json") for item in load_issues(root)
+    ]
+    input_root = control_input_root(root)
     by_id = {item["local_id"]: item for item in issues}
     edges = build_relationship_edges(issues)
-    indexes = root / "jira" / "indexes"
-    relationships = root / "jira" / "relationships"
+    indexes = input_root / "jira" / "indexes"
+    relationships = input_root / "jira" / "relationships"
     write_jsonl(indexes / "issues.jsonl", issues)
     write_json(indexes / "issues_by_id.json", by_id)
     write_jsonl(relationships / "issues.jsonl", edges)
@@ -108,7 +112,7 @@ def rebuild_jira_indexes(root: Path) -> dict[str, Any]:
         "source_context_directory": "jira/source_context",
         "last_generated_date": "2026-08-14",
     }
-    write_json(root / "jira" / "BOARD_MANIFEST.json", manifest)
+    write_json(input_root / "jira" / "BOARD_MANIFEST.json", manifest)
     status = {
         "schema_version": "1.0.0",
         "issue_count": len(issues),
@@ -123,5 +127,5 @@ def rebuild_jira_indexes(root: Path) -> dict[str, Any]:
         ),
         "edge_count": len(edges),
     }
-    write_json(root / "jira" / "reports" / "backlog_status.json", status)
+    write_json(input_root / "jira" / "reports" / "backlog_status.json", status)
     return {"manifest": manifest, "graph": graph, "status": status}

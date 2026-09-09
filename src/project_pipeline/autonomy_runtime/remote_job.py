@@ -40,6 +40,9 @@ class DispatchAdapter(Protocol):
         max_output_bytes: int = 65536,
         extra_env: dict[str, str] | None = None,
         job_handle: int | None = None,
+        job_id: str | None = None,
+        input_sha256: str | None = None,
+        envelope: dict[str, Any] | None = None,
     ) -> dict[str, Any]: ...
 
 
@@ -134,10 +137,17 @@ class RemoteJobController:
                 intent = self.store.get_intent(envelope.job_id)
                 if intent is None:
                     failures.append("intent_missing")
-                elif str(intent.get("lease_id")) != envelope.lease_id:
-                    failures.append("lease_mismatch")
-                elif str(intent.get("fence")) != envelope.fence:
-                    failures.append("fence_mismatch")
+                else:
+                    stored = dict(intent)
+                    stored.pop("status", None)
+                    incoming = envelope.model_dump(mode="json")
+                    incoming.pop("status", None)
+                    if stored != incoming:
+                        failures.append("conflicting_intent")
+                    elif str(intent.get("lease_id")) != envelope.lease_id:
+                        failures.append("lease_mismatch")
+                    elif str(intent.get("fence")) != envelope.fence:
+                        failures.append("fence_mismatch")
         if not argv_is_confined(envelope.argv):
             failures.append("argv_not_confined")
         if contains_secret_shaped(envelope.argv) or contains_secret_shaped(envelope.workspace):
@@ -159,11 +169,12 @@ class RemoteJobController:
             existing_result = self.store.get_result(envelope.job_id)
             if existing_result is not None:
                 return {"outcome": "REJECTED", "reason": "already_accepted"}
-            intent = self.store.get_intent(envelope.job_id)
-            if intent and str(intent.get("status")) in {"RUNNING", "DISPATCHED"}:
-                return {"outcome": "UNKNOWN_OUTCOME", "reason": "unresolved_in_flight"}
-            if intent and str(intent.get("status")) == "ACCEPTED":
-                return {"outcome": "REJECTED", "reason": "already_accepted"}
+            claimed = self.store.claim_launch(envelope.model_dump(mode="json"))
+            if not claimed.get("ok"):
+                reason = str(claimed.get("reason") or "intent_missing")
+                if reason == "unresolved_in_flight":
+                    return {"outcome": "UNKNOWN_OUTCOME", "reason": reason}
+                return {"outcome": "REJECTED", "reason": reason}
         remote = bool(getattr(self.adapter, "remote_host", False))
         adapter_host = getattr(self.adapter, "machine_id", None)
         if remote and envelope.host_id != adapter_host:
@@ -190,6 +201,8 @@ class RemoteJobController:
         if not remote and not workspace.is_dir():
             return {"outcome": "REJECTED", "reason": "workspace_missing"}
         remaining = max(1, int((envelope.deadline_utc - now).total_seconds()))
+        extra_env = None
+        handle: int | None = None
         try:
             limits = limits_for_adapter(
                 adapter=self.adapter,
@@ -199,29 +212,36 @@ class RemoteJobController:
             )
         except ResourceLimitError as error:
             return {"outcome": "REJECTED", "reason": str(error)}
-        if self.store is not None:
-            self.store.mark_status(envelope.job_id, "DISPATCHED")
+        if remote:
+            extra_env = limits.get("env")
+        elif not limits.get("ok"):
+            return {
+                "outcome": "REJECTED",
+                "reason": str(limits.get("reason") or "unsupported_limits"),
+            }
+        else:
+            extra_env = limits.get("env")
+            raw_handle = limits.get("handle")
+            handle = raw_handle if isinstance(raw_handle, int) else None
         try:
             payload = self.adapter.execute(
                 command=list(envelope.argv),
                 working_directory=workspace,
                 timeout_seconds=remaining,
-                extra_env=limits.get("env"),
-                job_handle=limits.get("handle"),
+                extra_env=extra_env,
+                job_handle=handle,
                 job_id=envelope.job_id,
                 input_sha256=envelope.input_sha256,
+                envelope=envelope.model_dump(mode="json"),
             )
-        except TypeError:
-            payload = self.adapter.execute(
-                command=list(envelope.argv),
-                working_directory=workspace,
-                timeout_seconds=remaining,
-                extra_env=limits.get("env"),
-                job_handle=limits.get("handle"),
-            )
+        except TypeError as error:
+            return {
+                "outcome": "UNKNOWN_OUTCOME",
+                "reason": "adapter_execute_contract_error",
+                "detail": type(error).__name__,
+            }
         finally:
-            handle = limits.get("handle")
-            close_job_handle(handle if isinstance(handle, int) else None)
+            close_job_handle(handle)
         if payload.get("timed_out"):
             if self.store is not None:
                 self.store.mark_status(envelope.job_id, "UNKNOWN_OUTCOME")
@@ -254,6 +274,10 @@ class RemoteJobController:
         artifact_bytes: bytes | None = None,
     ) -> dict[str, Any]:
         now = (now or datetime.now(UTC)).astimezone(UTC)
+        if self.require_intent and (
+            self.store is None or self.store.get_intent(envelope.job_id) is None
+        ):
+            return {"outcome": "REJECTED", "reason": "intent_missing"}
         if result.job_id != envelope.job_id:
             return {"outcome": "REJECTED", "reason": "wrong_job"}
         if result.host_id != expected_host or result.host_id != envelope.host_id:
@@ -264,6 +288,8 @@ class RemoteJobController:
             return {"outcome": "REJECTED", "reason": "late_result"}
         if int(result.exit_code) != 0:
             return {"outcome": "REJECTED", "reason": "nonzero_exit"}
+        if envelope.output_contract_sha256 and artifact_bytes is None:
+            return {"outcome": "REJECTED", "reason": "artifact_bytes_required"}
         if envelope.output_contract_sha256:
             actual = result.output_sha256
             if artifact_bytes is not None:

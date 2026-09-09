@@ -184,11 +184,17 @@ def _inventory_disk_free_gb(inventory: Mapping[str, Any]) -> float:
 
 
 def _inventory_complete(inventory: Mapping[str, Any]) -> bool:
-    required = ("hostname", "whoami", "totalRAMGB", "cpuLogical", "disks", "isa")
+    required = ("hostname", "whoami", "sid", "totalRAMGB", "cpuLogical", "disks", "isa")
     if any(not inventory.get(key) for key in required):
         return False
     measured_at = inventory.get("measured_at_utc")
     return measured_at is not None
+
+
+def _mark_inventory_complete(payload: dict[str, Any]) -> dict[str, Any]:
+    payload["ok"] = True
+    payload["observation_kind"] = "MEASURED" if _inventory_complete(payload) else "PARTIAL"
+    return payload
 
 
 def _observed_worker_profile(
@@ -249,9 +255,11 @@ def _observed_worker_profile(
         ),
         sid=str(inventory["sid"]) if inventory.get("sid") else None,
         os_build=str(inventory["osBuild"]) if inventory.get("osBuild") else None,
-        os_support_status=str(inventory["osSupportStatus"])
-        if inventory.get("osSupportStatus")
-        else None,
+        os_support_status=(
+            str(inventory["osSupportStatus"])
+            if inventory.get("osSupportStatus")
+            else ("UNSUPPORTED_21H1" if str(inventory.get("osBuild") or "") == "19043" else None)
+        ),
         cpu_physical_cores=int(physical) if physical is not None else None,
     )
 
@@ -424,6 +432,7 @@ $row = [pscustomobject]@{
     cpuLogical = $cs.NumberOfLogicalProcessors
     cpuPhysical = $cpuPhysical
     osBuild = $os.BuildNumber
+    osSupportStatus = if ($os.BuildNumber -eq '19043') { 'UNSUPPORTED_21H1' } else { $null }
     disks = @($disks | ForEach-Object {
         [pscustomobject]@{ DeviceID = $_.DeviceID; FreeGB = [math]::Round(($_.FreeSpace / 1GB), 2) }
     })
@@ -437,8 +446,7 @@ $row | ConvertTo-Json -Compress -Depth 5
 def measure_local_inventory(*, query: Any = None) -> dict[str, Any]:
     """Measure this host. Observation time is the CIM measurement time, not ingest time."""
 
-    runner = query
-    if runner is None:
+    if query is None:
         completed = subprocess.run(
             ["powershell.exe", "-NoProfile", "-NonInteractive", "-Command", _MEASURE_QUERY],
             capture_output=True,
@@ -448,16 +456,15 @@ def measure_local_inventory(*, query: Any = None) -> dict[str, Any]:
         )
         if completed.returncode != 0:
             return {"ok": False, "reason": "measurement_unavailable", "observation_kind": "PARTIAL"}
-        payload = json.loads(completed.stdout or "{}")
+        raw = completed.stdout or "{}"
     else:
-        payload = json.loads(runner(_MEASURE_QUERY))
+        raw = query(_MEASURE_QUERY)
+    payload = json.loads(raw)
     if not isinstance(payload, dict) or not payload.get("measured_at_utc"):
         return {"ok": False, "reason": "measurement_incomplete", "observation_kind": "PARTIAL"}
-    if not payload.get("isa") and runner is None:
+    if not payload.get("isa") and query is None:
         payload["isa"] = detect_isa_flags()
-    payload["ok"] = True
-    payload["observation_kind"] = "MEASURED" if _inventory_complete(payload) else "PARTIAL"
-    return payload
+    return _mark_inventory_complete(payload)
 
 
 def measure_remote_inventory(
@@ -520,7 +527,5 @@ def measure_remote_inventory(
         }
     if not isinstance(payload, dict) or not payload.get("measured_at_utc"):
         return {"ok": False, "reason": "measurement_incomplete", "observation_kind": "PARTIAL"}
-    payload["ok"] = True
-    payload["observation_kind"] = "MEASURED" if _inventory_complete(payload) else "PARTIAL"
     payload["tailnet_host"] = host
-    return payload
+    return _mark_inventory_complete(payload)
