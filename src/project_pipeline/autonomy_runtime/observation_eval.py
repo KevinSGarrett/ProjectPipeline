@@ -44,9 +44,10 @@ def evaluate_observation(
                 task_id = str(item.get("task_id") or "")
                 if task_id.startswith(SMOKE_USEFUL_PREFIX):
                     smoke = True
-                if task_id.startswith(EXECUTABLE_USEFUL_PREFIX) and str(
-                    item.get("outcome") or ""
-                ) == "ACCEPTED":
+                if (
+                    task_id.startswith(EXECUTABLE_USEFUL_PREFIX)
+                    and str(item.get("outcome") or "") == "ACCEPTED"
+                ):
                     accepted = True
         if smoke or not accepted:
             reasons.append("useful_work_missing")

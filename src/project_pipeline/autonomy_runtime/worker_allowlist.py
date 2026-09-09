@@ -31,9 +31,7 @@ REMOTE_HOLD_SCRIPTS = {
     COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle20_hold_job.py",
 }
 HOST_PYTHON_EXECUTABLES = {
-    COMFY_MACHINE_ID: (
-        r"C:\Users\Windows 11\AppData\Local\Programs\Python\Python311\python.exe"
-    ),
+    COMFY_MACHINE_ID: (r"C:\Users\Windows 11\AppData\Local\Programs\Python\Python311\python.exe"),
     XEON_MACHINE_ID: r"C:\Users\kines\AppData\Local\Programs\Python\Python311\python.exe",
 }
 
@@ -70,11 +68,11 @@ def remote_command_allowed(argv: tuple[str, ...]) -> bool:
         posix = argv[1].replace("\\", "/")
         if "pp_jobs" in posix.split("/"):
             return False
-        approved = {
-            item.replace("\\", "/").casefold() for item in REMOTE_WORKER_SCRIPTS.values()
-        } | {item.replace("\\", "/").casefold() for item in REMOTE_HOLD_SCRIPTS.values()} | {
-            item.replace("\\", "/").casefold() for item in REMOTE_JOB_SCRIPTS.values()
-        }
+        approved = (
+            {item.replace("\\", "/").casefold() for item in REMOTE_WORKER_SCRIPTS.values()}
+            | {item.replace("\\", "/").casefold() for item in REMOTE_HOLD_SCRIPTS.values()}
+            | {item.replace("\\", "/").casefold() for item in REMOTE_JOB_SCRIPTS.values()}
+        )
         if posix.casefold() not in approved:
             return False
         if ".." in posix:

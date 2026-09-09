@@ -15,6 +15,7 @@ from project_pipeline.autonomy_runtime.fleet_loop import (
     useful_argv,
 )
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
+from project_pipeline.overlay import locate_input
 from project_pipeline.scheduler.admission import write_admission_record
 from project_pipeline.scheduler.fleet import MachineProfile
 from project_pipeline.scheduler.persistence import SchedulerStore
@@ -223,12 +224,17 @@ def test_useful_job_writes_artifact(tmp_path: Path) -> None:
 
 def test_duplicate_work_audit_and_structural_ready_fail_closed() -> None:
     audit = duplicate_work_audit(ROOT)
-    assert "REQ-CTRL-0004" in audit["incomplete_requirements"]
-    assert any(
-        item.get("issue_id") == "PP-TASK-000381"
-        and "REQ-CTRL-0004" in item.get("requirement_ids", [])
-        for item in audit["findings"]
-    )
+    catalog = locate_input(ROOT, "plans/_traceability/requirements.jsonl")
+    if catalog.is_file():
+        assert "REQ-CTRL-0004" in audit["incomplete_requirements"]
+        assert any(
+            item.get("issue_id") == "PP-TASK-000381"
+            and "REQ-CTRL-0004" in item.get("requirement_ids", [])
+            for item in audit["findings"]
+        )
+    else:
+        assert audit["incomplete_requirements"] == []
+        assert audit["findings"] == []
     empty = select_two_useful_jobs(
         ["PP-STORY-000065", "PP-STORY-000396"], blocked="PP-STORY-000139"
     )

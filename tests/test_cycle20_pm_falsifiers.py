@@ -341,9 +341,7 @@ def test_worker_cache_and_managed_path_do_not_false_accept(tmp_path: Path) -> No
     assert payload["phase"] == "managed"
     assert payload["pid"]
     spaced = r"C:\Users\Windows 11\AppData\Local\Programs\Python\Python311\python.exe"
-    quoted = owned_task_retirement_plan(
-        "ProjectPipelineFleetWorkerComfy", python_executable=spaced
-    )
+    quoted = owned_task_retirement_plan("ProjectPipelineFleetWorkerComfy", python_executable=spaced)
     assert quoted["ok"] is True
     tr = quoted["replacement_create_argv"][quoted["replacement_create_argv"].index("/TR") + 1]
     assert '"' in tr
@@ -654,9 +652,7 @@ def test_prelaunch_reject_releases_dispatched_claim(tmp_path: Path) -> None:
 
 def test_retirement_remote_keeps_tr_as_one_token() -> None:
     spaced = r"C:\Users\Windows 11\AppData\Local\Programs\Python\Python311\python.exe"
-    plan = owned_task_retirement_plan(
-        "ProjectPipelineFleetWorkerComfy", python_executable=spaced
-    )
+    plan = owned_task_retirement_plan("ProjectPipelineFleetWorkerComfy", python_executable=spaced)
     argv = [str(item) for item in plan["replacement_create_argv"]]
     remote = quote_command(argv)
     after_tr = remote.split("/TR", 1)[1]

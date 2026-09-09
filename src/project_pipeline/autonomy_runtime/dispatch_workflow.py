@@ -246,9 +246,7 @@ class DispatchWorkflow:
                     "remote_pid": str(executed.get("remote_pid") or ""),
                 }
             )
-        accepted = controller.accept(
-            envelope, executed["result"], expected_host=chosen.machine_id
-        )
+        accepted = controller.accept(envelope, executed["result"], expected_host=chosen.machine_id)
         lifecycle = (
             "ACCEPTED" if accepted.get("outcome") == "ACCEPTED" else str(accepted.get("reason"))
         )

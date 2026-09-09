@@ -358,7 +358,10 @@ class FleetJobStore:
             if intent["status"] == "ACCEPTED":
                 db.execute("COMMIT")
                 return {"ok": False, "reason": "already_accepted"}
-            if intent["status"] in {"RUNNING", "DISPATCHED", "UNKNOWN_OUTCOME"} and not absence_proof:
+            if (
+                intent["status"] in {"RUNNING", "DISPATCHED", "UNKNOWN_OUTCOME"}
+                and not absence_proof
+            ):
                 db.execute("COMMIT")
                 return {
                     "ok": False,

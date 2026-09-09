@@ -379,9 +379,7 @@ def _observation_database(root: Path, database: Path | None, *, live_ssh: bool, 
     return out / "scheduler.sqlite3"
 
 
-def _operator_surfaces(
-    *, status_path: Path, journal: FleetLifecycleJournal
-) -> dict[str, Any]:
+def _operator_surfaces(*, status_path: Path, journal: FleetLifecycleJournal) -> dict[str, Any]:
     cli: dict[str, Any] = {}
     if status_path.is_file():
         try:
