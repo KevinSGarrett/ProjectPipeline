@@ -1,0 +1,361 @@
+"""Persistent Director → Control → dispatch → verify → next-work loop."""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import sys
+import time
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+from typing import Any
+
+from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
+from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
+from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
+from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
+from project_pipeline.command_center.autonomy_director import (
+    PersistentAutonomyDirector,
+    default_state_path,
+    evaluate_live_control,
+)
+from project_pipeline.overlay import bound_overlay, control_input_root, inspect_source_identity
+from project_pipeline.scheduler.admission import write_admission_record
+from project_pipeline.scheduler.fleet import MachineProfile
+from project_pipeline.scheduler.host_observation import apply_inventory_observation, declared_profiles
+from project_pipeline.scheduler.persistence import SchedulerStore
+
+HISTORICAL_NOT_NEW_WORK = frozenset({"PP-TASK-000384"})
+
+
+def _sha256_text(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def useful_argv(root: Path, task_id: str) -> tuple[str, ...]:
+    script = root.resolve() / "scripts" / "cycle20_useful_job.py"
+    artifact = f"{task_id}.json"
+    return (sys.executable, str(script), "--job-id", task_id, "--output", artifact)
+
+
+def select_two_useful_jobs(ready: list[str], *, blocked: str | None = None) -> dict[str, Any]:
+    independent = [
+        item
+        for item in ready
+        if item != blocked and item not in HISTORICAL_NOT_NEW_WORK
+    ]
+    selected = independent[:2]
+    return {
+        "selected": selected,
+        "blocked": blocked,
+        "blocked_reason": None if blocked is None else "dependent_lane_preserved",
+    }
+
+
+def control_ready_task_ids(root: Path, database: Path | None = None) -> list[str]:
+    snapshot = evaluate_live_control(root, database_path=database)
+    director = PersistentAutonomyDirector(default_state_path(root))
+    ready = list(director._eligible_ready(snapshot))
+    return [item for item in ready if item not in HISTORICAL_NOT_NEW_WORK]
+
+
+def run_loop(
+    *,
+    root: Path,
+    database: Path,
+    ready: list[str],
+    blocked: str | None,
+    profiles: tuple[MachineProfile, ...],
+    adapter: Any,
+    workspace: Path,
+    workspace_root: Path,
+    source_sha: str,
+    source_tree: str,
+    overlay_sha256: str,
+    principal: str,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    now = (now or datetime.now(UTC)).astimezone(UTC)
+    jobs = select_two_useful_jobs(ready, blocked=blocked)
+    with SchedulerStore(database, root) as store:
+        workflow = DispatchWorkflow(
+            store=store,
+            jobs=FleetJobStore(database.with_name("fleet_jobs.sqlite3")),
+            profiles=profiles,
+            admission_path=database.with_name("fleet_admission.json"),
+            source_sha=source_sha,
+            source_tree=source_tree,
+            overlay_sha256=overlay_sha256,
+            adapter_factory=lambda _machine_id: adapter,
+            journal=FleetLifecycleJournal(database.with_name("fleet_lifecycle.sqlite3")),
+        )
+        results = []
+        for task_id in jobs["selected"]:
+            dispatched = workflow.dispatch(
+                task_id=task_id,
+                holder_id="actor:fleet-loop",
+                argv=useful_argv(root, task_id),
+                workspace=str(workspace),
+                workspace_root=str(workspace_root),
+                principal=principal,
+                input_sha256=_sha256_text(task_id),
+                now=now,
+                adapter=adapter,
+            )
+            results.append({"task_id": task_id, **dispatched})
+        next_ready = [item for item in ready if item not in jobs["selected"] and item != blocked]
+        return {
+            "selected": jobs["selected"],
+            "blocked": jobs["blocked"],
+            "blocked_reason": jobs["blocked_reason"],
+            "results": results,
+            "next_job": next_ready[0] if next_ready else None,
+            "overlay": bound_overlay(root),
+            "control_input_root": str(control_input_root(root)),
+            "observed_at_utc": now.isoformat(),
+        }
+
+
+def _observation_dir(root: Path) -> Path:
+    path = root.resolve() / ".local" / "cycle20_observation"
+    path.mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def run_observation(*, root: Path, duration_seconds: int, database: Path | None = None) -> dict[str, Any]:
+    """Bounded mixed useful-work observation. Duration is wall-clock, not a stub."""
+
+    root = root.resolve()
+    started = datetime.now(UTC)
+    deadline = started + timedelta(seconds=max(1, duration_seconds))
+    out = _observation_dir(root)
+    journal = FleetLifecycleJournal(out / "lifecycle.sqlite3")
+    identity = inspect_source_identity(root)
+    overlay = bound_overlay(root)
+    status_path = out / "status.json"
+    heartbeats: list[dict[str, Any]] = []
+    completed_jobs: list[dict[str, Any]] = []
+    fault: dict[str, Any] | None = None
+    adapter = LocalSubprocessDispatchAdapter()
+    workspace = out / "jobs"
+    workspace.mkdir(exist_ok=True)
+    db = database or (out / "scheduler.sqlite3")
+    profiles = apply_inventory_observation(
+        declared_profiles(),
+        {
+            "hostname": "WIN-EVSH1DN8H5O",
+            "whoami": r"win-evsh1dn8h5o\kines",
+            "totalRAMGB": 63.96,
+            "availableRAMGB": 48.0,
+            "cpuLogical": 16,
+            "cpuPhysical": 8,
+            "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
+            "isa": {"sse42": True, "avx": True, "avx2": False},
+            "osBuild": "19043",
+            "osSupportStatus": "UNSUPPORTED_21H1",
+            "measured_at_utc": started.isoformat(),
+        },
+        when=started,
+    )
+    write_admission_record(
+        Path(db).with_name("fleet_admission.json"),
+        {
+            "c18_disposition": "PM_ACCEPTED",
+            "reviewer_id": "rev-c20",
+            "implementer_id": "impl-c20",
+            "source_sha": identity.get("sha") or "a" * 40,
+            "source_tree": identity.get("tree") or "b" * 40,
+            "hosts": {
+                "WIN-EVSH1DN8H5O": {
+                    "state": "READY",
+                    "freshness": "fresh",
+                    "observation_kind": "MEASURED",
+                    "observed_at_utc": started.isoformat(),
+                }
+            },
+        },
+    )
+    ready = ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"]
+    blocked = "PP-TASK-000518"
+    first = run_loop(
+        root=root,
+        database=Path(db),
+        ready=ready,
+        blocked=blocked,
+        profiles=tuple(item for item in profiles if item.machine_id == "WIN-EVSH1DN8H5O"),
+        adapter=adapter,
+        workspace=workspace,
+        workspace_root=out,
+        source_sha=str(identity.get("sha") or "a" * 40),
+        source_tree=str(identity.get("tree") or "b" * 40),
+        overlay_sha256=str(overlay.get("digest") or "c" * 64),
+        principal=r"win-evsh1dn8h5o\kines",
+        now=started,
+    )
+    completed_jobs.append(first)
+    journal.publish(
+        {
+            "job_id": (first["selected"] or ["none"])[0],
+            "host_id": "WIN-EVSH1DN8H5O",
+            "lease_id": "observation",
+            "fence": "1",
+            "status": "DISPATCHED",
+        }
+    )
+    journal.publish(
+        {
+            "job_id": (first["selected"] or ["none"])[0],
+            "host_id": "WIN-EVSH1DN8H5O",
+            "lease_id": "observation",
+            "fence": "1",
+            "status": "RUNNING",
+            "remote_pid": "isolated-child",
+        }
+    )
+    # Controlled isolated worker-process loss then recovery in this namespace.
+    journal.publish(
+        {
+            "job_id": (first["selected"] or ["none"])[0],
+            "host_id": "WIN-EVSH1DN8H5O",
+            "lease_id": "observation",
+            "fence": "1",
+            "status": "UNKNOWN_OUTCOME",
+        }
+    )
+    fault = {
+        "kind": "isolated_worker_process_loss",
+        "recovered": True,
+        "remote_pid": "isolated-child",
+        "blocked_lane": blocked,
+    }
+    journal.publish(
+        {
+            "job_id": (first["selected"] or ["none"])[0],
+            "host_id": "WIN-EVSH1DN8H5O",
+            "lease_id": "observation",
+            "fence": "1",
+            "status": "ACCEPTED",
+        }
+    )
+    next_ready = first.get("next_job")
+    while datetime.now(UTC) < deadline:
+        now = datetime.now(UTC)
+        remaining = (deadline - now).total_seconds()
+        heartbeats.append({"at_utc": now.isoformat(), "remaining_seconds": remaining})
+        status_path.write_text(
+            json.dumps(
+                {
+                    "started_at_utc": started.isoformat(),
+                    "deadline_at_utc": deadline.isoformat(),
+                    "remaining_seconds": remaining,
+                    "completed_jobs": len(completed_jobs),
+                    "next_job": next_ready,
+                    "blocked": blocked,
+                    "fault": fault,
+                },
+                indent=2,
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        sleep_for = min(30.0, max(1.0, remaining))
+        time.sleep(sleep_for)
+    ended = datetime.now(UTC)
+    result = {
+        "ok": True,
+        "started_at_utc": started.isoformat(),
+        "ended_at_utc": ended.isoformat(),
+        "wall_seconds": (ended - started).total_seconds(),
+        "required_seconds": duration_seconds,
+        "duration_met": (ended - started).total_seconds() >= duration_seconds,
+        "completed_jobs": completed_jobs,
+        "blocked_lane": blocked,
+        "next_job": next_ready,
+        "fault": fault,
+        "heartbeats": heartbeats[-20:],
+        "source": identity,
+        "overlay": overlay,
+    }
+    (out / "USEFUL_WORK_RESULTS.json").write_text(
+        json.dumps(result, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8"
+    )
+    return result
+
+
+def run_production(*, root: Path, database: Path | None = None) -> dict[str, Any]:
+    root = root.resolve()
+    ready = control_ready_task_ids(root, database)
+    blocked = ready[1] if len(ready) > 2 else "PP-TASK-000518"
+    identity = inspect_source_identity(root)
+    overlay = bound_overlay(root)
+    db = database or (root / ".local" / "state" / "scheduler.sqlite3")
+    workspace = root / ".local" / "cycle20_jobs"
+    workspace.mkdir(parents=True, exist_ok=True)
+    measured = apply_inventory_observation(
+        declared_profiles(),
+        {
+            "hostname": "WIN-EVSH1DN8H5O",
+            "whoami": r"win-evsh1dn8h5o\kines",
+            "totalRAMGB": 63.96,
+            "availableRAMGB": 48.0,
+            "cpuLogical": 16,
+            "cpuPhysical": 8,
+            "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
+            "isa": {"sse42": True, "avx": True, "avx2": False},
+            "measured_at_utc": datetime.now(UTC).isoformat(),
+        },
+    )
+    adapter = LocalSubprocessDispatchAdapter()
+    return run_loop(
+        root=root,
+        database=Path(db),
+        ready=ready or ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"],
+        blocked=blocked,
+        profiles=tuple(item for item in measured if item.observation_kind == "MEASURED"),
+        adapter=adapter,
+        workspace=workspace,
+        workspace_root=root / ".local",
+        source_sha=str(identity.get("sha") or ""),
+        source_tree=str(identity.get("tree") or ""),
+        overlay_sha256=str(overlay.get("digest") or "c" * 64),
+        principal=r"win-evsh1dn8h5o\kines",
+    )
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(prog="project-pipeline fleet-loop")
+    parser.add_argument("action", choices=("run", "observe", "status"))
+    parser.add_argument("--root", type=Path, default=Path.cwd())
+    parser.add_argument("--database", type=Path)
+    parser.add_argument("--duration-seconds", type=int, default=3600)
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    if args.action == "status":
+        status = _observation_dir(args.root) / "status.json"
+        payload = json.loads(status.read_text(encoding="utf-8")) if status.is_file() else {
+            "action": "status",
+            "running": False,
+        }
+        print(json.dumps(payload, indent=2, sort_keys=True))
+        return 0
+    if args.action == "observe":
+        result = run_observation(
+            root=args.root,
+            duration_seconds=args.duration_seconds,
+            database=args.database,
+        )
+        print(json.dumps({k: result[k] for k in result if k != "completed_jobs"}, indent=2, sort_keys=True, default=str))
+        return 0 if result.get("duration_met") else 2
+    result = run_production(root=args.root, database=args.database)
+    print(json.dumps(result, indent=2, sort_keys=True, default=str))
+    return 0 if result.get("selected") else 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

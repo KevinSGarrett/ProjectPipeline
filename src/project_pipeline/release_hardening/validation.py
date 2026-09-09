@@ -4,6 +4,8 @@ import json
 from pathlib import Path
 from xml.etree import ElementTree
 
+from project_pipeline.overlay import locate_input
+
 _REQUIRED = (
     "config/release_policy.json",
     "config/pass24_hardening_matrix.json",
@@ -36,7 +38,7 @@ _REQUIRED = (
 def validate_release_hardening(root: Path) -> list[str]:
     errors = []
     for rel in _REQUIRED:
-        if not (root / rel).is_file():
+        if not locate_input(root, rel).is_file():
             errors.append(f"required Pass 24 artifact is missing: {rel}")
     if errors:
         return errors
@@ -80,7 +82,9 @@ def validate_release_hardening(root: Path) -> list[str]:
     if not expected <= profiles:
         errors.append("runtime profiles do not cover all required environment classes")
     gate = json.loads(
-        (root / "provenance/pass_24_upstream_hardening_gate.json").read_text(encoding="utf-8")
+        locate_input(root, "provenance/pass_24_upstream_hardening_gate.json").read_text(
+            encoding="utf-8"
+        )
     )
     if set(gate.get("candidate_upstream_ids", [])) != {
         f"UPSTREAM-{value:03d}" for value in (7, 43, 47, 48, 53, 69, 81, 89, 90, 94, 100, 114)

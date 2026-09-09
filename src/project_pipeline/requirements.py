@@ -6,10 +6,12 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.io import read_jsonl
+from project_pipeline.overlay import control_input_root
 from project_pipeline.source_references import parse_source_reference
 
 
 def load_requirement_catalog(root: Path) -> list[dict[str, Any]]:
+    root = control_input_root(root)
     return read_jsonl(root / "plans" / "_traceability" / "requirements.jsonl")
 
 

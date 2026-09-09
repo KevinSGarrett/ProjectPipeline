@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.io import read_json, write_json, write_jsonl
+from project_pipeline.overlay import control_input_root
 
 ISSUE_DIRECTORIES = ("epics", "stories", "tasks", "subtasks", "bugs", "spikes")
 ISSUE_TYPES = ("BUG", "EPIC", "SPIKE", "STORY", "SUBTASK", "TASK")
@@ -17,6 +18,7 @@ def _issue_sort_key(issue: dict[str, Any]) -> tuple[int, str]:
 
 
 def load_issues(root: Path) -> list[dict[str, Any]]:
+    root = control_input_root(root)
     rows: list[dict[str, Any]] = []
     for directory in ISSUE_DIRECTORIES:
         folder = root / "jira" / directory

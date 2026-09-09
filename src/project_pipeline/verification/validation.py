@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from project_pipeline.overlay import locate_input
 from project_pipeline.verification.policy import load_verification_policy
 
 _REQUIRED = (
@@ -56,7 +57,7 @@ _EXPECTED_UPSTREAM = {
 def validate_verification_harness(root: Path) -> list[str]:
     errors: list[str] = []
     for relative in _REQUIRED:
-        if not (root / relative).exists():
+        if not locate_input(root, relative).exists():
             errors.append(f"verification required path missing: {relative}")
     try:
         policy = load_verification_policy(root)
@@ -78,7 +79,7 @@ def validate_verification_harness(root: Path) -> list[str]:
     except Exception as exc:
         errors.append(f"verification policy invalid: {exc}")
 
-    gate_path = root / "provenance" / "pass_16_verification_activation_gate.json"
+    gate_path = locate_input(root, "provenance/pass_16_verification_activation_gate.json")
     if gate_path.exists():
         try:
             gate = json.loads(gate_path.read_text(encoding="utf-8"))
@@ -93,7 +94,7 @@ def validate_verification_harness(root: Path) -> list[str]:
         except Exception as exc:
             errors.append(f"Pass 16 activation gate invalid: {exc}")
 
-    adoption = root / "provenance" / "upstream_adoption_gate.json"
+    adoption = locate_input(root, "provenance/upstream_adoption_gate.json")
     if adoption.exists():
         document = json.loads(adoption.read_text(encoding="utf-8"))
         subsystem = document.get("subsystems", {}).get("verification_and_evaluation", {})
@@ -102,7 +103,7 @@ def validate_verification_harness(root: Path) -> list[str]:
         if set(subsystem.get("candidate_upstream_ids", ())) != _EXPECTED_UPSTREAM:
             errors.append("verification/evaluation candidate set drifted")
 
-    pass23_gate = root / "provenance" / "pass_23_upstream_e2e_gate.json"
+    pass23_gate = locate_input(root, "provenance/pass_23_upstream_e2e_gate.json")
     if pass23_gate.exists():
         try:
             gate = json.loads(pass23_gate.read_text(encoding="utf-8"))

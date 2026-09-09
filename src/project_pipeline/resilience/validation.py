@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from project_pipeline.overlay import locate_input
+
 _REQUIRED = (
     "src/project_pipeline/domain/resilience.py",
     "src/project_pipeline/resilience/failover.py",
@@ -37,7 +39,7 @@ _EXPECTED = {
 def validate_resilience_foundation(root: Path) -> list[str]:
     errors = []
     for rel in _REQUIRED:
-        if not (root / rel).exists():
+        if not locate_input(root, rel).exists():
             errors.append(f"resilience required path missing: {rel}")
     try:
         policy = json.loads((root / "config/resilience_policy.json").read_text(encoding="utf-8"))
@@ -61,7 +63,7 @@ def validate_resilience_foundation(root: Path) -> list[str]:
     try:
         rows = [
             json.loads(x)
-            for x in (root / "provenance/upstream_usage.jsonl")
+            for x in locate_input(root, "provenance/upstream_usage.jsonl")
             .read_text(encoding="utf-8")
             .splitlines()
             if x.strip()

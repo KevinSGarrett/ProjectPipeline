@@ -42,7 +42,8 @@ from project_pipeline.command_center.realtime import RealtimeEventBroker
 from project_pipeline.configuration import load_runtime_configuration
 from project_pipeline.domain.control import ControlSnapshot
 from project_pipeline.jira import load_issues
-from project_pipeline.scheduler.fleet import occupancy_from_leases
+from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
+from project_pipeline.scheduler.fleet import merge_occupancy, occupancy_from_leases
 from project_pipeline.scheduler.host_observation import (
     apply_local_control_observation,
     declared_profiles,
@@ -159,7 +160,14 @@ def create_live_command_center_app(
 
     def occupancy_provider() -> dict[str, dict[str, Any]]:
         with SchedulerStore(runtime_database, root) as store:
-            return occupancy_from_leases(store.list_active_leases())
+            lease_occupancy = occupancy_from_leases(store.list_active_leases())
+        journal_path = Path(runtime_database).with_name("fleet_lifecycle.sqlite3")
+        journal_occupancy: dict[str, dict[str, Any]] = {}
+        if journal_path.is_file():
+            journal_occupancy = FleetLifecycleJournal(journal_path).occupancy_by_host(
+                authority="lease-store"
+            )
+        return merge_occupancy(lease_occupancy, journal_occupancy)
 
     app = create_command_center_app(
         snapshot_provider=lambda: snapshot_from_repository(root),

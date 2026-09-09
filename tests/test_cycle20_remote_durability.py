@@ -1,0 +1,223 @@
+from __future__ import annotations
+
+import json
+import sys
+from datetime import UTC, datetime, timedelta
+from pathlib import Path
+
+import pytest
+
+from project_pipeline.autonomy_runtime.confinement import ConfinementError, canonicalize_workspace
+from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
+from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
+from project_pipeline.autonomy_runtime.ssh_dispatch import build_ssh_argv, remote_command_allowed
+from project_pipeline.autonomy_runtime.windows_limits import nested_pool_env
+
+NOW = datetime(2026, 9, 8, tzinfo=UTC)
+SHA = "a" * 40
+TREE = "b" * 40
+
+
+def _profile(machine_id: str, **overrides: object) -> MachineProfile:
+    payload = {
+        "machine_id": machine_id,
+        "hostname": machine_id,
+        "role": "CPU_WORKER",
+        "observed_at_utc": NOW,
+        "isa_flags": ("avx",),
+        "cpu_slots": 8,
+        "memory_mb": 32000,
+        "disk_mb": 20000,
+        "principal": "worker",
+        "observation_kind": "MEASURED",
+    }
+    payload.update(overrides)
+    return MachineProfile.model_validate(payload)
+
+
+def _envelope(tmp_path: Path, **overrides: object) -> RemoteJobEnvelope:
+    workspace = tmp_path / "job"
+    workspace.mkdir(exist_ok=True)
+    payload = {
+        "job_id": "PP-TASK-000516",
+        "host_id": "COMFY-V4-CPU-01",
+        "profile_id": "cpu",
+        "principal": "worker",
+        "lease_id": "LEASE-AAAAAAAAAAAAAAAAAAAA",
+        "fence": "1",
+        "source_sha": SHA,
+        "source_tree": TREE,
+        "overlay_sha256": "c" * 64,
+        "input_sha256": "d" * 64,
+        "argv": (sys.executable, "-c", "print('ok')"),
+        "workspace": str(workspace),
+        "deadline_utc": NOW + timedelta(minutes=5),
+        "cpu_ceiling": 1,
+        "memory_mb_ceiling": 512,
+        "correlation_id": "corr-c20",
+        "workspace_root": str(tmp_path),
+    }
+    payload.update(overrides)
+    return RemoteJobEnvelope.model_validate(payload)
+
+
+def test_restart_rejects_conflicting_expired_result(tmp_path: Path) -> None:
+    store = FleetJobStore(tmp_path / "jobs.sqlite3")
+    envelope = _envelope(tmp_path)
+    store.persist_intent(envelope.model_dump(mode="json"), now=NOW)
+    first = RemoteJobController(store=store, require_intent=True)
+    executed = first.execute(envelope, now=NOW)
+    accepted = first.accept(envelope, executed["result"], expected_host=envelope.host_id, now=NOW)
+    assert accepted["outcome"] == "ACCEPTED"
+    first.expire_fence(envelope.fence)
+    late = envelope.model_copy(update={"deadline_utc": NOW - timedelta(days=1)})
+    tampered = executed["result"].model_copy(update={"output_sha256": "e" * 64})
+    restarted = RemoteJobController(store=store, require_intent=True)
+    replay = restarted.accept(late, tampered, expected_host=envelope.host_id, now=NOW)
+    assert replay["outcome"] == "REJECTED"
+
+
+def test_concurrent_duplicate_dispatch_does_not_reexecute(tmp_path: Path) -> None:
+    store = FleetJobStore(tmp_path / "jobs.sqlite3")
+    envelope = _envelope(tmp_path)
+    store.persist_intent(envelope.model_dump(mode="json"), now=NOW)
+    runs = {"count": 0}
+
+    class _Adapter:
+        def execute(self, **_kwargs: object) -> dict[str, object]:
+            runs["count"] += 1
+            return {
+                "exit_code": 0,
+                "timed_out": False,
+                "stdout_sha256": "1" * 64,
+                "stderr_sha256": "2" * 64,
+                "payload_sha256": "3" * 64,
+            }
+
+    controller = RemoteJobController(_Adapter(), store=store, require_intent=True)
+    first = controller.execute(envelope, now=NOW)
+    assert first["outcome"] == "EXECUTED"
+    controller.accept(envelope, first["result"], expected_host=envelope.host_id, now=NOW)
+    second = RemoteJobController(_Adapter(), store=store, require_intent=True).execute(
+        envelope, now=NOW
+    )
+    assert second["reason"] == "already_accepted"
+    assert runs["count"] == 1
+
+
+def test_nonzero_exit_and_output_tamper_are_rejected(tmp_path: Path) -> None:
+    envelope = _envelope(tmp_path, output_contract_sha256="f" * 64)
+
+    class _Adapter:
+        def execute(self, **_kwargs: object) -> dict[str, object]:
+            return {
+                "exit_code": 1,
+                "timed_out": False,
+                "stdout_sha256": "1" * 64,
+                "stderr_sha256": "2" * 64,
+                "payload_sha256": "3" * 64,
+            }
+
+    executed = RemoteJobController(_Adapter()).execute(envelope, now=NOW)
+    denied = RemoteJobController().accept(
+        envelope, executed["result"], expected_host=envelope.host_id, now=NOW
+    )
+    assert denied["reason"] == "nonzero_exit"
+    ok_envelope = envelope.model_copy(update={"output_contract_sha256": "3" * 64})
+
+    class _Ok:
+        def execute(self, **_kwargs: object) -> dict[str, object]:
+            return {
+                "exit_code": 0,
+                "timed_out": False,
+                "stdout_sha256": "1" * 64,
+                "stderr_sha256": "2" * 64,
+                "payload_sha256": "3" * 64,
+            }
+
+    executed_ok = RemoteJobController(_Ok()).execute(ok_envelope, now=NOW)
+    tamper = RemoteJobController().accept(
+        ok_envelope,
+        executed_ok["result"],
+        expected_host=ok_envelope.host_id,
+        now=NOW,
+        artifact_bytes=b"nope",
+    )
+    assert tamper["reason"] == "output_tamper"
+
+
+def test_caller_envelope_without_intent_is_rejected(tmp_path: Path) -> None:
+    store = FleetJobStore(tmp_path / "jobs.sqlite3")
+    envelope = _envelope(tmp_path)
+    denied = RemoteJobController(store=store, require_intent=True).execute(envelope, now=NOW)
+    assert denied["reason"] == "intent_missing"
+
+
+def test_traversal_and_metacharacters_are_rejected(tmp_path: Path) -> None:
+    root = tmp_path / "root"
+    root.mkdir()
+    with pytest.raises(ConfinementError):
+        canonicalize_workspace(r"C:\Windows\..\pp_jobs", root=str(root))
+    with pytest.raises(ConfinementError):
+        canonicalize_workspace(r"C:\pp_jobs & echo AUDIT", root=str(root))
+    with pytest.raises(ConfinementError):
+        canonicalize_workspace(r"\\100.1.1.1\share", root=str(root))
+
+
+def test_ssh_does_not_interpolate_remote_cwd(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("not-a-real-key\n", encoding="utf-8")
+    argv = build_ssh_argv(
+        identity=identity,
+        user="kines",
+        host="100.107.207.66",
+        remote_argv=["hostname"],
+        remote_cwd=r"C:\Users\kines\safe",
+    )
+    joined = " ".join(argv)
+    assert "cmd" not in argv
+    assert "cd /d" not in joined
+    assert r"C:\Users\kines\safe" not in joined
+    assert remote_command_allowed(("python", r"C:\Users\kines\pp_jobs\job.py")) is False
+    assert remote_command_allowed(("hostname",)) is True
+
+
+def test_nested_pools_are_bound() -> None:
+    env = nested_pool_env(2)
+    assert env["OMP_NUM_THREADS"] == "2"
+    assert env["OPENBLAS_NUM_THREADS"] == "2"
+
+
+def test_secret_argv_is_rejected(tmp_path: Path) -> None:
+    store = FleetJobStore(tmp_path / "jobs.sqlite3")
+    envelope = _envelope(tmp_path, argv=(sys.executable, "-c", "print('api_key=sk-abcdefghijklmnop')"))
+    denied = store.persist_intent(envelope.model_dump(mode="json"), now=NOW)
+    assert denied["reason"] == "secret_in_envelope"
+    executed = RemoteJobController(store=store, require_intent=True).execute(envelope, now=NOW)
+    assert executed["reason"] in {"secret_in_argv", "intent_missing"}
+
+
+def test_worker_side_dedup(tmp_path: Path) -> None:
+    from project_pipeline.autonomy_runtime.worker_entrypoint import run_envelope
+
+    workspace = tmp_path / "job"
+    workspace.mkdir()
+    payload = {
+        "argv": [sys.executable, "-c", "print('once')"],
+        "workspace": str(workspace),
+        "job_id": "PP-TASK-000516",
+        "input_sha256": "d" * 64,
+    }
+    first = run_envelope(payload)
+    second = run_envelope(payload)
+    assert first["ok"] is True
+    assert second["duplicate"] is True
+
+
+def test_enforce_or_reject_creates_job_object() -> None:
+    from project_pipeline.autonomy_runtime.windows_limits import close_job_handle, enforce_or_reject
+
+    limits = enforce_or_reject(cpu_ceiling=1, memory_mb_ceiling=256, deadline_seconds=5)
+    assert limits["ok"] is True
+    assert limits["mechanism"] == "windows_job_object"
+    close_job_handle(int(limits["handle"]))

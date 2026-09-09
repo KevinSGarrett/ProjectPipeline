@@ -261,8 +261,18 @@ def test_declared_xeon_is_enrollment_pending() -> None:
     assert "avx2" not in {flag.lower() for flag in xeon.isa_flags}
     chosen, denials = select_target(tuple(profiles.values()), when=NOW)
     assert chosen is None
-    assert any("stale_capacity" in item for item in denials)
-    observed = declared_profiles(when=NOW, observation_source="test_fixture")
+    assert any("stale_capacity" in item or "measurement_incomplete" in item for item in denials)
+    inventory = {
+        "hostname": "WIN-EVSH1DN8H5O",
+        "whoami": r"win-evsh1dn8h5o\kines",
+        "totalRAMGB": 63.96,
+        "cpuLogical": 16,
+        "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
+        "gpus": [{"Name": "NVIDIA Quadro 6000"}],
+        "isa": {"sse42": True, "avx": True, "avx2": False},
+        "measured_at_utc": NOW.isoformat(),
+    }
+    observed = apply_inventory_observation(declared_profiles(), inventory, when=NOW)
     chosen_observed, _observed_denials = select_target(observed, when=NOW)
     assert chosen_observed is not None
     assert chosen_observed.machine_id == "WIN-EVSH1DN8H5O"
@@ -274,8 +284,8 @@ def test_declared_xeon_is_enrollment_pending() -> None:
 def test_declared_profiles_are_stale_without_observation_source() -> None:
     profiles = declared_profiles(when=NOW)
     assert all(not item.fresh_at(NOW) for item in profiles)
-    observed = declared_profiles(when=NOW, observation_source="test_fixture")
-    assert all(item.fresh_at(NOW) for item in observed)
+    named = declared_profiles(when=NOW, observation_source="test_fixture")
+    assert all(not item.fresh_at(NOW) for item in named)
 
 
 def test_resume_does_not_refresh_stale_observation() -> None:
@@ -411,6 +421,7 @@ def test_inventory_observation_admits_xeon_cpu_not_cuda() -> None:
         "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
         "gpus": [{"Name": "NVIDIA Quadro 6000"}],
         "isa": {"sse42": True, "avx": True, "avx2": False},
+        "measured_at_utc": NOW.isoformat(),
     }
     observed = apply_inventory_observation(declared_profiles(), inventory, when=NOW)
     xeon = {item.machine_id: item for item in observed}["WIN-EVSH1DN8H5O"]
@@ -443,7 +454,7 @@ def test_ssh_dispatch_builds_argv_without_env_or_kevin_principal(tmp_path: Path)
     assert "kevin@" not in " ".join(argv)
     assert "kines@" not in " ".join(argv)
     assert remote_command_allowed(("hostname",)) is True
-    assert remote_command_allowed(("python", r"C:\Users\kines\pp_jobs\job.py")) is True
+    assert remote_command_allowed(("python", r"C:\Users\kines\pp_jobs\job.py")) is False
     assert remote_command_allowed(("python", "-c", "print(1)")) is False
     assert remote_command_allowed(("python", "-c", "__import__('os').system('whoami')")) is False
     try:
@@ -639,6 +650,7 @@ def test_inventory_observation_admits_comfy_cpu_not_cuda() -> None:
         "disks": [{"DeviceID": "C:", "FreeGB": 28.5}],
         "gpus": [{"Name": "Intel(R) UHD Graphics 630"}],
         "isa": {"sse42": True, "avx": True, "avx2": True},
+        "measured_at_utc": NOW.isoformat(),
     }
     observed = apply_inventory_observation(declared_profiles(), inventory, when=NOW)
     comfy = {item.machine_id: item for item in observed}["COMFY-V4-CPU-01"]
@@ -735,6 +747,7 @@ def test_inventory_observation_preserves_drained_comfy() -> None:
         "disks": [{"DeviceID": "C:", "FreeGB": 28.5}],
         "gpus": [{"Name": "Intel(R) UHD Graphics 630"}],
         "isa": {"sse42": True, "avx": True, "avx2": True},
+        "measured_at_utc": NOW.isoformat(),
     }
     profiles = tuple(
         item.model_copy(update={"state": "DRAINED"})

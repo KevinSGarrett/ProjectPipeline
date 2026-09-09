@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.autonomy_runtime.supervisor import PersistentSupervisor
+from project_pipeline.autonomy_runtime.windows_limits import assign_and_wait
 
 SAFE_ENV_KEYS = frozenset(
     {
@@ -57,6 +58,7 @@ class LocalSubprocessDispatchAdapter:
         timeout_seconds: int = DEFAULT_TIMEOUT_SECONDS,
         max_output_bytes: int = DEFAULT_MAX_OUTPUT_BYTES,
         extra_env: dict[str, str] | None = None,
+        job_handle: int | None = None,
     ) -> dict[str, Any]:
         if not command or any(not isinstance(item, str) or not item for item in command):
             raise ValueError("command must be a non-empty argument array")
@@ -64,18 +66,28 @@ class LocalSubprocessDispatchAdapter:
             raise ValueError(f"invalid worktree: {working_directory}")
         raw_stdout = ""
         raw_stderr = ""
+        env = _safe_env(extra_env)
         try:
-            completed = subprocess.run(
-                command,
-                cwd=str(working_directory),
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=timeout_seconds,
-                env=_safe_env(extra_env),
-            )
-            raw_stdout = completed.stdout
-            raw_stderr = completed.stderr
+            if job_handle:
+                completed = assign_and_wait(
+                    command=command,
+                    working_directory=working_directory,
+                    timeout_seconds=timeout_seconds,
+                    env=env,
+                    handle=int(job_handle),
+                )
+            else:
+                completed = subprocess.run(
+                    command,
+                    cwd=str(working_directory),
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                    timeout=timeout_seconds,
+                    env=env,
+                )
+            raw_stdout = completed.stdout or ""
+            raw_stderr = completed.stderr or ""
             timed_out = False
             exit_code = completed.returncode
         except subprocess.TimeoutExpired as error:
@@ -100,6 +112,7 @@ class LocalSubprocessDispatchAdapter:
         payload["payload_sha256"] = hashlib.sha256(
             json.dumps(payload, sort_keys=True).encode("utf-8")
         ).hexdigest()
+        payload["remote_pid"] = str(getattr(completed, "pid", "") or "")
         return payload
 
 

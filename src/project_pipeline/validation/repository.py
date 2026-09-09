@@ -48,6 +48,7 @@ from project_pipeline.validation.product_model_audit import (
     validate_independent_product_model_audit,
 )
 from project_pipeline.validation.product_outcome import validate_product_outcome
+from project_pipeline.overlay import control_input_root, locate_input
 from project_pipeline.validation.public_repository import validate_public_repository_surface
 from project_pipeline.validation.registries import (
     check_adr_registry,
@@ -64,8 +65,6 @@ from project_pipeline.validation.registries import (
 
 CONTROL_WORKSPACE_MARKERS = (
     ".agents",
-    ".cursor",
-    ".cursorignore",
     "instructions",
     "jira",
     "plans",
@@ -101,6 +100,7 @@ class RepositoryValidator:
 
     def __init__(self, root: Path) -> None:
         self.root = root.resolve()
+        self.input_root = control_input_root(self.root)
         self.report = ValidationReport(project_root=str(self.root))
         policy_path = self.root / "config" / "repository_policy.json"
         self.policy: dict[str, Any] = read_json(policy_path) if policy_path.exists() else {}
@@ -176,15 +176,17 @@ class RepositoryValidator:
 
         def plans() -> None:
             nonlocal plan_ids, section_index
-            plan_ids, section_index = check_plan_registry(self.root, self.report)
+            plan_ids, section_index = check_plan_registry(self.input_root, self.report)
 
         def jira() -> None:
             nonlocal issues
-            issues = check_jira_registry(self.root, self.report, plan_ids, section_index)
+            issues = check_jira_registry(self.input_root, self.report, plan_ids, section_index)
 
         def requirement_check() -> None:
             nonlocal requirements
-            requirements = check_requirement_registry(self.root, self.report, plan_ids, issues)
+            requirements = check_requirement_registry(
+                self.input_root, self.report, plan_ids, issues
+            )
 
         self._run("plans", plans)
         self._run("jira", jira)
@@ -192,22 +194,22 @@ class RepositoryValidator:
         self._run(
             "requirement_supporting_registries",
             lambda: check_requirement_supporting_registries(
-                self.root, self.report, requirements, plan_ids, section_index, issues
+                self.input_root, self.report, requirements, plan_ids, section_index, issues
             ),
         )
         self._run(
             "source_section_registry",
-            lambda: check_source_section_registry(self.root, self.report, requirements),
+            lambda: check_source_section_registry(self.input_root, self.report, requirements),
         )
         self._run(
             "traceability_exports",
-            lambda: check_traceability_exports(self.root, self.report, requirements),
+            lambda: check_traceability_exports(self.input_root, self.report, requirements),
         )
         self._run("architecture_decisions", lambda: check_adr_registry(self.root, self.report))
         self._run("architecture_registry", self._check_architecture_registry)
-        self._run("upstream_registry", lambda: check_upstream_registry(self.root, self.report))
+        self._run("upstream_registry", lambda: check_upstream_registry(self.input_root, self.report))
         self._run("upstream_reviews", self._check_upstream_reviews)
-        self._run("evidence_ledger", lambda: check_evidence_ledger(self.root, self.report))
+        self._run("evidence_ledger", lambda: check_evidence_ledger(self.input_root, self.report))
         self._run("manifest", self._check_manifest)
         return self.report
 
@@ -298,11 +300,11 @@ class RepositoryValidator:
             self.report.add("ERROR", "PROJECTSTATE001", error, "config/project_manifest.json")
 
     def _check_product_outcome(self) -> None:
-        for error in validate_product_outcome(self.root):
+        for error in validate_product_outcome(self.input_root):
             self.report.add("ERROR", "PRODUCT001", error, "config/product_outcome.json")
 
     def _check_product_model_audit(self) -> None:
-        for error in validate_independent_product_model_audit(self.root):
+        for error in validate_independent_product_model_audit(self.input_root):
             self.report.add("ERROR", "PRODUCT002", error, "config/product_outcome.json")
 
     def _check_database_migrations(self) -> None:
@@ -394,11 +396,11 @@ class RepositoryValidator:
             )
 
     def _check_architecture_registry(self) -> None:
-        for error in validate_architecture(self.root):
+        for error in validate_architecture(self.input_root):
             self.report.add("ERROR", "ARCHREG001", error, "architecture")
 
     def _check_upstream_reviews(self) -> None:
-        for error in validate_upstream_reviews(self.root):
+        for error in validate_upstream_reviews(self.input_root):
             self.report.add("ERROR", "UPREVIEW001", error, "provenance/upstream_registry.json")
 
     def _check_required_paths(self) -> None:
@@ -428,7 +430,7 @@ class RepositoryValidator:
                     "config/repository_policy.json",
                 )
                 continue
-            if not (self.root / relative).exists():
+            if not locate_input(self.root, relative).exists():
                 self.report.add(
                     "ERROR", "STRUCT003", f"Required path is missing: {relative}", relative
                 )

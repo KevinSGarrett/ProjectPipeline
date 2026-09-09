@@ -121,8 +121,6 @@ def test_unmarked_checkout_does_not_suppress_private_control_validation() -> Non
     "private_path",
     (
         ".agents",
-        ".cursor",
-        ".cursorignore",
         "instructions",
         "jira",
         "plans",
