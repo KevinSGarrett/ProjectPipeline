@@ -958,6 +958,7 @@ def build_parser() -> argparse.ArgumentParser:
     fleet_loop.add_argument("--root", type=_root, default=Path.cwd())
     fleet_loop.add_argument("--database", type=Path)
     fleet_loop.add_argument("--duration-seconds", type=int, default=3600)
+    fleet_loop.add_argument("--live-ssh", action="store_true")
     fleet_loop.add_argument("--json-output", type=Path)
     _add_configuration_arguments(fleet_loop)
 
@@ -4553,6 +4554,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                         if getattr(args, "database", None)
                         else []
                     ),
+                    *(["--live-ssh"] if getattr(args, "live_ssh", False) else []),
                 ]
             )
             result = {"command": "fleet-loop", "action": args.action, "exit_code": code}

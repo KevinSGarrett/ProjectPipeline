@@ -9,8 +9,13 @@ import pytest
 from project_pipeline.autonomy_runtime.confinement import ConfinementError, canonicalize_workspace
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
-from project_pipeline.autonomy_runtime.ssh_dispatch import build_ssh_argv, remote_command_allowed
+from project_pipeline.autonomy_runtime.ssh_dispatch import (
+    build_ssh_argv,
+    parse_worker_stdout,
+    remote_command_allowed,
+)
 from project_pipeline.autonomy_runtime.windows_limits import nested_pool_env
+from project_pipeline.autonomy_runtime.worker_entrypoint import run_envelope
 
 NOW = datetime(2026, 9, 8, tzinfo=UTC)
 SHA = "a" * 40
@@ -181,9 +186,12 @@ def test_secret_argv_is_rejected(tmp_path: Path) -> None:
     assert executed["reason"] in {"secret_in_argv", "intent_missing"}
 
 
-def test_worker_side_dedup(tmp_path: Path) -> None:
-    from project_pipeline.autonomy_runtime.worker_entrypoint import run_envelope
+def test_worker_stdout_pid_is_parsed() -> None:
+    parsed = parse_worker_stdout('noise\n{"ok": true, "pid": 4242, "exit_code": 0}\n')
+    assert parsed["pid"] == 4242
 
+
+def test_worker_side_dedup(tmp_path: Path) -> None:
     workspace = tmp_path / "job"
     workspace.mkdir()
     payload = {

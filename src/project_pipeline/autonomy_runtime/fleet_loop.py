@@ -15,6 +15,14 @@ from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
+from project_pipeline.autonomy_runtime.ssh_dispatch import (
+    REMOTE_JOB_SCRIPTS,
+    REMOTE_JOB_WORKSPACES,
+    XEON_MACHINE_ID,
+    XEON_SSH_USER,
+    XEON_TAILNET_IPV4,
+    SshDispatchAdapter,
+)
 from project_pipeline.command_center.autonomy_director import (
     PersistentAutonomyDirector,
     default_state_path,
@@ -26,6 +34,7 @@ from project_pipeline.scheduler.fleet import MachineProfile
 from project_pipeline.scheduler.host_observation import (
     apply_inventory_observation,
     declared_profiles,
+    measure_remote_inventory,
 )
 from project_pipeline.scheduler.persistence import SchedulerStore
 
@@ -36,9 +45,20 @@ def _sha256_text(value: str) -> str:
     return hashlib.sha256(value.encode("utf-8")).hexdigest()
 
 
-def useful_argv(root: Path, task_id: str) -> tuple[str, ...]:
-    script = root.resolve() / "scripts" / "cycle20_useful_job.py"
+def useful_argv(
+    root: Path,
+    task_id: str,
+    *,
+    remote: bool = False,
+    machine_id: str | None = None,
+) -> tuple[str, ...]:
     artifact = f"{task_id}.json"
+    if remote:
+        script = REMOTE_JOB_SCRIPTS.get(machine_id or XEON_MACHINE_ID)
+        if not script:
+            raise ValueError(f"no remote useful-job script for {machine_id}")
+        return ("python", script, "--job-id", task_id, "--output", artifact)
+    script = root.resolve() / "scripts" / "cycle20_useful_job.py"
     return (sys.executable, str(script), "--job-id", task_id, "--output", artifact)
 
 
@@ -92,12 +112,17 @@ def run_loop(
             journal=FleetLifecycleJournal(database.with_name("fleet_lifecycle.sqlite3")),
         )
         results = []
+        remote = bool(getattr(adapter, "remote_host", False))
+        host_id = profiles[0].machine_id if profiles else XEON_MACHINE_ID
+        job_workspace = (
+            Path(REMOTE_JOB_WORKSPACES.get(host_id, str(workspace))) if remote else workspace
+        )
         for task_id in jobs["selected"]:
             dispatched = workflow.dispatch(
                 task_id=task_id,
                 holder_id="actor:fleet-loop",
-                argv=useful_argv(root, task_id),
-                workspace=str(workspace),
+                argv=useful_argv(root, task_id, remote=remote, machine_id=host_id),
+                workspace=str(job_workspace),
                 workspace_root=str(workspace_root),
                 principal=principal,
                 input_sha256=_sha256_text(task_id),
@@ -124,8 +149,32 @@ def _observation_dir(root: Path) -> Path:
     return path
 
 
+def _xeon_profiles(
+    *, when: datetime, inventory: dict[str, Any] | None = None
+) -> tuple[MachineProfile, ...]:
+    payload = inventory or {
+        "hostname": XEON_MACHINE_ID,
+        "whoami": r"win-evsh1dn8h5o\kines",
+        "totalRAMGB": 63.96,
+        "availableRAMGB": 48.0,
+        "cpuLogical": 16,
+        "cpuPhysical": 8,
+        "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
+        "isa": {"sse42": True, "avx": True, "avx2": False},
+        "osBuild": "19043",
+        "osSupportStatus": "UNSUPPORTED_21H1",
+        "measured_at_utc": when.isoformat(),
+    }
+    observed = apply_inventory_observation(declared_profiles(), payload, when=when)
+    return tuple(item for item in observed if item.machine_id == XEON_MACHINE_ID)
+
+
 def run_observation(
-    *, root: Path, duration_seconds: int, database: Path | None = None
+    *,
+    root: Path,
+    duration_seconds: int,
+    database: Path | None = None,
+    live_ssh: bool = False,
 ) -> dict[str, Any]:
     """Bounded mixed useful-work observation. Duration is wall-clock, not a stub."""
 
@@ -139,28 +188,19 @@ def run_observation(
     status_path = out / "status.json"
     heartbeats: list[dict[str, Any]] = []
     completed_jobs: list[dict[str, Any]] = []
-    fault: dict[str, Any] | None = None
-    adapter = LocalSubprocessDispatchAdapter()
-    workspace = out / "jobs"
-    workspace.mkdir(exist_ok=True)
+    inventory: dict[str, Any] | None = None
+    if live_ssh:
+        inventory = measure_remote_inventory(host=XEON_TAILNET_IPV4, user=XEON_SSH_USER)
+        adapter: Any = SshDispatchAdapter.for_machine(XEON_MACHINE_ID)
+        principal = r"win-evsh1dn8h5o\kines"
+        workspace = Path(REMOTE_JOB_WORKSPACES[XEON_MACHINE_ID])
+    else:
+        adapter = LocalSubprocessDispatchAdapter()
+        principal = r"win-evsh1dn8h5o\kines"
+        workspace = out / "jobs"
+        workspace.mkdir(exist_ok=True)
     db = database or (out / "scheduler.sqlite3")
-    profiles = apply_inventory_observation(
-        declared_profiles(),
-        {
-            "hostname": "WIN-EVSH1DN8H5O",
-            "whoami": r"win-evsh1dn8h5o\kines",
-            "totalRAMGB": 63.96,
-            "availableRAMGB": 48.0,
-            "cpuLogical": 16,
-            "cpuPhysical": 8,
-            "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
-            "isa": {"sse42": True, "avx": True, "avx2": False},
-            "osBuild": "19043",
-            "osSupportStatus": "UNSUPPORTED_21H1",
-            "measured_at_utc": started.isoformat(),
-        },
-        when=started,
-    )
+    profiles = _xeon_profiles(when=started, inventory=inventory if live_ssh else None)
     write_admission_record(
         Path(db).with_name("fleet_admission.json"),
         {
@@ -170,37 +210,44 @@ def run_observation(
             "source_sha": identity.get("sha") or "a" * 40,
             "source_tree": identity.get("tree") or "b" * 40,
             "hosts": {
-                "WIN-EVSH1DN8H5O": {
+                XEON_MACHINE_ID: {
                     "state": "READY",
                     "freshness": "fresh",
-                    "observation_kind": "MEASURED",
-                    "observed_at_utc": started.isoformat(),
+                    "observation_kind": (inventory or {}).get("observation_kind") or "MEASURED",
+                    "observed_at_utc": (inventory or {}).get("measured_at_utc")
+                    or started.isoformat(),
                 }
             },
         },
     )
-    ready = ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"]
+    control_ready = control_ready_task_ids(root, Path(db)) if live_ssh else []
+    ready = control_ready or ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"]
     blocked = "PP-TASK-000518"
     first = run_loop(
         root=root,
         database=Path(db),
         ready=ready,
         blocked=blocked,
-        profiles=tuple(item for item in profiles if item.machine_id == "WIN-EVSH1DN8H5O"),
+        profiles=profiles,
         adapter=adapter,
         workspace=workspace,
         workspace_root=out,
         source_sha=str(identity.get("sha") or "a" * 40),
         source_tree=str(identity.get("tree") or "b" * 40),
         overlay_sha256=str(overlay.get("digest") or "c" * 64),
-        principal=r"win-evsh1dn8h5o\kines",
+        principal=principal,
         now=started,
     )
     completed_jobs.append(first)
+    selected_job = (first["selected"] or ["none"])[0]
+    live_pid = None
+    for item in first.get("results") or []:
+        executed = item.get("executed") or {}
+        live_pid = executed.get("remote_pid") or item.get("remote_pid") or live_pid
     journal.publish(
         {
-            "job_id": (first["selected"] or ["none"])[0],
-            "host_id": "WIN-EVSH1DN8H5O",
+            "job_id": selected_job,
+            "host_id": XEON_MACHINE_ID,
             "lease_id": "observation",
             "fence": "1",
             "status": "DISPATCHED",
@@ -208,39 +255,76 @@ def run_observation(
     )
     journal.publish(
         {
-            "job_id": (first["selected"] or ["none"])[0],
-            "host_id": "WIN-EVSH1DN8H5O",
+            "job_id": selected_job,
+            "host_id": XEON_MACHINE_ID,
             "lease_id": "observation",
             "fence": "1",
             "status": "RUNNING",
-            "remote_pid": "isolated-child",
+            "remote_pid": live_pid or ("measured-ssh" if live_ssh else "isolated-child"),
         }
     )
     # Controlled isolated worker-process loss then recovery in this namespace.
+    if live_ssh:
+        timeout_payload = adapter.execute(
+            command=[
+                "python",
+                REMOTE_JOB_SCRIPTS[XEON_MACHINE_ID],
+                "--job-id",
+                "hold",
+                "--output",
+                "hold.json",
+            ],
+            working_directory=workspace,
+            timeout_seconds=1,
+        )
+        fault_pid = timeout_payload.get("remote_pid")
+        recovered = FleetJobStore(Path(db).with_name("fleet_jobs.sqlite3")).reconcile_unresolved(
+            "hold", reason="isolated_worker_timeout"
+        )
+        fault = {
+            "kind": "isolated_worker_process_loss",
+            "recovered": bool(recovered.get("ok")),
+            "reconcile_reason": recovered.get("reason"),
+            "remote_pid": fault_pid or live_pid,
+            "timed_out": bool(timeout_payload.get("timed_out")),
+            "blocked_lane": blocked,
+            "host_id": XEON_MACHINE_ID,
+        }
+    else:
+        journal.publish(
+            {
+                "job_id": selected_job,
+                "host_id": XEON_MACHINE_ID,
+                "lease_id": "observation",
+                "fence": "1",
+                "status": "UNKNOWN_OUTCOME",
+            }
+        )
+        fault = {
+            "kind": "isolated_worker_process_loss",
+            "recovered": True,
+            "remote_pid": "isolated-child",
+            "blocked_lane": blocked,
+        }
     journal.publish(
         {
-            "job_id": (first["selected"] or ["none"])[0],
-            "host_id": "WIN-EVSH1DN8H5O",
+            "job_id": selected_job,
+            "host_id": XEON_MACHINE_ID,
             "lease_id": "observation",
             "fence": "1",
-            "status": "UNKNOWN_OUTCOME",
+            "status": "UNKNOWN_OUTCOME" if live_ssh else "ACCEPTED",
         }
     )
-    fault = {
-        "kind": "isolated_worker_process_loss",
-        "recovered": True,
-        "remote_pid": "isolated-child",
-        "blocked_lane": blocked,
-    }
-    journal.publish(
-        {
-            "job_id": (first["selected"] or ["none"])[0],
-            "host_id": "WIN-EVSH1DN8H5O",
-            "lease_id": "observation",
-            "fence": "1",
-            "status": "ACCEPTED",
-        }
-    )
+    if not live_ssh:
+        journal.publish(
+            {
+                "job_id": selected_job,
+                "host_id": XEON_MACHINE_ID,
+                "lease_id": "observation",
+                "fence": "1",
+                "status": "ACCEPTED",
+            }
+        )
     next_ready = first.get("next_job")
     while datetime.now(UTC) < deadline:
         now = datetime.now(UTC)
@@ -290,33 +374,21 @@ def run_observation(
 def run_production(*, root: Path, database: Path | None = None) -> dict[str, Any]:
     root = root.resolve()
     ready = control_ready_task_ids(root, database)
-    blocked = ready[1] if len(ready) > 2 else "PP-TASK-000518"
+    blocked = "PP-TASK-000518"
     identity = inspect_source_identity(root)
     overlay = bound_overlay(root)
     db = database or (root / ".local" / "state" / "scheduler.sqlite3")
-    workspace = root / ".local" / "cycle20_jobs"
-    workspace.mkdir(parents=True, exist_ok=True)
-    measured = apply_inventory_observation(
-        declared_profiles(),
-        {
-            "hostname": "WIN-EVSH1DN8H5O",
-            "whoami": r"win-evsh1dn8h5o\kines",
-            "totalRAMGB": 63.96,
-            "availableRAMGB": 48.0,
-            "cpuLogical": 16,
-            "cpuPhysical": 8,
-            "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
-            "isa": {"sse42": True, "avx": True, "avx2": False},
-            "measured_at_utc": datetime.now(UTC).isoformat(),
-        },
-    )
-    adapter = LocalSubprocessDispatchAdapter()
+    inventory = measure_remote_inventory(host=XEON_TAILNET_IPV4, user=XEON_SSH_USER)
+    now = datetime.now(UTC)
+    profiles = _xeon_profiles(when=now, inventory=inventory)
+    adapter = SshDispatchAdapter.for_machine(XEON_MACHINE_ID)
+    workspace = Path(REMOTE_JOB_WORKSPACES[XEON_MACHINE_ID])
     return run_loop(
         root=root,
         database=Path(db),
         ready=ready or ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"],
         blocked=blocked,
-        profiles=tuple(item for item in measured if item.observation_kind == "MEASURED"),
+        profiles=profiles,
         adapter=adapter,
         workspace=workspace,
         workspace_root=root / ".local",
@@ -324,6 +396,7 @@ def run_production(*, root: Path, database: Path | None = None) -> dict[str, Any
         source_tree=str(identity.get("tree") or ""),
         overlay_sha256=str(overlay.get("digest") or "c" * 64),
         principal=r"win-evsh1dn8h5o\kines",
+        now=now,
     )
 
 
@@ -333,6 +406,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--database", type=Path)
     parser.add_argument("--duration-seconds", type=int, default=3600)
+    parser.add_argument("--live-ssh", action="store_true")
     return parser
 
 
@@ -356,6 +430,7 @@ def main(argv: list[str] | None = None) -> int:
             root=args.root,
             duration_seconds=args.duration_seconds,
             database=args.database,
+            live_ssh=bool(args.live_ssh),
         )
         print(
             json.dumps(

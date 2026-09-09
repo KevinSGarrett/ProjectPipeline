@@ -3,7 +3,12 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from pathlib import Path
 
-from project_pipeline.autonomy_runtime.fleet_loop import run_loop, select_two_useful_jobs
+from project_pipeline.autonomy_runtime.fleet_loop import (
+    build_parser,
+    run_loop,
+    select_two_useful_jobs,
+    useful_argv,
+)
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
 from project_pipeline.scheduler.admission import write_admission_record
@@ -116,12 +121,11 @@ def test_lifecycle_journal_zero_occupancy_requires_authority(tmp_path: Path) -> 
 
 
 def test_cli_discovers_fleet_loop() -> None:
-    from project_pipeline.autonomy_runtime.fleet_loop import build_parser
-
     parser = build_parser()
-    args = parser.parse_args(["status", "--duration-seconds", "3600"])
+    args = parser.parse_args(["status", "--duration-seconds", "3600", "--live-ssh"])
     assert args.action == "status"
     assert args.duration_seconds == 3600
+    assert args.live_ssh is True
 
 
 def test_lifecycle_has_no_kill_or_recover() -> None:
@@ -130,8 +134,6 @@ def test_lifecycle_has_no_kill_or_recover() -> None:
 
 
 def test_useful_job_writes_artifact(tmp_path: Path) -> None:
-    from project_pipeline.autonomy_runtime.fleet_loop import useful_argv
-
     argv = useful_argv(ROOT, "PP-TASK-000516")
     assert argv[1].endswith("cycle20_useful_job.py")
     assert "PP-TASK-000384" not in argv

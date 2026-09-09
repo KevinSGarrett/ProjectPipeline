@@ -7,6 +7,7 @@ from project_pipeline.autonomy_runtime.managed_worker import (
     classify_scheduled_action,
     inspect_scheduled_task_xml,
     os_age_denies_xeon,
+    owned_task_retirement_plan,
 )
 from project_pipeline.scheduler.admission import chosen_host_admitted, evaluate_admission
 from project_pipeline.scheduler.fleet import MachineProfile, select_target
@@ -154,6 +155,30 @@ def test_scheduled_task_xml_hash_does_not_mutate_host() -> None:
         acl_fullcontrol_users=(),
     )
     assert ok["accepted_production_worker"] is True
+
+
+def test_user_pp_jobs_and_system_protected_are_rejected() -> None:
+    user_pp_jobs = classify_scheduled_action(
+        runas=r"WIN-EVSH1DN8H5O\kines",
+        script_path=r"C:\Users\kines\pp_jobs\run_index.cmd",
+        acl_fullcontrol_users=(),
+    )
+    assert user_pp_jobs["accepted_production_worker"] is False
+    system_protected = classify_scheduled_action(
+        runas=r"NT AUTHORITY\SYSTEM",
+        script_path=r"C:\ProgramData\ProjectPipeline\worker\entrypoint.py",
+        acl_fullcontrol_users=(),
+    )
+    assert system_protected["accepted_production_worker"] is False
+
+
+def test_owned_task_retirement_plan_is_scoped() -> None:
+    plan = owned_task_retirement_plan("ProjectPipelineFleetWorkerXeon")
+    assert plan["ok"] is True
+    assert plan["unrelated_services_untouched"] is True
+    assert "/DISABLE" in plan["disable_argv"]
+    stray = owned_task_retirement_plan("SomeOtherTask")
+    assert stray["ok"] is False
 
 
 def test_system_sid_with_pp_jobs_is_not_production_worker() -> None:

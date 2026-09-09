@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 786,
+  "test_count": 789,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3931,6 +3931,21 @@
       "callable": "test_system_sid_with_pp_jobs_is_not_production_worker",
       "path": "tests/test_cycle20_host_admission.py",
       "test_id": "TEST-C20-ADM-012"
+    },
+    {
+      "callable": "test_user_pp_jobs_and_system_protected_are_rejected",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-013"
+    },
+    {
+      "callable": "test_owned_task_retirement_plan_is_scoped",
+      "path": "tests/test_cycle20_host_admission.py",
+      "test_id": "TEST-C20-ADM-014"
+    },
+    {
+      "callable": "test_worker_stdout_pid_is_parsed",
+      "path": "tests/test_cycle20_remote_durability.py",
+      "test_id": "TEST-C20-DUR-011"
     }
   ]
 }

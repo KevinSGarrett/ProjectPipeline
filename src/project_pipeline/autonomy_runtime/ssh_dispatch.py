@@ -42,6 +42,30 @@ REMOTE_WORKER_SCRIPTS = {
     XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\worker\cycle20_remote_worker.py",
     COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\worker\cycle20_remote_worker.py",
 }
+REMOTE_JOB_SCRIPTS = {
+    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs\cycle20_useful_job.py",
+    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle20_useful_job.py",
+}
+REMOTE_JOB_WORKSPACES = {
+    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs",
+    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs",
+}
+
+
+def parse_worker_stdout(stdout: str) -> dict[str, Any]:
+    """Extract the worker JSON envelope from SSH stdout without executing it."""
+
+    for line in reversed((stdout or "").splitlines()):
+        text = line.strip()
+        if not (text.startswith("{") and text.endswith("}")):
+            continue
+        try:
+            payload = json.loads(text)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, dict):
+            return payload
+    return {}
 
 
 def timeout_output_text(value: object) -> str:
@@ -261,6 +285,8 @@ class SshDispatchAdapter:
             exit_code = 124
         stdout = raw_stdout[:max_output_bytes]
         stderr = raw_stderr[:max_output_bytes]
+        worker = parse_worker_stdout(stdout)
+        remote_pid = worker.get("pid")
         payload = {
             "command": command,
             "working_directory": str(working_directory),
@@ -276,6 +302,7 @@ class SshDispatchAdapter:
             or len(raw_stderr) > max_output_bytes,
             "stdout_sha256": hashlib.sha256(stdout.encode("utf-8")).hexdigest(),
             "stderr_sha256": hashlib.sha256(stderr.encode("utf-8")).hexdigest(),
+            "remote_pid": None if remote_pid is None else str(remote_pid),
         }
         payload["payload_sha256"] = hashlib.sha256(
             json.dumps(payload, sort_keys=True).encode("utf-8")

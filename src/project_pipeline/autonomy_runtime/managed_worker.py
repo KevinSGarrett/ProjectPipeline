@@ -8,6 +8,11 @@ from typing import Any, Literal
 
 PROTECTED_CODE_ROOT = r"C:\ProgramData\ProjectPipeline\worker"
 WRITABLE_JOB_ROOT = r"C:\ProgramData\ProjectPipeline\jobs"
+HOST_PROTECTED_CODE_ROOTS = (
+    PROTECTED_CODE_ROOT.lower(),
+    r"c:\users\kines\projectpipeline\worker",
+    r"c:\users\windows 11\projectpipeline\worker",
+)
 SYSTEM_ACCOUNT = r"NT AUTHORITY\SYSTEM"
 SYSTEM_IDENTITIES = frozenset({SYSTEM_ACCOUNT.upper(), "SYSTEM", "S-1-5-18"})
 XEON_MACHINE_ID = "WIN-EVSH1DN8H5O"
@@ -18,24 +23,75 @@ OWNED_TASK_NAMES = (
 )
 
 
+def _normalized_windows_path(value: str) -> str:
+    return value.replace("/", "\\").lower()
+
+
+def _is_protected_code_path(script_path: str) -> bool:
+    path_norm = _normalized_windows_path(script_path)
+    return any(path_norm.startswith(root) for root in HOST_PROTECTED_CODE_ROOTS)
+
+
 def classify_scheduled_action(
     *,
     runas: str,
     script_path: str,
     acl_fullcontrol_users: tuple[str, ...],
 ) -> dict[str, str | bool]:
-    """SYSTEM executing user-writable generated code is not a production worker."""
+    """SYSTEM or pp_jobs-generated code is never an accepted production job worker."""
 
-    writable = "pp_jobs" in script_path.replace("/", "\\").lower()
-    system = runas.upper() in SYSTEM_IDENTITIES
+    path_norm = _normalized_windows_path(script_path)
+    writable = "pp_jobs" in path_norm
+    system = runas.strip().upper() in SYSTEM_IDENTITIES
     user_write = bool(acl_fullcontrol_users)
-    accepted = not (system and (writable or user_write))
+    protected = _is_protected_code_path(script_path)
+    accepted = (not system) and (not writable) and protected and (not user_write)
+    if system:
+        reason = "system_not_job_worker"
+    elif writable:
+        reason = "user_writable_pp_jobs"
+    elif user_write:
+        reason = "acl_allows_user_write"
+    elif not protected:
+        reason = "code_not_in_protected_root"
+    else:
+        reason = "least_privilege_ok"
     return {
         "accepted_production_worker": accepted,
         "identity": "privileged_bootstrap" if system else "unprivileged_job_worker",
-        "reason": "system_user_writable_code" if not accepted else "least_privilege_ok",
+        "reason": reason,
         "protected_code_root": PROTECTED_CODE_ROOT,
         "writable_job_root": WRITABLE_JOB_ROOT,
+    }
+
+
+def owned_task_retirement_plan(task_name: str) -> dict[str, Any]:
+    """Disable only the two owned SYSTEM index tasks; register a least-privilege replacement."""
+
+    if task_name not in OWNED_TASK_NAMES:
+        return {"ok": False, "reason": "not_owned_task", "task_name": task_name}
+    replacement = task_name.replace("FleetWorker", "ManagedWorker")
+    worker_script = rf"{PROTECTED_CODE_ROOT}\cycle20_remote_worker.py"
+    return {
+        "ok": True,
+        "task_name": task_name,
+        "export_argv": ("schtasks", "/Query", "/TN", task_name, "/XML"),
+        "disable_argv": ("schtasks", "/Change", "/TN", task_name, "/DISABLE"),
+        "replacement_name": replacement,
+        "replacement_create_argv": (
+            "schtasks",
+            "/Create",
+            "/TN",
+            replacement,
+            "/SC",
+            "ONLOGON",
+            "/TR",
+            f'python "{worker_script}"',
+            "/F",
+        ),
+        "rollback_argv": ("schtasks", "/Change", "/TN", task_name, "/ENABLE"),
+        "unrelated_services_untouched": True,
+        "do_not_reboot": True,
     }
 
 
