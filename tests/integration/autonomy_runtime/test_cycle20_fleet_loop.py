@@ -10,7 +10,6 @@ from project_pipeline.autonomy_runtime.fleet_loop import (
     useful_argv,
 )
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
-from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
 from project_pipeline.scheduler.admission import write_admission_record
 from project_pipeline.scheduler.fleet import MachineProfile
 
@@ -69,14 +68,28 @@ def test_loop_dispatches_local_adapter_and_continues(tmp_path: Path) -> None:
             },
         },
     )
-    adapter = LocalSubprocessDispatchAdapter()
+
+    class _RemoteAdapter:
+        remote_host = True
+        machine_id = "WIN-EVSH1DN8H5O"
+
+        def execute(self, **_kwargs: object) -> dict[str, object]:
+            return {
+                "exit_code": 0,
+                "timed_out": False,
+                "stdout_sha256": "1" * 64,
+                "stderr_sha256": "2" * 64,
+                "payload_sha256": "3" * 64,
+                "remote_pid": "4242",
+            }
+
     result = run_loop(
         root=ROOT,
         database=database,
         ready=["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"],
         blocked="PP-TASK-000518",
         profiles=(_profile(),),
-        adapter=adapter,
+        adapter=_RemoteAdapter(),
         workspace=workspace,
         workspace_root=tmp_path,
         source_sha=SHA,

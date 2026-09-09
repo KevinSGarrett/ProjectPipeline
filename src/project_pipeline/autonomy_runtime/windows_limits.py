@@ -91,6 +91,42 @@ def _windows_available() -> bool:
     return os.name == "nt" and ctypes is not None
 
 
+def limits_for_adapter(
+    *,
+    adapter: Any,
+    cpu_ceiling: int,
+    memory_mb_ceiling: int,
+    deadline_seconds: int,
+) -> dict[str, Any]:
+    """Job Objects are for local Windows processes. Remote adapters get nested pools only."""
+
+    if bool(getattr(adapter, "remote_host", False)):
+        if cpu_ceiling < 1 or memory_mb_ceiling < 1 or deadline_seconds < 1:
+            raise ResourceLimitError("invalid_limits")
+        return {
+            "ok": True,
+            "mechanism": "nested_pool_env_remote",
+            "handle": None,
+            "env": nested_pool_env(cpu_ceiling),
+            "deadline_seconds": deadline_seconds,
+        }
+    if _windows_available():
+        return enforce_or_reject(
+            cpu_ceiling=cpu_ceiling,
+            memory_mb_ceiling=memory_mb_ceiling,
+            deadline_seconds=deadline_seconds,
+        )
+    if cpu_ceiling < 1 or memory_mb_ceiling < 1 or deadline_seconds < 1:
+        raise ResourceLimitError("invalid_limits")
+    return {
+        "ok": True,
+        "mechanism": "nested_pool_env_non_windows",
+        "handle": None,
+        "env": nested_pool_env(cpu_ceiling),
+        "deadline_seconds": deadline_seconds,
+    }
+
+
 def enforce_or_reject(
     *,
     cpu_ceiling: int,

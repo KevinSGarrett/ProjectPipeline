@@ -14,7 +14,12 @@ from project_pipeline.autonomy_runtime.ssh_dispatch import (
     parse_worker_stdout,
     remote_command_allowed,
 )
-from project_pipeline.autonomy_runtime.windows_limits import nested_pool_env
+from project_pipeline.autonomy_runtime.windows_limits import (
+    ResourceLimitError,
+    close_job_handle,
+    enforce_or_reject,
+    nested_pool_env,
+)
 from project_pipeline.autonomy_runtime.worker_entrypoint import run_envelope
 
 NOW = datetime(2026, 9, 8, tzinfo=UTC)
@@ -48,11 +53,26 @@ def _envelope(tmp_path: Path, **overrides: object) -> RemoteJobEnvelope:
     return RemoteJobEnvelope.model_validate(payload)
 
 
+class _RemoteMock:
+    remote_host = True
+    machine_id = "COMFY-V4-CPU-01"
+    exit_code = 0
+
+    def execute(self, **_kwargs: object) -> dict[str, object]:
+        return {
+            "exit_code": self.exit_code,
+            "timed_out": False,
+            "stdout_sha256": "1" * 64,
+            "stderr_sha256": "2" * 64,
+            "payload_sha256": "3" * 64,
+        }
+
+
 def test_restart_rejects_conflicting_expired_result(tmp_path: Path) -> None:
     store = FleetJobStore(tmp_path / "jobs.sqlite3")
     envelope = _envelope(tmp_path)
     store.persist_intent(envelope.model_dump(mode="json"), now=NOW)
-    first = RemoteJobController(store=store, require_intent=True)
+    first = RemoteJobController(_RemoteMock(), store=store, require_intent=True)
     executed = first.execute(envelope, now=NOW)
     accepted = first.accept(envelope, executed["result"], expected_host=envelope.host_id, now=NOW)
     assert accepted["outcome"] == "ACCEPTED"
@@ -70,22 +90,16 @@ def test_concurrent_duplicate_dispatch_does_not_reexecute(tmp_path: Path) -> Non
     store.persist_intent(envelope.model_dump(mode="json"), now=NOW)
     runs = {"count": 0}
 
-    class _Adapter:
+    class _Counting(_RemoteMock):
         def execute(self, **_kwargs: object) -> dict[str, object]:
             runs["count"] += 1
-            return {
-                "exit_code": 0,
-                "timed_out": False,
-                "stdout_sha256": "1" * 64,
-                "stderr_sha256": "2" * 64,
-                "payload_sha256": "3" * 64,
-            }
+            return super().execute()
 
-    controller = RemoteJobController(_Adapter(), store=store, require_intent=True)
+    controller = RemoteJobController(_Counting(), store=store, require_intent=True)
     first = controller.execute(envelope, now=NOW)
     assert first["outcome"] == "EXECUTED"
     controller.accept(envelope, first["result"], expected_host=envelope.host_id, now=NOW)
-    second = RemoteJobController(_Adapter(), store=store, require_intent=True).execute(
+    second = RemoteJobController(_Counting(), store=store, require_intent=True).execute(
         envelope, now=NOW
     )
     assert second["reason"] == "already_accepted"
@@ -95,34 +109,16 @@ def test_concurrent_duplicate_dispatch_does_not_reexecute(tmp_path: Path) -> Non
 def test_nonzero_exit_and_output_tamper_are_rejected(tmp_path: Path) -> None:
     envelope = _envelope(tmp_path, output_contract_sha256="f" * 64)
 
-    class _Adapter:
-        def execute(self, **_kwargs: object) -> dict[str, object]:
-            return {
-                "exit_code": 1,
-                "timed_out": False,
-                "stdout_sha256": "1" * 64,
-                "stderr_sha256": "2" * 64,
-                "payload_sha256": "3" * 64,
-            }
+    class _Fail(_RemoteMock):
+        exit_code = 1
 
-    executed = RemoteJobController(_Adapter()).execute(envelope, now=NOW)
+    executed = RemoteJobController(_Fail()).execute(envelope, now=NOW)
     denied = RemoteJobController().accept(
         envelope, executed["result"], expected_host=envelope.host_id, now=NOW
     )
     assert denied["reason"] == "nonzero_exit"
     ok_envelope = envelope.model_copy(update={"output_contract_sha256": "3" * 64})
-
-    class _Ok:
-        def execute(self, **_kwargs: object) -> dict[str, object]:
-            return {
-                "exit_code": 0,
-                "timed_out": False,
-                "stdout_sha256": "1" * 64,
-                "stderr_sha256": "2" * 64,
-                "payload_sha256": "3" * 64,
-            }
-
-    executed_ok = RemoteJobController(_Ok()).execute(ok_envelope, now=NOW)
+    executed_ok = RemoteJobController(_RemoteMock()).execute(ok_envelope, now=NOW)
     tamper = RemoteJobController().accept(
         ok_envelope,
         executed_ok["result"],
@@ -207,8 +203,10 @@ def test_worker_side_dedup(tmp_path: Path) -> None:
 
 
 def test_enforce_or_reject_creates_job_object() -> None:
-    from project_pipeline.autonomy_runtime.windows_limits import close_job_handle, enforce_or_reject
-
+    if sys.platform != "win32":
+        with pytest.raises(ResourceLimitError, match="job_object_unavailable"):
+            enforce_or_reject(cpu_ceiling=1, memory_mb_ceiling=256, deadline_seconds=5)
+        return
     limits = enforce_or_reject(cpu_ceiling=1, memory_mb_ceiling=256, deadline_seconds=5)
     assert limits["ok"] is True
     assert limits["mechanism"] == "windows_job_object"

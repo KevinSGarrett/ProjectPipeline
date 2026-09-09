@@ -22,7 +22,7 @@ from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAda
 from project_pipeline.autonomy_runtime.windows_limits import (
     ResourceLimitError,
     close_job_handle,
-    enforce_or_reject,
+    limits_for_adapter,
 )
 from project_pipeline.domain.base import DomainModel
 
@@ -187,7 +187,8 @@ class RemoteJobController:
             return {"outcome": "REJECTED", "reason": "workspace_missing"}
         remaining = max(1, int((envelope.deadline_utc - now).total_seconds()))
         try:
-            limits = enforce_or_reject(
+            limits = limits_for_adapter(
+                adapter=self.adapter,
                 cpu_ceiling=envelope.cpu_ceiling,
                 memory_mb_ceiling=envelope.memory_mb_ceiling,
                 deadline_seconds=remaining,
