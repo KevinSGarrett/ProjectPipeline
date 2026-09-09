@@ -9,7 +9,6 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
 
 UNSAFE = re.compile(r'[<>|&^%\n\r\x00"`]')
 
@@ -28,6 +27,56 @@ def main() -> int:
     if action == "measure":
         print(json.dumps({"ok": False, "reason": "use_controller_cim", "exit_code": 2}))
         return 2
+    if action == "kill":
+        try:
+            pid = int(payload.get("pid") or 0)
+        except (TypeError, ValueError):
+            print(json.dumps({"ok": False, "reason": "invalid_pid", "exit_code": 2}))
+            return 2
+        if pid <= 4 or pid == os.getpid():
+            print(json.dumps({"ok": False, "reason": "pid_not_killable", "pid": pid, "exit_code": 2}))
+            return 2
+        if os.name == "nt":
+            completed = subprocess.run(
+                ["taskkill", "/PID", str(pid), "/T", "/F"],
+                capture_output=True,
+                text=True,
+                check=False,
+                shell=False,
+            )
+            gone = completed.returncode == 0 or "not found" in (completed.stderr or "").lower()
+            print(
+                json.dumps(
+                    {
+                        "ok": True,
+                        "pid": pid,
+                        "killed": completed.returncode == 0,
+                        "already_gone": gone and completed.returncode != 0,
+                        "phase": "kill",
+                        "exit_code": 0,
+                    },
+                    sort_keys=True,
+                )
+            )
+            return 0
+        try:
+            os.kill(pid, 9)
+            print(json.dumps({"ok": True, "pid": pid, "killed": True, "phase": "kill", "exit_code": 0}))
+            return 0
+        except OSError:
+            print(
+                json.dumps(
+                    {
+                        "ok": True,
+                        "pid": pid,
+                        "killed": False,
+                        "already_gone": True,
+                        "phase": "kill",
+                        "exit_code": 0,
+                    }
+                )
+            )
+            return 0
     argv = payload.get("argv")
     workspace = str(payload.get("workspace") or "")
     if not isinstance(argv, list) or not argv or any(UNSAFE.search(str(item) or "") for item in argv):
@@ -41,6 +90,7 @@ def main() -> int:
     for key, value in nested.items():
         env[str(key)] = str(value)
     Path(workspace).mkdir(parents=True, exist_ok=True)
+    print(json.dumps({"ok": True, "pid": os.getpid(), "phase": "started"}, sort_keys=True), flush=True)
     completed = subprocess.run(
         [str(item) for item in argv],
         cwd=workspace,

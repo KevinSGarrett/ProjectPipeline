@@ -16,12 +16,18 @@ from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
+    REMOTE_HOLD_SCRIPTS,
     REMOTE_JOB_SCRIPTS,
     REMOTE_JOB_WORKSPACES,
     XEON_MACHINE_ID,
     XEON_SSH_USER,
     XEON_TAILNET_IPV4,
     SshDispatchAdapter,
+    isolated_remote_worker_loss,
+)
+from project_pipeline.autonomy_runtime.worker_supervision import (
+    recover_isolated_job,
+    start_isolated_job,
 )
 from project_pipeline.command_center.autonomy_director import (
     PersistentAutonomyDirector,
@@ -265,32 +271,23 @@ def run_observation(
     )
     # Controlled isolated worker-process loss then recovery in this namespace.
     if live_ssh:
-        timeout_payload = adapter.execute(
-            command=[
-                "python",
-                REMOTE_JOB_SCRIPTS[XEON_MACHINE_ID],
-                "--job-id",
-                "hold",
-                "--output",
-                "hold.json",
-            ],
-            working_directory=workspace,
-            timeout_seconds=1,
+        fault = isolated_remote_worker_loss(
+            adapter,
+            workspace=workspace,
+            hold_script=REMOTE_HOLD_SCRIPTS[XEON_MACHINE_ID],
         )
-        fault_pid = timeout_payload.get("remote_pid")
         recovered = FleetJobStore(Path(db).with_name("fleet_jobs.sqlite3")).reconcile_unresolved(
-            "hold", reason="isolated_worker_timeout"
+            "hold", reason="isolated_worker_killed"
         )
-        fault = {
-            "kind": "isolated_worker_process_loss",
-            "recovered": bool(recovered.get("ok")),
-            "reconcile_reason": recovered.get("reason"),
-            "remote_pid": fault_pid or live_pid,
-            "timed_out": bool(timeout_payload.get("timed_out")),
-            "blocked_lane": blocked,
-            "host_id": XEON_MACHINE_ID,
-        }
+        fault["reconcile_reason"] = recovered.get("reason")
+        fault["blocked_lane"] = blocked
+        fault["host_id"] = XEON_MACHINE_ID
     else:
+        child = start_isolated_job(
+            [sys.executable, "-c", "import time; time.sleep(30)"],
+            workspace=workspace,
+        )
+        recovered_local = recover_isolated_job(child)
         journal.publish(
             {
                 "job_id": selected_job,
@@ -302,9 +299,10 @@ def run_observation(
         )
         fault = {
             "kind": "isolated_worker_process_loss",
-            "recovered": True,
-            "remote_pid": "isolated-child",
+            "recovered": bool(recovered_local.get("recovered")),
+            "remote_pid": str(child.pid),
             "blocked_lane": blocked,
+            "ssh_client_termination": False,
         }
     journal.publish(
         {

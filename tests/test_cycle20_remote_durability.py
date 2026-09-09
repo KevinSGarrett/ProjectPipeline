@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -11,6 +12,7 @@ from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
 from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
+    SshDispatchAdapter,
     build_ssh_argv,
     parse_worker_stdout,
     remote_command_allowed,
@@ -22,6 +24,10 @@ from project_pipeline.autonomy_runtime.windows_limits import (
     nested_pool_env,
 )
 from project_pipeline.autonomy_runtime.worker_entrypoint import run_envelope
+from project_pipeline.autonomy_runtime.worker_supervision import (
+    recover_isolated_job,
+    start_isolated_job,
+)
 
 NOW = datetime(2026, 9, 8, tzinfo=UTC)
 SHA = "a" * 40
@@ -198,6 +204,36 @@ def test_local_adapter_timeout_does_not_raise_unbound_pid(tmp_path: Path) -> Non
     assert payload["timed_out"] is True
     assert payload["exit_code"] == 124
     assert payload["remote_pid"] == ""
+
+
+def test_local_isolated_worker_loss_recovers(tmp_path: Path) -> None:
+    child = start_isolated_job(
+        [sys.executable, "-c", "import time; time.sleep(30)"],
+        workspace=tmp_path,
+    )
+    recovered = recover_isolated_job(child)
+    assert recovered["recovered"] is True
+    assert recovered["running"] is False
+    assert child.poll() is not None
+
+
+def test_ssh_kill_stdin_uses_action_kill(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("placeholder", encoding="utf-8")
+    captured: dict[str, str] = {}
+
+    def _runner(*_args: object, **kwargs: object) -> subprocess.CompletedProcess[str]:
+        captured["input"] = str(kwargs.get("input") or "")
+        return subprocess.CompletedProcess(
+            ["ssh"], 0, '{"ok": true, "pid": 4242, "killed": true, "phase": "kill"}', ""
+        )
+
+    adapter = SshDispatchAdapter(identity=identity, runner=_runner)
+    payload = adapter.kill_pid(4242, workspace=tmp_path)
+    assert '"action": "kill"' in captured["input"]
+    assert '"pid": 4242' in captured["input"]
+    assert payload["exit_code"] == 0
+    assert payload["remote_pid"] == "4242"
 
 
 def test_worker_side_dedup(tmp_path: Path) -> None:
