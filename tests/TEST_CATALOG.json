@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 755,
+  "test_count": 758,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3776,6 +3776,21 @@
       "callable": "test_fleet_api_binds_lease_occupancy",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-036"
+    },
+    {
+      "callable": "test_local_machine_leases_bind_to_primary_control_host",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-037"
+    },
+    {
+      "callable": "test_accepted_remote_jobs_are_not_active_occupancy",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-038"
+    },
+    {
+      "callable": "test_drain_persist_keeps_recorded_jobs",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-039"
     }
   ]
 }

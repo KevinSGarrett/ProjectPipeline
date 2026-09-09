@@ -50,10 +50,47 @@ class FleetRegistry:
             occupancy=merge_occupancy(job_occupancy, occupancy or {}),
         )
 
+    def refresh_from_disk(self) -> None:
+        if self.persist_path is None or not self.persist_path.is_file():
+            return
+        loaded = type(self).load_or_declared(self.persist_path, self.profiles())
+        self._profiles = {item.machine_id: item for item in loaded.profiles()}
+        self.audit = list(loaded.audit)
+        self.jobs = list(loaded.jobs)
+
+    def _merge_disk_jobs(self) -> None:
+        if self.persist_path is None or not self.persist_path.is_file():
+            return
+        try:
+            payload = json.loads(self.persist_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return
+        disk_jobs = payload.get("jobs") if isinstance(payload, dict) else None
+        if not isinstance(disk_jobs, list):
+            return
+        merged = {
+            str(item.get("job_id")): item
+            for item in disk_jobs
+            if isinstance(item, dict) and item.get("job_id")
+        }
+        for item in self.jobs:
+            job_id = item.get("job_id")
+            if job_id:
+                merged[str(job_id)] = item
+        self.jobs = list(merged.values())
+
     def record_job(self, job: dict[str, Any]) -> dict[str, Any]:
+        memory_jobs = list(self.jobs)
+        if self.persist_path is not None:
+            self.refresh_from_disk()
         record = dict(job)
-        self.jobs = [item for item in self.jobs if item.get("job_id") != record.get("job_id")]
-        self.jobs.append(record)
+        merged = {
+            str(item.get("job_id")): item
+            for item in [*memory_jobs, *self.jobs]
+            if isinstance(item, dict) and item.get("job_id")
+        }
+        merged[str(record.get("job_id"))] = record
+        self.jobs = list(merged.values())
         self._commit()
         return record
 
@@ -109,6 +146,8 @@ class FleetRegistry:
         }
 
     def persist(self, path: Path) -> None:
+        self.persist_path = path
+        self._merge_disk_jobs()
         path.parent.mkdir(parents=True, exist_ok=True)
         payload = {
             "schema_version": "1.0.0",

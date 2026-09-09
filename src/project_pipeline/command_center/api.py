@@ -441,6 +441,7 @@ def create_command_center_app(
     def fleet_status(_actor: str = Depends(principal)) -> dict[str, Any]:
         if fleet_registry is None:
             raise HTTPException(status_code=503, detail="fleet registry not configured")
+        fleet_registry.refresh_from_disk()
         occupancy = occupancy_provider() if occupancy_provider is not None else None
         return {
             "hosts": fleet_registry.projection(occupancy=occupancy),
@@ -451,6 +452,7 @@ def create_command_center_app(
     def fleet_drain(machine_id: str, actor: str = Depends(principal)) -> dict[str, Any]:
         if fleet_registry is None:
             raise HTTPException(status_code=503, detail="fleet registry not configured")
+        fleet_registry.refresh_from_disk()
         result = fleet_registry.drain(machine_id, actor=actor)
         if not result["ok"]:
             raise HTTPException(status_code=404, detail=str(result.get("reason")))
@@ -460,6 +462,7 @@ def create_command_center_app(
     def fleet_resume(machine_id: str, actor: str = Depends(principal)) -> dict[str, Any]:
         if fleet_registry is None:
             raise HTTPException(status_code=503, detail="fleet registry not configured")
+        fleet_registry.refresh_from_disk()
         result = fleet_registry.resume(machine_id, actor=actor)
         if not result["ok"]:
             raise HTTPException(status_code=409, detail=str(result.get("reason")))

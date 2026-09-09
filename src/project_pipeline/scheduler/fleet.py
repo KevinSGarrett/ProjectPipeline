@@ -214,6 +214,15 @@ def resume_host(profile: MachineProfile, *, when: datetime | None = None) -> Mac
     return profile.model_copy(update={"state": "READY"})
 
 
+LOCAL_MACHINE_ALIASES = {"machine:local": "PRIMARY-CODEX-WORKSTATION"}
+
+
+def _occupancy_machine_id(machine_id: str | None) -> str | None:
+    if not machine_id:
+        return None
+    return LOCAL_MACHINE_ALIASES.get(machine_id, machine_id)
+
+
 def _join_ids(values: Iterable[str]) -> str:
     return ",".join(sorted(values))
 
@@ -230,7 +239,7 @@ def _token_set(*values: object) -> set[str]:
 def occupancy_from_leases(leases: Iterable[ResourceLease]) -> dict[str, dict[str, Any]]:
     grouped: dict[str, list[ResourceLease]] = {}
     for lease in leases:
-        machine_id = lease.claim.machine_id
+        machine_id = _occupancy_machine_id(lease.claim.machine_id)
         if not machine_id:
             continue
         grouped.setdefault(machine_id, []).append(lease)
@@ -256,7 +265,7 @@ def occupancy_from_jobs(
     for job in jobs:
         host_id = str(job.get("host_id") or "")
         outcome = str(job.get("outcome") or "")
-        if not host_id or outcome not in {"ACCEPTED", "EXECUTED"}:
+        if not host_id or outcome not in {"RUNNING", "DISPATCHED"}:
             continue
         deadline_raw = job.get("deadline_utc")
         if deadline_raw:
