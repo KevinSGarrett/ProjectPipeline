@@ -124,6 +124,24 @@ def _read_json_object(path: Path) -> dict[str, Any]:
     return loaded if isinstance(loaded, dict) else {}
 
 
+def _print_running_record(child_pid: int, child_creation_time: str | None) -> None:
+    worker_pid = os.getpid()
+    print(
+        json.dumps(
+            {
+                "ok": True,
+                "pid": worker_pid,
+                "creation_time": process_creation_filetime(worker_pid),
+                "child_pid": child_pid,
+                "child_creation_time": child_creation_time,
+                "phase": "RUNNING",
+            },
+            sort_keys=True,
+        ),
+        flush=True,
+    )
+
+
 def _record_running_ownership(payload: dict[str, Any]) -> Path | None:
     workspace = str(payload.get("workspace") or "")
     job_id = str(payload.get("job_id") or "")
@@ -191,24 +209,12 @@ def _spawn_enforced(
     handle = int(limits["handle"])
     started: dict[str, Any] = {}
 
-    def _capture(pid: int, creation: str | None) -> None:
-        started["pid"] = pid
-        started["creation_time"] = creation
-        print(
-            json.dumps(
-                {
-                    "ok": True,
-                    "pid": os.getpid(),
-                    "child_pid": pid,
-                    "creation_time": creation,
-                    "phase": "RUNNING",
-                },
-                sort_keys=True,
-            ),
-            flush=True,
-        )
+    def _capture(child_pid: int, child_creation: str | None) -> None:
+        started["pid"] = child_pid
+        started["creation_time"] = child_creation
+        _print_running_record(child_pid, child_creation)
         if on_started is not None:
-            on_started(pid, creation)
+            on_started(child_pid, child_creation)
 
     try:
         completed = assign_and_wait(
@@ -546,20 +552,6 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     if str(payload.get("action") or "execute") == "execute":
         _record_running_ownership(payload)
-        print(
-            json.dumps(
-                {
-                    "ok": True,
-                    "pid": os.getpid(),
-                    "phase": "started",
-                    "creation_time": process_creation_filetime(os.getpid()),
-                    "job_id": payload.get("job_id"),
-                    "fence": payload.get("fence"),
-                },
-                sort_keys=True,
-            ),
-            flush=True,
-        )
     result = run_envelope(payload)
     print(json.dumps(result, sort_keys=True))
     return int(result.get("exit_code") or 0)

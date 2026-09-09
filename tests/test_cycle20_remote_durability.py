@@ -30,6 +30,7 @@ from project_pipeline.autonomy_runtime.windows_limits import (
     close_job_handle,
     enforce_or_reject,
     nested_pool_env,
+    process_creation_filetime,
 )
 from project_pipeline.autonomy_runtime.worker_entrypoint import run_envelope
 from project_pipeline.autonomy_runtime.worker_supervision import (
@@ -247,6 +248,39 @@ def test_ssh_kill_stdin_uses_action_kill(tmp_path: Path) -> None:
     assert payload["killed"] is True
 
 
+class _StdoutLines:
+    def __init__(self, lines: list[str]) -> None:
+        self._pending = list(lines)
+
+    def readline(self) -> str:
+        return self._pending.pop(0) if self._pending else ""
+
+    def exhausted(self) -> bool:
+        return not self._pending
+
+
+class _StartedProcess:
+    def __init__(self, lines: list[str]) -> None:
+        self.stdout = _StdoutLines(lines)
+
+    def poll(self) -> int | None:
+        return 0 if self.stdout.exhausted() else None
+
+
+def test_read_started_record_waits_for_running_phase(tmp_path: Path) -> None:
+    identity = tmp_path / "id_ed25519"
+    identity.write_text("placeholder", encoding="utf-8")
+    adapter = SshDispatchAdapter(identity=identity)
+    premature = '{"ok": true, "pid": 11, "phase": "started", "creation_time": "1"}\n'
+    running = '{"ok": true, "pid": 22, "phase": "RUNNING", "creation_time": "2"}\n'
+    record = adapter.read_started_record(_StartedProcess([premature, running]))
+    assert record["pid"] == 22
+    assert record["phase"] == "RUNNING"
+    assert record["creation_time"] == "2"
+    ignored = adapter.read_started_record(_StartedProcess([premature]))
+    assert ignored == {}
+
+
 def test_windows_worker_argv_is_allowlisted_on_posix_pathlib() -> None:
     assert remote_command_allowed(
         (
@@ -271,6 +305,14 @@ def test_worker_side_dedup(tmp_path: Path) -> None:
     assert second["duplicate"] is True
 
 
+def _running_record_from_stdout(buf: str) -> dict[str, object]:
+    for line in buf.splitlines():
+        parsed = parse_worker_stdout(line)
+        if parsed.get("pid") is not None and parsed.get("phase") == "RUNNING":
+            return parsed
+    return {}
+
+
 def test_enforced_spawn_prints_pid_before_child_exits(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -288,27 +330,27 @@ def test_enforced_spawn_prints_pid_before_child_exits(
         "deadline_utc": (datetime.now(UTC) + timedelta(minutes=1)).isoformat(),
     }
     started: dict[str, object] = {}
-
-    def _run() -> dict[str, object]:
-        return run_envelope(payload)
-
-    thread = threading.Thread(target=lambda: started.update({"result": _run()}), daemon=True)
+    thread = threading.Thread(
+        target=lambda: started.update({"result": run_envelope(payload)}), daemon=True
+    )
     thread.start()
     deadline = time.time() + 5
-    seen = False
+    running: dict[str, object] = {}
     buf = ""
     while time.time() < deadline and thread.is_alive():
         buf += capsys.readouterr().out
-        parsed = parse_worker_stdout(buf)
-        if parsed.get("pid") is not None:
-            seen = True
+        running = _running_record_from_stdout(buf)
+        if running:
             break
         time.sleep(0.05)
     thread.join(timeout=10)
     buf += capsys.readouterr().out
-    if parse_worker_stdout(buf).get("pid") is not None:
-        seen = True
-    assert seen is True
+    if not running:
+        running = _running_record_from_stdout(buf)
+    assert running.get("phase") == "RUNNING"
+    assert running["pid"] == os.getpid()
+    assert running["creation_time"] == process_creation_filetime(int(running["pid"]))
+    assert running.get("child_pid") not in {None, running["pid"]}
 
 
 def test_enforce_or_reject_creates_job_object() -> None:
