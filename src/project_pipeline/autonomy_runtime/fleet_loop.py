@@ -271,9 +271,11 @@ def run_observation(
     db = database or (out / "scheduler.sqlite3")
     profiles = _xeon_profiles(when=started, inventory=inventory if live_ssh else None)
     admission_path = Path(db).with_name("fleet_admission.json")
-    existing = load_admission_record(admission_path) or load_admission_record(
-        root / ".local" / "state" / "fleet_admission.json"
-    ) or {}
+    existing = (
+        load_admission_record(admission_path)
+        or load_admission_record(root / ".local" / "state" / "fleet_admission.json")
+        or {}
+    )
     write_admission_record(
         admission_path,
         observation_admission_record(
@@ -311,7 +313,9 @@ def run_observation(
         deadline=deadline,
     )
     completed_jobs = list(available.get("completed_jobs") or [])
-    first = completed_jobs[0] if completed_jobs else {"selected": [], "results": [], "next_job": None}
+    first = (
+        completed_jobs[0] if completed_jobs else {"selected": [], "results": [], "next_job": None}
+    )
     selected_job = (first["selected"] or ["none"])[0]
     live_pid = None
     for item in first.get("results") or []:
