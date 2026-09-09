@@ -28,8 +28,10 @@ from project_pipeline.command_center.realtime import RealtimeEventBroker
 from project_pipeline.domain.scheduler import (
     AccessMode,
     ResourceClaim,
+    ResourceLease,
     ResourceRegistrySnapshot,
     ResourceType,
+    scheduler_identifier,
 )
 from project_pipeline.scheduler.admission import (
     chosen_host_admitted,
@@ -39,6 +41,9 @@ from project_pipeline.scheduler.admission import (
 from project_pipeline.scheduler.fleet import (
     MachineProfile,
     bind_profile_claims,
+    fleet_projection,
+    occupancy_from_jobs,
+    occupancy_from_leases,
     physical_claims_for_machine,
     resume_host,
     select_target,
@@ -744,3 +749,147 @@ def test_inventory_observation_preserves_drained_comfy() -> None:
     chosen, denials = select_target(observed, when=NOW)
     assert chosen is None or chosen.machine_id != "COMFY-V4-CPU-01"
     assert any("host_state:DRAINED" in item or "COMFY-V4-CPU-01" in item for item in denials)
+
+
+def _lease(machine_id: str, task_id: str, *, token: int = 1) -> ResourceLease:
+    claim = physical_claims_for_machine(machine_id)[0]
+    return ResourceLease(
+        lease_id=scheduler_identifier("LEASE", machine_id, task_id, str(token)),
+        task_id=task_id,
+        holder_id=f"worker:{machine_id}",
+        claim=claim,
+        fencing_token=token,
+        acquired_at_utc=NOW,
+        expires_at_utc=NOW + timedelta(minutes=15),
+    )
+
+
+def test_missing_occupancy_stays_unknown_not_green() -> None:
+    rows = fleet_projection((_profile("WIN-EVSH1DN8H5O"),), when=NOW)
+    assert rows[0]["active_jobs"] == "unknown"
+    assert rows[0]["lease_id"] == "unknown"
+    assert rows[0]["assignment"] == "unknown"
+
+
+def test_idle_occupancy_is_zero_none_not_unknown() -> None:
+    rows = fleet_projection((_profile("WIN-EVSH1DN8H5O"),), when=NOW, occupancy={})
+    assert rows[0]["active_jobs"] == 0
+    assert rows[0]["lease_id"] == "none"
+    assert rows[0]["assignment"] == "none"
+
+
+def test_lease_occupancy_binds_jobs_and_does_not_paint_other_hosts() -> None:
+    xeon = _profile("WIN-EVSH1DN8H5O")
+    comfy = _profile("COMFY-V4-CPU-01")
+    occupancy = occupancy_from_leases((_lease("WIN-EVSH1DN8H5O", "PP-TASK-000512"),))
+    rows = {
+        row["machine_id"]: row
+        for row in fleet_projection((xeon, comfy), when=NOW, occupancy=occupancy)
+    }
+    assert rows["WIN-EVSH1DN8H5O"]["active_jobs"] == 1
+    assert rows["WIN-EVSH1DN8H5O"]["assignment"] == "PP-TASK-000512"
+    assert rows["WIN-EVSH1DN8H5O"]["lease_id"].startswith("LEASE-")
+    assert rows["COMFY-V4-CPU-01"]["active_jobs"] == 0
+    assert rows["COMFY-V4-CPU-01"]["lease_id"] == "none"
+
+
+def test_fleet_api_binds_lease_occupancy() -> None:
+    profile = _profile("COMFY-V4-CPU-01", observed_at_utc=datetime.now(UTC))
+    registry = FleetRegistry((profile,))
+    lease = _lease("COMFY-V4-CPU-01", "PP-TASK-000515")
+    snapshot = CommandCenterProjectionService().build_snapshot(
+        snapshot_id="cc:fleet-occupancy",
+        project_id="PROJECT-PIPELINE",
+        operating_mode="NORMAL",
+        health=(HealthDimension(name="control", state=HealthState.HEALTHY, reason="ok"),),
+    )
+    app = create_command_center_app(
+        snapshot_provider=lambda: snapshot,
+        event_broker=RealtimeEventBroker(),
+        inbox=AttentionNotificationBroker(),
+        auth=CommandCenterAuth(lambda token: "actor:test" if token == "good" else None),
+        fleet_registry=registry,
+        occupancy_provider=lambda: occupancy_from_leases((lease,)),
+    )
+    listed = TestClient(app).get(
+        "/api/v1/command-center/fleet", headers={"Authorization": "Bearer good"}
+    )
+    assert listed.status_code == 200
+    host = listed.json()["hosts"][0]
+    assert host["active_jobs"] == 1
+    assert host["assignment"] == "PP-TASK-000515"
+    assert host["lease_id"].startswith("LEASE-")
+
+
+def test_local_machine_leases_bind_to_primary_control_host() -> None:
+    claim = ResourceClaim(
+        resource_key="machine:local/cpu_slots",
+        resource_type=ResourceType.CPU_SLOT,
+        access_mode=AccessMode.SHARED,
+        quantity=1,
+        machine_id="machine:local",
+    )
+    lease = ResourceLease(
+        lease_id=scheduler_identifier("LEASE", "machine:local", "PP-TASK-000514"),
+        task_id="PP-TASK-000514",
+        holder_id="worker:local",
+        claim=claim,
+        fencing_token=1,
+        acquired_at_utc=NOW,
+        expires_at_utc=NOW + timedelta(minutes=15),
+    )
+    occupancy = occupancy_from_leases((lease,))
+    rows = {
+        row["machine_id"]: row
+        for row in fleet_projection(
+            (_profile("PRIMARY-CODEX-WORKSTATION", role="PRIMARY_CONTROL_CANDIDATE"),),
+            when=NOW,
+            occupancy=occupancy,
+        )
+    }
+    assert rows["PRIMARY-CODEX-WORKSTATION"]["active_jobs"] == 1
+    assert rows["PRIMARY-CODEX-WORKSTATION"]["assignment"] == "PP-TASK-000514"
+
+
+def test_accepted_remote_jobs_are_not_active_occupancy() -> None:
+    running = occupancy_from_jobs(
+        (
+            {
+                "job_id": "JOB-RUN",
+                "host_id": "WIN-EVSH1DN8H5O",
+                "outcome": "RUNNING",
+                "lease_id": "LEASE-RUNNING",
+                "deadline_utc": (NOW + timedelta(hours=1)).isoformat(),
+            },
+            {
+                "job_id": "JOB-DONE",
+                "host_id": "WIN-EVSH1DN8H5O",
+                "outcome": "ACCEPTED",
+                "lease_id": "LEASE-DONE",
+                "deadline_utc": (NOW + timedelta(hours=1)).isoformat(),
+            },
+        ),
+        when=NOW,
+    )
+    assert running["WIN-EVSH1DN8H5O"]["active_jobs"] == 1
+    assert running["WIN-EVSH1DN8H5O"]["assignment"] == "JOB-RUN"
+
+
+def test_drain_persist_keeps_recorded_jobs(tmp_path: Path) -> None:
+    path = tmp_path / "fleet_state.json"
+    profile = _profile("COMFY-V4-CPU-01", observed_at_utc=NOW)
+    writer = FleetRegistry((profile,), persist_path=path)
+    writer.record_job(
+        {
+            "job_id": "JOB-LIVE",
+            "host_id": "COMFY-V4-CPU-01",
+            "outcome": "RUNNING",
+            "deadline_utc": (NOW + timedelta(hours=1)).isoformat(),
+        }
+    )
+    operator = FleetRegistry.load_or_declared(path, declared_profiles())
+    drained = operator.drain("COMFY-V4-CPU-01", actor="actor:test")
+    assert drained["ok"] is True
+    reloaded = FleetRegistry.load_or_declared(path, declared_profiles())
+    assert reloaded.profiles()[0].state == "DRAINED"
+    assert any(item.get("job_id") == "JOB-LIVE" for item in reloaded.jobs)

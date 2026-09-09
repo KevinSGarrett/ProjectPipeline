@@ -1,6 +1,6 @@
 {
   "schema_version": "2.0.0",
-  "test_count": 751,
+  "test_count": 758,
   "tests": [
     {
       "callable": "test_openai_responses_adapter_normalizes_payload_and_usage",
@@ -3756,6 +3756,41 @@
       "callable": "test_inventory_observation_preserves_drained_comfy",
       "path": "tests/test_fleet_runtime.py",
       "test_id": "TEST-FLEET-032"
+    },
+    {
+      "callable": "test_missing_occupancy_stays_unknown_not_green",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-033"
+    },
+    {
+      "callable": "test_idle_occupancy_is_zero_none_not_unknown",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-034"
+    },
+    {
+      "callable": "test_lease_occupancy_binds_jobs_and_does_not_paint_other_hosts",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-035"
+    },
+    {
+      "callable": "test_fleet_api_binds_lease_occupancy",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-036"
+    },
+    {
+      "callable": "test_local_machine_leases_bind_to_primary_control_host",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-037"
+    },
+    {
+      "callable": "test_accepted_remote_jobs_are_not_active_occupancy",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-038"
+    },
+    {
+      "callable": "test_drain_persist_keeps_recorded_jobs",
+      "path": "tests/test_fleet_runtime.py",
+      "test_id": "TEST-FLEET-039"
     }
   ]
 }

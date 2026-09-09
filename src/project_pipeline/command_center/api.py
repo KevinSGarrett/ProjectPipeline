@@ -75,6 +75,7 @@ def create_command_center_app(
     repository_root: Path | None = None,
     runtime_database: Path | None = None,
     fleet_registry: FleetRegistry | None = None,
+    occupancy_provider: Callable[[], dict[str, dict[str, Any]]] | None = None,
 ) -> FastAPI:
     app = FastAPI(title="Project Pipeline Command Center API", version="1.1.0")
     auth = auth or CommandCenterAuth.deny_all()
@@ -440,12 +441,18 @@ def create_command_center_app(
     def fleet_status(_actor: str = Depends(principal)) -> dict[str, Any]:
         if fleet_registry is None:
             raise HTTPException(status_code=503, detail="fleet registry not configured")
-        return {"hosts": fleet_registry.projection(), "audit": list(fleet_registry.audit)}
+        fleet_registry.refresh_from_disk()
+        occupancy = occupancy_provider() if occupancy_provider is not None else None
+        return {
+            "hosts": fleet_registry.projection(occupancy=occupancy),
+            "audit": list(fleet_registry.audit),
+        }
 
     @app.post("/api/v1/command-center/fleet/{machine_id}/drain")
     def fleet_drain(machine_id: str, actor: str = Depends(principal)) -> dict[str, Any]:
         if fleet_registry is None:
             raise HTTPException(status_code=503, detail="fleet registry not configured")
+        fleet_registry.refresh_from_disk()
         result = fleet_registry.drain(machine_id, actor=actor)
         if not result["ok"]:
             raise HTTPException(status_code=404, detail=str(result.get("reason")))
@@ -455,6 +462,7 @@ def create_command_center_app(
     def fleet_resume(machine_id: str, actor: str = Depends(principal)) -> dict[str, Any]:
         if fleet_registry is None:
             raise HTTPException(status_code=503, detail="fleet registry not configured")
+        fleet_registry.refresh_from_disk()
         result = fleet_registry.resume(machine_id, actor=actor)
         if not result["ok"]:
             raise HTTPException(status_code=409, detail=str(result.get("reason")))

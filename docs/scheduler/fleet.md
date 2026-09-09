@@ -41,4 +41,7 @@ a discrete CUDA device. The laptop `id_ed25519` is authorized in
   drain/resume POSTs. The live verification preview
   (`apps/command_center/preview/index.html`) includes the `#fleet` surface and
   hydrates hosts from that API. Stale or unknown freshness stays stale or
-  unknown, never green.
+  unknown, never green. Active jobs, lease IDs, fences, and assignments bind
+  from scheduler leases and recorded remote-run jobs. Idle hosts show `0` /
+  `none`. Missing occupancy sources remain `unknown`; they are not painted as
+  live work.
