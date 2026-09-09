@@ -3,6 +3,10 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime, timedelta
 
+from project_pipeline.autonomy_runtime.fleet_loop import (
+    choose_measured_worker,
+    profiles_from_inventories,
+)
 from project_pipeline.autonomy_runtime.managed_worker import (
     classify_live_managed_worker,
     classify_scheduled_action,
@@ -16,6 +20,7 @@ from project_pipeline.autonomy_runtime.managed_worker import (
 from project_pipeline.scheduler.admission import chosen_host_admitted, evaluate_admission
 from project_pipeline.scheduler.fleet import MachineProfile, select_target
 from project_pipeline.scheduler.host_observation import (
+    COMFY_MACHINE_ID,
     apply_inventory_observation,
     declared_profiles,
     measure_local_inventory,
@@ -27,8 +32,8 @@ TREE = "b" * 40
 XEON = "WIN-EVSH1DN8H5O"
 
 
-def _measured_xeon() -> MachineProfile:
-    inventory = {
+def _xeon_inventory() -> dict[str, object]:
+    return {
         "hostname": XEON,
         "whoami": r"win-evsh1dn8h5o\kines",
         "sid": "S-1-5-21-xeon",
@@ -43,7 +48,10 @@ def _measured_xeon() -> MachineProfile:
         "osSupportStatus": "UNSUPPORTED_21H1",
         "measured_at_utc": NOW.isoformat(),
     }
-    observed = apply_inventory_observation(declared_profiles(), inventory, when=NOW)
+
+
+def _measured_xeon() -> MachineProfile:
+    observed = apply_inventory_observation(declared_profiles(), _xeon_inventory(), when=NOW)
     return {item.machine_id: item for item in observed}[XEON]
 
 
@@ -348,3 +356,32 @@ def test_measured_admission_requires_sid_principal_and_workspace() -> None:
         now=NOW,
     )
     assert allowed["ok"] is True
+
+
+def test_profiles_from_inventories_keep_both_hosts_measured() -> None:
+    comfy_inventory = {
+        "hostname": COMFY_MACHINE_ID,
+        "whoami": r"COMFY-V4-CPU-01\Windows 11",
+        "sid": "S-1-5-21-comfy",
+        "totalRAMGB": 31.79,
+        "availableRAMGB": 20.0,
+        "cpuLogical": 8,
+        "cpuPhysical": 4,
+        "disks": [{"DeviceID": "C:", "FreeGB": 28.5}],
+        "isa": {"sse42": True, "avx": True, "avx2": True},
+        "osBuild": "26100",
+        "osSupportStatus": "SUPPORTED",
+        "measured_at_utc": NOW.isoformat(),
+    }
+    profiles = profiles_from_inventories(
+        {XEON: _xeon_inventory(), COMFY_MACHINE_ID: comfy_inventory},
+        when=NOW,
+    )
+    by_id = {item.machine_id: item for item in profiles}
+    assert by_id[XEON].observation_kind == "MEASURED"
+    assert by_id[COMFY_MACHINE_ID].observation_kind == "MEASURED"
+    assert by_id[XEON].sid == "S-1-5-21-xeon"
+    assert by_id[COMFY_MACHINE_ID].sid == "S-1-5-21-comfy"
+    chosen = choose_measured_worker(profiles)
+    assert chosen is not None
+    assert chosen.machine_id == XEON

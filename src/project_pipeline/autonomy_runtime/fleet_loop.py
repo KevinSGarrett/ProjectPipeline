@@ -429,17 +429,11 @@ def measure_enrolled_inventories() -> dict[str, dict[str, Any]]:
 def profiles_from_inventories(
     inventories: dict[str, dict[str, Any]], *, when: datetime
 ) -> tuple[MachineProfile, ...]:
-    declared = declared_profiles()
-    by_id = {item.machine_id: item for item in declared}
+    profiles = declared_profiles()
     for payload in inventories.values():
-        for item in apply_inventory_observation(declared, payload, when=when):
-            if item.machine_id in by_id:
-                by_id[item.machine_id] = item
-    return tuple(
-        by_id[machine_id]
-        for machine_id in (XEON_MACHINE_ID, COMFY_MACHINE_ID)
-        if machine_id in by_id
-    )
+        profiles = apply_inventory_observation(profiles, payload, when=when)
+    by_id = {item.machine_id: item for item in profiles}
+    return (by_id[XEON_MACHINE_ID], by_id[COMFY_MACHINE_ID])
 
 
 def choose_measured_worker(
