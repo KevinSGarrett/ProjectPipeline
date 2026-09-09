@@ -29,7 +29,7 @@ from project_pipeline.domain.state import TaskLifecycleState
 from project_pipeline.io import read_json
 from project_pipeline.jira import load_issues
 from project_pipeline.persistence import SQLiteStateStore
-from project_pipeline.requirements import load_requirement_catalog
+from project_pipeline.requirements import load_requirement_catalog, requirement_catalog_present
 
 _COMPLETE_REQUIREMENT_STATES = {
     ImplementationState.IMPLEMENTED.value,
@@ -357,6 +357,7 @@ class ProjectControlKernel:
             for item in load_requirement_catalog(self.root)
             if item.get("disposition") == RequirementDisposition.ACCEPTED.value
         ]
+        catalog_present = requirement_catalog_present(self.root)
         states = self.store.list_task_states(self.project_id)
         total = len(states)
         completed = sum(item.state in _TERMINAL_WORK for item in states)
@@ -384,8 +385,10 @@ class ProjectControlKernel:
         reconciliation_count = cohorts.reconciliation_facts
         incomplete_requirement_count = len(requirements) - req_complete
         reasons: list[str] = []
-        all_work_terminal = completed == total
-        all_requirements_complete = req_complete == len(requirements)
+        all_work_terminal = total > 0 and completed == total
+        all_requirements_complete = (
+            catalog_present and bool(requirements) and req_complete == len(requirements)
+        )
         if mode == "PAUSED_PENDING_INDEPENDENT_PRODUCT_MODEL_AUDIT" and (
             ordinary_active or ordinary_ready
         ):
@@ -416,7 +419,9 @@ class ProjectControlKernel:
             state = CompletionProjectionState.INCOMPLETE
             if not all_work_terminal:
                 reasons.append(f"{total - completed} work items are not terminal")
-            if not all_requirements_complete:
+            if not catalog_present:
+                reasons.append("requirement catalog is missing")
+            elif not all_requirements_complete:
                 reasons.append(
                     f"{len(requirements) - req_complete} accepted requirements are not implemented or externally blocked"
                 )

@@ -10,6 +10,7 @@ import contextlib
 import hashlib
 import io
 import json
+import os
 import runpy
 import subprocess
 import threading
@@ -613,8 +614,12 @@ def test_kill_matches_running_ownership_before_result_cache(tmp_path: Path) -> N
                 "workspace": str(workspace),
             }
         )
-    assert result["ok"] is True
-    assert kill_calls
+    if os.name != "nt":
+        assert result["ok"] is False
+        assert result.get("reason") == "kill_unsupported"
+    else:
+        assert result["ok"] is True
+        assert kill_calls
     missing = run_envelope(
         {
             "action": "kill",

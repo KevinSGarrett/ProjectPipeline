@@ -25,7 +25,7 @@ from project_pipeline.domain.requirements import ImplementationState, Requiremen
 from project_pipeline.io import sha256_canonical_file, sha256_file
 from project_pipeline.jira import load_issues
 from project_pipeline.overlay import locate_input
-from project_pipeline.requirements import load_requirement_catalog
+from project_pipeline.requirements import load_requirement_catalog, requirement_catalog_present
 
 _COMPLETE = {
     ImplementationState.IMPLEMENTED.value,
@@ -212,6 +212,7 @@ def build_repository_gate_facts(
     root: Path, project_id: str, *, external_live_qualification: Path | None = None
 ) -> CompletionGateFacts:
     requirements = load_requirement_catalog(root)
+    catalog_present = requirement_catalog_present(root)
     accepted = [
         item
         for item in requirements
@@ -219,9 +220,14 @@ def build_repository_gate_facts(
     ]
     issues = load_issues(root)
     coverage_path = locate_input(root, "plans/_traceability/coverage_report.json")
-    traceability = json.loads(coverage_path.read_text(encoding="utf-8"))
-    dispositioned = all(item.get("disposition") for item in requirements)
-    req_complete = all(item.get("implementation_state") in _COMPLETE for item in accepted)
+    if coverage_path.is_file():
+        traceability = json.loads(coverage_path.read_text(encoding="utf-8"))
+    else:
+        traceability = {"unexplained_gap_count": 1}
+    dispositioned = catalog_present and all(item.get("disposition") for item in requirements)
+    req_complete = catalog_present and all(
+        item.get("implementation_state") in _COMPLETE for item in accepted
+    )
     traceable = all(
         item.get("implementation_state") not in _COMPLETE or bool(item.get("implementation_paths"))
         for item in accepted

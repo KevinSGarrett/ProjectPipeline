@@ -245,6 +245,15 @@ def test_ssh_kill_stdin_uses_action_kill(tmp_path: Path) -> None:
     assert payload["killed"] is True
 
 
+def test_windows_worker_argv_is_allowlisted_on_posix_pathlib() -> None:
+    assert remote_command_allowed(
+        (
+            r"C:\Users\kines\AppData\Local\Programs\Python\Python311\python.exe",
+            r"C:\ProgramData\ProjectPipeline\worker\cycle20_remote_worker.py",
+        )
+    )
+
+
 def test_worker_side_dedup(tmp_path: Path) -> None:
     workspace = tmp_path / "job"
     workspace.mkdir()

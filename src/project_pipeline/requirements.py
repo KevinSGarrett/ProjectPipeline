@@ -9,9 +9,19 @@ from project_pipeline.io import read_jsonl
 from project_pipeline.overlay import locate_input
 from project_pipeline.source_references import parse_source_reference
 
+REQUIREMENT_CATALOG = "plans/_traceability/requirements.jsonl"
+
+
+def requirement_catalog_path(root: Path) -> Path:
+    return locate_input(root, REQUIREMENT_CATALOG)
+
+
+def requirement_catalog_present(root: Path) -> bool:
+    return requirement_catalog_path(root).is_file()
+
 
 def load_requirement_catalog(root: Path) -> list[dict[str, Any]]:
-    path = locate_input(root, "plans/_traceability/requirements.jsonl")
+    path = requirement_catalog_path(root)
     if not path.is_file():
         return []
     return read_jsonl(path)

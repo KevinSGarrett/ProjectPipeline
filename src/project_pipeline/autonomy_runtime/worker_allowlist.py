@@ -6,8 +6,6 @@ controller service/supervisor stack.
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from project_pipeline.autonomy_runtime.confinement import (
     COMFY_MACHINE_ID,
     XEON_MACHINE_ID,
@@ -48,10 +46,14 @@ def worker_launch_argv(machine_id: str) -> tuple[str, ...]:
     return ("python", script)
 
 
+def _argv_name(value: str) -> str:
+    return value.replace("\\", "/").rsplit("/", 1)[-1].lower()
+
+
 def remote_command_allowed(argv: tuple[str, ...]) -> bool:
     if not argv:
         return False
-    name = Path(argv[0]).name.lower()
+    name = _argv_name(argv[0])
     if name == "hostname":
         return len(argv) == 1
     if name not in PYTHON_NAMES:
