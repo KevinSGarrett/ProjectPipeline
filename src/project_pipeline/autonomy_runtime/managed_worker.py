@@ -76,10 +76,11 @@ def last_result_never_run(last_result: object, last_run_time: str | None = None)
     if last_result in NEVER_RUN_RESULTS:
         return True
     try:
-        if int(str(last_result).strip(), 0) == 267011:
-            return True
+        never_run_code = int(str(last_result).strip(), 0) == 267011
     except (TypeError, ValueError):
-        pass
+        never_run_code = False
+    if never_run_code:
+        return True
     stamp = (last_run_time or "").strip().lower()
     return stamp.startswith("11/30/1999") or stamp in {"n/a", "never"}
 

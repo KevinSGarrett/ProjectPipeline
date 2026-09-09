@@ -30,6 +30,7 @@ JOB_OBJECT_LIMIT_JOB_TIME = 0x4
 JOB_OBJECT_LIMIT_PROCESS_TIME = 0x2
 JOB_OBJECT_CPU_RATE_CONTROL_ENABLE = 0x1
 JOB_OBJECT_CPU_RATE_CONTROL_HARD_CAP = 0x4
+CREATE_SUSPENDED = 0x00000004
 
 
 class LargeInteger(ctypes.Structure if ctypes is not None else object):  # type: ignore[misc]
@@ -222,6 +223,17 @@ def close_job_handle(handle: int | None) -> None:
     ctypes.WinDLL("kernel32", use_last_error=True).CloseHandle(handle)
 
 
+def _resume_suspended_process(process_handle: int) -> bool:
+    """Resume a CREATE_SUSPENDED child after Job Object assignment."""
+
+    if not _windows_available() or process_handle <= 0:
+        return False
+    ntdll = ctypes.WinDLL("ntdll")
+    ntdll.NtResumeProcess.argtypes = [wintypes.HANDLE]
+    ntdll.NtResumeProcess.restype = ctypes.c_long
+    return int(ntdll.NtResumeProcess(process_handle)) == 0
+
+
 def process_creation_filetime(pid: int) -> str | None:
     """Return the process creation FILETIME as a decimal string, or None."""
 
@@ -266,6 +278,7 @@ def assign_and_wait(
         raise ResourceLimitError("unsupported_limits:job_object_unavailable")
     kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
     kernel32.AssignProcessToJobObject.argtypes = [wintypes.HANDLE, wintypes.HANDLE]
+    # CREATE_SUSPENDED: AssignProcessToJobObject must win before a fast-exit child.
     process = subprocess.Popen(
         command,
         cwd=str(working_directory),
@@ -274,13 +287,19 @@ def assign_and_wait(
         text=True,
         env=env,
         shell=False,
+        creationflags=CREATE_SUSPENDED,
     )
+    process_handle = int(process._handle)  # type: ignore[attr-defined]
     creation = process_creation_filetime(int(process.pid))
-    assigned = kernel32.AssignProcessToJobObject(handle, int(process._handle))  # type: ignore[attr-defined]
+    assigned = kernel32.AssignProcessToJobObject(handle, process_handle)
     if not assigned:
         process.kill()
         close_job_handle(handle)
         raise ResourceLimitError("unsupported_limits:job_object_assign_failed")
+    if not _resume_suspended_process(process_handle):
+        process.kill()
+        close_job_handle(handle)
+        raise ResourceLimitError("unsupported_limits:job_object_resume_failed")
     if on_started is not None:
         on_started(int(process.pid), creation)
     try:

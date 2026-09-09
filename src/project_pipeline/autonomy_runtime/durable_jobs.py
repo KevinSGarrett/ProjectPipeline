@@ -179,6 +179,18 @@ class FleetJobStore:
                 (status, job_id),
             )
 
+    def release_unlaunched(self, job_id: str) -> None:
+        """Return DISPATCHED to INTENT when no remote process was started."""
+
+        with self._lock:
+            self._connection().execute(
+                """
+                UPDATE fleet_dispatch_intents SET status='INTENT'
+                WHERE job_id=? AND status='DISPATCHED'
+                """,
+                (job_id,),
+            )
+
     def get_intent(self, job_id: str) -> dict[str, Any] | None:
         row = (
             self._connection()

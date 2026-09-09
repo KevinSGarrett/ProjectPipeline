@@ -432,6 +432,13 @@ class SshDispatchAdapter:
             "stderr_sha256": hashlib.sha256(stderr.encode("utf-8")).hexdigest(),
             "remote_pid": None if remote_pid is None else str(remote_pid),
         }
+        for key in ("ok", "killed"):
+            if key in worker:
+                payload[key] = worker[key]
+        for key in ("reason", "phase"):
+            value = worker.get(key)
+            if value:
+                payload[key] = value
         payload["payload_sha256"] = hashlib.sha256(
             json.dumps(payload, sort_keys=True).encode("utf-8")
         ).hexdigest()

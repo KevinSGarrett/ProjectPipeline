@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from datetime import UTC, datetime, timedelta
@@ -23,6 +24,7 @@ from project_pipeline.autonomy_runtime.ssh_dispatch import (
 )
 from project_pipeline.autonomy_runtime.windows_limits import (
     ResourceLimitError,
+    assign_and_wait,
     close_job_handle,
     enforce_or_reject,
     nested_pool_env,
@@ -239,6 +241,8 @@ def test_ssh_kill_stdin_uses_action_kill(tmp_path: Path) -> None:
     assert '"pid": 4242' in captured["input"]
     assert payload["exit_code"] == 0
     assert payload["remote_pid"] == "4242"
+    assert payload["ok"] is True
+    assert payload["killed"] is True
 
 
 def test_worker_side_dedup(tmp_path: Path) -> None:
@@ -265,6 +269,22 @@ def test_enforce_or_reject_creates_job_object() -> None:
     assert limits["ok"] is True
     assert limits["mechanism"] == "windows_job_object"
     close_job_handle(int(limits["handle"]))
+
+
+def test_assign_and_wait_covers_immediate_exit_child(tmp_path: Path) -> None:
+    if sys.platform != "win32":
+        pytest.skip("Job Objects are Windows-only")
+    limits = enforce_or_reject(cpu_ceiling=1, memory_mb_ceiling=64, deadline_seconds=10)
+    completed = assign_and_wait(
+        command=[sys.executable, "-c", "print('ok')"],
+        working_directory=tmp_path,
+        timeout_seconds=10,
+        env=dict(os.environ),
+        handle=int(limits["handle"]),
+    )
+    close_job_handle(int(limits["handle"]))
+    assert completed.returncode == 0
+    assert "ok" in (completed.stdout or "")
 
 
 def test_overlay_digest_changes_when_bytes_change(tmp_path: Path) -> None:

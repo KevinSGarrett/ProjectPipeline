@@ -11,6 +11,7 @@ from project_pipeline.autonomy_runtime.managed_worker import (
     owned_task_retirement_plan,
 )
 from project_pipeline.autonomy_runtime.ssh_dispatch import FLEET_SSH_TARGETS
+from project_pipeline.autonomy_runtime.windows_service import quote_command
 from project_pipeline.autonomy_runtime.worker_allowlist import HOST_PYTHON_EXECUTABLES
 
 IDENTITY = Path.home() / ".ssh" / "id_ed25519"
@@ -44,6 +45,10 @@ def _ssh(user: str, host: str, remote: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def _quoted_ssh(user: str, host: str, argv: list[str]) -> subprocess.CompletedProcess[str]:
+    return _ssh(user, host, quote_command(argv))
+
+
 def main() -> int:
     results = []
     for machine_id, task_name in HOST_TASKS.items():
@@ -63,11 +68,15 @@ def main() -> int:
             )
             continue
         replacement = str(plan["replacement_name"])
-        disable = _ssh(target["user"], target["host"], f"schtasks /Change /TN {task_name} /DISABLE")
-        create_remote = " ".join(str(item) for item in plan["replacement_create_argv"])
-        create = _ssh(target["user"], target["host"], create_remote)
-        query = _ssh(
-            target["user"], target["host"], f"schtasks /Query /TN {replacement} /V /FO LIST"
+        user, host = target["user"], target["host"]
+        disable = _quoted_ssh(
+            user, host, ["schtasks", "/Change", "/TN", task_name, "/DISABLE"]
+        )
+        create = _quoted_ssh(
+            user, host, [str(item) for item in plan["replacement_create_argv"]]
+        )
+        query = _quoted_ssh(
+            user, host, ["schtasks", "/Query", "/TN", replacement, "/V", "/FO", "LIST"]
         )
         results.append(
             {

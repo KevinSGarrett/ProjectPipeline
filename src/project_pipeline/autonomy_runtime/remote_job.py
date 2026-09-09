@@ -165,104 +165,114 @@ class RemoteJobController:
         authority = self._authority_failures(envelope)
         if authority:
             return {"outcome": "REJECTED", "reason": authority[0], "failures": authority}
+        claimed = False
+        launched = False
         if self.store is not None:
             existing_result = self.store.get_result(envelope.job_id)
             if existing_result is not None:
                 return {"outcome": "REJECTED", "reason": "already_accepted"}
-            claimed = self.store.claim_launch(envelope.model_dump(mode="json"))
-            if not claimed.get("ok"):
-                reason = str(claimed.get("reason") or "intent_missing")
+            claimed_launch = self.store.claim_launch(envelope.model_dump(mode="json"))
+            if not claimed_launch.get("ok"):
+                reason = str(claimed_launch.get("reason") or "intent_missing")
                 if reason == "unresolved_in_flight":
                     return {"outcome": "UNKNOWN_OUTCOME", "reason": reason}
                 return {"outcome": "REJECTED", "reason": reason}
-        remote = bool(getattr(self.adapter, "remote_host", False))
-        adapter_host = getattr(self.adapter, "machine_id", None)
-        if remote and envelope.host_id != adapter_host:
-            return {"outcome": "REJECTED", "reason": "wrong_host"}
-        root = envelope.workspace_root or self.workspace_root
-        if remote:
+            claimed = True
+        try:
+            remote = bool(getattr(self.adapter, "remote_host", False))
+            adapter_host = getattr(self.adapter, "machine_id", None)
+            if remote and envelope.host_id != adapter_host:
+                return {"outcome": "REJECTED", "reason": "wrong_host"}
+            root = envelope.workspace_root or self.workspace_root
+            if remote:
+                try:
+                    allowed = envelope.workspace_root or REMOTE_JOB_WORKSPACES.get(envelope.host_id)
+                    if not allowed:
+                        return {"outcome": "REJECTED", "reason": "workspace_root_missing"}
+                    confine_remote_workspace(envelope.workspace, allowed_root=allowed)
+                except ConfinementError as error:
+                    return {"outcome": "REJECTED", "reason": str(error)}
+                workspace = Path(envelope.workspace)
+            elif root:
+                try:
+                    workspace = canonicalize_workspace(
+                        envelope.workspace, root=root, host_id=envelope.host_id
+                    )
+                except ConfinementError as error:
+                    return {"outcome": "REJECTED", "reason": str(error)}
+            else:
+                workspace = Path(envelope.workspace)
+            if not remote and not workspace.is_dir():
+                return {"outcome": "REJECTED", "reason": "workspace_missing"}
+            remaining = max(1, int((envelope.deadline_utc - now).total_seconds()))
             try:
-                allowed = envelope.workspace_root or REMOTE_JOB_WORKSPACES.get(envelope.host_id)
-                if not allowed:
-                    return {"outcome": "REJECTED", "reason": "workspace_root_missing"}
-                confine_remote_workspace(envelope.workspace, allowed_root=allowed)
-            except ConfinementError as error:
-                return {"outcome": "REJECTED", "reason": str(error)}
-            workspace = Path(envelope.workspace)
-        elif root:
-            try:
-                workspace = canonicalize_workspace(
-                    envelope.workspace, root=root, host_id=envelope.host_id
+                limits = limits_for_adapter(
+                    adapter=self.adapter,
+                    cpu_ceiling=envelope.cpu_ceiling,
+                    memory_mb_ceiling=envelope.memory_mb_ceiling,
+                    deadline_seconds=remaining,
                 )
-            except ConfinementError as error:
+            except ResourceLimitError as error:
                 return {"outcome": "REJECTED", "reason": str(error)}
-        else:
-            workspace = Path(envelope.workspace)
-        if not remote and not workspace.is_dir():
-            return {"outcome": "REJECTED", "reason": "workspace_missing"}
-        remaining = max(1, int((envelope.deadline_utc - now).total_seconds()))
-        extra_env = None
-        handle: int | None = None
-        try:
-            limits = limits_for_adapter(
-                adapter=self.adapter,
-                cpu_ceiling=envelope.cpu_ceiling,
-                memory_mb_ceiling=envelope.memory_mb_ceiling,
-                deadline_seconds=remaining,
-            )
-        except ResourceLimitError as error:
-            return {"outcome": "REJECTED", "reason": str(error)}
-        if remote:
             extra_env = limits.get("env")
-        elif not limits.get("ok"):
-            return {
-                "outcome": "REJECTED",
-                "reason": str(limits.get("reason") or "unsupported_limits"),
-            }
-        else:
-            extra_env = limits.get("env")
-            raw_handle = limits.get("handle")
-            handle = raw_handle if isinstance(raw_handle, int) else None
-        try:
-            payload = self.adapter.execute(
-                command=list(envelope.argv),
-                working_directory=workspace,
-                timeout_seconds=remaining,
-                extra_env=extra_env,
-                job_handle=handle,
+            handle: int | None = None
+            if not remote:
+                if not limits.get("ok"):
+                    return {
+                        "outcome": "REJECTED",
+                        "reason": str(limits.get("reason") or "unsupported_limits"),
+                    }
+                raw_handle = limits.get("handle")
+                handle = raw_handle if isinstance(raw_handle, int) else None
+            try:
+                payload = self.adapter.execute(
+                    command=list(envelope.argv),
+                    working_directory=workspace,
+                    timeout_seconds=remaining,
+                    extra_env=extra_env,
+                    job_handle=handle,
+                    job_id=envelope.job_id,
+                    input_sha256=envelope.input_sha256,
+                    envelope=envelope.model_dump(mode="json"),
+                )
+            except ResourceLimitError as error:
+                return {"outcome": "REJECTED", "reason": str(error)}
+            except TypeError as error:
+                launched = True
+                if self.store is not None:
+                    self.store.mark_status(envelope.job_id, "UNKNOWN_OUTCOME")
+                return {
+                    "outcome": "UNKNOWN_OUTCOME",
+                    "reason": "adapter_execute_contract_error",
+                    "detail": type(error).__name__,
+                }
+            finally:
+                close_job_handle(handle)
+            launched = True
+            if payload.get("timed_out"):
+                if self.store is not None:
+                    self.store.mark_status(envelope.job_id, "UNKNOWN_OUTCOME")
+                return {"outcome": "UNKNOWN_OUTCOME", "reason": "lost_acknowledgement"}
+            if self.store is not None:
+                self.store.mark_status(envelope.job_id, "RUNNING")
+            result = RemoteJobResult(
                 job_id=envelope.job_id,
-                input_sha256=envelope.input_sha256,
-                envelope=envelope.model_dump(mode="json"),
+                host_id=str(adapter_host or envelope.host_id),
+                fence=envelope.fence,
+                exit_code=int(payload["exit_code"]),
+                stdout_sha256=str(payload["stdout_sha256"]),
+                stderr_sha256=str(payload["stderr_sha256"]),
+                output_sha256=str(payload["payload_sha256"]),
             )
-        except TypeError as error:
             return {
-                "outcome": "UNKNOWN_OUTCOME",
-                "reason": "adapter_execute_contract_error",
-                "detail": type(error).__name__,
+                "outcome": "EXECUTED",
+                "result": result,
+                "envelope_digest": envelope.digest(),
+                "remote_pid": payload.get("remote_pid") or payload.get("pid"),
             }
         finally:
-            close_job_handle(handle)
-        if payload.get("timed_out"):
-            if self.store is not None:
-                self.store.mark_status(envelope.job_id, "UNKNOWN_OUTCOME")
-            return {"outcome": "UNKNOWN_OUTCOME", "reason": "lost_acknowledgement"}
-        if self.store is not None:
-            self.store.mark_status(envelope.job_id, "RUNNING")
-        result = RemoteJobResult(
-            job_id=envelope.job_id,
-            host_id=str(adapter_host or envelope.host_id),
-            fence=envelope.fence,
-            exit_code=int(payload["exit_code"]),
-            stdout_sha256=str(payload["stdout_sha256"]),
-            stderr_sha256=str(payload["stderr_sha256"]),
-            output_sha256=str(payload["payload_sha256"]),
-        )
-        return {
-            "outcome": "EXECUTED",
-            "result": result,
-            "envelope_digest": envelope.digest(),
-            "remote_pid": payload.get("remote_pid") or payload.get("pid"),
-        }
+            if self.store is not None and claimed and not launched:
+                self.store.release_unlaunched(envelope.job_id)
 
     def accept(
         self,

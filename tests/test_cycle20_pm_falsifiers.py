@@ -39,6 +39,7 @@ from project_pipeline.autonomy_runtime.ssh_dispatch import (
     remote_command_allowed,
 )
 from project_pipeline.autonomy_runtime.windows_limits import limits_for_adapter
+from project_pipeline.autonomy_runtime.windows_service import quote_command
 from project_pipeline.autonomy_runtime.worker_entrypoint import run_envelope
 from project_pipeline.overlay import refresh_instruction_manifest_hashes
 from project_pipeline.scheduler.admission import write_admission_record
@@ -627,6 +628,42 @@ def test_kill_matches_running_ownership_before_result_cache(tmp_path: Path) -> N
         }
     )
     assert missing.get("reason") == "unowned_pid"
+
+
+def test_prelaunch_reject_releases_dispatched_claim(tmp_path: Path) -> None:
+    store = FleetJobStore(tmp_path / "prelaunch.sqlite3")
+    env = _envelope(tmp_path, "prelaunch", host_id="WIN-EVSH1DN8H5O")
+    store.persist_intent(env.model_dump(mode="json"), now=NOW)
+    controller = RemoteJobController(
+        FakeRemote(),
+        store=store,
+        require_intent=True,
+        expected_source_sha=SHA,
+        expected_source_tree=TREE,
+    )
+    first = controller.execute(env, now=NOW)
+    assert first["outcome"] == "REJECTED"
+    assert first["reason"] == "wrong_host"
+    intent = store.get_intent(env.job_id)
+    assert intent is not None
+    assert intent["status"] == "INTENT"
+    second = controller.execute(env, now=NOW)
+    assert second["reason"] == "wrong_host"
+    assert second["reason"] != "unresolved_in_flight"
+
+
+def test_retirement_remote_keeps_tr_as_one_token() -> None:
+    spaced = r"C:\Users\Windows 11\AppData\Local\Programs\Python\Python311\python.exe"
+    plan = owned_task_retirement_plan(
+        "ProjectPipelineFleetWorkerComfy", python_executable=spaced
+    )
+    argv = [str(item) for item in plan["replacement_create_argv"]]
+    remote = quote_command(argv)
+    after_tr = remote.split("/TR", 1)[1]
+    before_f = after_tr.split("/F", 1)[0]
+    assert "--managed" in before_f
+    assert before_f.count('"') >= 2
+    assert remote.index("--managed") < remote.index("/F")
 
 
 def test_instruction_manifest_hashes_follow_resolved_public_bytes(tmp_path: Path) -> None:
