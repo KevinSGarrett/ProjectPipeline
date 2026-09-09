@@ -26,6 +26,7 @@ from project_pipeline.jira_steward import validate_jira_steward_foundation
 from project_pipeline.lifecycle import validate_lifecycle_foundation
 from project_pipeline.manifest import verify_manifest
 from project_pipeline.orchestration import validate_orchestration_foundation
+from project_pipeline.overlay import control_input_root, locate_input
 from project_pipeline.persistence import validate_migration_catalog
 from project_pipeline.release_factory.validation import validate_release_factory
 from project_pipeline.release_hardening import validate_release_hardening
@@ -48,7 +49,6 @@ from project_pipeline.validation.product_model_audit import (
     validate_independent_product_model_audit,
 )
 from project_pipeline.validation.product_outcome import validate_product_outcome
-from project_pipeline.overlay import control_input_root, locate_input
 from project_pipeline.validation.public_repository import validate_public_repository_surface
 from project_pipeline.validation.registries import (
     check_adr_registry,
@@ -207,7 +207,9 @@ class RepositoryValidator:
         )
         self._run("architecture_decisions", lambda: check_adr_registry(self.root, self.report))
         self._run("architecture_registry", self._check_architecture_registry)
-        self._run("upstream_registry", lambda: check_upstream_registry(self.input_root, self.report))
+        self._run(
+            "upstream_registry", lambda: check_upstream_registry(self.input_root, self.report)
+        )
         self._run("upstream_reviews", self._check_upstream_reviews)
         self._run("evidence_ledger", lambda: check_evidence_ledger(self.input_root, self.report))
         self._run("manifest", self._check_manifest)

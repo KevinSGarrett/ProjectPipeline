@@ -2011,10 +2011,17 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                     item.model_dump(mode="json") for item in scheduler_store.list_active_leases()
                 ],
             }, 0
-        if args.action in {"fleet", "place", "drain", "resume", "observe", "remote-run", "dispatch"}:
+        if args.action in {
+            "fleet",
+            "place",
+            "drain",
+            "resume",
+            "observe",
+            "remote-run",
+            "dispatch",
+        }:
             from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
             from project_pipeline.autonomy_runtime.remote_job import (
-                RemoteJobController,
                 RemoteJobEnvelope,
             )
             from project_pipeline.autonomy_runtime.ssh_dispatch import SshDispatchAdapter

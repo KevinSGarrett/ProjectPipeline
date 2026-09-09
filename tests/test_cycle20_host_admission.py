@@ -88,7 +88,9 @@ def test_hostname_only_and_stale_and_future_are_ineligible() -> None:
     )
     chosen_stale, stale_denials = select_target((stale,), when=NOW)
     assert chosen_stale is None
-    assert any("measurement_incomplete" in item or "stale_capacity" in item for item in stale_denials)
+    assert any(
+        "measurement_incomplete" in item or "stale_capacity" in item for item in stale_denials
+    )
 
 
 def test_literal_1970_freshness_is_not_admission() -> None:

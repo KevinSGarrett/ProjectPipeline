@@ -188,9 +188,7 @@ def _inventory_complete(inventory: Mapping[str, Any]) -> bool:
     if any(not inventory.get(key) for key in required):
         return False
     measured_at = inventory.get("measured_at_utc")
-    if measured_at is None:
-        return False
-    return True
+    return measured_at is not None
 
 
 def _observed_worker_profile(
@@ -220,7 +218,9 @@ def _observed_worker_profile(
         kind = "MEASURED" if complete else "PARTIAL"
     measured_at = inventory.get("measured_at_utc")
     if measured_at:
-        observed_at = datetime.fromisoformat(str(measured_at).replace("Z", "+00:00")).astimezone(UTC)
+        observed_at = datetime.fromisoformat(str(measured_at).replace("Z", "+00:00")).astimezone(
+            UTC
+        )
     else:
         observed_at = UNOBSERVED_AT
         kind = "PARTIAL"
@@ -249,7 +249,9 @@ def _observed_worker_profile(
         ),
         sid=str(inventory["sid"]) if inventory.get("sid") else None,
         os_build=str(inventory["osBuild"]) if inventory.get("osBuild") else None,
-        os_support_status=str(inventory["osSupportStatus"]) if inventory.get("osSupportStatus") else None,
+        os_support_status=str(inventory["osSupportStatus"])
+        if inventory.get("osSupportStatus")
+        else None,
         cpu_physical_cores=int(physical) if physical is not None else None,
     )
 
@@ -458,13 +460,18 @@ def measure_local_inventory(*, query: Any = None) -> dict[str, Any]:
     return payload
 
 
-def measure_remote_inventory(*, host: str, user: str, identity: Path | None = None) -> dict[str, Any]:
+def measure_remote_inventory(
+    *, host: str, user: str, identity: Path | None = None
+) -> dict[str, Any]:
     """Measure an enrolled worker through OpenSSH. Observation time is the remote CIM time."""
 
-    allowed = {item["host"]: item["user"] for item in (
-        {"host": "100.107.207.66", "user": "kines"},
-        {"host": "100.77.151.3", "user": "Windows 11"},
-    )}
+    allowed = {
+        item["host"]: item["user"]
+        for item in (
+            {"host": "100.107.207.66", "user": "kines"},
+            {"host": "100.77.151.3", "user": "Windows 11"},
+        )
+    }
     if allowed.get(host) != user:
         return {"ok": False, "reason": "unknown_ssh_target", "observation_kind": "PARTIAL"}
     key = identity or (Path.home() / ".ssh" / "id_ed25519")
@@ -506,11 +513,14 @@ def measure_remote_inventory(*, host: str, user: str, identity: Path | None = No
     try:
         payload = json.loads((completed.stdout or "").strip().splitlines()[-1])
     except (json.JSONDecodeError, IndexError):
-        return {"ok": False, "reason": "remote_measurement_unparseable", "observation_kind": "PARTIAL"}
+        return {
+            "ok": False,
+            "reason": "remote_measurement_unparseable",
+            "observation_kind": "PARTIAL",
+        }
     if not isinstance(payload, dict) or not payload.get("measured_at_utc"):
         return {"ok": False, "reason": "measurement_incomplete", "observation_kind": "PARTIAL"}
     payload["ok"] = True
     payload["observation_kind"] = "MEASURED" if _inventory_complete(payload) else "PARTIAL"
     payload["tailnet_host"] = host
     return payload
-

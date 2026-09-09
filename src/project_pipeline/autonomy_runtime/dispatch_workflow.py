@@ -12,7 +12,11 @@ from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, Re
 from project_pipeline.autonomy_runtime.ssh_dispatch import SshDispatchAdapter
 from project_pipeline.autonomy_runtime.windows_limits import nested_pool_env
 from project_pipeline.scheduler.admission import chosen_host_admitted, load_admission_record
-from project_pipeline.scheduler.fleet import MachineProfile, physical_claims_for_machine, select_target
+from project_pipeline.scheduler.fleet import (
+    MachineProfile,
+    physical_claims_for_machine,
+    select_target,
+)
 from project_pipeline.scheduler.persistence import SchedulerStore
 
 
@@ -89,13 +93,15 @@ class DispatchWorkflow:
         bundle = self.store.acquire_bundle(
             task_id=task_id,
             holder_id=holder_id,
-            claims=physical_claims_for_machine(
-                chosen.machine_id, cpu=cpu, memory_mb=memory_mb
-            ),
+            claims=physical_claims_for_machine(chosen.machine_id, cpu=cpu, memory_mb=memory_mb),
             now=now,
         )
         if not bundle.acquired:
-            return {"outcome": "REJECTED", "reason": "lease_denied", "failures": list(bundle.reasons)}
+            return {
+                "outcome": "REJECTED",
+                "reason": "lease_denied",
+                "failures": list(bundle.reasons),
+            }
         fence = str(bundle.leases[0].fencing_token)
         lease_id = bundle.leases[0].lease_id
         envelope = RemoteJobEnvelope(
@@ -184,7 +190,9 @@ class DispatchWorkflow:
         accepted = controller.accept(
             envelope, executed["result"], expected_host=chosen.machine_id, now=now
         )
-        lifecycle = "ACCEPTED" if accepted.get("outcome") == "ACCEPTED" else str(accepted.get("reason"))
+        lifecycle = (
+            "ACCEPTED" if accepted.get("outcome") == "ACCEPTED" else str(accepted.get("reason"))
+        )
         if self.journal is not None:
             self.journal.publish(
                 {

@@ -148,7 +148,9 @@ def _overlay_ignore(_directory: str, names: list[str]) -> set[str]:
     denied = set()
     for name in names:
         lowered = name.lower()
-        if name in FORBIDDEN_OVERLAY_NAMES or lowered in {item.lower() for item in FORBIDDEN_OVERLAY_NAMES}:
+        if name in FORBIDDEN_OVERLAY_NAMES or lowered in {
+            item.lower() for item in FORBIDDEN_OVERLAY_NAMES
+        }:
             denied.add(name)
         if lowered in {".env", ".venv", "venv", "__pycache__", ".git"}:
             denied.add(name)
@@ -171,7 +173,9 @@ def bind_overlay_from_source(
     overlay_root = overlay_root.resolve()
     overlay_root.mkdir(parents=True, exist_ok=True)
     copied: list[str] = []
-    domains = list(REQUIRED_DOMAINS) + [item for item in extra_domains if item not in REQUIRED_DOMAINS]
+    domains = list(REQUIRED_DOMAINS) + [
+        item for item in extra_domains if item not in REQUIRED_DOMAINS
+    ]
     for domain in domains:
         origin = control_source / domain
         if not origin.exists():

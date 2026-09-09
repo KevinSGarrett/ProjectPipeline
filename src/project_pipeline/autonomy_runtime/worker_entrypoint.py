@@ -15,7 +15,10 @@ from project_pipeline.autonomy_runtime.confinement import (
     argv_is_confined,
     reject_unsafe_string,
 )
-from project_pipeline.autonomy_runtime.managed_worker import OWNED_TASK_NAMES, inspect_scheduled_task_xml
+from project_pipeline.autonomy_runtime.managed_worker import (
+    OWNED_TASK_NAMES,
+    inspect_scheduled_task_xml,
+)
 from project_pipeline.autonomy_runtime.providers import contains_secret_shaped
 from project_pipeline.scheduler.host_observation import measure_local_inventory
 
@@ -62,10 +65,14 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
             shell=False,
         )
         xml_text = completed.stdout or ""
-        inspected = inspect_scheduled_task_xml(xml_text) if xml_text.strip() else {
-            "ok": False,
-            "reason": "task_xml_missing",
-        }
+        inspected = (
+            inspect_scheduled_task_xml(xml_text)
+            if xml_text.strip()
+            else {
+                "ok": False,
+                "reason": "task_xml_missing",
+            }
+        )
         inspected["exit_code"] = completed.returncode
         inspected["ok"] = completed.returncode == 0 and xml_text.strip() != ""
         inspected["pid"] = os.getpid()

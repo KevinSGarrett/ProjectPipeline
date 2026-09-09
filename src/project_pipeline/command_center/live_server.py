@@ -12,6 +12,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, Response
 
+from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.command_center.api import CommandCenterAuth, create_command_center_app
 from project_pipeline.command_center.application import RepositoryApplicationProjectionBuilder
 from project_pipeline.command_center.autonomy_director import (
@@ -42,7 +43,6 @@ from project_pipeline.command_center.realtime import RealtimeEventBroker
 from project_pipeline.configuration import load_runtime_configuration
 from project_pipeline.domain.control import ControlSnapshot
 from project_pipeline.jira import load_issues
-from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.scheduler.fleet import merge_occupancy, occupancy_from_leases
 from project_pipeline.scheduler.host_observation import (
     apply_local_control_observation,

@@ -92,7 +92,9 @@ class FleetJobStore:
         self._local.db = connection
         return connection
 
-    def persist_intent(self, envelope: dict[str, Any], *, now: datetime | None = None) -> dict[str, Any]:
+    def persist_intent(
+        self, envelope: dict[str, Any], *, now: datetime | None = None
+    ) -> dict[str, Any]:
         now = (now or _now()).astimezone(UTC)
         job_id = str(envelope["job_id"])
         if contains_secret_shaped(envelope):
@@ -135,7 +137,12 @@ class FleetJobStore:
                         ),
                     )
                     db.execute("COMMIT")
-                    return {"ok": True, "duplicate": False, "replaced_unlaunched": True, "status": "INTENT"}
+                    return {
+                        "ok": True,
+                        "duplicate": False,
+                        "replaced_unlaunched": True,
+                        "status": "INTENT",
+                    }
                 db.execute("COMMIT")
                 return {"ok": False, "reason": "conflicting_intent", "status": existing["status"]}
             db.execute(
@@ -173,10 +180,14 @@ class FleetJobStore:
             )
 
     def get_intent(self, job_id: str) -> dict[str, Any] | None:
-        row = self._connection().execute(
-            "SELECT payload_json, status FROM fleet_dispatch_intents WHERE job_id=?",
-            (job_id,),
-        ).fetchone()
+        row = (
+            self._connection()
+            .execute(
+                "SELECT payload_json, status FROM fleet_dispatch_intents WHERE job_id=?",
+                (job_id,),
+            )
+            .fetchone()
+        )
         if row is None:
             return None
         payload = json.loads(row["payload_json"])
@@ -192,22 +203,32 @@ class FleetJobStore:
             )
 
     def fence_expired(self, fence: str) -> bool:
-        row = self._connection().execute(
-            "SELECT fence FROM fleet_expired_fences WHERE fence=?",
-            (fence,),
-        ).fetchone()
+        row = (
+            self._connection()
+            .execute(
+                "SELECT fence FROM fleet_expired_fences WHERE fence=?",
+                (fence,),
+            )
+            .fetchone()
+        )
         return row is not None
 
     def get_result(self, job_id: str) -> dict[str, Any] | None:
-        row = self._connection().execute(
-            "SELECT payload_json FROM fleet_job_results WHERE job_id=?",
-            (job_id,),
-        ).fetchone()
+        row = (
+            self._connection()
+            .execute(
+                "SELECT payload_json FROM fleet_job_results WHERE job_id=?",
+                (job_id,),
+            )
+            .fetchone()
+        )
         if row is None:
             return None
         return json.loads(row["payload_json"])
 
-    def accept_result(self, result: dict[str, Any], *, now: datetime | None = None) -> dict[str, Any]:
+    def accept_result(
+        self, result: dict[str, Any], *, now: datetime | None = None
+    ) -> dict[str, Any]:
         now = (now or _now()).astimezone(UTC)
         job_id = str(result["job_id"])
         payload = json.dumps(result, sort_keys=True, default=str)
@@ -220,12 +241,15 @@ class FleetJobStore:
             ).fetchone()
             if existing is not None:
                 db.execute("COMMIT")
-                same = (
-                    existing["output_sha256"] == result["output_sha256"]
-                    and int(existing["exit_code"]) == int(result["exit_code"])
-                )
+                same = existing["output_sha256"] == result["output_sha256"] and int(
+                    existing["exit_code"]
+                ) == int(result["exit_code"])
                 if same:
-                    return {"outcome": "ACCEPTED", "duplicate": True, "result": json.loads(existing["payload_json"])}
+                    return {
+                        "outcome": "ACCEPTED",
+                        "duplicate": True,
+                        "result": json.loads(existing["payload_json"]),
+                    }
                 return {"outcome": "REJECTED", "reason": "conflicting_replay"}
             db.execute(
                 """

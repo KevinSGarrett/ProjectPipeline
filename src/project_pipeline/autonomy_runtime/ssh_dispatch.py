@@ -121,7 +121,11 @@ def remote_command_allowed(argv: tuple[str, ...]) -> bool:
         return False
     if len(argv) == 2 and argv[1] in {"-V", "--version"}:
         return True
-    if len(argv) >= 3 and argv[1] == "-m" and argv[2] == "project_pipeline.autonomy_runtime.worker_entrypoint":
+    if (
+        len(argv) >= 3
+        and argv[1] == "-m"
+        and argv[2] == "project_pipeline.autonomy_runtime.worker_entrypoint"
+    ):
         return True
     if len(argv) >= 2 and not str(argv[1]).startswith("-"):
         posix = argv[1].replace("\\", "/")

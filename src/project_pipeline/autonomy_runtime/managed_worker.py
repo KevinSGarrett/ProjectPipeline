@@ -85,7 +85,8 @@ def os_age_denies_xeon(os_support_status: str | None, machine_id: str) -> bool:
     """Operator grant: OS support-age never denies WIN-EVSH1DN8H5O."""
 
     del os_support_status
-    return False if machine_id == XEON_MACHINE_ID else False
+    del machine_id
+    return False
 
 
 def os_age_policy(machine_id: str, os_support_status: str | None) -> dict[str, Any]:

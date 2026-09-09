@@ -191,4 +191,6 @@ def assign_and_wait(
     except subprocess.TimeoutExpired:
         kernel32.TerminateJobObject(handle, 124)
         stdout, stderr = process.communicate()
-        raise subprocess.TimeoutExpired(command, timeout_seconds, output=stdout, stderr=stderr)
+        raise subprocess.TimeoutExpired(
+            command, timeout_seconds, output=stdout, stderr=stderr
+        ) from None

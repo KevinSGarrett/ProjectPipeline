@@ -23,7 +23,10 @@ from project_pipeline.command_center.autonomy_director import (
 from project_pipeline.overlay import bound_overlay, control_input_root, inspect_source_identity
 from project_pipeline.scheduler.admission import write_admission_record
 from project_pipeline.scheduler.fleet import MachineProfile
-from project_pipeline.scheduler.host_observation import apply_inventory_observation, declared_profiles
+from project_pipeline.scheduler.host_observation import (
+    apply_inventory_observation,
+    declared_profiles,
+)
 from project_pipeline.scheduler.persistence import SchedulerStore
 
 HISTORICAL_NOT_NEW_WORK = frozenset({"PP-TASK-000384"})
@@ -41,9 +44,7 @@ def useful_argv(root: Path, task_id: str) -> tuple[str, ...]:
 
 def select_two_useful_jobs(ready: list[str], *, blocked: str | None = None) -> dict[str, Any]:
     independent = [
-        item
-        for item in ready
-        if item != blocked and item not in HISTORICAL_NOT_NEW_WORK
+        item for item in ready if item != blocked and item not in HISTORICAL_NOT_NEW_WORK
     ]
     selected = independent[:2]
     return {
@@ -123,7 +124,9 @@ def _observation_dir(root: Path) -> Path:
     return path
 
 
-def run_observation(*, root: Path, duration_seconds: int, database: Path | None = None) -> dict[str, Any]:
+def run_observation(
+    *, root: Path, duration_seconds: int, database: Path | None = None
+) -> dict[str, Any]:
     """Bounded mixed useful-work observation. Duration is wall-clock, not a stub."""
 
     root = root.resolve()
@@ -338,10 +341,14 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.action == "status":
         status = _observation_dir(args.root) / "status.json"
-        payload = json.loads(status.read_text(encoding="utf-8")) if status.is_file() else {
-            "action": "status",
-            "running": False,
-        }
+        payload = (
+            json.loads(status.read_text(encoding="utf-8"))
+            if status.is_file()
+            else {
+                "action": "status",
+                "running": False,
+            }
+        )
         print(json.dumps(payload, indent=2, sort_keys=True))
         return 0
     if args.action == "observe":
@@ -350,7 +357,14 @@ def main(argv: list[str] | None = None) -> int:
             duration_seconds=args.duration_seconds,
             database=args.database,
         )
-        print(json.dumps({k: result[k] for k in result if k != "completed_jobs"}, indent=2, sort_keys=True, default=str))
+        print(
+            json.dumps(
+                {k: result[k] for k in result if k != "completed_jobs"},
+                indent=2,
+                sort_keys=True,
+                default=str,
+            )
+        )
         return 0 if result.get("duration_met") else 2
     result = run_production(root=args.root, database=args.database)
     print(json.dumps(result, indent=2, sort_keys=True, default=str))

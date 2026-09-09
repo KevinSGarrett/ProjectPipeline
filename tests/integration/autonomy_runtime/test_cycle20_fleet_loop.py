@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import json
-import sys
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from pathlib import Path
 
 from project_pipeline.autonomy_runtime.fleet_loop import run_loop, select_two_useful_jobs

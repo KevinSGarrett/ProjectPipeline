@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -16,23 +15,6 @@ from project_pipeline.autonomy_runtime.windows_limits import nested_pool_env
 NOW = datetime(2026, 9, 8, tzinfo=UTC)
 SHA = "a" * 40
 TREE = "b" * 40
-
-
-def _profile(machine_id: str, **overrides: object) -> MachineProfile:
-    payload = {
-        "machine_id": machine_id,
-        "hostname": machine_id,
-        "role": "CPU_WORKER",
-        "observed_at_utc": NOW,
-        "isa_flags": ("avx",),
-        "cpu_slots": 8,
-        "memory_mb": 32000,
-        "disk_mb": 20000,
-        "principal": "worker",
-        "observation_kind": "MEASURED",
-    }
-    payload.update(overrides)
-    return MachineProfile.model_validate(payload)
 
 
 def _envelope(tmp_path: Path, **overrides: object) -> RemoteJobEnvelope:
@@ -190,7 +172,9 @@ def test_nested_pools_are_bound() -> None:
 
 def test_secret_argv_is_rejected(tmp_path: Path) -> None:
     store = FleetJobStore(tmp_path / "jobs.sqlite3")
-    envelope = _envelope(tmp_path, argv=(sys.executable, "-c", "print('api_key=sk-abcdefghijklmnop')"))
+    envelope = _envelope(
+        tmp_path, argv=(sys.executable, "-c", "print('api_key=sk-abcdefghijklmnop')")
+    )
     denied = store.persist_intent(envelope.model_dump(mode="json"), now=NOW)
     assert denied["reason"] == "secret_in_envelope"
     executed = RemoteJobController(store=store, require_intent=True).execute(envelope, now=NOW)
