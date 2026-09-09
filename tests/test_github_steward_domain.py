@@ -257,3 +257,41 @@ def test_merge_gate_ignores_pull_author_self_approval():
     assert gate.state is MergeGateState.BLOCKED
     assert "self_review" in gate.blockers
     assert gate.approvals_observed == 0
+
+
+def test_merge_gate_author_comment_is_not_self_approval():
+    pr = PullRequestSnapshot(
+        pull_request_id=github_identifier("GHPR", "owner/repo", "7", SHA2),
+        repository_slug="owner/repo",
+        number=7,
+        title="Implement governed repository stewardship",
+        state=PullRequestState.OPEN,
+        base_branch="main",
+        head_branch="feature/pp-7",
+        base_sha=SHA1,
+        head_sha=SHA2,
+        mergeable=True,
+        author="implementer",
+        reviews=(
+            PullRequestReview(
+                review_id="r-comment",
+                author="implementer",
+                state=ReviewState.COMMENTED,
+                commit_sha=SHA2,
+                submitted_at_utc=datetime.now(UTC),
+            ),
+        ),
+        checks=(
+            PullRequestCheck(
+                check_id="1",
+                name="tests",
+                state=CheckState.COMPLETED,
+                conclusion=CheckConclusion.SUCCESS,
+            ),
+        ),
+    )
+    gate = evaluate_merge_gate(
+        pr, required_checks=("tests",), approvals_required=1, require_head_sha=SHA2
+    )
+    assert "self_review" not in gate.blockers
+    assert gate.approvals_observed == 0
