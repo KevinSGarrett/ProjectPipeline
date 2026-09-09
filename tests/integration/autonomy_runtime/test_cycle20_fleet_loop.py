@@ -7,17 +7,20 @@ from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.fleet_loop import (
     build_parser,
+    choose_measured_worker,
+    duplicate_work_audit,
     run_available_work,
     run_loop,
     select_two_useful_jobs,
     useful_argv,
 )
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
+from project_pipeline.overlay import locate_input
 from project_pipeline.scheduler.admission import write_admission_record
 from project_pipeline.scheduler.fleet import MachineProfile
 from project_pipeline.scheduler.persistence import SchedulerStore
 
-NOW = datetime(2026, 9, 8, tzinfo=UTC)
+NOW = datetime.now(UTC)
 SHA = "a" * 40
 TREE = "b" * 40
 ROOT = Path(__file__).resolve().parents[3]
@@ -40,6 +43,66 @@ def _profile() -> MachineProfile:
     )
 
 
+def _write_xeon_admission(path: Path) -> None:
+    write_admission_record(
+        path,
+        {
+            "c18_disposition": "PM_ACCEPTED",
+            "reviewer_id": "rev",
+            "implementer_id": "impl",
+            "source_sha": SHA,
+            "source_tree": TREE,
+            "hosts": {
+                "WIN-EVSH1DN8H5O": {
+                    "state": "READY",
+                    "freshness": "fresh",
+                    "observation_kind": "MEASURED",
+                    "observed_at_utc": NOW.isoformat(),
+                    "sid": "S-1-5-21-xeon",
+                    "principal": r"win-evsh1dn8h5o\kines",
+                    "workspace_root": r"C:\Users\kines\ProjectPipeline\jobs",
+                }
+            },
+        },
+    )
+
+
+def _run_kwargs(tmp_path: Path) -> dict[str, object]:
+    database = tmp_path / "state.sqlite3"
+    workspace = tmp_path / "ws"
+    workspace.mkdir()
+    _write_xeon_admission(database.with_name("fleet_admission.json"))
+    return {
+        "root": ROOT,
+        "database": database,
+        "blocked": "PP-TASK-000518",
+        "profiles": (_profile(),),
+        "adapter": _RemoteAdapter(),
+        "workspace": workspace,
+        "workspace_root": tmp_path,
+        "source_sha": SHA,
+        "source_tree": TREE,
+        "overlay_sha256": "c" * 64,
+        "principal": r"win-evsh1dn8h5o\kines",
+        "now": NOW,
+    }
+
+
+class _RemoteAdapter:
+    remote_host = True
+    machine_id = "WIN-EVSH1DN8H5O"
+
+    def execute(self, **_kwargs: object) -> dict[str, object]:
+        return {
+            "exit_code": 0,
+            "timed_out": False,
+            "stdout_sha256": "1" * 64,
+            "stderr_sha256": "2" * 64,
+            "payload_sha256": "3" * 64,
+            "remote_pid": "4242",
+        }
+
+
 def test_selects_two_jobs_and_preserves_blocked_lane() -> None:
     jobs = select_two_useful_jobs(
         ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000518"],
@@ -49,58 +112,19 @@ def test_selects_two_jobs_and_preserves_blocked_lane() -> None:
     assert jobs["blocked"] == "PP-TASK-000518"
 
 
-def test_loop_dispatches_local_adapter_and_continues(tmp_path: Path) -> None:
-    database = tmp_path / "state.sqlite3"
-    workspace = tmp_path / "ws"
-    workspace.mkdir()
-    admission = database.with_name("fleet_admission.json")
-    write_admission_record(
-        admission,
-        {
-            "c18_disposition": "PM_ACCEPTED",
-            "reviewer_id": "rev",
-            "implementer_id": "impl",
-            "source_sha": SHA,
-            "source_tree": TREE,
-            "hosts": {
-                "WIN-EVSH1DN8H5O": {
-                    "state": "READY",
-                    "freshness": "fresh",
-                    "observation_kind": "MEASURED",
-                    "observed_at_utc": NOW.isoformat(),
-                }
-            },
-        },
+def test_select_skips_structural_parents() -> None:
+    jobs = select_two_useful_jobs(
+        ["PP-STORY-000065", "PP-TASK-000516", "PP-TASK-000517"],
+        blocked="PP-STORY-000139",
     )
+    assert jobs["selected"] == ["PP-TASK-000516", "PP-TASK-000517"]
+    assert "PP-STORY-000065" in jobs["skipped_structural"]
 
-    class _RemoteAdapter:
-        remote_host = True
-        machine_id = "WIN-EVSH1DN8H5O"
 
-        def execute(self, **_kwargs: object) -> dict[str, object]:
-            return {
-                "exit_code": 0,
-                "timed_out": False,
-                "stdout_sha256": "1" * 64,
-                "stderr_sha256": "2" * 64,
-                "payload_sha256": "3" * 64,
-                "remote_pid": "4242",
-            }
-
+def test_loop_dispatches_local_adapter_and_continues(tmp_path: Path) -> None:
     result = run_loop(
-        root=ROOT,
-        database=database,
         ready=["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"],
-        blocked="PP-TASK-000518",
-        profiles=(_profile(),),
-        adapter=_RemoteAdapter(),
-        workspace=workspace,
-        workspace_root=tmp_path,
-        source_sha=SHA,
-        source_tree=TREE,
-        overlay_sha256="c" * 64,
-        principal=r"win-evsh1dn8h5o\kines",
-        now=NOW,
+        **_run_kwargs(tmp_path),
     )
     assert result["selected"] == ["PP-TASK-000516", "PP-TASK-000517"]
     assert result["next_job"] == "PP-TASK-000519"
@@ -109,99 +133,22 @@ def test_loop_dispatches_local_adapter_and_continues(tmp_path: Path) -> None:
 
 
 def test_available_work_dispatches_next_job_after_first_pair(tmp_path: Path) -> None:
-    database = tmp_path / "state.sqlite3"
-    workspace = tmp_path / "ws"
-    workspace.mkdir()
-    write_admission_record(
-        database.with_name("fleet_admission.json"),
-        {
-            "c18_disposition": "PM_ACCEPTED",
-            "reviewer_id": "rev",
-            "implementer_id": "impl",
-            "source_sha": SHA,
-            "source_tree": TREE,
-            "hosts": {
-                "WIN-EVSH1DN8H5O": {
-                    "state": "READY",
-                    "freshness": "fresh",
-                    "observation_kind": "MEASURED",
-                    "observed_at_utc": NOW.isoformat(),
-                }
-            },
-        },
-    )
-
-    class _RemoteAdapter:
-        remote_host = True
-        machine_id = "WIN-EVSH1DN8H5O"
-
-        def execute(self, **_kwargs: object) -> dict[str, object]:
-            return {
-                "exit_code": 0,
-                "timed_out": False,
-                "stdout_sha256": "1" * 64,
-                "stderr_sha256": "2" * 64,
-                "payload_sha256": "3" * 64,
-                "remote_pid": "4242",
-            }
-
+    kwargs = _run_kwargs(tmp_path)
     result = run_available_work(
-        root=ROOT,
-        database=database,
         ready=["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"],
-        blocked="PP-TASK-000518",
-        profiles=(_profile(),),
-        adapter=_RemoteAdapter(),
-        workspace=workspace,
-        workspace_root=tmp_path,
-        source_sha=SHA,
-        source_tree=TREE,
-        overlay_sha256="c" * 64,
-        principal=r"win-evsh1dn8h5o\kines",
-        now=NOW,
+        **kwargs,
     )
     assert result["ok"] is True
     assert result["selected"] == ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"]
     assert len(result["completed_jobs"]) == 2
-    empty = run_available_work(
-        root=ROOT,
-        database=database,
-        ready=[],
-        blocked="PP-TASK-000518",
-        profiles=(_profile(),),
-        adapter=_RemoteAdapter(),
-        workspace=workspace,
-        workspace_root=tmp_path,
-        source_sha=SHA,
-        source_tree=TREE,
-        overlay_sha256="c" * 64,
-        principal=r"win-evsh1dn8h5o\kines",
-        now=NOW,
-    )
+    empty = run_available_work(ready=[], **kwargs)
     assert empty["ok"] is False
     assert empty["reason"] == "director_ready_empty"
 
 
 def test_unknown_machine_id_does_not_widen_to_all_hosts(tmp_path: Path) -> None:
     database = tmp_path / "state.sqlite3"
-    write_admission_record(
-        database.with_name("fleet_admission.json"),
-        {
-            "c18_disposition": "PM_ACCEPTED",
-            "reviewer_id": "rev",
-            "implementer_id": "impl",
-            "source_sha": SHA,
-            "source_tree": TREE,
-            "hosts": {
-                "WIN-EVSH1DN8H5O": {
-                    "state": "READY",
-                    "freshness": "fresh",
-                    "observation_kind": "MEASURED",
-                    "observed_at_utc": NOW.isoformat(),
-                }
-            },
-        },
-    )
+    _write_xeon_admission(database.with_name("fleet_admission.json"))
     with SchedulerStore(database, ROOT) as store:
         workflow = DispatchWorkflow(
             store=store,
@@ -273,3 +220,49 @@ def test_useful_job_writes_artifact(tmp_path: Path) -> None:
     argv = useful_argv(ROOT, "PP-TASK-000516")
     assert argv[1].endswith("cycle20_useful_job.py")
     assert "PP-TASK-000384" not in argv
+
+
+def test_duplicate_work_audit_and_structural_ready_fail_closed() -> None:
+    audit = duplicate_work_audit(ROOT)
+    catalog = locate_input(ROOT, "plans/_traceability/requirements.jsonl")
+    if catalog.is_file():
+        assert "REQ-CTRL-0004" in audit["incomplete_requirements"]
+        assert any(
+            item.get("issue_id") == "PP-TASK-000381"
+            and "REQ-CTRL-0004" in item.get("requirement_ids", [])
+            for item in audit["findings"]
+        )
+    else:
+        assert audit["incomplete_requirements"] == []
+        assert audit["findings"] == []
+    empty = select_two_useful_jobs(
+        ["PP-STORY-000065", "PP-STORY-000396"], blocked="PP-STORY-000139"
+    )
+    assert empty["selected"] == []
+    assert empty["skipped_structural"] == ["PP-STORY-000065", "PP-STORY-000396"]
+
+
+def test_choose_measured_worker_prefers_xeon_and_falls_back_to_comfy() -> None:
+    xeon = _profile().model_copy(update={"sid": None, "observation_kind": "PARTIAL"})
+    comfy = MachineProfile.model_validate(
+        {
+            "machine_id": "COMFY-V4-CPU-01",
+            "hostname": "COMFY-V4-CPU-01",
+            "role": "CPU_WORKER",
+            "observed_at_utc": NOW,
+            "isa_flags": ("avx", "avx2"),
+            "cpu_slots": 8,
+            "memory_mb": 32000,
+            "disk_mb": 22000,
+            "principal": r"comfy-v4-cpu-01\windows 11",
+            "observation_kind": "MEASURED",
+            "sid": "S-1-5-21-comfy",
+        }
+    )
+    chosen = choose_measured_worker((xeon, comfy))
+    assert chosen is not None
+    assert chosen.machine_id == "COMFY-V4-CPU-01"
+    xeon_ready = _profile().model_copy(update={"sid": "S-1-5-21-xeon"})
+    preferred = choose_measured_worker((xeon_ready, comfy))
+    assert preferred is not None
+    assert preferred.machine_id == "WIN-EVSH1DN8H5O"

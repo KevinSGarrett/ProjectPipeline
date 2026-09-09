@@ -69,8 +69,9 @@ class LocalSubprocessDispatchAdapter:
         job_handle: int | None = None,
         job_id: str | None = None,
         input_sha256: str | None = None,
+        envelope: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
-        del job_id, input_sha256
+        del job_id, input_sha256, envelope
         if not command or any(not isinstance(item, str) or not item for item in command):
             raise ValueError("command must be a non-empty argument array")
         if not working_directory.is_dir():

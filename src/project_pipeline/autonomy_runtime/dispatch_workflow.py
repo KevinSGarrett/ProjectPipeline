@@ -111,8 +111,9 @@ class DispatchWorkflow:
             }
         fence = str(bundle.leases[0].fencing_token)
         lease_id = bundle.leases[0].lease_id
+        outcome: dict[str, Any] | None = None
         try:
-            return self._dispatch_with_bundle(
+            outcome = self._dispatch_with_bundle(
                 task_id=task_id,
                 holder_id=holder_id,
                 argv=argv,
@@ -130,14 +131,16 @@ class DispatchWorkflow:
                 fence=fence,
                 lease_id=lease_id,
             )
+            return outcome
         finally:
-            for lease in bundle.leases:
-                self.store.release_lease(
-                    lease.lease_id,
-                    holder_id=holder_id,
-                    fencing_token=lease.fencing_token,
-                    now=now,
-                )
+            if outcome is not None and outcome.get("outcome") in {"ACCEPTED", "REJECTED"}:
+                for lease in bundle.leases:
+                    self.store.release_lease(
+                        lease.lease_id,
+                        holder_id=holder_id,
+                        fencing_token=lease.fencing_token,
+                        now=now,
+                    )
 
     def _dispatch_with_bundle(
         self,
@@ -243,9 +246,7 @@ class DispatchWorkflow:
                     "remote_pid": str(executed.get("remote_pid") or ""),
                 }
             )
-        accepted = controller.accept(
-            envelope, executed["result"], expected_host=chosen.machine_id, now=now
-        )
+        accepted = controller.accept(envelope, executed["result"], expected_host=chosen.machine_id)
         lifecycle = (
             "ACCEPTED" if accepted.get("outcome") == "ACCEPTED" else str(accepted.get("reason"))
         )

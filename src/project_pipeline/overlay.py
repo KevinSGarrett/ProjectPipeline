@@ -16,6 +16,8 @@ REQUIRED_DOMAINS = ("instructions", "jira", "plans", "provenance")
 EXTRA_BIND_PATHS = (
     "AGENTS.md",
     ".agents",
+    "FILE_MANIFEST.sha256",
+    "PROJECT_MANIFEST.json",
     "config/project_manifest.json",
     "docs/NAVIGATION.md",
     "docs/jira",
@@ -256,16 +258,13 @@ def refresh_instruction_manifest_hashes(overlay_root: Path, source_root: Path) -
         relative = str(record["path"])
         overlay_file = overlay_root / relative
         source_file = source_root / relative
-        if overlay_file.is_file():
-            updated.append(record)
+        target = overlay_file if overlay_file.is_file() else source_file
+        if target.is_file():
+            item = dict(record)
+            item["sha256"] = hashlib.sha256(target.read_bytes()).hexdigest()
+            item["size_bytes"] = target.stat().st_size
+            updated.append(item)
             continue
-        if not source_file.is_file():
-            updated.append(record)
-            continue
-        digest = hashlib.sha256(source_file.read_bytes()).hexdigest()
-        item = dict(record)
-        item["sha256"] = digest
-        item["size_bytes"] = source_file.stat().st_size
-        updated.append(item)
+        updated.append(record)
     payload["files"] = updated
     path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")

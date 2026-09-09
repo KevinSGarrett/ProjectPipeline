@@ -16,6 +16,8 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.autonomy_runtime.confinement import (
+    COMFY_MACHINE_ID,
+    XEON_MACHINE_ID,
     ConfinementError,
     reject_unsafe_string,
 )
@@ -25,15 +27,16 @@ from project_pipeline.autonomy_runtime.service import (
     SAFE_ENV_KEYS,
 )
 from project_pipeline.autonomy_runtime.windows_limits import NESTED_POOL_KEYS
+from project_pipeline.autonomy_runtime.worker_allowlist import (
+    remote_command_allowed,
+    worker_launch_argv,
+)
 
-XEON_MACHINE_ID = "WIN-EVSH1DN8H5O"
 XEON_TAILNET_IPV4 = "100.107.207.66"
 XEON_SSH_USER = "kines"
-COMFY_MACHINE_ID = "COMFY-V4-CPU-01"
 COMFY_TAILNET_IPV4 = "100.77.151.3"
 COMFY_SSH_USER = "Windows 11"
 DEFAULT_IDENTITY = Path.home() / ".ssh" / "id_ed25519"
-PYTHON_NAMES = frozenset({"python", "python.exe", "python3", "python3.exe"})
 SSH_CLIENT_ENV_KEYS = SAFE_ENV_KEYS | frozenset({"PROGRAMDATA"})
 ALWAYS_DENIED_USERS = frozenset({"kevin"})
 COMFY_DENIED_USERS = frozenset({"kevin", "kines"})
@@ -42,18 +45,6 @@ FLEET_SSH_TARGETS: Mapping[str, Mapping[str, str]] = {
     COMFY_MACHINE_ID: {"host": COMFY_TAILNET_IPV4, "user": COMFY_SSH_USER},
 }
 WORKER_ENTRYPOINT = ("python", "-m", "project_pipeline.autonomy_runtime.worker_entrypoint")
-REMOTE_WORKER_SCRIPTS = {
-    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\worker\cycle20_remote_worker.py",
-    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\worker\cycle20_remote_worker.py",
-}
-REMOTE_JOB_SCRIPTS = {
-    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs\cycle20_useful_job.py",
-    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle20_useful_job.py",
-}
-REMOTE_HOLD_SCRIPTS = {
-    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs\cycle20_hold_job.py",
-    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle20_hold_job.py",
-}
 
 
 def parse_worker_stdout(stdout: str) -> dict[str, Any]:
@@ -120,8 +111,10 @@ def build_ssh_argv(
     except ConfinementError as error:
         raise ValueError(str(error)) from error
     machine_id = _machine_id_for_host(host)
-    worker_script = REMOTE_WORKER_SCRIPTS.get(machine_id)
-    remote_worker = ("python", worker_script) if worker_script else WORKER_ENTRYPOINT
+    try:
+        remote_worker = worker_launch_argv(machine_id)
+    except ValueError:
+        remote_worker = WORKER_ENTRYPOINT
     return [
         "ssh",
         "-i",
@@ -137,37 +130,6 @@ def build_ssh_argv(
         host,
         *remote_worker,
     ]
-
-
-def remote_command_allowed(argv: tuple[str, ...]) -> bool:
-    if not argv:
-        return False
-    name = Path(argv[0]).name.lower()
-    if name == "hostname":
-        return len(argv) == 1
-    if name not in PYTHON_NAMES:
-        return False
-    if len(argv) == 2 and argv[1] in {"-V", "--version"}:
-        return True
-    if (
-        len(argv) >= 3
-        and argv[1] == "-m"
-        and argv[2] == "project_pipeline.autonomy_runtime.worker_entrypoint"
-    ):
-        return True
-    if len(argv) >= 2 and not str(argv[1]).startswith("-"):
-        posix = argv[1].replace("\\", "/")
-        if "pp_jobs" in posix.split("/"):
-            return False
-        if not posix.lower().endswith(".py") or ".." in posix:
-            return False
-        for item in argv[2:]:
-            try:
-                reject_unsafe_string(item, field="argv")
-            except ConfinementError:
-                return False
-        return True
-    return False
 
 
 class SshDispatchAdapter:
@@ -227,6 +189,7 @@ class SshDispatchAdapter:
         target_pid: int | None,
         job_id: str | None = None,
         input_sha256: str | None = None,
+        envelope: Mapping[str, Any] | None = None,
     ) -> str:
         payload: dict[str, Any] = {
             "action": action,
@@ -237,8 +200,29 @@ class SshDispatchAdapter:
             "job_id": job_id,
             "input_sha256": input_sha256,
         }
+        if envelope:
+            for key in (
+                "lease_id",
+                "fence",
+                "source_sha",
+                "source_tree",
+                "profile_id",
+                "principal",
+                "overlay_sha256",
+                "deadline_utc",
+                "cpu_ceiling",
+                "memory_mb_ceiling",
+                "workspace_root",
+                "output_contract_sha256",
+                "creation_time",
+            ):
+                if key in envelope and envelope[key] is not None:
+                    payload[key] = envelope[key]
         if target_pid is not None:
             payload["pid"] = int(target_pid)
+        for key in ("creation_time", "principal", "job_id", "fence"):
+            if envelope and envelope.get(key) is not None:
+                payload[key] = envelope[key]
         return json.dumps(payload, sort_keys=True)
 
     def start_job(
@@ -247,6 +231,9 @@ class SshDispatchAdapter:
         command: list[str],
         working_directory: Path,
         extra_env: dict[str, str] | None = None,
+        envelope: Mapping[str, Any] | None = None,
+        job_id: str | None = None,
+        input_sha256: str | None = None,
     ) -> subprocess.Popen[str]:
         extra = extra_env or {}
         if extra and any(key not in NESTED_POOL_KEYS for key in extra):
@@ -277,19 +264,22 @@ class SshDispatchAdapter:
                 extra=extra,
                 action="execute",
                 target_pid=None,
+                job_id=job_id,
+                input_sha256=input_sha256,
+                envelope=envelope,
             )
         )
         process.stdin.close()
         return process
 
-    def read_started_pid(
+    def read_started_record(
         self, process: subprocess.Popen[str], *, timeout_seconds: int = 12
-    ) -> str | None:
+    ) -> dict[str, Any]:
         deadline = time.time() + max(1, timeout_seconds)
         buf = ""
         while time.time() < deadline:
             if process.stdout is None:
-                return None
+                return {}
             line = process.stdout.readline()
             if not line:
                 if process.poll() is not None:
@@ -298,21 +288,49 @@ class SshDispatchAdapter:
                 continue
             buf += line
             parsed = parse_worker_stdout(buf)
-            pid = parsed.get("pid")
-            if pid is not None:
-                return str(pid)
-        return None
+            if parsed.get("pid") is not None:
+                return parsed
+        return {}
 
-    def kill_pid(self, pid: int, *, workspace: Path) -> dict[str, Any]:
-        worker = REMOTE_WORKER_SCRIPTS.get(self.machine_id)
-        if not worker:
-            raise ValueError("no remote worker script for kill")
+    def read_started_pid(
+        self, process: subprocess.Popen[str], *, timeout_seconds: int = 12
+    ) -> str | None:
+        record = self.read_started_record(process, timeout_seconds=timeout_seconds)
+        pid = record.get("pid")
+        return str(pid) if pid is not None else None
+
+    def kill_pid(
+        self,
+        pid: int,
+        *,
+        workspace: Path,
+        job_id: str | None = None,
+        fence: str | None = None,
+        creation_time: str | None = None,
+        principal: str | None = None,
+        envelope: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        try:
+            command = list(worker_launch_argv(self.machine_id))
+        except ValueError as error:
+            raise ValueError("no remote worker script for kill") from error
+        kill_envelope = dict(envelope or {})
+        if job_id:
+            kill_envelope["job_id"] = job_id
+        if fence:
+            kill_envelope["fence"] = fence
+        if creation_time:
+            kill_envelope["creation_time"] = creation_time
+        if principal:
+            kill_envelope["principal"] = principal
         return self.execute(
-            command=["python", worker],
+            command=command,
             working_directory=workspace,
             action="kill",
             target_pid=int(pid),
             timeout_seconds=20,
+            job_id=job_id,
+            envelope=kill_envelope or None,
         )
 
     def execute(
@@ -328,6 +346,7 @@ class SshDispatchAdapter:
         target_pid: int | None = None,
         job_id: str | None = None,
         input_sha256: str | None = None,
+        envelope: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         extra = extra_env or {}
         if extra and any(key not in NESTED_POOL_KEYS for key in extra):
@@ -351,6 +370,7 @@ class SshDispatchAdapter:
             target_pid=target_pid,
             job_id=job_id,
             input_sha256=input_sha256,
+            envelope=envelope,
         )
         try:
             completed = runner(
@@ -412,6 +432,13 @@ class SshDispatchAdapter:
             "stderr_sha256": hashlib.sha256(stderr.encode("utf-8")).hexdigest(),
             "remote_pid": None if remote_pid is None else str(remote_pid),
         }
+        for key in ("ok", "killed"):
+            if key in worker:
+                payload[key] = worker[key]
+        for key in ("reason", "phase"):
+            value = worker.get(key)
+            if value:
+                payload[key] = value
         payload["payload_sha256"] = hashlib.sha256(
             json.dumps(payload, sort_keys=True).encode("utf-8")
         ).hexdigest()

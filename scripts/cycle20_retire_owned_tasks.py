@@ -11,15 +11,13 @@ from project_pipeline.autonomy_runtime.managed_worker import (
     owned_task_retirement_plan,
 )
 from project_pipeline.autonomy_runtime.ssh_dispatch import FLEET_SSH_TARGETS
+from project_pipeline.autonomy_runtime.windows_service import quote_command
+from project_pipeline.autonomy_runtime.worker_allowlist import HOST_PYTHON_EXECUTABLES
 
 IDENTITY = Path.home() / ".ssh" / "id_ed25519"
 HOST_TASKS = {
     "WIN-EVSH1DN8H5O": "ProjectPipelineFleetWorkerXeon",
     "COMFY-V4-CPU-01": "ProjectPipelineFleetWorkerComfy",
-}
-HOST_WORKER = {
-    "WIN-EVSH1DN8H5O": r"C:\Users\kines\ProjectPipeline\worker\cycle20_remote_worker.py",
-    "COMFY-V4-CPU-01": r"C:\Users\Windows 11\ProjectPipeline\worker\cycle20_remote_worker.py",
 }
 
 
@@ -47,23 +45,38 @@ def _ssh(user: str, host: str, remote: str) -> subprocess.CompletedProcess[str]:
     )
 
 
+def _quoted_ssh(user: str, host: str, argv: list[str]) -> subprocess.CompletedProcess[str]:
+    return _ssh(user, host, quote_command(argv))
+
+
 def main() -> int:
     results = []
     for machine_id, task_name in HOST_TASKS.items():
         if task_name not in OWNED_TASK_NAMES:
             continue
         target = FLEET_SSH_TARGETS[machine_id]
-        plan = owned_task_retirement_plan(task_name)
-        worker = HOST_WORKER[machine_id]
+        python_exe = HOST_PYTHON_EXECUTABLES.get(machine_id)
+        plan = owned_task_retirement_plan(task_name, python_executable=python_exe)
+        if not plan.get("ok"):
+            results.append(
+                {
+                    "machine_id": machine_id,
+                    "task_name": task_name,
+                    "ok": False,
+                    "reason": plan.get("reason"),
+                }
+            )
+            continue
         replacement = str(plan["replacement_name"])
-        disable = _ssh(target["user"], target["host"], f"schtasks /Change /TN {task_name} /DISABLE")
-        create = _ssh(
-            target["user"],
-            target["host"],
-            (f'schtasks /Create /TN {replacement} /SC ONLOGON /TR "python {worker}" /F'),
+        user, host = target["user"], target["host"]
+        disable = _quoted_ssh(
+            user, host, ["schtasks", "/Change", "/TN", task_name, "/DISABLE"]
         )
-        query = _ssh(
-            target["user"], target["host"], f"schtasks /Query /TN {replacement} /V /FO LIST"
+        create = _quoted_ssh(
+            user, host, [str(item) for item in plan["replacement_create_argv"]]
+        )
+        query = _quoted_ssh(
+            user, host, ["schtasks", "/Query", "/TN", replacement, "/V", "/FO", "LIST"]
         )
         results.append(
             {
