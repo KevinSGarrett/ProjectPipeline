@@ -3,6 +3,8 @@ from __future__ import annotations
 import os
 import subprocess
 import sys
+import threading
+import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -267,6 +269,46 @@ def test_worker_side_dedup(tmp_path: Path) -> None:
     second = run_envelope(payload)
     assert first["ok"] is True
     assert second["duplicate"] is True
+
+
+def test_enforced_spawn_prints_pid_before_child_exits(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    if sys.platform != "win32":
+        pytest.skip("Job Object spawn is Windows-only")
+    workspace = tmp_path / "job"
+    workspace.mkdir()
+    payload = {
+        "argv": [sys.executable, "-c", "import time; time.sleep(2); print('late')"],
+        "workspace": str(workspace),
+        "job_id": "C20-OWNED-FAULT",
+        "input_sha256": "d" * 64,
+        "cpu_ceiling": 1,
+        "memory_mb_ceiling": 64,
+        "deadline_utc": (datetime.now(UTC) + timedelta(minutes=1)).isoformat(),
+    }
+    started: dict[str, object] = {}
+
+    def _run() -> dict[str, object]:
+        return run_envelope(payload)
+
+    thread = threading.Thread(target=lambda: started.update({"result": _run()}), daemon=True)
+    thread.start()
+    deadline = time.time() + 5
+    seen = False
+    buf = ""
+    while time.time() < deadline and thread.is_alive():
+        buf += capsys.readouterr().out
+        parsed = parse_worker_stdout(buf)
+        if parsed.get("pid") is not None:
+            seen = True
+            break
+        time.sleep(0.05)
+    thread.join(timeout=10)
+    buf += capsys.readouterr().out
+    if parse_worker_stdout(buf).get("pid") is not None:
+        seen = True
+    assert seen is True
 
 
 def test_enforce_or_reject_creates_job_object() -> None:

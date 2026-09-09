@@ -194,6 +194,19 @@ def _spawn_enforced(
     def _capture(pid: int, creation: str | None) -> None:
         started["pid"] = pid
         started["creation_time"] = creation
+        print(
+            json.dumps(
+                {
+                    "ok": True,
+                    "pid": os.getpid(),
+                    "child_pid": pid,
+                    "creation_time": creation,
+                    "phase": "RUNNING",
+                },
+                sort_keys=True,
+            ),
+            flush=True,
+        )
         if on_started is not None:
             on_started(pid, creation)
 
