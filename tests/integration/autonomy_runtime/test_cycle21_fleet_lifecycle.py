@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import inspect
+import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -223,3 +224,22 @@ def test_production_fleet_loop_cli_forwards_json_output(
     assert "--json-output" in argv
     assert str(dest) in argv
     assert "--live-ssh" in argv
+
+
+def test_fleet_loop_status_and_run_write_json_output(tmp_path: Path) -> None:
+    from project_pipeline.autonomy_runtime.fleet_loop import main as fleet_loop_main
+
+    status_dir = tmp_path / ".local" / "cycle21_observation"
+    status_dir.mkdir(parents=True)
+    (status_dir / "status.json").write_text(
+        json.dumps({"remaining_seconds": 12, "fault": {"kind": "owned_durable_fault"}}) + "\n",
+        encoding="utf-8",
+    )
+    dest = tmp_path / "status-out.json"
+    code = fleet_loop_main(["status", "--root", str(tmp_path), "--json-output", str(dest)])
+    assert code == 0
+    payload = json.loads(dest.read_text(encoding="utf-8"))
+    assert payload["remaining_seconds"] == 12
+    source = inspect.getsource(fleet_loop_main)
+    assert "_persist_json_output(args.json_output, result)" in source
+    assert source.count("_persist_json_output(args.json_output") >= 3

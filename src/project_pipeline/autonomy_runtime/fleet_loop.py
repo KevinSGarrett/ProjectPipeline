@@ -1217,6 +1217,16 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _persist_json_output(path: Path | None, payload: dict[str, Any]) -> None:
+    if path is None:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n",
+        encoding="utf-8",
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -1231,6 +1241,7 @@ def main(argv: list[str] | None = None) -> int:
             }
         )
         print(json.dumps(payload, indent=2, sort_keys=True))
+        _persist_json_output(args.json_output, payload)
         return 0
     if args.action == "observe":
         result = run_observation(
@@ -1247,16 +1258,12 @@ def main(argv: list[str] | None = None) -> int:
                 default=str,
             )
         )
-        if args.json_output:
-            args.json_output.parent.mkdir(parents=True, exist_ok=True)
-            args.json_output.write_text(
-                json.dumps(result, indent=2, sort_keys=True, default=str) + "\n",
-                encoding="utf-8",
-            )
+        _persist_json_output(args.json_output, result)
         evaluation = result.get("evaluation") if isinstance(result.get("evaluation"), dict) else {}
         return 0 if result.get("ok") and evaluation.get("ok") else 2
     result = run_production(root=args.root, database=args.database)
     print(json.dumps(result, indent=2, sort_keys=True, default=str))
+    _persist_json_output(args.json_output, result)
     return 0 if result.get("selected") else 2
 
 
