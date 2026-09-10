@@ -185,6 +185,16 @@ def default_identity_path() -> Path:
     return DEFAULT_IDENTITY
 
 
+def ssh_config_user_option(user: str) -> str:
+    """Format an ssh_config User option that survives spaces in the username."""
+
+    if not user or "\n" in user or "\x00" in user:
+        raise ValueError("invalid ssh user")
+    if any(ch.isspace() for ch in user):
+        return f'User="{user}"'
+    return f"User={user}"
+
+
 def _denied_users_for_host(host: str) -> frozenset[str]:
     if host == COMFY_TAILNET_IPV4:
         return COMFY_DENIED_USERS
@@ -310,7 +320,7 @@ class SshDispatchAdapter:
                 "-o",
                 f"ConnectTimeout={self.connect_timeout}",
                 "-o",
-                f"User={self.user}",
+                ssh_config_user_option(self.user),
                 f"{self.host}:{posix}",
                 str(dest),
             ],

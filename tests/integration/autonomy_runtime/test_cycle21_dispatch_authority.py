@@ -17,7 +17,10 @@ from project_pipeline.autonomy_runtime.remote_job import (
     RemoteJobResult,
 )
 from project_pipeline.autonomy_runtime.remote_worker_protocol import run_envelope
-from project_pipeline.autonomy_runtime.ssh_dispatch import SshDispatchAdapter
+from project_pipeline.autonomy_runtime.ssh_dispatch import (
+    SshDispatchAdapter,
+    ssh_config_user_option,
+)
 from project_pipeline.scheduler.admission import chosen_host_admitted
 
 NOW = datetime.now(UTC)
@@ -334,5 +337,7 @@ def test_cycle_owned_job_admits_measured_host_without_c18() -> None:
 
 def test_scp_uses_user_option_not_user_at_host() -> None:
     source = inspect.getsource(SshDispatchAdapter.acquire_workspace_file)
-    assert "User={self.user}" in source
+    assert "ssh_config_user_option(self.user)" in source
     assert "self.user}@{self.host}" not in source
+    assert ssh_config_user_option("Windows 11") == 'User="Windows 11"'
+    assert ssh_config_user_option("kines") == "User=kines"
