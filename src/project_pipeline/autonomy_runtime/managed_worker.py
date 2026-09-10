@@ -27,11 +27,13 @@ MANAGED_TASK_NAMES = (
 )
 INSPECTABLE_TASK_NAMES = OWNED_TASK_NAMES + MANAGED_TASK_NAMES
 NEVER_RUN_RESULTS = frozenset({267011, "267011", "0x41303"})
-_PRINCIPAL_FULL_CONTROL = re.compile(
+_ACE_LINE = re.compile(
     r"(?P<principal>(?:NT AUTHORITY|BUILTIN|NT SERVICE|[A-Za-z0-9._-]+)"
-    r"\\[^\\\r\n:]+):\S*\(F\)",
+    r"\\[^\\\r\n:]+):(?P<aces>\S+)",
     re.IGNORECASE,
 )
+_PAREN = re.compile(r"\(([^)]+)\)")
+_WRITE_TOKENS = frozenset({"F", "M", "W", "D", "DC", "WDAC", "WO", "WD"})
 _ADMIN_OR_SYSTEM = frozenset(
     {
         r"nt authority\system",
@@ -58,11 +60,14 @@ def _is_protected_code_path(script_path: str) -> bool:
     return False
 
 
-def parse_icacls_fullcontrol_users(text: str) -> tuple[str, ...]:
-    """Return non-admin principals that have Full Control in an icacls listing."""
+def parse_icacls_write_users(text: str) -> tuple[str, ...]:
+    """Return non-admin principals that have write/modify/full-control ACEs."""
 
     found: list[str] = []
-    for match in _PRINCIPAL_FULL_CONTROL.finditer(text):
+    for match in _ACE_LINE.finditer(text):
+        tokens = {item.upper() for item in _PAREN.findall(match.group("aces"))}
+        if not tokens.intersection(_WRITE_TOKENS):
+            continue
         principal = match.group("principal").strip()
         token = principal.lower()
         if not token or token in _ADMIN_OR_SYSTEM:
@@ -70,6 +75,12 @@ def parse_icacls_fullcontrol_users(text: str) -> tuple[str, ...]:
         if principal not in found:
             found.append(principal)
     return tuple(found)
+
+
+def parse_icacls_fullcontrol_users(text: str) -> tuple[str, ...]:
+    """Return non-admin principals that have write or Full Control in an icacls listing."""
+
+    return parse_icacls_write_users(text)
 
 
 def last_result_never_run(last_result: object, last_run_time: str | None = None) -> bool:
@@ -95,8 +106,8 @@ def classify_live_managed_worker(
 ) -> dict[str, Any]:
     """Classify a live task using XML identity plus ACL readback and run evidence."""
 
-    users = parse_icacls_fullcontrol_users(icacls_text)
-    parsed = bool(_PRINCIPAL_FULL_CONTROL.search(icacls_text))
+    users = parse_icacls_write_users(icacls_text)
+    parsed = bool(_ACE_LINE.search(icacls_text))
     verdict = classify_scheduled_action(
         runas=runas,
         script_path=script_path,
@@ -104,8 +115,15 @@ def classify_live_managed_worker(
         acl_evidence=parsed,
     )
     never_run = last_result_never_run(last_result, last_run_time)
+    try:
+        result_code = int(str(last_result).strip(), 0)
+    except (TypeError, ValueError):
+        result_code = None
     accepted = False if never_run else bool(verdict["accepted_production_worker"])
     reason = "managed_worker_never_run" if never_run else verdict["reason"]
+    if accepted and result_code not in {0, None}:
+        accepted = False
+        reason = "task_result_nonzero"
     return {
         **verdict,
         "accepted_production_worker": accepted,

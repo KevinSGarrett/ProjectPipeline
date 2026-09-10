@@ -21,13 +21,25 @@ REMOTE_WORKER_SCRIPTS = {
     COMFY_MACHINE_ID: PROTECTED_WORKER_SCRIPT,
 }
 REMOTE_JOB_SCRIPTS = {
-    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs\cycle20_useful_job.py",
-    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle20_useful_job.py",
+    XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs\cycle21_validation_job.py",
+    COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle21_validation_job.py",
 }
+REMOTE_JOB_SCRIPT_ALIASES = (
+    r"C:\Users\kines\ProjectPipeline\jobs\cycle20_useful_job.py",
+    r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle20_useful_job.py",
+    r"C:\Users\kines\ProjectPipeline\jobs\cycle21_validation_job.py",
+    r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle21_validation_job.py",
+)
 REMOTE_HOLD_SCRIPTS = {
     XEON_MACHINE_ID: r"C:\Users\kines\ProjectPipeline\jobs\cycle20_hold_job.py",
     COMFY_MACHINE_ID: r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle20_hold_job.py",
 }
+REMOTE_HOLD_SCRIPT_ALIASES = (
+    r"C:\Users\kines\ProjectPipeline\jobs\cycle20_hold_job.py",
+    r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle20_hold_job.py",
+    r"C:\Users\kines\ProjectPipeline\jobs\cycle21_hold_job.py",
+    r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle21_hold_job.py",
+)
 HOST_PYTHON_EXECUTABLES = {
     COMFY_MACHINE_ID: (r"C:\Users\Windows 11\AppData\Local\Programs\Python\Python311\python.exe"),
     XEON_MACHINE_ID: r"C:\Users\kines\AppData\Local\Programs\Python\Python311\python.exe",
@@ -73,7 +85,9 @@ def remote_command_allowed(argv: tuple[str, ...]) -> bool:
         approved = (
             {item.replace("\\", "/").casefold() for item in REMOTE_WORKER_SCRIPTS.values()}
             | {item.replace("\\", "/").casefold() for item in REMOTE_HOLD_SCRIPTS.values()}
+            | {item.replace("\\", "/").casefold() for item in REMOTE_HOLD_SCRIPT_ALIASES}
             | {item.replace("\\", "/").casefold() for item in REMOTE_JOB_SCRIPTS.values()}
+            | {item.replace("\\", "/").casefold() for item in REMOTE_JOB_SCRIPT_ALIASES}
         )
         if posix.casefold() not in approved:
             return False

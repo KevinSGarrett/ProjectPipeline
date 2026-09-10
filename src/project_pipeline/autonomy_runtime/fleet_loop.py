@@ -12,8 +12,9 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.autonomy_runtime.confinement import REMOTE_JOB_WORKSPACES
+from project_pipeline.autonomy_runtime.context_validation import job_input_digest
 from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
-from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
+from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore, digest_bytes
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.observation_eval import evaluate_observation
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobEnvelope
@@ -26,6 +27,7 @@ from project_pipeline.autonomy_runtime.ssh_dispatch import (
     XEON_SSH_USER,
     XEON_TAILNET_IPV4,
     SshDispatchAdapter,
+    job_stdout_metrics,
 )
 from project_pipeline.autonomy_runtime.worker_allowlist import (
     REMOTE_HOLD_SCRIPTS,
@@ -58,7 +60,11 @@ from project_pipeline.scheduler.persistence import SchedulerStore
 
 HISTORICAL_NOT_NEW_WORK = frozenset({"PP-TASK-000384"})
 STRUCTURAL_PARENTS = frozenset({"PP-STORY-000065", "PP-STORY-000396"})
-CYCLE20_EXECUTABLE_LEAVES = ("PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519")
+NO_READY_OUTCOME = "no_executable_leaf_ready"
+CYCLE21_HOST_JOBS = {
+    XEON_MACHINE_ID: "PP-TASK-C21-VALIDATE-XEON",
+    COMFY_MACHINE_ID: "PP-TASK-C21-VALIDATE-COMFY",
+}
 _IMPLEMENTED_ISSUE_STATES = {
     ImplementationState.IMPLEMENTED.value,
     ImplementationState.MOCK_VERIFIED.value,
@@ -127,8 +133,15 @@ def useful_argv(
         if not script:
             raise ValueError(f"no remote useful-job script for {machine_id}")
         return ("python", script, "--job-id", task_id, "--output", artifact)
-    script = root.resolve() / "scripts" / "cycle20_useful_job.py"
+    script = root.resolve() / "scripts" / "cycle21_validation_job.py"
     return (sys.executable, str(script), "--job-id", task_id, "--output", artifact)
+
+
+def observation_ready_task_ids(
+    root: Path, database: Path | None = None, *, live_ssh: bool
+) -> list[str]:
+    del live_ssh
+    return control_ready_task_ids(root, database)
 
 
 def select_two_useful_jobs(ready: list[str], *, blocked: str | None = None) -> dict[str, Any]:
@@ -143,20 +156,77 @@ def select_two_useful_jobs(ready: list[str], *, blocked: str | None = None) -> d
     }
 
 
+def cycle_owned_validation_jobs(profiles: tuple[MachineProfile, ...]) -> list[str]:
+    measured = {
+        item.machine_id for item in profiles if item.observation_kind == "MEASURED" and item.sid
+    }
+    return [job_id for machine_id, job_id in CYCLE21_HOST_JOBS.items() if machine_id in measured]
+
+
+def _machine_for_task(
+    task_id: str,
+    profiles: tuple[MachineProfile, ...],
+    *,
+    index: int,
+    remote: bool,
+) -> str:
+    by_id = {
+        item.machine_id: item
+        for item in profiles
+        if item.observation_kind == "MEASURED" or not remote
+    }
+    if task_id == CYCLE21_HOST_JOBS.get(XEON_MACHINE_ID):
+        return XEON_MACHINE_ID
+    if task_id == CYCLE21_HOST_JOBS.get(COMFY_MACHINE_ID):
+        return COMFY_MACHINE_ID
+    ordered = [item for item in (XEON_MACHINE_ID, COMFY_MACHINE_ID) if item in by_id]
+    if not ordered:
+        ordered = [item.machine_id for item in profiles] or [XEON_MACHINE_ID]
+    return ordered[index % len(ordered)]
+
+
+def _bind_adapter(adapter: Any, machine_id: str) -> Any:
+    if isinstance(adapter, SshDispatchAdapter):
+        return SshDispatchAdapter.for_machine(machine_id)
+    return adapter
+
+
+def _enrich_dispatched(
+    task_id: str,
+    dispatched: dict[str, Any],
+    host_id: str,
+    *,
+    adapter: Any = None,
+    workspace: Path | None = None,
+    acquired_root: Path | None = None,
+) -> dict[str, Any]:
+    item: dict[str, Any] = {"task_id": task_id, **dispatched, "host_id": host_id}
+    executed = dispatched.get("executed") if isinstance(dispatched.get("executed"), dict) else {}
+    stdout = str(executed.get("stdout") or "")
+    metrics = job_stdout_metrics(stdout)
+    for key in ("tests_run", "collected", "artifact_sha256", "junit_sha256"):
+        if item.get(key) in (None, "", 0, "0"):
+            value = metrics.get(key) or executed.get(key) or dispatched.get(key)
+            if value not in (None, "", 0, "0"):
+                item[key] = value
+    acquire = getattr(adapter, "acquire_workspace_file", None)
+    job_workspace = workspace or Path(str(executed.get("working_directory") or ""))
+    if acquired_root is not None and callable(acquire) and job_workspace:
+        dest = Path(acquired_root) / host_id / task_id / "junit.xml"
+        payload = acquire(job_workspace, "junit.xml", dest)
+        if payload:
+            digest = digest_bytes(payload)
+            item["acquired_junit_path"] = str(dest)
+            item["artifact_sha256"] = digest
+            item["junit_sha256"] = digest
+    return item
+
+
 def control_ready_task_ids(root: Path, database: Path | None = None) -> list[str]:
     snapshot = evaluate_live_control(root, database_path=database)
     director = PersistentAutonomyDirector(default_state_path(root))
     ready = list(director._eligible_ready(snapshot))
     return [item for item in ready if is_executable_job(item)]
-
-
-def observation_ready_task_ids(
-    root: Path, database: Path | None = None, *, live_ssh: bool
-) -> list[str]:
-    ready = control_ready_task_ids(root, database)
-    if live_ssh and not ready:
-        return list(CYCLE20_EXECUTABLE_LEAVES)
-    return ready
 
 
 def blocked_dependent_lane(root: Path, database: Path | None = None) -> str | None:
@@ -207,40 +277,72 @@ def run_loop(
             source_sha=source_sha,
             source_tree=source_tree,
             overlay_sha256=overlay_sha256,
-            adapter_factory=lambda _machine_id: adapter,
+            adapter_factory=lambda machine_id: _bind_adapter(adapter, str(machine_id)),
             journal=journal or FleetLifecycleJournal(database.with_name("fleet_lifecycle.sqlite3")),
         )
         results = []
         remote = bool(getattr(adapter, "remote_host", False))
-        host_id = profiles[0].machine_id if profiles else XEON_MACHINE_ID
-        job_workspace = (
-            Path(REMOTE_JOB_WORKSPACES.get(host_id, str(workspace))) if remote else workspace
-        )
-        bind_root = str(job_workspace) if remote else str(workspace_root)
-        for task_id in jobs["selected"]:
+        by_id = {item.machine_id: item for item in profiles}
+        for index, task_id in enumerate(jobs["selected"]):
+            host_id = _machine_for_task(task_id, profiles, index=index, remote=remote)
+            chosen_profile = by_id.get(host_id)
+            host_principal = (
+                str(chosen_profile.principal) if chosen_profile is not None else principal
+            )
+            job_workspace = (
+                Path(REMOTE_JOB_WORKSPACES.get(host_id, str(workspace))) if remote else workspace
+            )
+            bind_root = str(job_workspace) if remote else str(workspace_root)
+            argv = useful_argv(root, task_id, remote=remote, machine_id=host_id)
+            host_adapter = _bind_adapter(adapter, host_id)
             dispatched = workflow.dispatch(
                 task_id=task_id,
                 holder_id="actor:fleet-loop",
-                argv=useful_argv(root, task_id, remote=remote, machine_id=host_id),
+                argv=argv,
                 workspace=str(job_workspace),
                 workspace_root=bind_root,
-                principal=principal,
-                input_sha256=_sha256_text(task_id),
+                principal=host_principal,
+                input_sha256=job_input_digest(
+                    task_id=task_id,
+                    source_sha=source_sha,
+                    source_tree=source_tree,
+                    overlay_sha256=overlay_sha256,
+                    pack_sha256=overlay_sha256,
+                    selection=argv,
+                ),
                 now=now,
-                adapter=adapter,
+                adapter=host_adapter,
+                machine_id=host_id if remote else None,
             )
-            results.append({"task_id": task_id, **dispatched})
-        next_ready = [
+            results.append(
+                _enrich_dispatched(
+                    task_id,
+                    dispatched,
+                    host_id,
+                    adapter=host_adapter,
+                    workspace=job_workspace,
+                    acquired_root=Path(workspace_root) / "acquired",
+                )
+            )
+        remaining_ready = [
             item
             for item in ready
             if item not in jobs["selected"] and item != blocked and is_executable_job(item)
+        ]
+        recomputed = [
+            item
+            for item in control_ready_task_ids(root, database)
+            if item not in jobs["selected"] and item != blocked
         ]
         return _loop_result(
             jobs,
             root=root,
             now=now,
             results=results,
-            next_job=next_ready[0] if next_ready else None,
+            next_job=recomputed[0]
+            if recomputed
+            else (remaining_ready[0] if remaining_ready else None),
+            control_recomputed=recomputed,
         )
 
 
@@ -354,8 +456,6 @@ def run_available_work(
             if item.get("outcome") == "ACCEPTED"
         }
         remaining = [item for item in remaining if item not in done and is_executable_job(item)]
-        if not result.get("next_job"):
-            break
     return {
         "ok": True,
         "completed_jobs": completed,
@@ -366,7 +466,7 @@ def run_available_work(
 
 
 def _observation_dir(root: Path) -> Path:
-    path = root.resolve() / ".local" / "cycle20_observation"
+    path = root.resolve() / ".local" / "cycle21_observation"
     path.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -388,14 +488,54 @@ def _operator_surfaces(*, status_path: Path, journal: FleetLifecycleJournal) -> 
             loaded = {}
         if isinstance(loaded, dict):
             cli = loaded
-    occupancy = journal.occupancy_by_host(authority="lease-store")
+    independent = FleetLifecycleJournal(journal.database)
+    occupancy = independent.occupancy_by_host(authority="lease-store")
+    events = independent.events()
+    journal_events = journal.events()
     fault = cli.get("fault") if isinstance(cli.get("fault"), dict) else {}
+    same = [str(item.get("job_id") or "") for item in events] == [
+        str(item.get("job_id") or "") for item in journal_events
+    ] and len(events) == len(journal_events)
     return {
         "cli_remaining_seconds": cli.get("remaining_seconds"),
         "cli_fault_kind": fault.get("kind"),
-        "command_center_journal_events": len(journal.events()),
+        "command_center_journal_events": len(events),
         "command_center_occupancy_hosts": sorted(occupancy),
-        "same_journal": True,
+        "same_journal": same,
+        "cli_ui_independent": independent.database.resolve() != status_path.resolve(),
+    }
+
+
+def independent_cli_ui(heartbeats: list[dict[str, Any]]) -> bool:
+    return any(bool(item.get("cli_ui_independent")) for item in heartbeats)
+
+
+def _resource_metrics(
+    start_inventories: dict[str, dict[str, Any]],
+    end_inventories: dict[str, dict[str, Any]],
+    completed_jobs: list[dict[str, Any]],
+    *,
+    transfer_seconds: float,
+) -> dict[str, Any]:
+    used: list[float] = []
+    for machine_id in (XEON_MACHINE_ID, COMFY_MACHINE_ID):
+        start = start_inventories.get(machine_id) or {}
+        end = end_inventories.get(machine_id) or start
+        total = float(end.get("totalRAMGB") or start.get("totalRAMGB") or 0)
+        avail = float(end.get("availableRAMGB") or 0)
+        if total > 0:
+            used.append(max(0.0, (total - avail) * 1024))
+    hosts: set[str] = set()
+    for batch in completed_jobs:
+        for item in batch.get("results") or []:
+            if isinstance(item, dict) and item.get("host_id"):
+                hosts.add(str(item["host_id"]))
+    scratch = sum(len(json.dumps(item, default=str)) for item in completed_jobs)
+    return {
+        "peak_ram_mb": max(used) if used else None,
+        "scratch_bytes": scratch if scratch else None,
+        "transfer_seconds": transfer_seconds if transfer_seconds > 0 else None,
+        "concurrency": len(hosts) if hosts else None,
     }
 
 
@@ -482,20 +622,40 @@ def _fault_owned_hold_job(
     principal: str,
     now: datetime,
     machine_id: str = XEON_MACHINE_ID,
+    scheduler: SchedulerStore | None = None,
 ) -> dict[str, Any]:
-    job_id = "C20-OWNED-FAULT"
+    job_id = "C21-OWNED-FAULT"
     hold = REMOTE_HOLD_SCRIPTS[machine_id]
+    lease_id = "C21-OWNED-FAULT-LEASE"
+    fence = "owned-fault-1"
+    if scheduler is not None:
+        bundle = scheduler.acquire_bundle(
+            task_id=job_id,
+            holder_id="actor:owned-fault",
+            claims=(),
+            now=now,
+        )
+        if bundle.acquired and bundle.leases:
+            lease_id = bundle.leases[0].lease_id
+            fence = str(bundle.leases[0].fencing_token)
     envelope = RemoteJobEnvelope(
         job_id=job_id,
         host_id=machine_id,
         profile_id="MEMORY_HEAVY_BATCH_WORKER",
         principal=principal,
-        lease_id="C20-OWNED-FAULT-LEASE",
-        fence="owned-fault-1",
+        lease_id=lease_id,
+        fence=fence,
         source_sha=source_sha,
         source_tree=source_tree,
         overlay_sha256=overlay_sha256,
-        input_sha256=_sha256_text(job_id),
+        input_sha256=job_input_digest(
+            task_id=job_id,
+            source_sha=source_sha,
+            source_tree=source_tree,
+            overlay_sha256=overlay_sha256,
+            pack_sha256=overlay_sha256,
+            selection=("hold",),
+        ),
         argv=("python", hold, "--job-id", job_id, "--seconds", "20", "--output", "hold.json"),
         workspace=str(workspace),
         workspace_root=str(workspace),
@@ -523,10 +683,10 @@ def _fault_owned_hold_job(
         input_sha256=envelope.input_sha256,
     )
     started = adapter.read_started_record(process)
-    remote_pid = started.get("pid")
-    creation_time = started.get("creation_time")
+    remote_pid = started.get("pid") or started.get("child_pid")
+    creation_time = started.get("creation_time") or started.get("child_creation_time")
     journal.publish(_owned_fault_event(envelope, status="RUNNING", remote_pid=remote_pid))
-    if not remote_pid:
+    if not remote_pid or not creation_time:
         store.mark_status(job_id, "UNKNOWN_OUTCOME")
         return {
             "kind": "owned_durable_fault",
@@ -543,24 +703,91 @@ def _fault_owned_hold_job(
         job_id=job_id,
         fence=envelope.fence,
         principal=principal,
-        creation_time=str(creation_time) if creation_time else None,
+        creation_time=str(creation_time),
         envelope=payload,
     )
+    killed = bool(kill_payload.get("killed")) and bool(kill_payload.get("ok"))
     store.mark_status(job_id, "UNKNOWN_OUTCOME")
     journal.publish(_owned_fault_event(envelope, status="UNKNOWN_OUTCOME", remote_pid=remote_pid))
-    reconciled = store.reconcile_unresolved(job_id, reason="owned_worker_killed")
-    intent_kept = store.get_intent(job_id) is not None
-    killed_ok = bool(kill_payload.get("ok")) and bool(
-        kill_payload.get("killed") or kill_payload.get("exit_code") == 0
+    absence_proof = killed
+    reconciled = store.reconcile_unresolved(
+        job_id, reason="owned_worker_killed", absence_proof=absence_proof
     )
-    recovered = killed_ok and intent_kept and reconciled.get("ok") is False
+    intent_kept = store.get_intent(job_id) is not None
+    recovered_output = False
+    if killed and reconciled.get("ok"):
+        recovered_env = envelope.model_copy(
+            update={
+                "job_id": f"{job_id}-RECOVERED",
+                "fence": f"{fence}-resume",
+                "argv": (
+                    "python",
+                    hold,
+                    "--job-id",
+                    f"{job_id}-RECOVERED",
+                    "--seconds",
+                    "1",
+                    "--output",
+                    "hold.json",
+                ),
+                "input_sha256": job_input_digest(
+                    task_id=f"{job_id}-RECOVERED",
+                    source_sha=source_sha,
+                    source_tree=source_tree,
+                    overlay_sha256=overlay_sha256,
+                    pack_sha256=overlay_sha256,
+                    selection=("recovered",),
+                ),
+            }
+        )
+        store.persist_intent(recovered_env.model_dump(mode="json"), now=now)
+        recovered_run = adapter.execute(
+            command=list(recovered_env.argv),
+            working_directory=workspace,
+            envelope=recovered_env.model_dump(mode="json"),
+            job_id=recovered_env.job_id,
+            input_sha256=recovered_env.input_sha256,
+        )
+        recovered_output = int(recovered_run.get("exit_code") or 1) == 0
+        stdout = str(recovered_run.get("stdout") or "")
+        stderr = str(recovered_run.get("stderr") or "")
+        output_sha256 = str(
+            recovered_run.get("payload_sha256")
+            or recovered_run.get("output_sha256")
+            or hashlib.sha256(stdout.encode("utf-8")).hexdigest()
+        )
+        stdout_sha256 = str(
+            recovered_run.get("stdout_sha256") or hashlib.sha256(stdout.encode("utf-8")).hexdigest()
+        )
+        stderr_sha256 = str(
+            recovered_run.get("stderr_sha256") or hashlib.sha256(stderr.encode("utf-8")).hexdigest()
+        )
+        if recovered_output and len(output_sha256) == 64:
+            store.accept_result(
+                {
+                    "job_id": recovered_env.job_id,
+                    "host_id": recovered_env.host_id,
+                    "fence": recovered_env.fence,
+                    "exit_code": 0,
+                    "output_sha256": output_sha256,
+                    "stdout_sha256": stdout_sha256,
+                    "stderr_sha256": stderr_sha256,
+                },
+                now=now,
+                envelope=recovered_env.model_dump(mode="json"),
+            )
+        else:
+            recovered_output = False
+    recovered = killed and intent_kept and reconciled.get("ok") is True and recovered_output
+    restarted_store = FleetJobStore(store.database)
+    controller_restarted = restarted_store.get_intent(job_id) is not None
     return {
         "kind": "owned_durable_fault",
         "recovered": recovered,
         "owned_job_id": job_id,
         "intent_preserved": intent_kept,
         "reconcile_reason": reconciled.get("reason"),
-        "killed": True,
+        "killed": killed,
         "remote_pid": remote_pid,
         "creation_time": creation_time,
         "lease_id": envelope.lease_id,
@@ -568,6 +795,10 @@ def _fault_owned_hold_job(
         "host_id": machine_id,
         "kill_exit_code": kill_payload.get("exit_code"),
         "kill_ok": kill_payload.get("ok"),
+        "recovered_output_accepted": recovered_output,
+        "unaffected_lane_progress": False,
+        "controller_restarted": controller_restarted,
+        "absence_proof": absence_proof,
     }
 
 
@@ -646,11 +877,13 @@ def run_observation(
         ),
     )
     if live_ssh:
-        ready = observation_ready_task_ids(root, Path(db), live_ssh=True)
-        blocked = blocked_dependent_lane(root, Path(db)) or "PP-STORY-000139"
+        ready = list(cycle_owned_validation_jobs(profiles))
+        control_ready = observation_ready_task_ids(root, Path(db), live_ssh=True)
+        ready.extend(item for item in control_ready if item not in ready)
+        blocked = blocked_dependent_lane(root, Path(db))
     else:
-        ready = list(CYCLE20_EXECUTABLE_LEAVES)
-        blocked = "PP-TASK-000518"
+        ready = observation_ready_task_ids(root, Path(db), live_ssh=False)
+        blocked = blocked_dependent_lane(root, Path(db))
     dispatch_sha = str(identity.get("sha") or "a" * 40)
     dispatch_tree = str(identity.get("tree") or "b" * 40)
     dispatch_overlay = str(overlay.get("digest") or "c" * 64)
@@ -669,7 +902,9 @@ def run_observation(
         "deadline": deadline,
         "journal": journal,
     }
+    dispatch_started = time.perf_counter()
     available = run_available_work(ready=ready, now=started, **work)
+    transfer_seconds = time.perf_counter() - dispatch_started
     completed_jobs = list(available.get("completed_jobs") or [])
     first = (
         completed_jobs[0] if completed_jobs else {"selected": [], "results": [], "next_job": None}
@@ -698,6 +933,15 @@ def run_observation(
             now=started,
             machine_id=live_machine,
         )
+        other_hosts = {
+            str(item.get("host_id") or "")
+            for batch in completed_jobs
+            for item in (batch.get("results") or [])
+            if isinstance(item, dict)
+            and item.get("outcome") == "ACCEPTED"
+            and str(item.get("host_id") or "") not in {"", live_machine}
+        }
+        fault["unaffected_lane_progress"] = bool(other_hosts)
         fault["blocked_lane"] = blocked
     else:
         fault = {
@@ -752,6 +996,7 @@ def run_observation(
                     "occupancy_hosts": surfaces["command_center_occupancy_hosts"],
                 },
                 "same_journal": surfaces["same_journal"],
+                "cli_ui_independent": surfaces["cli_ui_independent"],
             }
         )
         sleep_for = min(30.0, max(1.0, remaining))
@@ -759,19 +1004,37 @@ def run_observation(
     ended = datetime.now(UTC)
     wall_seconds = (ended - started).total_seconds()
     duration_met = wall_seconds >= duration_seconds
+    end_inventories = measure_enrolled_inventories() if live_ssh else inventories
+    surfaces_final = (
+        heartbeats[-1] if heartbeats else {"cli_ui_independent": False, "same_journal": False}
+    )
     evaluated = evaluate_observation(
         {
             "duration_met": duration_met,
             "wall_seconds": wall_seconds,
             "fault": fault,
             "source": identity,
+            "overlay": overlay,
             "heartbeats": heartbeats,
             "completed_jobs": completed_jobs,
             "lifecycle_events": journal.events(),
+            "resources": _resource_metrics(
+                inventories,
+                end_inventories,
+                completed_jobs,
+                transfer_seconds=transfer_seconds,
+            ),
+            "cli_ui_independent": bool(
+                surfaces_final.get("cli") or surfaces_final.get("command_center")
+            )
+            and independent_cli_ui(heartbeats),
         },
         expected_source_sha=str(identity.get("sha") or ""),
+        expected_source_tree=str(identity.get("tree") or ""),
+        expected_overlay_sha256=str(overlay.get("digest") or ""),
         require_useful_work=True,
         require_owned_recovery=True,
+        required_seconds=duration_seconds,
     )
     result = {
         "ok": bool(evaluated.get("ok")),
@@ -801,7 +1064,7 @@ def run_observation(
 def run_production(*, root: Path, database: Path | None = None) -> dict[str, Any]:
     root = root.resolve()
     ready = control_ready_task_ids(root, database)
-    blocked = blocked_dependent_lane(root, database) or "PP-TASK-000518"
+    blocked = blocked_dependent_lane(root, database)
     identity = inspect_source_identity(root)
     overlay = bound_overlay(root)
     db = database or (root / ".local" / "state" / "scheduler.sqlite3")
@@ -880,6 +1143,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--database", type=Path)
     parser.add_argument("--duration-seconds", type=int, default=3600)
     parser.add_argument("--live-ssh", action="store_true")
+    parser.add_argument("--json-output", type=Path)
     return parser
 
 
@@ -913,7 +1177,14 @@ def main(argv: list[str] | None = None) -> int:
                 default=str,
             )
         )
-        return 0 if result.get("duration_met") else 2
+        if args.json_output:
+            args.json_output.parent.mkdir(parents=True, exist_ok=True)
+            args.json_output.write_text(
+                json.dumps(result, indent=2, sort_keys=True, default=str) + "\n",
+                encoding="utf-8",
+            )
+        evaluation = result.get("evaluation") if isinstance(result.get("evaluation"), dict) else {}
+        return 0 if result.get("ok") and evaluation.get("ok") else 2
     result = run_production(root=args.root, database=args.database)
     print(json.dumps(result, indent=2, sort_keys=True, default=str))
     return 0 if result.get("selected") else 2

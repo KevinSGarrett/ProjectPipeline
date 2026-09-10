@@ -66,6 +66,10 @@ class RemoteJobEnvelope(DomainModel):
     correlation_id: str
     workspace_root: str | None = None
     output_contract_sha256: str | None = None
+    context_pack: dict[str, Any] | None = None
+    pack_sha256: str | None = None
+    require_context_consumption: bool = False
+    project_id: str = "PROJECT-PIPELINE"
     effect_class: Literal["IDEMPOTENT_RESULT", "NON_IDEMPOTENT_EFFECT"] = "IDEMPOTENT_RESULT"
 
     def digest(self) -> str:
@@ -269,6 +273,12 @@ class RemoteJobController:
                 "result": result,
                 "envelope_digest": envelope.digest(),
                 "remote_pid": payload.get("remote_pid") or payload.get("pid"),
+                "stdout": payload.get("stdout") or "",
+                "stderr": payload.get("stderr") or "",
+                "context_consumption": payload.get("context_consumption"),
+                "tests_run": payload.get("tests_run"),
+                "artifact_sha256": payload.get("artifact_sha256"),
+                "junit_sha256": payload.get("junit_sha256"),
             }
         finally:
             if self.store is not None and claimed and not launched:
@@ -282,33 +292,40 @@ class RemoteJobController:
         expected_host: str,
         now: datetime | None = None,
         artifact_bytes: bytes | None = None,
+        context_consumption: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         now = (now or datetime.now(UTC)).astimezone(UTC)
-        if self.require_intent and (
-            self.store is None or self.store.get_intent(envelope.job_id) is None
-        ):
-            return {"outcome": "REJECTED", "reason": "intent_missing"}
         if result.job_id != envelope.job_id:
             return {"outcome": "REJECTED", "reason": "wrong_job"}
         if result.host_id != expected_host or result.host_id != envelope.host_id:
             return {"outcome": "REJECTED", "reason": "wrong_host"}
+        payload = envelope.model_dump(mode="json")
+        if self.store is not None:
+            return self.store.accept_result(
+                result.model_dump(mode="json"),
+                now=now,
+                envelope=payload,
+                artifact_bytes=artifact_bytes,
+                context_consumption=context_consumption,
+            )
+        if self.require_intent:
+            return {"outcome": "REJECTED", "reason": "intent_missing"}
         if self._fence_expired(envelope.fence) or result.fence != envelope.fence:
             return {"outcome": "REJECTED", "reason": "expired_fence"}
         if now > envelope.deadline_utc:
             return {"outcome": "REJECTED", "reason": "late_result"}
         if int(result.exit_code) != 0:
             return {"outcome": "REJECTED", "reason": "nonzero_exit"}
-        if envelope.output_contract_sha256 and artifact_bytes is None:
+        require_bytes = (
+            bool(envelope.output_contract_sha256) or envelope.require_context_consumption
+        )
+        if require_bytes and artifact_bytes is None:
             return {"outcome": "REJECTED", "reason": "artifact_bytes_required"}
-        if envelope.output_contract_sha256:
-            actual = result.output_sha256
-            if artifact_bytes is not None:
-                actual = hashlib.sha256(artifact_bytes).hexdigest()
-            if actual != envelope.output_contract_sha256:
+        if artifact_bytes is not None:
+            actual = hashlib.sha256(artifact_bytes).hexdigest()
+            if envelope.output_contract_sha256 and actual != envelope.output_contract_sha256:
                 return {"outcome": "REJECTED", "reason": "output_tamper"}
-        if self.store is not None:
-            stored = self.store.accept_result(result.model_dump(mode="json"), now=now)
-            return stored
+            result = result.model_copy(update={"output_sha256": actual})
         existing = self._accepted.get(envelope.job_id)
         if existing is not None:
             if (

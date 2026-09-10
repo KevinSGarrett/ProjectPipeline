@@ -7,9 +7,11 @@ A path segment named ``pp_jobs`` is not confinement.
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import os
 import subprocess
+import threading
 import time
 from collections.abc import Callable, Mapping
 from pathlib import Path
@@ -45,6 +47,9 @@ FLEET_SSH_TARGETS: Mapping[str, Mapping[str, str]] = {
     COMFY_MACHINE_ID: {"host": COMFY_TAILNET_IPV4, "user": COMFY_SSH_USER},
 }
 WORKER_ENTRYPOINT = ("python", "-m", "project_pipeline.autonomy_runtime.worker_entrypoint")
+ACQUIRED_WORKSPACE_FILES = frozenset(
+    {"junit.xml", "artifact_manifest.json", "useful_artifact.json"}
+)
 
 
 def parse_worker_stdout(stdout: str) -> dict[str, Any]:
@@ -63,8 +68,109 @@ def parse_worker_stdout(stdout: str) -> dict[str, Any]:
     return {}
 
 
+def job_stdout_metrics(stdout: str) -> dict[str, Any]:
+    """Parse native-test metrics from job or worker JSON stdout."""
+
+    metrics: dict[str, Any] = {}
+    for candidate in (stdout,):
+        parsed = parse_worker_stdout(str(candidate or ""))
+        inner = parsed.get("stdout") if isinstance(parsed.get("stdout"), str) else None
+        bodies = [parsed]
+        if inner:
+            nested = parse_worker_stdout(inner)
+            if nested:
+                bodies.append(nested)
+        for body in bodies:
+            for key in ("tests_run", "collected", "artifact_sha256", "junit_sha256"):
+                if body.get(key) not in (None, "", 0, "0"):
+                    metrics[key] = body.get(key)
+            if body.get("context_consumption") is not None:
+                metrics["context_consumption"] = body["context_consumption"]
+    return metrics
+
+
 def _is_running_started_record(payload: Mapping[str, Any]) -> bool:
     return payload.get("pid") is not None and payload.get("phase") == "RUNNING"
+
+
+def _runner_accepts_input(runner: Callable[..., Any]) -> bool:
+    try:
+        signature = inspect.signature(runner)
+    except (TypeError, ValueError):
+        return True
+    if any(item.kind == inspect.Parameter.VAR_KEYWORD for item in signature.parameters.values()):
+        return True
+    return "input" in signature.parameters
+
+
+def _bounded_popen_run(
+    argv: list[str],
+    *,
+    env: dict[str, str],
+    timeout_seconds: int,
+    max_output_bytes: int,
+    stdin_payload: str,
+) -> subprocess.CompletedProcess[str]:
+    process = subprocess.Popen(
+        argv,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env=env,
+        shell=False,
+    )
+    overflow = {"stdout": False, "stderr": False}
+    stdout_holder = {"text": ""}
+    stderr_holder = {"text": ""}
+
+    def _drain(stream: Any, key: str, holder: dict[str, str]) -> None:
+        chunks: list[bytes] = []
+        total = 0
+        while True:
+            data = stream.read(4096)
+            if not data:
+                break
+            if total + len(data) > max_output_bytes:
+                overflow[key] = True
+                remain = max(0, max_output_bytes - total)
+                if remain:
+                    chunks.append(data[:remain])
+                process.kill()
+                break
+            chunks.append(data)
+            total += len(data)
+        holder["text"] = b"".join(chunks).decode("utf-8", errors="replace")
+
+    reader_out = threading.Thread(
+        target=_drain, args=(process.stdout, "stdout", stdout_holder), daemon=True
+    )
+    reader_err = threading.Thread(
+        target=_drain, args=(process.stderr, "stderr", stderr_holder), daemon=True
+    )
+    reader_out.start()
+    reader_err.start()
+    if process.stdin is not None:
+        process.stdin.write(stdin_payload.encode("utf-8"))
+        process.stdin.close()
+    try:
+        process.wait(timeout=timeout_seconds)
+        timed_out = False
+        exit_code = int(process.returncode or 0)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        timed_out = True
+        exit_code = 124
+    reader_out.join(timeout=5)
+    reader_err.join(timeout=5)
+    if overflow["stdout"] or overflow["stderr"]:
+        exit_code = 125
+        stderr_holder["text"] = (stderr_holder["text"] + "\n[truncated:output_limit]").strip()
+    completed = subprocess.CompletedProcess(
+        argv, exit_code, stdout_holder["text"], stderr_holder["text"]
+    )
+    completed.timed_out = timed_out  # type: ignore[attr-defined]
+    completed.output_truncated = overflow["stdout"] or overflow["stderr"]  # type: ignore[attr-defined]
+    return completed
 
 
 def timeout_output_text(value: object) -> str:
@@ -179,6 +285,43 @@ class SshDispatchAdapter:
             runner=runner,
         )
 
+    def acquire_workspace_file(
+        self, working_directory: Path, name: str, dest: Path
+    ) -> bytes | None:
+        """Copy one job output file back and return its bytes. Does not trust stdout hashes."""
+
+        if self.runner is not None or name not in ACQUIRED_WORKSPACE_FILES:
+            return None
+        try:
+            reject_unsafe_string(str(working_directory), field="workspace")
+        except ConfinementError:
+            return None
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        remote = f"{self.user}@{self.host}:{Path(working_directory).as_posix()}/{name}"
+        completed = subprocess.run(
+            [
+                "scp",
+                "-i",
+                str(self.identity),
+                "-o",
+                "IdentitiesOnly=yes",
+                "-o",
+                "BatchMode=yes",
+                "-o",
+                f"ConnectTimeout={self.connect_timeout}",
+                remote,
+                str(dest),
+            ],
+            capture_output=True,
+            check=False,
+            shell=False,
+            timeout=45,
+            env=self._ssh_env(),
+        )
+        if completed.returncode != 0 or not dest.is_file():
+            return None
+        return dest.read_bytes()
+
     def _ssh_env(self) -> dict[str, str]:
         allowed = {item.upper() for item in SSH_CLIENT_ENV_KEYS}
         return {key: value for key, value in os.environ.items() if key.upper() in allowed}
@@ -218,7 +361,11 @@ class SshDispatchAdapter:
                 "memory_mb_ceiling",
                 "workspace_root",
                 "output_contract_sha256",
+                "context_pack",
+                "pack_sha256",
+                "require_context_consumption",
                 "creation_time",
+                "project_id",
             ):
                 if key in envelope and envelope[key] is not None:
                     payload[key] = envelope[key]
@@ -365,7 +512,6 @@ class SshDispatchAdapter:
             connect_timeout=self.connect_timeout,
         )
         env = self._ssh_env()
-        runner = self.runner or subprocess.run
         stdin_payload = self._stdin_payload(
             command=command,
             working_directory=working_directory,
@@ -376,45 +522,42 @@ class SshDispatchAdapter:
             input_sha256=input_sha256,
             envelope=envelope,
         )
-        try:
-            completed = runner(
+        if self.runner is None:
+            completed = _bounded_popen_run(
                 argv,
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=timeout_seconds,
                 env=env,
-                input=stdin_payload,
+                timeout_seconds=timeout_seconds,
+                max_output_bytes=max_output_bytes,
+                stdin_payload=stdin_payload,
             )
             raw_stdout = completed.stdout or ""
             raw_stderr = completed.stderr or ""
-            timed_out = False
+            timed_out = bool(getattr(completed, "timed_out", False))
             exit_code = completed.returncode
-        except TypeError:
-            # Injected test runners may not accept input=
+        else:
+            kwargs: dict[str, Any] = {
+                "capture_output": True,
+                "text": True,
+                "check": False,
+                "timeout": timeout_seconds,
+                "env": env,
+            }
+            if _runner_accepts_input(self.runner):
+                kwargs["input"] = stdin_payload
             try:
-                completed = runner(
-                    argv,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    timeout=timeout_seconds,
-                    env=env,
-                )
-                raw_stdout = completed.stdout or ""
-                raw_stderr = completed.stderr or ""
-                timed_out = False
-                exit_code = completed.returncode
+                completed = self.runner(argv, **kwargs)
+            except TypeError as error:
+                raise TypeError("ssh_runner_contract_error_after_dispatch") from error
             except subprocess.TimeoutExpired as error:
                 raw_stdout = timeout_output_text(error.stdout or error.output)
                 raw_stderr = timeout_output_text(error.stderr)
                 timed_out = True
                 exit_code = 124
-        except subprocess.TimeoutExpired as error:
-            raw_stdout = timeout_output_text(error.stdout or error.output)
-            raw_stderr = timeout_output_text(error.stderr)
-            timed_out = True
-            exit_code = 124
+            else:
+                raw_stdout = completed.stdout or ""
+                raw_stderr = completed.stderr or ""
+                timed_out = False
+                exit_code = completed.returncode
         stdout = raw_stdout[:max_output_bytes]
         stderr = raw_stderr[:max_output_bytes]
         worker = parse_worker_stdout(stdout)
@@ -439,6 +582,10 @@ class SshDispatchAdapter:
         for key in ("ok", "killed"):
             if key in worker:
                 payload[key] = worker[key]
+        if worker.get("context_consumption") is not None:
+            payload["context_consumption"] = worker["context_consumption"]
+        job_metrics = job_stdout_metrics(str(worker.get("stdout") or stdout))
+        payload.update(job_metrics)
         for key in ("reason", "phase"):
             value = worker.get(key)
             if value:

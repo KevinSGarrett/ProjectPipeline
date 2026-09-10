@@ -239,14 +239,80 @@ class FleetJobStore:
         return json.loads(row["payload_json"])
 
     def accept_result(
-        self, result: dict[str, Any], *, now: datetime | None = None
+        self,
+        result: dict[str, Any],
+        *,
+        now: datetime | None = None,
+        envelope: dict[str, Any] | None = None,
+        artifact_bytes: bytes | None = None,
+        context_consumption: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         now = (now or _now()).astimezone(UTC)
-        job_id = str(result["job_id"])
-        payload = json.dumps(result, sort_keys=True, default=str)
+        job_id = str(result.get("job_id") or "")
+        if not job_id:
+            return {"outcome": "REJECTED", "reason": "job_id_missing"}
         with self._lock:
             db = self._connection()
             db.execute("BEGIN IMMEDIATE")
+            intent_row = db.execute(
+                "SELECT payload_json, status FROM fleet_dispatch_intents WHERE job_id=?",
+                (job_id,),
+            ).fetchone()
+            if intent_row is None:
+                db.execute("COMMIT")
+                return {"outcome": "REJECTED", "reason": "intent_missing"}
+            stored = json.loads(intent_row["payload_json"])
+            stored.pop("status", None)
+            expected = dict(envelope or {})
+            expected.pop("status", None)
+            if expected and stored != expected:
+                db.execute("COMMIT")
+                return {"outcome": "REJECTED", "reason": "conflicting_intent"}
+            if str(result.get("host_id") or "") != str(stored.get("host_id") or ""):
+                db.execute("COMMIT")
+                return {"outcome": "REJECTED", "reason": "wrong_host"}
+            if str(result.get("fence") or "") != str(stored.get("fence") or ""):
+                db.execute("COMMIT")
+                return {"outcome": "REJECTED", "reason": "expired_fence"}
+            expired = db.execute(
+                "SELECT fence FROM fleet_expired_fences WHERE fence=?",
+                (str(stored.get("fence") or ""),),
+            ).fetchone()
+            if expired is not None:
+                db.execute("COMMIT")
+                return {"outcome": "REJECTED", "reason": "expired_fence"}
+            deadline = datetime.fromisoformat(
+                str(stored.get("deadline_utc") or "").replace("Z", "+00:00")
+            ).astimezone(UTC)
+            if now > deadline:
+                db.execute("COMMIT")
+                return {"outcome": "REJECTED", "reason": "late_result"}
+            try:
+                exit_code = int(result.get("exit_code"))
+            except (TypeError, ValueError):
+                db.execute("COMMIT")
+                return {"outcome": "REJECTED", "reason": "nonzero_exit"}
+            if exit_code != 0:
+                db.execute("COMMIT")
+                return {"outcome": "REJECTED", "reason": "nonzero_exit"}
+            contract = str(stored.get("output_contract_sha256") or "")
+            require_bytes = bool(contract) or bool(stored.get("require_context_consumption"))
+            if require_bytes:
+                if artifact_bytes is None:
+                    db.execute("COMMIT")
+                    return {"outcome": "REJECTED", "reason": "artifact_bytes_required"}
+                actual_output = digest_bytes(artifact_bytes)
+                if contract and actual_output != contract:
+                    db.execute("COMMIT")
+                    return {"outcome": "REJECTED", "reason": "output_tamper"}
+                result = dict(result)
+                result["artifact_sha256"] = actual_output
+                result["output_sha256"] = actual_output
+            if stored.get("require_context_consumption") and not (
+                context_consumption and context_consumption.get("ok")
+            ):
+                db.execute("COMMIT")
+                return {"outcome": "REJECTED", "reason": "context_unconsumed"}
             existing = db.execute(
                 "SELECT payload_json, output_sha256, exit_code FROM fleet_job_results WHERE job_id=?",
                 (job_id,),
@@ -263,6 +329,7 @@ class FleetJobStore:
                         "result": json.loads(existing["payload_json"]),
                     }
                 return {"outcome": "REJECTED", "reason": "conflicting_replay"}
+            payload = json.dumps(result, sort_keys=True, default=str)
             db.execute(
                 """
                 INSERT INTO fleet_job_results (

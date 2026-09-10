@@ -82,6 +82,10 @@ def _envelope(tmp_path: Path, name: str, **changes: object) -> RemoteJobEnvelope
 class FakeRemote:
     remote_host = True
     machine_id = "COMFY-V4-CPU-01"
+    _junit = (
+        b"<testsuite tests='1' failures='0' errors='0' skipped='0'>"
+        b"<testcase classname='cycle21' name='native_pass'/></testsuite>"
+    )
 
     def execute(self, **_kwargs: object) -> dict[str, object]:
         return dict(
@@ -91,7 +95,18 @@ class FakeRemote:
             stderr_sha256="2" * 64,
             payload_sha256="3" * 64,
             remote_pid="FIXTURE_ONLY",
+            context_consumption={"ok": True, "worker_id": "fixture:1", "status": "CONSUMED"},
         )
+
+    def acquire_workspace_file(
+        self, working_directory: Path, name: str, dest: Path
+    ) -> bytes | None:
+        del working_directory
+        if name != "junit.xml":
+            return None
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(self._junit)
+        return self._junit
 
 
 def test_wire_includes_authority_and_rejects_nested_env_as_enforcement(
@@ -466,7 +481,8 @@ def test_useful_job_is_not_metadata_only_and_failed_loop_does_not_ok(
     payload = json.loads(artifact.read_text(encoding="utf-8"))
     assert set(payload) != {"job_id", "artifact_sha256", "bytes"}
     assert payload["ok"] is True
-    assert payload["verifier"] == "implementation_and_test_binding"
+    assert payload["verifier"] == "native_pytest_execution"
+    assert int(payload.get("tests_run") or 0) >= 1
     assert payload["criterion_ids"]
     assert payload["implementation_paths"]
     assert payload.get("selected_source") != "remote_job.py"
@@ -548,7 +564,9 @@ def test_observation_evaluator_fails_when_hour_elapsed_without_recovery() -> Non
     )
 
 
-def test_observation_evaluator_requires_recovered_accepted_work_and_coverage() -> None:
+def test_observation_evaluator_requires_recovered_accepted_work_and_coverage(
+    tmp_path: Path,
+) -> None:
     matching = {
         "duration_met": True,
         "wall_seconds": 3600.0,
@@ -570,11 +588,70 @@ def test_observation_evaluator_requires_recovered_accepted_work_and_coverage() -
     assert "recovery_not_proven" in failed["reasons"]
     assert "useful_work_missing" in failed["reasons"]
     matching["fault"]["recovered"] = True
+    matching["fault"]["recovered_output_accepted"] = True
+    matching["fault"]["unaffected_lane_progress"] = True
+    matching["fault"]["controller_restarted"] = True
+    xeon_bytes = (
+        b"<testsuite tests='1' failures='0' errors='0' skipped='0'>"
+        b"<testcase classname='cycle21' name='xeon'/></testsuite>"
+    )
+    comfy_bytes = (
+        b"<testsuite tests='1' failures='0' errors='0' skipped='0'>"
+        b"<testcase classname='cycle21' name='comfy'/></testsuite>"
+    )
+    xeon_path = tmp_path / "xeon.xml"
+    comfy_path = tmp_path / "comfy.xml"
+    xeon_path.write_bytes(xeon_bytes)
+    comfy_path.write_bytes(comfy_bytes)
     matching["completed_jobs"] = [
-        {"results": [{"outcome": "ACCEPTED", "task_id": "PP-TASK-000516"}]}
+        {
+            "results": [
+                {
+                    "outcome": "ACCEPTED",
+                    "task_id": "PP-TASK-000516",
+                    "tests_run": 1,
+                    "artifact_sha256": hashlib.sha256(xeon_bytes).hexdigest(),
+                    "acquired_junit_path": str(xeon_path),
+                    "host_id": "WIN-EVSH1DN8H5O",
+                },
+                {
+                    "outcome": "ACCEPTED",
+                    "task_id": "PP-TASK-000521",
+                    "tests_run": 1,
+                    "artifact_sha256": hashlib.sha256(comfy_bytes).hexdigest(),
+                    "acquired_junit_path": str(comfy_path),
+                    "host_id": "COMFY-V4-CPU-01",
+                },
+            ]
+        }
     ]
+    matching["heartbeats"] = [
+        {"at_utc": datetime(2026, 9, 10, 3, 0, tzinfo=UTC).isoformat()}
+        if False
+        else {
+            "at_utc": (
+                datetime(2026, 9, 10, 3, 0, tzinfo=UTC) + timedelta(seconds=i * 60)
+            ).isoformat()
+        }
+        for i in range(60)
+    ]
+    matching["overlay"] = {"digest": "c" * 64}
+    matching["source"]["tree"] = "b" * 40
+    matching["resources"] = {
+        "peak_ram_mb": 1024,
+        "scratch_bytes": 12,
+        "transfer_seconds": 8,
+        "concurrency": 2,
+    }
+    matching["cli_ui_independent"] = True
     passed = evaluate_observation(
-        matching, expected_source_sha=SHA, require_useful_work=True, require_owned_recovery=True
+        matching,
+        expected_source_sha=SHA,
+        expected_source_tree="b" * 40,
+        expected_overlay_sha256="c" * 64,
+        require_useful_work=True,
+        require_owned_recovery=True,
+        required_seconds=3600,
     )
     assert passed["ok"] is True
 
@@ -591,7 +668,9 @@ def test_kill_matches_running_ownership_before_result_cache(tmp_path: Path) -> N
                 "fence": "owned-fault-1",
                 "principal": "fixture",
                 "pid": 424242,
-                "child_pid": 0,
+                "child_pid": 424242,
+                "creation_time": "111",
+                "worker_creation_time": "111",
                 "phase": "RUNNING",
             }
         ),
@@ -603,7 +682,13 @@ def test_kill_matches_running_ownership_before_result_cache(tmp_path: Path) -> N
         kill_calls.append(argv)
         return subprocess.CompletedProcess(argv, 0, "", "")
 
-    with patch("subprocess.run", side_effect=fake_kill):
+    with (
+        patch("subprocess.run", side_effect=fake_kill),
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol.process_creation_filetime",
+            return_value="111",
+        ),
+    ):
         result = run_envelope(
             {
                 "action": "kill",
@@ -611,6 +696,7 @@ def test_kill_matches_running_ownership_before_result_cache(tmp_path: Path) -> N
                 "job_id": "C20-OWNED-FAULT",
                 "fence": "owned-fault-1",
                 "principal": "fixture",
+                "creation_time": "111",
                 "workspace": str(workspace),
             }
         )
@@ -627,6 +713,7 @@ def test_kill_matches_running_ownership_before_result_cache(tmp_path: Path) -> N
             "job_id": "OTHER-JOB",
             "fence": "owned-fault-1",
             "principal": "fixture",
+            "creation_time": "111",
             "workspace": str(workspace),
         }
     )
