@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import subprocess
+import threading
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -306,6 +308,183 @@ def test_prelaunch_pack_failure_releases_claim_for_retry(tmp_path: Path) -> None
     assert first["reason"] == "pack_missing"
     assert second["reason"] != "unresolved_in_flight"
     assert second["reason"] == "pack_missing"
+
+
+def test_failed_complete_cache_does_not_block_retry(tmp_path: Path) -> None:
+    env = _envelope(tmp_path, "failed-cache")
+    payload = env.model_dump(mode="json")
+    payload["argv"] = list(env.argv)
+
+    class Failed:
+        returncode = 2
+        stdout = "no pytest"
+        stderr = "No module named pytest"
+        pid = 1
+        creation_time = "1"
+        output_truncated = False
+
+    class Passed:
+        returncode = 0
+        stdout = "ok"
+        stderr = ""
+        pid = 2
+        creation_time = "2"
+        output_truncated = False
+
+    calls = {"n": 0}
+
+    def fake_spawn(**kwargs: object) -> tuple[object, dict[str, object]]:
+        del kwargs
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return Failed(), {"pid": 1, "creation_time": "1", "mechanism": "fixture"}
+        return Passed(), {"pid": 2, "creation_time": "2", "mechanism": "fixture"}
+
+    with (
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol.local_runtime_identity",
+            return_value=_identity(),
+        ),
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol._spawn_enforced",
+            side_effect=fake_spawn,
+        ),
+    ):
+        first = run_envelope(payload)
+        second = run_envelope(payload)
+    assert first["ok"] is False
+    assert first.get("duplicate") is not True
+    assert second["ok"] is True
+    assert second.get("duplicate") is not True
+    assert calls["n"] == 2
+
+
+def test_orphan_claim_after_failed_complete_does_not_block_retry(tmp_path: Path) -> None:
+    env = _envelope(tmp_path, "orphan-claim")
+    payload = env.model_dump(mode="json")
+    payload["argv"] = list(env.argv)
+    workspace = Path(payload["workspace"])
+    cache = workspace / ".pp_worker_results" / f"{env.job_id}.json"
+    claim = cache.with_suffix(".claim")
+
+    class Failed:
+        returncode = 2
+        stdout = "no pytest"
+        stderr = "No module named pytest"
+        pid = 1
+        creation_time = "1"
+        output_truncated = False
+
+    class Passed:
+        returncode = 0
+        stdout = "ok"
+        stderr = ""
+        pid = 2
+        creation_time = "2"
+        output_truncated = False
+
+    calls = {"n": 0}
+
+    def fake_spawn(**kwargs: object) -> tuple[object, dict[str, object]]:
+        del kwargs
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return Failed(), {"pid": 1, "creation_time": "1", "mechanism": "fixture"}
+        return Passed(), {"pid": 2, "creation_time": "2", "mechanism": "fixture"}
+
+    with (
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol.local_runtime_identity",
+            return_value=_identity(),
+        ),
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol._spawn_enforced",
+            side_effect=fake_spawn,
+        ),
+    ):
+        first = run_envelope(payload)
+        cache_payload = json.loads(cache.read_text(encoding="utf-8"))
+        complete_at = datetime.fromisoformat(
+            str(cache_payload["completed_at_utc"]).replace("Z", "+00:00")
+        )
+        earlier = complete_at - timedelta(seconds=5)
+        claim.write_text(
+            json.dumps(
+                {
+                    "claim_state": "RUNNING",
+                    "authority_identity": first["authority_identity"],
+                    "job_id": env.job_id,
+                    "started_at_utc": earlier.isoformat(),
+                    "pid": 1,
+                },
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        second = run_envelope(payload)
+    assert first["ok"] is False
+    assert second["ok"] is True
+    assert second.get("reason") != "unresolved_in_flight"
+    assert calls["n"] == 2
+
+
+def test_concurrent_retry_after_failure_is_once_only(tmp_path: Path) -> None:
+    env = _envelope(tmp_path, "concurrent-retry")
+    payload = env.model_dump(mode="json")
+    payload["argv"] = list(env.argv)
+    calls = {"n": 0}
+    entered = threading.Event()
+    hold = threading.Event()
+
+    class Failed:
+        returncode = 2
+        stdout = "no pytest"
+        stderr = "No module named pytest"
+        pid = 1
+        creation_time = "1"
+        output_truncated = False
+
+    class Passed:
+        returncode = 0
+        stdout = "ok"
+        stderr = ""
+        pid = 2
+        creation_time = "2"
+        output_truncated = False
+
+    def fake_spawn(**kwargs: object) -> tuple[object, dict[str, object]]:
+        del kwargs
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return Failed(), {"pid": 1, "creation_time": "1", "mechanism": "fixture"}
+        entered.set()
+        assert hold.wait(timeout=5)
+        return Passed(), {"pid": 2, "creation_time": "2", "mechanism": "fixture"}
+
+    with (
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol.local_runtime_identity",
+            return_value=_identity(),
+        ),
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol._spawn_enforced",
+            side_effect=fake_spawn,
+        ),
+    ):
+        first = run_envelope(payload)
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            winner = pool.submit(run_envelope, payload)
+            assert entered.wait(timeout=5)
+            loser = pool.submit(run_envelope, payload)
+            blocked = loser.result(timeout=10)
+            hold.set()
+            accepted = winner.result(timeout=10)
+    assert first["ok"] is False
+    assert calls["n"] == 2
+    assert accepted.get("ok") is True
+    assert accepted.get("duplicate") is not True
+    assert blocked.get("reason") == "unresolved_in_flight"
 
 
 def test_cycle_owned_job_admits_measured_host_without_c18() -> None:

@@ -198,6 +198,13 @@ def _remaining_deadline_seconds(raw: object) -> int:
         return 1
 
 
+def _zero_exit(value: object) -> bool:
+    try:
+        return int(value) == 0
+    except (TypeError, ValueError):
+        return False
+
+
 def _load_cache(path: Path, identity: str) -> dict[str, Any] | None:
     if not path.is_file():
         return None
@@ -206,8 +213,56 @@ def _load_cache(path: Path, identity: str) -> dict[str, Any] | None:
         return None
     if str(payload.get("claim_state") or "") != WORKER_CLAIM_COMPLETE:
         return None
+    if payload.get("ok") is not True or not _zero_exit(payload.get("exit_code")):
+        return None
     payload["duplicate"] = True
     return payload
+
+
+def _is_failed_complete(path: Path, identity: str) -> bool:
+    if not path.is_file():
+        return False
+    payload = _read_json_object(path)
+    if str(payload.get("authority_identity") or "") != identity:
+        return False
+    if str(payload.get("claim_state") or "") != WORKER_CLAIM_COMPLETE:
+        return False
+    return payload.get("ok") is not True or not _zero_exit(payload.get("exit_code"))
+
+
+def _open_exclusive_claim(claim: Path) -> int | None:
+    try:
+        return os.open(str(claim), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
+        return None
+
+
+def _parse_utc(value: object) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    text = value.strip().replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed
+
+
+def _stale_failed_complete_claim(cache: Path, claim: Path, identity: str) -> bool:
+    if not _is_failed_complete(cache, identity):
+        return False
+    cache_payload = _read_json_object(cache)
+    claimed = _read_json_object(claim)
+    claim_started = _parse_utc(claimed.get("started_at_utc"))
+    complete_at = _parse_utc(cache_payload.get("completed_at_utc"))
+    if claim_started is not None and complete_at is not None:
+        return claim_started <= complete_at
+    try:
+        return claim.stat().st_mtime <= cache.stat().st_mtime
+    except OSError:
+        return False
 
 
 def _store_cache(path: Path, payload: dict[str, Any]) -> None:
@@ -231,26 +286,36 @@ def _claim_worker_execution(cache: Path, identity: str, payload: dict[str, Any])
         "pid": os.getpid(),
         "started_at_utc": datetime.now(UTC).isoformat(),
     }
-    try:
-        fd = os.open(str(claim), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-    except FileExistsError:
+    fd = _open_exclusive_claim(claim)
+    if fd is None:
         existing = _load_cache(cache, identity)
         if existing is not None:
             return {"ok": True, "duplicate": True, "result": existing}
         claimed = _read_json_object(claim)
-        if str(claimed.get("authority_identity") or "") != identity:
+        claimed_identity = str(claimed.get("authority_identity") or "")
+        if claimed_identity and claimed_identity != identity:
             return {"ok": False, "reason": "incompatible_cache_identity"}
-        return {"ok": False, "reason": "unresolved_in_flight"}
+        if _stale_failed_complete_claim(cache, claim, identity):
+            with suppress(OSError):
+                claim.unlink()
+            fd = _open_exclusive_claim(claim)
+        if fd is None:
+            return {"ok": False, "reason": "unresolved_in_flight"}
     try:
         os.write(fd, (json.dumps(record, sort_keys=True) + "\n").encode("utf-8"))
     finally:
         os.close(fd)
+    in_flight = dict(record)
+    in_flight["ok"] = False
+    in_flight["exit_code"] = None
+    _store_cache(cache, in_flight)
     return {"ok": True, "duplicate": False, "claim": claim}
 
 
 def _complete_worker_claim(cache: Path, claim: Path, result: dict[str, Any]) -> None:
     result = dict(result)
     result["claim_state"] = WORKER_CLAIM_COMPLETE
+    result["completed_at_utc"] = datetime.now(UTC).isoformat()
     _store_cache(cache, result)
     with suppress(OSError):
         claim.unlink()
