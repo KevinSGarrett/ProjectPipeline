@@ -192,6 +192,32 @@ def newly_ready_owned_jobs(
     ]
 
 
+def refresh_owned_admission(
+    inventories: dict[str, dict[str, Any]],
+    *,
+    admission_path: Path,
+    existing: dict[str, Any],
+    source_sha: str,
+    source_tree: str,
+    selected_ids: set[str],
+    verified_hosts: set[str],
+    when: datetime,
+) -> tuple[tuple[MachineProfile, ...], list[str]]:
+    profiles = profiles_from_inventories(inventories, when=when)
+    write_admission_record(
+        admission_path,
+        observation_admission_record(
+            existing,
+            hosts=_measured_hosts(inventories),
+            source_sha=source_sha,
+            source_tree=source_tree,
+        ),
+    )
+    return profiles, newly_ready_owned_jobs(
+        profiles, selected_ids=selected_ids, verified_hosts=verified_hosts
+    )
+
+
 def _machine_for_task(
     task_id: str,
     profiles: tuple[MachineProfile, ...],
@@ -1064,23 +1090,18 @@ def run_observation(
             continue
         if live_ssh and (now - last_inventory).total_seconds() >= 90:
             inventories = measure_enrolled_inventories()
-            profiles = profiles_from_inventories(inventories, when=now)
-            work["profiles"] = profiles
-            last_inventory = now
-            write_admission_record(
-                admission_path,
-                observation_admission_record(
-                    load_admission_record(admission_path) or existing,
-                    hosts=_measured_hosts(inventories),
-                    source_sha=dispatch_sha,
-                    source_tree=dispatch_tree,
-                ),
-            )
-            discovered = newly_ready_owned_jobs(
-                profiles,
+            profiles, discovered = refresh_owned_admission(
+                inventories,
+                admission_path=admission_path,
+                existing=load_admission_record(admission_path) or existing,
+                source_sha=dispatch_sha,
+                source_tree=dispatch_tree,
                 selected_ids=selected_ids,
                 verified_hosts=verified_hosts,
+                when=now,
             )
+            work["profiles"] = profiles
+            last_inventory = now
             if discovered:
                 next_ready = _ingest_observation_work(
                     run_available_work(ready=discovered, now=now, **work),

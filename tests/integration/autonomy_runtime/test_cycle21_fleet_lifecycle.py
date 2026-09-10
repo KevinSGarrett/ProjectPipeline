@@ -21,6 +21,7 @@ from project_pipeline.autonomy_runtime.fleet_loop import (
     cycle_owned_validation_jobs,
     newly_ready_owned_jobs,
     observation_ready_task_ids,
+    refresh_owned_admission,
     run_observation,
 )
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
@@ -253,6 +254,83 @@ def test_remeasure_admission_admits_cycle_owned_xeon(tmp_path: Path) -> None:
     assert admitted["ok"] is True
 
 
+def _live_inventory(hostname: str, sid: str, whoami: str) -> dict[str, object]:
+    return {
+        "ok": True,
+        "hostname": hostname,
+        "whoami": whoami,
+        "sid": sid,
+        "observation_kind": "MEASURED",
+        "measured_at_utc": NOW.isoformat(),
+        "totalRAMGB": 32.0,
+        "availableRAMGB": 20.0,
+        "cpuLogical": 8,
+        "cpuPhysical": 8,
+        "disks": [{"DeviceID": "C:", "FreeGB": 40.0}],
+        "isa": {"sse42": True, "avx": True, "avx2": hostname == "COMFY-V4-CPU-01"},
+        "osBuild": "26100" if hostname == "COMFY-V4-CPU-01" else "19043",
+    }
+
+
+def test_refresh_owned_admission_dispatches_xeon_after_comfy_result(tmp_path: Path) -> None:
+    sha = "a" * 40
+    tree = "b" * 40
+    path = tmp_path / "observe.sqlite3.fleet_admission.json"
+    comfy_inv = _live_inventory("COMFY-V4-CPU-01", "S-1-5-21-comfy", r"comfy-v4-cpu-01\windows 11")
+    xeon_inv = _live_inventory("WIN-EVSH1DN8H5O", "S-1-5-21-xeon", r"win-evsh1dn8h5o\kines")
+    xeon_inv["totalRAMGB"] = 63.96
+    comfy_only = {
+        "COMFY-V4-CPU-01": comfy_inv,
+        "WIN-EVSH1DN8H5O": {
+            "ok": False,
+            "reason": "remote_measurement_unavailable",
+            "observation_kind": "PARTIAL",
+        },
+    }
+    profiles, discovered = refresh_owned_admission(
+        comfy_only,
+        admission_path=path,
+        existing={},
+        source_sha=sha,
+        source_tree=tree,
+        selected_ids={"PP-TASK-000991"},
+        verified_hosts={"COMFY-V4-CPU-01"},
+        when=NOW,
+    )
+    assert discovered == []
+    denied = chosen_host_admitted(
+        load_admission_record(path),
+        "WIN-EVSH1DN8H5O",
+        expected_sha=sha,
+        expected_tree=tree,
+        now=NOW,
+        cycle_owned=True,
+    )
+    assert denied["ok"] is False
+    both = {"COMFY-V4-CPU-01": comfy_inv, "WIN-EVSH1DN8H5O": xeon_inv}
+    profiles, discovered = refresh_owned_admission(
+        both,
+        admission_path=path,
+        existing=load_admission_record(path) or {},
+        source_sha=sha,
+        source_tree=tree,
+        selected_ids={"PP-TASK-000991"},
+        verified_hosts={"COMFY-V4-CPU-01"},
+        when=NOW,
+    )
+    assert any(item.machine_id == "WIN-EVSH1DN8H5O" for item in profiles)
+    assert discovered == ["PP-TASK-000990"]
+    admitted = chosen_host_admitted(
+        load_admission_record(path),
+        "WIN-EVSH1DN8H5O",
+        expected_sha=sha,
+        expected_tree=tree,
+        now=NOW,
+        cycle_owned=True,
+    )
+    assert admitted["ok"] is True
+
+
 def test_noncanonical_cycle_job_id_cannot_lease() -> None:
     with pytest.raises(ValueError, match="Invalid issue identifier"):
         validate_identifier("PP-TASK-C21-VALIDATE-COMFY", IdentifierKind.ISSUE)
@@ -292,8 +370,7 @@ def test_observation_staggers_cycle_owned_jobs() -> None:
     assert "pending_owned" in source
     assert "elapsed >= 45" in source
     assert "verified_hosts" in source
-    assert "newly_ready_owned_jobs" in source
-    assert "measure_enrolled_inventories" in source
+    assert "refresh_owned_admission" in source
     assert "CYCLE_OWNED_VALIDATION_JOBS" in source
 
 
