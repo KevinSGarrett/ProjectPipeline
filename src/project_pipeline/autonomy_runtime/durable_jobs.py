@@ -295,15 +295,18 @@ class FleetJobStore:
             if exit_code != 0:
                 db.execute("COMMIT")
                 return {"outcome": "REJECTED", "reason": "nonzero_exit"}
-            contract = stored.get("output_contract_sha256")
-            actual_output = str(result.get("output_sha256") or "")
-            if artifact_bytes is not None:
-                actual_output = hashlib.sha256(artifact_bytes).hexdigest()
+            contract = str(stored.get("output_contract_sha256") or "")
+            if contract:
+                if artifact_bytes is None:
+                    db.execute("COMMIT")
+                    return {"outcome": "REJECTED", "reason": "artifact_bytes_required"}
+                actual_output = digest_bytes(artifact_bytes)
+                if actual_output != contract:
+                    db.execute("COMMIT")
+                    return {"outcome": "REJECTED", "reason": "output_tamper"}
                 result = dict(result)
                 result["artifact_sha256"] = actual_output
-            if contract and actual_output != contract:
-                db.execute("COMMIT")
-                return {"outcome": "REJECTED", "reason": "output_tamper"}
+                result["output_sha256"] = actual_output
             if stored.get("require_context_consumption") and not (
                 context_consumption and context_consumption.get("ok")
             ):

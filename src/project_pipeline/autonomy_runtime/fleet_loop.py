@@ -14,7 +14,7 @@ from typing import Any
 from project_pipeline.autonomy_runtime.confinement import REMOTE_JOB_WORKSPACES
 from project_pipeline.autonomy_runtime.context_validation import job_input_digest
 from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
-from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
+from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore, digest_bytes
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.observation_eval import evaluate_observation
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobEnvelope
@@ -191,7 +191,15 @@ def _bind_adapter(adapter: Any, machine_id: str) -> Any:
     return adapter
 
 
-def _enrich_dispatched(task_id: str, dispatched: dict[str, Any], host_id: str) -> dict[str, Any]:
+def _enrich_dispatched(
+    task_id: str,
+    dispatched: dict[str, Any],
+    host_id: str,
+    *,
+    adapter: Any = None,
+    workspace: Path | None = None,
+    acquired_root: Path | None = None,
+) -> dict[str, Any]:
     item: dict[str, Any] = {"task_id": task_id, **dispatched, "host_id": host_id}
     executed = dispatched.get("executed") if isinstance(dispatched.get("executed"), dict) else {}
     stdout = str(executed.get("stdout") or "")
@@ -201,6 +209,16 @@ def _enrich_dispatched(task_id: str, dispatched: dict[str, Any], host_id: str) -
             value = metrics.get(key) or executed.get(key) or dispatched.get(key)
             if value not in (None, "", 0, "0"):
                 item[key] = value
+    acquire = getattr(adapter, "acquire_workspace_file", None)
+    job_workspace = workspace or Path(str(executed.get("working_directory") or ""))
+    if acquired_root is not None and callable(acquire) and job_workspace:
+        dest = Path(acquired_root) / host_id / task_id / "junit.xml"
+        payload = acquire(job_workspace, "junit.xml", dest)
+        if payload:
+            digest = digest_bytes(payload)
+            item["acquired_junit_path"] = str(dest)
+            item["artifact_sha256"] = digest
+            item["junit_sha256"] = digest
     return item
 
 
@@ -296,7 +314,16 @@ def run_loop(
                 adapter=host_adapter,
                 machine_id=host_id if remote else None,
             )
-            results.append(_enrich_dispatched(task_id, dispatched, host_id))
+            results.append(
+                _enrich_dispatched(
+                    task_id,
+                    dispatched,
+                    host_id,
+                    adapter=host_adapter,
+                    workspace=job_workspace,
+                    acquired_root=Path(workspace_root) / "acquired",
+                )
+            )
         remaining_ready = [
             item
             for item in ready

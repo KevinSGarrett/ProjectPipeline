@@ -47,6 +47,9 @@ FLEET_SSH_TARGETS: Mapping[str, Mapping[str, str]] = {
     COMFY_MACHINE_ID: {"host": COMFY_TAILNET_IPV4, "user": COMFY_SSH_USER},
 }
 WORKER_ENTRYPOINT = ("python", "-m", "project_pipeline.autonomy_runtime.worker_entrypoint")
+ACQUIRED_WORKSPACE_FILES = frozenset(
+    {"junit.xml", "artifact_manifest.json", "useful_artifact.json"}
+)
 
 
 def parse_worker_stdout(stdout: str) -> dict[str, Any]:
@@ -281,6 +284,43 @@ class SshDispatchAdapter:
             connect_timeout=connect_timeout,
             runner=runner,
         )
+
+    def acquire_workspace_file(
+        self, working_directory: Path, name: str, dest: Path
+    ) -> bytes | None:
+        """Copy one job output file back and return its bytes. Does not trust stdout hashes."""
+
+        if self.runner is not None or name not in ACQUIRED_WORKSPACE_FILES:
+            return None
+        try:
+            reject_unsafe_string(str(working_directory), field="workspace")
+        except ConfinementError:
+            return None
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        remote = f"{self.user}@{self.host}:{Path(working_directory).as_posix()}/{name}"
+        completed = subprocess.run(
+            [
+                "scp",
+                "-i",
+                str(self.identity),
+                "-o",
+                "IdentitiesOnly=yes",
+                "-o",
+                "BatchMode=yes",
+                "-o",
+                f"ConnectTimeout={self.connect_timeout}",
+                remote,
+                str(dest),
+            ],
+            capture_output=True,
+            check=False,
+            shell=False,
+            timeout=45,
+            env=self._ssh_env(),
+        )
+        if completed.returncode != 0 or not dest.is_file():
+            return None
+        return dest.read_bytes()
 
     def _ssh_env(self) -> dict[str, str]:
         allowed = {item.upper() for item in SSH_CLIENT_ENV_KEYS}

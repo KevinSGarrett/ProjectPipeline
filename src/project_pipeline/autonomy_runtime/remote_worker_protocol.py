@@ -188,6 +188,16 @@ def _deadline_passed(raw: object) -> bool:
     return datetime.now(UTC) > deadline
 
 
+def _remaining_deadline_seconds(raw: object) -> int:
+    if not raw:
+        return 1
+    try:
+        deadline = datetime.fromisoformat(str(raw).replace("Z", "+00:00"))
+        return max(1, int((deadline.astimezone(UTC) - datetime.now(UTC)).total_seconds()))
+    except ValueError:
+        return 1
+
+
 def _load_cache(path: Path, identity: str) -> dict[str, Any] | None:
     if not path.is_file():
         return None
@@ -242,6 +252,13 @@ def _complete_worker_claim(cache: Path, claim: Path, result: dict[str, Any]) -> 
     result = dict(result)
     result["claim_state"] = WORKER_CLAIM_COMPLETE
     _store_cache(cache, result)
+    with suppress(OSError):
+        claim.unlink()
+
+
+def _release_worker_claim(claim: Path | None) -> None:
+    if claim is None:
+        return
     with suppress(OSError):
         claim.unlink()
 
@@ -371,7 +388,8 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
             return claimed["result"]
         if not claimed.get("ok"):
             return _fail(str(claimed.get("reason") or "worker_claim_failed"))
-        claim = claimed.get("claim")
+        claim_path = claimed.get("claim")
+        claim = claim_path if isinstance(claim_path, Path) else None
     own = _record_running_ownership(payload)
 
     def _child_started(pid: int, creation: str | None) -> None:
@@ -387,89 +405,90 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
         )
         _store_cache(own, recorded)
 
-    nested = payload.get("nested_env") if isinstance(payload.get("nested_env"), dict) else {}
-    env = os.environ.copy()
-    for key, value in nested.items():
-        if str(key) in NESTED_POOL_KEYS:
-            env[str(key)] = str(value)
-    env = _bound_job_env(env)
-    argv = _resolve_job_python(argv)
     try:
-        cpu = int(payload.get("cpu_ceiling") or 0)
-        memory_mb = int(payload.get("memory_mb_ceiling") or 0)
-    except (TypeError, ValueError):
-        return _fail("invalid_limits")
-    if cpu < 1 or memory_mb < 1:
-        return _fail("invalid_limits")
-    Path(workspace).mkdir(parents=True, exist_ok=True)
-    consumed: dict[str, Any] | None = None
-    pack = payload.get("context_pack")
-    if pack is not None or payload.get("pack_sha256") or payload.get("require_context_consumption"):
-        pack_path = Path(workspace) / "context_pack.json"
-        if isinstance(pack, dict):
-            write_pack(Path(workspace), pack)
-        consumed = consume_pack_on_worker({**payload, "pack_path": str(pack_path)})
-        if not consumed.get("ok"):
-            return _fail(str(consumed.get("reason") or "pack_unconsumed"))
-    remaining = 1
-    raw_deadline = payload.get("deadline_utc")
-    if raw_deadline:
+        nested = payload.get("nested_env") if isinstance(payload.get("nested_env"), dict) else {}
+        env = os.environ.copy()
+        for key, value in nested.items():
+            if str(key) in NESTED_POOL_KEYS:
+                env[str(key)] = str(value)
+        env = _bound_job_env(env)
+        argv = _resolve_job_python(argv)
         try:
-            deadline = datetime.fromisoformat(str(raw_deadline).replace("Z", "+00:00"))
-            remaining = max(1, int((deadline.astimezone(UTC) - datetime.now(UTC)).total_seconds()))
-        except ValueError:
-            remaining = 1
-    env.update(nested_pool_env(max(1, cpu)))
-    try:
-        completed, enforced = _spawn_enforced(
-            argv=argv,
-            workspace=Path(workspace),
-            env=env,
-            cpu_ceiling=max(1, cpu),
-            memory_mb_ceiling=max(1, memory_mb),
-            deadline_seconds=remaining,
-            on_started=_child_started,
+            cpu = int(payload.get("cpu_ceiling") or 0)
+            memory_mb = int(payload.get("memory_mb_ceiling") or 0)
+        except (TypeError, ValueError):
+            return _fail("invalid_limits")
+        if cpu < 1 or memory_mb < 1:
+            return _fail("invalid_limits")
+        Path(workspace).mkdir(parents=True, exist_ok=True)
+        consumed: dict[str, Any] | None = None
+        pack = payload.get("context_pack")
+        if (
+            pack is not None
+            or payload.get("pack_sha256")
+            or payload.get("require_context_consumption")
+        ):
+            pack_path = Path(workspace) / "context_pack.json"
+            if isinstance(pack, dict):
+                write_pack(Path(workspace), pack)
+            consumed = consume_pack_on_worker({**payload, "pack_path": str(pack_path)})
+            if not consumed.get("ok"):
+                return _fail(str(consumed.get("reason") or "pack_unconsumed"))
+        remaining = _remaining_deadline_seconds(payload.get("deadline_utc"))
+        env.update(nested_pool_env(max(1, cpu)))
+        try:
+            completed, enforced = _spawn_enforced(
+                argv=argv,
+                workspace=Path(workspace),
+                env=env,
+                cpu_ceiling=max(1, cpu),
+                memory_mb_ceiling=max(1, memory_mb),
+                deadline_seconds=remaining,
+                on_started=_child_started,
+            )
+        except ResourceLimitError as error:
+            return _fail(str(error))
+        except subprocess.TimeoutExpired:
+            return _fail("deadline_enforced", extra={"timed_out": True})
+        child_pid = int(enforced.get("pid") or 0)
+        creation_time = enforced.get("creation_time")
+        mechanism = enforced.get("mechanism")
+        stdout = completed.stdout or ""
+        stderr = completed.stderr or ""
+        truncated = bool(
+            getattr(completed, "output_truncated", False) or enforced.get("output_truncated")
         )
-    except ResourceLimitError as error:
-        return _fail(str(error))
-    except subprocess.TimeoutExpired:
-        return _fail("deadline_enforced", extra={"timed_out": True})
-    child_pid = int(enforced.get("pid") or 0)
-    creation_time = enforced.get("creation_time")
-    mechanism = enforced.get("mechanism")
-    stdout = completed.stdout or ""
-    stderr = completed.stderr or ""
-    truncated = bool(
-        getattr(completed, "output_truncated", False) or enforced.get("output_truncated")
-    )
-    if truncated:
-        stderr = (stderr + "\n[truncated:output_limit]").strip()
-    worker_pid = os.getpid()
-    result = {
-        "ok": completed.returncode == 0 and not truncated,
-        "exit_code": completed.returncode,
-        "stdout": stdout,
-        "stderr": stderr,
-        "pid": worker_pid,
-        "child_pid": child_pid,
-        "creation_time": creation_time,
-        "output_sha256": hashlib.sha256(stdout.encode("utf-8")).hexdigest(),
-        "job_id": job_id,
-        "input_sha256": input_sha256,
-        "fence": str(payload.get("fence") or ""),
-        "principal": str(payload.get("principal") or ""),
-        "source_sha": str(payload.get("source_sha") or ""),
-        "source_tree": str(payload.get("source_tree") or ""),
-        "overlay_sha256": str(payload.get("overlay_sha256") or ""),
-        "limit_mechanism": mechanism,
-        "duplicate": False,
-        "truncated": truncated,
-        "authority_identity": identity,
-        "context_consumption": consumed,
-    }
-    if cache is not None and claim is not None:
-        _complete_worker_claim(cache, Path(str(claim)), result)
-    return result
+        if truncated:
+            stderr = (stderr + "\n[truncated:output_limit]").strip()
+        worker_pid = os.getpid()
+        result = {
+            "ok": completed.returncode == 0 and not truncated,
+            "exit_code": completed.returncode,
+            "stdout": stdout,
+            "stderr": stderr,
+            "pid": worker_pid,
+            "child_pid": child_pid,
+            "creation_time": creation_time,
+            "output_sha256": hashlib.sha256(stdout.encode("utf-8")).hexdigest(),
+            "job_id": job_id,
+            "input_sha256": input_sha256,
+            "fence": str(payload.get("fence") or ""),
+            "principal": str(payload.get("principal") or ""),
+            "source_sha": str(payload.get("source_sha") or ""),
+            "source_tree": str(payload.get("source_tree") or ""),
+            "overlay_sha256": str(payload.get("overlay_sha256") or ""),
+            "limit_mechanism": mechanism,
+            "duplicate": False,
+            "truncated": truncated,
+            "authority_identity": identity,
+            "context_consumption": consumed,
+        }
+        if cache is not None and claim is not None:
+            _complete_worker_claim(cache, claim, result)
+            claim = None
+        return result
+    finally:
+        _release_worker_claim(claim)
 
 
 def _ownership_records(workspace: str, job_id: str) -> list[dict[str, Any]]:

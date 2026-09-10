@@ -549,7 +549,9 @@ def test_observation_evaluator_fails_when_hour_elapsed_without_recovery() -> Non
     )
 
 
-def test_observation_evaluator_requires_recovered_accepted_work_and_coverage() -> None:
+def test_observation_evaluator_requires_recovered_accepted_work_and_coverage(
+    tmp_path: Path,
+) -> None:
     matching = {
         "duration_met": True,
         "wall_seconds": 3600.0,
@@ -574,6 +576,12 @@ def test_observation_evaluator_requires_recovered_accepted_work_and_coverage() -
     matching["fault"]["recovered_output_accepted"] = True
     matching["fault"]["unaffected_lane_progress"] = True
     matching["fault"]["controller_restarted"] = True
+    xeon_bytes = b"<testsuite tests='1' name='xeon'/>"
+    comfy_bytes = b"<testsuite tests='1' name='comfy'/>"
+    xeon_path = tmp_path / "xeon.xml"
+    comfy_path = tmp_path / "comfy.xml"
+    xeon_path.write_bytes(xeon_bytes)
+    comfy_path.write_bytes(comfy_bytes)
     matching["completed_jobs"] = [
         {
             "results": [
@@ -581,14 +589,16 @@ def test_observation_evaluator_requires_recovered_accepted_work_and_coverage() -
                     "outcome": "ACCEPTED",
                     "task_id": "PP-TASK-000516",
                     "tests_run": 1,
-                    "artifact_sha256": "a" * 64,
+                    "artifact_sha256": hashlib.sha256(xeon_bytes).hexdigest(),
+                    "acquired_junit_path": str(xeon_path),
                     "host_id": "WIN-EVSH1DN8H5O",
                 },
                 {
                     "outcome": "ACCEPTED",
                     "task_id": "PP-TASK-000521",
                     "tests_run": 1,
-                    "artifact_sha256": "b" * 64,
+                    "artifact_sha256": hashlib.sha256(comfy_bytes).hexdigest(),
+                    "acquired_junit_path": str(comfy_path),
                     "host_id": "COMFY-V4-CPU-01",
                 },
             ]

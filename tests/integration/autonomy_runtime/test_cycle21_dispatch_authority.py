@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import hashlib
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
+from project_pipeline.autonomy_runtime.context_validation import NATIVE_PASS, job_input_digest
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.remote_job import (
     RemoteJobController,
@@ -225,3 +227,58 @@ def test_consume_context_requires_identity(tmp_path: Path) -> None:
         result = run_envelope(payload)
     assert result["ok"] is False
     assert result["reason"] in {"authority_missing", "authority_unverified"}
+
+
+def test_store_requires_artifact_bytes_when_contract_set(tmp_path: Path) -> None:
+    store = FleetJobStore(tmp_path / "jobs.sqlite3")
+    body = b"<testsuite tests='1'/>"
+    contract = hashlib.sha256(body).hexdigest()
+    env = _envelope(tmp_path, "artifact-bytes", output_contract_sha256=contract)
+    store.persist_intent(env.model_dump(mode="json"), now=NOW)
+    result = RemoteJobResult(
+        job_id=env.job_id,
+        host_id=env.host_id,
+        fence=env.fence,
+        exit_code=0,
+        stdout_sha256="1" * 64,
+        stderr_sha256="2" * 64,
+        output_sha256=contract,
+    )
+    controller = RemoteJobController(store=store, require_intent=True)
+    missing = controller.accept(env, result, expected_host=HOST, now=NOW)
+    assert missing["outcome"] == "REJECTED"
+    assert missing["reason"] == "artifact_bytes_required"
+    echoed = controller.accept(
+        env, result, expected_host=HOST, now=NOW, artifact_bytes=b"not-the-junit"
+    )
+    assert echoed["reason"] == "output_tamper"
+    accepted = controller.accept(env, result, expected_host=HOST, now=NOW, artifact_bytes=body)
+    assert accepted["outcome"] == "ACCEPTED"
+
+
+def test_prelaunch_pack_failure_releases_claim_for_retry(tmp_path: Path) -> None:
+    env = _envelope(tmp_path, "pack-retry")
+    pack_sha = "c" * 64
+    digest = job_input_digest(
+        task_id=env.job_id,
+        source_sha=SHA,
+        source_tree=TREE,
+        overlay_sha256="c" * 64,
+        pack_sha256=pack_sha,
+        selection=(NATIVE_PASS,),
+    )
+    payload = env.model_dump(mode="json")
+    payload["argv"] = list(env.argv)
+    payload["require_context_consumption"] = True
+    payload["pack_sha256"] = pack_sha
+    payload["input_sha256"] = digest
+    with patch(
+        "project_pipeline.autonomy_runtime.remote_worker_protocol.local_runtime_identity",
+        return_value=_identity(),
+    ):
+        first = run_envelope(payload)
+        second = run_envelope(payload)
+    assert first["ok"] is False
+    assert first["reason"] == "pack_missing"
+    assert second["reason"] != "unresolved_in_flight"
+    assert second["reason"] == "pack_missing"

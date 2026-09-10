@@ -2,13 +2,17 @@
 
 from __future__ import annotations
 
+import hashlib
+import re
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 
 EXECUTABLE_USEFUL_PREFIX = "PP-TASK-"
 SMOKE_USEFUL_PREFIX = "PP-STORY-"
 XEON_MACHINE_ID = "WIN-EVSH1DN8H5O"
 COMFY_MACHINE_ID = "COMFY-V4-CPU-01"
+_ARTIFACT_SHA = re.compile(r"^[a-f0-9]{64}$")
 
 
 def _parse_utc(value: object) -> datetime | None:
@@ -57,6 +61,16 @@ def _accepted_jobs(jobs: list[Any]) -> list[dict[str, Any]]:
                 continue
             accepted.append(item)
     return accepted
+
+
+def _verified_acquired_artifact(item: dict[str, Any]) -> str | None:
+    digest = str(item.get("artifact_sha256") or item.get("junit_sha256") or "")
+    path = Path(str(item.get("acquired_junit_path") or ""))
+    if not _ARTIFACT_SHA.fullmatch(digest) or not path.is_file():
+        return None
+    if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+        return None
+    return digest
 
 
 def evaluate_observation(
@@ -118,7 +132,7 @@ def evaluate_observation(
             if task_id.startswith(SMOKE_USEFUL_PREFIX):
                 smoke = True
             tests_run = int(item.get("tests_run") or item.get("collected") or 0)
-            artifact = str(item.get("artifact_sha256") or item.get("junit_sha256") or "")
+            artifact = _verified_acquired_artifact(item)
             if (
                 task_id.startswith(EXECUTABLE_USEFUL_PREFIX)
                 and str(item.get("outcome") or "") == "ACCEPTED"
