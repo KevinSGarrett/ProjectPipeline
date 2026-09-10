@@ -97,11 +97,11 @@ BINDINGS = {
         ),
         "required_tests": (NATIVE_PASS,),
     },
-    "PP-TASK-C21-VALIDATE-XEON": {
+    "PP-TASK-000990": {
         "implementation_paths": ("src/project_pipeline/autonomy_runtime/context_validation.py",),
         "required_tests": (NATIVE_PASS,),
     },
-    "PP-TASK-C21-VALIDATE-COMFY": {
+    "PP-TASK-000991": {
         "implementation_paths": ("src/project_pipeline/autonomy_runtime/context_validation.py",),
         "required_tests": (NATIVE_PASS,),
     },
