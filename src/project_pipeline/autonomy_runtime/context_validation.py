@@ -222,6 +222,7 @@ def execute_native_tests(
     output_dir: Path,
     python_executable: str | None = None,
 ) -> dict[str, Any]:
+    output_dir = Path(output_dir).expanduser().resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     junit = output_dir / "junit.xml"
     interpreter = python_executable or sys.executable
