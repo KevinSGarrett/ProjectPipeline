@@ -274,14 +274,15 @@ def run_loop(
     with SchedulerStore(database, root) as store:
         workflow = DispatchWorkflow(
             store=store,
-            jobs=FleetJobStore(database.with_name("fleet_jobs.sqlite3")),
+            jobs=FleetJobStore(_sidecar_path(database, "fleet_jobs.sqlite3")),
             profiles=profiles,
-            admission_path=database.with_name("fleet_admission.json"),
+            admission_path=_sidecar_path(database, "fleet_admission.json"),
             source_sha=source_sha,
             source_tree=source_tree,
             overlay_sha256=overlay_sha256,
             adapter_factory=lambda machine_id: _bind_adapter(adapter, str(machine_id)),
-            journal=journal or FleetLifecycleJournal(database.with_name("fleet_lifecycle.sqlite3")),
+            journal=journal
+            or FleetLifecycleJournal(_sidecar_path(database, "fleet_lifecycle.sqlite3")),
         )
         results = []
         remote = bool(getattr(adapter, "remote_host", False))
@@ -466,6 +467,11 @@ def run_available_work(
         "selected": _selected_job_ids(completed),
         "blocked": blocked,
     }
+
+
+def _sidecar_path(database: Path, suffix: str) -> Path:
+    database = Path(database)
+    return database.with_name(f"{database.stem}.{suffix}")
 
 
 def _observation_dir(root: Path) -> Path:
@@ -663,10 +669,11 @@ def _fault_owned_hold_job(
     machine_id: str = XEON_MACHINE_ID,
     scheduler: SchedulerStore | None = None,
 ) -> dict[str, Any]:
-    job_id = "C21-OWNED-FAULT"
+    stamp = now.astimezone(UTC).strftime("%Y%m%dT%H%M%SZ")
+    job_id = f"C21-OWNED-FAULT-{stamp}"
     hold = REMOTE_HOLD_SCRIPTS[machine_id]
-    lease_id = "C21-OWNED-FAULT-LEASE"
-    fence = "owned-fault-1"
+    lease_id = f"{job_id}-LEASE"
+    fence = f"owned-fault-{stamp}"
     if scheduler is not None:
         bundle = scheduler.acquire_bundle(
             task_id=job_id,
@@ -869,7 +876,7 @@ def run_observation(
     completed_jobs: list[dict[str, Any]] = []
     principal = r"win-evsh1dn8h5o\kines"
     db = _observation_database(root, database, live_ssh=live_ssh, out=out)
-    journal = FleetLifecycleJournal(Path(db).with_name("fleet_lifecycle.sqlite3"))
+    journal = FleetLifecycleJournal(_sidecar_path(Path(db), "fleet_lifecycle.sqlite3"))
     live_machine = XEON_MACHINE_ID
     inventories: dict[str, dict[str, Any]] = {}
     if live_ssh:
@@ -898,7 +905,7 @@ def run_observation(
         workspace = out / "jobs"
         workspace.mkdir(exist_ok=True)
         profiles = _xeon_profiles(when=started)
-    admission_path = Path(db).with_name("fleet_admission.json")
+    admission_path = _sidecar_path(Path(db), "fleet_admission.json")
     existing = (
         load_admission_record(admission_path)
         or load_admission_record(root / ".local" / "state" / "fleet_admission.json")
@@ -962,7 +969,7 @@ def run_observation(
         completed_jobs[0] if completed_jobs else {"selected": [], "results": [], "next_job": None}
     )
     selected_job = (first.get("selected") or ["none"])[0]
-    jobs_store = FleetJobStore(Path(db).with_name("fleet_jobs.sqlite3"))
+    jobs_store = FleetJobStore(_sidecar_path(Path(db), "fleet_jobs.sqlite3"))
     sha = str(identity.get("sha") or "").strip().lower()
     tree = str(identity.get("tree") or "").strip().lower()
     overlay_digest = str(overlay.get("digest") or "")
@@ -1185,7 +1192,7 @@ def run_production(*, root: Path, database: Path | None = None) -> dict[str, Any
         }
     adapter = SshDispatchAdapter.for_machine(chosen.machine_id)
     workspace = Path(REMOTE_JOB_WORKSPACES[chosen.machine_id])
-    admission_path = Path(db).with_name("fleet_admission.json")
+    admission_path = _sidecar_path(Path(db), "fleet_admission.json")
     existing = load_admission_record(admission_path) or {}
     write_admission_record(
         admission_path,

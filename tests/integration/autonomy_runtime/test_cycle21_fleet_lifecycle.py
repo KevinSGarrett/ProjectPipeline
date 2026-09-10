@@ -14,6 +14,7 @@ from project_pipeline.autonomy_runtime.fleet_loop import (
     _cli_status_from_process,
     _fault_owned_hold_job,
     _machine_for_task,
+    _sidecar_path,
     _zero_exit,
     choose_measured_worker,
     cycle_owned_validation_jobs,
@@ -308,3 +309,16 @@ def test_integer_zero_recovered_exit_reaches_accept(tmp_path: Path) -> None:
     assert adapter.execute_calls == 1
     assert fault["recovered_output_accepted"] is True
     assert fault["recovered"] is True
+
+
+def test_observation_sidecars_include_database_stem(tmp_path: Path) -> None:
+    first = tmp_path / "cycle21_allup_a.sqlite3"
+    second = tmp_path / "cycle21_allup_b.sqlite3"
+    assert _sidecar_path(first, "fleet_jobs.sqlite3") != _sidecar_path(second, "fleet_jobs.sqlite3")
+    assert _sidecar_path(first, "fleet_jobs.sqlite3").name == "cycle21_allup_a.fleet_jobs.sqlite3"
+
+
+def test_owned_fault_job_id_is_attempt_specific() -> None:
+    source = inspect.getsource(_fault_owned_hold_job)
+    assert "C21-OWNED-FAULT-{stamp}" in source
+    assert 'job_id = "C21-OWNED-FAULT"' not in source
