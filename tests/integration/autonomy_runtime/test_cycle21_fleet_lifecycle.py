@@ -9,14 +9,18 @@ from pathlib import Path
 
 import pytest
 
+from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.fleet_loop import (
     _cli_status_from_process,
+    _fault_owned_hold_job,
     _machine_for_task,
+    _zero_exit,
     choose_measured_worker,
     cycle_owned_validation_jobs,
     observation_ready_task_ids,
     run_observation,
 )
+from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.managed_worker import classify_live_managed_worker
 from project_pipeline.autonomy_runtime.observation_eval import evaluate_observation
 from project_pipeline.domain.identifiers import IdentifierKind, validate_identifier
@@ -243,3 +247,64 @@ def test_fleet_loop_status_and_run_write_json_output(tmp_path: Path) -> None:
     source = inspect.getsource(fleet_loop_main)
     assert "_persist_json_output(args.json_output, result)" in source
     assert source.count("_persist_json_output(args.json_output") >= 3
+
+
+def test_integer_zero_exit_is_success() -> None:
+    assert _zero_exit(0) is True
+    assert _zero_exit("0") is True
+    assert _zero_exit(None) is False
+    assert _zero_exit(1) is False
+
+
+class _RecoverAdapter:
+    def __init__(self, exit_code: object) -> None:
+        self.exit_code = exit_code
+        self.execute_calls = 0
+
+    def start_job(self, **kwargs: object) -> object:
+        del kwargs
+        return object()
+
+    def read_started_record(self, process: object, timeout_seconds: int = 30) -> dict[str, object]:
+        del process, timeout_seconds
+        return {
+            "ok": True,
+            "pid": 11,
+            "child_pid": 11,
+            "creation_time": "1",
+            "child_creation_time": "1",
+        }
+
+    def kill_pid(self, pid: int, **kwargs: object) -> dict[str, object]:
+        del pid, kwargs
+        return {"ok": True, "killed": True, "exit_code": 0}
+
+    def execute(self, **kwargs: object) -> dict[str, object]:
+        del kwargs
+        self.execute_calls += 1
+        return {
+            "exit_code": self.exit_code,
+            "stdout": "recovered",
+            "stderr": "",
+            "payload_sha256": "a" * 64,
+        }
+
+
+def test_integer_zero_recovered_exit_reaches_accept(tmp_path: Path) -> None:
+    store = FleetJobStore(tmp_path / "jobs.sqlite3")
+    journal = FleetLifecycleJournal(tmp_path / "journal.sqlite3")
+    adapter = _RecoverAdapter(0)
+    fault = _fault_owned_hold_job(
+        adapter=adapter,  # type: ignore[arg-type]
+        store=store,
+        journal=journal,
+        workspace=tmp_path,
+        source_sha="a" * 40,
+        source_tree="b" * 40,
+        overlay_sha256="c" * 64,
+        principal=r"win-evsh1dn8h5o\kines",
+        now=NOW,
+    )
+    assert adapter.execute_calls == 1
+    assert fault["recovered_output_accepted"] is True
+    assert fault["recovered"] is True

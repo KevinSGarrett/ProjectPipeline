@@ -626,6 +626,13 @@ def _measured_hosts(inventories: dict[str, dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _zero_exit(value: object) -> bool:
+    try:
+        return int(value) == 0
+    except (TypeError, ValueError):
+        return False
+
+
 def _owned_fault_event(
     envelope: RemoteJobEnvelope, *, status: str, remote_pid: object | None = None
 ) -> dict[str, Any]:
@@ -781,7 +788,7 @@ def _fault_owned_hold_job(
             job_id=recovered_env.job_id,
             input_sha256=recovered_env.input_sha256,
         )
-        recovered_output = int(recovered_run.get("exit_code") or 1) == 0
+        recovered_output = _zero_exit(recovered_run.get("exit_code"))
         stdout = str(recovered_run.get("stdout") or "")
         stderr = str(recovered_run.get("stderr") or "")
         output_sha256 = str(
