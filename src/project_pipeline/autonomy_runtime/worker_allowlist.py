@@ -48,14 +48,16 @@ HOST_PYTHON_EXECUTABLES = {
 
 
 def worker_launch_argv(machine_id: str) -> tuple[str, ...]:
-    """Return the fixed remote worker executable and ProgramData script."""
+    """Return PATH python plus the ProgramData worker script.
+
+    SSH remote argv is executed by Windows OpenSSH through cmd.exe and cannot
+    carry an unquoted user-profile interpreter path that contains spaces. The
+    declared host interpreter remains HOST_PYTHON_EXECUTABLES for job pytest.
+    """
 
     script = REMOTE_WORKER_SCRIPTS.get(machine_id)
     if not script:
         raise ValueError("worker_script_unresolved")
-    python_exe = HOST_PYTHON_EXECUTABLES.get(machine_id)
-    if python_exe:
-        return (python_exe, script)
     return ("python", script)
 
 

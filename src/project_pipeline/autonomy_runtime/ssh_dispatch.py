@@ -445,7 +445,12 @@ class SshDispatchAdapter:
                 return parsed
             if parsed.get("ok") is False:
                 return parsed
-        return parse_worker_stdout(buf)
+        parsed = parse_worker_stdout(buf)
+        if _is_running_started_record(parsed):
+            return parsed
+        if parsed.get("ok") is False:
+            return parsed
+        return {"ok": False, "reason": "pid_not_observed"}
 
     def read_started_pid(
         self, process: subprocess.Popen[str], *, timeout_seconds: int = 12
