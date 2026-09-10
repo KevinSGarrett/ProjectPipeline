@@ -143,9 +143,75 @@ def test_stdout_only_forged_artifact_fails() -> None:
     assert "useful_work_missing" in result["reasons"]
 
 
+def test_attribute_only_junit_is_not_useful_work(tmp_path: Path) -> None:
+    forged = _acquired_junit(tmp_path / "forged.xml", b"<testsuite tests='1' name='forged'/>")
+    payload = {
+        "duration_met": True,
+        "wall_seconds": 3600,
+        "source": {"sha": SHA, "tree": TREE},
+        "overlay": {"digest": "c" * 64},
+        "heartbeats": [
+            {"at_utc": datetime(2026, 9, 10, 3, i, tzinfo=UTC).isoformat()} for i in range(60)
+        ],
+        "fault": {
+            "recovered": True,
+            "killed": True,
+            "owned_job_id": "C21-OWNED-FAULT",
+            "intent_preserved": True,
+            "reconcile_reason": "owned_worker_killed",
+            "recovered_output_accepted": True,
+            "unaffected_lane_progress": True,
+            "controller_restarted": True,
+        },
+        "completed_jobs": [
+            {
+                "results": [
+                    {
+                        "task_id": "PP-TASK-000521",
+                        "outcome": "ACCEPTED",
+                        "tests_run": 1,
+                        "host_id": "WIN-EVSH1DN8H5O",
+                        **forged,
+                    },
+                    {
+                        "task_id": "PP-TASK-000518",
+                        "outcome": "ACCEPTED",
+                        "tests_run": 1,
+                        "host_id": "COMFY-V4-CPU-01",
+                        **forged,
+                    },
+                ]
+            }
+        ],
+        "resources": {
+            "peak_ram_mb": 1024,
+            "scratch_bytes": 2048,
+            "transfer_seconds": 12.5,
+            "concurrency": 2,
+        },
+        "cli_ui_independent": True,
+    }
+    result = evaluate_observation(
+        payload,
+        expected_source_sha=SHA,
+        expected_source_tree=TREE,
+        expected_overlay_sha256="c" * 64,
+    )
+    assert result["ok"] is False
+    assert "useful_work_missing" in result["reasons"]
+
+
 def test_valid_observation_shape_can_pass(tmp_path: Path) -> None:
-    xeon = _acquired_junit(tmp_path / "xeon.xml", b"<testsuite tests='1' name='xeon'/>")
-    comfy = _acquired_junit(tmp_path / "comfy.xml", b"<testsuite tests='1' name='comfy'/>")
+    xeon = _acquired_junit(
+        tmp_path / "xeon.xml",
+        b"<testsuite tests='1' failures='0' errors='0' skipped='0'>"
+        b"<testcase classname='cycle21' name='xeon'/></testsuite>",
+    )
+    comfy = _acquired_junit(
+        tmp_path / "comfy.xml",
+        b"<testsuite tests='1' failures='0' errors='0' skipped='0'>"
+        b"<testcase classname='cycle21' name='comfy'/></testsuite>",
+    )
     heartbeats = [
         {"at_utc": datetime(2026, 9, 10, 3, i, tzinfo=UTC).isoformat()} for i in range(60)
     ]

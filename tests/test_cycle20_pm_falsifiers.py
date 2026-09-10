@@ -82,6 +82,10 @@ def _envelope(tmp_path: Path, name: str, **changes: object) -> RemoteJobEnvelope
 class FakeRemote:
     remote_host = True
     machine_id = "COMFY-V4-CPU-01"
+    _junit = (
+        b"<testsuite tests='1' failures='0' errors='0' skipped='0'>"
+        b"<testcase classname='cycle21' name='native_pass'/></testsuite>"
+    )
 
     def execute(self, **_kwargs: object) -> dict[str, object]:
         return dict(
@@ -91,7 +95,18 @@ class FakeRemote:
             stderr_sha256="2" * 64,
             payload_sha256="3" * 64,
             remote_pid="FIXTURE_ONLY",
+            context_consumption={"ok": True, "worker_id": "fixture:1", "status": "CONSUMED"},
         )
+
+    def acquire_workspace_file(
+        self, working_directory: Path, name: str, dest: Path
+    ) -> bytes | None:
+        del working_directory
+        if name != "junit.xml":
+            return None
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(self._junit)
+        return self._junit
 
 
 def test_wire_includes_authority_and_rejects_nested_env_as_enforcement(
@@ -576,8 +591,14 @@ def test_observation_evaluator_requires_recovered_accepted_work_and_coverage(
     matching["fault"]["recovered_output_accepted"] = True
     matching["fault"]["unaffected_lane_progress"] = True
     matching["fault"]["controller_restarted"] = True
-    xeon_bytes = b"<testsuite tests='1' name='xeon'/>"
-    comfy_bytes = b"<testsuite tests='1' name='comfy'/>"
+    xeon_bytes = (
+        b"<testsuite tests='1' failures='0' errors='0' skipped='0'>"
+        b"<testcase classname='cycle21' name='xeon'/></testsuite>"
+    )
+    comfy_bytes = (
+        b"<testsuite tests='1' failures='0' errors='0' skipped='0'>"
+        b"<testcase classname='cycle21' name='comfy'/></testsuite>"
+    )
     xeon_path = tmp_path / "xeon.xml"
     comfy_path = tmp_path / "comfy.xml"
     xeon_path.write_bytes(xeon_bytes)

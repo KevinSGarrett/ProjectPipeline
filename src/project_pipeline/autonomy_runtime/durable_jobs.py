@@ -296,12 +296,13 @@ class FleetJobStore:
                 db.execute("COMMIT")
                 return {"outcome": "REJECTED", "reason": "nonzero_exit"}
             contract = str(stored.get("output_contract_sha256") or "")
-            if contract:
+            require_bytes = bool(contract) or bool(stored.get("require_context_consumption"))
+            if require_bytes:
                 if artifact_bytes is None:
                     db.execute("COMMIT")
                     return {"outcome": "REJECTED", "reason": "artifact_bytes_required"}
                 actual_output = digest_bytes(artifact_bytes)
-                if actual_output != contract:
+                if contract and actual_output != contract:
                     db.execute("COMMIT")
                     return {"outcome": "REJECTED", "reason": "output_tamper"}
                 result = dict(result)

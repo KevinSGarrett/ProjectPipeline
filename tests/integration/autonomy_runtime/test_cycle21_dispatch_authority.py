@@ -256,6 +256,25 @@ def test_store_requires_artifact_bytes_when_contract_set(tmp_path: Path) -> None
     assert accepted["outcome"] == "ACCEPTED"
 
 
+def test_store_requires_artifact_bytes_for_context_jobs(tmp_path: Path) -> None:
+    store = FleetJobStore(tmp_path / "jobs.sqlite3")
+    env = _envelope(tmp_path, "context-bytes", require_context_consumption=True)
+    store.persist_intent(env.model_dump(mode="json"), now=NOW)
+    result = RemoteJobResult(
+        job_id=env.job_id,
+        host_id=env.host_id,
+        fence=env.fence,
+        exit_code=0,
+        stdout_sha256="1" * 64,
+        stderr_sha256="2" * 64,
+        output_sha256="3" * 64,
+    )
+    missing = RemoteJobController(store=store, require_intent=True).accept(
+        env, result, expected_host=HOST, now=NOW
+    )
+    assert missing["reason"] == "artifact_bytes_required"
+
+
 def test_prelaunch_pack_failure_releases_claim_for_retry(tmp_path: Path) -> None:
     env = _envelope(tmp_path, "pack-retry")
     pack_sha = "c" * 64

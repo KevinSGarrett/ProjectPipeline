@@ -316,14 +316,16 @@ class RemoteJobController:
             return {"outcome": "REJECTED", "reason": "late_result"}
         if int(result.exit_code) != 0:
             return {"outcome": "REJECTED", "reason": "nonzero_exit"}
-        if envelope.output_contract_sha256 and artifact_bytes is None:
+        require_bytes = (
+            bool(envelope.output_contract_sha256) or envelope.require_context_consumption
+        )
+        if require_bytes and artifact_bytes is None:
             return {"outcome": "REJECTED", "reason": "artifact_bytes_required"}
-        if envelope.output_contract_sha256:
-            actual = result.output_sha256
-            if artifact_bytes is not None:
-                actual = hashlib.sha256(artifact_bytes).hexdigest()
-            if actual != envelope.output_contract_sha256:
+        if artifact_bytes is not None:
+            actual = hashlib.sha256(artifact_bytes).hexdigest()
+            if envelope.output_contract_sha256 and actual != envelope.output_contract_sha256:
                 return {"outcome": "REJECTED", "reason": "output_tamper"}
+            result = result.model_copy(update={"output_sha256": actual})
         existing = self._accepted.get(envelope.job_id)
         if existing is not None:
             if (

@@ -11,9 +11,10 @@ from project_pipeline.autonomy_runtime.context_validation import (
     compile_validation_pack,
     consume_pack_on_worker,
     job_input_digest,
+    junit_case_counts_from_bytes,
     write_pack,
 )
-from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
+from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore, digest_bytes
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
 from project_pipeline.autonomy_runtime.ssh_dispatch import SshDispatchAdapter, job_stdout_metrics
@@ -25,6 +26,19 @@ from project_pipeline.scheduler.fleet import (
     select_target,
 )
 from project_pipeline.scheduler.persistence import SchedulerStore
+
+
+def _acquire_job_artifact(adapter: Any, workspace: str, dest: Path) -> bytes | None:
+    acquire = getattr(adapter, "acquire_workspace_file", None)
+    if callable(acquire):
+        return acquire(Path(workspace), "junit.xml", dest)
+    local = Path(workspace) / "junit.xml"
+    if local.is_file():
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        payload = local.read_bytes()
+        dest.write_bytes(payload)
+        return payload
+    return None
 
 
 class DispatchWorkflow:
@@ -326,10 +340,28 @@ class DispatchWorkflow:
                     "remote_pid": str(executed.get("remote_pid") or ""),
                 }
             )
+        acquired_dest = Path(self.jobs.database).parent / "acquired" / task_id / "junit.xml"
+        artifact_bytes = _acquire_job_artifact(worker, workspace, acquired_dest)
+        collected, failed, skipped = (
+            junit_case_counts_from_bytes(artifact_bytes) if artifact_bytes else (0, 0, 0)
+        )
+        if artifact_bytes is None or collected < 1 or failed:
+            reason = (
+                "artifact_bytes_required" if artifact_bytes is None else "native_tests_unproven"
+            )
+            return {
+                "outcome": "REJECTED",
+                "reason": reason,
+                "lifecycle": "REJECTED",
+                "host_id": chosen.machine_id,
+                "lease_id": lease_id,
+                "fence": fence,
+            }
         accepted = controller.accept(
             envelope,
             executed["result"],
             expected_host=chosen.machine_id,
+            artifact_bytes=artifact_bytes,
             context_consumption=consumed
             if consumed is not None
             else executed.get("context_consumption"),
@@ -357,7 +389,10 @@ class DispatchWorkflow:
             "lease_id": lease_id,
             "fence": fence,
             "executed": executed,
-            "tests_run": executed.get("tests_run"),
-            "artifact_sha256": executed.get("artifact_sha256"),
-            "junit_sha256": executed.get("junit_sha256"),
+            "tests_run": collected,
+            "collected": collected,
+            "skipped": skipped,
+            "acquired_junit_path": str(acquired_dest),
+            "artifact_sha256": digest_bytes(artifact_bytes),
+            "junit_sha256": digest_bytes(artifact_bytes),
         }

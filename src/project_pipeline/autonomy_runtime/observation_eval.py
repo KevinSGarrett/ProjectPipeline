@@ -8,6 +8,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.autonomy_runtime.context_validation import junit_case_counts
+
 EXECUTABLE_USEFUL_PREFIX = "PP-TASK-"
 SMOKE_USEFUL_PREFIX = "PP-STORY-"
 XEON_MACHINE_ID = "WIN-EVSH1DN8H5O"
@@ -68,8 +70,16 @@ def _verified_acquired_artifact(item: dict[str, Any]) -> str | None:
     path = Path(str(item.get("acquired_junit_path") or ""))
     if not _ARTIFACT_SHA.fullmatch(digest) or not path.is_file():
         return None
-    if hashlib.sha256(path.read_bytes()).hexdigest() != digest:
+    payload = path.read_bytes()
+    if hashlib.sha256(payload).hexdigest() != digest:
         return None
+    collected, failed, skipped = junit_case_counts(path)
+    if collected < 1 or failed:
+        return None
+    if skipped and collected == skipped:
+        return None
+    item["tests_run"] = collected
+    item["collected"] = collected
     return digest
 
 
@@ -131,8 +141,8 @@ def evaluate_observation(
             task_id = str(item.get("task_id") or "")
             if task_id.startswith(SMOKE_USEFUL_PREFIX):
                 smoke = True
-            tests_run = int(item.get("tests_run") or item.get("collected") or 0)
             artifact = _verified_acquired_artifact(item)
+            tests_run = int(item.get("tests_run") or 0)
             if (
                 task_id.startswith(EXECUTABLE_USEFUL_PREFIX)
                 and str(item.get("outcome") or "") == "ACCEPTED"

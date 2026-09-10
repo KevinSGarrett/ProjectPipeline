@@ -91,6 +91,10 @@ def _run_kwargs(tmp_path: Path) -> dict[str, object]:
 class _RemoteAdapter:
     remote_host = True
     machine_id = "WIN-EVSH1DN8H5O"
+    _junit = (
+        b"<testsuite tests='1' failures='0' errors='0' skipped='0'>"
+        b"<testcase classname='cycle21' name='native_pass'/></testsuite>"
+    )
 
     def execute(self, **_kwargs: object) -> dict[str, object]:
         return {
@@ -106,6 +110,16 @@ class _RemoteAdapter:
                 "status": "CONSUMED",
             },
         }
+
+    def acquire_workspace_file(
+        self, working_directory: Path, name: str, dest: Path
+    ) -> bytes | None:
+        del working_directory
+        if name != "junit.xml":
+            return None
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_bytes(self._junit)
+        return self._junit
 
 
 def test_selects_two_jobs_and_preserves_blocked_lane() -> None:

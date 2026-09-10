@@ -241,7 +241,7 @@ def execute_native_tests(
         check=False,
         shell=False,
     )
-    collected, failed, skipped = _junit_counts(junit)
+    collected, failed, skipped = junit_case_counts(junit)
     logs = (completed.stdout or "")[:65536]
     stderr = (completed.stderr or "")[:65536]
     if completed.returncode != 0:
@@ -312,21 +312,30 @@ def _pack_item(pack: dict[str, Any], key: str) -> dict[str, Any]:
     return {}
 
 
-def _junit_counts(path: Path) -> tuple[int, int, int]:
+def junit_case_counts(path: Path) -> tuple[int, int, int]:
     if not path.is_file():
         return (0, 0, 0)
     try:
-        root = ElementTree.parse(path).getroot()
+        return junit_case_counts_from_bytes(path.read_bytes())
+    except OSError:
+        return (0, 0, 0)
+
+
+def junit_case_counts_from_bytes(payload: bytes) -> tuple[int, int, int]:
+    try:
+        root = ElementTree.fromstring(payload)
     except ElementTree.ParseError:
         return (0, 0, 0)
-    suites = [root] if root.tag.endswith("testsuite") else list(root)
-    collected = 0
+    cases = [node for node in root.iter() if str(node.tag).endswith("testcase")]
+    collected = len(cases)
     failed = 0
     skipped = 0
-    for suite in suites:
-        collected += int(suite.attrib.get("tests") or 0)
-        failed += int(suite.attrib.get("failures") or 0) + int(suite.attrib.get("errors") or 0)
-        skipped += int(suite.attrib.get("skipped") or 0)
+    for case in cases:
+        tags = {str(child.tag).rsplit("}", 1)[-1] for child in list(case)}
+        if "failure" in tags or "error" in tags:
+            failed += 1
+        if "skipped" in tags:
+            skipped += 1
     return (collected, failed, skipped)
 
 
