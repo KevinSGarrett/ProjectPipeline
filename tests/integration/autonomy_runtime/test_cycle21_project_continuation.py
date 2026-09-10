@@ -8,8 +8,10 @@ from pathlib import Path
 
 from project_pipeline.autonomy_runtime.context_validation import NATIVE_PASS, execute_native_tests
 from project_pipeline.autonomy_runtime.fleet_loop import (
+    accepted_result_hosts,
     duplicate_work_audit,
     is_executable_job,
+    newly_ready_owned_jobs,
     observation_ready_task_ids,
     select_two_useful_jobs,
     useful_argv,
@@ -52,6 +54,22 @@ def test_native_job_rejects_file_presence_only(tmp_path: Path) -> None:
         assert payload.get("verifier") != "implementation_and_test_binding" or payload.get(
             "tests_run"
         )
+
+
+def test_next_owned_job_requires_verified_prior_result() -> None:
+    completed = [
+        {
+            "results": [
+                {
+                    "task_id": "PP-TASK-000991",
+                    "outcome": "REJECTED",
+                    "host_id": "COMFY-V4-CPU-01",
+                }
+            ]
+        }
+    ]
+    assert accepted_result_hosts(completed) == set()
+    assert newly_ready_owned_jobs((), selected_ids=set(), verified_hosts=set()) == []
 
 
 def test_req_ctrl_and_pdef_remain_incomplete() -> None:

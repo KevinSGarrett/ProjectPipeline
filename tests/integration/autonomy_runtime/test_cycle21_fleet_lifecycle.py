@@ -16,8 +16,10 @@ from project_pipeline.autonomy_runtime.fleet_loop import (
     _machine_for_task,
     _sidecar_path,
     _zero_exit,
+    accepted_result_hosts,
     choose_measured_worker,
     cycle_owned_validation_jobs,
+    newly_ready_owned_jobs,
     observation_ready_task_ids,
     run_observation,
 )
@@ -32,6 +34,40 @@ from project_pipeline.scheduler.host_observation import (
 )
 
 NOW = datetime(2026, 9, 10, 3, 0, tzinfo=UTC)
+
+
+def _measured_xeon_and_comfy() -> tuple[MachineProfile, MachineProfile]:
+    xeon = MachineProfile.model_validate(
+        {
+            "machine_id": "WIN-EVSH1DN8H5O",
+            "hostname": "WIN-EVSH1DN8H5O",
+            "role": "MEMORY_HEAVY_BATCH_WORKER",
+            "observed_at_utc": NOW,
+            "isa_flags": ("avx",),
+            "cpu_slots": 8,
+            "memory_mb": 64000,
+            "disk_mb": 70000,
+            "principal": r"win-evsh1dn8h5o\kines",
+            "observation_kind": "MEASURED",
+            "sid": "S-1-5-21-xeon",
+        }
+    )
+    comfy = MachineProfile.model_validate(
+        {
+            "machine_id": "COMFY-V4-CPU-01",
+            "hostname": "COMFY-V4-CPU-01",
+            "role": "CPU_WORKER",
+            "observed_at_utc": NOW,
+            "isa_flags": ("avx2",),
+            "cpu_slots": 8,
+            "memory_mb": 32000,
+            "disk_mb": 40000,
+            "principal": r"comfy-v4-cpu-01\windows 11",
+            "observation_kind": "MEASURED",
+            "sid": "S-1-5-21-comfy",
+        }
+    )
+    return xeon, comfy
 
 
 def test_hostname_only_inventory_is_not_ready() -> None:
@@ -105,43 +141,36 @@ def test_empty_control_ready_does_not_fabricate_leaves() -> None:
 
 
 def test_cycle_owned_jobs_bind_both_hosts() -> None:
-    now = datetime(2026, 9, 10, 3, 0, tzinfo=UTC)
-    xeon = MachineProfile.model_validate(
-        {
-            "machine_id": "WIN-EVSH1DN8H5O",
-            "hostname": "WIN-EVSH1DN8H5O",
-            "role": "MEMORY_HEAVY_BATCH_WORKER",
-            "observed_at_utc": now,
-            "isa_flags": ("avx",),
-            "cpu_slots": 8,
-            "memory_mb": 64000,
-            "disk_mb": 70000,
-            "principal": r"win-evsh1dn8h5o\kines",
-            "observation_kind": "MEASURED",
-            "sid": "S-1-5-21-xeon",
-        }
-    )
-    comfy = MachineProfile.model_validate(
-        {
-            "machine_id": "COMFY-V4-CPU-01",
-            "hostname": "COMFY-V4-CPU-01",
-            "role": "CPU_WORKER",
-            "observed_at_utc": now,
-            "isa_flags": ("avx2",),
-            "cpu_slots": 8,
-            "memory_mb": 32000,
-            "disk_mb": 40000,
-            "principal": r"comfy-v4-cpu-01\windows 11",
-            "observation_kind": "MEASURED",
-            "sid": "S-1-5-21-comfy",
-        }
-    )
+    xeon, comfy = _measured_xeon_and_comfy()
     jobs = cycle_owned_validation_jobs((xeon, comfy))
     assert jobs == ["PP-TASK-000990", "PP-TASK-000991"]
     assert _machine_for_task(jobs[0], (xeon, comfy), index=0, remote=True) == "WIN-EVSH1DN8H5O"
     assert _machine_for_task(jobs[1], (xeon, comfy), index=1, remote=True) == "COMFY-V4-CPU-01"
     for task_id in jobs:
         assert validate_identifier(task_id, IdentifierKind.ISSUE) == task_id
+
+
+def test_owned_jobs_wait_for_verified_result_then_admit_second_host() -> None:
+    xeon, comfy = _measured_xeon_and_comfy()
+    completed = [
+        {
+            "results": [
+                {
+                    "task_id": "PP-TASK-000991",
+                    "outcome": "ACCEPTED",
+                    "host_id": "COMFY-V4-CPU-01",
+                    "tests_run": 1,
+                }
+            ]
+        }
+    ]
+    assert accepted_result_hosts(completed) == {"COMFY-V4-CPU-01"}
+    assert newly_ready_owned_jobs((xeon, comfy), selected_ids=set(), verified_hosts=set()) == []
+    assert newly_ready_owned_jobs(
+        (xeon, comfy),
+        selected_ids={"PP-TASK-000991"},
+        verified_hosts={"COMFY-V4-CPU-01"},
+    ) == ["PP-TASK-000990"]
 
 
 def test_noncanonical_cycle_job_id_cannot_lease() -> None:
@@ -182,6 +211,9 @@ def test_observation_staggers_cycle_owned_jobs() -> None:
     source = inspect.getsource(run_observation)
     assert "pending_owned" in source
     assert "elapsed >= 45" in source
+    assert "verified_hosts" in source
+    assert "newly_ready_owned_jobs" in source
+    assert "measure_enrolled_inventories" in source
     assert "CYCLE_OWNED_VALIDATION_JOBS" in source
 
 

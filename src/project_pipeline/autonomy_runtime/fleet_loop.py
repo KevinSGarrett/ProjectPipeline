@@ -166,6 +166,32 @@ def cycle_owned_validation_jobs(profiles: tuple[MachineProfile, ...]) -> list[st
     return [job_id for machine_id, job_id in CYCLE21_HOST_JOBS.items() if machine_id in measured]
 
 
+def accepted_result_hosts(completed_jobs: list[dict[str, Any]]) -> set[str]:
+    hosts: set[str] = set()
+    for batch in completed_jobs:
+        if not isinstance(batch, dict):
+            continue
+        for item in batch.get("results") or []:
+            if isinstance(item, dict) and item.get("outcome") == "ACCEPTED":
+                host = str(item.get("host_id") or "")
+                if host:
+                    hosts.add(host)
+    return hosts
+
+
+def newly_ready_owned_jobs(
+    profiles: tuple[MachineProfile, ...],
+    *,
+    selected_ids: set[str],
+    verified_hosts: set[str],
+) -> list[str]:
+    if not verified_hosts:
+        return []
+    return [
+        job_id for job_id in cycle_owned_validation_jobs(profiles) if job_id not in selected_ids
+    ]
+
+
 def _machine_for_task(
     task_id: str,
     profiles: tuple[MachineProfile, ...],
@@ -856,6 +882,20 @@ def _fault_owned_hold_job(
     }
 
 
+def _ingest_observation_work(
+    more: dict[str, Any],
+    completed_jobs: list[dict[str, Any]],
+    selected_ids: set[str],
+) -> Any:
+    completed_jobs.extend(list(more.get("completed_jobs") or []))
+    selected_ids.update(more.get("selected") or [])
+    return more.get("next_job")
+
+
+def _unaffected_lane_progress(completed_jobs: list[dict[str, Any]], live_machine: str) -> bool:
+    return bool(accepted_result_hosts(completed_jobs) - {live_machine, ""})
+
+
 def run_observation(
     *,
     root: Path,
@@ -992,15 +1032,9 @@ def run_observation(
             now=started,
             machine_id=live_machine,
         )
-        other_hosts = {
-            str(item.get("host_id") or "")
-            for batch in completed_jobs
-            for item in (batch.get("results") or [])
-            if isinstance(item, dict)
-            and item.get("outcome") == "ACCEPTED"
-            and str(item.get("host_id") or "") not in {"", live_machine}
-        }
-        fault["unaffected_lane_progress"] = bool(other_hosts)
+        fault["unaffected_lane_progress"] = _unaffected_lane_progress(
+            completed_jobs, live_machine
+        )
         fault["blocked_lane"] = blocked
     else:
         fault = {
@@ -1013,26 +1047,52 @@ def run_observation(
         }
     next_ready = available.get("next_job")
     selected_ids = set(available.get("selected") or [])
+    last_inventory = started
     while datetime.now(UTC) < deadline:
         now = datetime.now(UTC)
         remaining = (deadline - now).total_seconds()
         elapsed = (now - started).total_seconds()
-        if live_ssh and pending_owned and elapsed >= 45:
-            more = run_available_work(ready=list(pending_owned), now=now, **work)
-            completed_jobs.extend(list(more.get("completed_jobs") or []))
-            selected_ids.update(more.get("selected") or [])
-            next_ready = more.get("next_job")
+        verified_hosts = accepted_result_hosts(completed_jobs)
+        if live_ssh and pending_owned and elapsed >= 45 and verified_hosts:
+            next_ready = _ingest_observation_work(
+                run_available_work(ready=list(pending_owned), now=now, **work),
+                completed_jobs,
+                selected_ids,
+            )
             pending_owned = []
-            other_hosts = {
-                str(item.get("host_id") or "")
-                for batch in completed_jobs
-                for item in (batch.get("results") or [])
-                if isinstance(item, dict)
-                and item.get("outcome") == "ACCEPTED"
-                and str(item.get("host_id") or "") not in {"", live_machine}
-            }
-            fault["unaffected_lane_progress"] = bool(other_hosts)
+            fault["unaffected_lane_progress"] = _unaffected_lane_progress(
+                completed_jobs, live_machine
+            )
             continue
+        if live_ssh and (now - last_inventory).total_seconds() >= 90:
+            inventories = measure_enrolled_inventories()
+            profiles = profiles_from_inventories(inventories, when=now)
+            work["profiles"] = profiles
+            last_inventory = now
+            write_admission_record(
+                admission_path,
+                observation_admission_record(
+                    load_admission_record(admission_path) or existing,
+                    hosts=_measured_hosts(inventories),
+                    source_sha=dispatch_sha,
+                    source_tree=dispatch_tree,
+                ),
+            )
+            discovered = newly_ready_owned_jobs(
+                profiles,
+                selected_ids=selected_ids,
+                verified_hosts=verified_hosts,
+            )
+            if discovered:
+                next_ready = _ingest_observation_work(
+                    run_available_work(ready=discovered, now=now, **work),
+                    completed_jobs,
+                    selected_ids,
+                )
+                fault["unaffected_lane_progress"] = _unaffected_lane_progress(
+                    completed_jobs, live_machine
+                )
+                continue
         if live_ssh:
             refreshed = [
                 item
@@ -1040,12 +1100,14 @@ def run_observation(
                 if item not in selected_ids
                 and item != blocked
                 and item in CYCLE_OWNED_VALIDATION_JOBS
+                and verified_hosts
             ]
             if refreshed:
-                more = run_available_work(ready=refreshed, now=now, **work)
-                completed_jobs.extend(list(more.get("completed_jobs") or []))
-                selected_ids.update(more.get("selected") or [])
-                next_ready = more.get("next_job")
+                next_ready = _ingest_observation_work(
+                    run_available_work(ready=refreshed, now=now, **work),
+                    completed_jobs,
+                    selected_ids,
+                )
                 continue
         status_payload = {
             "started_at_utc": started.isoformat(),
