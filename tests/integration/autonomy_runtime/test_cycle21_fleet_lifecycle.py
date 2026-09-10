@@ -6,11 +6,14 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from project_pipeline.autonomy_runtime.fleet_loop import (
+    _machine_for_task,
     choose_measured_worker,
+    cycle_owned_validation_jobs,
     observation_ready_task_ids,
 )
 from project_pipeline.autonomy_runtime.managed_worker import classify_live_managed_worker
 from project_pipeline.autonomy_runtime.observation_eval import evaluate_observation
+from project_pipeline.scheduler.fleet import MachineProfile
 from project_pipeline.scheduler.host_observation import (
     apply_inventory_observation,
     declared_profiles,
@@ -85,6 +88,46 @@ def test_empty_control_ready_does_not_fabricate_leaves() -> None:
     root = Path(__file__).resolve().parents[3]
     ready = observation_ready_task_ids(root, None, live_ssh=True)
     assert ready != ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"]
+    owned = cycle_owned_validation_jobs(())
+    assert "PP-TASK-000516" not in owned
+
+
+def test_cycle_owned_jobs_bind_both_hosts() -> None:
+    now = datetime(2026, 9, 10, 3, 0, tzinfo=UTC)
+    xeon = MachineProfile.model_validate(
+        {
+            "machine_id": "WIN-EVSH1DN8H5O",
+            "hostname": "WIN-EVSH1DN8H5O",
+            "role": "MEMORY_HEAVY_BATCH_WORKER",
+            "observed_at_utc": now,
+            "isa_flags": ("avx",),
+            "cpu_slots": 8,
+            "memory_mb": 64000,
+            "disk_mb": 70000,
+            "principal": r"win-evsh1dn8h5o\kines",
+            "observation_kind": "MEASURED",
+            "sid": "S-1-5-21-xeon",
+        }
+    )
+    comfy = MachineProfile.model_validate(
+        {
+            "machine_id": "COMFY-V4-CPU-01",
+            "hostname": "COMFY-V4-CPU-01",
+            "role": "CPU_WORKER",
+            "observed_at_utc": now,
+            "isa_flags": ("avx2",),
+            "cpu_slots": 8,
+            "memory_mb": 32000,
+            "disk_mb": 40000,
+            "principal": r"comfy-v4-cpu-01\windows 11",
+            "observation_kind": "MEASURED",
+            "sid": "S-1-5-21-comfy",
+        }
+    )
+    jobs = cycle_owned_validation_jobs((xeon, comfy))
+    assert jobs == ["PP-TASK-C21-VALIDATE-XEON", "PP-TASK-C21-VALIDATE-COMFY"]
+    assert _machine_for_task(jobs[0], (xeon, comfy), index=0, remote=True) == "WIN-EVSH1DN8H5O"
+    assert _machine_for_task(jobs[1], (xeon, comfy), index=1, remote=True) == "COMFY-V4-CPU-01"
 
 
 def test_observation_rejects_zero_time_and_duplicate_heartbeats() -> None:

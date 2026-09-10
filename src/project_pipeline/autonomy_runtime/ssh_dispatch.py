@@ -65,6 +65,27 @@ def parse_worker_stdout(stdout: str) -> dict[str, Any]:
     return {}
 
 
+def job_stdout_metrics(stdout: str) -> dict[str, Any]:
+    """Parse native-test metrics from job or worker JSON stdout."""
+
+    metrics: dict[str, Any] = {}
+    for candidate in (stdout,):
+        parsed = parse_worker_stdout(str(candidate or ""))
+        inner = parsed.get("stdout") if isinstance(parsed.get("stdout"), str) else None
+        bodies = [parsed]
+        if inner:
+            nested = parse_worker_stdout(inner)
+            if nested:
+                bodies.append(nested)
+        for body in bodies:
+            for key in ("tests_run", "collected", "artifact_sha256", "junit_sha256"):
+                if body.get(key) not in (None, "", 0, "0"):
+                    metrics[key] = body.get(key)
+            if body.get("context_consumption") is not None:
+                metrics["context_consumption"] = body["context_consumption"]
+    return metrics
+
+
 def _is_running_started_record(payload: Mapping[str, Any]) -> bool:
     return payload.get("pid") is not None and payload.get("phase") == "RUNNING"
 
@@ -300,6 +321,9 @@ class SshDispatchAdapter:
                 "memory_mb_ceiling",
                 "workspace_root",
                 "output_contract_sha256",
+                "context_pack",
+                "pack_sha256",
+                "require_context_consumption",
                 "creation_time",
             ):
                 if key in envelope and envelope[key] is not None:
@@ -517,6 +541,10 @@ class SshDispatchAdapter:
         for key in ("ok", "killed"):
             if key in worker:
                 payload[key] = worker[key]
+        if worker.get("context_consumption") is not None:
+            payload["context_consumption"] = worker["context_consumption"]
+        job_metrics = job_stdout_metrics(str(worker.get("stdout") or stdout))
+        payload.update(job_metrics)
         for key in ("reason", "phase"):
             value = worker.get(key)
             if value:

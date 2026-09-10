@@ -66,6 +66,9 @@ class RemoteJobEnvelope(DomainModel):
     correlation_id: str
     workspace_root: str | None = None
     output_contract_sha256: str | None = None
+    context_pack: dict[str, Any] | None = None
+    pack_sha256: str | None = None
+    require_context_consumption: bool = False
     effect_class: Literal["IDEMPOTENT_RESULT", "NON_IDEMPOTENT_EFFECT"] = "IDEMPOTENT_RESULT"
 
     def digest(self) -> str:
@@ -269,6 +272,12 @@ class RemoteJobController:
                 "result": result,
                 "envelope_digest": envelope.digest(),
                 "remote_pid": payload.get("remote_pid") or payload.get("pid"),
+                "stdout": payload.get("stdout") or "",
+                "stderr": payload.get("stderr") or "",
+                "context_consumption": payload.get("context_consumption"),
+                "tests_run": payload.get("tests_run"),
+                "artifact_sha256": payload.get("artifact_sha256"),
+                "junit_sha256": payload.get("junit_sha256"),
             }
         finally:
             if self.store is not None and claimed and not launched:

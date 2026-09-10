@@ -25,6 +25,10 @@ from project_pipeline.autonomy_runtime.confinement import (
     argv_is_confined,
     confine_remote_workspace,
 )
+from project_pipeline.autonomy_runtime.context_validation import (
+    consume_pack_on_worker,
+    write_pack,
+)
 from project_pipeline.autonomy_runtime.windows_limits import (
     NESTED_POOL_KEYS,
     ResourceLimitError,
@@ -298,8 +302,6 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
     if action == "measure":
         return _fail("use_controller_cim")
     if action == "consume_context":
-        from project_pipeline.autonomy_runtime.context_validation import consume_pack_on_worker
-
         return consume_pack_on_worker(payload)
     host_id = str(payload.get("host_id") or "")
     if not host_id:
@@ -375,6 +377,15 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
     if cpu < 1 or memory_mb < 1:
         return _fail("invalid_limits")
     Path(workspace).mkdir(parents=True, exist_ok=True)
+    consumed: dict[str, Any] | None = None
+    pack = payload.get("context_pack")
+    if pack is not None or payload.get("pack_sha256") or payload.get("require_context_consumption"):
+        pack_path = Path(workspace) / "context_pack.json"
+        if isinstance(pack, dict):
+            write_pack(Path(workspace), pack)
+        consumed = consume_pack_on_worker({**payload, "pack_path": str(pack_path)})
+        if not consumed.get("ok"):
+            return _fail(str(consumed.get("reason") or "pack_unconsumed"))
     remaining = 1
     raw_deadline = payload.get("deadline_utc")
     if raw_deadline:
@@ -429,6 +440,7 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
         "duplicate": False,
         "truncated": truncated,
         "authority_identity": identity,
+        "context_consumption": consumed,
     }
     if cache is not None and claim is not None:
         _complete_worker_claim(cache, Path(str(claim)), result)

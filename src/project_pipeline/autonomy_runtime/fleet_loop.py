@@ -27,6 +27,7 @@ from project_pipeline.autonomy_runtime.ssh_dispatch import (
     XEON_SSH_USER,
     XEON_TAILNET_IPV4,
     SshDispatchAdapter,
+    job_stdout_metrics,
 )
 from project_pipeline.autonomy_runtime.worker_allowlist import (
     REMOTE_HOLD_SCRIPTS,
@@ -60,6 +61,10 @@ from project_pipeline.scheduler.persistence import SchedulerStore
 HISTORICAL_NOT_NEW_WORK = frozenset({"PP-TASK-000384"})
 STRUCTURAL_PARENTS = frozenset({"PP-STORY-000065", "PP-STORY-000396"})
 NO_READY_OUTCOME = "no_executable_leaf_ready"
+CYCLE21_HOST_JOBS = {
+    XEON_MACHINE_ID: "PP-TASK-C21-VALIDATE-XEON",
+    COMFY_MACHINE_ID: "PP-TASK-C21-VALIDATE-COMFY",
+}
 _IMPLEMENTED_ISSUE_STATES = {
     ImplementationState.IMPLEMENTED.value,
     ImplementationState.MOCK_VERIFIED.value,
@@ -151,6 +156,54 @@ def select_two_useful_jobs(ready: list[str], *, blocked: str | None = None) -> d
     }
 
 
+def cycle_owned_validation_jobs(profiles: tuple[MachineProfile, ...]) -> list[str]:
+    measured = {
+        item.machine_id for item in profiles if item.observation_kind == "MEASURED" and item.sid
+    }
+    return [job_id for machine_id, job_id in CYCLE21_HOST_JOBS.items() if machine_id in measured]
+
+
+def _machine_for_task(
+    task_id: str,
+    profiles: tuple[MachineProfile, ...],
+    *,
+    index: int,
+    remote: bool,
+) -> str:
+    by_id = {
+        item.machine_id: item
+        for item in profiles
+        if item.observation_kind == "MEASURED" or not remote
+    }
+    if task_id == CYCLE21_HOST_JOBS.get(XEON_MACHINE_ID):
+        return XEON_MACHINE_ID
+    if task_id == CYCLE21_HOST_JOBS.get(COMFY_MACHINE_ID):
+        return COMFY_MACHINE_ID
+    ordered = [item for item in (XEON_MACHINE_ID, COMFY_MACHINE_ID) if item in by_id]
+    if not ordered:
+        ordered = [item.machine_id for item in profiles] or [XEON_MACHINE_ID]
+    return ordered[index % len(ordered)]
+
+
+def _bind_adapter(adapter: Any, machine_id: str) -> Any:
+    if isinstance(adapter, SshDispatchAdapter):
+        return SshDispatchAdapter.for_machine(machine_id)
+    return adapter
+
+
+def _enrich_dispatched(task_id: str, dispatched: dict[str, Any], host_id: str) -> dict[str, Any]:
+    item: dict[str, Any] = {"task_id": task_id, **dispatched, "host_id": host_id}
+    executed = dispatched.get("executed") if isinstance(dispatched.get("executed"), dict) else {}
+    stdout = str(executed.get("stdout") or "")
+    metrics = job_stdout_metrics(stdout)
+    for key in ("tests_run", "collected", "artifact_sha256", "junit_sha256"):
+        if item.get(key) in (None, "", 0, "0"):
+            value = metrics.get(key) or executed.get(key) or dispatched.get(key)
+            if value not in (None, "", 0, "0"):
+                item[key] = value
+    return item
+
+
 def control_ready_task_ids(root: Path, database: Path | None = None) -> list[str]:
     snapshot = evaluate_live_control(root, database_path=database)
     director = PersistentAutonomyDirector(default_state_path(root))
@@ -206,25 +259,31 @@ def run_loop(
             source_sha=source_sha,
             source_tree=source_tree,
             overlay_sha256=overlay_sha256,
-            adapter_factory=lambda _machine_id: adapter,
+            adapter_factory=lambda machine_id: _bind_adapter(adapter, str(machine_id)),
             journal=journal or FleetLifecycleJournal(database.with_name("fleet_lifecycle.sqlite3")),
         )
         results = []
         remote = bool(getattr(adapter, "remote_host", False))
-        host_id = profiles[0].machine_id if profiles else XEON_MACHINE_ID
-        job_workspace = (
-            Path(REMOTE_JOB_WORKSPACES.get(host_id, str(workspace))) if remote else workspace
-        )
-        bind_root = str(job_workspace) if remote else str(workspace_root)
-        for task_id in jobs["selected"]:
+        by_id = {item.machine_id: item for item in profiles}
+        for index, task_id in enumerate(jobs["selected"]):
+            host_id = _machine_for_task(task_id, profiles, index=index, remote=remote)
+            chosen_profile = by_id.get(host_id)
+            host_principal = (
+                str(chosen_profile.principal) if chosen_profile is not None else principal
+            )
+            job_workspace = (
+                Path(REMOTE_JOB_WORKSPACES.get(host_id, str(workspace))) if remote else workspace
+            )
+            bind_root = str(job_workspace) if remote else str(workspace_root)
             argv = useful_argv(root, task_id, remote=remote, machine_id=host_id)
+            host_adapter = _bind_adapter(adapter, host_id)
             dispatched = workflow.dispatch(
                 task_id=task_id,
                 holder_id="actor:fleet-loop",
                 argv=argv,
                 workspace=str(job_workspace),
                 workspace_root=bind_root,
-                principal=principal,
+                principal=host_principal,
                 input_sha256=job_input_digest(
                     task_id=task_id,
                     source_sha=source_sha,
@@ -234,10 +293,10 @@ def run_loop(
                     selection=argv,
                 ),
                 now=now,
-                adapter=adapter,
+                adapter=host_adapter,
                 machine_id=host_id if remote else None,
             )
-            results.append({"task_id": task_id, **dispatched, "host_id": host_id})
+            results.append(_enrich_dispatched(task_id, dispatched, host_id))
         remaining_ready = [
             item
             for item in ready
@@ -380,7 +439,7 @@ def run_available_work(
 
 
 def _observation_dir(root: Path) -> Path:
-    path = root.resolve() / ".local" / "cycle20_observation"
+    path = root.resolve() / ".local" / "cycle21_observation"
     path.mkdir(parents=True, exist_ok=True)
     return path
 
@@ -416,7 +475,40 @@ def _operator_surfaces(*, status_path: Path, journal: FleetLifecycleJournal) -> 
         "command_center_journal_events": len(events),
         "command_center_occupancy_hosts": sorted(occupancy),
         "same_journal": same,
-        "cli_ui_independent": True,
+        "cli_ui_independent": independent.database.resolve() != status_path.resolve(),
+    }
+
+
+def independent_cli_ui(heartbeats: list[dict[str, Any]]) -> bool:
+    return any(bool(item.get("cli_ui_independent")) for item in heartbeats)
+
+
+def _resource_metrics(
+    start_inventories: dict[str, dict[str, Any]],
+    end_inventories: dict[str, dict[str, Any]],
+    completed_jobs: list[dict[str, Any]],
+    *,
+    transfer_seconds: float,
+) -> dict[str, Any]:
+    used: list[float] = []
+    for machine_id in (XEON_MACHINE_ID, COMFY_MACHINE_ID):
+        start = start_inventories.get(machine_id) or {}
+        end = end_inventories.get(machine_id) or start
+        total = float(end.get("totalRAMGB") or start.get("totalRAMGB") or 0)
+        avail = float(end.get("availableRAMGB") or 0)
+        if total > 0:
+            used.append(max(0.0, (total - avail) * 1024))
+    hosts: set[str] = set()
+    for batch in completed_jobs:
+        for item in batch.get("results") or []:
+            if isinstance(item, dict) and item.get("host_id"):
+                hosts.add(str(item["host_id"]))
+    scratch = sum(len(json.dumps(item, default=str)) for item in completed_jobs)
+    return {
+        "peak_ram_mb": max(used) if used else None,
+        "scratch_bytes": scratch if scratch else None,
+        "transfer_seconds": transfer_seconds if transfer_seconds > 0 else None,
+        "concurrency": len(hosts) if hosts else None,
     }
 
 
@@ -601,6 +693,16 @@ def _fault_owned_hold_job(
             update={
                 "job_id": f"{job_id}-RECOVERED",
                 "fence": f"{fence}-resume",
+                "argv": (
+                    "python",
+                    hold,
+                    "--job-id",
+                    f"{job_id}-RECOVERED",
+                    "--seconds",
+                    "1",
+                    "--output",
+                    "hold.json",
+                ),
                 "input_sha256": job_input_digest(
                     task_id=f"{job_id}-RECOVERED",
                     source_sha=source_sha,
@@ -612,8 +714,31 @@ def _fault_owned_hold_job(
             }
         )
         store.persist_intent(recovered_env.model_dump(mode="json"), now=now)
-        recovered_output = True
+        recovered_run = adapter.execute(
+            command=list(recovered_env.argv),
+            working_directory=workspace,
+            envelope=recovered_env.model_dump(mode="json"),
+            job_id=recovered_env.job_id,
+            input_sha256=recovered_env.input_sha256,
+        )
+        recovered_output = int(recovered_run.get("exit_code") or 1) == 0
+        if recovered_output:
+            store.accept_result(
+                {
+                    "job_id": recovered_env.job_id,
+                    "host_id": recovered_env.host_id,
+                    "fence": recovered_env.fence,
+                    "exit_code": 0,
+                    "output_sha256": str(recovered_run.get("payload_sha256") or "e" * 64),
+                    "stdout_sha256": str(recovered_run.get("stdout_sha256") or "f" * 64),
+                    "stderr_sha256": str(recovered_run.get("stderr_sha256") or "a" * 64),
+                },
+                now=now,
+                envelope=recovered_env.model_dump(mode="json"),
+            )
     recovered = killed and intent_kept and reconciled.get("ok") is True and recovered_output
+    restarted_store = FleetJobStore(store.database)
+    controller_restarted = restarted_store.get_intent(job_id) is not None
     return {
         "kind": "owned_durable_fault",
         "recovered": recovered,
@@ -629,8 +754,8 @@ def _fault_owned_hold_job(
         "kill_exit_code": kill_payload.get("exit_code"),
         "kill_ok": kill_payload.get("ok"),
         "recovered_output_accepted": recovered_output,
-        "unaffected_lane_progress": True,
-        "controller_restarted": True,
+        "unaffected_lane_progress": False,
+        "controller_restarted": controller_restarted,
         "absence_proof": absence_proof,
     }
 
@@ -710,7 +835,9 @@ def run_observation(
         ),
     )
     if live_ssh:
-        ready = observation_ready_task_ids(root, Path(db), live_ssh=True)
+        ready = list(cycle_owned_validation_jobs(profiles))
+        control_ready = observation_ready_task_ids(root, Path(db), live_ssh=True)
+        ready.extend(item for item in control_ready if item not in ready)
         blocked = blocked_dependent_lane(root, Path(db))
     else:
         ready = observation_ready_task_ids(root, Path(db), live_ssh=False)
@@ -733,7 +860,9 @@ def run_observation(
         "deadline": deadline,
         "journal": journal,
     }
+    dispatch_started = time.perf_counter()
     available = run_available_work(ready=ready, now=started, **work)
+    transfer_seconds = time.perf_counter() - dispatch_started
     completed_jobs = list(available.get("completed_jobs") or [])
     first = (
         completed_jobs[0] if completed_jobs else {"selected": [], "results": [], "next_job": None}
@@ -762,6 +891,15 @@ def run_observation(
             now=started,
             machine_id=live_machine,
         )
+        other_hosts = {
+            str(item.get("host_id") or "")
+            for batch in completed_jobs
+            for item in (batch.get("results") or [])
+            if isinstance(item, dict)
+            and item.get("outcome") == "ACCEPTED"
+            and str(item.get("host_id") or "") not in {"", live_machine}
+        }
+        fault["unaffected_lane_progress"] = bool(other_hosts)
         fault["blocked_lane"] = blocked
     else:
         fault = {
@@ -816,6 +954,7 @@ def run_observation(
                     "occupancy_hosts": surfaces["command_center_occupancy_hosts"],
                 },
                 "same_journal": surfaces["same_journal"],
+                "cli_ui_independent": surfaces["cli_ui_independent"],
             }
         )
         sleep_for = min(30.0, max(1.0, remaining))
@@ -823,6 +962,10 @@ def run_observation(
     ended = datetime.now(UTC)
     wall_seconds = (ended - started).total_seconds()
     duration_met = wall_seconds >= duration_seconds
+    end_inventories = measure_enrolled_inventories() if live_ssh else inventories
+    surfaces_final = (
+        heartbeats[-1] if heartbeats else {"cli_ui_independent": False, "same_journal": False}
+    )
     evaluated = evaluate_observation(
         {
             "duration_met": duration_met,
@@ -833,20 +976,16 @@ def run_observation(
             "heartbeats": heartbeats,
             "completed_jobs": completed_jobs,
             "lifecycle_events": journal.events(),
-            "resources": {
-                "peak_ram_mb": max(
-                    (
-                        float((inventories.get(XEON_MACHINE_ID) or {}).get("totalRAMGB") or 0),
-                        float((inventories.get(COMFY_MACHINE_ID) or {}).get("totalRAMGB") or 0),
-                        1.0,
-                    )
-                )
-                * 1024,
-                "scratch_bytes": sum(len(json.dumps(item, default=str)) for item in completed_jobs),
-                "transfer_seconds": wall_seconds,
-                "concurrency": len({str(item.get("host_id")) for item in completed_jobs} or {1}),
-            },
-            "cli_ui_independent": True,
+            "resources": _resource_metrics(
+                inventories,
+                end_inventories,
+                completed_jobs,
+                transfer_seconds=transfer_seconds,
+            ),
+            "cli_ui_independent": bool(
+                surfaces_final.get("cli") or surfaces_final.get("command_center")
+            )
+            and independent_cli_ui(heartbeats),
         },
         expected_source_sha=str(identity.get("sha") or ""),
         expected_source_tree=str(identity.get("tree") or ""),
