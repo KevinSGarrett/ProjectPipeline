@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import hashlib
-import inspect
+import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -335,9 +335,30 @@ def test_cycle_owned_job_admits_measured_host_without_c18() -> None:
     assert "c18_acceptance_missing" in production["failures"]
 
 
-def test_scp_uses_user_option_not_user_at_host() -> None:
-    source = inspect.getsource(SshDispatchAdapter.acquire_workspace_file)
-    assert "ssh_config_user_option(self.user)" in source
-    assert "self.user}@{self.host}" not in source
+def test_scp_uses_user_option_not_user_at_host(tmp_path: Path) -> None:
+    key = tmp_path / "id_ed25519"
+    key.write_text("placeholder", encoding="utf-8")
+    dest = tmp_path / "junit.xml"
+    captured: dict[str, object] = {}
+
+    def fake_run(argv: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        captured["argv"] = argv
+        dest.write_bytes(b"<testsuite tests='1'></testsuite>")
+        return subprocess.CompletedProcess(argv, 0, "", "")
+
+    adapter = SshDispatchAdapter.for_machine(HOST, identity=key)
+    workspace = Path(r"C:\Users\Windows 11\ProjectPipeline\jobs")
+    with patch(
+        "project_pipeline.autonomy_runtime.ssh_dispatch.subprocess.run",
+        side_effect=fake_run,
+    ):
+        payload = adapter.acquire_workspace_file(workspace, "junit.xml", dest)
+    argv = captured["argv"]
+    assert isinstance(argv, list)
+    assert argv[0] == "scp"
+    assert ssh_config_user_option("Windows 11") in argv
     assert ssh_config_user_option("Windows 11") == 'User="Windows 11"'
-    assert ssh_config_user_option("kines") == "User=kines"
+    assert not any("Windows 11@" in str(item) for item in argv)
+    assert "python" not in argv
+    assert "-c" not in argv
+    assert payload == b"<testsuite tests='1'></testsuite>"
