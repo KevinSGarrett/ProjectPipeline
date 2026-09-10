@@ -1032,9 +1032,7 @@ def run_observation(
             now=started,
             machine_id=live_machine,
         )
-        fault["unaffected_lane_progress"] = _unaffected_lane_progress(
-            completed_jobs, live_machine
-        )
+        fault["unaffected_lane_progress"] = _unaffected_lane_progress(completed_jobs, live_machine)
         fault["blocked_lane"] = blocked
     else:
         fault = {

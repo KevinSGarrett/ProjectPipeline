@@ -27,6 +27,13 @@ from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.managed_worker import classify_live_managed_worker
 from project_pipeline.autonomy_runtime.observation_eval import evaluate_observation
 from project_pipeline.domain.identifiers import IdentifierKind, validate_identifier
+from project_pipeline.scheduler.admission import (
+    chosen_host_admitted,
+    load_admission_record,
+    measured_host_record,
+    observation_admission_record,
+    write_admission_record,
+)
 from project_pipeline.scheduler.fleet import MachineProfile
 from project_pipeline.scheduler.host_observation import (
     apply_inventory_observation,
@@ -171,6 +178,79 @@ def test_owned_jobs_wait_for_verified_result_then_admit_second_host() -> None:
         selected_ids={"PP-TASK-000991"},
         verified_hosts={"COMFY-V4-CPU-01"},
     ) == ["PP-TASK-000990"]
+
+
+def test_xeon_job_appears_only_after_host_becomes_measured() -> None:
+    xeon, comfy = _measured_xeon_and_comfy()
+    missing = xeon.model_copy(update={"observation_kind": "DECLARED", "sid": ""})
+    verified = {"COMFY-V4-CPU-01"}
+    selected = {"PP-TASK-000991"}
+    assert (
+        newly_ready_owned_jobs((missing, comfy), selected_ids=selected, verified_hosts=verified)
+        == []
+    )
+    assert newly_ready_owned_jobs(
+        (xeon, comfy), selected_ids=selected, verified_hosts=verified
+    ) == ["PP-TASK-000990"]
+
+
+def test_remeasure_admission_admits_cycle_owned_xeon(tmp_path: Path) -> None:
+    sha = "a" * 40
+    tree = "b" * 40
+    path = tmp_path / "observe.sqlite3.fleet_admission.json"
+    comfy_host = measured_host_record(
+        {
+            "hostname": "COMFY-V4-CPU-01",
+            "sid": "S-1-5-21-comfy",
+            "whoami": r"comfy-v4-cpu-01\windows 11",
+            "observation_kind": "MEASURED",
+            "measured_at_utc": NOW.isoformat(),
+        },
+        workspace_root=r"C:\Users\Windows 11\ProjectPipeline\jobs",
+    )
+    write_admission_record(
+        path,
+        observation_admission_record(
+            {}, hosts={"COMFY-V4-CPU-01": comfy_host}, source_sha=sha, source_tree=tree
+        ),
+    )
+    denied = chosen_host_admitted(
+        load_admission_record(path),
+        "WIN-EVSH1DN8H5O",
+        expected_sha=sha,
+        expected_tree=tree,
+        now=NOW,
+        cycle_owned=True,
+    )
+    assert denied["ok"] is False
+    xeon_host = measured_host_record(
+        {
+            "hostname": "WIN-EVSH1DN8H5O",
+            "sid": "S-1-5-21-xeon",
+            "whoami": r"win-evsh1dn8h5o\kines",
+            "observation_kind": "MEASURED",
+            "measured_at_utc": NOW.isoformat(),
+        },
+        workspace_root=r"C:\Users\kines\ProjectPipeline\jobs",
+    )
+    write_admission_record(
+        path,
+        observation_admission_record(
+            load_admission_record(path) or {},
+            hosts={"COMFY-V4-CPU-01": comfy_host, "WIN-EVSH1DN8H5O": xeon_host},
+            source_sha=sha,
+            source_tree=tree,
+        ),
+    )
+    admitted = chosen_host_admitted(
+        load_admission_record(path),
+        "WIN-EVSH1DN8H5O",
+        expected_sha=sha,
+        expected_tree=tree,
+        now=NOW,
+        cycle_owned=True,
+    )
+    assert admitted["ok"] is True
 
 
 def test_noncanonical_cycle_job_id_cannot_lease() -> None:

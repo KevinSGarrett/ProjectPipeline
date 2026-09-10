@@ -9,6 +9,7 @@ from pathlib import Path
 from project_pipeline.autonomy_runtime.context_validation import NATIVE_PASS, execute_native_tests
 from project_pipeline.autonomy_runtime.fleet_loop import (
     accepted_result_hosts,
+    cycle_owned_validation_jobs,
     duplicate_work_audit,
     is_executable_job,
     newly_ready_owned_jobs,
@@ -16,6 +17,7 @@ from project_pipeline.autonomy_runtime.fleet_loop import (
     select_two_useful_jobs,
     useful_argv,
 )
+from project_pipeline.scheduler.fleet import MachineProfile
 
 NOW = datetime(2026, 9, 10, tzinfo=UTC)
 ROOT = Path(__file__).resolve().parents[3]
@@ -68,8 +70,44 @@ def test_next_owned_job_requires_verified_prior_result() -> None:
             ]
         }
     ]
+    xeon = MachineProfile.model_validate(
+        {
+            "machine_id": "WIN-EVSH1DN8H5O",
+            "hostname": "WIN-EVSH1DN8H5O",
+            "role": "MEMORY_HEAVY_BATCH_WORKER",
+            "observed_at_utc": NOW,
+            "isa_flags": ("avx",),
+            "cpu_slots": 8,
+            "memory_mb": 64000,
+            "disk_mb": 70000,
+            "principal": r"win-evsh1dn8h5o\kines",
+            "observation_kind": "MEASURED",
+            "sid": "S-1-5-21-xeon",
+        }
+    )
+    comfy = MachineProfile.model_validate(
+        {
+            "machine_id": "COMFY-V4-CPU-01",
+            "hostname": "COMFY-V4-CPU-01",
+            "role": "CPU_WORKER",
+            "observed_at_utc": NOW,
+            "isa_flags": ("avx2",),
+            "cpu_slots": 8,
+            "memory_mb": 32000,
+            "disk_mb": 40000,
+            "principal": r"comfy-v4-cpu-01\windows 11",
+            "observation_kind": "MEASURED",
+            "sid": "S-1-5-21-comfy",
+        }
+    )
     assert accepted_result_hosts(completed) == set()
-    assert newly_ready_owned_jobs((), selected_ids=set(), verified_hosts=set()) == []
+    assert cycle_owned_validation_jobs((xeon, comfy)) == ["PP-TASK-000990", "PP-TASK-000991"]
+    assert (
+        newly_ready_owned_jobs(
+            (xeon, comfy), selected_ids=set(), verified_hosts=accepted_result_hosts(completed)
+        )
+        == []
+    )
 
 
 def test_req_ctrl_and_pdef_remain_incomplete() -> None:
