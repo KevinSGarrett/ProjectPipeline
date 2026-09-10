@@ -30,7 +30,6 @@ from project_pipeline.autonomy_runtime.service import (
 )
 from project_pipeline.autonomy_runtime.windows_limits import NESTED_POOL_KEYS
 from project_pipeline.autonomy_runtime.worker_allowlist import (
-    HOST_PYTHON_EXECUTABLES,
     remote_command_allowed,
     worker_launch_argv,
 )
@@ -321,51 +320,9 @@ class SshDispatchAdapter:
             timeout=45,
             env=self._ssh_env(),
         )
-        if completed.returncode == 0 and dest.is_file():
-            return dest.read_bytes()
-        return self._acquire_via_ssh_python(working_directory, name, dest)
-
-    def _acquire_via_ssh_python(
-        self, working_directory: Path, name: str, dest: Path
-    ) -> bytes | None:
-        remote_path = str(Path(working_directory) / name)
-        script = (
-            "import pathlib,sys; "
-            f"p=pathlib.Path({remote_path!r}); "
-            "sys.stdout.buffer.write(p.read_bytes() if p.is_file() else b'')"
-        )
-        python_exe = HOST_PYTHON_EXECUTABLES.get(self.machine_id) or "python"
-        argv = [
-            "ssh",
-            "-i",
-            str(self.identity),
-            "-o",
-            "IdentitiesOnly=yes",
-            "-o",
-            "BatchMode=yes",
-            "-o",
-            f"ConnectTimeout={self.connect_timeout}",
-            "-l",
-            self.user,
-            self.host,
-            python_exe,
-            "-c",
-            script,
-        ]
-        completed = subprocess.run(
-            argv,
-            capture_output=True,
-            check=False,
-            shell=False,
-            timeout=45,
-            env=self._ssh_env(),
-        )
-        payload = completed.stdout or b""
-        if completed.returncode != 0 or not payload:
+        if completed.returncode != 0 or not dest.is_file():
             return None
-        dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_bytes(payload)
-        return payload
+        return dest.read_bytes()
 
     def _ssh_env(self) -> dict[str, str]:
         allowed = {item.upper() for item in SSH_CLIENT_ENV_KEYS}
