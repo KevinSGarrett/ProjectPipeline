@@ -518,3 +518,122 @@ def test_owned_fault_job_id_is_attempt_specific() -> None:
     source = inspect.getsource(_fault_owned_hold_job)
     assert "C21-OWNED-FAULT-{stamp}" in source
     assert "%Y%m%dT%H%M%S%fZ" in source
+
+
+def test_run_observation_remeasures_xeon_and_dispatches_after_comfy(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from project_pipeline.autonomy_runtime import fleet_loop as fl
+
+    clock = {"now": NOW}
+    calls: list[list[str]] = []
+    measure_calls = {"n": 0}
+
+    class FrozenDateTime(datetime):
+        @classmethod
+        def now(cls, tz: object = None) -> datetime:
+            current = clock["now"]
+            return current if tz is None else current.astimezone(tz)  # type: ignore[arg-type]
+
+    comfy_inv = _live_inventory("COMFY-V4-CPU-01", "S-1-5-21-comfy", r"comfy-v4-cpu-01\windows 11")
+    xeon_inv = _live_inventory("WIN-EVSH1DN8H5O", "S-1-5-21-xeon", r"win-evsh1dn8h5o\kines")
+    xeon_inv["totalRAMGB"] = 63.96
+    missing_xeon = {
+        "ok": False,
+        "reason": "remote_measurement_unavailable",
+        "observation_kind": "PARTIAL",
+    }
+
+    def measure() -> dict[str, dict[str, object]]:
+        measure_calls["n"] += 1
+        if measure_calls["n"] == 1:
+            return {"COMFY-V4-CPU-01": comfy_inv, "WIN-EVSH1DN8H5O": missing_xeon}
+        return {"COMFY-V4-CPU-01": comfy_inv, "WIN-EVSH1DN8H5O": xeon_inv}
+
+    def fake_sleep(seconds: float) -> None:
+        clock["now"] = clock["now"] + timedelta(seconds=float(seconds))
+
+    def fake_work(**kwargs: object) -> dict[str, object]:
+        ready = list(kwargs.get("ready") or [])  # type: ignore[arg-type]
+        calls.append(ready)
+        results = []
+        for task_id in ready:
+            host = "WIN-EVSH1DN8H5O" if str(task_id).endswith("990") else "COMFY-V4-CPU-01"
+            results.append(
+                {
+                    "task_id": task_id,
+                    "outcome": "ACCEPTED",
+                    "host_id": host,
+                    "tests_run": 1,
+                }
+            )
+        return {
+            "ok": True,
+            "completed_jobs": [{"selected": ready, "results": results}],
+            "selected": ready,
+            "next_job": None,
+        }
+
+    monkeypatch.setattr(fl, "datetime", FrozenDateTime)
+    monkeypatch.setattr(fl.time, "sleep", fake_sleep)
+    monkeypatch.setattr(fl, "measure_enrolled_inventories", measure)
+    monkeypatch.setattr(fl, "run_available_work", fake_work)
+    monkeypatch.setattr(
+        fl,
+        "inspect_source_identity",
+        lambda root: {"ok": True, "sha": "a" * 40, "tree": "b" * 40},
+    )
+    monkeypatch.setattr(
+        fl,
+        "bound_overlay",
+        lambda root: {"ok": True, "digest": "c" * 64},
+    )
+    monkeypatch.setattr(fl, "observation_ready_task_ids", lambda *args, **kwargs: [])
+    monkeypatch.setattr(fl, "control_ready_task_ids", lambda *args, **kwargs: [])
+    monkeypatch.setattr(fl, "blocked_dependent_lane", lambda *args, **kwargs: "PP-STORY-000139")
+    monkeypatch.setattr(
+        fl,
+        "_fault_owned_hold_job",
+        lambda **kwargs: {
+            "recovered": True,
+            "killed": True,
+            "owned_job_id": "C21-OWNED-FAULT-TEST",
+            "intent_preserved": True,
+            "recovered_output_accepted": True,
+            "controller_restarted": True,
+            "unaffected_lane_progress": False,
+        },
+    )
+    monkeypatch.setattr(
+        fl,
+        "_operator_surfaces",
+        lambda **kwargs: {
+            "cli_remaining_seconds": 1.0,
+            "cli_fault_kind": "owned_durable_fault",
+            "command_center_journal_events": 1,
+            "command_center_occupancy_hosts": ["COMFY-V4-CPU-01"],
+            "same_journal": False,
+            "cli_ui_independent": True,
+        },
+    )
+    database = tmp_path / "obs.sqlite3"
+    result = run_observation(
+        root=tmp_path,
+        duration_seconds=120,
+        database=database,
+        live_ssh=True,
+    )
+    assert calls
+    assert calls[0] == ["PP-TASK-000991"]
+    assert ["PP-TASK-000990"] in calls
+    record = load_admission_record(_sidecar_path(database, "fleet_admission.json"))
+    admitted = chosen_host_admitted(
+        record,
+        "WIN-EVSH1DN8H5O",
+        expected_sha="a" * 40,
+        expected_tree="b" * 40,
+        now=NOW,
+        cycle_owned=True,
+    )
+    assert admitted["ok"] is True
+    assert result["fault"]["unaffected_lane_progress"] is True
