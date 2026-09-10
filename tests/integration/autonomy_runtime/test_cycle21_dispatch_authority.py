@@ -191,6 +191,7 @@ def test_ssh_does_not_retry_typeerror(tmp_path: Path) -> None:
         raise TypeError("after launch")
 
     adapter = SshDispatchAdapter.for_machine(HOST, identity=key, runner=runner)
+    caught = False
     try:
         adapter.execute(
             command=[
@@ -201,7 +202,6 @@ def test_ssh_does_not_retry_typeerror(tmp_path: Path) -> None:
             envelope=_envelope(tmp_path, "ssh-retry").model_dump(mode="json"),
         )
     except TypeError:
-        pass
-    else:
-        raise AssertionError("expected TypeError")
+        caught = True
+    assert caught is True
     assert len(calls) == 1

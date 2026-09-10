@@ -2,4 +2,6 @@
 
 
 def test_cycle21_native_pass() -> None:
-    assert True
+    collected = ("native", "pytest", "fixture")
+    assert collected[-1] == "fixture"
+    assert len(collected) == 3

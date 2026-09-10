@@ -5,4 +5,5 @@ import pytest
 
 @pytest.mark.skip(reason="mandatory check skipped")
 def test_cycle21_native_skip() -> None:
-    assert True
+    collected = ("skipped", "mandatory")
+    assert len(collected) == 2
