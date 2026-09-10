@@ -154,7 +154,10 @@ def test_wire_includes_authority_and_rejects_nested_env_as_enforcement(
     assert any(
         "ProgramData" in str(item) and "cycle20_remote_worker.py" in str(item) for item in ssh_argv
     )
-    assert any(str(item).lower().endswith("python.exe") for item in ssh_argv)
+    assert ssh_argv[-2] == "python"
+    assert not any(
+        " " in str(item) and str(item).lower().endswith("python.exe") for item in ssh_argv
+    )
     limits = limits_for_adapter(
         adapter=adapter, cpu_ceiling=1, memory_mb_ceiling=1, deadline_seconds=1
     )

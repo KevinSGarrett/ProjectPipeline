@@ -279,7 +279,8 @@ def test_read_started_record_waits_for_running_phase(tmp_path: Path) -> None:
     assert record["phase"] == "RUNNING"
     assert record["creation_time"] == "2"
     ignored = adapter.read_started_record(_StartedProcess([premature]))
-    assert ignored == {}
+    assert ignored.get("reason") == "pid_not_observed"
+    assert ignored.get("phase") != "RUNNING"
 
 
 def test_windows_worker_argv_is_allowlisted_on_posix_pathlib() -> None:

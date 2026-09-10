@@ -2,17 +2,23 @@
 
 from __future__ import annotations
 
+import inspect
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+import pytest
+
 from project_pipeline.autonomy_runtime.fleet_loop import (
+    _cli_status_from_process,
     _machine_for_task,
     choose_measured_worker,
     cycle_owned_validation_jobs,
     observation_ready_task_ids,
+    run_observation,
 )
 from project_pipeline.autonomy_runtime.managed_worker import classify_live_managed_worker
 from project_pipeline.autonomy_runtime.observation_eval import evaluate_observation
+from project_pipeline.domain.identifiers import IdentifierKind, validate_identifier
 from project_pipeline.scheduler.fleet import MachineProfile
 from project_pipeline.scheduler.host_observation import (
     apply_inventory_observation,
@@ -125,9 +131,16 @@ def test_cycle_owned_jobs_bind_both_hosts() -> None:
         }
     )
     jobs = cycle_owned_validation_jobs((xeon, comfy))
-    assert jobs == ["PP-TASK-C21-VALIDATE-XEON", "PP-TASK-C21-VALIDATE-COMFY"]
+    assert jobs == ["PP-TASK-000990", "PP-TASK-000991"]
     assert _machine_for_task(jobs[0], (xeon, comfy), index=0, remote=True) == "WIN-EVSH1DN8H5O"
     assert _machine_for_task(jobs[1], (xeon, comfy), index=1, remote=True) == "COMFY-V4-CPU-01"
+    for task_id in jobs:
+        assert validate_identifier(task_id, IdentifierKind.ISSUE) == task_id
+
+
+def test_noncanonical_cycle_job_id_cannot_lease() -> None:
+    with pytest.raises(ValueError, match="Invalid issue identifier"):
+        validate_identifier("PP-TASK-C21-VALIDATE-COMFY", IdentifierKind.ISSUE)
 
 
 def test_observation_rejects_zero_time_and_duplicate_heartbeats() -> None:
@@ -150,3 +163,15 @@ def test_observation_rejects_zero_time_and_duplicate_heartbeats() -> None:
     assert any(
         "zero_wall_seconds" in item or "heartbeat_duplicate" in item for item in result["reasons"]
     )
+
+
+def test_operator_surfaces_invoke_production_status_cli() -> None:
+    source = inspect.getsource(_cli_status_from_process)
+    assert "fleet-loop" in source
+    assert "status" in source
+
+
+def test_observation_staggers_cycle_owned_jobs() -> None:
+    source = inspect.getsource(run_observation)
+    assert "pending_owned" in source
+    assert "elapsed >= 45" in source

@@ -185,6 +185,16 @@ def default_identity_path() -> Path:
     return DEFAULT_IDENTITY
 
 
+def ssh_config_user_option(user: str) -> str:
+    """Format an ssh_config User option that survives spaces in the username."""
+
+    if not user or "\n" in user or "\x00" in user:
+        raise ValueError("invalid ssh user")
+    if any(ch.isspace() for ch in user):
+        return f'User="{user}"'
+    return f"User={user}"
+
+
 def _denied_users_for_host(host: str) -> frozenset[str]:
     if host == COMFY_TAILNET_IPV4:
         return COMFY_DENIED_USERS
@@ -297,7 +307,7 @@ class SshDispatchAdapter:
         except ConfinementError:
             return None
         dest.parent.mkdir(parents=True, exist_ok=True)
-        remote = f"{self.user}@{self.host}:{Path(working_directory).as_posix()}/{name}"
+        posix = f"{Path(working_directory).as_posix()}/{name}"
         completed = subprocess.run(
             [
                 "scp",
@@ -309,7 +319,9 @@ class SshDispatchAdapter:
                 "BatchMode=yes",
                 "-o",
                 f"ConnectTimeout={self.connect_timeout}",
-                remote,
+                "-o",
+                ssh_config_user_option(self.user),
+                f"{self.host}:{posix}",
                 str(dest),
             ],
             capture_output=True,
@@ -424,7 +436,7 @@ class SshDispatchAdapter:
         return process
 
     def read_started_record(
-        self, process: subprocess.Popen[str], *, timeout_seconds: int = 12
+        self, process: subprocess.Popen[str], *, timeout_seconds: int = 30
     ) -> dict[str, Any]:
         if process.stdout is None:
             return {}
@@ -441,7 +453,14 @@ class SshDispatchAdapter:
             parsed = parse_worker_stdout(buf)
             if _is_running_started_record(parsed):
                 return parsed
-        return {}
+            if parsed.get("ok") is False:
+                return parsed
+        parsed = parse_worker_stdout(buf)
+        if _is_running_started_record(parsed):
+            return parsed
+        if parsed.get("ok") is False:
+            return parsed
+        return {"ok": False, "reason": "pid_not_observed"}
 
     def read_started_pid(
         self, process: subprocess.Popen[str], *, timeout_seconds: int = 12

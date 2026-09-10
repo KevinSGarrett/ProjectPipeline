@@ -7,7 +7,10 @@ from pathlib import Path
 from unittest.mock import patch
 
 from project_pipeline.autonomy_runtime.remote_worker_protocol import _pid_is_owned, run_envelope
-from project_pipeline.autonomy_runtime.worker_allowlist import remote_command_allowed
+from project_pipeline.autonomy_runtime.worker_allowlist import (
+    remote_command_allowed,
+    worker_launch_argv,
+)
 
 NOW = datetime.now(UTC)
 HOST = "COMFY-V4-CPU-01"
@@ -21,6 +24,13 @@ def _identity() -> dict[str, str]:
         "sid": "S-1-5-21-comfy",
         "module_sha256": "a" * 64,
     }
+
+
+def test_comfy_ssh_transport_argv_has_no_spaces() -> None:
+    argv = worker_launch_argv(HOST)
+    assert argv[0] == "python"
+    assert all(" " not in item for item in argv)
+    assert remote_command_allowed(argv) is True
 
 
 def test_rejects_traversal_and_unapproved_scripts() -> None:
