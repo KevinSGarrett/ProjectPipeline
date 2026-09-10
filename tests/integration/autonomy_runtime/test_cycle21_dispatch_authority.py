@@ -308,6 +308,55 @@ def test_prelaunch_pack_failure_releases_claim_for_retry(tmp_path: Path) -> None
     assert second["reason"] == "pack_missing"
 
 
+def test_failed_complete_cache_does_not_block_retry(tmp_path: Path) -> None:
+    env = _envelope(tmp_path, "failed-cache")
+    payload = env.model_dump(mode="json")
+    payload["argv"] = list(env.argv)
+
+    class Failed:
+        returncode = 2
+        stdout = "no pytest"
+        stderr = "No module named pytest"
+        pid = 1
+        creation_time = "1"
+        output_truncated = False
+
+    class Passed:
+        returncode = 0
+        stdout = "ok"
+        stderr = ""
+        pid = 2
+        creation_time = "2"
+        output_truncated = False
+
+    calls = {"n": 0}
+
+    def fake_spawn(**kwargs: object) -> tuple[object, dict[str, object]]:
+        del kwargs
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return Failed(), {"pid": 1, "creation_time": "1", "mechanism": "fixture"}
+        return Passed(), {"pid": 2, "creation_time": "2", "mechanism": "fixture"}
+
+    with (
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol.local_runtime_identity",
+            return_value=_identity(),
+        ),
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol._spawn_enforced",
+            side_effect=fake_spawn,
+        ),
+    ):
+        first = run_envelope(payload)
+        second = run_envelope(payload)
+    assert first["ok"] is False
+    assert first.get("duplicate") is not True
+    assert second["ok"] is True
+    assert second.get("duplicate") is not True
+    assert calls["n"] == 2
+
+
 def test_cycle_owned_job_admits_measured_host_without_c18() -> None:
     record = {
         "source_sha": SHA,

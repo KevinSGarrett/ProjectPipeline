@@ -198,6 +198,13 @@ def _remaining_deadline_seconds(raw: object) -> int:
         return 1
 
 
+def _zero_exit(value: object) -> bool:
+    try:
+        return int(value) == 0
+    except (TypeError, ValueError):
+        return False
+
+
 def _load_cache(path: Path, identity: str) -> dict[str, Any] | None:
     if not path.is_file():
         return None
@@ -205,6 +212,8 @@ def _load_cache(path: Path, identity: str) -> dict[str, Any] | None:
     if str(payload.get("authority_identity") or "") != identity:
         return None
     if str(payload.get("claim_state") or "") != WORKER_CLAIM_COMPLETE:
+        return None
+    if payload.get("ok") is not True or not _zero_exit(payload.get("exit_code")):
         return None
     payload["duplicate"] = True
     return payload
