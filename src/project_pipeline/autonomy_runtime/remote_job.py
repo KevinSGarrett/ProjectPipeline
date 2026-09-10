@@ -69,6 +69,7 @@ class RemoteJobEnvelope(DomainModel):
     context_pack: dict[str, Any] | None = None
     pack_sha256: str | None = None
     require_context_consumption: bool = False
+    project_id: str = "PROJECT-PIPELINE"
     effect_class: Literal["IDEMPOTENT_RESULT", "NON_IDEMPOTENT_EFFECT"] = "IDEMPOTENT_RESULT"
 
     def digest(self) -> str:

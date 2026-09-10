@@ -6,8 +6,6 @@ import argparse
 import hashlib
 import json
 import os
-import subprocess
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -17,7 +15,6 @@ try:
         execute_native_tests,
     )
 except ImportError:
-    NATIVE_PASS = "cycle21_native_pass.py"
 
     def execute_native_tests(
         *,
@@ -26,35 +23,20 @@ except ImportError:
         output_dir: Path,
         python_executable: str | None = None,
     ) -> dict[str, Any]:
-        output_dir.mkdir(parents=True, exist_ok=True)
-        junit = output_dir / "junit.xml"
-        fixture = Path(__file__).with_name("cycle21_native_pass.py")
-        targets = [
-            str(fixture if item.endswith("cycle21_native_pass.py") else item) for item in selection
-        ]
-        argv = [
-            python_executable or sys.executable,
-            "-m",
-            "pytest",
-            "-q",
-            f"--junitxml={junit}",
-            *targets,
-        ]
-        completed = subprocess.run(
-            argv, cwd=str(root), capture_output=True, text=True, check=False, shell=False
-        )
-        digest = hashlib.sha256(junit.read_bytes()).hexdigest() if junit.is_file() else None
-        collected = 1 if completed.returncode == 0 else 0
+        del root, selection, output_dir, python_executable
         return {
-            "ok": completed.returncode == 0 and junit.is_file(),
-            "status": "PASS" if completed.returncode == 0 else "FAIL",
-            "tests_run": collected,
-            "collected": collected,
-            "exit_code": completed.returncode,
-            "command": argv,
-            "junit_sha256": digest,
-            "artifact_sha256": digest or hashlib.sha256(b"").hexdigest(),
+            "ok": False,
+            "status": "CONTEXT_VALIDATION_UNAVAILABLE",
+            "reason": "context_validation_unavailable",
+            "tests_run": 0,
+            "collected": 0,
+            "exit_code": 2,
+            "command": [],
+            "junit_sha256": None,
+            "artifact_sha256": hashlib.sha256(b"").hexdigest(),
         }
+
+    NATIVE_PASS = "tests/fixtures/cycle21_native_pass.py"
 
 
 CRITERIA = {

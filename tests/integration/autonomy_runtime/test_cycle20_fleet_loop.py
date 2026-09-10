@@ -100,6 +100,11 @@ class _RemoteAdapter:
             "stderr_sha256": "2" * 64,
             "payload_sha256": "3" * 64,
             "remote_pid": "4242",
+            "context_consumption": {
+                "ok": True,
+                "worker_id": "WIN-EVSH1DN8H5O:4242",
+                "status": "CONSUMED",
+            },
         }
 
 

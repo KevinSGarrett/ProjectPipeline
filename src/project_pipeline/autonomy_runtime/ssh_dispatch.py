@@ -325,6 +325,7 @@ class SshDispatchAdapter:
                 "pack_sha256",
                 "require_context_consumption",
                 "creation_time",
+                "project_id",
             ):
                 if key in envelope and envelope[key] is not None:
                     payload[key] = envelope[key]

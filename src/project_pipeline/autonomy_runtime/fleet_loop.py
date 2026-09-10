@@ -722,20 +722,35 @@ def _fault_owned_hold_job(
             input_sha256=recovered_env.input_sha256,
         )
         recovered_output = int(recovered_run.get("exit_code") or 1) == 0
-        if recovered_output:
+        stdout = str(recovered_run.get("stdout") or "")
+        stderr = str(recovered_run.get("stderr") or "")
+        output_sha256 = str(
+            recovered_run.get("payload_sha256")
+            or recovered_run.get("output_sha256")
+            or hashlib.sha256(stdout.encode("utf-8")).hexdigest()
+        )
+        stdout_sha256 = str(
+            recovered_run.get("stdout_sha256") or hashlib.sha256(stdout.encode("utf-8")).hexdigest()
+        )
+        stderr_sha256 = str(
+            recovered_run.get("stderr_sha256") or hashlib.sha256(stderr.encode("utf-8")).hexdigest()
+        )
+        if recovered_output and len(output_sha256) == 64:
             store.accept_result(
                 {
                     "job_id": recovered_env.job_id,
                     "host_id": recovered_env.host_id,
                     "fence": recovered_env.fence,
                     "exit_code": 0,
-                    "output_sha256": str(recovered_run.get("payload_sha256") or "e" * 64),
-                    "stdout_sha256": str(recovered_run.get("stdout_sha256") or "f" * 64),
-                    "stderr_sha256": str(recovered_run.get("stderr_sha256") or "a" * 64),
+                    "output_sha256": output_sha256,
+                    "stdout_sha256": stdout_sha256,
+                    "stderr_sha256": stderr_sha256,
                 },
                 now=now,
                 envelope=recovered_env.model_dump(mode="json"),
             )
+        else:
+            recovered_output = False
     recovered = killed and intent_kept and reconciled.get("ok") is True and recovered_output
     restarted_store = FleetJobStore(store.database)
     controller_restarted = restarted_store.get_intent(job_id) is not None

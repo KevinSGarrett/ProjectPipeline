@@ -129,6 +129,24 @@ def compile_validation_pack(
         }
 
 
+def pack_content_digest(pack: dict[str, Any]) -> str:
+    payload = {
+        "delegation_id": pack.get("delegation_id"),
+        "policy_version": pack.get("policy_version"),
+        "items": pack.get("items") or [],
+        "coverage": pack.get("coverage") or {},
+        "stale_keys": pack.get("stale_keys") or [],
+        "redaction_count": pack.get("redaction_count"),
+        "omissions": pack.get("omissions") or [],
+        "warnings": pack.get("warnings") or [],
+        "total_chars": pack.get("total_chars"),
+    }
+    encoded = json.dumps(
+        payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False, default=str
+    )
+    return hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+
 def write_pack(workspace: Path, pack: dict[str, Any]) -> Path:
     path = workspace / "context_pack.json"
     path.write_text(json.dumps(pack, indent=2, sort_keys=True) + "\n", encoding="utf-8")
@@ -137,35 +155,41 @@ def write_pack(workspace: Path, pack: dict[str, Any]) -> Path:
 
 def consume_pack_on_worker(payload: dict[str, Any]) -> dict[str, Any]:
     live = local_runtime_identity()
-    pack_path = Path(str(payload.get("pack_path") or payload.get("workspace") or "")).resolve()
-    if pack_path.is_dir():
-        pack_path = pack_path / "context_pack.json"
+    workspace = str(payload.get("workspace") or "").strip()
+    raw_path = Path(str(payload.get("pack_path") or workspace or "")).resolve()
+    pack_path = raw_path / "context_pack.json" if raw_path.is_dir() else raw_path
+    if workspace:
+        allowed = (Path(workspace).resolve() / "context_pack.json").resolve()
+        if pack_path != allowed:
+            return {"ok": False, "reason": "pack_path_not_confined", "exit_code": 2}
+        pack_path = allowed
     if not pack_path.is_file():
         return {"ok": False, "reason": "pack_missing", "exit_code": 2}
     try:
         pack = json.loads(pack_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError, UnicodeDecodeError):
         return {"ok": False, "reason": "pack_unreadable", "exit_code": 2}
+    if not isinstance(pack, dict):
+        return {"ok": False, "reason": "pack_unreadable", "exit_code": 2}
     expected = str(payload.get("pack_sha256") or "")
-    actual = hashlib.sha256(
-        json.dumps(pack, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    ).hexdigest()
-    if expected and actual != expected and str(pack.get("content_sha256") or "") != expected:
+    if len(expected) != 64:
+        return {"ok": False, "reason": "pack_digest_required", "exit_code": 2}
+    actual = pack_content_digest(pack)
+    if actual != expected or str(pack.get("content_sha256") or "") != expected:
         return {"ok": False, "reason": "pack_tampered", "exit_code": 2}
     binding = _pack_item(pack, "source_binding")
     if str(binding.get("source_sha") or "") != str(payload.get("source_sha") or ""):
         return {"ok": False, "reason": "wrong_source", "exit_code": 2}
     if str(binding.get("source_tree") or "") != str(payload.get("source_tree") or ""):
         return {"ok": False, "reason": "wrong_tree", "exit_code": 2}
+    if str(binding.get("overlay_sha256") or "") != str(payload.get("overlay_sha256") or ""):
+        return {"ok": False, "reason": "wrong_overlay", "exit_code": 2}
     authority = _pack_item(pack, "authority")
     if str(authority.get("host_id") or "") != str(payload.get("host_id") or ""):
         return {"ok": False, "reason": "wrong_host", "exit_code": 2}
     if str(authority.get("principal") or "") != str(payload.get("principal") or ""):
         return {"ok": False, "reason": "wrong_principal", "exit_code": 2}
-    if str(payload.get("project_id") or "PROJECT-PIPELINE") not in {
-        "PROJECT-PIPELINE",
-        str(binding.get("task_id") or payload.get("job_id") or ""),
-    } and str(payload.get("project_id") or "") not in {"", "PROJECT-PIPELINE"}:
+    if str(payload.get("project_id") or "") != "PROJECT-PIPELINE":
         return {"ok": False, "reason": "wrong_project", "exit_code": 2}
     generated = pack.get("generated_at_utc")
     try:

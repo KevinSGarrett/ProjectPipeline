@@ -10,6 +10,7 @@ from project_pipeline.autonomy_runtime.context_validation import (
     NATIVE_PASS,
     compile_validation_pack,
     consume_pack_on_worker,
+    job_input_digest,
     write_pack,
 )
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
@@ -188,15 +189,31 @@ class DispatchWorkflow:
         if compiled.get("ok") and isinstance(compiled.get("pack"), dict):
             pack_payload = compiled["pack"]
             pack_digest = str(compiled.get("pack_sha256") or "")
+        if not pack_payload or len(pack_digest) != 64:
+            return {
+                "outcome": "REJECTED",
+                "reason": "context_pack_compile_failed",
+                "lifecycle": "REJECTED",
+                "host_id": chosen.machine_id,
+                "lease_id": lease_id,
+                "fence": fence,
+            }
         nested_pool_env(cpu)
         worker = adapter or self.adapter_factory(chosen.machine_id)
         remote_worker = isinstance(worker, SshDispatchAdapter) or bool(
             getattr(worker, "remote_host", False)
         )
         local_workspace = Path(workspace).is_dir() and not remote_worker
-        require_pack = bool(pack_payload) and (
-            isinstance(worker, SshDispatchAdapter) or local_workspace
+        require_pack = True
+        canonical_input = job_input_digest(
+            task_id=task_id,
+            source_sha=self.source_sha,
+            source_tree=self.source_tree,
+            overlay_sha256=self.overlay_sha256,
+            pack_sha256=pack_digest,
+            selection=(NATIVE_PASS,),
         )
+        del input_sha256
         envelope = RemoteJobEnvelope(
             job_id=task_id,
             host_id=chosen.machine_id,
@@ -207,7 +224,7 @@ class DispatchWorkflow:
             source_sha=self.source_sha,
             source_tree=self.source_tree,
             overlay_sha256=self.overlay_sha256,
-            input_sha256=input_sha256,
+            input_sha256=canonical_input,
             argv=argv,
             workspace=workspace,
             workspace_root=workspace_root,
@@ -240,12 +257,15 @@ class DispatchWorkflow:
             consumed = consume_pack_on_worker(
                 {
                     "pack_path": str(Path(workspace) / "context_pack.json"),
+                    "workspace": str(workspace),
                     "pack_sha256": pack_digest,
                     "source_sha": self.source_sha,
                     "source_tree": self.source_tree,
+                    "overlay_sha256": self.overlay_sha256,
                     "host_id": chosen.machine_id,
                     "principal": envelope.principal,
                     "job_id": task_id,
+                    "project_id": "PROJECT-PIPELINE",
                 }
             )
             if not consumed.get("ok"):

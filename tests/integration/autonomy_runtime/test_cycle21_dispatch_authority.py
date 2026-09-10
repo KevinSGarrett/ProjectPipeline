@@ -205,3 +205,23 @@ def test_ssh_does_not_retry_typeerror(tmp_path: Path) -> None:
         caught = True
     assert caught is True
     assert len(calls) == 1
+
+
+def test_consume_context_requires_identity(tmp_path: Path) -> None:
+    payload = {
+        "action": "consume_context",
+        "host_id": HOST,
+        "job_id": "consume-unauth",
+        "workspace": str(tmp_path),
+        "workspace_root": str(tmp_path),
+        "pack_sha256": "c" * 64,
+        "argv": ["python", r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle21_validation_job.py"],
+        "input_sha256": "d" * 64,
+    }
+    with patch(
+        "project_pipeline.autonomy_runtime.remote_worker_protocol.local_runtime_identity",
+        return_value=_identity(),
+    ):
+        result = run_envelope(payload)
+    assert result["ok"] is False
+    assert result["reason"] in {"authority_missing", "authority_unverified"}

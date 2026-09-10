@@ -26,7 +26,9 @@ from project_pipeline.autonomy_runtime.confinement import (
     confine_remote_workspace,
 )
 from project_pipeline.autonomy_runtime.context_validation import (
+    NATIVE_PASS,
     consume_pack_on_worker,
+    job_input_digest,
     write_pack,
 )
 from project_pipeline.autonomy_runtime.windows_limits import (
@@ -301,8 +303,6 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
         return _kill(payload)
     if action == "measure":
         return _fail("use_controller_cim")
-    if action == "consume_context":
-        return consume_pack_on_worker(payload)
     host_id = str(payload.get("host_id") or "")
     if not host_id:
         return _fail("authority_missing", extra={"missing": ["host_id"]})
@@ -338,6 +338,31 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
     input_sha256 = str(payload.get("input_sha256") or "")
     if not input_sha256 or len(input_sha256) != 64:
         return _fail("input_digest_required")
+    if action == "consume_context":
+        pack_path = Path(workspace) / "context_pack.json"
+        consumed = consume_pack_on_worker({**payload, "pack_path": str(pack_path)})
+        if not consumed.get("ok"):
+            return _fail(str(consumed.get("reason") or "pack_unconsumed"))
+        return consumed
+    require_pack = bool(
+        payload.get("require_context_consumption")
+        or payload.get("context_pack") is not None
+        or payload.get("pack_sha256")
+    )
+    if require_pack:
+        pack_digest = str(payload.get("pack_sha256") or "")
+        if len(pack_digest) != 64:
+            return _fail("pack_digest_required")
+        expected_input = job_input_digest(
+            task_id=job_id,
+            source_sha=str(payload.get("source_sha") or ""),
+            source_tree=str(payload.get("source_tree") or ""),
+            overlay_sha256=str(payload.get("overlay_sha256") or ""),
+            pack_sha256=pack_digest,
+            selection=(NATIVE_PASS,),
+        )
+        if input_sha256 != expected_input:
+            return _fail("input_digest_mismatch")
     identity = authority_identity(payload)
     claim = None
     if cache is not None:
