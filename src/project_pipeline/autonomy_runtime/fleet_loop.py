@@ -471,7 +471,7 @@ def run_available_work(
 
 def _sidecar_path(database: Path, suffix: str) -> Path:
     database = Path(database)
-    return database.with_name(f"{database.stem}.{suffix}")
+    return database.with_name(f"{database.name}.{suffix}")
 
 
 def _observation_dir(root: Path) -> Path:
@@ -669,7 +669,7 @@ def _fault_owned_hold_job(
     machine_id: str = XEON_MACHINE_ID,
     scheduler: SchedulerStore | None = None,
 ) -> dict[str, Any]:
-    stamp = now.astimezone(UTC).strftime("%Y%m%dT%H%M%SZ")
+    stamp = now.astimezone(UTC).strftime("%Y%m%dT%H%M%S%fZ")
     job_id = f"C21-OWNED-FAULT-{stamp}"
     hold = REMOTE_HOLD_SCRIPTS[machine_id]
     lease_id = f"{job_id}-LEASE"

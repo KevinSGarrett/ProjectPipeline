@@ -315,10 +315,17 @@ def test_observation_sidecars_include_database_stem(tmp_path: Path) -> None:
     first = tmp_path / "cycle21_allup_a.sqlite3"
     second = tmp_path / "cycle21_allup_b.sqlite3"
     assert _sidecar_path(first, "fleet_jobs.sqlite3") != _sidecar_path(second, "fleet_jobs.sqlite3")
-    assert _sidecar_path(first, "fleet_jobs.sqlite3").name == "cycle21_allup_a.fleet_jobs.sqlite3"
+    assert _sidecar_path(first, "fleet_jobs.sqlite3").name == (
+        "cycle21_allup_a.sqlite3.fleet_jobs.sqlite3"
+    )
+    collision = tmp_path / "run.db"
+    other = tmp_path / "run.sqlite3"
+    assert _sidecar_path(collision, "fleet_jobs.sqlite3") != _sidecar_path(
+        other, "fleet_jobs.sqlite3"
+    )
 
 
 def test_owned_fault_job_id_is_attempt_specific() -> None:
     source = inspect.getsource(_fault_owned_hold_job)
     assert "C21-OWNED-FAULT-{stamp}" in source
-    assert 'job_id = "C21-OWNED-FAULT"' not in source
+    assert "%Y%m%dT%H%M%S%fZ" in source
