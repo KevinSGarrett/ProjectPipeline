@@ -6,6 +6,7 @@ from pathlib import Path
 from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.fleet_loop import (
+    _sidecar_path,
     build_parser,
     choose_measured_worker,
     duplicate_work_audit,
@@ -71,7 +72,7 @@ def _run_kwargs(tmp_path: Path) -> dict[str, object]:
     database = tmp_path / "state.sqlite3"
     workspace = tmp_path / "ws"
     workspace.mkdir()
-    _write_xeon_admission(database.with_name("fleet_admission.json"))
+    _write_xeon_admission(_sidecar_path(database, "fleet_admission.json"))
     return {
         "root": ROOT,
         "database": database,

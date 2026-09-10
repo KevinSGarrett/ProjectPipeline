@@ -2028,6 +2028,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
             "dispatch",
         }:
             from project_pipeline.autonomy_runtime.campaign import inspect_worktree_identity
+            from project_pipeline.autonomy_runtime.fleet_loop import _sidecar_path
             from project_pipeline.autonomy_runtime.remote_job import (
                 RemoteJobEnvelope,
             )
@@ -2063,7 +2064,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 fleet.replace(apply_inventory_observation(fleet.profiles(), inventory))
                 fleet.persist(fleet_state)
                 identity = inspect_worktree_identity(args.root)
-                admission_path = Path(database).with_name("fleet_admission.json")
+                admission_path = _sidecar_path(Path(database), "fleet_admission.json")
                 existing = load_admission_record(admission_path) or {}
                 hosts = {
                     str(row["machine_id"]): {
@@ -2116,7 +2117,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                         "executed": {"outcome": "REJECTED", "reason": "wrong_host"},
                     }, 2
                 identity = inspect_worktree_identity(args.root)
-                admission_path = Path(database).with_name("fleet_admission.json")
+                admission_path = _sidecar_path(Path(database), "fleet_admission.json")
                 record = load_admission_record(admission_path)
                 host_gate = chosen_host_admitted(
                     record,
@@ -2146,7 +2147,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
                 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 
-                jobs = FleetJobStore(Path(database).with_name("fleet_jobs.sqlite3"))
+                jobs = FleetJobStore(_sidecar_path(Path(database), "fleet_jobs.sqlite3"))
                 workflow = DispatchWorkflow(
                     store=scheduler_store,
                     jobs=jobs,
@@ -2191,7 +2192,7 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 )
             if args.action == "place":
                 identity = inspect_worktree_identity(args.root)
-                admission_path = Path(database).with_name("fleet_admission.json")
+                admission_path = _sidecar_path(Path(database), "fleet_admission.json")
                 record = load_admission_record(admission_path)
                 gate = evaluate_admission(
                     record,

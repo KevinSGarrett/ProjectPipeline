@@ -12,6 +12,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse, Response
 
+from project_pipeline.autonomy_runtime.fleet_loop import _sidecar_path
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.command_center.api import CommandCenterAuth, create_command_center_app
 from project_pipeline.command_center.application import RepositoryApplicationProjectionBuilder
@@ -161,7 +162,7 @@ def create_live_command_center_app(
     def occupancy_provider() -> dict[str, dict[str, Any]]:
         with SchedulerStore(runtime_database, root) as store:
             lease_occupancy = occupancy_from_leases(store.list_active_leases())
-        journal_path = Path(runtime_database).with_name("fleet_lifecycle.sqlite3")
+        journal_path = _sidecar_path(Path(runtime_database), "fleet_lifecycle.sqlite3")
         journal_occupancy: dict[str, dict[str, Any]] = {}
         if journal_path.is_file():
             journal_occupancy = FleetLifecycleJournal(journal_path).occupancy_by_host(
