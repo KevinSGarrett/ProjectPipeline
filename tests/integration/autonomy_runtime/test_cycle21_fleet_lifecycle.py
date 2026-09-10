@@ -16,15 +16,25 @@ from project_pipeline.autonomy_runtime.fleet_loop import (
     _machine_for_task,
     _sidecar_path,
     _zero_exit,
+    accepted_result_hosts,
     choose_measured_worker,
     cycle_owned_validation_jobs,
+    newly_ready_owned_jobs,
     observation_ready_task_ids,
+    refresh_owned_admission,
     run_observation,
 )
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.managed_worker import classify_live_managed_worker
 from project_pipeline.autonomy_runtime.observation_eval import evaluate_observation
 from project_pipeline.domain.identifiers import IdentifierKind, validate_identifier
+from project_pipeline.scheduler.admission import (
+    chosen_host_admitted,
+    load_admission_record,
+    measured_host_record,
+    observation_admission_record,
+    write_admission_record,
+)
 from project_pipeline.scheduler.fleet import MachineProfile
 from project_pipeline.scheduler.host_observation import (
     apply_inventory_observation,
@@ -32,6 +42,40 @@ from project_pipeline.scheduler.host_observation import (
 )
 
 NOW = datetime(2026, 9, 10, 3, 0, tzinfo=UTC)
+
+
+def _measured_xeon_and_comfy() -> tuple[MachineProfile, MachineProfile]:
+    xeon = MachineProfile.model_validate(
+        {
+            "machine_id": "WIN-EVSH1DN8H5O",
+            "hostname": "WIN-EVSH1DN8H5O",
+            "role": "MEMORY_HEAVY_BATCH_WORKER",
+            "observed_at_utc": NOW,
+            "isa_flags": ("avx",),
+            "cpu_slots": 8,
+            "memory_mb": 64000,
+            "disk_mb": 70000,
+            "principal": r"win-evsh1dn8h5o\kines",
+            "observation_kind": "MEASURED",
+            "sid": "S-1-5-21-xeon",
+        }
+    )
+    comfy = MachineProfile.model_validate(
+        {
+            "machine_id": "COMFY-V4-CPU-01",
+            "hostname": "COMFY-V4-CPU-01",
+            "role": "CPU_WORKER",
+            "observed_at_utc": NOW,
+            "isa_flags": ("avx2",),
+            "cpu_slots": 8,
+            "memory_mb": 32000,
+            "disk_mb": 40000,
+            "principal": r"comfy-v4-cpu-01\windows 11",
+            "observation_kind": "MEASURED",
+            "sid": "S-1-5-21-comfy",
+        }
+    )
+    return xeon, comfy
 
 
 def test_hostname_only_inventory_is_not_ready() -> None:
@@ -105,43 +149,186 @@ def test_empty_control_ready_does_not_fabricate_leaves() -> None:
 
 
 def test_cycle_owned_jobs_bind_both_hosts() -> None:
-    now = datetime(2026, 9, 10, 3, 0, tzinfo=UTC)
-    xeon = MachineProfile.model_validate(
-        {
-            "machine_id": "WIN-EVSH1DN8H5O",
-            "hostname": "WIN-EVSH1DN8H5O",
-            "role": "MEMORY_HEAVY_BATCH_WORKER",
-            "observed_at_utc": now,
-            "isa_flags": ("avx",),
-            "cpu_slots": 8,
-            "memory_mb": 64000,
-            "disk_mb": 70000,
-            "principal": r"win-evsh1dn8h5o\kines",
-            "observation_kind": "MEASURED",
-            "sid": "S-1-5-21-xeon",
-        }
-    )
-    comfy = MachineProfile.model_validate(
-        {
-            "machine_id": "COMFY-V4-CPU-01",
-            "hostname": "COMFY-V4-CPU-01",
-            "role": "CPU_WORKER",
-            "observed_at_utc": now,
-            "isa_flags": ("avx2",),
-            "cpu_slots": 8,
-            "memory_mb": 32000,
-            "disk_mb": 40000,
-            "principal": r"comfy-v4-cpu-01\windows 11",
-            "observation_kind": "MEASURED",
-            "sid": "S-1-5-21-comfy",
-        }
-    )
+    xeon, comfy = _measured_xeon_and_comfy()
     jobs = cycle_owned_validation_jobs((xeon, comfy))
     assert jobs == ["PP-TASK-000990", "PP-TASK-000991"]
     assert _machine_for_task(jobs[0], (xeon, comfy), index=0, remote=True) == "WIN-EVSH1DN8H5O"
     assert _machine_for_task(jobs[1], (xeon, comfy), index=1, remote=True) == "COMFY-V4-CPU-01"
     for task_id in jobs:
         assert validate_identifier(task_id, IdentifierKind.ISSUE) == task_id
+
+
+def test_owned_jobs_wait_for_verified_result_then_admit_second_host() -> None:
+    xeon, comfy = _measured_xeon_and_comfy()
+    completed = [
+        {
+            "results": [
+                {
+                    "task_id": "PP-TASK-000991",
+                    "outcome": "ACCEPTED",
+                    "host_id": "COMFY-V4-CPU-01",
+                    "tests_run": 1,
+                }
+            ]
+        }
+    ]
+    assert accepted_result_hosts(completed) == {"COMFY-V4-CPU-01"}
+    assert newly_ready_owned_jobs((xeon, comfy), selected_ids=set(), verified_hosts=set()) == []
+    assert newly_ready_owned_jobs(
+        (xeon, comfy),
+        selected_ids={"PP-TASK-000991"},
+        verified_hosts={"COMFY-V4-CPU-01"},
+    ) == ["PP-TASK-000990"]
+
+
+def test_xeon_job_appears_only_after_host_becomes_measured() -> None:
+    xeon, comfy = _measured_xeon_and_comfy()
+    missing = xeon.model_copy(update={"observation_kind": "DECLARED", "sid": ""})
+    verified = {"COMFY-V4-CPU-01"}
+    selected = {"PP-TASK-000991"}
+    assert (
+        newly_ready_owned_jobs((missing, comfy), selected_ids=selected, verified_hosts=verified)
+        == []
+    )
+    assert newly_ready_owned_jobs(
+        (xeon, comfy), selected_ids=selected, verified_hosts=verified
+    ) == ["PP-TASK-000990"]
+
+
+def test_remeasure_admission_admits_cycle_owned_xeon(tmp_path: Path) -> None:
+    sha = "a" * 40
+    tree = "b" * 40
+    path = tmp_path / "observe.sqlite3.fleet_admission.json"
+    comfy_host = measured_host_record(
+        {
+            "hostname": "COMFY-V4-CPU-01",
+            "sid": "S-1-5-21-comfy",
+            "whoami": r"comfy-v4-cpu-01\windows 11",
+            "observation_kind": "MEASURED",
+            "measured_at_utc": NOW.isoformat(),
+        },
+        workspace_root=r"C:\Users\Windows 11\ProjectPipeline\jobs",
+    )
+    write_admission_record(
+        path,
+        observation_admission_record(
+            {}, hosts={"COMFY-V4-CPU-01": comfy_host}, source_sha=sha, source_tree=tree
+        ),
+    )
+    denied = chosen_host_admitted(
+        load_admission_record(path),
+        "WIN-EVSH1DN8H5O",
+        expected_sha=sha,
+        expected_tree=tree,
+        now=NOW,
+        cycle_owned=True,
+    )
+    assert denied["ok"] is False
+    xeon_host = measured_host_record(
+        {
+            "hostname": "WIN-EVSH1DN8H5O",
+            "sid": "S-1-5-21-xeon",
+            "whoami": r"win-evsh1dn8h5o\kines",
+            "observation_kind": "MEASURED",
+            "measured_at_utc": NOW.isoformat(),
+        },
+        workspace_root=r"C:\Users\kines\ProjectPipeline\jobs",
+    )
+    write_admission_record(
+        path,
+        observation_admission_record(
+            load_admission_record(path) or {},
+            hosts={"COMFY-V4-CPU-01": comfy_host, "WIN-EVSH1DN8H5O": xeon_host},
+            source_sha=sha,
+            source_tree=tree,
+        ),
+    )
+    admitted = chosen_host_admitted(
+        load_admission_record(path),
+        "WIN-EVSH1DN8H5O",
+        expected_sha=sha,
+        expected_tree=tree,
+        now=NOW,
+        cycle_owned=True,
+    )
+    assert admitted["ok"] is True
+
+
+def _live_inventory(hostname: str, sid: str, whoami: str) -> dict[str, object]:
+    return {
+        "ok": True,
+        "hostname": hostname,
+        "whoami": whoami,
+        "sid": sid,
+        "observation_kind": "MEASURED",
+        "measured_at_utc": NOW.isoformat(),
+        "totalRAMGB": 32.0,
+        "availableRAMGB": 20.0,
+        "cpuLogical": 8,
+        "cpuPhysical": 8,
+        "disks": [{"DeviceID": "C:", "FreeGB": 40.0}],
+        "isa": {"sse42": True, "avx": True, "avx2": hostname == "COMFY-V4-CPU-01"},
+        "osBuild": "26100" if hostname == "COMFY-V4-CPU-01" else "19043",
+    }
+
+
+def test_refresh_owned_admission_dispatches_xeon_after_comfy_result(tmp_path: Path) -> None:
+    sha = "a" * 40
+    tree = "b" * 40
+    path = tmp_path / "observe.sqlite3.fleet_admission.json"
+    comfy_inv = _live_inventory("COMFY-V4-CPU-01", "S-1-5-21-comfy", r"comfy-v4-cpu-01\windows 11")
+    xeon_inv = _live_inventory("WIN-EVSH1DN8H5O", "S-1-5-21-xeon", r"win-evsh1dn8h5o\kines")
+    xeon_inv["totalRAMGB"] = 63.96
+    comfy_only = {
+        "COMFY-V4-CPU-01": comfy_inv,
+        "WIN-EVSH1DN8H5O": {
+            "ok": False,
+            "reason": "remote_measurement_unavailable",
+            "observation_kind": "PARTIAL",
+        },
+    }
+    profiles, discovered = refresh_owned_admission(
+        comfy_only,
+        admission_path=path,
+        existing={},
+        source_sha=sha,
+        source_tree=tree,
+        selected_ids={"PP-TASK-000991"},
+        verified_hosts={"COMFY-V4-CPU-01"},
+        when=NOW,
+    )
+    assert discovered == []
+    denied = chosen_host_admitted(
+        load_admission_record(path),
+        "WIN-EVSH1DN8H5O",
+        expected_sha=sha,
+        expected_tree=tree,
+        now=NOW,
+        cycle_owned=True,
+    )
+    assert denied["ok"] is False
+    both = {"COMFY-V4-CPU-01": comfy_inv, "WIN-EVSH1DN8H5O": xeon_inv}
+    profiles, discovered = refresh_owned_admission(
+        both,
+        admission_path=path,
+        existing=load_admission_record(path) or {},
+        source_sha=sha,
+        source_tree=tree,
+        selected_ids={"PP-TASK-000991"},
+        verified_hosts={"COMFY-V4-CPU-01"},
+        when=NOW,
+    )
+    assert any(item.machine_id == "WIN-EVSH1DN8H5O" for item in profiles)
+    assert discovered == ["PP-TASK-000990"]
+    admitted = chosen_host_admitted(
+        load_admission_record(path),
+        "WIN-EVSH1DN8H5O",
+        expected_sha=sha,
+        expected_tree=tree,
+        now=NOW,
+        cycle_owned=True,
+    )
+    assert admitted["ok"] is True
 
 
 def test_noncanonical_cycle_job_id_cannot_lease() -> None:
@@ -182,6 +369,8 @@ def test_observation_staggers_cycle_owned_jobs() -> None:
     source = inspect.getsource(run_observation)
     assert "pending_owned" in source
     assert "elapsed >= 45" in source
+    assert "verified_hosts" in source
+    assert "refresh_owned_admission" in source
     assert "CYCLE_OWNED_VALIDATION_JOBS" in source
 
 
@@ -329,3 +518,122 @@ def test_owned_fault_job_id_is_attempt_specific() -> None:
     source = inspect.getsource(_fault_owned_hold_job)
     assert "C21-OWNED-FAULT-{stamp}" in source
     assert "%Y%m%dT%H%M%S%fZ" in source
+
+
+def test_run_observation_remeasures_xeon_and_dispatches_after_comfy(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from project_pipeline.autonomy_runtime import fleet_loop as fl
+
+    clock = {"now": NOW}
+    calls: list[list[str]] = []
+    measure_calls = {"n": 0}
+
+    class FrozenDateTime(datetime):
+        @classmethod
+        def now(cls, tz: object = None) -> datetime:
+            current = clock["now"]
+            return current if tz is None else current.astimezone(tz)  # type: ignore[arg-type]
+
+    comfy_inv = _live_inventory("COMFY-V4-CPU-01", "S-1-5-21-comfy", r"comfy-v4-cpu-01\windows 11")
+    xeon_inv = _live_inventory("WIN-EVSH1DN8H5O", "S-1-5-21-xeon", r"win-evsh1dn8h5o\kines")
+    xeon_inv["totalRAMGB"] = 63.96
+    missing_xeon = {
+        "ok": False,
+        "reason": "remote_measurement_unavailable",
+        "observation_kind": "PARTIAL",
+    }
+
+    def measure() -> dict[str, dict[str, object]]:
+        measure_calls["n"] += 1
+        if measure_calls["n"] == 1:
+            return {"COMFY-V4-CPU-01": comfy_inv, "WIN-EVSH1DN8H5O": missing_xeon}
+        return {"COMFY-V4-CPU-01": comfy_inv, "WIN-EVSH1DN8H5O": xeon_inv}
+
+    def fake_sleep(seconds: float) -> None:
+        clock["now"] = clock["now"] + timedelta(seconds=float(seconds))
+
+    def fake_work(**kwargs: object) -> dict[str, object]:
+        ready = list(kwargs.get("ready") or [])  # type: ignore[arg-type]
+        calls.append(ready)
+        results = []
+        for task_id in ready:
+            host = "WIN-EVSH1DN8H5O" if str(task_id).endswith("990") else "COMFY-V4-CPU-01"
+            results.append(
+                {
+                    "task_id": task_id,
+                    "outcome": "ACCEPTED",
+                    "host_id": host,
+                    "tests_run": 1,
+                }
+            )
+        return {
+            "ok": True,
+            "completed_jobs": [{"selected": ready, "results": results}],
+            "selected": ready,
+            "next_job": None,
+        }
+
+    monkeypatch.setattr(fl, "datetime", FrozenDateTime)
+    monkeypatch.setattr(fl.time, "sleep", fake_sleep)
+    monkeypatch.setattr(fl, "measure_enrolled_inventories", measure)
+    monkeypatch.setattr(fl, "run_available_work", fake_work)
+    monkeypatch.setattr(
+        fl,
+        "inspect_source_identity",
+        lambda root: {"ok": True, "sha": "a" * 40, "tree": "b" * 40},
+    )
+    monkeypatch.setattr(
+        fl,
+        "bound_overlay",
+        lambda root: {"ok": True, "digest": "c" * 64},
+    )
+    monkeypatch.setattr(fl, "observation_ready_task_ids", lambda *args, **kwargs: [])
+    monkeypatch.setattr(fl, "control_ready_task_ids", lambda *args, **kwargs: [])
+    monkeypatch.setattr(fl, "blocked_dependent_lane", lambda *args, **kwargs: "PP-STORY-000139")
+    monkeypatch.setattr(
+        fl,
+        "_fault_owned_hold_job",
+        lambda **kwargs: {
+            "recovered": True,
+            "killed": True,
+            "owned_job_id": "C21-OWNED-FAULT-TEST",
+            "intent_preserved": True,
+            "recovered_output_accepted": True,
+            "controller_restarted": True,
+            "unaffected_lane_progress": False,
+        },
+    )
+    monkeypatch.setattr(
+        fl,
+        "_operator_surfaces",
+        lambda **kwargs: {
+            "cli_remaining_seconds": 1.0,
+            "cli_fault_kind": "owned_durable_fault",
+            "command_center_journal_events": 1,
+            "command_center_occupancy_hosts": ["COMFY-V4-CPU-01"],
+            "same_journal": False,
+            "cli_ui_independent": True,
+        },
+    )
+    database = tmp_path / "obs.sqlite3"
+    result = run_observation(
+        root=tmp_path,
+        duration_seconds=120,
+        database=database,
+        live_ssh=True,
+    )
+    assert calls
+    assert calls[0] == ["PP-TASK-000991"]
+    assert ["PP-TASK-000990"] in calls
+    record = load_admission_record(_sidecar_path(database, "fleet_admission.json"))
+    admitted = chosen_host_admitted(
+        record,
+        "WIN-EVSH1DN8H5O",
+        expected_sha="a" * 40,
+        expected_tree="b" * 40,
+        now=NOW,
+        cycle_owned=True,
+    )
+    assert admitted["ok"] is True
+    assert result["fault"]["unaffected_lane_progress"] is True
