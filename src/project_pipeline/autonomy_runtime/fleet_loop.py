@@ -32,6 +32,7 @@ from project_pipeline.autonomy_runtime.ssh_dispatch import (
     job_stdout_metrics,
 )
 from project_pipeline.autonomy_runtime.worker_allowlist import (
+    CYCLE_OWNED_VALIDATION_JOBS,
     REMOTE_HOLD_SCRIPTS,
     REMOTE_JOB_SCRIPTS,
 )
@@ -496,7 +497,7 @@ def _cli_status_from_process(root: Path) -> dict[str, Any]:
         env=env,
     )
     try:
-        payload = json.loads(completed.stdout)
+        payload, _ = json.JSONDecoder().raw_decode(completed.stdout.lstrip())
     except json.JSONDecodeError:
         return {}
     return payload if isinstance(payload, dict) else {}
@@ -625,6 +626,13 @@ def _measured_hosts(inventories: dict[str, dict[str, Any]]) -> dict[str, Any]:
     }
 
 
+def _zero_exit(value: object) -> bool:
+    try:
+        return int(value) == 0
+    except (TypeError, ValueError):
+        return False
+
+
 def _owned_fault_event(
     envelope: RemoteJobEnvelope, *, status: str, remote_pid: object | None = None
 ) -> dict[str, Any]:
@@ -746,6 +754,7 @@ def _fault_owned_hold_job(
     )
     intent_kept = store.get_intent(job_id) is not None
     recovered_output = False
+    recovered_reason: str | None = None
     if killed and reconciled.get("ok"):
         recovered_env = envelope.model_copy(
             update={
@@ -779,7 +788,7 @@ def _fault_owned_hold_job(
             job_id=recovered_env.job_id,
             input_sha256=recovered_env.input_sha256,
         )
-        recovered_output = int(recovered_run.get("exit_code") or 1) == 0
+        recovered_output = _zero_exit(recovered_run.get("exit_code"))
         stdout = str(recovered_run.get("stdout") or "")
         stderr = str(recovered_run.get("stderr") or "")
         output_sha256 = str(
@@ -793,8 +802,9 @@ def _fault_owned_hold_job(
         stderr_sha256 = str(
             recovered_run.get("stderr_sha256") or hashlib.sha256(stderr.encode("utf-8")).hexdigest()
         )
+        recovered_reason = str(recovered_run.get("reason") or "")
         if recovered_output and len(output_sha256) == 64:
-            store.accept_result(
+            accepted = store.accept_result(
                 {
                     "job_id": recovered_env.job_id,
                     "host_id": recovered_env.host_id,
@@ -807,6 +817,11 @@ def _fault_owned_hold_job(
                 now=now,
                 envelope=recovered_env.model_dump(mode="json"),
             )
+            recovered_output = str(accepted.get("outcome") or "") == "ACCEPTED"
+            if not recovered_output:
+                recovered_reason = str(
+                    accepted.get("reason") or recovered_reason or "accept_rejected"
+                )
         else:
             recovered_output = False
     recovered = killed and intent_kept and reconciled.get("ok") is True and recovered_output
@@ -827,6 +842,7 @@ def _fault_owned_hold_job(
         "kill_exit_code": kill_payload.get("exit_code"),
         "kill_ok": kill_payload.get("ok"),
         "recovered_output_accepted": recovered_output,
+        "recovered_reason": recovered_reason,
         "unaffected_lane_progress": False,
         "controller_restarted": controller_restarted,
         "absence_proof": absence_proof,
@@ -1014,7 +1030,9 @@ def run_observation(
             refreshed = [
                 item
                 for item in control_ready_task_ids(root, Path(db))
-                if item not in selected_ids and item != blocked
+                if item not in selected_ids
+                and item != blocked
+                and item in CYCLE_OWNED_VALIDATION_JOBS
             ]
             if refreshed:
                 more = run_available_work(ready=refreshed, now=now, **work)
@@ -1061,27 +1079,30 @@ def run_observation(
     surfaces_final = (
         heartbeats[-1] if heartbeats else {"cli_ui_independent": False, "same_journal": False}
     )
+    resources = _resource_metrics(
+        inventories,
+        end_inventories,
+        completed_jobs,
+        transfer_seconds=transfer_seconds,
+    )
+    cli_ui_independent = bool(
+        surfaces_final.get("cli") or surfaces_final.get("command_center")
+    ) and independent_cli_ui(heartbeats)
+    eval_payload = {
+        "duration_met": duration_met,
+        "wall_seconds": wall_seconds,
+        "fault": fault,
+        "source": identity,
+        "overlay": overlay,
+        "heartbeats": heartbeats,
+        "completed_jobs": completed_jobs,
+        "lifecycle_events": journal.events(),
+        "resources": resources,
+        "cli_ui_independent": cli_ui_independent,
+        "same_journal": bool(surfaces_final.get("same_journal")),
+    }
     evaluated = evaluate_observation(
-        {
-            "duration_met": duration_met,
-            "wall_seconds": wall_seconds,
-            "fault": fault,
-            "source": identity,
-            "overlay": overlay,
-            "heartbeats": heartbeats,
-            "completed_jobs": completed_jobs,
-            "lifecycle_events": journal.events(),
-            "resources": _resource_metrics(
-                inventories,
-                end_inventories,
-                completed_jobs,
-                transfer_seconds=transfer_seconds,
-            ),
-            "cli_ui_independent": bool(
-                surfaces_final.get("cli") or surfaces_final.get("command_center")
-            )
-            and independent_cli_ui(heartbeats),
-        },
+        eval_payload,
         expected_source_sha=str(identity.get("sha") or ""),
         expected_source_tree=str(identity.get("tree") or ""),
         expected_overlay_sha256=str(overlay.get("digest") or ""),
@@ -1107,6 +1128,9 @@ def run_observation(
         "lifecycle_events": journal.events(),
         "source": identity,
         "overlay": overlay,
+        "resources": resources,
+        "cli_ui_independent": cli_ui_independent,
+        "same_journal": bool(surfaces_final.get("same_journal")),
     }
     (out / "USEFUL_WORK_RESULTS.json").write_text(
         json.dumps(result, indent=2, sort_keys=True, default=str) + "\n", encoding="utf-8"
@@ -1200,6 +1224,16 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _persist_json_output(path: Path | None, payload: dict[str, Any]) -> None:
+    if path is None:
+        return
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(payload, indent=2, sort_keys=True, default=str) + "\n",
+        encoding="utf-8",
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
@@ -1214,6 +1248,7 @@ def main(argv: list[str] | None = None) -> int:
             }
         )
         print(json.dumps(payload, indent=2, sort_keys=True))
+        _persist_json_output(args.json_output, payload)
         return 0
     if args.action == "observe":
         result = run_observation(
@@ -1230,16 +1265,12 @@ def main(argv: list[str] | None = None) -> int:
                 default=str,
             )
         )
-        if args.json_output:
-            args.json_output.parent.mkdir(parents=True, exist_ok=True)
-            args.json_output.write_text(
-                json.dumps(result, indent=2, sort_keys=True, default=str) + "\n",
-                encoding="utf-8",
-            )
+        _persist_json_output(args.json_output, result)
         evaluation = result.get("evaluation") if isinstance(result.get("evaluation"), dict) else {}
         return 0 if result.get("ok") and evaluation.get("ok") else 2
     result = run_production(root=args.root, database=args.database)
     print(json.dumps(result, indent=2, sort_keys=True, default=str))
+    _persist_json_output(args.json_output, result)
     return 0 if result.get("selected") else 2
 
 
