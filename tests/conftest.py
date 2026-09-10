@@ -13,8 +13,3 @@ collect_ignore = [
 @pytest.fixture
 def project_root() -> Path:
     return ROOT
-
-
-@pytest.fixture
-def project_root() -> Path:
-    return ROOT

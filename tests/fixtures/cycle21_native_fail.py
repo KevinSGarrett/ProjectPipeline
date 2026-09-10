@@ -2,4 +2,4 @@
 
 
 def test_cycle21_native_fail() -> None:
-    assert False, "known failing isolated fixture"
+    raise AssertionError("known failing isolated fixture")
