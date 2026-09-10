@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
@@ -354,6 +355,69 @@ def test_failed_complete_cache_does_not_block_retry(tmp_path: Path) -> None:
     assert first.get("duplicate") is not True
     assert second["ok"] is True
     assert second.get("duplicate") is not True
+    assert calls["n"] == 2
+
+
+def test_orphan_claim_after_failed_complete_does_not_block_retry(tmp_path: Path) -> None:
+    env = _envelope(tmp_path, "orphan-claim")
+    payload = env.model_dump(mode="json")
+    payload["argv"] = list(env.argv)
+    workspace = Path(payload["workspace"])
+    cache = workspace / ".pp_worker_results" / f"{env.job_id}.json"
+    claim = cache.with_suffix(".claim")
+
+    class Failed:
+        returncode = 2
+        stdout = "no pytest"
+        stderr = "No module named pytest"
+        pid = 1
+        creation_time = "1"
+        output_truncated = False
+
+    class Passed:
+        returncode = 0
+        stdout = "ok"
+        stderr = ""
+        pid = 2
+        creation_time = "2"
+        output_truncated = False
+
+    calls = {"n": 0}
+
+    def fake_spawn(**kwargs: object) -> tuple[object, dict[str, object]]:
+        del kwargs
+        calls["n"] += 1
+        if calls["n"] == 1:
+            return Failed(), {"pid": 1, "creation_time": "1", "mechanism": "fixture"}
+        return Passed(), {"pid": 2, "creation_time": "2", "mechanism": "fixture"}
+
+    with (
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol.local_runtime_identity",
+            return_value=_identity(),
+        ),
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol._spawn_enforced",
+            side_effect=fake_spawn,
+        ),
+    ):
+        first = run_envelope(payload)
+        claim.write_text(
+            json.dumps(
+                {
+                    "claim_state": "RUNNING",
+                    "authority_identity": first["authority_identity"],
+                    "job_id": env.job_id,
+                },
+                sort_keys=True,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
+        second = run_envelope(payload)
+    assert first["ok"] is False
+    assert second["ok"] is True
+    assert second.get("reason") != "unresolved_in_flight"
     assert calls["n"] == 2
 
 

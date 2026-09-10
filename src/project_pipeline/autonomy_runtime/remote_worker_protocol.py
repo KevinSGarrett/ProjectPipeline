@@ -219,6 +219,24 @@ def _load_cache(path: Path, identity: str) -> dict[str, Any] | None:
     return payload
 
 
+def _is_failed_complete(path: Path, identity: str) -> bool:
+    if not path.is_file():
+        return False
+    payload = _read_json_object(path)
+    if str(payload.get("authority_identity") or "") != identity:
+        return False
+    if str(payload.get("claim_state") or "") != WORKER_CLAIM_COMPLETE:
+        return False
+    return payload.get("ok") is not True or not _zero_exit(payload.get("exit_code"))
+
+
+def _open_exclusive_claim(claim: Path) -> int | None:
+    try:
+        return os.open(str(claim), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
+        return None
+
+
 def _store_cache(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
@@ -240,16 +258,21 @@ def _claim_worker_execution(cache: Path, identity: str, payload: dict[str, Any])
         "pid": os.getpid(),
         "started_at_utc": datetime.now(UTC).isoformat(),
     }
-    try:
-        fd = os.open(str(claim), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
-    except FileExistsError:
+    fd = _open_exclusive_claim(claim)
+    if fd is None:
         existing = _load_cache(cache, identity)
         if existing is not None:
             return {"ok": True, "duplicate": True, "result": existing}
         claimed = _read_json_object(claim)
-        if str(claimed.get("authority_identity") or "") != identity:
+        claimed_identity = str(claimed.get("authority_identity") or "")
+        if claimed_identity and claimed_identity != identity:
             return {"ok": False, "reason": "incompatible_cache_identity"}
-        return {"ok": False, "reason": "unresolved_in_flight"}
+        if _is_failed_complete(cache, identity):
+            with suppress(OSError):
+                claim.unlink()
+            fd = _open_exclusive_claim(claim)
+        if fd is None:
+            return {"ok": False, "reason": "unresolved_in_flight"}
     try:
         os.write(fd, (json.dumps(record, sort_keys=True) + "\n").encode("utf-8"))
     finally:
