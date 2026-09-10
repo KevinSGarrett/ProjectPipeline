@@ -237,6 +237,34 @@ def _open_exclusive_claim(claim: Path) -> int | None:
         return None
 
 
+def _parse_utc(value: object) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    text = value.strip().replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed
+
+
+def _stale_failed_complete_claim(cache: Path, claim: Path, identity: str) -> bool:
+    if not _is_failed_complete(cache, identity):
+        return False
+    cache_payload = _read_json_object(cache)
+    claimed = _read_json_object(claim)
+    claim_started = _parse_utc(claimed.get("started_at_utc"))
+    complete_at = _parse_utc(cache_payload.get("completed_at_utc"))
+    if claim_started is not None and complete_at is not None:
+        return claim_started <= complete_at
+    try:
+        return claim.stat().st_mtime <= cache.stat().st_mtime
+    except OSError:
+        return False
+
+
 def _store_cache(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
@@ -267,7 +295,7 @@ def _claim_worker_execution(cache: Path, identity: str, payload: dict[str, Any])
         claimed_identity = str(claimed.get("authority_identity") or "")
         if claimed_identity and claimed_identity != identity:
             return {"ok": False, "reason": "incompatible_cache_identity"}
-        if _is_failed_complete(cache, identity):
+        if _stale_failed_complete_claim(cache, claim, identity):
             with suppress(OSError):
                 claim.unlink()
             fd = _open_exclusive_claim(claim)
@@ -277,12 +305,17 @@ def _claim_worker_execution(cache: Path, identity: str, payload: dict[str, Any])
         os.write(fd, (json.dumps(record, sort_keys=True) + "\n").encode("utf-8"))
     finally:
         os.close(fd)
+    in_flight = dict(record)
+    in_flight["ok"] = False
+    in_flight["exit_code"] = None
+    _store_cache(cache, in_flight)
     return {"ok": True, "duplicate": False, "claim": claim}
 
 
 def _complete_worker_claim(cache: Path, claim: Path, result: dict[str, Any]) -> None:
     result = dict(result)
     result["claim_state"] = WORKER_CLAIM_COMPLETE
+    result["completed_at_utc"] = datetime.now(UTC).isoformat()
     _store_cache(cache, result)
     with suppress(OSError):
         claim.unlink()
