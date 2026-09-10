@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from pytest import MonkeyPatch
+
 from project_pipeline.autonomy_runtime.context_validation import (
     NATIVE_FAIL,
     NATIVE_PASS,
@@ -110,3 +112,21 @@ def test_native_pass_and_known_fail_fixture(tmp_path: Path, project_root: Path) 
     assert failed["status"] == "FAIL"
     contract = verify_output_contract(failed, artifact_bytes=None)
     assert contract["ok"] is False
+
+
+def test_relative_output_dir_writes_junit_even_when_pytest_cwd_differs(
+    tmp_path: Path, project_root: Path, monkeypatch: MonkeyPatch
+) -> None:
+    jobs = tmp_path / "jobs"
+    jobs.mkdir()
+    monkeypatch.chdir(jobs)
+    passed = execute_native_tests(
+        root=project_root, selection=(NATIVE_PASS,), output_dir=Path(".")
+    )
+    assert passed["ok"] is True
+    assert int(passed["collected"]) >= 1
+    junit = jobs / "junit.xml"
+    assert junit.is_file()
+    assert Path(str(passed["junit_path"])).resolve() == junit.resolve()
+    junit_arg = next(item for item in passed["command"] if str(item).startswith("--junitxml="))
+    assert Path(str(junit_arg).split("=", 1)[1]).is_absolute()
