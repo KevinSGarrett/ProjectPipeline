@@ -4556,24 +4556,20 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "fleet-loop":
             from project_pipeline.autonomy_runtime.fleet_loop import main as fleet_loop_main
 
-            code = fleet_loop_main(
-                [
-                    args.action,
-                    "--root",
-                    str(args.root),
-                    "--duration-seconds",
-                    str(args.duration_seconds),
-                    *(
-                        ["--database", str(args.database)]
-                        if getattr(args, "database", None)
-                        else []
-                    ),
-                    *(["--live-ssh"] if getattr(args, "live_ssh", False) else []),
-                ]
-            )
-            result = {"command": "fleet-loop", "action": args.action, "exit_code": code}
-            _write_json_output(result, args.json_output)
-            return code
+            argv = [
+                args.action,
+                "--root",
+                str(args.root),
+                "--duration-seconds",
+                str(args.duration_seconds),
+            ]
+            if getattr(args, "database", None):
+                argv.extend(["--database", str(args.database)])
+            if getattr(args, "live_ssh", False):
+                argv.append("--live-ssh")
+            if getattr(args, "json_output", None):
+                argv.extend(["--json-output", str(args.json_output)])
+            return fleet_loop_main(argv)
         if args.command == "agent-router":
             result, code = _run_agent_router_command(args)
             _write_json_output(result, args.json_output)

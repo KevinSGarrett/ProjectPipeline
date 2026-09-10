@@ -169,9 +169,57 @@ def test_operator_surfaces_invoke_production_status_cli() -> None:
     source = inspect.getsource(_cli_status_from_process)
     assert "fleet-loop" in source
     assert "status" in source
+    assert "raw_decode" in source
 
 
 def test_observation_staggers_cycle_owned_jobs() -> None:
     source = inspect.getsource(run_observation)
     assert "pending_owned" in source
     assert "elapsed >= 45" in source
+    assert "CYCLE_OWNED_VALIDATION_JOBS" in source
+
+
+def test_observation_result_persists_resource_metrics() -> None:
+    source = inspect.getsource(run_observation)
+    assert '"resources": resources' in source
+    assert "cli_ui_independent" in source
+
+
+def test_production_fleet_loop_cli_forwards_json_output(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from project_pipeline import cli as pipeline_cli
+
+    dest = tmp_path / "observe.json"
+    captured: list[list[str]] = []
+
+    def fake_main(argv: list[str] | None = None) -> int:
+        args = list(argv or [])
+        captured.append(args)
+        dest.write_text('{"ok": true, "evaluation": {"ok": true}}\n', encoding="utf-8")
+        return 0
+
+    monkeypatch.setattr(
+        "project_pipeline.autonomy_runtime.fleet_loop.main",
+        fake_main,
+    )
+    code = pipeline_cli.main(
+        [
+            "fleet-loop",
+            "observe",
+            "--root",
+            str(tmp_path),
+            "--json-output",
+            str(dest),
+            "--live-ssh",
+            "--duration-seconds",
+            "3600",
+        ]
+    )
+    assert code == 0
+    assert dest.is_file()
+    assert captured
+    argv = captured[0]
+    assert "--json-output" in argv
+    assert str(dest) in argv
+    assert "--live-ssh" in argv
