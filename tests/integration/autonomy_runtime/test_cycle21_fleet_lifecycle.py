@@ -2,16 +2,19 @@
 
 from __future__ import annotations
 
+import inspect
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
 
 from project_pipeline.autonomy_runtime.fleet_loop import (
+    _cli_status_from_process,
     _machine_for_task,
     choose_measured_worker,
     cycle_owned_validation_jobs,
     observation_ready_task_ids,
+    run_observation,
 )
 from project_pipeline.autonomy_runtime.managed_worker import classify_live_managed_worker
 from project_pipeline.autonomy_runtime.observation_eval import evaluate_observation
@@ -160,3 +163,15 @@ def test_observation_rejects_zero_time_and_duplicate_heartbeats() -> None:
     assert any(
         "zero_wall_seconds" in item or "heartbeat_duplicate" in item for item in result["reasons"]
     )
+
+
+def test_operator_surfaces_invoke_production_status_cli() -> None:
+    source = inspect.getsource(_cli_status_from_process)
+    assert "fleet-loop" in source
+    assert "status" in source
+
+
+def test_observation_staggers_cycle_owned_jobs() -> None:
+    source = inspect.getsource(run_observation)
+    assert "pending_owned" in source
+    assert "elapsed >= 45" in source

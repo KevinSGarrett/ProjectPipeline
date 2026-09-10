@@ -5,6 +5,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import subprocess
 import sys
 import time
 from datetime import UTC, datetime, timedelta
@@ -479,15 +481,39 @@ def _observation_database(root: Path, database: Path | None, *, live_ssh: bool, 
     return out / "scheduler.sqlite3"
 
 
-def _operator_surfaces(*, status_path: Path, journal: FleetLifecycleJournal) -> dict[str, Any]:
-    cli: dict[str, Any] = {}
+def _cli_status_from_process(root: Path) -> dict[str, Any]:
+    env = os.environ.copy()
+    src = str((root / "src").resolve())
+    existing = str(env.get("PYTHONPATH") or "")
+    env["PYTHONPATH"] = src if not existing else src + os.pathsep + existing
+    completed = subprocess.run(
+        [sys.executable, "-m", "project_pipeline", "fleet-loop", "status", "--root", str(root)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=20,
+        cwd=str(root),
+        env=env,
+    )
+    try:
+        payload = json.loads(completed.stdout)
+    except json.JSONDecodeError:
+        return {}
+    return payload if isinstance(payload, dict) else {}
+
+
+def _operator_surfaces(
+    *, root: Path, status_path: Path, journal: FleetLifecycleJournal
+) -> dict[str, Any]:
+    file_status: dict[str, Any] = {}
     if status_path.is_file():
         try:
             loaded = json.loads(status_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError, UnicodeDecodeError):
             loaded = {}
         if isinstance(loaded, dict):
-            cli = loaded
+            file_status = loaded
+    cli = _cli_status_from_process(root)
     independent = FleetLifecycleJournal(journal.database)
     occupancy = independent.occupancy_by_host(authority="lease-store")
     events = independent.events()
@@ -496,13 +522,18 @@ def _operator_surfaces(*, status_path: Path, journal: FleetLifecycleJournal) -> 
     same = [str(item.get("job_id") or "") for item in events] == [
         str(item.get("job_id") or "") for item in journal_events
     ] and len(events) == len(journal_events)
+    independent_read = (
+        bool(cli)
+        and cli.get("remaining_seconds") == file_status.get("remaining_seconds")
+        and independent.database.resolve() != status_path.resolve()
+    )
     return {
         "cli_remaining_seconds": cli.get("remaining_seconds"),
         "cli_fault_kind": fault.get("kind"),
         "command_center_journal_events": len(events),
         "command_center_occupancy_hosts": sorted(occupancy),
         "same_journal": same,
-        "cli_ui_independent": independent.database.resolve() != status_path.resolve(),
+        "cli_ui_independent": independent_read,
     }
 
 
@@ -876,10 +907,15 @@ def run_observation(
             source_tree=str(identity.get("tree") or existing.get("source_tree") or "b" * 40),
         ),
     )
+    pending_owned: list[str] = []
     if live_ssh:
-        ready = list(cycle_owned_validation_jobs(profiles))
+        owned = list(cycle_owned_validation_jobs(profiles))
+        ready = owned[:1]
+        pending_owned = owned[1:]
         control_ready = observation_ready_task_ids(root, Path(db), live_ssh=True)
-        ready.extend(item for item in control_ready if item not in ready)
+        ready.extend(
+            item for item in control_ready if item not in ready and item not in pending_owned
+        )
         blocked = blocked_dependent_lane(root, Path(db))
     else:
         ready = observation_ready_task_ids(root, Path(db), live_ssh=False)
@@ -957,6 +993,23 @@ def run_observation(
     while datetime.now(UTC) < deadline:
         now = datetime.now(UTC)
         remaining = (deadline - now).total_seconds()
+        elapsed = (now - started).total_seconds()
+        if live_ssh and pending_owned and elapsed >= 45:
+            more = run_available_work(ready=list(pending_owned), now=now, **work)
+            completed_jobs.extend(list(more.get("completed_jobs") or []))
+            selected_ids.update(more.get("selected") or [])
+            next_ready = more.get("next_job")
+            pending_owned = []
+            other_hosts = {
+                str(item.get("host_id") or "")
+                for batch in completed_jobs
+                for item in (batch.get("results") or [])
+                if isinstance(item, dict)
+                and item.get("outcome") == "ACCEPTED"
+                and str(item.get("host_id") or "") not in {"", live_machine}
+            }
+            fault["unaffected_lane_progress"] = bool(other_hosts)
+            continue
         if live_ssh:
             refreshed = [
                 item
@@ -982,7 +1035,7 @@ def run_observation(
             json.dumps(status_payload, indent=2, sort_keys=True) + "\n",
             encoding="utf-8",
         )
-        surfaces = _operator_surfaces(status_path=status_path, journal=journal)
+        surfaces = _operator_surfaces(root=root, status_path=status_path, journal=journal)
         heartbeats.append(
             {
                 "at_utc": now.isoformat(),
