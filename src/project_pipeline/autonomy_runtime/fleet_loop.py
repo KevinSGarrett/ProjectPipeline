@@ -693,7 +693,7 @@ def _fault_owned_hold_job(
             "recovered": False,
             "owned_job_id": job_id,
             "intent_preserved": True,
-            "reason": "pid_not_observed",
+            "reason": str(started.get("reason") or "pid_not_observed"),
             "lease_id": envelope.lease_id,
             "fence": envelope.fence,
         }

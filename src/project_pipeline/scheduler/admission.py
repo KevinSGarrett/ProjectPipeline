@@ -149,7 +149,16 @@ def chosen_host_admitted(
     expected_sha: str,
     expected_tree: str,
     now: datetime | None = None,
+    cycle_owned: bool = False,
 ) -> dict[str, Any]:
+    if cycle_owned:
+        return _cycle_owned_host_admitted(
+            record,
+            machine_id,
+            expected_sha=expected_sha,
+            expected_tree=expected_tree,
+            now=now,
+        )
     gate = evaluate_admission(
         record, expected_sha=expected_sha, expected_tree=expected_tree, now=now
     )
@@ -170,6 +179,41 @@ def chosen_host_admitted(
     tree_ok = _identity_matches(record.get("source_tree"), expected_tree)
     if not sha_ok or not tree_ok:
         return {"ok": False, "failures": gate["failures"]}
+    return {"ok": True, "failures": ()}
+
+
+def _cycle_owned_host_admitted(
+    record: Mapping[str, Any] | None,
+    machine_id: str,
+    *,
+    expected_sha: str,
+    expected_tree: str,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Disposable cycle-owned jobs require measured hosts, not a minted C18 PM disposition."""
+
+    if record is None:
+        return {"ok": False, "failures": ("admission_record_missing",)}
+    hosts = record.get("hosts") if isinstance(record.get("hosts"), Mapping) else {}
+    host = hosts.get(machine_id)
+    if not isinstance(host, Mapping):
+        return {"ok": False, "failures": (f"unchosen_host:{machine_id}",)}
+    state = str(host.get("state") or "")
+    freshness = str(host.get("freshness") or "unknown")
+    if state != "READY" or not _measurement_ok(host, now=now):
+        return {
+            "ok": False,
+            "failures": (f"remote_denied:{machine_id}:{state or 'UNDECLARED'}:{freshness}",),
+        }
+    sha_ok = _identity_matches(record.get("source_sha"), expected_sha)
+    tree_ok = _identity_matches(record.get("source_tree"), expected_tree)
+    if not sha_ok:
+        return {"ok": False, "failures": ("wrong_source_sha",)}
+    if not tree_ok:
+        return {"ok": False, "failures": ("wrong_source_tree",)}
+    identity = host_identity_failures(host)
+    if identity:
+        return {"ok": False, "failures": identity}
     return {"ok": True, "failures": ()}
 
 

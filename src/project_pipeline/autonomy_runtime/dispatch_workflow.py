@@ -19,6 +19,9 @@ from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
 from project_pipeline.autonomy_runtime.ssh_dispatch import SshDispatchAdapter, job_stdout_metrics
 from project_pipeline.autonomy_runtime.windows_limits import nested_pool_env
+from project_pipeline.autonomy_runtime.worker_allowlist import (
+    CYCLE_OWNED_VALIDATION_JOBS,
+)
 from project_pipeline.scheduler.admission import chosen_host_admitted, load_admission_record
 from project_pipeline.scheduler.fleet import (
     MachineProfile,
@@ -109,6 +112,7 @@ class DispatchWorkflow:
             expected_sha=self.source_sha,
             expected_tree=self.source_tree,
             now=now,
+            cycle_owned=task_id in CYCLE_OWNED_VALIDATION_JOBS,
         )
         if not gate["ok"]:
             return {

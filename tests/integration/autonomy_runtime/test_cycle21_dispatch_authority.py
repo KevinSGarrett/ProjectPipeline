@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import inspect
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -17,6 +18,7 @@ from project_pipeline.autonomy_runtime.remote_job import (
 )
 from project_pipeline.autonomy_runtime.remote_worker_protocol import run_envelope
 from project_pipeline.autonomy_runtime.ssh_dispatch import SshDispatchAdapter
+from project_pipeline.scheduler.admission import chosen_host_admitted
 
 NOW = datetime.now(UTC)
 SHA = "f41c64d5b533ed4a329e0e431ee073dd791ee050"
@@ -301,3 +303,36 @@ def test_prelaunch_pack_failure_releases_claim_for_retry(tmp_path: Path) -> None
     assert first["reason"] == "pack_missing"
     assert second["reason"] != "unresolved_in_flight"
     assert second["reason"] == "pack_missing"
+
+
+def test_cycle_owned_job_admits_measured_host_without_c18() -> None:
+    record = {
+        "source_sha": SHA,
+        "source_tree": TREE,
+        "hosts": {
+            HOST: {
+                "state": "READY",
+                "freshness": "fresh",
+                "observation_kind": "MEASURED",
+                "observed_at_utc": NOW.isoformat(),
+                "sid": "S-1-5-21-comfy",
+                "principal": PRINCIPAL,
+                "workspace_root": r"C:\Users\Windows 11\ProjectPipeline\jobs",
+            }
+        },
+    }
+    owned = chosen_host_admitted(
+        record, HOST, expected_sha=SHA, expected_tree=TREE, now=NOW, cycle_owned=True
+    )
+    assert owned["ok"] is True
+    production = chosen_host_admitted(
+        record, HOST, expected_sha=SHA, expected_tree=TREE, now=NOW, cycle_owned=False
+    )
+    assert production["ok"] is False
+    assert "c18_acceptance_missing" in production["failures"]
+
+
+def test_scp_uses_user_option_not_user_at_host() -> None:
+    source = inspect.getsource(SshDispatchAdapter.acquire_workspace_file)
+    assert "User={self.user}" in source
+    assert "self.user}@{self.host}" not in source
