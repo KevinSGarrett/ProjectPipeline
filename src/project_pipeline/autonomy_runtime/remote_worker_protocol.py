@@ -39,6 +39,11 @@ from project_pipeline.autonomy_runtime.worker_allowlist import (
     PYTHON_NAMES,
     remote_command_allowed,
 )
+from project_pipeline.autonomy_runtime.worker_runtime_identity import (
+    authority_identity,
+    identity_matches,
+    local_runtime_identity,
+)
 
 REQUIRED_EXECUTE = (
     "lease_id",
@@ -55,7 +60,11 @@ REQUIRED_EXECUTE = (
     "workspace",
     "argv",
     "job_id",
+    "input_sha256",
 )
+MAX_OUTPUT_BYTES = 65536
+WORKER_CLAIM_RUNNING = "RUNNING"
+WORKER_CLAIM_COMPLETE = "COMPLETE"
 SAFE_JOB_ID = re.compile(r"^[A-Za-z0-9._-]+$")
 
 
@@ -173,14 +182,13 @@ def _deadline_passed(raw: object) -> bool:
     return datetime.now(UTC) > deadline
 
 
-def _load_cache(path: Path, input_sha256: str) -> dict[str, Any] | None:
+def _load_cache(path: Path, identity: str) -> dict[str, Any] | None:
     if not path.is_file():
         return None
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+    payload = _read_json_object(path)
+    if str(payload.get("authority_identity") or "") != identity:
         return None
-    if str(payload.get("input_sha256") or "") != input_sha256:
+    if str(payload.get("claim_state") or "") != WORKER_CLAIM_COMPLETE:
         return None
     payload["duplicate"] = True
     return payload
@@ -189,6 +197,47 @@ def _load_cache(path: Path, input_sha256: str) -> dict[str, Any] | None:
 def _store_cache(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _claim_worker_execution(cache: Path, identity: str, payload: dict[str, Any]) -> dict[str, Any]:
+    cache.parent.mkdir(parents=True, exist_ok=True)
+    cached = _load_cache(cache, identity)
+    if cached is not None:
+        return {"ok": True, "duplicate": True, "result": cached}
+    claim = cache.with_suffix(".claim")
+    record = {
+        "claim_state": WORKER_CLAIM_RUNNING,
+        "authority_identity": identity,
+        "job_id": str(payload.get("job_id") or ""),
+        "fence": str(payload.get("fence") or ""),
+        "principal": str(payload.get("principal") or ""),
+        "source_sha": str(payload.get("source_sha") or ""),
+        "pid": os.getpid(),
+        "started_at_utc": datetime.now(UTC).isoformat(),
+    }
+    try:
+        fd = os.open(str(claim), os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
+        existing = _load_cache(cache, identity)
+        if existing is not None:
+            return {"ok": True, "duplicate": True, "result": existing}
+        claimed = _read_json_object(claim)
+        if str(claimed.get("authority_identity") or "") != identity:
+            return {"ok": False, "reason": "incompatible_cache_identity"}
+        return {"ok": False, "reason": "unresolved_in_flight"}
+    try:
+        os.write(fd, (json.dumps(record, sort_keys=True) + "\n").encode("utf-8"))
+    finally:
+        os.close(fd)
+    return {"ok": True, "duplicate": False, "claim": claim}
+
+
+def _complete_worker_claim(cache: Path, claim: Path, result: dict[str, Any]) -> None:
+    result = dict(result)
+    result["claim_state"] = WORKER_CLAIM_COMPLETE
+    _store_cache(cache, result)
+    with suppress(OSError):
+        claim.unlink()
 
 
 def _spawn_enforced(
@@ -200,6 +249,7 @@ def _spawn_enforced(
     memory_mb_ceiling: int,
     deadline_seconds: int,
     on_started: Callable[[int, str | None], None] | None = None,
+    max_output_bytes: int = MAX_OUTPUT_BYTES,
 ) -> tuple[subprocess.CompletedProcess[str], dict[str, Any]]:
     limits = enforce_or_reject(
         cpu_ceiling=cpu_ceiling,
@@ -224,6 +274,7 @@ def _spawn_enforced(
             env=env,
             handle=handle,
             on_started=_capture,
+            max_output_bytes=max_output_bytes,
         )
     finally:
         close_job_handle(handle)
@@ -236,6 +287,7 @@ def _spawn_enforced(
         "cpu_rate": limits.get("cpu_rate"),
         "pid": pid,
         "creation_time": creation,
+        "output_truncated": bool(getattr(completed, "output_truncated", False)),
     }
 
 
@@ -245,41 +297,54 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
         return _kill(payload)
     if action == "measure":
         return _fail("use_controller_cim")
+    if action == "consume_context":
+        from project_pipeline.autonomy_runtime.context_validation import consume_pack_on_worker
+
+        return consume_pack_on_worker(payload)
     host_id = str(payload.get("host_id") or "")
-    if host_id and host_id not in APPROVED_WORKER_HOSTS:
+    if not host_id:
+        return _fail("authority_missing", extra={"missing": ["host_id"]})
+    if host_id not in APPROVED_WORKER_HOSTS:
         return _fail("wrong_host")
-    production = host_id in APPROVED_WORKER_HOSTS
     missing = [key for key in REQUIRED_EXECUTE if not payload.get(key)]
-    if production and missing:
+    if missing:
         return _fail("authority_missing", extra={"missing": missing})
+    live = local_runtime_identity(protocol_file=str(globals().get("__file__") or ""))
+    identity_failures = identity_matches(payload, live, required_host=host_id)
+    if identity_failures:
+        return _fail("authority_unverified", extra={"failures": list(identity_failures)})
     argv_raw = payload.get("argv")
     if not isinstance(argv_raw, list) or not argv_raw:
         return _fail("argv_not_confined")
     argv = [str(item) for item in argv_raw]
     if not argv_is_confined(tuple(argv)):
         return _fail("argv_not_confined")
-    if production and not remote_command_allowed(tuple(argv)):
+    if not remote_command_allowed(tuple(argv)):
         return _fail("argv_not_approved")
     workspace = str(payload.get("workspace") or "")
     workspace_root = str(payload.get("workspace_root") or "")
     job_id = str(payload.get("job_id") or "")
-    if production:
-        if host_id not in APPROVED_WORKER_HOSTS:
-            return _fail("wrong_host")
-        try:
-            confine_remote_workspace(workspace, allowed_root=workspace_root)
-        except ConfinementError as error:
-            return _fail(str(error))
-        if _deadline_passed(payload.get("deadline_utc")):
-            return _fail("expired_deadline")
+    try:
+        confine_remote_workspace(workspace, allowed_root=workspace_root)
+    except ConfinementError as error:
+        return _fail(str(error))
+    if _deadline_passed(payload.get("deadline_utc")):
+        return _fail("expired_deadline")
     cache = _safe_cache(workspace, job_id) if job_id else None
     if job_id and cache is None:
         return _fail("job_id_unsafe")
     input_sha256 = str(payload.get("input_sha256") or "")
-    if cache is not None and input_sha256:
-        cached = _load_cache(cache, input_sha256)
-        if cached is not None:
-            return cached
+    if not input_sha256 or len(input_sha256) != 64:
+        return _fail("input_digest_required")
+    identity = authority_identity(payload)
+    claim = None
+    if cache is not None:
+        claimed = _claim_worker_execution(cache, identity, payload)
+        if claimed.get("duplicate"):
+            return claimed["result"]
+        if not claimed.get("ok"):
+            return _fail(str(claimed.get("reason") or "worker_claim_failed"))
+        claim = claimed.get("claim")
     own = _record_running_ownership(payload)
 
     def _child_started(pid: int, creation: str | None) -> None:
@@ -307,54 +372,45 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
         memory_mb = int(payload.get("memory_mb_ceiling") or 0)
     except (TypeError, ValueError):
         return _fail("invalid_limits")
+    if cpu < 1 or memory_mb < 1:
+        return _fail("invalid_limits")
     Path(workspace).mkdir(parents=True, exist_ok=True)
-    if production or (cpu >= 1 and memory_mb >= 1):
-        remaining = 1
-        raw_deadline = payload.get("deadline_utc")
-        if raw_deadline:
-            try:
-                deadline = datetime.fromisoformat(str(raw_deadline).replace("Z", "+00:00"))
-                remaining = max(
-                    1, int((deadline.astimezone(UTC) - datetime.now(UTC)).total_seconds())
-                )
-            except ValueError:
-                remaining = 1
-        env.update(nested_pool_env(max(1, cpu)))
+    remaining = 1
+    raw_deadline = payload.get("deadline_utc")
+    if raw_deadline:
         try:
-            completed, enforced = _spawn_enforced(
-                argv=argv,
-                workspace=Path(workspace),
-                env=env,
-                cpu_ceiling=max(1, cpu),
-                memory_mb_ceiling=max(1, memory_mb),
-                deadline_seconds=remaining,
-                on_started=_child_started,
-            )
-        except ResourceLimitError as error:
-            return _fail(str(error))
-        except subprocess.TimeoutExpired:
-            return _fail("deadline_enforced", extra={"timed_out": True})
-        child_pid = int(enforced.get("pid") or 0)
-        creation_time = enforced.get("creation_time")
-        mechanism = enforced.get("mechanism")
-    else:
-        completed = subprocess.run(
-            argv,
-            cwd=workspace,
-            capture_output=True,
-            text=True,
-            check=False,
-            shell=False,
+            deadline = datetime.fromisoformat(str(raw_deadline).replace("Z", "+00:00"))
+            remaining = max(1, int((deadline.astimezone(UTC) - datetime.now(UTC)).total_seconds()))
+        except ValueError:
+            remaining = 1
+    env.update(nested_pool_env(max(1, cpu)))
+    try:
+        completed, enforced = _spawn_enforced(
+            argv=argv,
+            workspace=Path(workspace),
             env=env,
+            cpu_ceiling=max(1, cpu),
+            memory_mb_ceiling=max(1, memory_mb),
+            deadline_seconds=remaining,
+            on_started=_child_started,
         )
-        child_pid = os.getpid()
-        creation_time = None
-        mechanism = "unbounded_local_fixture"
-    stdout = (completed.stdout or "")[:65536]
-    stderr = (completed.stderr or "")[:65536]
+    except ResourceLimitError as error:
+        return _fail(str(error))
+    except subprocess.TimeoutExpired:
+        return _fail("deadline_enforced", extra={"timed_out": True})
+    child_pid = int(enforced.get("pid") or 0)
+    creation_time = enforced.get("creation_time")
+    mechanism = enforced.get("mechanism")
+    stdout = completed.stdout or ""
+    stderr = completed.stderr or ""
+    truncated = bool(
+        getattr(completed, "output_truncated", False) or enforced.get("output_truncated")
+    )
+    if truncated:
+        stderr = (stderr + "\n[truncated:output_limit]").strip()
     worker_pid = os.getpid()
     result = {
-        "ok": completed.returncode == 0,
+        "ok": completed.returncode == 0 and not truncated,
         "exit_code": completed.returncode,
         "stdout": stdout,
         "stderr": stderr,
@@ -366,11 +422,16 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
         "input_sha256": input_sha256,
         "fence": str(payload.get("fence") or ""),
         "principal": str(payload.get("principal") or ""),
+        "source_sha": str(payload.get("source_sha") or ""),
+        "source_tree": str(payload.get("source_tree") or ""),
+        "overlay_sha256": str(payload.get("overlay_sha256") or ""),
         "limit_mechanism": mechanism,
         "duplicate": False,
+        "truncated": truncated,
+        "authority_identity": identity,
     }
-    if cache is not None and input_sha256 and completed.returncode == 0:
-        _store_cache(cache, result)
+    if cache is not None and claim is not None:
+        _complete_worker_claim(cache, Path(str(claim)), result)
     return result
 
 
@@ -396,16 +457,18 @@ def _pid_is_owned(
     pid_i: int,
     creation_time: str,
 ) -> bool:
+    if not job_id or not fence or not principal or not creation_time:
+        return False
     if str(recorded.get("job_id") or "") != job_id:
         return False
     if str(recorded.get("fence") or "") != fence:
+        return False
+    if str(recorded.get("principal") or "") != principal:
         return False
     if str(pid_i) not in {
         str(recorded.get("pid") or ""),
         str(recorded.get("child_pid") or ""),
     }:
-        return False
-    if principal and str(recorded.get("principal") or "") not in {"", principal}:
         return False
     recorded_times = {
         value
@@ -415,10 +478,10 @@ def _pid_is_owned(
         )
         if value
     }
-    if creation_time and recorded_times and creation_time not in recorded_times:
+    if creation_time not in recorded_times:
         return False
     live_creation = process_creation_filetime(pid_i)
-    return not (live_creation and creation_time and live_creation != creation_time)
+    return bool(live_creation) and live_creation == creation_time
 
 
 def _kill(payload: dict[str, Any]) -> dict[str, Any]:
@@ -430,8 +493,14 @@ def _kill(payload: dict[str, Any]) -> dict[str, Any]:
         pid_i = int(payload.get("pid") or 0)
     except (TypeError, ValueError):
         return _fail("invalid_pid")
-    if not job_id or not fence or not SAFE_JOB_ID.match(job_id):
-        return _fail("unowned_pid", extra={"pid": pid_i})
+    if (
+        not job_id
+        or not fence
+        or not principal
+        or not creation_time
+        or not SAFE_JOB_ID.match(job_id)
+    ):
+        return _fail("ownership_identity_required", extra={"pid": pid_i})
     if pid_i <= 4 or pid_i == os.getpid():
         return _fail("pid_not_killable", extra={"pid": pid_i})
     workspace = str(payload.get("workspace") or "")
@@ -456,12 +525,13 @@ def _kill(payload: dict[str, Any]) -> dict[str, Any]:
             check=False,
             shell=False,
         )
+        killed = completed.returncode == 0
         return {
-            "ok": True,
+            "ok": killed,
             "pid": pid_i,
-            "killed": completed.returncode == 0,
+            "killed": killed,
             "phase": "kill",
-            "exit_code": 0,
+            "exit_code": completed.returncode,
             "job_id": job_id,
             "fence": fence,
         }
@@ -488,8 +558,34 @@ def _script_digest() -> str:
         return ""
 
 
+def _managed_inbox(jobs_root: Path) -> Path:
+    inbox = jobs_root / "inbox"
+    inbox.mkdir(parents=True, exist_ok=True)
+    return inbox
+
+
+def _intake_admitted_job(envelope_path: Path) -> dict[str, Any]:
+    running = envelope_path.with_name(envelope_path.stem + ".running.json")
+    try:
+        envelope_path.replace(running)
+    except OSError as error:
+        return {"ok": False, "reason": "claim_failed", "detail": type(error).__name__}
+    try:
+        payload = json.loads(running.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+        return {"ok": False, "reason": "invalid_envelope"}
+    if not isinstance(payload, dict):
+        return _fail("invalid_envelope")
+    result = run_envelope(payload)
+    result_path = running.with_name(str(payload.get("job_id") or "job") + ".result.json")
+    result_path.write_text(json.dumps(result, sort_keys=True) + "\n", encoding="utf-8")
+    with suppress(OSError):
+        running.unlink()
+    return result
+
+
 def run_managed_worker(args: list[str]) -> int:
-    """Stay resident, emit liveness, and stop only on the owned stop flag."""
+    """Stay resident, emit liveness, and own admitted inbox jobs until stop."""
 
     heartbeat = Path(
         _arg_value(args, "--heartbeat")
@@ -501,6 +597,7 @@ def run_managed_worker(args: list[str]) -> int:
     pid_file = Path(
         _arg_value(args, "--pid-file") or r"C:\ProgramData\ProjectPipeline\jobs\managed.pid"
     )
+    jobs_root = Path(_arg_value(args, "--jobs-root") or r"C:\ProgramData\ProjectPipeline\jobs")
     max_raw = _arg_value(args, "--max-seconds")
     try:
         max_seconds = float(max_raw) if max_raw else None
@@ -509,19 +606,27 @@ def run_managed_worker(args: list[str]) -> int:
     try:
         heartbeat.parent.mkdir(parents=True, exist_ok=True)
         pid_file.write_text(str(os.getpid()), encoding="utf-8")
+        inbox = _managed_inbox(jobs_root)
     except OSError:
         print(json.dumps(_fail("managed_state_unwritable"), sort_keys=True))
         return 2
     started = time.monotonic()
     digest = _script_digest()
+    owned: list[str] = []
     try:
         while not stop_flag.is_file():
+            for envelope_path in sorted(inbox.glob("*.envelope.json")):
+                result = _intake_admitted_job(envelope_path)
+                if result.get("job_id"):
+                    owned.append(str(result["job_id"]))
             payload = {
                 "ok": True,
                 "phase": "managed",
                 "pid": os.getpid(),
                 "heartbeat_at_utc": datetime.now(UTC).isoformat(),
                 "script_sha256": digest,
+                "inbox": str(inbox),
+                "owned_jobs": owned[-32:],
             }
             heartbeat.write_text(json.dumps(payload, sort_keys=True) + "\n", encoding="utf-8")
             if max_seconds is not None and (time.monotonic() - started) >= max_seconds:
@@ -531,7 +636,17 @@ def run_managed_worker(args: list[str]) -> int:
         if pid_file.is_file():
             with suppress(OSError):
                 pid_file.unlink()
-    print(json.dumps({"ok": True, "phase": "managed_stop", "pid": os.getpid()}, sort_keys=True))
+    print(
+        json.dumps(
+            {
+                "ok": True,
+                "phase": "managed_stop",
+                "pid": os.getpid(),
+                "owned_jobs": owned,
+            },
+            sort_keys=True,
+        )
+    )
     return 0
 
 
@@ -550,8 +665,6 @@ def main(argv: list[str] | None = None) -> int:
         result = _fail("invalid_envelope")
         print(json.dumps(result, sort_keys=True))
         return 2
-    if str(payload.get("action") or "execute") == "execute":
-        _record_running_ownership(payload)
     result = run_envelope(payload)
     print(json.dumps(result, sort_keys=True))
     return int(result.get("exit_code") or 0)

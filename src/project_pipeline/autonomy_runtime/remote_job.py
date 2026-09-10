@@ -282,16 +282,24 @@ class RemoteJobController:
         expected_host: str,
         now: datetime | None = None,
         artifact_bytes: bytes | None = None,
+        context_consumption: dict[str, Any] | None = None,
     ) -> dict[str, Any]:
         now = (now or datetime.now(UTC)).astimezone(UTC)
-        if self.require_intent and (
-            self.store is None or self.store.get_intent(envelope.job_id) is None
-        ):
-            return {"outcome": "REJECTED", "reason": "intent_missing"}
         if result.job_id != envelope.job_id:
             return {"outcome": "REJECTED", "reason": "wrong_job"}
         if result.host_id != expected_host or result.host_id != envelope.host_id:
             return {"outcome": "REJECTED", "reason": "wrong_host"}
+        payload = envelope.model_dump(mode="json")
+        if self.store is not None:
+            return self.store.accept_result(
+                result.model_dump(mode="json"),
+                now=now,
+                envelope=payload,
+                artifact_bytes=artifact_bytes,
+                context_consumption=context_consumption,
+            )
+        if self.require_intent:
+            return {"outcome": "REJECTED", "reason": "intent_missing"}
         if self._fence_expired(envelope.fence) or result.fence != envelope.fence:
             return {"outcome": "REJECTED", "reason": "expired_fence"}
         if now > envelope.deadline_utc:
@@ -306,9 +314,6 @@ class RemoteJobController:
                 actual = hashlib.sha256(artifact_bytes).hexdigest()
             if actual != envelope.output_contract_sha256:
                 return {"outcome": "REJECTED", "reason": "output_tamper"}
-        if self.store is not None:
-            stored = self.store.accept_result(result.model_dump(mode="json"), now=now)
-            return stored
         existing = self._accepted.get(envelope.job_id)
         if existing is not None:
             if (

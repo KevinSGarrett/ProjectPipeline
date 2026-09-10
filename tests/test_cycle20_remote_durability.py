@@ -7,6 +7,7 @@ import threading
 import time
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -294,13 +295,53 @@ def test_worker_side_dedup(tmp_path: Path) -> None:
     workspace = tmp_path / "job"
     workspace.mkdir()
     payload = {
-        "argv": [sys.executable, "-c", "print('once')"],
+        "argv": [
+            "python",
+            r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle21_validation_job.py",
+        ],
         "workspace": str(workspace),
+        "workspace_root": str(tmp_path),
         "job_id": "PP-TASK-000516",
         "input_sha256": "d" * 64,
+        "host_id": "COMFY-V4-CPU-01",
+        "profile_id": "CPU_WORKER",
+        "principal": r"comfy-v4-cpu-01\windows 11",
+        "lease_id": "LEASE-1",
+        "fence": "fence-1",
+        "source_sha": "f41c64d5b533ed4a329e0e431ee073dd791ee050",
+        "source_tree": "66778a1fdc0a7a8d8cf3b07f25367ed896ffca2b",
+        "overlay_sha256": "c" * 64,
+        "deadline_utc": (datetime.now(UTC) + timedelta(minutes=5)).isoformat(),
+        "cpu_ceiling": 1,
+        "memory_mb_ceiling": 64,
     }
-    first = run_envelope(payload)
-    second = run_envelope(payload)
+
+    class Completed:
+        returncode = 0
+        stdout = "once"
+        stderr = ""
+        pid = 7
+        creation_time = "111"
+        output_truncated = False
+
+    identity = {
+        "hostname": "COMFY-V4-CPU-01",
+        "principal": r"comfy-v4-cpu-01\windows 11",
+        "sid": "S-1-5-21-comfy",
+        "module_sha256": "a" * 64,
+    }
+    with (
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol.local_runtime_identity",
+            return_value=identity,
+        ),
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol._spawn_enforced",
+            return_value=(Completed(), {"pid": 7, "creation_time": "111", "mechanism": "fixture"}),
+        ),
+    ):
+        first = run_envelope(payload)
+        second = run_envelope(payload)
     assert first["ok"] is True
     assert second["duplicate"] is True
 
@@ -323,34 +364,59 @@ def test_enforced_spawn_prints_pid_before_child_exits(
     payload = {
         "argv": [sys.executable, "-c", "import time; time.sleep(2); print('late')"],
         "workspace": str(workspace),
+        "workspace_root": str(tmp_path),
         "job_id": "C20-OWNED-FAULT",
         "input_sha256": "d" * 64,
         "cpu_ceiling": 1,
         "memory_mb_ceiling": 64,
         "deadline_utc": (datetime.now(UTC) + timedelta(minutes=1)).isoformat(),
+        "host_id": "COMFY-V4-CPU-01",
+        "profile_id": "CPU_WORKER",
+        "principal": r"comfy-v4-cpu-01\windows 11",
+        "lease_id": "LEASE-1",
+        "fence": "fence-1",
+        "source_sha": "f41c64d5b533ed4a329e0e431ee073dd791ee050",
+        "source_tree": "66778a1fdc0a7a8d8cf3b07f25367ed896ffca2b",
+        "overlay_sha256": "c" * 64,
+    }
+    identity = {
+        "hostname": "COMFY-V4-CPU-01",
+        "principal": r"comfy-v4-cpu-01\windows 11",
+        "sid": "S-1-5-21-comfy",
+        "module_sha256": "a" * 64,
     }
     started: dict[str, object] = {}
     thread = threading.Thread(
         target=lambda: started.update({"result": run_envelope(payload)}), daemon=True
     )
-    thread.start()
-    deadline = time.time() + 5
-    running: dict[str, object] = {}
-    buf = ""
-    while time.time() < deadline and thread.is_alive():
+    with (
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol.local_runtime_identity",
+            return_value=identity,
+        ),
+        patch(
+            "project_pipeline.autonomy_runtime.remote_worker_protocol.remote_command_allowed",
+            return_value=True,
+        ),
+    ):
+        thread.start()
+        deadline = time.time() + 5
+        running: dict[str, object] = {}
+        buf = ""
+        while time.time() < deadline and thread.is_alive():
+            buf += capsys.readouterr().out
+            running = _running_record_from_stdout(buf)
+            if running:
+                break
+            time.sleep(0.05)
+        thread.join(timeout=10)
         buf += capsys.readouterr().out
-        running = _running_record_from_stdout(buf)
-        if running:
-            break
-        time.sleep(0.05)
-    thread.join(timeout=10)
-    buf += capsys.readouterr().out
-    if not running:
-        running = _running_record_from_stdout(buf)
-    assert running.get("phase") == "RUNNING"
-    assert running["pid"] == os.getpid()
-    assert running["creation_time"] == process_creation_filetime(int(running["pid"]))
-    assert running.get("child_pid") not in {None, running["pid"]}
+        if not running:
+            running = _running_record_from_stdout(buf)
+        assert running.get("phase") == "RUNNING"
+        assert running["pid"] == os.getpid()
+        assert running["creation_time"] == process_creation_filetime(int(running["pid"]))
+        assert running.get("child_pid") not in {None, running["pid"]}
 
 
 def test_enforce_or_reject_creates_job_object() -> None:

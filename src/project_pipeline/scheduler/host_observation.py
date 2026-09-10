@@ -15,7 +15,7 @@ import socket
 import subprocess
 from collections.abc import Mapping
 from ctypes import wintypes
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
@@ -215,6 +215,22 @@ def _observed_worker_profile(
     ram_gb = inventory.get("totalRAMGB")
     logical = inventory.get("cpuLogical")
     whoami = inventory.get("whoami")
+    measured_at = inventory.get("measured_at_utc")
+    observed_at = UNOBSERVED_AT
+    if measured_at:
+        try:
+            observed_at = datetime.fromisoformat(
+                str(measured_at).replace("Z", "+00:00")
+            ).astimezone(UTC)
+        except ValueError:
+            observed_at = UNOBSERVED_AT
+            complete = False
+    current = (when or datetime.now(UTC)).astimezone(UTC)
+    if observed_at.year <= 1970 or observed_at > current + timedelta(seconds=300):
+        complete = False
+        kind_override = "PARTIAL"
+    else:
+        kind_override = None
     if ram_gb is None or logical is None or not whoami:
         kind = "PARTIAL"
         ram_gb = default_ram_gb
@@ -222,14 +238,8 @@ def _observed_worker_profile(
         whoami = default_principal
     else:
         kind = "MEASURED" if complete else "PARTIAL"
-    measured_at = inventory.get("measured_at_utc")
-    if measured_at:
-        observed_at = datetime.fromisoformat(str(measured_at).replace("Z", "+00:00")).astimezone(
-            UTC
-        )
-    else:
-        observed_at = UNOBSERVED_AT
-        kind = "PARTIAL"
+    if kind_override:
+        kind = kind_override
     del when
     available_ram = inventory.get("availableRAMGB")
     physical = inventory.get("cpuPhysical")

@@ -7,9 +7,11 @@ A path segment named ``pp_jobs`` is not confinement.
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import os
 import subprocess
+import threading
 import time
 from collections.abc import Callable, Mapping
 from pathlib import Path
@@ -65,6 +67,86 @@ def parse_worker_stdout(stdout: str) -> dict[str, Any]:
 
 def _is_running_started_record(payload: Mapping[str, Any]) -> bool:
     return payload.get("pid") is not None and payload.get("phase") == "RUNNING"
+
+
+def _runner_accepts_input(runner: Callable[..., Any]) -> bool:
+    try:
+        signature = inspect.signature(runner)
+    except (TypeError, ValueError):
+        return True
+    if any(item.kind == inspect.Parameter.VAR_KEYWORD for item in signature.parameters.values()):
+        return True
+    return "input" in signature.parameters
+
+
+def _bounded_popen_run(
+    argv: list[str],
+    *,
+    env: dict[str, str],
+    timeout_seconds: int,
+    max_output_bytes: int,
+    stdin_payload: str,
+) -> subprocess.CompletedProcess[str]:
+    process = subprocess.Popen(
+        argv,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        env=env,
+        shell=False,
+    )
+    overflow = {"stdout": False, "stderr": False}
+    stdout_holder = {"text": ""}
+    stderr_holder = {"text": ""}
+
+    def _drain(stream: Any, key: str, holder: dict[str, str]) -> None:
+        chunks: list[bytes] = []
+        total = 0
+        while True:
+            data = stream.read(4096)
+            if not data:
+                break
+            if total + len(data) > max_output_bytes:
+                overflow[key] = True
+                remain = max(0, max_output_bytes - total)
+                if remain:
+                    chunks.append(data[:remain])
+                process.kill()
+                break
+            chunks.append(data)
+            total += len(data)
+        holder["text"] = b"".join(chunks).decode("utf-8", errors="replace")
+
+    reader_out = threading.Thread(
+        target=_drain, args=(process.stdout, "stdout", stdout_holder), daemon=True
+    )
+    reader_err = threading.Thread(
+        target=_drain, args=(process.stderr, "stderr", stderr_holder), daemon=True
+    )
+    reader_out.start()
+    reader_err.start()
+    if process.stdin is not None:
+        process.stdin.write(stdin_payload.encode("utf-8"))
+        process.stdin.close()
+    try:
+        process.wait(timeout=timeout_seconds)
+        timed_out = False
+        exit_code = int(process.returncode or 0)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        timed_out = True
+        exit_code = 124
+    reader_out.join(timeout=5)
+    reader_err.join(timeout=5)
+    if overflow["stdout"] or overflow["stderr"]:
+        exit_code = 125
+        stderr_holder["text"] = (stderr_holder["text"] + "\n[truncated:output_limit]").strip()
+    completed = subprocess.CompletedProcess(
+        argv, exit_code, stdout_holder["text"], stderr_holder["text"]
+    )
+    completed.timed_out = timed_out  # type: ignore[attr-defined]
+    completed.output_truncated = overflow["stdout"] or overflow["stderr"]  # type: ignore[attr-defined]
+    return completed
 
 
 def timeout_output_text(value: object) -> str:
@@ -365,7 +447,6 @@ class SshDispatchAdapter:
             connect_timeout=self.connect_timeout,
         )
         env = self._ssh_env()
-        runner = self.runner or subprocess.run
         stdin_payload = self._stdin_payload(
             command=command,
             working_directory=working_directory,
@@ -376,45 +457,42 @@ class SshDispatchAdapter:
             input_sha256=input_sha256,
             envelope=envelope,
         )
-        try:
-            completed = runner(
+        if self.runner is None:
+            completed = _bounded_popen_run(
                 argv,
-                capture_output=True,
-                text=True,
-                check=False,
-                timeout=timeout_seconds,
                 env=env,
-                input=stdin_payload,
+                timeout_seconds=timeout_seconds,
+                max_output_bytes=max_output_bytes,
+                stdin_payload=stdin_payload,
             )
             raw_stdout = completed.stdout or ""
             raw_stderr = completed.stderr or ""
-            timed_out = False
+            timed_out = bool(getattr(completed, "timed_out", False))
             exit_code = completed.returncode
-        except TypeError:
-            # Injected test runners may not accept input=
+        else:
+            kwargs: dict[str, Any] = {
+                "capture_output": True,
+                "text": True,
+                "check": False,
+                "timeout": timeout_seconds,
+                "env": env,
+            }
+            if _runner_accepts_input(self.runner):
+                kwargs["input"] = stdin_payload
             try:
-                completed = runner(
-                    argv,
-                    capture_output=True,
-                    text=True,
-                    check=False,
-                    timeout=timeout_seconds,
-                    env=env,
-                )
-                raw_stdout = completed.stdout or ""
-                raw_stderr = completed.stderr or ""
-                timed_out = False
-                exit_code = completed.returncode
+                completed = self.runner(argv, **kwargs)
+            except TypeError as error:
+                raise TypeError("ssh_runner_contract_error_after_dispatch") from error
             except subprocess.TimeoutExpired as error:
                 raw_stdout = timeout_output_text(error.stdout or error.output)
                 raw_stderr = timeout_output_text(error.stderr)
                 timed_out = True
                 exit_code = 124
-        except subprocess.TimeoutExpired as error:
-            raw_stdout = timeout_output_text(error.stdout or error.output)
-            raw_stderr = timeout_output_text(error.stderr)
-            timed_out = True
-            exit_code = 124
+            else:
+                raw_stdout = completed.stdout or ""
+                raw_stderr = completed.stderr or ""
+                timed_out = False
+                exit_code = completed.returncode
         stdout = raw_stdout[:max_output_bytes]
         stderr = raw_stderr[:max_output_bytes]
         worker = parse_worker_stdout(stdout)

@@ -218,7 +218,7 @@ def test_lifecycle_has_no_kill_or_recover() -> None:
 
 def test_useful_job_writes_artifact(tmp_path: Path) -> None:
     argv = useful_argv(ROOT, "PP-TASK-000516")
-    assert argv[1].endswith("cycle20_useful_job.py")
+    assert argv[1].endswith("cycle21_validation_job.py")
     assert "PP-TASK-000384" not in argv
 
 

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import threading
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -263,6 +264,34 @@ def process_creation_filetime(pid: int) -> str | None:
     return str(value)
 
 
+def _drain_bounded(
+    stream: Any,
+    *,
+    max_bytes: int,
+    overflow: dict[str, bool],
+    key: str,
+    terminate: Callable[[], None],
+) -> str:
+    chunks: list[bytes] = []
+    total = 0
+    while True:
+        data = stream.read(4096)
+        if not data:
+            break
+        if isinstance(data, str):
+            data = data.encode("utf-8", errors="replace")
+        if total + len(data) > max_bytes:
+            overflow[key] = True
+            remain = max(0, max_bytes - total)
+            if remain:
+                chunks.append(data[:remain])
+            terminate()
+            break
+        chunks.append(data)
+        total += len(data)
+    return b"".join(chunks).decode("utf-8", errors="replace")
+
+
 def assign_and_wait(
     *,
     command: list[str],
@@ -271,6 +300,7 @@ def assign_and_wait(
     env: dict[str, str],
     handle: int,
     on_started: Callable[[int, str | None], None] | None = None,
+    max_output_bytes: int = 65536,
 ) -> subprocess.CompletedProcess[str]:
     """Assign the child to the Job Object and wait; terminate the job on timeout."""
 
@@ -284,7 +314,6 @@ def assign_and_wait(
         cwd=str(working_directory),
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        text=True,
         env=env,
         shell=False,
         creationflags=CREATE_SUSPENDED,
@@ -302,15 +331,56 @@ def assign_and_wait(
         raise ResourceLimitError("unsupported_limits:job_object_resume_failed")
     if on_started is not None:
         on_started(int(process.pid), creation)
+    overflow = {"stdout": False, "stderr": False}
+
+    def _terminate_overflow() -> None:
+        kernel32.TerminateJobObject(handle, 125)
+
+    stdout_holder: dict[str, str] = {"text": ""}
+    stderr_holder: dict[str, str] = {"text": ""}
+
+    def _stdout() -> None:
+        stdout_holder["text"] = _drain_bounded(
+            process.stdout,
+            max_bytes=max_output_bytes,
+            overflow=overflow,
+            key="stdout",
+            terminate=_terminate_overflow,
+        )
+
+    def _stderr() -> None:
+        stderr_holder["text"] = _drain_bounded(
+            process.stderr,
+            max_bytes=max_output_bytes,
+            overflow=overflow,
+            key="stderr",
+            terminate=_terminate_overflow,
+        )
+
+    reader_out = threading.Thread(target=_stdout, daemon=True)
+    reader_err = threading.Thread(target=_stderr, daemon=True)
+    reader_out.start()
+    reader_err.start()
     try:
-        stdout, stderr = process.communicate(timeout=timeout_seconds)
-        completed = subprocess.CompletedProcess(command, process.returncode, stdout, stderr)
-        completed.pid = process.pid  # type: ignore[attr-defined]
-        completed.creation_time = creation  # type: ignore[attr-defined]
-        return completed
+        process.wait(timeout=timeout_seconds)
     except subprocess.TimeoutExpired:
         kernel32.TerminateJobObject(handle, 124)
-        stdout, stderr = process.communicate()
+        reader_out.join(timeout=5)
+        reader_err.join(timeout=5)
         raise subprocess.TimeoutExpired(
-            command, timeout_seconds, output=stdout, stderr=stderr
+            command,
+            timeout_seconds,
+            output=stdout_holder["text"],
+            stderr=stderr_holder["text"],
         ) from None
+    reader_out.join(timeout=5)
+    reader_err.join(timeout=5)
+    completed = subprocess.CompletedProcess(
+        command, process.returncode, stdout_holder["text"], stderr_holder["text"]
+    )
+    completed.pid = process.pid  # type: ignore[attr-defined]
+    completed.creation_time = creation  # type: ignore[attr-defined]
+    completed.output_truncated = overflow["stdout"] or overflow["stderr"]  # type: ignore[attr-defined]
+    if overflow["stdout"] or overflow["stderr"]:
+        completed.returncode = completed.returncode or 125
+    return completed
