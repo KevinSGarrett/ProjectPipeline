@@ -6,4 +6,4 @@ numpy==2.4.6
 pip-audit==2.10.1
 pre-commit==4.6.2
 ruff==0.16.5
-types-networkx==3.6.1.20260728
+types-networkx==3.6.1.20260903
