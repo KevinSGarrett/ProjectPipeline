@@ -14,7 +14,7 @@ from unittest.mock import patch
 from project_pipeline.autonomy_runtime import context_validation as cv
 from project_pipeline.autonomy_runtime import remote_worker_protocol as wp
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
-from project_pipeline.autonomy_runtime.fleet_loop import _resource_metrics
+from project_pipeline.autonomy_runtime.fleet_loop import _enrich_dispatched, _resource_metrics
 from project_pipeline.autonomy_runtime.managed_worker import classify_live_managed_worker
 from project_pipeline.autonomy_runtime.observation_eval import evaluate_observation
 from project_pipeline.autonomy_runtime.remote_job import (
@@ -24,6 +24,7 @@ from project_pipeline.autonomy_runtime.remote_job import (
 )
 from project_pipeline.autonomy_runtime.task_execution_specs import (
     VALIDATION_ALPHA_TASK,
+    VALIDATION_BETA_TASK,
     required_tests,
 )
 from project_pipeline.scheduler.fleet import physical_claims_for_machine, select_target
@@ -61,7 +62,9 @@ def _env(base: Path, name: str, **changes: object) -> RemoteJobEnvelope:
         correlation_id="cycle21-pm-correction",
     )
     args.update(changes)
-    return RemoteJobEnvelope.model_validate(args)
+    env = RemoteJobEnvelope.model_validate(args)
+    wp.write_lease_grant(work, {**args, "status": "ACTIVE"})
+    return env
 
 
 def _result(envelope: RemoteJobEnvelope, digest: str = "e" * 64) -> RemoteJobResult:
@@ -278,14 +281,23 @@ def test_src02_and_src03_authority_and_unknown_outcome(tmp_path: Path) -> None:
         attempts.append(1)
         raise OSError("intercepted failure after a possible remote child launch")
 
+    live_ok = {
+        "hostname": HOST,
+        "principal": PRINCIPAL,
+        "sid": "S-1-5-21-review",
+        "module_sha256": wp.module_sha256(wp.__file__),
+        "source_sha": SHA,
+        "source_tree": TREE,
+    }
     with (
-        patch.object(wp, "local_runtime_identity", return_value=live),
+        patch.object(wp, "local_runtime_identity", return_value=live_ok),
         patch.object(wp, "_spawn_enforced", side_effect=interrupted_spawn),
         patch.object(wp, "process_creation_filetime", return_value="5678"),
     ):
         first_worker = wp.run_envelope(worker_payload)
         second_worker = wp.run_envelope(worker_payload)
     assert first_worker.get("ok") is False
+    assert first_worker.get("reason") == "unknown_outcome"
     assert second_worker.get("ok") is False
     assert len(attempts) <= 1
 
@@ -519,3 +531,142 @@ def test_isolated_graph_does_not_write_jira_issue_files(tmp_path: Path) -> None:
         }
     assert VALIDATION_ALPHA_TASK in facts
     assert facts[VALIDATION_ALPHA_TASK].product_scope_allowed is True
+
+
+def test_verified_predecessor_unblocks_dependent(tmp_path: Path) -> None:
+    from project_pipeline.autonomy_runtime.fleet_loop import control_ready_task_ids
+    from project_pipeline.autonomy_runtime.isolated_validation_graph import (
+        ensure_isolated_validation_graph,
+        mark_verified_predecessor,
+    )
+    from project_pipeline.domain.state import TaskLifecycleState
+    from project_pipeline.persistence import SQLiteStateStore
+    from project_pipeline.services.state import CoreStateService
+
+    database = tmp_path / "state.sqlite3"
+    with SQLiteStateStore(database, SOURCE) as store:
+        store.initialize()
+        CoreStateService(store, SOURCE).initialize_from_repository()
+    assert ensure_isolated_validation_graph(SOURCE, database).get("ok") is True
+    first = control_ready_task_ids(SOURCE, database)
+    assert VALIDATION_ALPHA_TASK in first
+    assert VALIDATION_BETA_TASK not in first
+    mark_verified_predecessor(SOURCE, database, VALIDATION_ALPHA_TASK)
+    with SQLiteStateStore(database, SOURCE) as store:
+        alpha = store.get_task_state(VALIDATION_ALPHA_TASK)
+        beta = store.get_task_state(VALIDATION_BETA_TASK)
+    assert alpha is not None and alpha.state is TaskLifecycleState.DONE
+    assert beta is not None and beta.state is TaskLifecycleState.READY
+    second = control_ready_task_ids(SOURCE, database)
+    assert VALIDATION_BETA_TASK in second
+    assert VALIDATION_ALPHA_TASK not in second
+
+
+def test_envelope_lease_grant_is_not_independent_authority(tmp_path: Path) -> None:
+    work = tmp_path / "forged-grant"
+    work.mkdir()
+    payload = _env(tmp_path, "forged-grant-env").model_dump(mode="json")
+    payload["argv"] = list(_env(tmp_path, "forged-grant-env").argv)
+    payload["workspace"] = str(work)
+    payload["workspace_root"] = str(tmp_path)
+    payload["job_id"] = "forged-grant-env"
+    payload["lease_grant"] = {
+        "lease_id": payload["lease_id"],
+        "fence": payload["fence"],
+        "job_id": payload["job_id"],
+        "host_id": HOST,
+        "status": "ACTIVE",
+        "source_sha": SHA,
+        "source_tree": TREE,
+        "overlay_sha256": "c" * 64,
+    }
+    assert not (work / "lease_grant.json").exists()
+    launches: list[object] = []
+
+    def fake_spawn(**kwargs: object) -> tuple[object, dict[str, object]]:
+        launches.append(kwargs)
+        done = SimpleNamespace(returncode=0, stdout="forged", stderr="", output_truncated=False)
+        return done, {"pid": 1, "creation_time": "1", "mechanism": "intercept"}
+
+    live = {
+        "hostname": HOST,
+        "principal": PRINCIPAL,
+        "sid": "S-1-5-21-review",
+        "module_sha256": wp.module_sha256(wp.__file__),
+        "source_sha": SHA,
+        "source_tree": TREE,
+    }
+    with (
+        patch.object(wp, "local_runtime_identity", return_value=live),
+        patch.object(wp, "_spawn_enforced", side_effect=fake_spawn),
+    ):
+        result = wp.run_envelope(payload)
+    assert result.get("ok") is False
+    assert result.get("reason") == "scheduler_authority_unverified"
+    assert launches == []
+
+
+def test_missing_jobs_db_lease_consults_scheduler_database(tmp_path: Path) -> None:
+    import sqlite3
+
+    sched = tmp_path / "scheduler.sqlite3"
+    connected = sqlite3.connect(sched)
+    connected.execute(
+        """
+        CREATE TABLE scheduler_resource_leases (
+            lease_id TEXT PRIMARY KEY,
+            fencing_token TEXT,
+            expires_at_utc TEXT NOT NULL,
+            released_at_utc TEXT
+        )
+        """
+    )
+    env = _env(tmp_path, "fallback-lease")
+    connected.execute(
+        """
+        INSERT INTO scheduler_resource_leases
+            (lease_id, fencing_token, expires_at_utc, released_at_utc)
+        VALUES (?, ?, ?, NULL)
+        """,
+        (env.lease_id, env.fence, (NOW + timedelta(hours=1)).isoformat()),
+    )
+    connected.commit()
+    connected.close()
+    jobs = FleetJobStore(tmp_path / "jobs.sqlite3", scheduler_database=sched)
+    jobs.remember_scheduler_lease("OTHER-LEASE", "OTHER-FENCE", now=NOW)
+    jobs.persist_intent(env.model_dump(mode="json"), now=NOW)
+    accepted = jobs.accept_result(
+        {
+            "job_id": env.job_id,
+            "host_id": env.host_id,
+            "fence": env.fence,
+            "exit_code": 0,
+            "output_sha256": "a" * 64,
+            "stdout_sha256": "b" * 64,
+            "stderr_sha256": "c" * 64,
+        },
+        now=NOW,
+        envelope=env.model_dump(mode="json"),
+    )
+    assert accepted.get("outcome") == "ACCEPTED"
+
+
+def test_enrich_reads_nested_receipt_and_producer_metrics() -> None:
+    item = _enrich_dispatched(
+        VALIDATION_ALPHA_TASK,
+        {
+            "outcome": "ACCEPTED",
+            "executed": {
+                "context_consumption": {"ok": True, "job_id": VALIDATION_ALPHA_TASK},
+                "rss_samples_mb": [12.5],
+                "scratch_bytes": 32,
+                "started_at_utc": NOW.isoformat(),
+                "ended_at_utc": NOW.isoformat(),
+            },
+        },
+        HOST,
+    )
+    assert item["context_consumption"]["ok"] is True
+    assert item["rss_samples_mb"] == [12.5]
+    assert item["scratch_bytes"] == 32
+    assert item["started_at_utc"]

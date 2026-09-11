@@ -69,21 +69,24 @@ def _query_scheduler_lease(
     fence: str,
     now: datetime,
 ) -> bool | None:
-    row = db.execute(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name='scheduler_resource_leases'"
-    ).fetchone()
-    if row is None:
+    try:
+        row = db.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='scheduler_resource_leases'"
+        ).fetchone()
+        if row is None:
+            return None
+        lease = db.execute(
+            """
+            SELECT fencing_token, expires_at_utc, released_at_utc
+            FROM scheduler_resource_leases
+            WHERE lease_id=?
+            """,
+            (lease_id,),
+        ).fetchone()
+    except sqlite3.OperationalError:
         return None
-    lease = db.execute(
-        """
-        SELECT fencing_token, expires_at_utc, released_at_utc
-        FROM scheduler_resource_leases
-        WHERE lease_id=?
-        """,
-        (lease_id,),
-    ).fetchone()
     if lease is None:
-        return False
+        return None
     if lease["released_at_utc"]:
         return False
     expires = datetime.fromisoformat(str(lease["expires_at_utc"]).replace("Z", "+00:00"))

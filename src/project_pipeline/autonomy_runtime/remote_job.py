@@ -289,6 +289,11 @@ class RemoteJobController:
                 "tests_run": payload.get("tests_run"),
                 "artifact_sha256": payload.get("artifact_sha256"),
                 "junit_sha256": payload.get("junit_sha256"),
+                "rss_samples_mb": payload.get("rss_samples_mb"),
+                "scratch_bytes": payload.get("scratch_bytes"),
+                "output_bytes": payload.get("output_bytes"),
+                "started_at_utc": payload.get("started_at_utc"),
+                "ended_at_utc": payload.get("ended_at_utc"),
             }
         finally:
             if self.store is not None and claimed and not launched:

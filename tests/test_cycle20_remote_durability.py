@@ -19,7 +19,7 @@ from project_pipeline.autonomy_runtime.confinement import (
 )
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
-from project_pipeline.autonomy_runtime.remote_worker_protocol import module_sha256
+from project_pipeline.autonomy_runtime.remote_worker_protocol import module_sha256, write_lease_grant
 from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
     SshDispatchAdapter,
@@ -330,6 +330,7 @@ def test_worker_side_dedup(tmp_path: Path) -> None:
             "overlay_sha256": "c" * 64,
         },
     }
+    write_lease_grant(workspace, payload)
 
     class Completed:
         returncode = 0
@@ -406,6 +407,7 @@ def test_enforced_spawn_prints_pid_before_child_exits(
             "overlay_sha256": "c" * 64,
         },
     }
+    write_lease_grant(workspace, payload)
     identity = {
         "hostname": "COMFY-V4-CPU-01",
         "principal": r"comfy-v4-cpu-01\windows 11",

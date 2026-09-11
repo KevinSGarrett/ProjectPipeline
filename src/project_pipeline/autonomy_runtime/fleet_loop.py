@@ -276,12 +276,27 @@ def _enrich_dispatched(
 ) -> dict[str, Any]:
     item: dict[str, Any] = {"task_id": task_id, **dispatched, "host_id": host_id}
     executed = dispatched.get("executed") if isinstance(dispatched.get("executed"), dict) else {}
+    if not isinstance(item.get("context_consumption"), dict) or not item.get("context_consumption"):
+        nested_receipt = executed.get("context_consumption") or executed.get("context_receipt")
+        if isinstance(nested_receipt, dict) and nested_receipt:
+            item["context_consumption"] = nested_receipt
     stdout = str(executed.get("stdout") or "")
     metrics = job_stdout_metrics(stdout)
-    for key in ("tests_run", "collected", "artifact_sha256", "junit_sha256"):
-        if item.get(key) in (None, "", 0, "0"):
+    for key in (
+        "tests_run",
+        "collected",
+        "artifact_sha256",
+        "junit_sha256",
+        "rss_samples_mb",
+        "workload_rss_samples_mb",
+        "scratch_bytes",
+        "output_bytes",
+        "started_at_utc",
+        "ended_at_utc",
+    ):
+        if item.get(key) in (None, "", 0, "0", [], ()):
             value = metrics.get(key) or executed.get(key) or dispatched.get(key)
-            if value not in (None, "", 0, "0"):
+            if value not in (None, "", 0, "0", [], ()):
                 item[key] = value
     acquire = getattr(adapter, "acquire_workspace_file", None)
     job_workspace = workspace or Path(str(executed.get("working_directory") or ""))

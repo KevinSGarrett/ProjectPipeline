@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -279,6 +280,13 @@ class DispatchWorkflow:
         )
         if Path(workspace).is_dir():
             write_lease_grant(Path(workspace), grant)
+        placer = getattr(worker, "place_workspace_file", None)
+        if callable(placer):
+            placer(
+                Path(workspace),
+                "lease_grant.json",
+                (json.dumps(grant, indent=2, sort_keys=True) + "\n").encode("utf-8"),
+            )
         intent = self.jobs.persist_intent(envelope.model_dump(mode="json"), now=now)
         if not intent.get("ok"):
             return {"outcome": "REJECTED", "reason": intent.get("reason"), "lifecycle": "REJECTED"}
@@ -423,4 +431,12 @@ class DispatchWorkflow:
             "acquired_junit_path": str(acquired_dest),
             "artifact_sha256": digest_bytes(artifact_bytes),
             "junit_sha256": digest_bytes(artifact_bytes),
+            "context_consumption": consumed
+            if consumed is not None
+            else executed.get("context_consumption"),
+            "rss_samples_mb": executed.get("rss_samples_mb"),
+            "scratch_bytes": executed.get("scratch_bytes"),
+            "output_bytes": executed.get("output_bytes"),
+            "started_at_utc": executed.get("started_at_utc"),
+            "ended_at_utc": executed.get("ended_at_utc"),
         }

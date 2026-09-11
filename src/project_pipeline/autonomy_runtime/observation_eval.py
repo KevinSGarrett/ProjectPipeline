@@ -150,8 +150,19 @@ def evaluate_observation(
                 continue
             artifact = _verified_acquired_artifact(item)
             tests_run = int(item.get("tests_run") or 0)
-            receipt = item.get("context_consumption") or item.get("context_receipt") or {}
-            started = _parse_utc(item.get("started_at_utc") or item.get("accepted_at_utc"))
+            executed = item.get("executed") if isinstance(item.get("executed"), dict) else {}
+            receipt = (
+                item.get("context_consumption")
+                or item.get("context_receipt")
+                or executed.get("context_consumption")
+                or executed.get("context_receipt")
+                or {}
+            )
+            started = _parse_utc(
+                item.get("started_at_utc")
+                or executed.get("started_at_utc")
+                or item.get("accepted_at_utc")
+            )
             if window_start and started and started < window_start:
                 reasons.append(f"pre_window_job:{task_id}")
                 continue

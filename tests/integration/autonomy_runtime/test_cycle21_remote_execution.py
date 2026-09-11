@@ -11,6 +11,7 @@ from project_pipeline.autonomy_runtime.remote_worker_protocol import (
     _pid_is_owned,
     module_sha256,
     run_envelope,
+    write_lease_grant,
 )
 from project_pipeline.autonomy_runtime.worker_allowlist import (
     remote_command_allowed,
@@ -140,6 +141,7 @@ def test_cache_does_not_reuse_changed_fence(tmp_path: Path) -> None:
             "overlay_sha256": "c" * 64,
         },
     }
+    write_lease_grant(workspace, payload)
 
     class Completed:
         returncode = 0

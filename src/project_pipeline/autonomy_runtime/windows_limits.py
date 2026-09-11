@@ -224,6 +224,34 @@ def close_job_handle(handle: int | None) -> None:
     ctypes.WinDLL("kernel32", use_last_error=True).CloseHandle(handle)
 
 
+def query_job_peak_memory_bytes(handle: int | None) -> int:
+    """Return PeakJobMemoryUsed for an open Job Object, or 0 if unavailable."""
+
+    if not handle or not _windows_available() or ctypes is None or wintypes is None:
+        return 0
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    kernel32.QueryInformationJobObject.argtypes = [
+        wintypes.HANDLE,
+        wintypes.DWORD,
+        wintypes.LPVOID,
+        wintypes.DWORD,
+        ctypes.POINTER(wintypes.DWORD),
+    ]
+    kernel32.QueryInformationJobObject.restype = wintypes.BOOL
+    info = JobObjectExtendedLimitInformationStruct()
+    written = wintypes.DWORD(0)
+    ok = kernel32.QueryInformationJobObject(
+        int(handle),
+        JobObjectExtendedLimitInformation,
+        ctypes.byref(info),
+        ctypes.sizeof(info),
+        ctypes.byref(written),
+    )
+    if not ok:
+        return 0
+    return int(info.PeakJobMemoryUsed or info.PeakProcessMemoryUsed or 0)
+
+
 def _resume_suspended_process(process_handle: int) -> bool:
     """Resume a CREATE_SUSPENDED child after Job Object assignment."""
 

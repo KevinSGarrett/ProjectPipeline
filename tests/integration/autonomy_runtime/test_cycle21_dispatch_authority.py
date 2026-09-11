@@ -22,6 +22,7 @@ from project_pipeline.autonomy_runtime.remote_job import (
 from project_pipeline.autonomy_runtime.remote_worker_protocol import (
     module_sha256,
     run_envelope,
+    write_lease_grant,
 )
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
     SshDispatchAdapter,
@@ -96,7 +97,9 @@ def _envelope(tmp_path: Path, name: str, **changes: object) -> RemoteJobEnvelope
             "source_tree": values["source_tree"],
             "overlay_sha256": values["overlay_sha256"],
         }
-    return RemoteJobEnvelope.model_validate(values)
+    env = RemoteJobEnvelope.model_validate(values)
+    write_lease_grant(workspace, {**values, **values["lease_grant"]})
+    return env
 
 
 def _bind_lease(store: FleetJobStore, env: RemoteJobEnvelope, *, now: datetime = NOW) -> None:

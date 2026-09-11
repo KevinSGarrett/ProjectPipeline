@@ -11,9 +11,11 @@ import inspect
 import json
 import os
 import subprocess
+import tempfile
 import threading
 import time
 from collections.abc import Callable, Mapping
+from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
@@ -50,6 +52,7 @@ WORKER_ENTRYPOINT = ("python", "-m", "project_pipeline.autonomy_runtime.worker_e
 ACQUIRED_WORKSPACE_FILES = frozenset(
     {"junit.xml", "artifact_manifest.json", "useful_artifact.json"}
 )
+PLACED_WORKSPACE_FILES = frozenset({"lease_grant.json"})
 
 
 def parse_worker_stdout(stdout: str) -> dict[str, Any]:
@@ -81,8 +84,19 @@ def job_stdout_metrics(stdout: str) -> dict[str, Any]:
             if nested:
                 bodies.append(nested)
         for body in bodies:
-            for key in ("tests_run", "collected", "artifact_sha256", "junit_sha256"):
-                if body.get(key) not in (None, "", 0, "0"):
+            for key in (
+                "tests_run",
+                "collected",
+                "artifact_sha256",
+                "junit_sha256",
+                "rss_samples_mb",
+                "workload_rss_samples_mb",
+                "scratch_bytes",
+                "output_bytes",
+                "started_at_utc",
+                "ended_at_utc",
+            ):
+                if body.get(key) not in (None, "", 0, "0", [], ()):
                     metrics[key] = body.get(key)
             if body.get("context_consumption") is not None:
                 metrics["context_consumption"] = body["context_consumption"]
@@ -333,6 +347,55 @@ class SshDispatchAdapter:
         if completed.returncode != 0 or not dest.is_file():
             return None
         return dest.read_bytes()
+
+    def place_workspace_file(self, working_directory: Path, name: str, payload: bytes) -> bool:
+        """Copy one independently persisted grant/input file to the remote workspace."""
+
+        if name not in PLACED_WORKSPACE_FILES or not payload:
+            return False
+        try:
+            reject_unsafe_string(str(working_directory), field="workspace")
+        except ConfinementError:
+            return False
+        local_dir = Path(working_directory)
+        if local_dir.is_dir():
+            (local_dir / name).write_bytes(payload)
+            if self.runner is not None:
+                return True
+        if self.runner is not None:
+            return local_dir.is_dir()
+        handle, raw = tempfile.mkstemp(prefix="pp-lease-grant-", suffix=".json")
+        source = Path(raw)
+        try:
+            with os.fdopen(handle, "wb") as stream:
+                stream.write(payload)
+            posix = f"{Path(working_directory).as_posix()}/{name}"
+            completed = subprocess.run(
+                [
+                    "scp",
+                    "-i",
+                    str(self.identity),
+                    "-o",
+                    "IdentitiesOnly=yes",
+                    "-o",
+                    "BatchMode=yes",
+                    "-o",
+                    f"ConnectTimeout={self.connect_timeout}",
+                    "-o",
+                    ssh_config_user_option(self.user),
+                    str(source),
+                    f"{self.host}:{posix}",
+                ],
+                capture_output=True,
+                check=False,
+                shell=False,
+                timeout=45,
+                env=self._ssh_env(),
+            )
+            return completed.returncode == 0
+        finally:
+            with suppress(OSError):
+                source.unlink()
 
     def _ssh_env(self) -> dict[str, str]:
         allowed = {item.upper() for item in SSH_CLIENT_ENV_KEYS}
@@ -605,6 +668,15 @@ class SshDispatchAdapter:
                 payload[key] = worker[key]
         if worker.get("context_consumption") is not None:
             payload["context_consumption"] = worker["context_consumption"]
+        for key in (
+            "rss_samples_mb",
+            "scratch_bytes",
+            "output_bytes",
+            "started_at_utc",
+            "ended_at_utc",
+        ):
+            if worker.get(key) not in (None, "", 0, "0", [], ()):
+                payload[key] = worker[key]
         job_metrics = job_stdout_metrics(str(worker.get("stdout") or stdout))
         payload.update(job_metrics)
         for key in ("reason", "phase"):
