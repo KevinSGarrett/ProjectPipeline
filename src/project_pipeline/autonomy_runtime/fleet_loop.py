@@ -675,10 +675,23 @@ def _resource_metrics(
             host = str(item.get("host_id") or "")
             if host:
                 hosts.add(host)
-            samples = item.get("rss_samples_mb") or item.get("workload_rss_samples_mb") or ()
+            executed = item.get("executed") if isinstance(item.get("executed"), dict) else {}
+            samples = (
+                item.get("rss_samples_mb")
+                or item.get("workload_rss_samples_mb")
+                or executed.get("rss_samples_mb")
+                or executed.get("workload_rss_samples_mb")
+                or ()
+            )
             if isinstance(samples, (list, tuple)) and samples:
                 peaks.append(max(float(value) for value in samples))
-            scratch += int(item.get("scratch_bytes") or item.get("output_bytes") or 0)
+            scratch += int(
+                item.get("scratch_bytes")
+                or item.get("output_bytes")
+                or executed.get("scratch_bytes")
+                or executed.get("output_bytes")
+                or 0
+            )
             try:
                 started = (
                     datetime.fromisoformat(
@@ -1257,9 +1270,7 @@ def run_observation(
         and len(overlay_digest) == 64
     ):
         catalog = root / "database" / "MIGRATION_CATALOG.json"
-        scheduler_cm = (
-            SchedulerStore(Path(db), root) if catalog.is_file() else nullcontext(None)
-        )
+        scheduler_cm = SchedulerStore(Path(db), root) if catalog.is_file() else nullcontext(None)
         with scheduler_cm as scheduler:
             fault = _fault_owned_hold_job(
                 adapter=adapter,
