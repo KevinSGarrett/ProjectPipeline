@@ -230,7 +230,11 @@ def test_valid_observation_shape_can_pass(tmp_path: Path) -> None:
             "recovered_output_accepted": True,
             "unaffected_lane_progress": True,
             "controller_restarted": True,
+            "restart_pid": 4243,
+            "remote_pid": 4242,
+            "creation_time": "132537600000000000",
         },
+        "started_at_utc": datetime(2026, 9, 10, 2, 0, tzinfo=UTC).isoformat(),
         "completed_jobs": [
             {
                 "results": [
@@ -239,6 +243,12 @@ def test_valid_observation_shape_can_pass(tmp_path: Path) -> None:
                         "outcome": "ACCEPTED",
                         "tests_run": 1,
                         "host_id": "WIN-EVSH1DN8H5O",
+                        "started_at_utc": datetime(2026, 9, 10, 3, 1, tzinfo=UTC).isoformat(),
+                        "context_consumption": {
+                            "ok": True,
+                            "job_id": "PP-TASK-000521",
+                            "host_id": "WIN-EVSH1DN8H5O",
+                        },
                         **xeon,
                     },
                     {
@@ -246,6 +256,12 @@ def test_valid_observation_shape_can_pass(tmp_path: Path) -> None:
                         "outcome": "ACCEPTED",
                         "tests_run": 1,
                         "host_id": "COMFY-V4-CPU-01",
+                        "started_at_utc": datetime(2026, 9, 10, 3, 2, tzinfo=UTC).isoformat(),
+                        "context_consumption": {
+                            "ok": True,
+                            "job_id": "PP-TASK-000518",
+                            "host_id": "COMFY-V4-CPU-01",
+                        },
                         **comfy,
                     },
                 ]

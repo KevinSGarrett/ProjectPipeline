@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 import pytest
 
+from project_pipeline.autonomy_runtime import remote_worker_protocol as worker_protocol
 from project_pipeline.autonomy_runtime.confinement import (
     ConfinementError,
     canonicalize_workspace,
@@ -18,6 +19,7 @@ from project_pipeline.autonomy_runtime.confinement import (
 )
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
+from project_pipeline.autonomy_runtime.remote_worker_protocol import module_sha256
 from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
     SshDispatchAdapter,
@@ -90,6 +92,7 @@ def test_restart_rejects_conflicting_expired_result(tmp_path: Path) -> None:
     store = FleetJobStore(tmp_path / "jobs.sqlite3")
     envelope = _envelope(tmp_path)
     store.persist_intent(envelope.model_dump(mode="json"), now=NOW)
+    store.remember_scheduler_lease(envelope.lease_id, envelope.fence, now=NOW)
     first = RemoteJobController(_RemoteMock(), store=store, require_intent=True)
     executed = first.execute(envelope, now=NOW)
     accepted = first.accept(envelope, executed["result"], expected_host=envelope.host_id, now=NOW)
@@ -106,6 +109,7 @@ def test_concurrent_duplicate_dispatch_does_not_reexecute(tmp_path: Path) -> Non
     store = FleetJobStore(tmp_path / "jobs.sqlite3")
     envelope = _envelope(tmp_path)
     store.persist_intent(envelope.model_dump(mode="json"), now=NOW)
+    store.remember_scheduler_lease(envelope.lease_id, envelope.fence, now=NOW)
     runs = {"count": 0}
 
     class _Counting(_RemoteMock):
@@ -315,6 +319,16 @@ def test_worker_side_dedup(tmp_path: Path) -> None:
         "deadline_utc": (datetime.now(UTC) + timedelta(minutes=5)).isoformat(),
         "cpu_ceiling": 1,
         "memory_mb_ceiling": 64,
+        "lease_grant": {
+            "lease_id": "LEASE-1",
+            "fence": "fence-1",
+            "job_id": "PP-TASK-000516",
+            "host_id": "COMFY-V4-CPU-01",
+            "status": "ACTIVE",
+            "source_sha": "f41c64d5b533ed4a329e0e431ee073dd791ee050",
+            "source_tree": "66778a1fdc0a7a8d8cf3b07f25367ed896ffca2b",
+            "overlay_sha256": "c" * 64,
+        },
     }
 
     class Completed:
@@ -329,7 +343,9 @@ def test_worker_side_dedup(tmp_path: Path) -> None:
         "hostname": "COMFY-V4-CPU-01",
         "principal": r"comfy-v4-cpu-01\windows 11",
         "sid": "S-1-5-21-comfy",
-        "module_sha256": "a" * 64,
+        "module_sha256": module_sha256(worker_protocol.__file__),
+        "source_sha": "f41c64d5b533ed4a329e0e431ee073dd791ee050",
+        "source_tree": "66778a1fdc0a7a8d8cf3b07f25367ed896ffca2b",
     }
     with (
         patch(
@@ -379,12 +395,24 @@ def test_enforced_spawn_prints_pid_before_child_exits(
         "source_sha": "f41c64d5b533ed4a329e0e431ee073dd791ee050",
         "source_tree": "66778a1fdc0a7a8d8cf3b07f25367ed896ffca2b",
         "overlay_sha256": "c" * 64,
+        "lease_grant": {
+            "lease_id": "LEASE-1",
+            "fence": "fence-1",
+            "job_id": "C20-OWNED-FAULT",
+            "host_id": "COMFY-V4-CPU-01",
+            "status": "ACTIVE",
+            "source_sha": "f41c64d5b533ed4a329e0e431ee073dd791ee050",
+            "source_tree": "66778a1fdc0a7a8d8cf3b07f25367ed896ffca2b",
+            "overlay_sha256": "c" * 64,
+        },
     }
     identity = {
         "hostname": "COMFY-V4-CPU-01",
         "principal": r"comfy-v4-cpu-01\windows 11",
         "sid": "S-1-5-21-comfy",
-        "module_sha256": "a" * 64,
+        "module_sha256": module_sha256(worker_protocol.__file__),
+        "source_sha": "f41c64d5b533ed4a329e0e431ee073dd791ee050",
+        "source_tree": "66778a1fdc0a7a8d8cf3b07f25367ed896ffca2b",
     }
     started: dict[str, object] = {}
     thread = threading.Thread(

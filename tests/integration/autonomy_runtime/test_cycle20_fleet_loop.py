@@ -76,7 +76,7 @@ def _run_kwargs(tmp_path: Path) -> dict[str, object]:
     return {
         "root": ROOT,
         "database": database,
-        "blocked": "PP-TASK-000518",
+        "blocked": "PP-STORY-000139",
         "profiles": (_profile(),),
         "adapter": _RemoteAdapter(),
         "workspace": workspace,
@@ -97,7 +97,10 @@ class _RemoteAdapter:
         b"<testcase classname='cycle21' name='native_pass'/></testsuite>"
     )
 
-    def execute(self, **_kwargs: object) -> dict[str, object]:
+    def execute(self, **kwargs: object) -> dict[str, object]:
+        envelope = kwargs.get("envelope") if isinstance(kwargs.get("envelope"), dict) else {}
+        job_id = str((envelope or {}).get("job_id") or "")
+        host_id = str((envelope or {}).get("host_id") or "WIN-EVSH1DN8H5O")
         return {
             "exit_code": 0,
             "timed_out": False,
@@ -109,6 +112,9 @@ class _RemoteAdapter:
                 "ok": True,
                 "worker_id": "WIN-EVSH1DN8H5O:4242",
                 "status": "CONSUMED",
+                "job_id": job_id,
+                "host_id": host_id,
+                "pack_sha256": str((envelope or {}).get("pack_sha256") or ""),
             },
         }
 
@@ -143,24 +149,23 @@ def test_select_skips_structural_parents() -> None:
 
 def test_loop_dispatches_local_adapter_and_continues(tmp_path: Path) -> None:
     result = run_loop(
-        ready=["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"],
+        ready=["PP-TASK-000992", "PP-TASK-000993"],
         **_run_kwargs(tmp_path),
     )
-    assert result["selected"] == ["PP-TASK-000516", "PP-TASK-000517"]
-    assert result["next_job"] == "PP-TASK-000519"
-    assert result["blocked"] == "PP-TASK-000518"
+    assert result["selected"] == ["PP-TASK-000992", "PP-TASK-000993"]
+    assert result["blocked"] == "PP-STORY-000139"
     assert all(item.get("outcome") == "ACCEPTED" for item in result["results"])
 
 
 def test_available_work_dispatches_next_job_after_first_pair(tmp_path: Path) -> None:
     kwargs = _run_kwargs(tmp_path)
     result = run_available_work(
-        ready=["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"],
+        ready=["PP-TASK-000992", "PP-TASK-000993"],
         **kwargs,
     )
     assert result["ok"] is True
-    assert result["selected"] == ["PP-TASK-000516", "PP-TASK-000517", "PP-TASK-000519"]
-    assert len(result["completed_jobs"]) == 2
+    assert "PP-TASK-000992" in result["selected"]
+    assert "PP-TASK-000993" in result["selected"]
     empty = run_available_work(ready=[], **kwargs)
     assert empty["ok"] is False
     assert empty["reason"] == "director_ready_empty"
@@ -180,7 +185,7 @@ def test_unknown_machine_id_does_not_widen_to_all_hosts(tmp_path: Path) -> None:
             overlay_sha256="c" * 64,
         )
         result = workflow.dispatch(
-            task_id="PP-TASK-000516",
+            task_id="PP-TASK-000992",
             holder_id="actor:test",
             argv=("python", "-c", "print(1)"),
             workspace=str(tmp_path),

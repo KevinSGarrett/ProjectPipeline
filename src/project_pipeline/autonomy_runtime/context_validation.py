@@ -7,7 +7,7 @@ import json
 import os
 import subprocess
 import sys
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 from xml.etree import ElementTree
@@ -27,6 +27,8 @@ from project_pipeline.domain.context import (
 CANARY = "SYNTHETIC_SECRET_CANARY_NOT_A_CREDENTIAL"
 NATIVE_PASS = "tests/fixtures/cycle21_native_pass.py"
 NATIVE_FAIL = "tests/fixtures/cycle21_native_fail.py"
+CLOCK_SKEW_SECONDS = 300
+FRESHNESS_SECONDS = 86_400
 
 
 def job_input_digest(
@@ -116,16 +118,18 @@ def compile_validation_pack(
     policy = ContextPolicy(policy_version="CTX-POLICY-21.0")
     with ContextService(root=root, database=database) as service:
         pack = service.compile(envelope, candidates, policy)
-        payload = json.dumps(pack.model_dump(mode="json"), sort_keys=True).encode("utf-8")
-        digest = hashlib.sha256(payload).hexdigest()
+        dumped = pack.model_dump(mode="json")
+        digest = pack_content_digest(dumped)
+        dumped["content_sha256"] = digest
+        artifact = hashlib.sha256(json.dumps(dumped, sort_keys=True).encode("utf-8")).hexdigest()
         return {
             "ok": True,
-            "pack": pack.model_dump(mode="json"),
+            "pack": dumped,
             "pack_id": pack.pack_id,
-            "pack_sha256": pack.content_sha256,
-            "artifact_sha256": digest,
+            "pack_sha256": digest,
+            "artifact_sha256": artifact,
             "delegation_id": envelope.delegation_id,
-            "canary_present": CANARY in json.dumps(pack.model_dump(mode="json")),
+            "canary_present": CANARY in json.dumps(dumped),
         }
 
 
@@ -133,6 +137,8 @@ def pack_content_digest(pack: dict[str, Any]) -> str:
     payload = {
         "delegation_id": pack.get("delegation_id"),
         "policy_version": pack.get("policy_version"),
+        "generated_at_utc": pack.get("generated_at_utc"),
+        "pack_id": pack.get("pack_id"),
         "items": pack.get("items") or [],
         "coverage": pack.get("coverage") or {},
         "stale_keys": pack.get("stale_keys") or [],
@@ -191,10 +197,23 @@ def consume_pack_on_worker(payload: dict[str, Any]) -> dict[str, Any]:
         return {"ok": False, "reason": "wrong_principal", "exit_code": 2}
     if str(payload.get("project_id") or "") != "PROJECT-PIPELINE":
         return {"ok": False, "reason": "wrong_project", "exit_code": 2}
+    job_id = str(payload.get("job_id") or "")
+    bound_task = str(binding.get("task_id") or "")
+    if not job_id or not bound_task or bound_task != job_id:
+        return {"ok": False, "reason": "wrong_task", "exit_code": 2}
+    expected_selection = payload.get("test_selection") or payload.get("selection")
+    if expected_selection:
+        actual_selection = _pack_item(pack, "test_selection").get("selection") or []
+        if [str(item) for item in expected_selection] != [str(item) for item in actual_selection]:
+            return {"ok": False, "reason": "wrong_selection", "exit_code": 2}
     generated = pack.get("generated_at_utc")
     try:
-        generated_at = datetime.fromisoformat(str(generated).replace("Z", "+00:00"))
-        if (datetime.now(UTC) - generated_at.astimezone(UTC)).total_seconds() > 86_400:
+        generated_at = datetime.fromisoformat(str(generated).replace("Z", "+00:00")).astimezone(UTC)
+        now = datetime.now(UTC)
+        age = (now - generated_at).total_seconds()
+        if generated_at > now + timedelta(seconds=CLOCK_SKEW_SECONDS):
+            return {"ok": False, "reason": "pack_timestamp_future", "exit_code": 2}
+        if age > FRESHNESS_SECONDS:
             return {"ok": False, "reason": "pack_stale", "exit_code": 2}
     except ValueError:
         return {"ok": False, "reason": "pack_stale", "exit_code": 2}
@@ -208,6 +227,8 @@ def consume_pack_on_worker(payload: dict[str, Any]) -> dict[str, Any]:
         "host_id": payload.get("host_id"),
         "principal": payload.get("principal"),
         "pack_sha256": pack.get("content_sha256"),
+        "job_id": job_id,
+        "task_id": bound_task,
         "live_hostname": live.get("hostname"),
     }
     receipt_path = pack_path.with_name("context_receipt.json")
@@ -249,7 +270,7 @@ def execute_native_tests(
         status = "FAIL"
     elif collected == 0:
         status = "NO_TESTS"
-    elif skipped and collected == skipped:
+    elif skipped:
         status = "MANDATORY_SKIPPED"
     else:
         status = "PASS"
@@ -285,9 +306,7 @@ def verify_output_contract(
         return {"ok": False, "reason": "tests_not_passed"}
     if int(manifest.get("collected") or 0) < 1:
         return {"ok": False, "reason": "no_tests_collected"}
-    if int(manifest.get("skipped") or 0) and int(manifest.get("collected")) == int(
-        manifest.get("skipped") or 0
-    ):
+    if int(manifest.get("skipped") or 0) > 0:
         return {"ok": False, "reason": "mandatory_skipped"}
     if int(manifest.get("exit_code") or 0) != 0:
         return {"ok": False, "reason": "nonzero_exit"}

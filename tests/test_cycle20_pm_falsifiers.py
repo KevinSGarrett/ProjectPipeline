@@ -422,7 +422,7 @@ def test_timeout_keeps_capacity_and_accept_uses_completion_clock(tmp_path: Path)
                 return {"timed_out": True}
 
         returned = workflow.dispatch(
-            task_id="PP-TASK-000516",
+            task_id="PP-TASK-000992",
             holder_id="review-holder",
             argv=("python", "fixture.py"),
             workspace=str(workspace),
@@ -480,13 +480,13 @@ def test_useful_job_is_not_metadata_only_and_failed_loop_does_not_ok(
     useful = runpy.run_path(str(SOURCE / "scripts" / "cycle20_useful_job.py"))
     artifact = tmp_path / "toy_useful_output.json"
     with contextlib.redirect_stdout(io.StringIO()):
-        useful["run"](job_id="PP-TASK-000516", output=artifact)
+        useful["run"](job_id="PP-TASK-000992", output=artifact)
     payload = json.loads(artifact.read_text(encoding="utf-8"))
     assert set(payload) != {"job_id", "artifact_sha256", "bytes"}
     assert payload["ok"] is True
     assert payload["verifier"] == "native_pytest_execution"
     assert int(payload.get("tests_run") or 0) >= 1
-    assert payload["criterion_ids"]
+    assert payload["criterion_ids"] == []
     assert payload["implementation_paths"]
     assert payload.get("selected_source") != "remote_job.py"
     refused = tmp_path / "story_parent.json"
@@ -594,6 +594,10 @@ def test_observation_evaluator_requires_recovered_accepted_work_and_coverage(
     matching["fault"]["recovered_output_accepted"] = True
     matching["fault"]["unaffected_lane_progress"] = True
     matching["fault"]["controller_restarted"] = True
+    matching["fault"]["restart_pid"] = 4243
+    matching["fault"]["remote_pid"] = 4242
+    matching["fault"]["creation_time"] = "132537600000000000"
+    matching["started_at_utc"] = datetime(2026, 9, 10, 2, 0, tzinfo=UTC).isoformat()
     xeon_bytes = (
         b"<testsuite tests='1' failures='0' errors='0' skipped='0'>"
         b"<testcase classname='cycle21' name='xeon'/></testsuite>"
@@ -616,6 +620,12 @@ def test_observation_evaluator_requires_recovered_accepted_work_and_coverage(
                     "artifact_sha256": hashlib.sha256(xeon_bytes).hexdigest(),
                     "acquired_junit_path": str(xeon_path),
                     "host_id": "WIN-EVSH1DN8H5O",
+                    "started_at_utc": datetime(2026, 9, 10, 3, 1, tzinfo=UTC).isoformat(),
+                    "context_consumption": {
+                        "ok": True,
+                        "job_id": "PP-TASK-000516",
+                        "host_id": "WIN-EVSH1DN8H5O",
+                    },
                 },
                 {
                     "outcome": "ACCEPTED",
@@ -624,6 +634,12 @@ def test_observation_evaluator_requires_recovered_accepted_work_and_coverage(
                     "artifact_sha256": hashlib.sha256(comfy_bytes).hexdigest(),
                     "acquired_junit_path": str(comfy_path),
                     "host_id": "COMFY-V4-CPU-01",
+                    "started_at_utc": datetime(2026, 9, 10, 3, 2, tzinfo=UTC).isoformat(),
+                    "context_consumption": {
+                        "ok": True,
+                        "job_id": "PP-TASK-000521",
+                        "host_id": "COMFY-V4-CPU-01",
+                    },
                 },
             ]
         }

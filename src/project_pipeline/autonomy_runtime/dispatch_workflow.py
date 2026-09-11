@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any
 
 from project_pipeline.autonomy_runtime.context_validation import (
-    NATIVE_PASS,
     compile_validation_pack,
     consume_pack_on_worker,
     job_input_digest,
@@ -17,7 +16,9 @@ from project_pipeline.autonomy_runtime.context_validation import (
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore, digest_bytes
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
+from project_pipeline.autonomy_runtime.remote_worker_protocol import write_lease_grant
 from project_pipeline.autonomy_runtime.ssh_dispatch import SshDispatchAdapter, job_stdout_metrics
+from project_pipeline.autonomy_runtime.task_execution_specs import required_tests
 from project_pipeline.autonomy_runtime.windows_limits import nested_pool_env
 from project_pipeline.autonomy_runtime.worker_allowlist import CYCLE_OWNED_VALIDATION_JOBS
 from project_pipeline.scheduler.admission import chosen_host_admitted, load_admission_record
@@ -189,6 +190,17 @@ class DispatchWorkflow:
         pack_payload: dict[str, Any] | None = None
         pack_digest = ""
         try:
+            selection = required_tests(task_id)
+        except ValueError as error:
+            return {
+                "outcome": "REJECTED",
+                "reason": str(error),
+                "lifecycle": "REJECTED",
+                "host_id": chosen.machine_id,
+                "lease_id": lease_id,
+                "fence": fence,
+            }
+        try:
             compiled = compile_validation_pack(
                 root=self.store.root,
                 database=Path(self.store.database),
@@ -196,7 +208,7 @@ class DispatchWorkflow:
                 source_sha=self.source_sha,
                 source_tree=self.source_tree,
                 overlay_sha256=self.overlay_sha256,
-                selection=(NATIVE_PASS,),
+                selection=selection,
                 host_id=chosen.machine_id,
                 principal=principal or chosen.principal,
             )
@@ -227,9 +239,19 @@ class DispatchWorkflow:
             source_tree=self.source_tree,
             overlay_sha256=self.overlay_sha256,
             pack_sha256=pack_digest,
-            selection=(NATIVE_PASS,),
+            selection=selection,
         )
         del input_sha256
+        grant = {
+            "lease_id": lease_id,
+            "fence": fence,
+            "job_id": task_id,
+            "host_id": chosen.machine_id,
+            "status": "ACTIVE",
+            "source_sha": self.source_sha,
+            "source_tree": self.source_tree,
+            "overlay_sha256": self.overlay_sha256,
+        }
         envelope = RemoteJobEnvelope(
             job_id=task_id,
             host_id=chosen.machine_id,
@@ -252,7 +274,11 @@ class DispatchWorkflow:
             context_pack=pack_payload if require_pack else None,
             pack_sha256=pack_digest or None if require_pack else None,
             require_context_consumption=require_pack,
+            test_selection=selection,
+            lease_grant=grant,
         )
+        if Path(workspace).is_dir():
+            write_lease_grant(Path(workspace), grant)
         intent = self.jobs.persist_intent(envelope.model_dump(mode="json"), now=now)
         if not intent.get("ok"):
             return {"outcome": "REJECTED", "reason": intent.get("reason"), "lifecycle": "REJECTED"}
@@ -347,7 +373,7 @@ class DispatchWorkflow:
         collected, failed, skipped = (
             junit_case_counts_from_bytes(artifact_bytes) if artifact_bytes else (0, 0, 0)
         )
-        if artifact_bytes is None or collected < 1 or failed:
+        if artifact_bytes is None or collected < 1 or failed or skipped:
             reason = (
                 "artifact_bytes_required" if artifact_bytes is None else "native_tests_unproven"
             )

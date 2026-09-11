@@ -6,7 +6,12 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
-from project_pipeline.autonomy_runtime.remote_worker_protocol import _pid_is_owned, run_envelope
+from project_pipeline.autonomy_runtime import remote_worker_protocol as worker_protocol
+from project_pipeline.autonomy_runtime.remote_worker_protocol import (
+    _pid_is_owned,
+    module_sha256,
+    run_envelope,
+)
 from project_pipeline.autonomy_runtime.worker_allowlist import (
     remote_command_allowed,
     worker_launch_argv,
@@ -22,7 +27,9 @@ def _identity() -> dict[str, str]:
         "hostname": HOST,
         "principal": PRINCIPAL,
         "sid": "S-1-5-21-comfy",
-        "module_sha256": "a" * 64,
+        "module_sha256": module_sha256(worker_protocol.__file__),
+        "source_sha": "f41c64d5b533ed4a329e0e431ee073dd791ee050",
+        "source_tree": "66778a1fdc0a7a8d8cf3b07f25367ed896ffca2b",
     }
 
 
@@ -122,6 +129,16 @@ def test_cache_does_not_reuse_changed_fence(tmp_path: Path) -> None:
         "workspace": str(workspace),
         "workspace_root": str(tmp_path),
         "argv": ["python", r"C:\Users\Windows 11\ProjectPipeline\jobs\cycle21_validation_job.py"],
+        "lease_grant": {
+            "lease_id": "LEASE-1",
+            "fence": "old-fence",
+            "job_id": "cache-job",
+            "host_id": HOST,
+            "status": "ACTIVE",
+            "source_sha": "f41c64d5b533ed4a329e0e431ee073dd791ee050",
+            "source_tree": "66778a1fdc0a7a8d8cf3b07f25367ed896ffca2b",
+            "overlay_sha256": "c" * 64,
+        },
     }
 
     class Completed:

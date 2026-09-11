@@ -10,9 +10,10 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from project_pipeline.autonomy_runtime.context_validation import (
-        NATIVE_PASS,
-        execute_native_tests,
+    from project_pipeline.autonomy_runtime.context_validation import execute_native_tests
+    from project_pipeline.autonomy_runtime.task_execution_specs import (
+        implementation_paths,
+        required_tests,
     )
 except ImportError:
 
@@ -36,76 +37,14 @@ except ImportError:
             "artifact_sha256": hashlib.sha256(b"").hexdigest(),
         }
 
-    NATIVE_PASS = "tests/fixtures/cycle21_native_pass.py"
+    def required_tests(task_id: str) -> tuple[str, ...]:
+        raise ValueError(f"no_execution_spec:{task_id}")
+
+    def implementation_paths(task_id: str) -> tuple[str, ...]:
+        del task_id
+        return ()
 
 
-CRITERIA = {
-    "PP-TASK-000516": ("AC-PP-000516-01", "AC-PP-000516-02", "AC-PP-000516-03", "AC-PP-000516-04"),
-    "PP-TASK-000517": ("AC-PP-000517-01", "AC-PP-000517-02", "AC-PP-000517-03", "AC-PP-000517-04"),
-    "PP-TASK-000518": ("AC-PP-000518-01", "AC-PP-000518-02", "AC-PP-000518-03", "AC-PP-000518-04"),
-    "PP-TASK-000519": ("AC-PP-000519-01", "AC-PP-000519-02", "AC-PP-000519-03"),
-    "PP-TASK-000520": ("AC-PP-000520-01", "AC-PP-000520-02", "AC-PP-000520-03"),
-    "PP-TASK-000521": (
-        "AC-PP-000521-01",
-        "AC-PP-000521-02",
-        "AC-PP-000521-03",
-        "AC-PP-000521-04",
-        "AC-PP-000521-05",
-    ),
-}
-BINDINGS = {
-    "PP-TASK-000516": {
-        "implementation_paths": (
-            "src/project_pipeline/autonomy_runtime/remote_worker_protocol.py",
-            "src/project_pipeline/autonomy_runtime/windows_limits.py",
-            "src/project_pipeline/autonomy_runtime/ssh_dispatch.py",
-            "src/project_pipeline/autonomy_runtime/durable_jobs.py",
-            "src/project_pipeline/autonomy_runtime/dispatch_workflow.py",
-        ),
-        "required_tests": (NATIVE_PASS,),
-    },
-    "PP-TASK-000517": {
-        "implementation_paths": (
-            "src/project_pipeline/autonomy_runtime/managed_worker.py",
-            "src/project_pipeline/scheduler/host_observation.py",
-        ),
-        "required_tests": (NATIVE_PASS,),
-    },
-    "PP-TASK-000518": {
-        "implementation_paths": (
-            "src/project_pipeline/autonomy_runtime/fleet_loop.py",
-            "src/project_pipeline/autonomy_runtime/context_validation.py",
-        ),
-        "required_tests": (NATIVE_PASS,),
-    },
-    "PP-TASK-000519": {
-        "implementation_paths": (
-            "src/project_pipeline/autonomy_runtime/observation_eval.py",
-            "src/project_pipeline/autonomy_runtime/lifecycle.py",
-            "src/project_pipeline/autonomy_runtime/fleet_loop.py",
-        ),
-        "required_tests": (NATIVE_PASS,),
-    },
-    "PP-TASK-000520": {
-        "implementation_paths": ("src/project_pipeline/autonomy_runtime/observation_eval.py",),
-        "required_tests": (NATIVE_PASS,),
-    },
-    "PP-TASK-000521": {
-        "implementation_paths": (
-            "src/project_pipeline/autonomy_runtime/context_validation.py",
-            "src/project_pipeline/autonomy_runtime/fleet_loop.py",
-        ),
-        "required_tests": (NATIVE_PASS,),
-    },
-    "PP-TASK-000990": {
-        "implementation_paths": ("src/project_pipeline/autonomy_runtime/context_validation.py",),
-        "required_tests": (NATIVE_PASS,),
-    },
-    "PP-TASK-000991": {
-        "implementation_paths": ("src/project_pipeline/autonomy_runtime/context_validation.py",),
-        "required_tests": (NATIVE_PASS,),
-    },
-}
 STRUCTURAL_PARENTS = frozenset({"PP-STORY-000065", "PP-STORY-000396"})
 
 
@@ -157,20 +96,22 @@ def run(*, job_id: str, output: Path, root: Path | None = None) -> dict[str, Any
                 "reason": "structural_parent_not_selected_work",
             },
         )
-    binding = BINDINGS.get(job_id)
-    if binding is None:
+    try:
+        tests = required_tests(job_id)
+        paths = implementation_paths(job_id)
+    except ValueError as error:
         return _emit(
             output,
             {
                 "ok": False,
                 "job_id": job_id,
-                "reason": "unknown_selected_work",
+                "reason": str(error) or "unknown_selected_work",
             },
         )
     files: list[dict[str, str | int]] = []
     missing: list[str] = []
     hasher = hashlib.sha256()
-    for relative in binding["implementation_paths"]:
+    for relative in paths:
         path = _resolve(repo, relative)
         if not path.is_file():
             missing.append(relative)
@@ -181,12 +122,11 @@ def run(*, job_id: str, output: Path, root: Path | None = None) -> dict[str, Any
         hasher.update(b"\0")
         hasher.update(payload)
         files.append({"path": relative, "sha256": digest, "bytes": len(payload)})
-    tests = tuple(binding["required_tests"])
     native = execute_native_tests(root=repo, selection=tests, output_dir=output.parent)
     artifact = {
         "ok": bool(native.get("ok")) and not missing,
         "job_id": job_id,
-        "criterion_ids": list(CRITERIA.get(job_id, ())),
+        "criterion_ids": [],
         "verifier": "native_pytest_execution",
         "implementation_paths": files,
         "required_tests": list(tests),
@@ -195,6 +135,7 @@ def run(*, job_id: str, output: Path, root: Path | None = None) -> dict[str, Any
         "junit_sha256": native.get("junit_sha256"),
         "tests_run": int(native.get("tests_run") or 0),
         "collected": int(native.get("collected") or 0),
+        "skipped": int(native.get("skipped") or 0),
         "exit_code": native.get("exit_code"),
         "command": native.get("command"),
         "bytes": sum(int(item["bytes"]) for item in files),

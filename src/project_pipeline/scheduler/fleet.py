@@ -89,6 +89,17 @@ class MachineProfile(DomainModel):
 
     def physical_pools(self) -> tuple[ResourcePool, ...]:
         reserve_cpu = 1 if self.cpu_slots > 1 else 0
+        memory_capacity = (
+            int(self.available_memory_mb)
+            if self.available_memory_mb is not None
+            else self.memory_mb
+        )
+        memory_capacity = max(1, memory_capacity)
+        reserved_memory = (
+            0
+            if memory_capacity <= 1
+            else max(1, min(memory_capacity - 1, int(memory_capacity * 0.15)))
+        )
         return (
             ResourcePool(
                 resource_key=f"{self.machine_id}/cpu_slots",
@@ -101,8 +112,8 @@ class MachineProfile(DomainModel):
             ResourcePool(
                 resource_key=f"{self.machine_id}/memory_mb",
                 resource_type=ResourceType.MEMORY_MB,
-                capacity_units=self.memory_mb,
-                reserved_units=max(1, min(self.memory_mb - 1, int(self.memory_mb * 0.15))),
+                capacity_units=memory_capacity,
+                reserved_units=reserved_memory,
                 machine_id=self.machine_id,
                 observed=True,
             ),

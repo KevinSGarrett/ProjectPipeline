@@ -14,7 +14,7 @@ from project_pipeline.autonomy_runtime.confinement import (
 )
 
 APPROVED_WORKER_HOSTS = frozenset({XEON_MACHINE_ID, COMFY_MACHINE_ID})
-CYCLE_OWNED_VALIDATION_JOBS = frozenset({"PP-TASK-000990", "PP-TASK-000991"})
+CYCLE_OWNED_VALIDATION_JOBS = frozenset({"PP-TASK-000992", "PP-TASK-000993"})
 PYTHON_NAMES = frozenset({"python", "python.exe", "python3", "python3.exe"})
 PROTECTED_WORKER_SCRIPT = r"C:\ProgramData\ProjectPipeline\worker\cycle20_remote_worker.py"
 REMOTE_WORKER_SCRIPTS = {
