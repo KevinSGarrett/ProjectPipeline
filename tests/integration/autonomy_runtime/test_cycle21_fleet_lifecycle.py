@@ -14,6 +14,7 @@ from project_pipeline.autonomy_runtime.fleet_loop import (
     _cli_status_from_process,
     _fault_owned_hold_job,
     _machine_for_task,
+    _place_independent_lease_grant,
     _sidecar_path,
     _zero_exit,
     accepted_result_hosts,
@@ -450,9 +451,18 @@ class _RecoverAdapter:
     def __init__(self, exit_code: object) -> None:
         self.exit_code = exit_code
         self.execute_calls = 0
+        self.start_calls = 0
+        self.placed: list[tuple[str, bytes]] = []
+        self.place_ok = True
+
+    def place_workspace_file(self, working_directory: Path, name: str, payload: bytes) -> bool:
+        del working_directory
+        self.placed.append((name, payload))
+        return self.place_ok
 
     def start_job(self, **kwargs: object) -> object:
         del kwargs
+        self.start_calls += 1
         return object()
 
     def read_started_record(self, process: object, timeout_seconds: int = 30) -> dict[str, object]:
@@ -495,9 +505,48 @@ def test_integer_zero_recovered_exit_reaches_accept(tmp_path: Path) -> None:
         principal=r"win-evsh1dn8h5o\kines",
         now=NOW,
     )
+    assert adapter.start_calls == 1
     assert adapter.execute_calls == 1
+    assert adapter.placed
+    assert all(name == "lease_grant.json" for name, _payload in adapter.placed)
+    grant = json.loads((tmp_path / "lease_grant.json").read_text(encoding="utf-8"))
+    assert grant["status"] == "ACTIVE"
+    assert str(grant["job_id"]).endswith("-RECOVERED")
+    assert str(grant["fence"]).endswith("-resume")
     assert fault["recovered_output_accepted"] is True
     assert fault["recovered"] is True
+
+
+def test_owned_fault_refuses_start_without_independent_grant(tmp_path: Path) -> None:
+    store = FleetJobStore(tmp_path / "jobs.sqlite3")
+    journal = FleetLifecycleJournal(tmp_path / "journal.sqlite3")
+    adapter = _RecoverAdapter(0)
+    adapter.place_ok = False
+    fault = _fault_owned_hold_job(
+        adapter=adapter,  # type: ignore[arg-type]
+        store=store,
+        journal=journal,
+        workspace=tmp_path,
+        source_sha="a" * 40,
+        source_tree="b" * 40,
+        overlay_sha256="c" * 64,
+        principal=r"win-evsh1dn8h5o\kines",
+        now=NOW,
+    )
+    assert adapter.start_calls == 0
+    assert adapter.execute_calls == 0
+    assert fault["recovered"] is False
+    assert fault["reason"] == "lease_grant_not_placed"
+
+
+def test_owned_fault_places_grant_before_start() -> None:
+    source = inspect.getsource(_fault_owned_hold_job)
+    helper = inspect.getsource(_place_independent_lease_grant)
+    assert "_place_independent_lease_grant" in source
+    assert "lease_grant_not_placed" in source
+    assert "write_lease_grant" in helper
+    assert "place_workspace_file" in helper
+    assert "lease_grant.json" in helper
 
 
 def test_observation_sidecars_include_database_stem(tmp_path: Path) -> None:

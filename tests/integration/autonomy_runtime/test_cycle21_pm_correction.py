@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import hashlib
+import inspect
 import json
 import subprocess
 from datetime import UTC, datetime, timedelta
@@ -504,6 +505,33 @@ def test_src07_evaluator_and_metrics(tmp_path: Path) -> None:
     assert metrics["host_count"] == 1
     dumped = json.dumps(payload["completed_jobs"], default=str)
     assert metrics["scratch_bytes"] != len(dumped)
+    nested = _resource_metrics(
+        {HOST: {"totalRAMGB": 32, "availableRAMGB": 20}},
+        {HOST: {"totalRAMGB": 32, "availableRAMGB": 31}},
+        [
+            {
+                "results": [
+                    {
+                        "host_id": HOST,
+                        "executed": {
+                            "rss_samples_mb": [64, 96],
+                            "scratch_bytes": 2048,
+                        },
+                        "started_at_utc": NOW.isoformat(),
+                        "ended_at_utc": (NOW + timedelta(seconds=10)).isoformat(),
+                    }
+                ]
+            }
+        ],
+        transfer_seconds=12,
+    )
+    assert nested["peak_ram_mb"] == 96
+    assert nested["scratch_bytes"] == 2048
+
+
+def test_spawn_enforced_queries_peak_before_closing_handle() -> None:
+    source = inspect.getsource(wp._spawn_enforced)
+    assert source.index("query_job_peak_memory_bytes") < source.index("close_job_handle")
 
 
 def test_isolated_graph_does_not_write_jira_issue_files(tmp_path: Path) -> None:

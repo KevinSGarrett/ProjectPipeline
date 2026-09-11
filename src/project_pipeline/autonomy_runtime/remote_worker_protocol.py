@@ -403,6 +403,7 @@ def _spawn_enforced(
         if on_started is not None:
             on_started(child_pid, child_creation)
 
+    peak_bytes = 0
     try:
         completed = assign_and_wait(
             command=argv,
@@ -414,12 +415,12 @@ def _spawn_enforced(
             max_output_bytes=max_output_bytes,
         )
     finally:
+        peak_bytes = query_job_peak_memory_bytes(handle)
         close_job_handle(handle)
     pid = int(started.get("pid") or getattr(completed, "pid", 0) or 0)
     creation = started.get("creation_time")
     if creation is None:
         creation = getattr(completed, "creation_time", None)
-    peak_bytes = query_job_peak_memory_bytes(handle)
     return completed, {
         "mechanism": limits.get("mechanism"),
         "cpu_rate": limits.get("cpu_rate"),
