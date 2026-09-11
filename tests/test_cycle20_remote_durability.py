@@ -19,7 +19,10 @@ from project_pipeline.autonomy_runtime.confinement import (
 )
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobController, RemoteJobEnvelope
-from project_pipeline.autonomy_runtime.remote_worker_protocol import module_sha256, write_lease_grant
+from project_pipeline.autonomy_runtime.remote_worker_protocol import (
+    module_sha256,
+    write_lease_grant,
+)
 from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
     SshDispatchAdapter,
