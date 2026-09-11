@@ -8,12 +8,14 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 import pytest
+from pydantic import ValidationError
 
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.fleet_loop import (
     _cli_status_from_process,
     _fault_owned_hold_job,
     _machine_for_task,
+    _owned_fault_scheduler_lease,
     _place_independent_lease_grant,
     _sidecar_path,
     _zero_exit,
@@ -41,6 +43,7 @@ from project_pipeline.scheduler.host_observation import (
     apply_inventory_observation,
     declared_profiles,
 )
+from project_pipeline.scheduler.persistence import SchedulerStore
 
 NOW = datetime(2026, 9, 10, 3, 0, tzinfo=UTC)
 
@@ -537,6 +540,53 @@ def test_owned_fault_refuses_start_without_independent_grant(tmp_path: Path) -> 
     assert adapter.execute_calls == 0
     assert fault["recovered"] is False
     assert fault["reason"] == "lease_grant_not_placed"
+
+
+def test_scheduler_rejects_synthetic_owned_fault_job_id(tmp_path: Path) -> None:
+    source = Path(__file__).resolve().parents[3]
+    with (
+        SchedulerStore(tmp_path / "resources.sqlite3", source) as scheduler,
+        pytest.raises(ValidationError, match="Invalid issue identifier"),
+    ):
+        scheduler.acquire_bundle(
+            task_id="C21-OWNED-FAULT-20260911T153606668538Z",
+            holder_id="actor:owned-fault",
+            claims=(),
+            now=NOW,
+        )
+
+
+def test_owned_fault_skips_scheduler_for_synthetic_job_id(tmp_path: Path) -> None:
+    source = Path(__file__).resolve().parents[3]
+    store = FleetJobStore(tmp_path / "jobs.sqlite3")
+    journal = FleetLifecycleJournal(tmp_path / "journal.sqlite3")
+    adapter = _RecoverAdapter(0)
+    with SchedulerStore(tmp_path / "resources.sqlite3", source) as scheduler:
+        assert (
+            _owned_fault_scheduler_lease(
+                scheduler,
+                "C21-OWNED-FAULT-20260911T153606668538Z",
+                NOW,
+            )
+            is None
+        )
+        fault = _fault_owned_hold_job(
+            adapter=adapter,  # type: ignore[arg-type]
+            store=store,
+            journal=journal,
+            workspace=tmp_path,
+            source_sha="a" * 40,
+            source_tree="b" * 40,
+            overlay_sha256="c" * 64,
+            principal=r"win-evsh1dn8h5o\kines",
+            now=NOW,
+            scheduler=scheduler,
+        )
+    assert adapter.start_calls == 1
+    assert adapter.execute_calls == 1
+    assert adapter.placed
+    assert fault["recovered"] is True
+    assert fault["recovered_output_accepted"] is True
 
 
 def test_owned_fault_places_grant_before_start() -> None:

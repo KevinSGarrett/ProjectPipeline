@@ -14,6 +14,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from pydantic import ValidationError
+
 from project_pipeline.autonomy_runtime.confinement import REMOTE_JOB_WORKSPACES
 from project_pipeline.autonomy_runtime.context_validation import job_input_digest
 from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
@@ -54,6 +56,7 @@ from project_pipeline.command_center.autonomy_director import (
 from project_pipeline.configuration import load_runtime_configuration
 from project_pipeline.domain.control import ReadinessState
 from project_pipeline.domain.requirements import ImplementationState, RequirementDisposition
+from project_pipeline.ids import ISSUE_ID
 from project_pipeline.jira import load_issues
 from project_pipeline.overlay import bound_overlay, control_input_root, inspect_source_identity
 from project_pipeline.requirements import load_requirement_catalog
@@ -894,6 +897,35 @@ def _place_independent_lease_grant(
     return Path(workspace).is_dir() and (Path(workspace) / "lease_grant.json").is_file()
 
 
+def _owned_fault_scheduler_lease(
+    scheduler: SchedulerStore | None,
+    job_id: str,
+    now: datetime,
+) -> tuple[str, str] | None:
+    """Return a scheduler lease only for canonical PP issue IDs.
+
+    Owned-fault jobs use synthetic C21-OWNED-FAULT-* identifiers. Passing those
+    to acquire_bundle constructs an invalid LeaseBundle and aborts the hour.
+    Empty claims cannot acquire either; the independent grant remains authority.
+    """
+
+    if scheduler is None or not ISSUE_ID.fullmatch(job_id):
+        return None
+    try:
+        bundle = scheduler.acquire_bundle(
+            task_id=job_id,
+            holder_id="actor:owned-fault",
+            claims=(),
+            now=now,
+        )
+    except ValidationError:
+        return None
+    if bundle.acquired and bundle.leases:
+        first = bundle.leases[0]
+        return first.lease_id, str(first.fencing_token)
+    return None
+
+
 def _fault_owned_hold_job(
     *,
     adapter: SshDispatchAdapter,
@@ -913,16 +945,9 @@ def _fault_owned_hold_job(
     hold = REMOTE_HOLD_SCRIPTS[machine_id]
     lease_id = f"{job_id}-LEASE"
     fence = f"owned-fault-{stamp}"
-    if scheduler is not None:
-        bundle = scheduler.acquire_bundle(
-            task_id=job_id,
-            holder_id="actor:owned-fault",
-            claims=(),
-            now=now,
-        )
-        if bundle.acquired and bundle.leases:
-            lease_id = bundle.leases[0].lease_id
-            fence = str(bundle.leases[0].fencing_token)
+    scheduled = _owned_fault_scheduler_lease(scheduler, job_id, now)
+    if scheduled is not None:
+        lease_id, fence = scheduled
     grant = _independent_lease_grant(
         lease_id=lease_id,
         fence=fence,
@@ -1271,20 +1296,30 @@ def run_observation(
     ):
         catalog = root / "database" / "MIGRATION_CATALOG.json"
         scheduler_cm = SchedulerStore(Path(db), root) if catalog.is_file() else nullcontext(None)
-        with scheduler_cm as scheduler:
-            fault = _fault_owned_hold_job(
-                adapter=adapter,
-                store=jobs_store,
-                journal=journal,
-                workspace=workspace,
-                source_sha=sha,
-                source_tree=tree,
-                overlay_sha256=overlay_digest,
-                principal=principal,
-                now=started,
-                machine_id=live_machine,
-                scheduler=scheduler,
-            )
+        try:
+            with scheduler_cm as scheduler:
+                fault = _fault_owned_hold_job(
+                    adapter=adapter,
+                    store=jobs_store,
+                    journal=journal,
+                    workspace=workspace,
+                    source_sha=sha,
+                    source_tree=tree,
+                    overlay_sha256=overlay_digest,
+                    principal=principal,
+                    now=started,
+                    machine_id=live_machine,
+                    scheduler=scheduler,
+                )
+        except ValidationError as exc:
+            fault = {
+                "kind": "owned_durable_fault",
+                "recovered": False,
+                "owned_job_id": None,
+                "intent_preserved": False,
+                "reason": "owned_fault_validation_error",
+                "exception_type": type(exc).__name__,
+            }
         fault["unaffected_lane_progress"] = _unaffected_lane_progress(completed_jobs, live_machine)
         fault["blocked_lane"] = blocked
     else:
