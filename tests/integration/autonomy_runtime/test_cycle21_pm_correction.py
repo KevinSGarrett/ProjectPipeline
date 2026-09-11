@@ -492,3 +492,30 @@ def test_src07_evaluator_and_metrics(tmp_path: Path) -> None:
     assert metrics["host_count"] == 1
     dumped = json.dumps(payload["completed_jobs"], default=str)
     assert metrics["scratch_bytes"] != len(dumped)
+
+
+def test_isolated_graph_does_not_write_jira_issue_files(tmp_path: Path) -> None:
+    from project_pipeline.autonomy_runtime.isolated_validation_graph import (
+        ensure_isolated_validation_graph,
+    )
+    from project_pipeline.control.kernel import ProjectControlKernel
+    from project_pipeline.overlay import control_input_root
+    from project_pipeline.persistence import SQLiteStateStore
+    from project_pipeline.services.state import CoreStateService
+
+    database = tmp_path / "state.sqlite3"
+    with SQLiteStateStore(database, SOURCE) as store:
+        store.initialize()
+        CoreStateService(store, SOURCE).initialize_from_repository()
+    installed = ensure_isolated_validation_graph(SOURCE, database)
+    assert installed.get("ok") is True
+    tasks = control_input_root(SOURCE) / "jira" / "tasks"
+    assert not (tasks / f"{VALIDATION_ALPHA_TASK}.json").exists()
+    with SQLiteStateStore(database, SOURCE) as store:
+        project_id = str(installed["project_id"])
+        facts = {
+            item.task_id: item
+            for item in ProjectControlKernel(SOURCE, store, project_id).task_facts()
+        }
+    assert VALIDATION_ALPHA_TASK in facts
+    assert facts[VALIDATION_ALPHA_TASK].product_scope_allowed is True

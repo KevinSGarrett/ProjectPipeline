@@ -191,6 +191,13 @@ class ProjectControlKernel:
         facts: list[TaskControlFact] = []
         for state in states:
             issue = issues.get(state.task_id)
+            if issue is None and state.task_id in CYCLE_OWNED_VALIDATION_JOBS:
+                issue = {
+                    "issue_type": "TASK",
+                    "risk_classification": "LOW",
+                    "requirement_ids": (),
+                    "state": "",
+                }
             if issue is None:
                 continue
             linked = [
