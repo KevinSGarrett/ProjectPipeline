@@ -26,7 +26,6 @@ from project_pipeline.autonomy_runtime.confinement import (
     confine_remote_workspace,
 )
 from project_pipeline.autonomy_runtime.context_validation import (
-    NATIVE_PASS,
     consume_pack_on_worker,
     job_input_digest,
     write_pack,
@@ -39,6 +38,7 @@ from project_pipeline.autonomy_runtime.windows_limits import (
     enforce_or_reject,
     nested_pool_env,
     process_creation_filetime,
+    query_job_peak_memory_bytes,
 )
 from project_pipeline.autonomy_runtime.worker_allowlist import (
     APPROVED_WORKER_HOSTS,
@@ -49,6 +49,7 @@ from project_pipeline.autonomy_runtime.worker_runtime_identity import (
     authority_identity,
     identity_matches,
     local_runtime_identity,
+    module_sha256,
 )
 
 REQUIRED_EXECUTE = (
@@ -72,6 +73,54 @@ MAX_OUTPUT_BYTES = 65536
 WORKER_CLAIM_RUNNING = "RUNNING"
 WORKER_CLAIM_COMPLETE = "COMPLETE"
 SAFE_JOB_ID = re.compile(r"^[A-Za-z0-9._-]+$")
+
+
+def write_lease_grant(workspace: Path, payload: dict[str, Any]) -> Path:
+    path = Path(workspace) / "lease_grant.json"
+    grant = {
+        "lease_id": str(payload.get("lease_id") or ""),
+        "fence": str(payload.get("fence") or ""),
+        "job_id": str(payload.get("job_id") or ""),
+        "host_id": str(payload.get("host_id") or ""),
+        "status": "ACTIVE",
+        "source_sha": str(payload.get("source_sha") or ""),
+        "source_tree": str(payload.get("source_tree") or ""),
+        "overlay_sha256": str(payload.get("overlay_sha256") or ""),
+    }
+    path.write_text(json.dumps(grant, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return path
+
+
+def _workspace_produced_bytes(workspace: Path) -> int:
+    skip = {"lease_grant.json", "context_pack.json"}
+    total = 0
+    if not workspace.is_dir():
+        return 0
+    for path in workspace.rglob("*"):
+        if not path.is_file() or path.name in skip:
+            continue
+        try:
+            total += path.stat().st_size
+        except OSError:
+            continue
+    return total
+
+
+def _lease_grant_matches(workspace: Path, payload: dict[str, Any]) -> bool:
+    path = Path(workspace) / "lease_grant.json"
+    if not path.is_file():
+        return False
+    try:
+        grant = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, UnicodeDecodeError):
+        return False
+    if not isinstance(grant, dict) or grant.get("status") != "ACTIVE":
+        return False
+    return (
+        str(grant.get("lease_id") or "") == str(payload.get("lease_id") or "")
+        and str(grant.get("fence") or "") == str(payload.get("fence") or "")
+        and str(grant.get("job_id") or "") == str(payload.get("job_id") or "")
+    )
 
 
 def _deployed_src() -> str | None:
@@ -370,12 +419,14 @@ def _spawn_enforced(
     creation = started.get("creation_time")
     if creation is None:
         creation = getattr(completed, "creation_time", None)
+    peak_bytes = query_job_peak_memory_bytes(handle)
     return completed, {
         "mechanism": limits.get("mechanism"),
         "cpu_rate": limits.get("cpu_rate"),
         "pid": pid,
         "creation_time": creation,
         "output_truncated": bool(getattr(completed, "output_truncated", False)),
+        "peak_job_memory_bytes": peak_bytes,
     }
 
 
@@ -397,6 +448,21 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
     identity_failures = identity_matches(payload, live, required_host=host_id)
     if identity_failures:
         return _fail("authority_unverified", extra={"failures": list(identity_failures)})
+    measured_module = module_sha256(str(globals().get("__file__") or ""))
+    if not measured_module or str(live.get("module_sha256") or "") != measured_module:
+        return _fail("runtime_module_unverified")
+    workspace_path = Path(str(payload.get("workspace") or ""))
+    if not _lease_grant_matches(workspace_path, payload):
+        return _fail("scheduler_authority_unverified")
+    live_source = str(live.get("source_sha") or "")
+    live_tree = str(live.get("source_tree") or "")
+    if (
+        not live_source
+        or not live_tree
+        or live_source != str(payload.get("source_sha") or "")
+        or live_tree != str(payload.get("source_tree") or "")
+    ):
+        return _fail("runtime_source_unverified")
     argv_raw = payload.get("argv")
     if not isinstance(argv_raw, list) or not argv_raw:
         return _fail("argv_not_confined")
@@ -435,13 +501,24 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
         pack_digest = str(payload.get("pack_sha256") or "")
         if len(pack_digest) != 64:
             return _fail("pack_digest_required")
+        pack_obj = payload.get("context_pack")
+        pack_path = Path(workspace) / "context_pack.json"
+        if pack_obj is None and not pack_path.is_file():
+            return _fail("pack_missing")
+        selection_raw = payload.get("test_selection") or payload.get("selection") or ()
+        if isinstance(selection_raw, str):
+            selection = (selection_raw,)
+        else:
+            selection = tuple(str(item) for item in selection_raw)
+        if not selection:
+            return _fail("selection_required")
         expected_input = job_input_digest(
             task_id=job_id,
             source_sha=str(payload.get("source_sha") or ""),
             source_tree=str(payload.get("source_tree") or ""),
             overlay_sha256=str(payload.get("overlay_sha256") or ""),
             pack_sha256=pack_digest,
-            selection=(NATIVE_PASS,),
+            selection=selection,
         )
         if input_sha256 != expected_input:
             return _fail("input_digest_mismatch")
@@ -501,7 +578,10 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
                 return _fail(str(consumed.get("reason") or "pack_unconsumed"))
         remaining = _remaining_deadline_seconds(payload.get("deadline_utc"))
         env.update(nested_pool_env(max(1, cpu)))
+        spawn_entered = False
+        started_at = datetime.now(UTC)
         try:
+            spawn_entered = True
             completed, enforced = _spawn_enforced(
                 argv=argv,
                 workspace=Path(workspace),
@@ -515,11 +595,18 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
             return _fail(str(error))
         except subprocess.TimeoutExpired:
             return _fail("deadline_enforced", extra={"timed_out": True})
+        except OSError:
+            claim = None
+            return _fail("unknown_outcome", extra={"spawn_entered": spawn_entered})
+        ended_at = datetime.now(UTC)
         child_pid = int(enforced.get("pid") or 0)
         creation_time = enforced.get("creation_time")
         mechanism = enforced.get("mechanism")
         stdout = completed.stdout or ""
         stderr = completed.stderr or ""
+        peak_bytes = int(enforced.get("peak_job_memory_bytes") or 0)
+        rss_samples = [round(peak_bytes / (1024 * 1024), 3)] if peak_bytes > 0 else []
+        produced = _workspace_produced_bytes(Path(workspace))
         truncated = bool(
             getattr(completed, "output_truncated", False) or enforced.get("output_truncated")
         )
@@ -547,6 +634,11 @@ def run_envelope(payload: dict[str, Any]) -> dict[str, Any]:
             "truncated": truncated,
             "authority_identity": identity,
             "context_consumption": consumed,
+            "started_at_utc": started_at.isoformat(),
+            "ended_at_utc": ended_at.isoformat(),
+            "rss_samples_mb": rss_samples,
+            "scratch_bytes": produced,
+            "output_bytes": produced,
         }
         if cache is not None and claim is not None:
             _complete_worker_claim(cache, claim, result)

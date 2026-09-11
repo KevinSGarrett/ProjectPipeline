@@ -151,7 +151,7 @@ def test_empty_control_ready_does_not_fabricate_leaves() -> None:
 def test_cycle_owned_jobs_bind_both_hosts() -> None:
     xeon, comfy = _measured_xeon_and_comfy()
     jobs = cycle_owned_validation_jobs((xeon, comfy))
-    assert jobs == ["PP-TASK-000990", "PP-TASK-000991"]
+    assert jobs == ["PP-TASK-000992", "PP-TASK-000993"]
     assert _machine_for_task(jobs[0], (xeon, comfy), index=0, remote=True) == "WIN-EVSH1DN8H5O"
     assert _machine_for_task(jobs[1], (xeon, comfy), index=1, remote=True) == "COMFY-V4-CPU-01"
     for task_id in jobs:
@@ -164,7 +164,7 @@ def test_owned_jobs_wait_for_verified_result_then_admit_second_host() -> None:
         {
             "results": [
                 {
-                    "task_id": "PP-TASK-000991",
+                    "task_id": "PP-TASK-000993",
                     "outcome": "ACCEPTED",
                     "host_id": "COMFY-V4-CPU-01",
                     "tests_run": 1,
@@ -176,23 +176,23 @@ def test_owned_jobs_wait_for_verified_result_then_admit_second_host() -> None:
     assert newly_ready_owned_jobs((xeon, comfy), selected_ids=set(), verified_hosts=set()) == []
     assert newly_ready_owned_jobs(
         (xeon, comfy),
-        selected_ids={"PP-TASK-000991"},
+        selected_ids={"PP-TASK-000993"},
         verified_hosts={"COMFY-V4-CPU-01"},
-    ) == ["PP-TASK-000990"]
+    ) == ["PP-TASK-000992"]
 
 
 def test_xeon_job_appears_only_after_host_becomes_measured() -> None:
     xeon, comfy = _measured_xeon_and_comfy()
     missing = xeon.model_copy(update={"observation_kind": "DECLARED", "sid": ""})
     verified = {"COMFY-V4-CPU-01"}
-    selected = {"PP-TASK-000991"}
+    selected = {"PP-TASK-000993"}
     assert (
         newly_ready_owned_jobs((missing, comfy), selected_ids=selected, verified_hosts=verified)
         == []
     )
     assert newly_ready_owned_jobs(
         (xeon, comfy), selected_ids=selected, verified_hosts=verified
-    ) == ["PP-TASK-000990"]
+    ) == ["PP-TASK-000992"]
 
 
 def test_remeasure_admission_admits_cycle_owned_xeon(tmp_path: Path) -> None:
@@ -293,7 +293,7 @@ def test_refresh_owned_admission_dispatches_xeon_after_comfy_result(tmp_path: Pa
         existing={},
         source_sha=sha,
         source_tree=tree,
-        selected_ids={"PP-TASK-000991"},
+        selected_ids={"PP-TASK-000993"},
         verified_hosts={"COMFY-V4-CPU-01"},
         when=NOW,
     )
@@ -314,12 +314,12 @@ def test_refresh_owned_admission_dispatches_xeon_after_comfy_result(tmp_path: Pa
         existing=load_admission_record(path) or {},
         source_sha=sha,
         source_tree=tree,
-        selected_ids={"PP-TASK-000991"},
+        selected_ids={"PP-TASK-000993"},
         verified_hosts={"COMFY-V4-CPU-01"},
         when=NOW,
     )
     assert any(item.machine_id == "WIN-EVSH1DN8H5O" for item in profiles)
-    assert discovered == ["PP-TASK-000990"]
+    assert discovered == ["PP-TASK-000992"]
     admitted = chosen_host_admitted(
         load_admission_record(path),
         "WIN-EVSH1DN8H5O",
@@ -558,7 +558,7 @@ def test_run_observation_remeasures_xeon_and_dispatches_after_comfy(
         calls.append(ready)
         results = []
         for task_id in ready:
-            host = "WIN-EVSH1DN8H5O" if str(task_id).endswith("990") else "COMFY-V4-CPU-01"
+            host = "WIN-EVSH1DN8H5O" if str(task_id).endswith("992") else "COMFY-V4-CPU-01"
             results.append(
                 {
                     "task_id": task_id,
@@ -588,8 +588,16 @@ def test_run_observation_remeasures_xeon_and_dispatches_after_comfy(
         "bound_overlay",
         lambda root: {"ok": True, "digest": "c" * 64},
     )
-    monkeypatch.setattr(fl, "observation_ready_task_ids", lambda *args, **kwargs: [])
-    monkeypatch.setattr(fl, "control_ready_task_ids", lambda *args, **kwargs: [])
+    monkeypatch.setattr(
+        fl,
+        "observation_ready_task_ids",
+        lambda *args, **kwargs: ["PP-TASK-000993"],
+    )
+    monkeypatch.setattr(
+        fl,
+        "control_ready_task_ids",
+        lambda *args, **kwargs: ["PP-TASK-000992"],
+    )
     monkeypatch.setattr(fl, "blocked_dependent_lane", lambda *args, **kwargs: "PP-STORY-000139")
     monkeypatch.setattr(
         fl,
@@ -624,8 +632,8 @@ def test_run_observation_remeasures_xeon_and_dispatches_after_comfy(
         live_ssh=True,
     )
     assert calls
-    assert calls[0] == ["PP-TASK-000991"]
-    assert ["PP-TASK-000990"] in calls
+    assert calls[0] == ["PP-TASK-000993"]
+    assert ["PP-TASK-000992"] in calls
     record = load_admission_record(_sidecar_path(database, "fleet_admission.json"))
     admitted = chosen_host_admitted(
         record,

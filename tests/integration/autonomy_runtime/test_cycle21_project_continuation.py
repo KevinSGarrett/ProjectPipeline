@@ -63,7 +63,7 @@ def test_next_owned_job_requires_verified_prior_result() -> None:
         {
             "results": [
                 {
-                    "task_id": "PP-TASK-000991",
+                    "task_id": "PP-TASK-000993",
                     "outcome": "REJECTED",
                     "host_id": "COMFY-V4-CPU-01",
                 }
@@ -101,7 +101,7 @@ def test_next_owned_job_requires_verified_prior_result() -> None:
         }
     )
     assert accepted_result_hosts(completed) == set()
-    assert cycle_owned_validation_jobs((xeon, comfy)) == ["PP-TASK-000990", "PP-TASK-000991"]
+    assert cycle_owned_validation_jobs((xeon, comfy)) == ["PP-TASK-000992", "PP-TASK-000993"]
     assert (
         newly_ready_owned_jobs(
             (xeon, comfy), selected_ids=set(), verified_hosts=accepted_result_hosts(completed)

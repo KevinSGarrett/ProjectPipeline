@@ -48,15 +48,64 @@ def module_sha256(path: str | None = None) -> str:
         return ""
 
 
+def _git_source_identity(root: Path) -> tuple[str, str]:
+    completed = subprocess.run(
+        ["git", "-C", str(root), "rev-parse", "HEAD", "HEAD^{tree}"],
+        check=False,
+        capture_output=True,
+        text=True,
+        shell=False,
+    )
+    lines = [line.strip().lower() for line in completed.stdout.splitlines() if line.strip()]
+    if completed.returncode != 0 or len(lines) < 2:
+        return "", ""
+    if len(lines[0]) != 40 or len(lines[1]) != 40:
+        return "", ""
+    return lines[0], lines[1]
+
+
+def measured_source_identity(*, protocol_file: str | None = None) -> tuple[str, str]:
+    """Measure executing-worker source/tree. Envelope strings are not authority."""
+
+    env_sha = (os.environ.get("PP_WORKER_SOURCE_SHA") or "").strip().lower()
+    env_tree = (os.environ.get("PP_WORKER_SOURCE_TREE") or "").strip().lower()
+    if len(env_sha) == 40 and len(env_tree) == 40:
+        return env_sha, env_tree
+    candidates: list[Path] = []
+    worker_src = (os.environ.get("PP_WORKER_SRC") or "").strip()
+    if worker_src:
+        candidates.append(Path(worker_src))
+    if protocol_file:
+        candidates.append(Path(protocol_file))
+    here = Path(__file__).resolve()
+    candidates.append(here)
+    seen: set[Path] = set()
+    for start in candidates:
+        current = start if start.is_dir() else start.parent
+        while current not in seen:
+            seen.add(current)
+            if (current / ".git").exists() or (current / ".git").is_file():
+                sha, tree = _git_source_identity(current)
+                if sha and tree:
+                    return sha, tree
+            if current.parent == current:
+                break
+            current = current.parent
+    return "", ""
+
+
 def local_runtime_identity(*, protocol_file: str | None = None) -> dict[str, str]:
     hostname = local_hostname()
     sid = local_sid()
     principal = local_principal()
+    source_sha, source_tree = measured_source_identity(protocol_file=protocol_file)
     return {
         "hostname": hostname,
         "principal": principal,
         "sid": sid,
         "module_sha256": module_sha256(protocol_file),
+        "source_sha": source_sha,
+        "source_tree": source_tree,
     }
 
 

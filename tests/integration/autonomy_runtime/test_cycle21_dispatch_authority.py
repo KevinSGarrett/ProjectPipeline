@@ -11,6 +11,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest.mock import patch
 
+from project_pipeline.autonomy_runtime import remote_worker_protocol as worker_protocol
 from project_pipeline.autonomy_runtime.context_validation import NATIVE_PASS, job_input_digest
 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 from project_pipeline.autonomy_runtime.remote_job import (
@@ -18,7 +19,11 @@ from project_pipeline.autonomy_runtime.remote_job import (
     RemoteJobEnvelope,
     RemoteJobResult,
 )
-from project_pipeline.autonomy_runtime.remote_worker_protocol import run_envelope
+from project_pipeline.autonomy_runtime.remote_worker_protocol import (
+    module_sha256,
+    run_envelope,
+    write_lease_grant,
+)
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
     SshDispatchAdapter,
     ssh_config_user_option,
@@ -32,12 +37,29 @@ HOST = "COMFY-V4-CPU-01"
 PRINCIPAL = r"comfy-v4-cpu-01\windows 11"
 
 
-def _identity() -> dict[str, str]:
-    return {
+def _identity(**extra: str) -> dict[str, str]:
+    identity = {
         "hostname": HOST,
         "principal": PRINCIPAL,
         "sid": "S-1-5-21-comfy",
-        "module_sha256": "a" * 64,
+        "module_sha256": module_sha256(worker_protocol.__file__),
+        "source_sha": SHA,
+        "source_tree": TREE,
+    }
+    identity.update(extra)
+    return identity
+
+
+def _lease_grant(env: RemoteJobEnvelope) -> dict[str, str]:
+    return {
+        "lease_id": env.lease_id,
+        "fence": env.fence,
+        "job_id": env.job_id,
+        "host_id": env.host_id,
+        "status": "ACTIVE",
+        "source_sha": env.source_sha,
+        "source_tree": env.source_tree,
+        "overlay_sha256": env.overlay_sha256,
     }
 
 
@@ -64,7 +86,42 @@ def _envelope(tmp_path: Path, name: str, **changes: object) -> RemoteJobEnvelope
         correlation_id="cycle21",
     )
     values.update(changes)
-    return RemoteJobEnvelope.model_validate(values)
+    if "lease_grant" not in values:
+        values["lease_grant"] = {
+            "lease_id": values["lease_id"],
+            "fence": values["fence"],
+            "job_id": values["job_id"],
+            "host_id": values["host_id"],
+            "status": "ACTIVE",
+            "source_sha": values["source_sha"],
+            "source_tree": values["source_tree"],
+            "overlay_sha256": values["overlay_sha256"],
+        }
+    env = RemoteJobEnvelope.model_validate(values)
+    write_lease_grant(workspace, {**values, **values["lease_grant"]})
+    return env
+
+
+def _bind_lease(store: FleetJobStore, env: RemoteJobEnvelope, *, now: datetime = NOW) -> None:
+    db = store._connection()
+    db.execute(
+        """
+        CREATE TABLE IF NOT EXISTS scheduler_resource_leases (
+            lease_id TEXT PRIMARY KEY,
+            fencing_token TEXT,
+            expires_at_utc TEXT NOT NULL,
+            released_at_utc TEXT
+        )
+        """
+    )
+    db.execute(
+        """
+        INSERT OR REPLACE INTO scheduler_resource_leases
+            (lease_id, fencing_token, expires_at_utc, released_at_utc)
+        VALUES (?, ?, ?, NULL)
+        """,
+        (env.lease_id, env.fence, (now + timedelta(hours=1)).isoformat()),
+    )
 
 
 def test_worker_rejects_missing_host_and_wrong_sid(tmp_path: Path) -> None:
@@ -114,6 +171,7 @@ def test_store_rejects_exit_nine_and_changed_intent(tmp_path: Path) -> None:
     store = FleetJobStore(tmp_path / "jobs.sqlite3")
     env = _envelope(tmp_path, "accept-auth")
     store.persist_intent(env.model_dump(mode="json"), now=NOW)
+    _bind_lease(store, env)
     result = RemoteJobResult(
         job_id=env.job_id,
         host_id=env.host_id,
@@ -137,6 +195,7 @@ def test_revocation_inside_accept_transaction(tmp_path: Path) -> None:
     store = FleetJobStore(tmp_path / "revoke.sqlite3")
     env = _envelope(tmp_path, "revoke")
     store.persist_intent(env.model_dump(mode="json"), now=NOW)
+    _bind_lease(store, env)
     store.expire_fence(env.fence, now=NOW)
     result = RemoteJobResult(
         job_id=env.job_id,
@@ -242,6 +301,7 @@ def test_store_requires_artifact_bytes_when_contract_set(tmp_path: Path) -> None
     contract = hashlib.sha256(body).hexdigest()
     env = _envelope(tmp_path, "artifact-bytes", output_contract_sha256=contract)
     store.persist_intent(env.model_dump(mode="json"), now=NOW)
+    _bind_lease(store, env)
     result = RemoteJobResult(
         job_id=env.job_id,
         host_id=env.host_id,
@@ -267,6 +327,7 @@ def test_store_requires_artifact_bytes_for_context_jobs(tmp_path: Path) -> None:
     store = FleetJobStore(tmp_path / "jobs.sqlite3")
     env = _envelope(tmp_path, "context-bytes", require_context_consumption=True)
     store.persist_intent(env.model_dump(mode="json"), now=NOW)
+    _bind_lease(store, env)
     result = RemoteJobResult(
         job_id=env.job_id,
         host_id=env.host_id,

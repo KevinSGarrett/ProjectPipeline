@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from project_pipeline.autonomy_runtime.worker_allowlist import CYCLE_OWNED_VALIDATION_JOBS
 from project_pipeline.control.cohorts import (
     assert_cohort_invariants,
     describe_reconciliation_cohorts,
@@ -190,6 +191,13 @@ class ProjectControlKernel:
         facts: list[TaskControlFact] = []
         for state in states:
             issue = issues.get(state.task_id)
+            if issue is None and state.task_id in CYCLE_OWNED_VALIDATION_JOBS:
+                issue = {
+                    "issue_type": "TASK",
+                    "risk_classification": "LOW",
+                    "requirement_ids": (),
+                    "state": "",
+                }
             if issue is None:
                 continue
             linked = [
@@ -236,6 +244,7 @@ class ProjectControlKernel:
                         not fail_closed
                         and (
                             state.task_id in selection_scope
+                            or state.task_id in CYCLE_OWNED_VALIDATION_JOBS
                             or self._completion_convergence_allowed(
                                 issue,
                                 requirements,

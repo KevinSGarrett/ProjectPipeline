@@ -42,7 +42,7 @@ from project_pipeline.domain.control import (
 )
 from project_pipeline.domain.scheduler import ResourceClaim
 from project_pipeline.persistence import SQLiteStateStore
-from project_pipeline.services.state import CoreStateService
+from project_pipeline.services.state import CoreStateService, task_records_from_jira
 
 
 class AutonomyDirectorError(RuntimeError):
@@ -91,6 +91,11 @@ def evaluate_live_control(
                 actor_id="actor:live-command-center",
                 correlation_id="corr:live-control-snapshot",
             )
+        elif not store.list_task_states(project_id):
+            imported = task_records_from_jira(root, project_id)
+            if imported:
+                store.put_task_states(imported)
+                service.refresh_task_counts(project_id)
         snapshot = ProjectControlKernel(root, store, project_id).evaluate()
     head_sha, tree_sha = repository_identity(root)
     bound = snapshot

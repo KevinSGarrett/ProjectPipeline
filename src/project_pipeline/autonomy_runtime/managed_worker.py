@@ -117,13 +117,20 @@ def classify_live_managed_worker(
     never_run = last_result_never_run(last_result, last_run_time)
     try:
         result_code = int(str(last_result).strip(), 0)
+        parsed_result = True
     except (TypeError, ValueError):
         result_code = None
+        parsed_result = False
     accepted = False if never_run else bool(verdict["accepted_production_worker"])
     reason = "managed_worker_never_run" if never_run else verdict["reason"]
-    if accepted and result_code not in {0, None}:
+    if not parsed_result:
         accepted = False
-        reason = "task_result_nonzero"
+        reason = "task_result_unknown"
+    elif accepted and result_code not in {0, 267009}:
+        # 267009 is currently running (SCHED_S_TASK_RUNNING); nonzero failure codes reject.
+        if result_code != 0:
+            accepted = False
+            reason = "task_result_nonzero"
     return {
         **verdict,
         "accepted_production_worker": accepted,
@@ -132,6 +139,7 @@ def classify_live_managed_worker(
         "last_result": last_result,
         "last_run_time": last_run_time,
         "never_run": never_run,
+        "result_code": result_code,
     }
 
 

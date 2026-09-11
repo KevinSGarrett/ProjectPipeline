@@ -69,6 +69,8 @@ class RemoteJobEnvelope(DomainModel):
     context_pack: dict[str, Any] | None = None
     pack_sha256: str | None = None
     require_context_consumption: bool = False
+    test_selection: tuple[str, ...] = ()
+    lease_grant: dict[str, Any] | None = None
     project_id: str = "PROJECT-PIPELINE"
     effect_class: Literal["IDEMPOTENT_RESULT", "NON_IDEMPOTENT_EFFECT"] = "IDEMPOTENT_RESULT"
 
@@ -228,6 +230,7 @@ class RemoteJobController:
                     }
                 raw_handle = limits.get("handle")
                 handle = raw_handle if isinstance(raw_handle, int) else None
+            launched = True
             try:
                 payload = self.adapter.execute(
                     command=list(envelope.argv),
@@ -240,15 +243,22 @@ class RemoteJobController:
                     envelope=envelope.model_dump(mode="json"),
                 )
             except ResourceLimitError as error:
+                launched = False
                 return {"outcome": "REJECTED", "reason": str(error)}
             except TypeError as error:
-                launched = True
                 if self.store is not None:
                     self.store.mark_status(envelope.job_id, "UNKNOWN_OUTCOME")
                 return {
                     "outcome": "UNKNOWN_OUTCOME",
                     "reason": "adapter_execute_contract_error",
                     "detail": type(error).__name__,
+                }
+            except OSError:
+                if self.store is not None:
+                    self.store.mark_status(envelope.job_id, "UNKNOWN_OUTCOME")
+                return {
+                    "outcome": "UNKNOWN_OUTCOME",
+                    "reason": "transport_uncertain",
                 }
             finally:
                 close_job_handle(handle)
@@ -279,6 +289,11 @@ class RemoteJobController:
                 "tests_run": payload.get("tests_run"),
                 "artifact_sha256": payload.get("artifact_sha256"),
                 "junit_sha256": payload.get("junit_sha256"),
+                "rss_samples_mb": payload.get("rss_samples_mb"),
+                "scratch_bytes": payload.get("scratch_bytes"),
+                "output_bytes": payload.get("output_bytes"),
+                "started_at_utc": payload.get("started_at_utc"),
+                "ended_at_utc": payload.get("ended_at_utc"),
             }
         finally:
             if self.store is not None and claimed and not launched:
@@ -323,9 +338,30 @@ class RemoteJobController:
             return {"outcome": "REJECTED", "reason": "artifact_bytes_required"}
         if artifact_bytes is not None:
             actual = hashlib.sha256(artifact_bytes).hexdigest()
-            if envelope.output_contract_sha256 and actual != envelope.output_contract_sha256:
+            expected_output = envelope.output_contract_sha256 or ""
+            if expected_output and actual != expected_output:
                 return {"outcome": "REJECTED", "reason": "output_tamper"}
-            result = result.model_copy(update={"output_sha256": actual})
+        if envelope.require_context_consumption:
+            receipt = context_consumption or {}
+            if not receipt.get("ok"):
+                return {"outcome": "REJECTED", "reason": "context_unconsumed"}
+            if (
+                str(receipt.get("job_id") or "") not in {"", envelope.job_id}
+                and str(receipt.get("job_id")) != envelope.job_id
+            ):
+                return {"outcome": "REJECTED", "reason": "context_wrong_job"}
+            if str(receipt.get("job_id") or "") and str(receipt.get("job_id")) != envelope.job_id:
+                return {"outcome": "REJECTED", "reason": "context_wrong_job"}
+            if (
+                str(receipt.get("host_id") or "")
+                and str(receipt.get("host_id")) != envelope.host_id
+            ):
+                return {"outcome": "REJECTED", "reason": "context_wrong_host"}
+            if (
+                envelope.pack_sha256
+                and str(receipt.get("pack_sha256") or "") != envelope.pack_sha256
+            ):
+                return {"outcome": "REJECTED", "reason": "context_wrong_pack"}
         existing = self._accepted.get(envelope.job_id)
         if existing is not None:
             if (

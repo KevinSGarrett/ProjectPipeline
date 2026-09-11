@@ -38,7 +38,7 @@ def _xeon_inventory() -> dict[str, object]:
         "whoami": r"win-evsh1dn8h5o\kines",
         "sid": "S-1-5-21-xeon",
         "totalRAMGB": 63.96,
-        "availableRAMGB": 48.0,
+        "availableRAMGB": 40.0,
         "cpuLogical": 16,
         "cpuPhysical": 8,
         "disks": [{"DeviceID": "C:", "FreeGB": 68.46}],
@@ -273,7 +273,11 @@ def test_xeon_has_no_legacy_memory_ceiling() -> None:
     xeon = _measured_xeon()
     assert xeon.memory_mb > 48000
     pools = {pool.resource_type.value: pool for pool in xeon.physical_pools()}
-    assert pools["MEMORY_MB"].capacity_units == xeon.memory_mb
+    assert xeon.available_memory_mb is not None
+    assert pools["MEMORY_MB"].capacity_units == max(1, int(xeon.available_memory_mb))
+    uncapped = xeon.model_copy(update={"available_memory_mb": 55000})
+    uncapped_pools = {pool.resource_type.value: pool for pool in uncapped.physical_pools()}
+    assert uncapped_pools["MEMORY_MB"].capacity_units == 55000
 
 
 def test_os_age_does_not_cap_or_strip_xeon() -> None:

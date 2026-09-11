@@ -2147,7 +2147,10 @@ def _run_scheduler_command(args: argparse.Namespace) -> tuple[dict[str, Any], in
                 from project_pipeline.autonomy_runtime.dispatch_workflow import DispatchWorkflow
                 from project_pipeline.autonomy_runtime.durable_jobs import FleetJobStore
 
-                jobs = FleetJobStore(_sidecar_path(Path(database), "fleet_jobs.sqlite3"))
+                jobs = FleetJobStore(
+                    _sidecar_path(Path(database), "fleet_jobs.sqlite3"),
+                    scheduler_database=Path(database),
+                )
                 workflow = DispatchWorkflow(
                     store=scheduler_store,
                     jobs=jobs,

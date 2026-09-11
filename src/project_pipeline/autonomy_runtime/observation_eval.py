@@ -74,9 +74,7 @@ def _verified_acquired_artifact(item: dict[str, Any]) -> str | None:
     if hashlib.sha256(payload).hexdigest() != digest:
         return None
     collected, failed, skipped = junit_case_counts(path)
-    if collected < 1 or failed:
-        return None
-    if skipped and collected == skipped:
+    if collected < 1 or failed or skipped:
         return None
     item["tests_run"] = collected
     item["collected"] = collected
@@ -132,7 +130,14 @@ def evaluate_observation(
             reasons.append("unaffected_lane_missing")
         if not fault.get("controller_restarted"):
             reasons.append("controller_restart_missing")
+        if not (fault.get("remote_pid") or fault.get("controller_pid") or fault.get("pid")):
+            reasons.append("recovery_pid_missing")
+        if not (fault.get("creation_time") or fault.get("filetime")):
+            reasons.append("recovery_filetime_missing")
+        if fault.get("controller_restarted") is True and not fault.get("restart_pid"):
+            reasons.append("controller_restart_not_a_process")
     jobs = payload.get("completed_jobs") if isinstance(payload.get("completed_jobs"), list) else []
+    window_start = _parse_utc(payload.get("started_at_utc"))
     if require_useful_work:
         smoke = False
         accepted_real: list[dict[str, Any]] = []
@@ -141,8 +146,35 @@ def evaluate_observation(
             task_id = str(item.get("task_id") or "")
             if task_id.startswith(SMOKE_USEFUL_PREFIX):
                 smoke = True
+            if item.get("duplicate") is True:
+                continue
             artifact = _verified_acquired_artifact(item)
             tests_run = int(item.get("tests_run") or 0)
+            executed = item.get("executed") if isinstance(item.get("executed"), dict) else {}
+            receipt = (
+                item.get("context_consumption")
+                or item.get("context_receipt")
+                or executed.get("context_consumption")
+                or executed.get("context_receipt")
+                or {}
+            )
+            started = _parse_utc(
+                item.get("started_at_utc")
+                or executed.get("started_at_utc")
+                or item.get("accepted_at_utc")
+            )
+            if window_start and started and started < window_start:
+                reasons.append(f"pre_window_job:{task_id}")
+                continue
+            if not isinstance(receipt, dict) or not receipt.get("ok"):
+                reasons.append(f"context_receipt_missing:{task_id}")
+                continue
+            if (
+                str(receipt.get("job_id") or "") not in {"", task_id}
+                and str(receipt.get("job_id")) != task_id
+            ):
+                reasons.append(f"context_wrong_job:{task_id}")
+                continue
             if (
                 task_id.startswith(EXECUTABLE_USEFUL_PREFIX)
                 and str(item.get("outcome") or "") == "ACCEPTED"

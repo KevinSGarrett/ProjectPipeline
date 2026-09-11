@@ -6,7 +6,7 @@ import hashlib
 import json
 import sqlite3
 import threading
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
@@ -62,11 +62,69 @@ def _now() -> datetime:
     return datetime.now(UTC)
 
 
+def _query_scheduler_lease(
+    db: sqlite3.Connection,
+    *,
+    lease_id: str,
+    fence: str,
+    now: datetime,
+) -> bool | None:
+    try:
+        row = db.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='scheduler_resource_leases'"
+        ).fetchone()
+        if row is None:
+            return None
+        lease = db.execute(
+            """
+            SELECT fencing_token, expires_at_utc, released_at_utc
+            FROM scheduler_resource_leases
+            WHERE lease_id=?
+            """,
+            (lease_id,),
+        ).fetchone()
+    except sqlite3.OperationalError:
+        return None
+    if lease is None:
+        return None
+    if lease["released_at_utc"]:
+        return False
+    expires = datetime.fromisoformat(str(lease["expires_at_utc"]).replace("Z", "+00:00"))
+    if expires.tzinfo is None:
+        expires = expires.replace(tzinfo=UTC)
+    if now > expires.astimezone(UTC):
+        return False
+    return not fence or str(lease["fencing_token"]) == str(fence)
+
+
+def _scheduler_lease_active(
+    db: sqlite3.Connection,
+    *,
+    lease_id: str,
+    fence: str,
+    now: datetime,
+    scheduler_database: Path | None = None,
+) -> bool:
+    found = _query_scheduler_lease(db, lease_id=lease_id, fence=fence, now=now)
+    if found is not None:
+        return found
+    if scheduler_database is None:
+        return False
+    extra = sqlite3.connect(str(scheduler_database))
+    extra.row_factory = sqlite3.Row
+    try:
+        found = _query_scheduler_lease(extra, lease_id=lease_id, fence=fence, now=now)
+        return bool(found)
+    finally:
+        extra.close()
+
+
 class FleetJobStore:
     """Process-restart durable job intents and accepted results."""
 
-    def __init__(self, database: Path) -> None:
+    def __init__(self, database: Path, scheduler_database: Path | None = None) -> None:
         self.database = Path(database)
+        self.scheduler_database = Path(scheduler_database) if scheduler_database else None
         self.database.parent.mkdir(parents=True, exist_ok=True)
         self._lock = threading.Lock()
         self._local = threading.local()
@@ -206,6 +264,37 @@ class FleetJobStore:
         payload["status"] = row["status"]
         return payload
 
+    def remember_scheduler_lease(
+        self,
+        lease_id: str,
+        fence: str,
+        *,
+        now: datetime | None = None,
+        ttl_seconds: int = 3600,
+    ) -> None:
+        now = (now or _now()).astimezone(UTC)
+        expires = now + timedelta(seconds=ttl_seconds)
+        with self._lock:
+            db = self._connection()
+            db.execute(
+                """
+                CREATE TABLE IF NOT EXISTS scheduler_resource_leases (
+                    lease_id TEXT PRIMARY KEY,
+                    fencing_token TEXT,
+                    expires_at_utc TEXT NOT NULL,
+                    released_at_utc TEXT
+                )
+                """
+            )
+            db.execute(
+                """
+                INSERT OR REPLACE INTO scheduler_resource_leases
+                    (lease_id, fencing_token, expires_at_utc, released_at_utc)
+                VALUES (?, ?, ?, NULL)
+                """,
+                (lease_id, fence, expires.isoformat()),
+            )
+
     def expire_fence(self, fence: str, *, now: datetime | None = None) -> None:
         now = (now or _now()).astimezone(UTC)
         with self._lock:
@@ -302,17 +391,40 @@ class FleetJobStore:
                     db.execute("COMMIT")
                     return {"outcome": "REJECTED", "reason": "artifact_bytes_required"}
                 actual_output = digest_bytes(artifact_bytes)
-                if contract and actual_output != contract:
+                claimed = str(result.get("artifact_sha256") or result.get("junit_sha256") or "")
+                expected_output = contract or claimed
+                if expected_output and actual_output != expected_output:
                     db.execute("COMMIT")
                     return {"outcome": "REJECTED", "reason": "output_tamper"}
                 result = dict(result)
                 result["artifact_sha256"] = actual_output
-                result["output_sha256"] = actual_output
-            if stored.get("require_context_consumption") and not (
-                context_consumption and context_consumption.get("ok")
+                if not contract:
+                    result["output_sha256"] = actual_output
+            if stored.get("require_context_consumption"):
+                receipt = context_consumption if isinstance(context_consumption, dict) else {}
+                if not receipt.get("ok"):
+                    db.execute("COMMIT")
+                    return {"outcome": "REJECTED", "reason": "context_unconsumed"}
+                if str(receipt.get("job_id") or "") != str(stored.get("job_id") or ""):
+                    db.execute("COMMIT")
+                    return {"outcome": "REJECTED", "reason": "context_wrong_job"}
+                if str(receipt.get("host_id") or "") != str(stored.get("host_id") or ""):
+                    db.execute("COMMIT")
+                    return {"outcome": "REJECTED", "reason": "context_wrong_host"}
+                expected_pack = str(stored.get("pack_sha256") or "")
+                if expected_pack and str(receipt.get("pack_sha256") or "") != expected_pack:
+                    db.execute("COMMIT")
+                    return {"outcome": "REJECTED", "reason": "context_wrong_pack"}
+            lease_id = str(stored.get("lease_id") or "")
+            if lease_id and not _scheduler_lease_active(
+                db,
+                lease_id=lease_id,
+                fence=str(stored.get("fence") or ""),
+                now=now,
+                scheduler_database=self.scheduler_database,
             ):
                 db.execute("COMMIT")
-                return {"outcome": "REJECTED", "reason": "context_unconsumed"}
+                return {"outcome": "REJECTED", "reason": "scheduler_lease_inactive"}
             existing = db.execute(
                 "SELECT payload_json, output_sha256, exit_code FROM fleet_job_results WHERE job_id=?",
                 (job_id,),
