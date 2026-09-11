@@ -9,6 +9,7 @@ import os
 import subprocess
 import sys
 import time
+from contextlib import nullcontext
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -24,6 +25,7 @@ from project_pipeline.autonomy_runtime.isolated_validation_graph import (
 from project_pipeline.autonomy_runtime.lifecycle import FleetLifecycleJournal
 from project_pipeline.autonomy_runtime.observation_eval import evaluate_observation
 from project_pipeline.autonomy_runtime.remote_job import RemoteJobEnvelope
+from project_pipeline.autonomy_runtime.remote_worker_protocol import write_lease_grant
 from project_pipeline.autonomy_runtime.service import LocalSubprocessDispatchAdapter
 from project_pipeline.autonomy_runtime.ssh_dispatch import (
     COMFY_MACHINE_ID,
@@ -836,6 +838,49 @@ def _prove_controller_process_restart(database: Path, job_id: str) -> dict[str, 
     }
 
 
+def _independent_lease_grant(
+    *,
+    lease_id: str,
+    fence: str,
+    job_id: str,
+    host_id: str,
+    source_sha: str,
+    source_tree: str,
+    overlay_sha256: str,
+) -> dict[str, Any]:
+    return {
+        "lease_id": lease_id,
+        "fence": fence,
+        "job_id": job_id,
+        "host_id": host_id,
+        "status": "ACTIVE",
+        "source_sha": source_sha,
+        "source_tree": source_tree,
+        "overlay_sha256": overlay_sha256,
+    }
+
+
+def _place_independent_lease_grant(
+    adapter: Any,
+    workspace: Path,
+    grant: dict[str, Any],
+) -> bool:
+    """Persist the grant as an independent workspace file. Envelope copies are not authority."""
+
+    if Path(workspace).is_dir():
+        write_lease_grant(Path(workspace), grant)
+    placer = getattr(adapter, "place_workspace_file", None)
+    if callable(placer):
+        return bool(
+            placer(
+                Path(workspace),
+                "lease_grant.json",
+                (json.dumps(grant, indent=2, sort_keys=True) + "\n").encode("utf-8"),
+            )
+        )
+    return Path(workspace).is_dir() and (Path(workspace) / "lease_grant.json").is_file()
+
+
 def _fault_owned_hold_job(
     *,
     adapter: SshDispatchAdapter,
@@ -865,6 +910,15 @@ def _fault_owned_hold_job(
         if bundle.acquired and bundle.leases:
             lease_id = bundle.leases[0].lease_id
             fence = str(bundle.leases[0].fencing_token)
+    grant = _independent_lease_grant(
+        lease_id=lease_id,
+        fence=fence,
+        job_id=job_id,
+        host_id=machine_id,
+        source_sha=source_sha,
+        source_tree=source_tree,
+        overlay_sha256=overlay_sha256,
+    )
     envelope = RemoteJobEnvelope(
         job_id=job_id,
         host_id=machine_id,
@@ -890,6 +944,7 @@ def _fault_owned_hold_job(
         cpu_ceiling=1,
         memory_mb_ceiling=256,
         correlation_id="actor:owned-fault",
+        lease_grant=grant,
     )
     payload = envelope.model_dump(mode="json")
     stored = store.persist_intent(payload, now=now)
@@ -901,6 +956,17 @@ def _fault_owned_hold_job(
             "owned_job_id": job_id,
             "intent_preserved": store.get_intent(job_id) is not None,
             "reason": stored.get("reason") or "intent_persist_failed",
+        }
+    if not _place_independent_lease_grant(adapter, workspace, grant):
+        store.mark_status(job_id, "UNKNOWN_OUTCOME")
+        return {
+            "kind": "owned_durable_fault",
+            "recovered": False,
+            "owned_job_id": job_id,
+            "intent_preserved": True,
+            "reason": "lease_grant_not_placed",
+            "lease_id": lease_id,
+            "fence": fence,
         }
     journal.publish(_owned_fault_event(envelope, status="DISPATCHED"))
     process = adapter.start_job(
@@ -945,22 +1011,34 @@ def _fault_owned_hold_job(
     recovered_output = False
     recovered_reason: str | None = None
     if killed and reconciled.get("ok"):
+        recovered_id = f"{job_id}-RECOVERED"
+        recovered_fence = f"{fence}-resume"
+        recovered_grant = _independent_lease_grant(
+            lease_id=lease_id,
+            fence=recovered_fence,
+            job_id=recovered_id,
+            host_id=machine_id,
+            source_sha=source_sha,
+            source_tree=source_tree,
+            overlay_sha256=overlay_sha256,
+        )
         recovered_env = envelope.model_copy(
             update={
-                "job_id": f"{job_id}-RECOVERED",
-                "fence": f"{fence}-resume",
+                "job_id": recovered_id,
+                "fence": recovered_fence,
+                "lease_grant": recovered_grant,
                 "argv": (
                     "python",
                     hold,
                     "--job-id",
-                    f"{job_id}-RECOVERED",
+                    recovered_id,
                     "--seconds",
                     "1",
                     "--output",
                     "hold.json",
                 ),
                 "input_sha256": job_input_digest(
-                    task_id=f"{job_id}-RECOVERED",
+                    task_id=recovered_id,
                     source_sha=source_sha,
                     source_tree=source_tree,
                     overlay_sha256=overlay_sha256,
@@ -971,49 +1049,54 @@ def _fault_owned_hold_job(
         )
         store.persist_intent(recovered_env.model_dump(mode="json"), now=now)
         store.remember_scheduler_lease(recovered_env.lease_id, recovered_env.fence, now=now)
-        recovered_run = adapter.execute(
-            command=list(recovered_env.argv),
-            working_directory=workspace,
-            envelope=recovered_env.model_dump(mode="json"),
-            job_id=recovered_env.job_id,
-            input_sha256=recovered_env.input_sha256,
-        )
-        recovered_output = _zero_exit(recovered_run.get("exit_code"))
-        stdout = str(recovered_run.get("stdout") or "")
-        stderr = str(recovered_run.get("stderr") or "")
-        output_sha256 = str(
-            recovered_run.get("payload_sha256")
-            or recovered_run.get("output_sha256")
-            or hashlib.sha256(stdout.encode("utf-8")).hexdigest()
-        )
-        stdout_sha256 = str(
-            recovered_run.get("stdout_sha256") or hashlib.sha256(stdout.encode("utf-8")).hexdigest()
-        )
-        stderr_sha256 = str(
-            recovered_run.get("stderr_sha256") or hashlib.sha256(stderr.encode("utf-8")).hexdigest()
-        )
-        recovered_reason = str(recovered_run.get("reason") or "")
-        if recovered_output and len(output_sha256) == 64:
-            accepted = store.accept_result(
-                {
-                    "job_id": recovered_env.job_id,
-                    "host_id": recovered_env.host_id,
-                    "fence": recovered_env.fence,
-                    "exit_code": 0,
-                    "output_sha256": output_sha256,
-                    "stdout_sha256": stdout_sha256,
-                    "stderr_sha256": stderr_sha256,
-                },
-                now=now,
-                envelope=recovered_env.model_dump(mode="json"),
-            )
-            recovered_output = str(accepted.get("outcome") or "") == "ACCEPTED"
-            if not recovered_output:
-                recovered_reason = str(
-                    accepted.get("reason") or recovered_reason or "accept_rejected"
-                )
+        if not _place_independent_lease_grant(adapter, workspace, recovered_grant):
+            recovered_reason = "lease_grant_not_placed"
         else:
-            recovered_output = False
+            recovered_run = adapter.execute(
+                command=list(recovered_env.argv),
+                working_directory=workspace,
+                envelope=recovered_env.model_dump(mode="json"),
+                job_id=recovered_env.job_id,
+                input_sha256=recovered_env.input_sha256,
+            )
+            recovered_output = _zero_exit(recovered_run.get("exit_code"))
+            stdout = str(recovered_run.get("stdout") or "")
+            stderr = str(recovered_run.get("stderr") or "")
+            output_sha256 = str(
+                recovered_run.get("payload_sha256")
+                or recovered_run.get("output_sha256")
+                or hashlib.sha256(stdout.encode("utf-8")).hexdigest()
+            )
+            stdout_sha256 = str(
+                recovered_run.get("stdout_sha256")
+                or hashlib.sha256(stdout.encode("utf-8")).hexdigest()
+            )
+            stderr_sha256 = str(
+                recovered_run.get("stderr_sha256")
+                or hashlib.sha256(stderr.encode("utf-8")).hexdigest()
+            )
+            recovered_reason = str(recovered_run.get("reason") or "")
+            if recovered_output and len(output_sha256) == 64:
+                accepted = store.accept_result(
+                    {
+                        "job_id": recovered_env.job_id,
+                        "host_id": recovered_env.host_id,
+                        "fence": recovered_env.fence,
+                        "exit_code": 0,
+                        "output_sha256": output_sha256,
+                        "stdout_sha256": stdout_sha256,
+                        "stderr_sha256": stderr_sha256,
+                    },
+                    now=now,
+                    envelope=recovered_env.model_dump(mode="json"),
+                )
+                recovered_output = str(accepted.get("outcome") or "") == "ACCEPTED"
+                if not recovered_output:
+                    recovered_reason = str(
+                        accepted.get("reason") or recovered_reason or "accept_rejected"
+                    )
+            else:
+                recovered_output = False
     recovered = killed and intent_kept and reconciled.get("ok") is True and recovered_output
     restart = _prove_controller_process_restart(store.database, job_id)
     return {
@@ -1173,18 +1256,24 @@ def run_observation(
         and len(tree) == 40
         and len(overlay_digest) == 64
     ):
-        fault = _fault_owned_hold_job(
-            adapter=adapter,
-            store=jobs_store,
-            journal=journal,
-            workspace=workspace,
-            source_sha=sha,
-            source_tree=tree,
-            overlay_sha256=overlay_digest,
-            principal=principal,
-            now=started,
-            machine_id=live_machine,
+        catalog = root / "database" / "MIGRATION_CATALOG.json"
+        scheduler_cm = (
+            SchedulerStore(Path(db), root) if catalog.is_file() else nullcontext(None)
         )
+        with scheduler_cm as scheduler:
+            fault = _fault_owned_hold_job(
+                adapter=adapter,
+                store=jobs_store,
+                journal=journal,
+                workspace=workspace,
+                source_sha=sha,
+                source_tree=tree,
+                overlay_sha256=overlay_digest,
+                principal=principal,
+                now=started,
+                machine_id=live_machine,
+                scheduler=scheduler,
+            )
         fault["unaffected_lane_progress"] = _unaffected_lane_progress(completed_jobs, live_machine)
         fault["blocked_lane"] = blocked
     else:
