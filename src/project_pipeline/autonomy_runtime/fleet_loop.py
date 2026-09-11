@@ -662,25 +662,30 @@ def _resource_metrics(
             if isinstance(samples, (list, tuple)) and samples:
                 peaks.append(max(float(value) for value in samples))
             scratch += int(item.get("scratch_bytes") or item.get("output_bytes") or 0)
-            started = (
-                datetime.fromisoformat(str(item.get("started_at_utc") or "").replace("Z", "+00:00"))
-                if item.get("started_at_utc")
-                else None
-            )
-            ended = (
-                datetime.fromisoformat(str(item.get("ended_at_utc") or "").replace("Z", "+00:00"))
-                if item.get("ended_at_utc")
-                else None
-            )
             try:
-                if started is not None and ended is not None:
-                    if started.tzinfo is None:
-                        started = started.replace(tzinfo=UTC)
-                    if ended.tzinfo is None:
-                        ended = ended.replace(tzinfo=UTC)
-                    intervals.append((started.astimezone(UTC), ended.astimezone(UTC)))
+                started = (
+                    datetime.fromisoformat(
+                        str(item.get("started_at_utc") or "").replace("Z", "+00:00")
+                    )
+                    if item.get("started_at_utc")
+                    else None
+                )
+                ended = (
+                    datetime.fromisoformat(
+                        str(item.get("ended_at_utc") or "").replace("Z", "+00:00")
+                    )
+                    if item.get("ended_at_utc")
+                    else None
+                )
             except ValueError:
-                pass
+                continue
+            if started is None or ended is None:
+                continue
+            if started.tzinfo is None:
+                started = started.replace(tzinfo=UTC)
+            if ended.tzinfo is None:
+                ended = ended.replace(tzinfo=UTC)
+            intervals.append((started.astimezone(UTC), ended.astimezone(UTC)))
     overlap = 0
     for index, (start, end) in enumerate(intervals):
         concurrent = 1
