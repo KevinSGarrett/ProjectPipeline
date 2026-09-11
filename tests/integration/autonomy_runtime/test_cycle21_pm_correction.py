@@ -76,6 +76,28 @@ def _result(envelope: RemoteJobEnvelope, digest: str = "e" * 64) -> RemoteJobRes
     )
 
 
+def test_src02_worker_measures_source_identity() -> None:
+    from project_pipeline.autonomy_runtime.worker_runtime_identity import (
+        local_runtime_identity,
+        measured_source_identity,
+    )
+
+    sha, tree = measured_source_identity(
+        protocol_file=str(
+            SOURCE / "src" / "project_pipeline" / "autonomy_runtime" / "worker_runtime_identity.py"
+        )
+    )
+    assert len(sha) == 40
+    assert len(tree) == 40
+    live = local_runtime_identity(
+        protocol_file=str(
+            SOURCE / "src" / "project_pipeline" / "autonomy_runtime" / "worker_runtime_identity.py"
+        )
+    )
+    assert live["source_sha"] == sha
+    assert live["source_tree"] == tree
+
+
 def test_src01_no_native_pass_default() -> None:
     tests = required_tests(VALIDATION_ALPHA_TASK)
     assert tests != (cv.NATIVE_PASS,)
